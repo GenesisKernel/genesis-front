@@ -18,3 +18,4 @@ import actionCreatorFactory from 'typescript-fsa';
 
 const actionCreator = actionCreatorFactory('auth');
 export const login = actionCreator.async<string, { test: string, result: boolean }, void>('LOGIN');
+export const setAction = actionCreator<string>('SET_ACTION');

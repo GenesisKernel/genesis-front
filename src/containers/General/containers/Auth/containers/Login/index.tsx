@@ -15,23 +15,20 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { connect } from 'react-redux';
-
+import { connect, Dispatch } from 'react-redux';
+import { push } from 'react-router-redux';
 import { IRootState } from 'modules';
-import { actions } from 'modules/auth';
+
+import AuthForm from 'components/AuthForm';
 
 interface ILoginProps {
     isLoggingIn: boolean;
-    login: typeof actions.login.started;
+    navigate: (url: string) => any;
 }
 
 const Login: React.SFC<ILoginProps> = (props) => {
     return (
-        <div>
-            <div>
-                <button disabled={props.isLoggingIn} onClick={props.login.bind(null, 'none')}>Login</button>
-            </div>
-        </div>
+        <AuthForm navigate={props.navigate} />
     );
 };
 
@@ -39,6 +36,8 @@ const mapStateToProps = (state: IRootState) => ({
     isLoggingIn: state.auth.isLoggingIn
 });
 
-export default connect(mapStateToProps, {
-    login: actions.login.started
-})(Login);
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+    navigate: (url: string) => dispatch(push(url))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

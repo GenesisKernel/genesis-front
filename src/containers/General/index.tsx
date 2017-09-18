@@ -73,7 +73,7 @@ class General extends React.Component<IGeneralProps> {
                     <Background />
                     <Col lg={5} md={6} xs={12} className="no-float align-middle">
                         {/*<LangSelector onSelect={() => { }} selectedIndex={0} values={[{ title: 'English(US)', image: '' }]} />*/}
-                        <Route exact path="/auth" component={Auth} />
+                        <Route path="/auth" component={Auth} />
                         <Route path="/install" component={Install} />
                         <Route exact path="/offline" component={Offline} />
                     </Col>

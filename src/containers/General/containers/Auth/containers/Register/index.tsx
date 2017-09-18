@@ -15,35 +15,56 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import { connect, Dispatch } from 'react-redux';
+import { push } from 'react-router-redux';
+import { IRootState } from 'modules';
 
-export default () => (
-    <div>
-        <h4 className="text-center">NL_CREATE_ACCOUNT</h4>
-        <div className="form-horizontal">
-            <div className="form-group list-group-item">
-                <label className="control-label col-sm-3" htmlFor="email">NL_SEED</label>
-                <div className="col-sm-9">
-                    <textarea className="form-control" />
-                    <div className="col-sm-4">
-                        <button className="btn btn-primary btn-block">NL_GENERATE</button>
-                    </div>
-                    <div className="col-sm-4">
-                        <button className="btn btn-primary btn-block">NL_SAVE</button>
-                    </div>
-                    <div className="col-sm-4">
-                        <button className="btn btn-primary btn-block">NL_SELECT</button>
+import RegisterForm from 'components/RegisterForm';
+
+interface IRegisterProps {
+    navigate: (url: string) => any;
+}
+
+const Register: React.SFC<IRegisterProps> = (props: IRegisterProps) => (
+    <RegisterForm navigate={props.navigate}>
+        <div>
+            <h4 className="text-center">NL_CREATE_ACCOUNT</h4>
+            <div className="form-horizontal">
+                <div className="form-group list-group-item">
+                    <label className="control-label col-sm-3" htmlFor="email">NL_SEED</label>
+                    <div className="col-sm-9">
+                        <textarea className="form-control" />
+                        <div className="col-sm-4">
+                            <button className="btn btn-primary btn-block">NL_GENERATE</button>
+                        </div>
+                        <div className="col-sm-4">
+                            <button className="btn btn-primary btn-block">NL_SAVE</button>
+                        </div>
+                        <div className="col-sm-4">
+                            <button className="btn btn-primary btn-block">NL_SELECT</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className="form-group list-group-item">
-                <label className="control-label col-sm-3" htmlFor="password">NL_PASSWORD</label>
-                <div className="col-sm-9">
-                    <input type="password" className="form-control" />
+                <div className="form-group list-group-item">
+                    <label className="control-label col-sm-3" htmlFor="password">NL_PASSWORD</label>
+                    <div className="col-sm-9">
+                        <input type="password" className="form-control" />
+                    </div>
                 </div>
-            </div>
-            <div className="form-group">
-                <p className="text-center mt0">Lorem ipsum dolor sit amet. Consecturer adepiscing elit</p>
+                <div className="form-group">
+                    <p className="text-center mt0">Lorem ipsum dolor sit amet. Consecturer adepiscing elit</p>
+                </div>
             </div>
         </div>
-    </div>
+    </RegisterForm>
 );
+
+const mapStateToProps = (state: IRootState) => ({
+
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+    navigate: (url: string) => dispatch(push(url))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register);

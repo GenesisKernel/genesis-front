@@ -36,6 +36,7 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
     render() {
         return (
             <FormControl
+                disabled={this.props.disabled}
                 onChange={this.props.onChange}
                 onBlur={this.props.onBlur}
                 bsClass={this.props.bsClass}

@@ -16,23 +16,25 @@
 
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
+import { Route } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { IRootState } from 'modules';
-import { Panel } from 'react-bootstrap';
+
+import Login from './containers/Login';
+import Import from './containers/Import';
+import Register from './containers/Register';
 
 interface IAuthProps {
     navigate: (url: string) => any;
 }
 
-class Auth extends React.Component<IAuthProps> {
-    render() {
-        return (
-            <Panel bsStyle="info" header={<img src="/img/logo.svg" />}>
-                <div>DND_AUTH_WINDOW</div>
-            </Panel>
-        );
-    }
-}
+const Auth: React.SFC<IAuthProps> = (props) => (
+    <div>
+        <Route exact path="/auth" component={Login} />
+        <Route exact path="/auth/import" component={Import} />
+        <Route exact path="/auth/create" component={Register} />
+    </div>
+);
 
 const mapStateToProps = (state: IRootState) => ({
 

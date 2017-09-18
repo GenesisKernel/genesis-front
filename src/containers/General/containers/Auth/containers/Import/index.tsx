@@ -15,23 +15,29 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { bindActionCreators, Dispatch } from 'redux';
-import { connect } from 'react-redux';
-//import { login } from 'modules/auth';
+import { connect, Dispatch } from 'react-redux';
+import { push } from 'react-router-redux';
+import { IRootState } from 'modules';
 
-const Import = (props: { login: Function }) => (
-    <div>
-        <h4>Heading</h4>
-        <p>Hello from the left container!</p>
-        {/*<button onClick={props.login.bind(null, MOCK_PASSWORD, MOCK_PUBLIC_KEY, MOCK_ENCRYPTED_KEY)}>AUTHENTICATE</button>*/}
-    </div>
-);
+import ImportForm from 'components/ImportForm';
 
-const mapDispatchToProps = (dispatch: Dispatch<{}>) => bindActionCreators({
-    //login: (password: string, publicKey: string, encryptedKey: string) => dispatch(login(password, publicKey, encryptedKey))
-}, dispatch);
+interface IImportProps {
+    isLoggingIn: boolean;
+    navigate: (url: string) => any;
+}
 
-export default connect(
-    null,
-    mapDispatchToProps
-)(Import);
+const Login: React.SFC<IImportProps> = (props) => {
+    return (
+        <ImportForm navigate={props.navigate} />
+    );
+};
+
+const mapStateToProps = (state: IRootState) => ({
+    isLoggingIn: state.auth.isLoggingIn
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+    navigate: (url: string) => dispatch(push(url))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
