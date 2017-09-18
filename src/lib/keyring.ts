@@ -37,7 +37,6 @@ export default class Keyring {
     constructor(password: string, publicKey: string, encKey: string) {
         this.publicKey = publicKey;
         this.privateKey = this.decrypt(encKey, password);
-        console.log(this.privateKey);
     }
 
     decrypt(encKey: string, password: string): string {
