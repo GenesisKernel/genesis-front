@@ -62,7 +62,7 @@ class General extends React.Component<IGeneralProps> {
     }
 
     render() {
-        if (this.props.isLoading || this.props.isLoggingIn) {
+        if (this.props.isLoading && this.props.isLoggingIn) {
             return (
                 <Splash />
             );

@@ -37,7 +37,6 @@ class Install extends React.Component<IInstallProps> {
     }
 
     onSubmit(values: IInstallParams) {
-        console.log('SUBMIT::', values);
         this.props.install(values);
     }
 
