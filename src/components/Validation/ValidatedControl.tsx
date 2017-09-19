@@ -46,6 +46,7 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
                 inputRef={this.props.inputRef}
                 type={this.props.type}
                 defaultValue={this.props.defaultValue}
+                value={this.props.value}
             >
                 {this.props.children}
             </FormControl>
