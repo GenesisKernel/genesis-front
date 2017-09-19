@@ -18,6 +18,7 @@ import * as React from 'react';
 import { Form, FormProps } from 'react-bootstrap';
 import ValidatedFormGroup from './ValidatedFormGroup';
 import ValidatedControl from './ValidatedControl';
+import ValidatedTextarea from './ValidatedTextarea';
 import ValidatedSelect from './ValidatedSelect';
 import { IValidator } from './Validators';
 
@@ -130,7 +131,7 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
             const validators = node.props.validators as IValidator[];
 
             handler.events.forEach(event => {
-                newProps[event.event] = this._setListener2(inputName, validators, event.handler, node.props[event.event]);
+                newProps[event.event] = this._setListener(inputName, validators, event.handler, node.props[event.event]);
             });
 
             const element = React.cloneElement(node, newProps);
@@ -141,61 +142,9 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
         else {
             return React.cloneElement(node, {}, this._renderChildren(node.props && node.props.children));
         }
-        /*if (ValidatedControl === node.type) {
-            const inputName = node.props && node.props.name;
-
-            if (!inputName) {
-                throw new Error('Validation input is missing "name" attribute');
-            }
-
-            const newProps = {
-                _registerElement: (defaultValue: string) => {
-                    if (defaultValue) {
-                        this._payload[inputName] = this.validate(inputName, defaultValue);
-                    }
-                },
-                _unregisterElement: this._unregisterElement.bind(this, inputName),
-            };
-
-            const { onChange, onBlur } = node.props;
-            const validators = node.props.validators as IValidator[];
-
-            if (validators && validators.length) {
-                newProps['onChange'] = this._setListener(inputName, validators, onChange);
-                newProps['onBlur'] = this._setListener(inputName, validators, onBlur);
-            }
-
-            const element = React.cloneElement(node, newProps);
-            this._registerElement(node.props.name, element, node.props.validators);
-
-            return element;
-        }
-        else if (ValidatedFormGroup === node.type) {
-            const inputFor = node.props && node.props.for;
-            const newProps = {
-                error: this.state.payload[inputFor] === false
-            };
-            return React.cloneElement(node, newProps, this._renderChildren(node.props && node.props.children));
-        }
-        else {
-            return React.cloneElement(node, {}, this._renderChildren(node.props && node.props.children));
-        }*/
     }
 
-    /*private _setListener(name: string, validators: IValidator[], oldHandler: Function) {
-        return (e: React.ChangeEvent<HTMLInputElement>) => {
-            this.setState({
-                payload: {
-                    ...this.state.payload,
-                    [name]: !this.validate(name, e.target.value).error
-                }
-            });
-            this._payload[name] = this.validate(name, e.target.value);
-            return oldHandler && oldHandler(e);
-        };
-    }*/
-
-    private _setListener2(name: string, validators: IValidator[], valueResolver: (e: React.SyntheticEvent<any>) => any, oldHandler?: Function) {
+    private _setListener(name: string, validators: IValidator[], valueResolver: (e: React.SyntheticEvent<any>) => any, oldHandler?: Function) {
         return (e: React.SyntheticEvent<any>) => {
             const value = valueResolver(e);
             const result = this.validate(name, value);
@@ -319,6 +268,21 @@ ValidatedForm.registerHandler({
         {
             event: 'onChange',
             handler: (e: React.ChangeEvent<HTMLSelectElement>) => e.target.value
+        }
+    ]
+});
+
+ValidatedForm.registerHandler({
+    type: ValidatedTextarea,
+    binding: 'name',
+    events: [
+        {
+            event: 'onChange',
+            handler: (e: React.ChangeEvent<HTMLInputElement>) => e.target.value
+        },
+        {
+            event: 'onBlur',
+            handler: (e: React.ChangeEvent<HTMLInputElement>) => e.target.value
         }
     ]
 });

@@ -14,20 +14,27 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import ValidatedControl from './ValidatedControl';
-import ValidatedSelect from './ValidatedSelect';
-import ValidatedTextarea from './ValidatedTextarea';
-import ValidatedForm from './ValidatedForm';
-import ValidatedFormGroup from './ValidatedFormGroup';
-import * as validators from './Validators';
+import * as React from 'react';
+import { IValidator } from './Validators';
 
-export default {
-    components: {
-        ValidatedControl,
-        ValidatedSelect,
-        ValidatedTextarea,
-        ValidatedForm,
-        ValidatedFormGroup
-    },
-    validators
-};
+interface IValidatedTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+    validators?: IValidator[];
+    _registerElement?: (value: string) => void;
+    _unregisterElement?: () => void;
+}
+
+export default class ValidatedTextarea extends React.Component<IValidatedTextareaProps> {
+    componentDidMount() {
+        this.props._registerElement(this.props.defaultValue as string);
+    }
+
+    componentWillUnmount() {
+        this.props._unregisterElement();
+    }
+
+    render() {
+        return (
+            <textarea className="form-control" defaultValue={this.props.defaultValue} onChange={this.props.onChange} onBlur={this.props.onBlur} />
+        );
+    }
+}
