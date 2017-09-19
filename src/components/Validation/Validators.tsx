@@ -37,3 +37,9 @@ export const minLength = (count: number) => {
         return count <= value.length;
     }) as IValidator;
 };
+
+export const compare = (compareValue: any) => {
+    return ((value: any) => {
+        return compareValue === value;
+    }) as IValidator;
+};
