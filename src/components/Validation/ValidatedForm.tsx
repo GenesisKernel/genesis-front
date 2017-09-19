@@ -130,6 +130,8 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
 
             const validators = node.props.validators as IValidator[];
 
+            // TODO: Traverse props to find corresponding field value and fire validation events
+            // this is a required behaviour to validate controlled items that have values passed through props
             handler.events.forEach(event => {
                 newProps[event.event] = this._setListener(inputName, validators, event.handler, node.props[event.event]);
             });

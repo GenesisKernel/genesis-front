@@ -30,7 +30,10 @@ interface IRegisterFormProps {
 }
 
 interface IRegisterFormState {
-    seed: string;
+    seed?: string;
+    seedConfirmation?: string;
+    password?: string;
+    isConfirming?: boolean;
 }
 
 export default class extends React.Component<IRegisterFormProps, IRegisterFormState> {
@@ -39,15 +42,25 @@ export default class extends React.Component<IRegisterFormProps, IRegisterFormSt
     constructor(props: IRegisterFormProps) {
         super(props);
         this.state = {
-            seed: ''
+            seed: '',
+            seedConfirmation: '',
+            password: '',
+            isConfirming: false
         };
     }
 
     componentWillReceiveProps(props: IRegisterFormProps) {
         if (props.loadedSeed) {
-            this.setState({
-                seed: props.loadedSeed
-            });
+            if (this.state.isConfirming) {
+                this.setState({
+                    seedConfirmation: props.loadedSeed
+                });
+            }
+            else {
+                this.setState({
+                    seed: props.loadedSeed
+                });
+            }
         }
     }
 
@@ -56,7 +69,17 @@ export default class extends React.Component<IRegisterFormProps, IRegisterFormSt
     }
 
     onSubmit(values: { [key: string]: any }) {
-        console.log('Submit::', values);
+        if (this.state.isConfirming) {
+            console.log(values);
+        }
+        else {
+            this.setState({
+                isConfirming: true,
+                seed: values.seed,
+                password: values.password,
+                seedConfirmation: ''
+            });
+        }
     }
 
     onGenerate() {
@@ -68,6 +91,12 @@ export default class extends React.Component<IRegisterFormProps, IRegisterFormSt
     onSeedChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
         this.setState({
             seed: e.target.value
+        });
+    }
+
+    onSeedConfirmationChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+        this.setState({
+            seedConfirmation: e.target.value
         });
     }
 
@@ -85,64 +114,128 @@ export default class extends React.Component<IRegisterFormProps, IRegisterFormSt
         }
     }
 
+    onPasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
+        this.setState({
+            password: e.target.value
+        });
+    }
+
+    onBack() {
+        this.setState({
+            isConfirming: false
+        });
+    }
+
+    renderFirst() {
+        return (
+            <div key="firstStep">
+                <fieldset>
+                    <Validation.components.ValidatedFormGroup for="seed">
+                        <Col md={3}>
+                            <label className="control-label">
+                                <FormattedMessage id="auth.seed" defaultMessage="Account seed" />
+                            </label>
+                        </Col>
+                        <Col md={9}>
+                            <div>
+                                <Validation.components.ValidatedTextarea className="input-seed" onChange={this.onSeedChange.bind(this)} value={this.state.seed} name="seed" validators={[Validation.validators.required]} />
+                            </div>
+                            <Col md={4} className="pl0 pr0">
+                                <Button className="btn-block" onClick={this.onGenerate.bind(this)}>
+                                    <FormattedMessage id="auth.seed.generate" defaultMessage="Generate" />
+                                </Button>
+                            </Col>
+                            <Col md={4} className="pl0 pr0">
+                                <Button className="btn-block" disabled={!this.state.seed} onClick={this.onSave.bind(this)}>
+                                    <FormattedMessage id="auth.seed.save" defaultMessage="Save" />
+                                </Button>
+                            </Col>
+                            <Col md={4} className="pl0 pr0">
+                                <Button className="btn-block" onClick={this.onLoad.bind(this)}>
+                                    <FormattedMessage id="auth.seed.load" defaultMessage="Load" />
+                                </Button>
+                            </Col>
+                        </Col>
+                    </Validation.components.ValidatedFormGroup>
+                </fieldset>
+                <fieldset>
+                    <Validation.components.ValidatedFormGroup for="password">
+                        <Col md={3}>
+                            <label className="control-label">
+                                <FormattedMessage id="general.password" defaultMessage="Password" />
+                            </label>
+                        </Col>
+                        <Col md={9}>
+                            <Validation.components.ValidatedControl onChange={this.onPasswordChange.bind(this)} value={this.state.password} name="password" type="password" validators={[Validation.validators.required, Validation.validators.minLength(6)]} />
+                        </Col>
+                    </Validation.components.ValidatedFormGroup>
+                </fieldset>
+                <fieldset className="mb0">
+                    <p className="text-center">
+                        <FormattedMessage id="auth.remember.disclaimer.confirm" defaultMessage="Please make sure that you keep your passphrase (account seed) safe and remember the password. You will be asked to re-type them for confirmation" />
+                    </p>
+                </fieldset>
+            </div>
+        );
+    }
+
+    renderSecond() {
+        return (
+            <div key="secondStep">
+                <fieldset>
+                    <Validation.components.ValidatedFormGroup for="seedConfirm">
+                        <Col md={3}>
+                            <label className="control-label">
+                                <FormattedMessage id="auth.seed.repeat" defaultMessage="Repeat seed" />
+                            </label>
+                        </Col>
+                        <Col md={9}>
+                            <div>
+                                <Validation.components.ValidatedTextarea className="input-seed" onChange={this.onSeedConfirmationChange.bind(this)} value={this.state.seedConfirmation} name="seedConfirm" validators={[Validation.validators.required, Validation.validators.compare(this.state.seed)]} />
+                            </div>
+                            <Button className="btn-block" onClick={this.onLoad.bind(this)}>
+                                <FormattedMessage id="auth.seed.load" defaultMessage="Load" />
+                            </Button>
+                        </Col>
+                    </Validation.components.ValidatedFormGroup>
+                </fieldset>
+                <fieldset>
+                    <Validation.components.ValidatedFormGroup for="passwordConfirm">
+                        <Col md={3}>
+                            <label className="control-label">
+                                <FormattedMessage id="general.password.repeat" defaultMessage="Repeat password" />
+                            </label>
+                        </Col>
+                        <Col md={9}>
+                            <Validation.components.ValidatedControl name="passwordConfirm" type="password" validators={[Validation.validators.compare(this.state.password)]} />
+                        </Col>
+                    </Validation.components.ValidatedFormGroup>
+                </fieldset>
+                <fieldset className="mb0">
+                    <p className="text-center">
+                        <FormattedMessage id="auth.remember.disclaimer.confirm" defaultMessage="Please repeat your registraion values. This step is required to ensure that your passphrase and password are stored correctly" />
+                    </p>
+                </fieldset>
+            </div>
+        );
+    }
+
     render() {
         return (
-            <Validation.components.ValidatedForm className="form-horizontal component-register-form" onSubmit={this.onSubmit.bind(this)}>
+            <Validation.components.ValidatedForm className="form-horizontal component-register-form" onSubmitSuccess={this.onSubmit.bind(this)}>
                 <input type="file" className="hidden" onChange={this.onLoadSuccess.bind(this)} ref={l => this.inputFile = l} />
                 <div className="panel panel-info">
                     <div className="panel-heading">
                         <div className="panel-title">NL_REGISTER</div>
                     </div>
-                    <h2 className="text-center">
-                        <FormattedMessage id="auth.registration" defaultMessage="Registration" />
-                    </h2>
-                    <div className="panel-body pb0">
-                        <fieldset>
-                            <Validation.components.ValidatedFormGroup for="seed">
-                                <Col md={3}>
-                                    <label className="control-label">
-                                        <FormattedMessage id="auth.seed" defaultMessage="Account seed" />
-                                    </label>
-                                </Col>
-                                <Col md={9}>
-                                    <div>
-                                        <Validation.components.ValidatedTextarea className="input-seed" onChange={this.onSeedChange.bind(this)} value={this.state.seed} name="seed" validators={[Validation.validators.required]} />
-                                    </div>
-                                    <Col md={4} className="pl0 pr0">
-                                        <Button className="btn-block" onClick={this.onGenerate.bind(this)}>
-                                            <FormattedMessage id="auth.seed.generate" defaultMessage="Generate" />
-                                        </Button>
-                                    </Col>
-                                    <Col md={4} className="pl0 pr0">
-                                        <Button className="btn-block" disabled={!this.state.seed} onClick={this.onSave.bind(this)}>
-                                            <FormattedMessage id="auth.seed.save" defaultMessage="Save" />
-                                        </Button>
-                                    </Col>
-                                    <Col md={4} className="pl0 pr0">
-                                        <Button className="btn-block" onClick={this.onLoad.bind(this)}>
-                                            <FormattedMessage id="auth.seed.load" defaultMessage="Load" />
-                                        </Button>
-                                    </Col>
-                                </Col>
-                            </Validation.components.ValidatedFormGroup>
-                        </fieldset>
-                        <fieldset>
-                            <Validation.components.ValidatedFormGroup for="password">
-                                <Col md={3}>
-                                    <label className="control-label">
-                                        <FormattedMessage id="general.password" defaultMessage="Password" />
-                                    </label>
-                                </Col>
-                                <Col md={9}>
-                                    <Validation.components.ValidatedControl name="password" type="password" validators={[Validation.validators.required, Validation.validators.minLength(6)]} />
-                                </Col>
-                            </Validation.components.ValidatedFormGroup>
-                        </fieldset>
-                        <fieldset className="mb0">
-                            <p className="text-center">
-                                <FormattedMessage id="auth.remember.disclaimer" defaultMessage="Pleasem ake sure that you keep your passphrase (account seed) safe and remember the password. You will be asked to re-type them for confirmation" />
-                            </p>
-                        </fieldset>
+                    <div className="panel-body pt0 pb0">
+                        <div className="h2">
+                            <Button onClick={this.onBack.bind(this)} className="pull-left" bsStyle="link">&lt;- Back</Button>
+                            <div>
+                                <FormattedMessage id="auth.registration" defaultMessage="Registration" />
+                            </div>
+                        </div>
+                        {this.state.isConfirming ? this.renderSecond() : this.renderFirst()}
                     </div>
                     <div className="panel-footer">
                         <div className="clearfix">
@@ -164,7 +257,7 @@ export default class extends React.Component<IRegisterFormProps, IRegisterFormSt
                         </div>
                     </div>
                 </div>
-            </Validation.components.ValidatedForm>
+            </Validation.components.ValidatedForm >
         );
     }
 }
