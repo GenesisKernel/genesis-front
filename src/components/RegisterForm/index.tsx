@@ -15,26 +15,40 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { Button, Col, FormGroup } from 'react-bootstrap';
+import { Button, Col } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
+import Keyring from 'lib/keyring';
+import { sendAttachment } from 'lib/fs';
+import './registerForm.css';
 
 import Validation from 'components/Validation';
-import Checkbox from 'components/Checkbox';
 
-interface IAuthFormProps {
+interface IRegisterFormProps {
+    loadedSeed: string;
     navigate: (url: string) => void;
+    importSeed: (file: Blob) => void;
 }
 
-interface IAuthFormState {
-    remember: boolean;
+interface IRegisterFormState {
+    seed: string;
 }
 
-export default class extends React.Component<IAuthFormProps, IAuthFormState> {
-    constructor(props: IAuthFormProps) {
+export default class extends React.Component<IRegisterFormProps, IRegisterFormState> {
+    inputFile: HTMLInputElement;
+
+    constructor(props: IRegisterFormProps) {
         super(props);
         this.state = {
-            remember: false
+            seed: ''
         };
+    }
+
+    componentWillReceiveProps(props: IRegisterFormProps) {
+        if (props.loadedSeed) {
+            this.setState({
+                seed: props.loadedSeed
+            });
+        }
     }
 
     onActionChange(action: string) {
@@ -45,75 +59,96 @@ export default class extends React.Component<IAuthFormProps, IAuthFormState> {
         console.log('Submit::', values);
     }
 
-    onRememberToggle(e: React.ChangeEvent<HTMLInputElement>) {
+    onGenerate() {
         this.setState({
-            remember: e.target.checked
+            seed: Keyring.generateSeed()
         });
+    }
+
+    onSeedChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+        this.setState({
+            seed: e.target.value
+        });
+    }
+
+    onSave() {
+        sendAttachment('seed.txt', this.state.seed);
+    }
+
+    onLoad() {
+        this.inputFile.click();
+    }
+
+    onLoadSuccess(e: React.ChangeEvent<HTMLInputElement>) {
+        if (e.target.files && e.target.files[0]) {
+            this.props.importSeed(e.target.files[0]);
+        }
     }
 
     render() {
         return (
-            <Validation.components.ValidatedForm className="form-horizontal component-install-form" onSubmit={this.onSubmit.bind(this)}>
+            <Validation.components.ValidatedForm className="form-horizontal component-register-form" onSubmit={this.onSubmit.bind(this)}>
+                <input type="file" className="hidden" onChange={this.onLoadSuccess.bind(this)} ref={l => this.inputFile = l} />
                 <div className="panel panel-info">
                     <div className="panel-heading">
                         <div className="panel-title">NL_REGISTER</div>
                     </div>
                     <h2 className="text-center">
-                        <FormattedMessage id="auth.register" defaultMessage="Register" />
+                        <FormattedMessage id="auth.registration" defaultMessage="Registration" />
                     </h2>
                     <div className="panel-body pb0">
                         <fieldset>
-                            <FormGroup>
+                            <Validation.components.ValidatedFormGroup for="seed">
                                 <Col md={3}>
                                     <label className="control-label">
-                                        <FormattedMessage id="general.ecosystem" defaultMessage="Ecosystem" />
+                                        <FormattedMessage id="auth.seed" defaultMessage="Account seed" />
                                     </label>
                                 </Col>
                                 <Col md={9}>
-                                    <Validation.components.ValidatedSelect name="ecosystem"></Validation.components.ValidatedSelect>
-                                </Col>
-                            </FormGroup>
-                        </fieldset>
-                        <fieldset>
-                            <Validation.components.ValidatedFormGroup for="address">
-                                <Col md={3}>
-                                    <label className="control-label">
-                                        <FormattedMessage id="general.address" defaultMessage="Address" />
-                                    </label>
-                                </Col>
-                                <Col md={9}>
-                                    <Validation.components.ValidatedControl name="address" type="text" disabled validators={[Validation.validators.required]} />
+                                    <div>
+                                        <Validation.components.ValidatedTextarea className="input-seed" onChange={this.onSeedChange.bind(this)} value={this.state.seed} name="seed" validators={[Validation.validators.required]} />
+                                    </div>
+                                    <Col md={4} className="pl0 pr0">
+                                        <Button className="btn-block" onClick={this.onGenerate.bind(this)}>
+                                            <FormattedMessage id="auth.seed.generate" defaultMessage="Generate" />
+                                        </Button>
+                                    </Col>
+                                    <Col md={4} className="pl0 pr0">
+                                        <Button className="btn-block" disabled={!this.state.seed} onClick={this.onSave.bind(this)}>
+                                            <FormattedMessage id="auth.seed.save" defaultMessage="Save" />
+                                        </Button>
+                                    </Col>
+                                    <Col md={4} className="pl0 pr0">
+                                        <Button className="btn-block" onClick={this.onLoad.bind(this)}>
+                                            <FormattedMessage id="auth.seed.load" defaultMessage="Load" />
+                                        </Button>
+                                    </Col>
                                 </Col>
                             </Validation.components.ValidatedFormGroup>
                         </fieldset>
-                        {this.state.remember && (
-                            <fieldset className="mb0">
-                                <Validation.components.ValidatedFormGroup for="password">
-                                    <Col md={3}>
-                                        <label className="control-label">
-                                            <FormattedMessage id="general.password" defaultMessage="Password" />
-                                        </label>
-                                    </Col>
-                                    <Col md={9}>
-                                        <Validation.components.ValidatedControl name="password" type="password" validators={[Validation.validators.required]} />
-                                    </Col>
-                                </Validation.components.ValidatedFormGroup>
-                            </fieldset>
-                        )}
-                        <fieldset className="pb0 pt0 mb0 bb0">
-                            <FormGroup>
-                                <Col md={3}></Col>
-                                <Col md={9}>
-                                    <Checkbox title="NL_REMEMBER_ME" defaultChecked={this.state.remember} onChange={this.onRememberToggle.bind(this)} />
+                        <fieldset>
+                            <Validation.components.ValidatedFormGroup for="password">
+                                <Col md={3}>
+                                    <label className="control-label">
+                                        <FormattedMessage id="general.password" defaultMessage="Password" />
+                                    </label>
                                 </Col>
-                            </FormGroup>
+                                <Col md={9}>
+                                    <Validation.components.ValidatedControl name="password" type="password" validators={[Validation.validators.required, Validation.validators.minLength(6)]} />
+                                </Col>
+                            </Validation.components.ValidatedFormGroup>
+                        </fieldset>
+                        <fieldset className="mb0">
+                            <p className="text-center">
+                                <FormattedMessage id="auth.remember.disclaimer" defaultMessage="Pleasem ake sure that you keep your passphrase (account seed) safe and remember the password. You will be asked to re-type them for confirmation" />
+                            </p>
                         </fieldset>
                     </div>
                     <div className="panel-footer">
                         <div className="clearfix">
                             <Col md={4} className="text-left">
                                 <Button bsStyle="link" onClick={this.onActionChange.bind(this, 'import')}>
-                                    <FormattedMessage id="auth.account.import" defaultMessage="Import" />
+                                    <FormattedMessage id="auth.account.import" defaultMessage="Import account" />
                                 </Button>
                             </Col>
                             <Col md={4} className="text-center">
@@ -123,7 +158,7 @@ export default class extends React.Component<IAuthFormProps, IAuthFormState> {
                             </Col>
                             <Col md={4} className="text-right">
                                 <Button bsStyle="primary" type="submit">
-                                    <FormattedMessage id="auth.create" defaultMessage="Create" />
+                                    <FormattedMessage id="auth.create" defaultMessage="Create account" />
                                 </Button>
                             </Col>
                         </div>

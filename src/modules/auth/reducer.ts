@@ -19,6 +19,7 @@ import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 
 export type State = {
+    readonly loadedSeed: string;
     readonly isAuthenticated: boolean;
     readonly isLoggingIn: boolean;
     readonly wallet: string;
@@ -27,6 +28,7 @@ export type State = {
 };
 
 export const initialState: State = {
+    loadedSeed: null,
     isAuthenticated: false,
     isLoggingIn: false,
     wallet: null,
@@ -44,6 +46,13 @@ export default (state: State = initialState, action: Action): State => {
 
     if (isType(action, actions.login.done)) {
         // console.log(action.payload.result);
+    }
+
+    if (isType(action, actions.importSeed.done)) {
+        return {
+            ...state,
+            loadedSeed: action.payload.result
+        };
     }
 
     return state;

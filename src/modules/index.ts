@@ -28,7 +28,7 @@ export interface IRootState {
 
 export const rootEpic = combineEpics<any>(
     engine.epic,
-    auth.epic.epic,
+    auth.epic,
 );
 
 export default combineReducers<IRootState>({

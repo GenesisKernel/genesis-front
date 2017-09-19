@@ -18,15 +18,18 @@ import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { push } from 'react-router-redux';
 import { IRootState } from 'modules';
+import { actions } from 'modules/auth';
 
 import RegisterForm from 'components/RegisterForm';
 
 interface IRegisterProps {
+    loadedSeed: string;
     navigate: (url: string) => any;
+    importSeed: (file: Blob) => any;
 }
 
 const Register: React.SFC<IRegisterProps> = (props: IRegisterProps) => (
-    <RegisterForm navigate={props.navigate}>
+    <RegisterForm navigate={props.navigate} importSeed={props.importSeed} loadedSeed={props.loadedSeed}>
         <div>
             <h4 className="text-center">NL_CREATE_ACCOUNT</h4>
             <div className="form-horizontal">
@@ -60,11 +63,12 @@ const Register: React.SFC<IRegisterProps> = (props: IRegisterProps) => (
 );
 
 const mapStateToProps = (state: IRootState) => ({
-
+    loadedSeed: state.auth.loadedSeed
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-    navigate: (url: string) => dispatch(push(url))
+    navigate: (url: string) => dispatch(push(url)),
+    importSeed: (file: Blob) => dispatch(actions.importSeed.started(file))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Register);

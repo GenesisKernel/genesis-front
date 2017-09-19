@@ -53,7 +53,7 @@ export default class extends React.Component<IAuthFormProps, IAuthFormState> {
 
     render() {
         return (
-            <Validation.components.ValidatedForm className="form-horizontal component-install-form" onSubmit={this.onSubmit.bind(this)}>
+            <Validation.components.ValidatedForm className="form-horizontal" onSubmit={this.onSubmit.bind(this)}>
                 <div className="panel panel-info">
                     <div className="panel-heading">
                         <div className="panel-title">NL_AUTHORIZATION</div>
@@ -113,7 +113,7 @@ export default class extends React.Component<IAuthFormProps, IAuthFormState> {
                         <div className="clearfix">
                             <Col md={4} className="text-left">
                                 <Button bsStyle="link" onClick={this.onActionChange.bind(this, 'import')}>
-                                    <FormattedMessage id="auth.account.import" defaultMessage="Import" />
+                                    <FormattedMessage id="auth.account.import" defaultMessage="Import account" />
                                 </Button>
                             </Col>
                             <Col md={4} className="text-center">

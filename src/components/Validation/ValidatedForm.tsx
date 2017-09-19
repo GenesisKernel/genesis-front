@@ -234,6 +234,7 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
     render() {
         return (
             <Form
+                className={this.props.className}
                 onSubmit={this._onSubmit.bind(this)}
                 bsClass={this.props.bsClass}
                 componentClass={this.props.componentClass}

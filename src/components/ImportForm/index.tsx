@@ -72,7 +72,7 @@ export default class extends React.Component<IImportFormProps> {
                             </Col>
                             <Col md={4} className="text-right">
                                 <Button bsStyle="primary" type="submit">
-                                    <FormattedMessage id="auth.import" defaultMessage="Import" />
+                                    <FormattedMessage id="auth.import" defaultMessage="Import account" />
                                 </Button>
                             </Col>
                         </div>

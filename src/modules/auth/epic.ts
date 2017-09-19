@@ -16,10 +16,12 @@
 
 import api from 'lib/api';
 import { Action } from 'redux';
+import { combineEpics } from 'redux-observable';
 import { Observable } from 'rxjs';
 import * as actions from './actions';
+import { readTextFile } from 'lib/fs';
 
-export const epic = (actions$: Observable<Action>) =>
+export const loginEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.login.started.match)
         .switchMap(action => {
             const request = api.getUid().then(uid => {
@@ -38,3 +40,21 @@ export const epic = (actions$: Observable<Action>) =>
                 });
             });
         });
+
+export const importSeedEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.importSeed.started.match)
+        .switchMap(action => {
+            return Observable.from(readTextFile(action.payload)).map(payload => {
+                return actions.importSeed.done({
+                    params: null,
+                    result: payload
+                });
+            }).catch(e => {
+                return Observable.of(actions.importSeed.failed({
+                    params: null,
+                    error: null
+                }));
+            });
+        });
+
+export default combineEpics(loginEpic, importSeedEpic);
