@@ -36,6 +36,7 @@
         "no-any": false,
         "no-arg": true,
         "no-bitwise": true,
+        "jsx-no-bind": false,
         "no-console": [
             true,
             "log",
