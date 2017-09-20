@@ -15,6 +15,7 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import ValidatedControl from './ValidatedControl';
+import ValidatedCheckbox from './ValidatedCheckbox';
 import ValidatedSelect from './ValidatedSelect';
 import ValidatedTextarea from './ValidatedTextarea';
 import ValidatedForm from './ValidatedForm';
@@ -24,6 +25,7 @@ import * as validators from './Validators';
 export default {
     components: {
         ValidatedControl,
+        ValidatedCheckbox,
         ValidatedSelect,
         ValidatedTextarea,
         ValidatedForm,

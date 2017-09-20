@@ -15,18 +15,23 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { FormControl, FormControlProps } from 'react-bootstrap';
 import { IValidator } from './Validators';
 
-interface IValidatedControlProps extends FormControlProps {
+interface IValidatedCheckboxProps {
     validators?: IValidator[];
-    _registerElement?: (value: string) => void;
+    _registerElement?: (value: boolean) => void;
     _unregisterElement?: () => void;
+    name: string;
+    title: string;
+    className?: string;
+    defaultChecked?: boolean;
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
+    checked?: boolean;
 }
 
-export default class ValidatedControl extends React.Component<IValidatedControlProps> {
+export default class ValidatedCheckbox extends React.Component<IValidatedCheckboxProps> {
     componentDidMount() {
-        this.props._registerElement(this.props.defaultValue as string);
+        this.props._registerElement(this.props.defaultChecked);
     }
 
     componentWillUnmount() {
@@ -35,22 +40,13 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
 
     render() {
         return (
-            <FormControl
-                readOnly={this.props.readOnly}
-                disabled={this.props.disabled}
-                onChange={this.props.onChange}
-                onBlur={this.props.onBlur}
-                bsClass={this.props.bsClass}
-                bsSize={this.props.bsSize}
-                componentClass={this.props.componentClass}
-                id={this.props.id}
-                inputRef={this.props.inputRef}
-                type={this.props.type}
-                defaultValue={this.props.defaultValue}
-                value={this.props.value}
-            >
-                {this.props.children}
-            </FormControl>
+            <div className={`checkbox c-checkbox ${this.props.className}`}>
+                <label>
+                    <input type="checkbox" name={this.props.name} defaultChecked={this.props.defaultChecked} onChange={this.props.onChange} checked={this.props.checked} />
+                    <em className="fa fa-check" />
+                    <span>{this.props.title}</span>
+                </label>
+            </div>
         );
     }
 }

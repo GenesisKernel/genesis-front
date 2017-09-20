@@ -18,6 +18,7 @@ import * as React from 'react';
 import { Form, FormProps } from 'react-bootstrap';
 import ValidatedFormGroup from './ValidatedFormGroup';
 import ValidatedControl from './ValidatedControl';
+import ValidatedCheckbox from './ValidatedCheckbox';
 import ValidatedTextarea from './ValidatedTextarea';
 import ValidatedSelect from './ValidatedSelect';
 import { IValidator } from './Validators';
@@ -35,7 +36,7 @@ export interface IValidationResult {
     name: string;
     error: boolean;
     validator?: IValidator;
-    value?: string;
+    value?: any;
 }
 
 interface IValidationElement {
@@ -120,7 +121,7 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
             }
 
             const newProps = {
-                _registerElement: (defaultValue: string) => {
+                _registerElement: (defaultValue: any) => {
                     if (defaultValue) {
                         this._payload[inputName] = this.validate(inputName, defaultValue);
                     }
@@ -179,7 +180,7 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
         }
     }
 
-    validate(name: string, value: string): IValidationResult {
+    validate(name: string, value: any): IValidationResult {
         const element = this._elements[name];
         if (!element) {
             return null;
@@ -260,6 +261,17 @@ ValidatedForm.registerHandler({
         {
             event: 'onBlur',
             handler: (e: React.ChangeEvent<HTMLInputElement>) => e.target.value
+        }
+    ]
+});
+
+ValidatedForm.registerHandler({
+    type: ValidatedCheckbox,
+    binding: 'name',
+    events: [
+        {
+            event: 'onChange',
+            handler: (e: React.ChangeEvent<HTMLInputElement>) => e.target.checked
         }
     ]
 });

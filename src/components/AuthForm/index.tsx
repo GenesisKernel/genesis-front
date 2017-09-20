@@ -20,7 +20,6 @@ import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import storage, { IStoredKey } from 'lib/storage';
 
 import Validation from 'components/Validation';
-import Checkbox from 'components/Checkbox';
 
 interface IAuthFormProps extends InjectedIntlProps {
     navigate: (url: string) => void;
@@ -29,6 +28,7 @@ interface IAuthFormProps extends InjectedIntlProps {
 interface IAuthFormState {
     remember: boolean;
     accounts: IStoredKey[];
+    account: IStoredKey;
 }
 
 class AuthForm extends React.Component<IAuthFormProps, IAuthFormState> {
@@ -36,13 +36,15 @@ class AuthForm extends React.Component<IAuthFormProps, IAuthFormState> {
         super(props);
         this.state = {
             remember: false,
-            accounts: []
+            accounts: [],
+            account: null
         };
     }
 
     componentWillMount() {
         this.setState({
-            accounts: storage.accounts.loadAll()
+            accounts: storage.accounts.loadAll(),
+            account: null
         });
     }
 
@@ -51,12 +53,22 @@ class AuthForm extends React.Component<IAuthFormProps, IAuthFormState> {
     }
 
     onSubmit(values: { [key: string]: any }) {
-        console.log('Submit::', values);
+        console.log('LOGIN::', {
+            account: this.state.account.address,
+            password: values.password,
+            remember: values.remember
+        });
+    }
+
+    onSelectAccount(account: IStoredKey) {
+        this.setState({
+            account
+        });
     }
 
     render() {
         return (
-            <Validation.components.ValidatedForm className="form-horizontal" onSubmit={this.onSubmit.bind(this)}>
+            <Validation.components.ValidatedForm className="form-horizontal" onSubmitSuccess={this.onSubmit.bind(this)}>
                 <div className="panel panel-info">
                     <div className="panel-heading">
                         <div className="panel-title">NL_AUTHORIZATION</div>
@@ -68,7 +80,7 @@ class AuthForm extends React.Component<IAuthFormProps, IAuthFormState> {
                         <ul>
                             {this.state.accounts.map(l => (
                                 <li key={l.id}>
-                                    <Button bsStyle="link">{l.address}</Button>
+                                    <Button bsStyle="link" onClick={this.onSelectAccount.bind(this, l)}>{l.address}</Button>
                                 </li>
                             ))}
                         </ul>
@@ -96,7 +108,7 @@ class AuthForm extends React.Component<IAuthFormProps, IAuthFormState> {
                                     </label>
                                 </Col>
                                 <Col md={9}>
-                                    <Validation.components.ValidatedControl name="address" type="text" disabled validators={[Validation.validators.required]} />
+                                    <Validation.components.ValidatedControl name="address" type="text" readOnly value={this.state.account ? this.state.account.address : ''} validators={[Validation.validators.required]} />
                                 </Col>
                             </Validation.components.ValidatedFormGroup>
                         </fieldset>
@@ -116,7 +128,7 @@ class AuthForm extends React.Component<IAuthFormProps, IAuthFormState> {
                             <FormGroup>
                                 <Col md={3}></Col>
                                 <Col md={9}>
-                                    <Checkbox title="NL_REMEMBER_ME" />
+                                    <Validation.components.ValidatedCheckbox name="remember" title={this.props.intl.formatMessage({ id: 'general.remember', defaultMessage: 'Remember password' })} />
                                 </Col>
                             </FormGroup>
                         </fieldset>
