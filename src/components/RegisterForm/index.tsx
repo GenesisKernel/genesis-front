@@ -243,7 +243,9 @@ export default class extends React.Component<IRegisterFormProps, IRegisterFormSt
                     </div>
                     <div className="panel-body pt0 pb0">
                         <div className="h2">
-                            <Button onClick={this.onBack.bind(this)} className="pull-left" bsStyle="link">&lt;- Back</Button>
+                            {this.state.isConfirming ? (
+                                <Button onClick={this.onBack.bind(this)} className="pull-left" bsStyle="link">&lt;- Back</Button>
+                            ) : null}
                             <div>
                                 <FormattedMessage id="auth.registration" defaultMessage="Registration" />
                             </div>

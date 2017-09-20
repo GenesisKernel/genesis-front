@@ -117,7 +117,7 @@ class AuthForm extends React.Component<IAuthFormProps, IAuthFormState> {
                                 </Col>
                             </Validation.components.ValidatedFormGroup>
                         </fieldset>
-                        <fieldset className="mb0">
+                        <fieldset>
                             <Validation.components.ValidatedFormGroup for="password">
                                 <Col md={3}>
                                     <label className="control-label">
@@ -129,11 +129,11 @@ class AuthForm extends React.Component<IAuthFormProps, IAuthFormState> {
                                 </Col>
                             </Validation.components.ValidatedFormGroup>
                         </fieldset>
-                        <fieldset className="pb0 pt0 mb0 bb0">
+                        <fieldset className="mb0 bb0" style={{ paddingBottom: 12 }}>
                             <FormGroup>
-                                <Col md={3}/>
+                                <Col md={3} />
                                 <Col md={9}>
-                                    <Validation.components.ValidatedCheckbox name="remember" title={this.props.intl.formatMessage({ id: 'general.remember', defaultMessage: 'Remember password' })} />
+                                    <Validation.components.ValidatedCheckbox className="pt0" name="remember" title={this.props.intl.formatMessage({ id: 'general.remember', defaultMessage: 'Remember password' })} />
                                 </Col>
                             </FormGroup>
                         </fieldset>
