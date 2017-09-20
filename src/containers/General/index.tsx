@@ -31,7 +31,7 @@ import Offline from './containers/Offline';
 interface IGeneralProps {
     locale: string;
     isLoading: boolean;
-    isLoggingIn: boolean;
+    isConnecting: boolean;
     isConnected: boolean;
     isInstalled: boolean;
     uid: string;
@@ -46,7 +46,7 @@ class General extends React.Component<IGeneralProps> {
     }
 
     componentWillReceiveProps(props: IGeneralProps) {
-        if (props.isLoading && !props.isLoggingIn) {
+        if (props.isLoading && !props.isConnecting) {
             this.props.setLoading(false);
 
             if (!props.isConnected) {
@@ -62,7 +62,7 @@ class General extends React.Component<IGeneralProps> {
     }
 
     render() {
-        if (this.props.isLoading && this.props.isLoggingIn) {
+        if (this.props.isLoading && this.props.isConnecting) {
             return (
                 <Splash />
             );
@@ -88,7 +88,7 @@ const mapStateToProps = (state: IRootState) => ({
     isLoading: state.engine.isLoading,
     isConnected: state.engine.isConnected,
     isInstalled: state.engine.isInstalled,
-    isLoggingIn: state.engine.isLoggingIn,
+    isConnecting: state.engine.isConnecting,
     uid: state.engine.uid
 });
 

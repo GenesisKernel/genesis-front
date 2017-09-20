@@ -26,7 +26,7 @@ export type State = {
     readonly isInstalling: boolean;
     readonly isLoading: boolean;
     readonly isConnected: boolean;
-    readonly isLoggingIn: boolean;
+    readonly isConnecting: boolean;
 };
 
 export const initialState: State = {
@@ -37,7 +37,7 @@ export const initialState: State = {
     isInstalling: false,
     isLoading: true,
     isConnected: null,
-    isLoggingIn: false
+    isConnecting: false
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -46,7 +46,7 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             uid: null,
             session: null,
-            isLoggingIn: true
+            isConnecting: true
         };
     }
 
@@ -57,7 +57,7 @@ export default (state: State = initialState, action: Action): State => {
             session: action.payload.result.session,
             isConnected: true,
             isInstalled: true,
-            isLoggingIn: false
+            isConnecting: false
         };
     }
 
@@ -70,7 +70,7 @@ export default (state: State = initialState, action: Action): State => {
                     session: null,
                     isInstalled: false,
                     isConnected: true,
-                    isLoggingIn: false
+                    isConnecting: false
                 };
 
             default:
@@ -79,7 +79,7 @@ export default (state: State = initialState, action: Action): State => {
                     uid: null,
                     session: null,
                     isConnected: false,
-                    isLoggingIn: false
+                    isConnecting: false
                 };
         }
     }

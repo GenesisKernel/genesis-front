@@ -22,7 +22,7 @@ import { IRootState } from 'modules';
 import { actions } from 'modules/engine';
 
 interface IOfflineProps {
-    isLoggingIn: boolean;
+    isConnecting: boolean;
     isConnected: boolean;
     identity: () => any;
     navigate: (url: string) => any;
@@ -56,7 +56,7 @@ class Offline extends React.Component<IOfflineProps, IOfflineState> {
             this.props.setLoading(true);
             this.props.navigate('/');
         }
-        else if (!props.isLoggingIn) {
+        else if (!props.isConnecting) {
             this.resetTimer();
         }
     }
@@ -86,10 +86,10 @@ class Offline extends React.Component<IOfflineProps, IOfflineState> {
         return (
             <Panel bsStyle="info" header="NL_APLA" className="text-center">
                 <h2>NL_SERVICE_OFFLINE</h2>
-                {this.props.isLoggingIn && (<h4>NL_CONNECTING...</h4>)}
-                {!this.props.isLoggingIn && (<h4>NL_Retry in {this.state.seconds} sec</h4>)}
+                {this.props.isConnecting && (<h4>NL_CONNECTING...</h4>)}
+                {!this.props.isConnecting && (<h4>NL_Retry in {this.state.seconds} sec</h4>)}
                 <div>
-                    <Button disabled={this.props.isLoggingIn} onClick={this.props.identity.bind(this)}>NL_RETRY</Button>
+                    <Button disabled={this.props.isConnecting} onClick={this.props.identity.bind(this)}>NL_RETRY</Button>
                 </div>
             </Panel>
         );
@@ -97,7 +97,7 @@ class Offline extends React.Component<IOfflineProps, IOfflineState> {
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    isLoggingIn: state.engine.isLoggingIn,
+    isConnecting: state.engine.isConnecting,
     isConnected: state.engine.isConnected,
 });
 

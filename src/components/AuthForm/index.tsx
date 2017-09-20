@@ -92,20 +92,6 @@ class AuthForm extends React.Component<IAuthFormProps, IAuthFormState> {
                     </div>
                     <div className="panel-body pb0">
                         <fieldset>
-                            <FormGroup>
-                                <Col md={3}>
-                                    <label className="control-label">
-                                        <FormattedMessage id="general.ecosystem" defaultMessage="Ecosystem" />
-                                    </label>
-                                </Col>
-                                <Col md={9}>
-                                    <Validation.components.ValidatedSelect name="ecosystem">
-                                        <option>{this.props.intl.formatMessage({ id: 'ecosystem.none', defaultMessage: 'None' })}</option>
-                                    </Validation.components.ValidatedSelect>
-                                </Col>
-                            </FormGroup>
-                        </fieldset>
-                        <fieldset>
                             <Validation.components.ValidatedFormGroup for="address">
                                 <Col md={3}>
                                     <label className="control-label">
@@ -116,6 +102,20 @@ class AuthForm extends React.Component<IAuthFormProps, IAuthFormState> {
                                     <Validation.components.ValidatedControl name="address" type="text" readOnly value={this.state.account ? this.state.account.address : ''} validators={[Validation.validators.required]} />
                                 </Col>
                             </Validation.components.ValidatedFormGroup>
+                        </fieldset>
+                        <fieldset>
+                            <FormGroup>
+                                <Col md={3}>
+                                    <label className="control-label">
+                                        <FormattedMessage id="general.ecosystem" defaultMessage="Ecosystem" />
+                                    </label>
+                                </Col>
+                                <Col md={9}>
+                                    <Validation.components.ValidatedSelect name="ecosystem" disabled={!this.state.account}>
+                                        <option>{this.props.intl.formatMessage({ id: 'ecosystem.none', defaultMessage: 'None' })}</option>
+                                    </Validation.components.ValidatedSelect>
+                                </Col>
+                            </FormGroup>
                         </fieldset>
                         <fieldset>
                             <Validation.components.ValidatedFormGroup for="password">

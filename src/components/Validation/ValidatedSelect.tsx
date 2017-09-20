@@ -20,6 +20,7 @@ import { IValidator } from './Validators';
 interface IValidatedSelectProps {
     name: string;
     validators?: IValidator[];
+    disabled?: boolean;
     _registerElement?: (value: string) => void;
     _unregisterElement?: () => void;
     defaultValue?: string;
@@ -37,7 +38,7 @@ export default class ValidatedSelect extends React.Component<IValidatedSelectPro
 
     render() {
         return (
-            <select className="form-control" name={this.props.name} defaultValue={this.props.defaultValue} onChange={this.props.onChange.bind(this)}>
+            <select className="form-control" disabled={this.props.disabled} name={this.props.name} defaultValue={this.props.defaultValue} onChange={this.props.onChange.bind(this)}>
                 {this.props.children}
             </select>
         );
