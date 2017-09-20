@@ -180,8 +180,9 @@ export default class Keyring {
     encKey: string;
     privateKey: string;
     accounts: IWalletData[] = [];
-    signAlg = 'SHA256withECDSA';
-    curveName = 'secp256r1';
+
+    static readonly signAlg = 'SHA256withECDSA';
+    static readonly curveName = 'secp256r1';
 
     static generateSeed = (count: number = 15) => {
         const result: string[] = [];
@@ -209,7 +210,7 @@ export default class Keyring {
             seedHex = hash.toString();
         }
 
-        const curveParams = KJUR.crypto.ECParameterDB.getByName('secp256r1');
+        const curveParams = KJUR.crypto.ECParameterDB.getByName(Keyring.curveName);
         const curveG = curveParams.G;
         const privateBig = new KJUR.BigInteger(seedHex, 16);
         const publicBig = curveG.multiply(privateBig);
@@ -248,18 +249,18 @@ export default class Keyring {
     verify(data: string = 'APLA'): boolean {
         const encryptedData = this.sign(data);
         const signature = new KJUR.crypto.Signature({
-            alg: this.signAlg,
+            alg: Keyring.signAlg,
             prov: 'cryptojs/jsrsa'
         });
 
-        signature.init({ xy: this.publicKey, curve: this.curveName });
+        signature.init({ xy: this.publicKey, curve: Keyring.curveName });
         signature.updateString(data);
         return signature.verify(encryptedData);
     }
 
     sign(data: string, privateKey: string = this.privateKey): string {
-        const signature = new KJUR.crypto.Signature({ alg: this.signAlg });
-        signature.init({ d: this.privateKey, curve: this.curveName });
+        const signature = new KJUR.crypto.Signature({ alg: Keyring.signAlg });
+        signature.init({ d: this.privateKey, curve: Keyring.curveName });
         signature.updateString(data);
         return signature.sign();
     }
