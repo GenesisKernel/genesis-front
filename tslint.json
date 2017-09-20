@@ -29,9 +29,11 @@
         "max-line-length": false,
         "member-ordering": [
             true,
-            "public-before-private",
-            "static-before-instance",
-            "variables-before-functions"
+            "private-instance-field",
+            "public-static-field",
+            "public-static-method",
+            "public-constructor",
+            "public-instance-method"
         ],
         "no-any": false,
         "no-arg": true,
