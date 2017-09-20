@@ -57,4 +57,30 @@ export const importSeedEpic = (actions$: Observable<Action>) =>
             });
         });
 
-export default combineEpics(loginEpic, importSeedEpic);
+export const createAccountEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.createAccount.started.match)
+        .switchMap(action => {
+            const promise = api.getUid().then(uid => {
+                const signature = action.payload.sign(uid.uid);
+                return api.login(uid.token, action.payload.getPublicKey(), signature);
+            })
+
+            return Observable.from(promise).map(payload => {
+                return actions.createAccount.done({
+                    params: null,
+                    result: {
+                        id: payload.wallet,
+                        encKey: action.payload.getEncKey(),
+                        publicKey: action.payload.getPublicKey(),
+                        address: payload.address
+                    }
+                });
+            }).catch(e => {
+                return Observable.of(actions.createAccount.failed({
+                    params: null,
+                    error: null
+                }));
+            });
+        });
+
+export default combineEpics(loginEpic, importSeedEpic, createAccountEpic);

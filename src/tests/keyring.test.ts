@@ -20,6 +20,20 @@ const MOCK_PASSWORD = '12345678';
 const MOCK_PUBLIC_KEY = '042e3077c513f3e2b7eaaeafb6ac299db932316e3b89fdcdde2eb0b524754b7a6893f5e11dfdba96ac47bf57e53e5fe46b958843cf54037b647b5abd7fa4403b97';
 const MOCK_ENCRYPTED_KEY = 'U2FsdGVkX19bpEaxxr9ZVpY05Iikcm1vgZsLWHNTv1dlUzqPpq9uKSOlc9z5PGMsKi12io/x7LFvAnXQSvOPCeWLTqKZGofMoZJGHqTUQ16gr2d1i/ZWuEUo0KGNWoBL';
 
+test('AES encrypt/decrypt sequence(valid)', () => {
+    const MOCK_DATA = 'Test case scenratio';
+    const encrypted = Keyring.encryptAES(MOCK_DATA, MOCK_PASSWORD);
+    const decrypted = Keyring.decryptAES(encrypted, MOCK_PASSWORD);
+    expect(MOCK_DATA === decrypted).toBeTruthy();
+});
+
+test('AES encrypt/decrypt sequence(invalid)', () => {
+    const MOCK_DATA = 'Test case scenratio';
+    const encrypted = Keyring.encryptAES(MOCK_DATA, MOCK_PASSWORD);
+    const decrypted = Keyring.decryptAES(encrypted, MOCK_PASSWORD + '1');
+    expect(MOCK_DATA === decrypted).toBeFalsy();
+});
+
 test('Keyring keypair generation using short(l < 64) seed', () => {
     const keyPair1 = Keyring.generateKeyPair('hello');
     const keyPair2 = Keyring.generateKeyPair('hello');
@@ -65,4 +79,13 @@ test('Keyring verification with invalid key', () => {
     const keyring = new Keyring('', '12345678', '12345678');
     const result = keyring.verify('test case #1');
     expect(result).toBe(false);
+});
+
+test('Complex encrypt/decrypt scenario', () => {
+    const seed = Keyring.generateSeed();
+    const keyPair = Keyring.generateKeyPair(seed);
+    const encKey = Keyring.encryptAES(keyPair.private, MOCK_PASSWORD);
+    const keyring = new Keyring(MOCK_PASSWORD, keyPair.public, encKey);
+    const result = keyring.verify('Test case scenario');
+    expect(result).toBeTruthy();
 });

@@ -17,23 +17,28 @@
 import * as actions from './actions';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
+import { IStoredKey } from 'lib/storage';
 
 export type State = {
     readonly loadedSeed: string;
     readonly isAuthenticated: boolean;
     readonly isLoggingIn: boolean;
+    readonly isCreatingAccount: boolean;
     readonly wallet: string;
     readonly sessionToken: string;
     readonly refreshToken: string;
+    readonly createdAccount: IStoredKey;
 };
 
 export const initialState: State = {
     loadedSeed: null,
     isAuthenticated: false,
     isLoggingIn: false,
+    isCreatingAccount: false,
     wallet: null,
     sessionToken: null,
-    refreshToken: null
+    refreshToken: null,
+    createdAccount: null
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -52,6 +57,28 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             loadedSeed: action.payload.result
+        };
+    }
+
+    if (isType(action, actions.createAccount.started)) {
+        return {
+            ...state,
+            isCreatingAccount: true
+        };
+    }
+
+    if (isType(action, actions.createAccount.done)) {
+        return {
+            ...state,
+            isCreatingAccount: false,
+            createdAccount: action.payload.result
+        };
+    }
+
+    if (isType(action, actions.createAccount.failed)) {
+        return {
+            ...state,
+            isCreatingAccount: false
         };
     }
 

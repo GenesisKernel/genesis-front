@@ -18,20 +18,24 @@ import * as React from 'react';
 import { Button, Col } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import Keyring from 'lib/keyring';
+import storage, { IStoredKey } from 'lib/storage';
 import { sendAttachment } from 'lib/fs';
 import './registerForm.css';
 
 import Validation from 'components/Validation';
 
 interface IRegisterFormProps {
+    isCreatingAccount: boolean;
+    createdAccount: IStoredKey;
     loadedSeed: string;
     navigate: (url: string) => void;
     importSeed: (file: Blob) => void;
+    createAccount: (keyring: Keyring) => void;
 }
 
 interface IRegisterFormState {
     seed?: string;
-    seedConfirmation?: string;
+    seedConfirm?: string;
     password?: string;
     isConfirming?: boolean;
 }
@@ -43,7 +47,7 @@ export default class extends React.Component<IRegisterFormProps, IRegisterFormSt
         super(props);
         this.state = {
             seed: '',
-            seedConfirmation: '',
+            seedConfirm: '',
             password: '',
             isConfirming: false
         };
@@ -53,7 +57,7 @@ export default class extends React.Component<IRegisterFormProps, IRegisterFormSt
         if (props.loadedSeed) {
             if (this.state.isConfirming) {
                 this.setState({
-                    seedConfirmation: props.loadedSeed
+                    seedConfirm: props.loadedSeed
                 });
             }
             else {
@@ -61,6 +65,10 @@ export default class extends React.Component<IRegisterFormProps, IRegisterFormSt
                     seed: props.loadedSeed
                 });
             }
+        }
+
+        if (props.createdAccount) {
+            storage.accounts.save(props.createdAccount);
         }
     }
 
@@ -70,14 +78,18 @@ export default class extends React.Component<IRegisterFormProps, IRegisterFormSt
 
     onSubmit(values: { [key: string]: any }) {
         if (this.state.isConfirming) {
-            console.log(values);
+            const keyPair = Keyring.generateKeyPair(values.seedConfirm);
+            const encKey = Keyring.encryptAES(keyPair.private, values.passwordConfirm);
+            const keyring = new Keyring(values.passwordConfirm, keyPair.public, encKey);
+            this.props.createAccount(keyring);
+            this.props.navigate('/auth');
         }
         else {
             this.setState({
                 isConfirming: true,
                 seed: values.seed,
                 password: values.password,
-                seedConfirmation: ''
+                seedConfirm: ''
             });
         }
     }
@@ -96,7 +108,7 @@ export default class extends React.Component<IRegisterFormProps, IRegisterFormSt
 
     onSeedConfirmationChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
         this.setState({
-            seedConfirmation: e.target.value
+            seedConfirm: e.target.value
         });
     }
 
@@ -111,6 +123,7 @@ export default class extends React.Component<IRegisterFormProps, IRegisterFormSt
     onLoadSuccess(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.files && e.target.files[0]) {
             this.props.importSeed(e.target.files[0]);
+            e.target.value = '';
         }
     }
 
@@ -191,7 +204,7 @@ export default class extends React.Component<IRegisterFormProps, IRegisterFormSt
                         </Col>
                         <Col md={9}>
                             <div>
-                                <Validation.components.ValidatedTextarea className="input-seed" onChange={this.onSeedConfirmationChange.bind(this)} value={this.state.seedConfirmation} name="seedConfirm" validators={[Validation.validators.required, Validation.validators.compare(this.state.seed)]} />
+                                <Validation.components.ValidatedTextarea className="input-seed" onChange={this.onSeedConfirmationChange.bind(this)} value={this.state.seedConfirm} name="seedConfirm" validators={[Validation.validators.required, Validation.validators.compare(this.state.seed)]} />
                             </div>
                             <Button className="btn-block" onClick={this.onLoad.bind(this)}>
                                 <FormattedMessage id="auth.seed.load" defaultMessage="Load" />
@@ -213,7 +226,7 @@ export default class extends React.Component<IRegisterFormProps, IRegisterFormSt
                 </fieldset>
                 <fieldset className="mb0">
                     <p className="text-center">
-                        <FormattedMessage id="auth.remember.disclaimer.confirm" defaultMessage="Please repeat your registraion values. This step is required to ensure that your passphrase and password are stored correctly" />
+                        <FormattedMessage id="auth.remember.disclaimer.confirm" defaultMessage="Please repeat your registration values. This step is required to ensure that your passphrase and password are stored correctly" />
                     </p>
                 </fieldset>
             </div>
@@ -250,7 +263,7 @@ export default class extends React.Component<IRegisterFormProps, IRegisterFormSt
                                 </Button>
                             </Col>
                             <Col md={4} className="text-right">
-                                <Button bsStyle="primary" type="submit">
+                                <Button bsStyle="primary" type="submit" disabled={this.state.isConfirming && this.props.isCreatingAccount}>
                                     <FormattedMessage id="auth.create" defaultMessage="Create account" />
                                 </Button>
                             </Col>

@@ -16,25 +16,34 @@
 
 import * as React from 'react';
 import { Button, Col, FormGroup } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
+import storage, { IStoredKey } from 'lib/storage';
 
 import Validation from 'components/Validation';
 import Checkbox from 'components/Checkbox';
 
-interface IAuthFormProps {
+interface IAuthFormProps extends InjectedIntlProps {
     navigate: (url: string) => void;
 }
 
 interface IAuthFormState {
     remember: boolean;
+    accounts: IStoredKey[];
 }
 
-export default class extends React.Component<IAuthFormProps, IAuthFormState> {
+class AuthForm extends React.Component<IAuthFormProps, IAuthFormState> {
     constructor(props: IAuthFormProps) {
         super(props);
         this.state = {
-            remember: false
+            remember: false,
+            accounts: []
         };
+    }
+
+    componentWillMount() {
+        this.setState({
+            accounts: storage.accounts.loadAll()
+        });
     }
 
     onActionChange(action: string) {
@@ -43,12 +52,6 @@ export default class extends React.Component<IAuthFormProps, IAuthFormState> {
 
     onSubmit(values: { [key: string]: any }) {
         console.log('Submit::', values);
-    }
-
-    onRememberToggle(e: React.ChangeEvent<HTMLInputElement>) {
-        this.setState({
-            remember: e.target.checked
-        });
     }
 
     render() {
@@ -61,6 +64,15 @@ export default class extends React.Component<IAuthFormProps, IAuthFormState> {
                     <h2 className="text-center">
                         <FormattedMessage id="auth.login" defaultMessage="Login" />
                     </h2>
+                    <div className="text-center">
+                        <ul>
+                            {this.state.accounts.map(l => (
+                                <li key={l.id}>
+                                    <Button bsStyle="link">{l.address}</Button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                     <div className="panel-body pb0">
                         <fieldset>
                             <FormGroup>
@@ -70,7 +82,9 @@ export default class extends React.Component<IAuthFormProps, IAuthFormState> {
                                     </label>
                                 </Col>
                                 <Col md={9}>
-                                    <Validation.components.ValidatedSelect name="ecosystem"></Validation.components.ValidatedSelect>
+                                    <Validation.components.ValidatedSelect name="ecosystem">
+                                        <option>{this.props.intl.formatMessage({ id: 'ecosystem.none', defaultMessage: 'None' })}</option>
+                                    </Validation.components.ValidatedSelect>
                                 </Col>
                             </FormGroup>
                         </fieldset>
@@ -86,25 +100,23 @@ export default class extends React.Component<IAuthFormProps, IAuthFormState> {
                                 </Col>
                             </Validation.components.ValidatedFormGroup>
                         </fieldset>
-                        {this.state.remember && (
-                            <fieldset className="mb0">
-                                <Validation.components.ValidatedFormGroup for="password">
-                                    <Col md={3}>
-                                        <label className="control-label">
-                                            <FormattedMessage id="general.password" defaultMessage="Password" />
-                                        </label>
-                                    </Col>
-                                    <Col md={9}>
-                                        <Validation.components.ValidatedControl name="password" type="password" validators={[Validation.validators.required]} />
-                                    </Col>
-                                </Validation.components.ValidatedFormGroup>
-                            </fieldset>
-                        )}
+                        <fieldset className="mb0">
+                            <Validation.components.ValidatedFormGroup for="password">
+                                <Col md={3}>
+                                    <label className="control-label">
+                                        <FormattedMessage id="general.password" defaultMessage="Password" />
+                                    </label>
+                                </Col>
+                                <Col md={9}>
+                                    <Validation.components.ValidatedControl name="password" type="password" validators={[Validation.validators.required]} />
+                                </Col>
+                            </Validation.components.ValidatedFormGroup>
+                        </fieldset>
                         <fieldset className="pb0 pt0 mb0 bb0">
                             <FormGroup>
                                 <Col md={3}></Col>
                                 <Col md={9}>
-                                    <Checkbox title="NL_REMEMBER_ME" defaultChecked={this.state.remember} onChange={this.onRememberToggle.bind(this)} />
+                                    <Checkbox title="NL_REMEMBER_ME" />
                                 </Col>
                             </FormGroup>
                         </fieldset>
@@ -133,3 +145,7 @@ export default class extends React.Component<IAuthFormProps, IAuthFormState> {
         );
     }
 }
+
+export default injectIntl(AuthForm, {
+    intlPropName: 'intl'
+});

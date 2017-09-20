@@ -15,8 +15,11 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import actionCreatorFactory from 'typescript-fsa';
+import Keyring from 'lib/keyring';
+import { IStoredKey } from 'lib/storage';
 
 const actionCreator = actionCreatorFactory('auth');
 export const login = actionCreator.async<string, { test: string, result: boolean }, void>('LOGIN');
 export const setAction = actionCreator<string>('SET_ACTION');
 export const importSeed = actionCreator.async<Blob, string, void>('IMPORT_SEED');
+export const createAccount = actionCreator.async<Keyring, IStoredKey, void>('CREATE_ACCOUNT');

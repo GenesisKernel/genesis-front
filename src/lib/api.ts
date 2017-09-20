@@ -51,6 +51,10 @@ export interface IGetUidResponse extends IResponse {
 }
 
 export interface ILoginResponse extends IResponse {
+    token: string;
+    refresh: string;
+    state: string;
+    wallet: string;
     address: string;
 }
 

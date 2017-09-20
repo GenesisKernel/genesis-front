@@ -19,17 +19,24 @@ import { connect, Dispatch } from 'react-redux';
 import { push } from 'react-router-redux';
 import { IRootState } from 'modules';
 import { actions } from 'modules/auth';
+import { IStoredKey } from 'lib/storage';
+import Keyring from 'lib/keyring';
 
 import RegisterForm from 'components/RegisterForm';
 
 interface IRegisterProps {
+    session: string;
+    uid: string;
+    isCreatingAccount: boolean;
     loadedSeed: string;
+    createdAccount: IStoredKey;
     navigate: (url: string) => any;
     importSeed: (file: Blob) => any;
+    createAccount: (keyring: Keyring) => any;
 }
 
 const Register: React.SFC<IRegisterProps> = (props: IRegisterProps) => (
-    <RegisterForm navigate={props.navigate} importSeed={props.importSeed} loadedSeed={props.loadedSeed}>
+    <RegisterForm {...props}>
         <div>
             <h4 className="text-center">NL_CREATE_ACCOUNT</h4>
             <div className="form-horizontal">
@@ -63,12 +70,17 @@ const Register: React.SFC<IRegisterProps> = (props: IRegisterProps) => (
 );
 
 const mapStateToProps = (state: IRootState) => ({
+    session: state.engine.session,
+    uid: state.engine.uid,
+    isCreatingAccount: state.auth.isCreatingAccount,
+    createdAccount: state.auth.createdAccount,
     loadedSeed: state.auth.loadedSeed
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
     navigate: (url: string) => dispatch(push(url)),
-    importSeed: (file: Blob) => dispatch(actions.importSeed.started(file))
+    importSeed: (file: Blob) => dispatch(actions.importSeed.started(file)),
+    createAccount: (keyring: Keyring) => dispatch(actions.createAccount.started(keyring))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Register);

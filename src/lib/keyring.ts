@@ -176,10 +176,9 @@ export interface IWalletData {
 }
 
 export default class Keyring {
-    publicKey: string;
-    encKey: string;
-    privateKey: string;
-    accounts: IWalletData[] = [];
+    private _publicKey: string;
+    private _encKey: string;
+    private _privateKey: string;
 
     static readonly signAlg = 'SHA256withECDSA';
     static readonly curveName = 'secp256r1';
@@ -221,7 +220,7 @@ export default class Keyring {
         const privateHex = ('0000000000' + privateBig.toString(16)).slice(-charLen);
         const xHex = ('0000000000' + valueX.toString(16)).slice(-charLen);
         const yHex = ('0000000000' + valueY.toString(16)).slice(-charLen);
-        const publicHex = xHex + yHex;
+        const publicHex = '04' + xHex + yHex;
 
         return {
             private: privateHex,
@@ -229,21 +228,26 @@ export default class Keyring {
         };
     }
 
-    constructor(password: string, publicKey: string, encKey: string) {
-        this.publicKey = publicKey;
-        this.privateKey = this.decrypt(encKey, password);
+    static encryptAES(data: string, password: string) {
+        return CryptoJS.AES.encrypt(data, password).toString();
     }
 
-    decrypt(encKey: string, password: string): string {
-        const decrypted = CryptoJS.AES.decrypt(encKey, password).toString(CryptoJS.enc.Hex);
-        let privateKey = '';
+    static decryptAES(data: string, password: string): string {
+        const decrypted = CryptoJS.AES.decrypt(data, password).toString(CryptoJS.enc.Hex);
+        let result = '';
 
         for (let i = 0; i < decrypted.length; i += 2) {
             const byte = parseInt(decrypted.substr(i, 2), 16);
-            privateKey += String.fromCharCode(byte);
+            result += String.fromCharCode(byte);
         }
 
-        return privateKey;
+        return result;
+    }
+
+    constructor(password: string, publicKey: string, encKey: string) {
+        this._publicKey = publicKey;
+        this._encKey = encKey;
+        this._privateKey = Keyring.decryptAES(encKey, password);
     }
 
     verify(data: string = 'APLA'): boolean {
@@ -253,15 +257,23 @@ export default class Keyring {
             prov: 'cryptojs/jsrsa'
         });
 
-        signature.init({ xy: this.publicKey, curve: Keyring.curveName });
+        signature.init({ xy: this._publicKey, curve: Keyring.curveName });
         signature.updateString(data);
         return signature.verify(encryptedData);
     }
 
-    sign(data: string, privateKey: string = this.privateKey): string {
+    sign(data: string, privateKey: string = this._privateKey): string {
         const signature = new KJUR.crypto.Signature({ alg: Keyring.signAlg });
-        signature.init({ d: this.privateKey, curve: Keyring.curveName });
+        signature.init({ d: this._privateKey, curve: Keyring.curveName });
         signature.updateString(data);
         return signature.sign();
+    }
+
+    getPublicKey() {
+        return this._publicKey.slice(2)
+    }
+
+    getEncKey() {
+        return this._encKey;
     }
 }

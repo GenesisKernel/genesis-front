@@ -28,7 +28,7 @@ interface ILoginProps {
 
 const Login: React.SFC<ILoginProps> = (props) => {
     return (
-        <AuthForm navigate={props.navigate} />
+        <AuthForm navigate={props.navigate} intl={null} />
     );
 };
 
