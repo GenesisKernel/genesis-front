@@ -192,6 +192,42 @@ export default class Keyring {
         return result.join(' ');
     }
 
+    static generateKeyPair(seed: string) {
+        const seedLower = seed.toLowerCase();
+        let seedHex = '';
+        for (let i = 0; i < seedLower.length; i++) {
+            const char = seedLower[i];
+            if (('0' <= char && '9' >= char) || ('a' <= char && 'f' >= char)) {
+                seedHex += char;
+            }
+            if (64 === seedHex.length) {
+                break;
+            }
+        }
+        if (64 > seedHex.length) {
+            const hash = CryptoJS.SHA256(seed);
+            seedHex = hash.toString();
+        }
+
+        const curveParams = KJUR.crypto.ECParameterDB.getByName('secp256r1');
+        const curveG = curveParams.G;
+        const privateBig = new KJUR.BigInteger(seedHex, 16);
+        const publicBig = curveG.multiply(privateBig);
+        const valueX = publicBig.getX().toBigInteger();
+        const valueY = publicBig.getY().toBigInteger();
+        const charLen = curveParams.keylen / 4;
+
+        const privateHex = ('0000000000' + privateBig.toString(16)).slice(-charLen);
+        const xHex = ('0000000000' + valueX.toString(16)).slice(-charLen);
+        const yHex = ('0000000000' + valueY.toString(16)).slice(-charLen);
+        const publicHex = xHex + yHex;
+
+        return {
+            private: privateHex,
+            public: publicHex
+        };
+    }
+
     constructor(password: string, publicKey: string, encKey: string) {
         this.publicKey = publicKey;
         this.privateKey = this.decrypt(encKey, password);
