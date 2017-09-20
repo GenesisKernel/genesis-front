@@ -69,6 +69,7 @@ export default class extends React.Component<IRegisterFormProps, IRegisterFormSt
 
         if (props.createdAccount) {
             storage.accounts.save(props.createdAccount);
+            this.props.navigate('/auth');
         }
     }
 
@@ -82,7 +83,6 @@ export default class extends React.Component<IRegisterFormProps, IRegisterFormSt
             const encKey = Keyring.encryptAES(keyPair.private, values.passwordConfirm);
             const keyring = new Keyring(values.passwordConfirm, keyPair.public, encKey);
             this.props.createAccount(keyring);
-            this.props.navigate('/auth');
         }
         else {
             this.setState({

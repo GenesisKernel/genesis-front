@@ -55,11 +55,11 @@ class InstallForm extends React.Component<IInstallProps, IInstallState> {
     }
 
     onSubmit(values: { [key: string]: string }) {
-        this.props.onSubmit && this.props.onSubmit({
+        this.props.onSubmit({
             type: values.type,
             log_level: values.logLevel,
             db_host: values.dbHost,
-            db_port: parseInt(values.dbPort),
+            db_port: parseInt(values.dbPort, 10),
             db_name: values.dbName,
             db_user: values.dbUser,
             db_pass: values.dbPass,
@@ -116,7 +116,7 @@ class InstallForm extends React.Component<IInstallProps, IInstallState> {
                     {'PRIVATE_NET' === this.state.type && (
                         <fieldset className="mb0 bb0">
                             <FormGroup>
-                                <Col md={3}></Col>
+                                <Col md={3} />
                                 <Col md={9}>
                                     <Checkbox title={this.props.intl.formatMessage({ id: 'install.first_block_generate', defaultMessage: 'Generate first block' })} checked={this.state.generateFirst} onChange={this.onGenerateFirstChange.bind(this)} />
                                 </Col>

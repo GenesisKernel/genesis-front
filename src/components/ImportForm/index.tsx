@@ -56,8 +56,7 @@ export default class extends React.Component<IImportFormProps> {
                     <h2 className="text-center">
                         <FormattedMessage id="auth.import" defaultMessage="Import" />
                     </h2>
-                    <div className="panel-body pb0">
-                    </div>
+                    <div className="panel-body pb0"/>
                     <div className="panel-footer">
                         <div className="clearfix">
                             <Col md={4} className="text-left">

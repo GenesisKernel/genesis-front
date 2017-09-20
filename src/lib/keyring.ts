@@ -269,8 +269,10 @@ export default class Keyring {
         return signature.sign();
     }
 
-    getPublicKey() {
-        return this._publicKey.slice(2)
+    // Use truncate to remove redundant leading value(04). Use truncated value to send
+    // requests to the api and use non-truncated version while working with JS code
+    getPublicKey(truncate: boolean = true) {
+        return truncate ? this._publicKey.slice(2) : this._publicKey;
     }
 
     getEncKey() {

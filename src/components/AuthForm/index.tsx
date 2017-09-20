@@ -18,11 +18,13 @@ import * as React from 'react';
 import { Button, Col, FormGroup } from 'react-bootstrap';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import storage, { IStoredKey } from 'lib/storage';
+import Keyring from 'lib/keyring';
 
 import Validation from 'components/Validation';
 
 interface IAuthFormProps extends InjectedIntlProps {
     navigate: (url: string) => void;
+    login: (keyring: Keyring, account: IStoredKey, remember: boolean) => void;
 }
 
 interface IAuthFormState {
@@ -53,11 +55,14 @@ class AuthForm extends React.Component<IAuthFormProps, IAuthFormState> {
     }
 
     onSubmit(values: { [key: string]: any }) {
-        console.log('LOGIN::', {
-            account: this.state.account.address,
-            password: values.password,
-            remember: values.remember
-        });
+        const keyring = new Keyring(values.password, this.state.account.publicKey, this.state.account.encKey);
+        if (keyring.verify()) {
+            this.props.login(keyring, this.state.account, values.remember);
+        }
+        else {
+            // TODO: Notification stub
+            alert('Invalid password');
+        }
     }
 
     onSelectAccount(account: IStoredKey) {
@@ -126,7 +131,7 @@ class AuthForm extends React.Component<IAuthFormProps, IAuthFormState> {
                         </fieldset>
                         <fieldset className="pb0 pt0 mb0 bb0">
                             <FormGroup>
-                                <Col md={3}></Col>
+                                <Col md={3}/>
                                 <Col md={9}>
                                     <Validation.components.ValidatedCheckbox name="remember" title={this.props.intl.formatMessage({ id: 'general.remember', defaultMessage: 'Remember password' })} />
                                 </Col>

@@ -15,27 +15,54 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import { Dispatch } from 'react-redux';
+import { push } from 'react-router-redux';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { IntlProvider } from 'react-intl';
 
 import General from 'containers/General';
+import Main from 'containers/Main';
 
 interface IAppProps {
     locale: string;
+    isAuthenticated: boolean;
+    navigate: (url: string) => any;
 }
 
-const App: React.SFC<IAppProps> = (props) => (
-    <IntlProvider locale={props.locale}>
-        <div className="container height-full">
-            <Route path="/" component={General} />
-        </div>
-    </IntlProvider>
-);
+class App extends React.Component<IAppProps> {
+    componentWillReceiveProps(props: IAppProps) {
+        if (this.props.isAuthenticated !== props.isAuthenticated) {
+            this.props.navigate('/');
+        }
+    }
+
+    render() {
+        return (
+            <IntlProvider locale={this.props.locale}>
+                <div className="container height-full">
+                    {this.props.isAuthenticated ?
+                        (
+                            <Route path="/" component={Main} />
+                        ) :
+                        (
+                            <Route path="/" component={General} />
+                        )
+                    }
+                </div>
+            </IntlProvider>
+        );
+    }
+}
 
 const mapStateToProps = (state: IRootState) => ({
-    locale: state.engine.locale
+    locale: state.engine.locale,
+    isAuthenticated: state.auth.isAuthenticated
 });
 
-export default connect(mapStateToProps, {}, null, { pure: false })(App);
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+    navigate: (url: string) => dispatch(push(url))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps, null, { pure: false })(App);

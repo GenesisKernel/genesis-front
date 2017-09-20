@@ -18,6 +18,7 @@ import * as actions from './actions';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { IStoredKey } from 'lib/storage';
+import Keyring from 'lib/keyring';
 
 export type State = {
     readonly loadedSeed: string;
@@ -28,6 +29,9 @@ export type State = {
     readonly sessionToken: string;
     readonly refreshToken: string;
     readonly createdAccount: IStoredKey;
+    readonly account: IStoredKey;
+    readonly keyring: Keyring;
+    readonly ecosystem: string;
 };
 
 export const initialState: State = {
@@ -38,19 +42,42 @@ export const initialState: State = {
     wallet: null,
     sessionToken: null,
     refreshToken: null,
-    createdAccount: null
+    createdAccount: null,
+    account: null,
+    keyring: null,
+    ecosystem: null
 };
 
 export default (state: State = initialState, action: Action): State => {
     if (isType(action, actions.login.started)) {
         return {
             ...state,
-            isLoggingIn: true
+            isAuthenticated: false,
+            isLoggingIn: true,
+            account: null,
+            sessionToken: null,
+            refreshToken: null
         };
     }
 
     if (isType(action, actions.login.done)) {
-        // console.log(action.payload.result);
+        return {
+            ...state,
+            isAuthenticated: true,
+            isLoggingIn: false,
+            account: action.payload.params.account,
+            ecosystem: action.payload.result.state,
+            sessionToken: action.payload.result.token,
+            refreshToken: action.payload.result.refresh,
+            keyring: action.payload.params.remember ? action.payload.params.keyring : null
+        };
+    }
+
+    if (isType(action, actions.login.failed)) {
+        return {
+            ...state,
+            isLoggingIn: false
+        };
     }
 
     if (isType(action, actions.importSeed.done)) {
@@ -63,7 +90,8 @@ export default (state: State = initialState, action: Action): State => {
     if (isType(action, actions.createAccount.started)) {
         return {
             ...state,
-            isCreatingAccount: true
+            isCreatingAccount: true,
+            createdAccount: null,
         };
     }
 
@@ -78,7 +106,8 @@ export default (state: State = initialState, action: Action): State => {
     if (isType(action, actions.createAccount.failed)) {
         return {
             ...state,
-            isCreatingAccount: false
+            isCreatingAccount: false,
+            createdAccount: null
         };
     }
 

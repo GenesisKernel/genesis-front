@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import api from 'lib/api';
+import api, { IAPIError } from 'lib/api';
 import { Action } from 'redux';
 import { combineEpics } from 'redux-observable';
 import { Observable } from 'rxjs';
@@ -24,20 +24,21 @@ import { readTextFile } from 'lib/fs';
 export const loginEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.login.started.match)
         .switchMap(action => {
-            const request = api.getUid().then(uid => {
-                return api.login(uid.token, '', '');
-            }).catch(e => {
-                return { error: 'test' };
+            const promise = api.getUid().then(uid => {
+                const signature = action.payload.keyring.sign(uid.uid);
+                return api.login(uid.token, action.payload.keyring.getPublicKey(), signature);
             });
 
-            return Observable.fromPromise(request).map(payload => {
+            return Observable.from(promise).map(payload => {
                 return actions.login.done({
-                    params: null,
-                    result: {
-                        test: '',
-                        result: true
-                    }
+                    params: action.payload,
+                    result: payload
                 });
+            }).catch((e: IAPIError) => {
+                return Observable.of(actions.login.failed({
+                    params: null,
+                    error: e.error
+                }));
             });
         });
 
@@ -63,7 +64,7 @@ export const createAccountEpic = (actions$: Observable<Action>) =>
             const promise = api.getUid().then(uid => {
                 const signature = action.payload.sign(uid.uid);
                 return api.login(uid.token, action.payload.getPublicKey(), signature);
-            })
+            });
 
             return Observable.from(promise).map(payload => {
                 return actions.createAccount.done({
@@ -71,7 +72,7 @@ export const createAccountEpic = (actions$: Observable<Action>) =>
                     result: {
                         id: payload.wallet,
                         encKey: action.payload.getEncKey(),
-                        publicKey: action.payload.getPublicKey(),
+                        publicKey: action.payload.getPublicKey(false),
                         address: payload.address
                     }
                 });

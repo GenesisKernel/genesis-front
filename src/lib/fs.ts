@@ -39,4 +39,4 @@ export const readTextFile = async (file: Blob) => {
         };
         reader.readAsText(file);
     });
-}
+};

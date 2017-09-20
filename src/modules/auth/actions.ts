@@ -16,10 +16,11 @@
 
 import actionCreatorFactory from 'typescript-fsa';
 import Keyring from 'lib/keyring';
+import { ILoginResponse } from 'lib/api';
 import { IStoredKey } from 'lib/storage';
 
 const actionCreator = actionCreatorFactory('auth');
-export const login = actionCreator.async<string, { test: string, result: boolean }, void>('LOGIN');
+export const login = actionCreator.async<{ keyring: Keyring, account: IStoredKey, remember: boolean }, ILoginResponse, string>('LOGIN');
 export const setAction = actionCreator<string>('SET_ACTION');
 export const importSeed = actionCreator.async<Blob, string, void>('IMPORT_SEED');
 export const createAccount = actionCreator.async<Keyring, IStoredKey, void>('CREATE_ACCOUNT');

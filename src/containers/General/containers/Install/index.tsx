@@ -42,7 +42,7 @@ class Install extends React.Component<IInstallProps> {
 
     render() {
         return (
-            <InstallForm ref="installForm" intl={null} isInstalling={this.props.isInstalling} onSubmit={this.onSubmit.bind(this)} />
+            <InstallForm intl={null} isInstalling={this.props.isInstalling} onSubmit={this.onSubmit.bind(this)} />
         );
     }
 }
