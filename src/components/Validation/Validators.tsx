@@ -21,6 +21,10 @@ export interface IValidator {
 export const required: IValidator = (value: string) => {
     const type = typeof value;
 
+    if (null === value) {
+        return false;
+    }
+
     switch (type) {
         case 'string': return value && !!value.length;
         case 'undefined': return false;

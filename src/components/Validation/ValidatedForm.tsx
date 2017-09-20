@@ -48,6 +48,7 @@ interface IValidationElement {
 interface IFormControl {
     type: React.ReactNode;
     binding: string;
+    getValue: (props: any) => any;
     events: { event: string, handler: (e: React.SyntheticEvent<any>) => any }[];
 }
 
@@ -122,20 +123,29 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
 
             const newProps = {
                 _registerElement: (defaultValue: any) => {
-                    if (defaultValue) {
+                    // Traverse props to find corresponding field value and fire validation events
+                    // this is a required behavior to validate controlled items that have values passed through props
+                    const controlledValue = handler.getValue(node.props);
+                    if (controlledValue) {
+                        this._reactListener(inputName, controlledValue, false);
+                    }
+                    else if (defaultValue) {
                         this._payload[inputName] = this.validate(inputName, defaultValue);
                     }
                 },
                 _unregisterElement: this._unregisterElement.bind(this, inputName),
             };
 
-            const validators = node.props.validators as IValidator[];
-
-            // TODO: Traverse props to find corresponding field value and fire validation events
-            // this is a required behaviour to validate controlled items that have values passed through props
             handler.events.forEach(event => {
-                newProps[event.event] = this._setListener(inputName, validators, event.handler, node.props[event.event]);
+                newProps[event.event] = this._setListener(inputName, event.handler, node.props[event.event]);
             });
+
+            if (node.props) {
+                const controlledValue = handler.getValue(node.props);
+                if (controlledValue) {
+                    this._reactListener(inputName, controlledValue, false);
+                }
+            }
 
             const element = React.cloneElement(node, newProps);
             this._registerElement(node.props.name, element, node.props.validators);
@@ -147,19 +157,25 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
         }
     }
 
-    private _setListener(name: string, validators: IValidator[], valueResolver: (e: React.SyntheticEvent<any>) => any, oldHandler?: Function) {
+    private _setListener(name: string, valueResolver: (e: React.SyntheticEvent<any>) => any, oldHandler?: Function) {
         return (e: React.SyntheticEvent<any>) => {
             const value = valueResolver(e);
-            const result = this.validate(name, value);
+            this._reactListener(name, value);
+            return oldHandler && oldHandler(e);
+        };
+    }
+
+    private _reactListener(name: string, value: string, updateState: boolean = true) {
+        const result = this.validate(name, value);
+        if (updateState) {
             this.setState({
                 payload: {
                     ...this.state.payload,
                     [name]: result && !result.error
                 }
             });
-            this._payload[name] = this.validate(name, value);
-            return oldHandler && oldHandler(e);
-        };
+        }
+        this._payload[name] = result;
     }
 
     private _onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -253,6 +269,7 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
 ValidatedForm.registerHandler({
     type: ValidatedControl,
     binding: 'name',
+    getValue: (props: { value: string }) => props.value,
     events: [
         {
             event: 'onChange',
@@ -268,6 +285,7 @@ ValidatedForm.registerHandler({
 ValidatedForm.registerHandler({
     type: ValidatedCheckbox,
     binding: 'name',
+    getValue: (props: { checked: boolean }) => props.checked,
     events: [
         {
             event: 'onChange',
@@ -279,6 +297,7 @@ ValidatedForm.registerHandler({
 ValidatedForm.registerHandler({
     type: ValidatedSelect,
     binding: 'name',
+    getValue: (props: { value: string }) => props.value,
     events: [
         {
             event: 'onChange',
@@ -290,6 +309,7 @@ ValidatedForm.registerHandler({
 ValidatedForm.registerHandler({
     type: ValidatedTextarea,
     binding: 'name',
+    getValue: (props: { value: string }) => props.value,
     events: [
         {
             event: 'onChange',
