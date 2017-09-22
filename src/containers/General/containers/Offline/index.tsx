@@ -15,18 +15,17 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
-import { push } from 'react-router-redux';
+import { connect } from 'react-redux';
 import { Panel, Button } from 'react-bootstrap';
 import { IRootState } from 'modules';
-import { actions } from 'modules/engine';
+import { identity, navigate, setLoading } from 'modules/engine/actions';
 
 interface IOfflineProps {
     isConnecting: boolean;
     isConnected: boolean;
-    identity: () => any;
-    navigate: (url: string) => any;
-    setLoading: (value: boolean) => any;
+    identity?: typeof identity.started;
+    navigate?: typeof navigate;
+    setLoading?: typeof setLoading;
 }
 
 interface IOfflineState {
@@ -73,7 +72,7 @@ class Offline extends React.Component<IOfflineProps, IOfflineState> {
         const seconds = this.state.seconds - 1;
 
         if (0 >= seconds) {
-            this.props.identity();
+            this.props.identity(null);
         }
         else {
             this.setState({
@@ -101,10 +100,10 @@ const mapStateToProps = (state: IRootState) => ({
     isConnected: state.engine.isConnected,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-    identity: () => dispatch(actions.identity.started(null)),
-    navigate: (url: string) => dispatch(push(url)),
-    setLoading: (value: boolean) => dispatch(actions.setLoading(value))
-});
+const mapDispatchToProps = {
+    navigate,
+    setLoading,
+    identity: identity.started,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Offline);

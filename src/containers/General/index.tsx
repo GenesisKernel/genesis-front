@@ -15,12 +15,11 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
-import { push } from 'react-router-redux';
 import { Col, Row } from 'react-bootstrap';
 import { IRootState } from 'modules';
-import { actions } from 'modules/engine';
+import { setLoading, identity, navigate } from 'modules/engine/actions';
 
 import Splash from 'components/Splash';
 import Background from 'components/Background';
@@ -35,14 +34,14 @@ interface IGeneralProps {
     isConnected: boolean;
     isInstalled: boolean;
     uid: string;
-    setLoading: (value: boolean) => any;
-    identity: () => any;
-    navigate: (url: string) => any;
+    setLoading?: typeof setLoading;
+    identity?: typeof identity.started;
+    navigate?: typeof navigate;
 }
 
 class General extends React.Component<IGeneralProps> {
     componentDidMount() {
-        this.props.identity();
+        this.props.identity(null);
     }
 
     componentWillReceiveProps(props: IGeneralProps) {
@@ -92,10 +91,10 @@ const mapStateToProps = (state: IRootState) => ({
     uid: state.engine.uid
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-    setLoading: (value: boolean) => dispatch(actions.setLoading(value)),
-    identity: () => dispatch(actions.identity.started(null)),
-    navigate: (url: string) => dispatch(push(url))
-});
+const mapDispatchToProps = {
+    navigate,
+    setLoading,
+    identity: identity.started
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(General);

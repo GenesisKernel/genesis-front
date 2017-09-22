@@ -17,16 +17,16 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { actions } from 'modules/engine';
+import { install, setLoading } from 'modules/engine/actions';
 import { IInstallParams } from 'lib/api';
 
 import InstallForm from 'components/InstallForm';
 
 interface IInstallProps {
-    install: typeof actions.install.started;
     isInstalled: boolean;
     isInstalling: boolean;
-    setLoading: typeof actions.setLoading;
+    install?: typeof install.started;
+    setLoading?: typeof setLoading;
 }
 
 class Install extends React.Component<IInstallProps> {
@@ -52,7 +52,9 @@ const mapStateToProps = (state: IRootState) => ({
     isInstalling: state.engine.isInstalling
 });
 
-export default connect(mapStateToProps, {
-    install: actions.install.started,
-    setLoading: actions.setLoading
-})(Install);
+const mapDispatchToProps = {
+    install: install.started,
+    setLoading: setLoading
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Install);

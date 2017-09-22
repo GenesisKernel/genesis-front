@@ -15,10 +15,10 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
-import { push } from 'react-router-redux';
 import { IRootState } from 'modules';
+import { navigate } from 'modules/engine/actions';
 
 import Login from './containers/Login';
 import Import from './containers/Import';
@@ -40,8 +40,8 @@ const mapStateToProps = (state: IRootState) => ({
 
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-    navigate: (url: string) => dispatch(push(url))
-});
+const mapDispatchToProps = {
+    navigate
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Auth);

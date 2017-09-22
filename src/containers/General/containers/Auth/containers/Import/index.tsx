@@ -15,8 +15,8 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
-import { push } from 'react-router-redux';
+import { connect } from 'react-redux';
+import { navigate } from 'modules/engine/actions';
 import { IRootState } from 'modules';
 
 import ImportForm from 'components/ImportForm';
@@ -36,8 +36,8 @@ const mapStateToProps = (state: IRootState) => ({
     isLoggingIn: state.auth.isLoggingIn
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-    navigate: (url: string) => dispatch(push(url))
-});
+const mapDispatchToProps = {
+    navigate
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

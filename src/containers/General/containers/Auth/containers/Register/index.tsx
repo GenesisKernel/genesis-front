@@ -15,12 +15,11 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
-import { push } from 'react-router-redux';
+import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { actions } from 'modules/auth';
+import { navigate } from 'modules/engine/actions';
+import { importSeed, createAccount } from 'modules/auth/actions';
 import { IStoredKey } from 'lib/storage';
-import Keyring from 'lib/keyring';
 
 import RegisterForm from 'components/RegisterForm';
 
@@ -30,9 +29,9 @@ interface IRegisterProps {
     isCreatingAccount: boolean;
     loadedSeed: string;
     createdAccount: IStoredKey;
-    navigate: (url: string) => any;
-    importSeed: (file: Blob) => any;
-    createAccount: (keyring: Keyring) => any;
+    navigate: typeof navigate;
+    importSeed: typeof importSeed.started;
+    createAccount: typeof createAccount.started;
 }
 
 const Register: React.SFC<IRegisterProps> = (props: IRegisterProps) => (
@@ -77,10 +76,10 @@ const mapStateToProps = (state: IRootState) => ({
     loadedSeed: state.auth.loadedSeed
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-    navigate: (url: string) => dispatch(push(url)),
-    importSeed: (file: Blob) => dispatch(actions.importSeed.started(file)),
-    createAccount: (keyring: Keyring) => dispatch(actions.createAccount.started(keyring))
-});
+const mapDispatchToProps = {
+    navigate,
+    importSeed: importSeed.started,
+    createAccount: createAccount.started
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Register);

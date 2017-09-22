@@ -15,34 +15,26 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
-import { push } from 'react-router-redux';
-import { IRootState } from 'modules';
-import Keyring from 'lib/keyring';
-import { IStoredKey } from 'lib/storage';
-import * as actions from 'modules/auth/actions';
+import { connect } from 'react-redux';
+import { navigate } from 'modules/engine/actions';
+import { login } from 'modules/auth/actions';
 
 import AuthForm from 'components/AuthForm';
 
 interface ILoginProps {
-    isLoggingIn: boolean;
-    navigate: (url: string) => any;
-    login: (keyring: Keyring, account: IStoredKey, remember: boolean) => any;
+    navigate: typeof navigate;
+    login: typeof login.started;
 }
 
 const Login: React.SFC<ILoginProps> = (props) => {
     return (
-        <AuthForm navigate={props.navigate} intl={null} login={props.login} />
+        <AuthForm {...props} intl={null} />
     );
 };
 
-const mapStateToProps = (state: IRootState) => ({
-    isLoggingIn: state.auth.isLoggingIn
-});
+const mapDispatchToProps = {
+    navigate,
+    login: login.started
+};
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-    navigate: (url: string) => dispatch(push(url)),
-    login: (keyring: Keyring, account: IStoredKey, remember: boolean) => dispatch(actions.login.started({ keyring, account, remember }))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(null, mapDispatchToProps)(Login);

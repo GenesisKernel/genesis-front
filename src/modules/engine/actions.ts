@@ -15,9 +15,11 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import actionCreatorFactory from 'typescript-fsa';
+import { push } from 'react-router-redux';
 import { IInstallParams } from 'lib/api';
 
 const actionCreator = actionCreatorFactory('engine');
+export const navigate = (url: string) => push(url);
 export const identity = actionCreator.async<void, { uid: string, session: string }, string>('IDENTITY');
 export const install = actionCreator.async<IInstallParams, { uid: string, session: string }, string>('INSTALL');
 export const setLoading = actionCreator<boolean>('SET_LOADING');

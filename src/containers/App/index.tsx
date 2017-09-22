@@ -15,12 +15,11 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { Dispatch } from 'react-redux';
-import { push } from 'react-router-redux';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { IntlProvider } from 'react-intl';
+import { navigate } from 'modules/engine/actions';
 
 import General from 'containers/General';
 import Main from 'containers/Main';
@@ -28,7 +27,7 @@ import Main from 'containers/Main';
 interface IAppProps {
     locale: string;
     isAuthenticated: boolean;
-    navigate: (url: string) => any;
+    navigate?: typeof navigate;
 }
 
 class App extends React.Component<IAppProps> {
@@ -61,8 +60,8 @@ const mapStateToProps = (state: IRootState) => ({
     isAuthenticated: state.auth.isAuthenticated
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-    navigate: (url: string) => dispatch(push(url))
-});
+const mapDispatchToProps = {
+    navigate
+};
 
 export default connect(mapStateToProps, mapDispatchToProps, null, { pure: false })(App);

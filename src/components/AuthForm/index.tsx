@@ -19,12 +19,14 @@ import { Button, Col, FormGroup } from 'react-bootstrap';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import storage, { IStoredKey } from 'lib/storage';
 import Keyring from 'lib/keyring';
+import { navigate } from 'modules/engine/actions';
+import { login } from 'modules/auth/actions';
 
 import Validation from 'components/Validation';
 
 interface IAuthFormProps extends InjectedIntlProps {
-    navigate: (url: string) => void;
-    login: (keyring: Keyring, account: IStoredKey, remember: boolean) => void;
+    navigate: typeof navigate;
+    login: typeof login.started;
 }
 
 interface IAuthFormState {
@@ -57,7 +59,11 @@ class AuthForm extends React.Component<IAuthFormProps, IAuthFormState> {
     onSubmit(values: { [key: string]: any }) {
         const keyring = new Keyring(values.password, this.state.account.publicKey, this.state.account.encKey);
         if (keyring.verify()) {
-            this.props.login(keyring, this.state.account, values.remember);
+            this.props.login({
+                keyring,
+                account: this.state.account,
+                remember: values.remember
+            });
         }
         else {
             // TODO: Notification stub
