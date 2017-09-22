@@ -20,7 +20,8 @@ import { ILoginResponse } from 'lib/api';
 import { IStoredKey } from 'lib/storage';
 
 const actionCreator = actionCreatorFactory('auth');
-export const login = actionCreator.async<{ keyring: Keyring, account: IStoredKey, remember: boolean }, ILoginResponse, string>('LOGIN');
+export const login = actionCreator.async<{ keyring: Keyring, remember: boolean }, ILoginResponse & { account: IStoredKey }, string>('LOGIN');
+export const reauthenticate = actionCreator.async<{ privateKey: string, publicKey: string }, ILoginResponse & { account: IStoredKey, keyring: Keyring }, string>('REAUTHENTICATE');
 export const setAction = actionCreator<string>('SET_ACTION');
 export const importSeed = actionCreator.async<Blob, string, void>('IMPORT_SEED');
 export const createAccount = actionCreator.async<Keyring, IStoredKey, void>('CREATE_ACCOUNT');

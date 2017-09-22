@@ -61,7 +61,6 @@ class AuthForm extends React.Component<IAuthFormProps, IAuthFormState> {
         if (keyring.verify()) {
             this.props.login({
                 keyring,
-                account: this.state.account,
                 remember: values.remember
             });
         }

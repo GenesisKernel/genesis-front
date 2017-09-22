@@ -20,6 +20,8 @@ import { Route } from 'react-router-dom';
 import { Col, Row } from 'react-bootstrap';
 import { IRootState } from 'modules';
 import { setLoading, identity, navigate } from 'modules/engine/actions';
+import { reauthenticate } from 'modules/auth/actions';
+import storage from 'lib/storage';
 
 import Splash from 'components/Splash';
 import Background from 'components/Background';
@@ -33,19 +35,31 @@ interface IGeneralProps {
     isConnecting: boolean;
     isConnected: boolean;
     isInstalled: boolean;
+    isLoggingIn: boolean;
     uid: string;
     setLoading?: typeof setLoading;
     identity?: typeof identity.started;
     navigate?: typeof navigate;
+    reauthenticate?: typeof reauthenticate.started;
 }
 
 class General extends React.Component<IGeneralProps> {
     componentDidMount() {
-        this.props.identity(null);
+        const privateKey = storage.settings.load('privateKey');
+        const publicKey = storage.settings.load('publicKey');
+        if (privateKey && publicKey) {
+            this.props.reauthenticate({
+                privateKey,
+                publicKey
+            });
+        }
+        else {
+            this.props.identity(null);
+        }
     }
 
     componentWillReceiveProps(props: IGeneralProps) {
-        if (props.isLoading && !props.isConnecting) {
+        if (props.isLoading && !props.isConnecting && !props.isLoggingIn) {
             this.props.setLoading(false);
 
             if (!props.isConnected) {
@@ -61,7 +75,7 @@ class General extends React.Component<IGeneralProps> {
     }
 
     render() {
-        if (this.props.isLoading && this.props.isConnecting) {
+        if (this.props.isLoading && (this.props.isConnecting || this.props.isLoggingIn)) {
             return (
                 <Splash />
             );
@@ -83,6 +97,7 @@ class General extends React.Component<IGeneralProps> {
 }
 
 const mapStateToProps = (state: IRootState) => ({
+    isLoggingIn: state.auth.isLoggingIn,
     locale: state.engine.locale,
     isLoading: state.engine.isLoading,
     isConnected: state.engine.isConnected,
@@ -94,7 +109,8 @@ const mapStateToProps = (state: IRootState) => ({
 const mapDispatchToProps = {
     navigate,
     setLoading,
-    identity: identity.started
+    identity: identity.started,
+    reauthenticate: reauthenticate.started
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(General);

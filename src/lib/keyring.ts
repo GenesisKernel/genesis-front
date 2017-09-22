@@ -244,10 +244,19 @@ export default class Keyring {
         return result;
     }
 
+    static fromPrivate(publicKey: string, privateKey: string) {
+        const value = new Keyring('', publicKey, privateKey);
+        value._privateKey = privateKey;
+        value._publicKey = publicKey;
+        return value;
+    }
+
     constructor(password: string, publicKey: string, encKey: string) {
         this._publicKey = publicKey;
-        this._encKey = encKey;
-        this._privateKey = Keyring.decryptAES(encKey, password);
+        if (encKey) {
+            this._encKey = encKey;
+            this._privateKey = Keyring.decryptAES(encKey, password);
+        }
     }
 
     verify(data: string = 'APLA'): boolean {
@@ -273,6 +282,10 @@ export default class Keyring {
     // requests to the api and use non-truncated version while working with JS code
     getPublicKey(truncate: boolean = true) {
         return truncate ? this._publicKey.slice(2) : this._publicKey;
+    }
+
+    getPrivateKey() {
+        return this._privateKey;
     }
 
     getEncKey() {

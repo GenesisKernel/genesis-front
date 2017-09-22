@@ -41,6 +41,11 @@ export interface IInstallParams {
     first_block_dir?: string;
 }
 
+export interface IRefreshResponse {
+    token: string;
+    refresh: string;
+}
+
 export interface IInstallResponse {
     success: boolean;
 }
@@ -106,6 +111,7 @@ const securedRequest = async (endpoint: string, session: string, body: { [key: s
 export default {
     // Level 0
     install: async (params: IInstallParams) => await request('install', params) as Promise<IInstallResponse>,
+    refresh: async (token: string) => await request('refresh', { token }) as Promise<IRefreshResponse>,
 
     // Level 1
     getUid: async () => await request('getuid', null, { method: 'GET', body: null }) as Promise<IGetUidResponse>,

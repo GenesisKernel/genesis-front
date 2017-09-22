@@ -64,6 +64,21 @@ class Storage<T extends IStoredData> {
     }
 }
 
+const settingsStorage = {
+    load(key: string, defaultValue: string = null) {
+        return localStorage.getItem(key) || defaultValue;
+    },
+
+    save(key: string, value: string) {
+        localStorage.setItem(key, value);
+    },
+
+    remove(key: string) {
+        localStorage.removeItem(key);
+    }
+};
+
 export default {
+    settings: settingsStorage,
     accounts: new Storage<IStoredKey>('accounts')
 };

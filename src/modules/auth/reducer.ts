@@ -65,7 +65,7 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             isAuthenticated: true,
             isLoggingIn: false,
-            account: action.payload.params.account,
+            account: action.payload.result.account,
             ecosystem: action.payload.result.state,
             sessionToken: action.payload.result.token,
             refreshToken: action.payload.result.refresh,
@@ -74,6 +74,37 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.login.failed)) {
+        return {
+            ...state,
+            isLoggingIn: false
+        };
+    }
+
+    if (isType(action, actions.reauthenticate.started)) {
+        return {
+            ...state,
+            isAuthenticated: false,
+            isLoggingIn: true,
+            account: null,
+            sessionToken: null,
+            refreshToken: null
+        };
+    }
+
+    if (isType(action, actions.reauthenticate.done)) {
+        return {
+            ...state,
+            isAuthenticated: true,
+            isLoggingIn: false,
+            account: action.payload.result.account,
+            ecosystem: action.payload.result.state,
+            sessionToken: action.payload.result.token,
+            refreshToken: action.payload.result.refresh,
+            keyring: action.payload.result.keyring
+        };
+    }
+
+    if (isType(action, actions.reauthenticate.failed)) {
         return {
             ...state,
             isLoggingIn: false
