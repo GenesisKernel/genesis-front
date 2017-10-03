@@ -18,37 +18,63 @@ import * as React from 'react';
 import { Button, Panel } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import Validation from 'components/Validation';
-//import Keyring from 'lib/keyring';
+import keyring from 'lib/keyring';
+import { sendAttachment } from 'lib/fs';
+import { IStoredKey } from 'lib/storage';
+import * as CopyToClipboard from 'react-copy-to-clipboard';
 
 export interface IBackupProps {
-    wallet: string;
+    account: IStoredKey;
+    privateKey: string;
 }
 
 interface IBackupState {
-
+    privateKey: string;
 }
 
 export default class extends React.Component<IBackupProps, IBackupState> {
     constructor(props: any) {
         super(props);
         this.state = {
-            keyring: null
+            privateKey: this.props.privateKey
         };
     }
 
     onSubmit(values: { [key: string]: string }) {
-        /*const encKey = this.props.keyring.getEncKey();
-        const privateKey = Keyring.decryptAES(encKey, values.password);
+        const privateKey = keyring.decryptAES(this.props.account.encKey, values.password);
 
-        if (!privateKey) {
+        if (privateKey) {
+            this.setState({
+                privateKey
+            });
+        }
+        else {
             // TODO: Notification stub
             alert('Incorrect password');
         }
-        else {
-            this.setState({
-                keyring: Keyring.fromPrivate(this.props.keyring.getPublicKey(), privateKey)
-            });
-        }*/
+    }
+
+    onCopy() {
+        // TODO: Notification stub
+        alert('Copied to clipboard');
+    }
+
+    onKeyDownlaod() {
+        sendAttachment('key.txt', this.generatePayload());
+    }
+
+    formatKey(key: string) {
+        return key.match(/.{1,2}/g).join(' ');
+    }
+
+    generatePayload() {
+        return [
+            //`Seed: e2cfd8ff56f96996a65261c78aceff2a12ceb748d5459e6120f4ba612d67633d`,
+            `ID: ${this.props.account.id}`,
+            `Private Key: ${this.state.privateKey}`,
+            `Public Key: ${this.props.account.publicKey}`,
+            `Address: ${this.props.account.address}`
+        ].join('\n');
     }
 
     renderFirst() {
@@ -83,12 +109,14 @@ export default class extends React.Component<IBackupProps, IBackupState> {
                 footer={(
                     <div className="clearfix">
                         <div className="pull-left">
-                            <Button bsStyle="primary">
-                                <FormattedMessage id="general.clipboard.copy" defaultMessage="Copy to clipboard" />
-                            </Button>
+                            <CopyToClipboard text={this.generatePayload()} onCopy={this.onCopy.bind(this)}>
+                                <Button bsStyle="primary">
+                                    <FormattedMessage id="general.clipboard.copy" defaultMessage="Copy to clipboard" />
+                                </Button>
+                            </CopyToClipboard>
                         </div>
                         <div className="pull-right">
-                            <Button bsStyle="primary">
+                            <Button bsStyle="primary" onClick={this.onKeyDownlaod.bind(this)}>
                                 <FormattedMessage id="general.download.asfile" defaultMessage="Download as file" />
                             </Button>
                         </div>
@@ -99,16 +127,22 @@ export default class extends React.Component<IBackupProps, IBackupState> {
                     <table className="table table-striped table-bordered table-hover preline">
                         <tbody>
                             <tr>
-                                <td style={{ minWidth: 100 }}>Private key</td>
-                                <td>{/*this.state.keyring.getPrivateKey()*/}</td>
+                                <td style={{ minWidth: 100 }}>
+                                    <FormattedMessage id="general.key.private" defaultMessage="Private key" />
+                                </td>
+                                <td>{this.formatKey(this.state.privateKey)}</td>
                             </tr>
                             <tr>
-                                <td>Public key</td>
-                                <td>{/*this.state.keyring.getPublicKey()*/}</td>
+                                <td>
+                                    <FormattedMessage id="general.key.public" defaultMessage="Public key" />
+                                </td>
+                                <td>{this.formatKey(this.props.account.publicKey)}</td>
                             </tr>
                             <tr>
-                                <td>Address</td>
-                                <td>{this.props.wallet}</td>
+                                <td>
+                                    <FormattedMessage id="general.address" defaultMessage="Address" />
+                                </td>
+                                <td>{this.props.account.address}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -124,7 +158,7 @@ export default class extends React.Component<IBackupProps, IBackupState> {
                     <FormattedMessage id="general.backup" defaultMessage="Backup" />
                 </div>
                 <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit.bind(this)}>
-                    {/*this.state.keyring ? this.renderSecond() : this.renderFirst()*/}
+                    {this.state.privateKey ? this.renderSecond() : this.renderFirst()}
                 </Validation.components.ValidatedForm>
             </div>
         );

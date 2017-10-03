@@ -25,7 +25,8 @@ const BackupContainer: React.SFC<IBackupProps> = (props) => (
 );
 
 const mapStateToProps = (state: IRootState) => ({
-    //keyring: state.auth.keyring,
+    privateKey: state.auth.privateKey,
+    account: state.auth.account,
     wallet: state.auth.wallet
 });
 
