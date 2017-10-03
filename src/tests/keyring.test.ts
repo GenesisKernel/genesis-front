@@ -72,3 +72,16 @@ test('Complex encrypt/decrypt scenario', () => {
     const result = keyring.verify(decKey, keyPair.public, 'Test case scenario');
     expect(result).toBeTruthy();
 });
+
+test('Key backup scenario', () => {
+    const key = {
+        id: '-1465863158328511897',
+        privateKey: '06076ac7d0bdaea988cfaee2af78b790805e41e38aa52c773cb37eb76adf91e0',
+        publicKey: '04ea0cdb0f9b2a8d7fa7403fe302c3f4686e0e52ef3d5d473df3d2c477c53bf9d76efc67d93b2b1d7042df219edda66c6c04d51e089e026bbf69e40ecedf1dd556',
+        address: '1698-0880-9153-8103-9719'
+    };
+
+    const backup = keyring.backup(key);
+    const restored = keyring.restore(backup);
+    expect(restored).toEqual(key);
+});

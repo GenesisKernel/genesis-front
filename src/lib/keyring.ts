@@ -164,6 +164,13 @@ const WORD_LIST = ['abandon', 'ability', 'able', 'about', 'above', 'absent', 'ab
     'wolf', 'woman', 'wonder', 'wood', 'wool', 'word', 'work', 'world', 'worry', 'worth', 'wrap', 'wreck', 'wrestle', 'wrist', 'write',
     'wrong', 'yard', 'year', 'yellow', 'you', 'young', 'youth', 'zebra', 'zero', 'zone', 'zoo'];
 
+export interface IKeyBackup {
+    id: string;
+    privateKey: string;
+    publicKey: string;
+    address: string;
+}
+
 const randomEngine = Random();
 const signAlg = 'SHA256withECDSA';
 const curveName = 'secp256r1';
@@ -256,6 +263,39 @@ const keyring = {
         signature.init({ d: privateKey, curve: curveName });
         signature.updateString(data);
         return signature.sign();
+    },
+
+    backup: (key: IKeyBackup) => {
+        return [
+            `ID: ${key.id}`,
+            //`Seed: e2cfd8ff56f96996a65261c78aceff2a12ceb748d5459e6120f4ba612d67633d`,
+            `Private Key: ${key.privateKey}`,
+            `Public Key: ${key.publicKey}`,
+            `Address: ${key.address}`
+        ].join('\n');
+    },
+
+    restore: (payload: string) => {
+        const tokens = payload.split('\n');
+        const backup: IKeyBackup = {
+            id: null,
+            privateKey: null,
+            publicKey: null,
+            address: null
+        };
+
+        for (let i = 0; i < tokens.length; i++) {
+            const token = tokens[i];
+            const matches = token.match(/^([a-zA-Z ]*): *(.*)$/);
+            switch (matches[1]) {
+                case 'ID': backup.id = matches[2]; break;
+                case 'Private Key': backup.privateKey = matches[2]; break;
+                case 'Public Key': backup.publicKey = matches[2]; break;
+                case 'Address': backup.address = matches[2]; break;
+                default: return null;
+            }
+        }
+        return backup;
     }
 };
 

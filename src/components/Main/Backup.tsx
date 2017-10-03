@@ -68,13 +68,12 @@ export default class extends React.Component<IBackupProps, IBackupState> {
     }
 
     generatePayload() {
-        return [
-            //`Seed: e2cfd8ff56f96996a65261c78aceff2a12ceb748d5459e6120f4ba612d67633d`,
-            `ID: ${this.props.account.id}`,
-            `Private Key: ${this.state.privateKey}`,
-            `Public Key: ${this.props.account.publicKey}`,
-            `Address: ${this.props.account.address}`
-        ].join('\n');
+        return keyring.backup({
+            id: this.props.account.id,
+            privateKey: this.state.privateKey,
+            publicKey: this.props.account.publicKey,
+            address: this.props.account.address
+        });
     }
 
     renderFirst() {
