@@ -16,22 +16,44 @@
 
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { Route, Switch } from 'react-router-dom';
 import { IRootState } from 'modules';
-import { IStoredKey } from 'lib/storage';
+import { setCollapsed } from 'modules/engine/actions';
 
-interface IMainProps {
-    account: IStoredKey;
-}
+import Main, { IMainProps } from 'components/Main';
+import Dashboard from 'containers/Main/containers/Dashboard';
+import Debug from 'containers/Main/containers/Debug';
+import Backup from 'containers/Main/containers/Backup';
+import EcosystemCreate from 'containers/Main/containers/EcosystemCreate';
+import MoneyTransfer from 'containers/Main/containers/MoneyTransfer';
+import Forging from 'containers/Main/containers/Forging';
+import RequestMembership from 'containers/Main/containers/RequestMembership';
+import NotFound from 'containers/Main/containers/NotFound';
 
-const Main: React.SFC<IMainProps> = (props) => (
-    <div>
-        <div>You're logged in</div>
-        <div>Your address is: {props.account.address}</div>
-    </div>
-);
+const MainContainer: React.SFC<IMainProps> = (props, context) => {
+    return (
+        <Main {...props}>
+            <Switch>
+                <Route exact path="/" component={Dashboard} />
+                <Route exact path="/debug" component={Debug} />
+                <Route exact path="/backup" component={Backup} />
+                <Route exact path="/forging" component={Forging} />
+                <Route exact path="/create-ecosystem" component={EcosystemCreate} />
+                <Route exact path="/request-membership" component={RequestMembership} />
+                <Route exact path="/transfer" component={MoneyTransfer} />
+                <Route path="*" component={NotFound} />
+            </Switch>
+        </Main>
+    );
+};
 
 const mapStateToProps = (state: IRootState) => ({
-    account: state.auth.account
+    account: state.auth.account,
+    isCollapsed: state.engine.isCollapsed
 });
 
-export default connect(mapStateToProps, {})(Main);
+const mapDispatchToProps = {
+    setCollapsed
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainContainer);

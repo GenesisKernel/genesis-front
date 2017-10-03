@@ -18,7 +18,6 @@ import * as actions from './actions';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { IStoredKey } from 'lib/storage';
-import Keyring from 'lib/keyring';
 
 export type State = {
     readonly loadedSeed: string;
@@ -28,9 +27,14 @@ export type State = {
     readonly wallet: string;
     readonly sessionToken: string;
     readonly refreshToken: string;
-    readonly createdAccount: IStoredKey;
+    readonly createdAccount: {
+        id: string;
+        address: string;
+        privateKey: string;
+        publicKey: string;
+    };
     readonly account: IStoredKey;
-    readonly keyring: Keyring;
+    readonly privateKey: string;
     readonly ecosystem: string;
 };
 
@@ -44,7 +48,7 @@ export const initialState: State = {
     refreshToken: null,
     createdAccount: null,
     account: null,
-    keyring: null,
+    privateKey: null,
     ecosystem: null
 };
 
@@ -69,7 +73,7 @@ export default (state: State = initialState, action: Action): State => {
             ecosystem: action.payload.result.state,
             sessionToken: action.payload.result.token,
             refreshToken: action.payload.result.refresh,
-            keyring: action.payload.params.remember ? action.payload.params.keyring : null
+            privateKey: action.payload.result.privateKey
         };
     }
 
@@ -80,7 +84,7 @@ export default (state: State = initialState, action: Action): State => {
         };
     }
 
-    if (isType(action, actions.reauthenticate.started)) {
+    if (isType(action, actions.reauthenticate)) {
         return {
             ...state,
             isAuthenticated: false,
@@ -88,26 +92,6 @@ export default (state: State = initialState, action: Action): State => {
             account: null,
             sessionToken: null,
             refreshToken: null
-        };
-    }
-
-    if (isType(action, actions.reauthenticate.done)) {
-        return {
-            ...state,
-            isAuthenticated: true,
-            isLoggingIn: false,
-            account: action.payload.result.account,
-            ecosystem: action.payload.result.state,
-            sessionToken: action.payload.result.token,
-            refreshToken: action.payload.result.refresh,
-            keyring: action.payload.result.keyring
-        };
-    }
-
-    if (isType(action, actions.reauthenticate.failed)) {
-        return {
-            ...state,
-            isLoggingIn: false
         };
     }
 
@@ -138,6 +122,13 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             isCreatingAccount: false,
+            createdAccount: null
+        };
+    }
+
+    if (isType(action, actions.clearCreatedAccount)) {
+        return {
+            ...state,
             createdAccount: null
         };
     }

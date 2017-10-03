@@ -20,6 +20,7 @@ import { IInstallParams } from 'lib/api';
 
 const actionCreator = actionCreatorFactory('engine');
 export const navigate = (url: string) => push(url);
-export const identity = actionCreator.async<void, { uid: string, session: string }, string>('IDENTITY');
+export const checkOnline = actionCreator.async<void, boolean, string>('CHECK_ONLINE');
 export const install = actionCreator.async<IInstallParams, { uid: string, session: string }, string>('INSTALL');
 export const setLoading = actionCreator<boolean>('SET_LOADING');
+export const setCollapsed = actionCreator<boolean>('SET_COLLAPSED');

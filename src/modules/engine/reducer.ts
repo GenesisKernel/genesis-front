@@ -20,54 +20,37 @@ import { isType } from 'typescript-fsa';
 
 export type State = {
     readonly locale: string;
-    readonly uid: string;
-    readonly session: string;
     readonly isInstalled: boolean;
     readonly isInstalling: boolean;
     readonly isLoading: boolean;
     readonly isConnected: boolean;
     readonly isConnecting: boolean;
+    readonly isCollapsed: boolean;
 };
 
 export const initialState: State = {
     locale: 'en-US',
-    uid: null,
-    session: null,
     isInstalled: null,
     isInstalling: false,
     isLoading: true,
     isConnected: null,
-    isConnecting: false
+    isConnecting: false,
+    isCollapsed: false
 };
 
 export default (state: State = initialState, action: Action): State => {
-    if (isType(action, actions.identity.started)) {
+    if (isType(action, actions.checkOnline.started)) {
         return {
             ...state,
-            uid: null,
-            session: null,
             isConnecting: true
         };
     }
 
-    if (isType(action, actions.identity.done)) {
-        return {
-            ...state,
-            uid: action.payload.result.uid,
-            session: action.payload.result.session,
-            isConnected: true,
-            isInstalled: true,
-            isConnecting: false
-        };
-    }
-
-    if (isType(action, actions.identity.failed)) {
+    if (isType(action, actions.checkOnline.failed)) {
         switch (action.payload.error) {
             case 'E_NOTINSTALLED':
                 return {
                     ...state,
-                    uid: null,
-                    session: null,
                     isInstalled: false,
                     isConnected: true,
                     isConnecting: false
@@ -76,8 +59,34 @@ export default (state: State = initialState, action: Action): State => {
             default:
                 return {
                     ...state,
-                    uid: null,
-                    session: null,
+                    isConnected: false,
+                    isConnecting: false
+                };
+        }
+    }
+
+    if (isType(action, actions.checkOnline.done)) {
+        return {
+            ...state,
+            isInstalled: true,
+            isConnected: action.payload.result,
+            isConnecting: false
+        };
+    }
+
+    if (isType(action, actions.checkOnline.failed)) {
+        switch (action.payload.error) {
+            case 'E_NOTINSTALLED':
+                return {
+                    ...state,
+                    isInstalled: false,
+                    isConnected: true,
+                    isConnecting: false
+                };
+
+            default:
+                return {
+                    ...state,
                     isConnected: false,
                     isConnecting: false
                 };
@@ -110,6 +119,13 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             isInstalling: false
+        };
+    }
+
+    if (isType(action, actions.setCollapsed)) {
+        return {
+            ...state,
+            isCollapsed: action.payload
         };
     }
 

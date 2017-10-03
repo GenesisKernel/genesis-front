@@ -20,34 +20,24 @@ import { combineEpics } from 'redux-observable';
 import { Observable } from 'rxjs';
 import * as actions from './actions';
 import { readTextFile } from 'lib/fs';
-import Keyring from 'lib/keyring';
+import keyring from 'lib/keyring';
 import storage from 'lib/storage';
 
 export const loginEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.login.started.match)
         .switchMap(action => {
             const promise = api.getUid().then(uid => {
-                const signature = action.payload.keyring.sign(uid.uid);
-                return api.login(uid.token, action.payload.keyring.getPublicKey(), signature);
+                const signature = keyring.sign(uid.uid, action.payload.privateKey);
+                return api.login(uid.token, action.payload.publicKey, signature);
             });
 
             return Observable.from(promise).map(payload => {
-                if (action.payload.remember) {
-                    storage.settings.save('refreshToken', payload.refresh);
-                    storage.settings.save('privateKey', action.payload.keyring.getPrivateKey());
-                    storage.settings.save('publicKey', action.payload.keyring.getPublicKey(false));
-                }
-                else {
-                    storage.settings.remove('refreshToken');
-                    storage.settings.remove('privateKey');
-                    storage.settings.remove('publicKey');
-                }
-
                 const account = storage.accounts.load(payload.wallet);
                 return actions.login.done({
                     params: action.payload,
                     result: {
                         ...payload,
+                        privateKey: action.payload.remember ? action.payload.privateKey : null,
                         account
                     }
                 });
@@ -60,27 +50,27 @@ export const loginEpic = (actions$: Observable<Action>) =>
         });
 
 export const reauthenticateEpic = (action$: Observable<Action>) =>
-    action$.filter(actions.reauthenticate.started.match)
+    action$.filter(actions.reauthenticate.match)
         .switchMap(action => {
-            const keyring = Keyring.fromPrivate(action.payload.publicKey, action.payload.privateKey);
             const promise = api.getUid().then(uid => {
-                const signature = keyring.sign(uid.uid);
-                return api.login(uid.token, keyring.getPublicKey(), signature);
+                const signature = keyring.sign(uid.uid, action.payload.privateKey);
+                return api.login(uid.token, action.payload.publicKey, signature);
             });
 
             return Observable.from(promise).map(payload => {
                 return actions.login.started({
-                    keyring,
+                    // Pass-through provided keys
+                    ...action.payload,
                     remember: true
                 });
             }).catch((e: IAPIError) => {
                 // TODO: Clear stored session
-                return Observable.of(actions.reauthenticate.failed({
+                return Observable.of(actions.login.failed({
                     params: null,
                     error: e.error
                 }));
             });
-        })
+        });
 
 export const importSeedEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.importSeed.started.match)
@@ -102,8 +92,8 @@ export const createAccountEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.createAccount.started.match)
         .switchMap(action => {
             const promise = api.getUid().then(uid => {
-                const signature = action.payload.sign(uid.uid);
-                return api.login(uid.token, action.payload.getPublicKey(), signature);
+                const signature = keyring.sign(uid.uid, action.payload.privateKey);
+                return api.login(uid.token, action.payload.publicKey, signature);
             });
 
             return Observable.from(promise).map(payload => {
@@ -111,9 +101,8 @@ export const createAccountEpic = (actions$: Observable<Action>) =>
                     params: null,
                     result: {
                         id: payload.wallet,
-                        encKey: action.payload.getEncKey(),
-                        publicKey: action.payload.getPublicKey(false),
-                        address: payload.address
+                        address: payload.address,
+                        ...action.payload
                     }
                 });
             }).catch(e => {

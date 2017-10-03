@@ -68,14 +68,21 @@ export interface ISignTestResponse extends IResponse {
     pubkey: string;
 }
 
-const request = async (endpoint: string, body: { [key: string]: any } = {}, options?: RequestInit) => {
+export interface IContentResponse extends IResponse {
+    tree: string;
+}
+
+const request = async (endpoint: string, body: { [key: string]: any }, options?: RequestInit) => {
     // TODO: Set request timeout
     const requestUrl = `${apiRoot}/${endpoint}`;
-    const requestBody = new URLSearchParams();
+    let requestBody: URLSearchParams = null;
 
-    for (let name in body) {
-        if (body.hasOwnProperty(name)) {
-            requestBody.append(name, body[name]);
+    if (body) {
+        requestBody = new URLSearchParams();
+        for (let name in body) {
+            if (body.hasOwnProperty(name)) {
+                requestBody.append(name, body[name]);
+            }
         }
     }
     const requestOptions = Object.assign({}, defaultOptions, { body: requestBody }, options) as RequestInit;
@@ -99,7 +106,7 @@ const request = async (endpoint: string, body: { [key: string]: any } = {}, opti
     return json;
 };
 
-const securedRequest = async (endpoint: string, session: string, body: { [key: string]: any } = {}, options?: RequestInit) => {
+const securedRequest = async (endpoint: string, session: string, body: { [key: string]: any }, options?: RequestInit) => {
     const extendedOptions = Object.assign({}, options, {
         headers: {
             Authorization: `Bearer ${session}`
@@ -120,11 +127,14 @@ export default {
         forsign: forSign,
         pubkey: publicKey
     }) as Promise<ISignTestResponse>,
-
-    // Level 2
     login: async (session: string, publicKey: string, signature: string, state: number = 0) => await securedRequest('login', session, {
-        pubkey: publicKey,
+        pubkey: publicKey.slice(2),
         signature,
         state
-    }) as Promise<ILoginResponse>
+    }) as Promise<ILoginResponse>,
+
+    // Level 2
+    contentMenu: async (session: string, name: string) => await securedRequest(`content/menu/${name}`, session, null, { method: 'GET' }) as Promise<IContentResponse>,
+    contentPage: async (session: string, name: string) => await securedRequest(`content/page/${name}`, session, null, { method: 'GET' }) as Promise<IContentResponse>,
+    contentTest: async (session: string, template: string) => await securedRequest(`content`, session, { template }) as Promise<IContentResponse>
 };

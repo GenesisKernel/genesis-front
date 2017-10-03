@@ -18,37 +18,14 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { install, setLoading } from 'modules/engine/actions';
-import { IInstallParams } from 'lib/api';
 
-import InstallForm from 'components/InstallForm';
+import Install, { IInstallProps } from 'components/General/Install';
 
-interface IInstallProps {
-    isInstalled: boolean;
-    isInstalling: boolean;
-    install?: typeof install.started;
-    setLoading?: typeof setLoading;
-}
-
-class Install extends React.Component<IInstallProps> {
-    componentWillReceiveProps(props: IInstallProps) {
-        if (props.isInstalled) {
-            this.props.setLoading(true);
-        }
-    }
-
-    onSubmit(values: IInstallParams) {
-        this.props.install(values);
-    }
-
-    render() {
-        return (
-            <InstallForm intl={null} isInstalling={this.props.isInstalling} onSubmit={this.onSubmit.bind(this)} />
-        );
-    }
-}
+const InstallContainer: React.SFC<IInstallProps> = (props) => (
+    <Install {...props} />
+);
 
 const mapStateToProps = (state: IRootState) => ({
-    isInstalled: state.engine.isInstalled,
     isInstalling: state.engine.isInstalling
 });
 
@@ -57,4 +34,4 @@ const mapDispatchToProps = {
     setLoading: setLoading
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Install);
+export default connect(mapStateToProps, mapDispatchToProps)(InstallContainer);

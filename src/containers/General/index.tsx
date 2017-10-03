@@ -17,84 +17,36 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
-import { Col, Row } from 'react-bootstrap';
 import { IRootState } from 'modules';
-import { setLoading, identity, navigate } from 'modules/engine/actions';
+import { navigate } from 'modules/engine/actions';
 import { reauthenticate } from 'modules/auth/actions';
-import storage from 'lib/storage';
 
-import Splash from 'components/Splash';
-import Background from 'components/Background';
-import Auth from './containers/Auth';
+import AnimatedSwitch, { animations } from 'components/Animation';
+import Welcome from './containers/Welcome';
+import Login from './containers/Login';
+import Account from './containers/Account';
+import Import from './containers/Account/Import';
+import Create from './containers/Account/Create';
 import Install from './containers/Install';
-import Offline from './containers/Offline';
+import NotFound from './containers/NotFound';
 
-interface IGeneralProps {
-    locale: string;
-    isLoading: boolean;
-    isConnecting: boolean;
-    isConnected: boolean;
+interface IGeneralContainerProps {
     isInstalled: boolean;
-    isLoggingIn: boolean;
-    uid: string;
-    setLoading?: typeof setLoading;
-    identity?: typeof identity.started;
-    navigate?: typeof navigate;
-    reauthenticate?: typeof reauthenticate.started;
 }
 
-class General extends React.Component<IGeneralProps> {
-    componentDidMount() {
-        const privateKey = storage.settings.load('privateKey');
-        const publicKey = storage.settings.load('publicKey');
-        if (privateKey && publicKey) {
-            this.props.reauthenticate({
-                privateKey,
-                publicKey
-            });
-        }
-        else {
-            this.props.identity(null);
-        }
-    }
-
-    componentWillReceiveProps(props: IGeneralProps) {
-        if (props.isLoading && !props.isConnecting && !props.isLoggingIn) {
-            this.props.setLoading(false);
-
-            if (!props.isConnected) {
-                this.props.navigate('/offline');
-            }
-            else if (!props.isInstalled) {
-                this.props.navigate('/install');
-            }
-            else {
-                this.props.navigate('/auth');
-            }
-        }
-    }
-
-    render() {
-        if (this.props.isLoading && (this.props.isConnecting || this.props.isLoggingIn)) {
-            return (
-                <Splash />
-            );
-        }
-        else {
-            return (
-                <Row>
-                    <Background />
-                    <Col lg={5} md={6} xs={12} className="no-float align-middle">
-                        {/*<LangSelector onSelect={() => { }} selectedIndex={0} values={[{ title: 'English(US)', image: '' }]} />*/}
-                        <Route path="/auth" component={Auth} />
-                        <Route path="/install" component={Install} />
-                        <Route exact path="/offline" component={Offline} />
-                    </Col>
-                </Row>
-            );
-        }
-    }
-}
+const GeneralContainer: React.SFC<IGeneralContainerProps> = (props) => (
+    <AnimatedSwitch animation={animations.fade()}>
+        {!props.isInstalled && (
+            <Route path="/" component={Install} />
+        )}
+        <Route path="/" exact component={Welcome} />
+        <Route path="/login" exact component={Login} />
+        <Route path="/account" exact component={Account} />
+        <Route path="/account/import" component={Import} />
+        <Route path="/account/create" component={Create} />
+        <Route path="*" component={NotFound} />
+    </AnimatedSwitch>
+);
 
 const mapStateToProps = (state: IRootState) => ({
     isLoggingIn: state.auth.isLoggingIn,
@@ -103,14 +55,11 @@ const mapStateToProps = (state: IRootState) => ({
     isConnected: state.engine.isConnected,
     isInstalled: state.engine.isInstalled,
     isConnecting: state.engine.isConnecting,
-    uid: state.engine.uid
 });
 
 const mapDispatchToProps = {
     navigate,
-    setLoading,
-    identity: identity.started,
-    reauthenticate: reauthenticate.started
+    reauthenticate: reauthenticate
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(General);
+export default connect(mapStateToProps, mapDispatchToProps)(GeneralContainer);

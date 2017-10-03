@@ -14,11 +14,22 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import './background.css';
 import * as React from 'react';
+import bg from '../../lib/triangles';
+import styled from 'styled-components';
 // import Measure from 'react-measure';
 
-import bg from '../../lib/triangles';
+const StyledBackground = styled.div`
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(img/back.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+`;
 
 export default class extends React.Component {
     shouldComponentUpdate() {
@@ -36,7 +47,7 @@ export default class extends React.Component {
             </Measure>
         );*/
         return (
-            <div className="component-background" ref={ref => ref && bg(ref)} />
+            <StyledBackground innerRef={(ref: any) => ref && bg(ref)} />
         );
     }
 }

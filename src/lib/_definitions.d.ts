@@ -16,6 +16,8 @@
 
 declare module 'jsrsasign';
 
+declare module 'react-router-transition';
+
 declare module '*.svg' {
     const content: string;
     export default content;

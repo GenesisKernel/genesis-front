@@ -20,19 +20,16 @@ import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
 import * as actions from './actions';
 
-export const identityEpic = (actions$: Observable<Action>) =>
-    actions$.filter(actions.identity.started.match)
+export const checkOnlineEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.checkOnline.started.match)
         .switchMap(action => {
             return Observable.from(api.getUid()).map(payload => {
-                return actions.identity.done({
+                return actions.checkOnline.done({
                     params: null,
-                    result: {
-                        uid: payload.uid,
-                        session: payload.token
-                    }
+                    result: true
                 });
             }).catch((error: IAPIError) => {
-                return Observable.of(actions.identity.failed({
+                return Observable.of(actions.checkOnline.failed({
                     params: null,
                     error: error.error
                 }));
@@ -61,4 +58,4 @@ export const installEpic = (actions$: Observable<Action>) =>
             }).delay(600);
         });
 
-export default combineEpics(identityEpic, installEpic);
+export default combineEpics(checkOnlineEpic, installEpic);

@@ -15,19 +15,43 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import './splash.css';
 import imgLogo from 'images/logo.svg';
+import styled from 'styled-components';
+
+const StyledSplash = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    display: table;
+
+    .content {
+        display: table-cell;
+        vertical-align: middle;
+        height: 100%;
+        padding: 10px;
+    }
+
+    .content > .loader {
+        position: relative;
+        width: 200px;
+        height: 65px;
+        margin: 0 auto;
+    }
+`;
 
 export default class extends React.Component {
     render() {
         return (
-            <div className="component-splash" style={{ background: '#23b7e5' }}>
+            <StyledSplash className="bg-dark">
                 <div className="content">
                     <div className="loader">
                         <img className="logo" src={imgLogo} />
                     </div>
                 </div>
-            </div>
+            </StyledSplash>
         );
     }
 }

@@ -165,6 +165,8 @@ const WORD_LIST = ['abandon', 'ability', 'able', 'about', 'above', 'absent', 'ab
     'wrong', 'yard', 'year', 'yellow', 'you', 'young', 'youth', 'zebra', 'zero', 'zone', 'zoo'];
 
 const randomEngine = Random();
+const signAlg = 'SHA256withECDSA';
+const curveName = 'secp256r1';
 
 export interface IWalletData {
     encKey: string;
@@ -175,24 +177,17 @@ export interface IWalletData {
     citizenID: number;
 }
 
-export default class Keyring {
-    private _publicKey: string;
-    private _encKey: string;
-    private _privateKey: string;
-
-    static readonly signAlg = 'SHA256withECDSA';
-    static readonly curveName = 'secp256r1';
-
-    static generateSeed = (count: number = 15) => {
+const keyring = {
+    generateSeed: (count: number = 15) => {
         const result: string[] = [];
         for (let i = 0; i < count; i++) {
             const value = randomEngine.pick(WORD_LIST);
             result.push(value);
         }
         return result.join(' ');
-    }
+    },
 
-    static generateKeyPair(seed: string) {
+    generateKeyPair: (seed: string) => {
         const seedLower = seed.toLowerCase();
         let seedHex = '';
         for (let i = 0; i < seedLower.length; i++) {
@@ -209,7 +204,7 @@ export default class Keyring {
             seedHex = hash.toString();
         }
 
-        const curveParams = KJUR.crypto.ECParameterDB.getByName(Keyring.curveName);
+        const curveParams = KJUR.crypto.ECParameterDB.getByName(curveName);
         const curveG = curveParams.G;
         const privateBig = new KJUR.BigInteger(seedHex, 16);
         const publicBig = curveG.multiply(privateBig);
@@ -226,13 +221,13 @@ export default class Keyring {
             private: privateHex,
             public: publicHex
         };
-    }
+    },
 
-    static encryptAES(data: string, password: string) {
+    encryptAES: (data: string, password: string) => {
         return CryptoJS.AES.encrypt(data, password).toString();
-    }
+    },
 
-    static decryptAES(data: string, password: string): string {
+    decryptAES: (data: string, password: string) => {
         const decrypted = CryptoJS.AES.decrypt(data, password).toString(CryptoJS.enc.Hex);
         let result = '';
 
@@ -242,53 +237,26 @@ export default class Keyring {
         }
 
         return result;
-    }
+    },
 
-    static fromPrivate(publicKey: string, privateKey: string) {
-        const value = new Keyring('', publicKey, privateKey);
-        value._privateKey = privateKey;
-        value._publicKey = publicKey;
-        return value;
-    }
-
-    constructor(password: string, publicKey: string, encKey: string) {
-        this._publicKey = publicKey;
-        if (encKey) {
-            this._encKey = encKey;
-            this._privateKey = Keyring.decryptAES(encKey, password);
-        }
-    }
-
-    verify(data: string = 'APLA'): boolean {
-        const encryptedData = this.sign(data);
+    verify: (privateKey: string, publicKey: string, data: string = 'APLA') => {
+        const encryptedData = keyring.sign(data, privateKey);
         const signature = new KJUR.crypto.Signature({
-            alg: Keyring.signAlg,
+            alg: signAlg,
             prov: 'cryptojs/jsrsa'
         });
 
-        signature.init({ xy: this._publicKey, curve: Keyring.curveName });
+        signature.init({ xy: publicKey, curve: curveName });
         signature.updateString(data);
         return signature.verify(encryptedData);
-    }
+    },
 
-    sign(data: string, privateKey: string = this._privateKey): string {
-        const signature = new KJUR.crypto.Signature({ alg: Keyring.signAlg });
-        signature.init({ d: this._privateKey, curve: Keyring.curveName });
+    sign: (data: string, privateKey: string) => {
+        const signature = new KJUR.crypto.Signature({ alg: signAlg });
+        signature.init({ d: privateKey, curve: curveName });
         signature.updateString(data);
         return signature.sign();
     }
+};
 
-    // Use truncate to remove redundant leading value(04). Use truncated value to send
-    // requests to the api and use non-truncated version while working with JS code
-    getPublicKey(truncate: boolean = true) {
-        return truncate ? this._publicKey.slice(2) : this._publicKey;
-    }
-
-    getPrivateKey() {
-        return this._privateKey;
-    }
-
-    getEncKey() {
-        return this._encKey;
-    }
-}
+export default keyring;
