@@ -22,7 +22,6 @@ import { navigate } from 'modules/engine/actions';
 import { reauthenticate } from 'modules/auth/actions';
 
 import AnimatedSwitch, { animations } from 'components/Animation';
-import Welcome from './containers/Welcome';
 import Login from './containers/Login';
 import Account from './containers/Account';
 import Import from './containers/Account/Import';
@@ -39,8 +38,7 @@ const GeneralContainer: React.SFC<IGeneralContainerProps> = (props) => (
         {!props.isInstalled && (
             <Route path="/" component={Install} />
         )}
-        <Route path="/" exact component={Welcome} />
-        <Route path="/login" exact component={Login} />
+        <Route path="/" exact component={Login} />
         <Route path="/account" exact component={Account} />
         <Route path="/account/import" component={Import} />
         <Route path="/account/create" component={Create} />
