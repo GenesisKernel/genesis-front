@@ -17,22 +17,25 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { navigate } from 'modules/engine/actions';
+import { importSeed, login } from 'modules/auth/actions';
 import { IRootState } from 'modules';
 
 import Import, { IImportProps } from 'components/General/Account/Import';
 
 const ImportContainer: React.SFC<IImportProps> = (props) => {
     return (
-        <Import navigate={props.navigate} return="/account" />
+        <Import {...props} return="/account" />
     );
 };
 
 const mapStateToProps = (state: IRootState) => ({
-
+    loadedSeed: state.auth.loadedSeed
 });
 
 const mapDispatchToProps = {
-    navigate
+    navigate,
+    importSeed: importSeed.started,
+    login: login.started
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ImportContainer);

@@ -27,8 +27,6 @@ import { sendAttachment } from 'lib/fs';
 import General from 'components/General';
 import Validation from 'components/Validation';
 
-const MAX_KEY_SIZE = 1024 * 10; // 10 KiB
-
 const StyledForm = styled.div`
     textarea.input-seed {
         height: 100px;
@@ -155,7 +153,7 @@ export default class extends React.Component<ICreateProps, ICreateState> {
 
     onLoadSuccess(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.files && e.target.files[0]) {
-            if (MAX_KEY_SIZE < e.target.files[0].size) {
+            if (keyring.MAX_KEY_SIZE < e.target.files[0].size) {
                 // TODO: Notification stub
                 alert('Uploaded key is too big or contains incorrect data');
             }

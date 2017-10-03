@@ -185,6 +185,8 @@ export interface IWalletData {
 }
 
 const keyring = {
+    MAX_KEY_SIZE: 1024 * 10, // 10 KiB
+
     generateSeed: (count: number = 15) => {
         const result: string[] = [];
         for (let i = 0; i < count; i++) {
