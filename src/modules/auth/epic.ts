@@ -49,28 +49,6 @@ export const loginEpic = (actions$: Observable<Action>) =>
             });
         });
 
-export const reauthenticateEpic = (action$: Observable<Action>) =>
-    action$.filter(actions.reauthenticate.match)
-        .switchMap(action => {
-            const promise = api.getUid().then(uid => {
-                const signature = keyring.sign(uid.uid, action.payload.privateKey);
-                return api.login(uid.token, action.payload.publicKey, signature);
-            });
-
-            return Observable.from(promise).map(payload => {
-                return actions.login.started({
-                    // Pass-through provided keys
-                    ...action.payload,
-                    remember: true
-                });
-            }).catch((e: IAPIError) => {
-                // TODO: Clear stored session
-                return Observable.of(actions.login.failed({
-                    params: null,
-                    error: e.error
-                }));
-            });
-        });
 
 export const importSeedEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.importSeed.started.match)
@@ -113,4 +91,4 @@ export const createAccountEpic = (actions$: Observable<Action>) =>
             });
         });
 
-export default combineEpics(loginEpic, reauthenticateEpic, importSeedEpic, createAccountEpic);
+export default combineEpics(loginEpic, importSeedEpic, createAccountEpic);

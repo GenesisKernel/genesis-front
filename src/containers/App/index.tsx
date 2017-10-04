@@ -15,15 +15,16 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { IntlProvider } from 'react-intl';
-import { reauthenticate } from 'modules/auth/actions';
+import { login } from 'modules/auth/actions';
 import { navigate, checkOnline, setLoading } from 'modules/engine/actions';
 import storage from 'lib/storage';
 import * as classnames from 'classnames';
 
+import AnimatedSwitch, { animations } from 'components/Animation';
 import Splash from 'components/Splash';
 import Offline from 'containers/Offline';
 import Main from 'containers/Main';
@@ -40,7 +41,7 @@ interface IAppProps {
     isConnecting: boolean;
     navigate?: typeof navigate;
     setLoading?: typeof setLoading;
-    reauthenticate?: typeof reauthenticate;
+    login?: typeof login.started;
     checkOnline?: typeof checkOnline.started;
 }
 
@@ -57,10 +58,14 @@ class App extends React.Component<IAppProps> {
                 const privateKey = storage.settings.load('privateKey');
                 const publicKey = storage.settings.load('publicKey');
                 if (privateKey && publicKey) {
-                    this.props.reauthenticate({
+                    this.props.login({
                         privateKey,
-                        publicKey
+                        publicKey,
+                        remember: true
                     });
+                }
+                else {
+                    this.props.setLoading(false);
                 }
             }
             else {
@@ -68,7 +73,7 @@ class App extends React.Component<IAppProps> {
             }
         }
 
-        if (null === this.props.isAuthenticated && props.isAuthenticated) {
+        if (this.props.isAuthenticated !== props.isAuthenticated) {
             this.props.setLoading(false);
         }
     }
@@ -84,8 +89,8 @@ class App extends React.Component<IAppProps> {
         return (
             <IntlProvider locale={this.props.locale}>
                 <div className={classes}>
-                    <Switch>
-                        {this.props.isConnecting && this.props.isLoading && (
+                    <AnimatedSwitch animation={animations.fade()}>
+                        {this.props.isLoading && (
                             <Route path="/" component={Splash} />
                         )}
                         {!this.props.isConnected && (
@@ -95,7 +100,7 @@ class App extends React.Component<IAppProps> {
                             <Route path="/" component={General} />
                         )}
                         <Route path="/" component={Main} />
-                    </Switch>
+                    </AnimatedSwitch>
                 </div>
             </IntlProvider>
         );
@@ -115,9 +120,9 @@ const mapStateToProps = (state: IRootState) => ({
 
 const mapDispatchToProps = {
     navigate,
+    setLoading,
     checkOnline: checkOnline.started,
-    reauthenticate,
-    setLoading
+    login: login.started
 };
 
 export default connect(mapStateToProps, mapDispatchToProps, null, { pure: false })(App);

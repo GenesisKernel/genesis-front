@@ -84,17 +84,6 @@ export default (state: State = initialState, action: Action): State => {
         };
     }
 
-    if (isType(action, actions.reauthenticate)) {
-        return {
-            ...state,
-            isAuthenticated: false,
-            isLoggingIn: true,
-            account: null,
-            sessionToken: null,
-            refreshToken: null
-        };
-    }
-
     if (isType(action, actions.importSeed.done)) {
         return {
             ...state,

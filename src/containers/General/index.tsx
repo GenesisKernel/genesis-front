@@ -19,7 +19,6 @@ import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
 import { IRootState } from 'modules';
 import { navigate } from 'modules/engine/actions';
-import { reauthenticate } from 'modules/auth/actions';
 
 import AnimatedSwitch, { animations } from 'components/Animation';
 import Login from './containers/Login';
@@ -56,8 +55,7 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    navigate,
-    reauthenticate: reauthenticate
+    navigate
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(GeneralContainer);
