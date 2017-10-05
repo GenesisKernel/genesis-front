@@ -21,12 +21,15 @@ import { IRootState } from 'modules';
 import { setCollapsed } from 'modules/engine/actions';
 
 import Main, { IMainProps } from 'components/Main';
+import Tables from 'containers/Main/containers/Admin/Tables';
+import TablesCreate from 'containers/Main/containers/Admin/Tables/Create';
+import TablesView from 'containers/Main/containers/Admin/Tables/View';
+import Interface from 'containers/Main/containers/Admin/Interface';
 import Dashboard from 'containers/Main/containers/Dashboard';
 import Debug from 'containers/Main/containers/Debug';
 import Backup from 'containers/Main/containers/Backup';
 import EcosystemCreate from 'containers/Main/containers/EcosystemCreate';
 import MoneyTransfer from 'containers/Main/containers/MoneyTransfer';
-import Forging from 'containers/Main/containers/Forging';
 import RequestMembership from 'containers/Main/containers/RequestMembership';
 import NotFound from 'containers/Main/containers/NotFound';
 
@@ -35,9 +38,12 @@ const MainContainer: React.SFC<IMainProps> = (props, context) => {
         <Main {...props}>
             <Switch>
                 <Route exact path="/" component={Dashboard} />
+                <Route exact path="/admin/tables" component={Tables} />
+                <Route exact path="/admin/tables/create" component={TablesCreate} />
+                <Route exact path="/admin/tables/:tableName" component={TablesView} />
+                <Route exact path="/admin/interface" component={Interface} />
                 <Route exact path="/debug" component={Debug} />
                 <Route exact path="/backup" component={Backup} />
-                <Route exact path="/forging" component={Forging} />
                 <Route exact path="/create-ecosystem" component={EcosystemCreate} />
                 <Route exact path="/request-membership" component={RequestMembership} />
                 <Route exact path="/transfer" component={MoneyTransfer} />

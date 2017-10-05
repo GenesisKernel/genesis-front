@@ -18,6 +18,7 @@ import 'rxjs';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { routerMiddleware } from 'react-router-redux';
 import { createEpicMiddleware } from 'redux-observable';
+//import txMiddleware from 'modules/middleware/tx';
 import createHistory from 'history/createBrowserHistory';
 import rootReducer, { rootEpic, IRootState } from './modules';
 

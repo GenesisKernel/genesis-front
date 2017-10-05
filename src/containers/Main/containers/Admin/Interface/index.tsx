@@ -17,20 +17,40 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
+import { getPages } from 'modules/admin/actions';
+import { IPagesResponse } from 'lib/api';
 
-import Backup, { IBackupProps } from 'components/Main/Backup';
+import Interface from 'components/Main/Admin/Interface';
 
-const BackupContainer: React.SFC<IBackupProps> = (props) => (
-    <Backup {...props} />
-);
+interface IInterfaceContainerProps {
+    session: string;
+    pages: IPagesResponse;
+    getPages: typeof getPages.started;
+}
+
+class InterfaceContainer extends React.Component<IInterfaceContainerProps> {
+    componentWillMount() {
+        this.props.getPages({ session: this.props.session });
+    }
+
+    render() {
+        return (
+            <Interface
+                pages={this.props.pages && this.props.pages.pages || []}
+                menus={this.props.pages && this.props.pages.menus || []}
+                blocks={this.props.pages && this.props.pages.blocks || []}
+            />
+        );
+    }
+}
 
 const mapStateToProps = (state: IRootState) => ({
-    account: state.auth.account,
-    privateKey: state.auth.privateKey
+    session: state.auth.sessionToken,
+    pages: state.admin.pages
 });
 
 const mapDispatchToProps = {
-
+    getPages: getPages.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(BackupContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(InterfaceContainer);

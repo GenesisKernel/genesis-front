@@ -72,6 +72,44 @@ export interface IContentResponse extends IResponse {
     tree: string;
 }
 
+export interface ITableResponse extends IResponse {
+    name: string;
+    insert: string;
+    new_column: string;
+    update: string;
+    conditions: string;
+    columns: {
+        name: string;
+        type: string;
+        perm: string;
+    }[];
+}
+
+export interface ITablesResponse extends IResponse {
+    count: string;
+    list: {
+        name: string;
+        count: string;
+    }[];
+}
+
+export interface IListResponse extends IResponse {
+    count: string;
+    list: [IDBValue & {
+        [key: string]: string;
+    }];
+}
+
+export interface IPagesResponse extends IResponse {
+    pages: [IDBValue & { name: string }];
+    menus: [IDBValue & { name: string }];
+    blocks: [IDBValue & { name: string }];
+}
+
+export interface IDBValue {
+    id: string;
+}
+
 const request = async (endpoint: string, body: { [key: string]: any }, options?: RequestInit) => {
     // TODO: Set request timeout
     const requestUrl = `${apiRoot}/${endpoint}`;
@@ -106,35 +144,56 @@ const request = async (endpoint: string, body: { [key: string]: any }, options?:
     return json;
 };
 
-const securedRequest = async (endpoint: string, session: string, body: { [key: string]: any }, options?: RequestInit) => {
+const securedRequest = async (endpoint: string, session: string, body: { [key: string]: any }, options?: RequestInit, mapper?: (response: any) => any) => {
     const extendedOptions = Object.assign({}, options, {
         headers: {
             Authorization: `Bearer ${session}`
         }
     });
-    return await request(endpoint, body, extendedOptions);
+    const response = await request(endpoint, body, extendedOptions);
+    if (mapper) {
+        return mapper(response);
+    }
+    else {
+        return response;
+    }
 };
 
-export default {
+const api = {
     // Level 0
-    install: async (params: IInstallParams) => await request('install', params) as Promise<IInstallResponse>,
-    refresh: async (token: string) => await request('refresh', { token }) as Promise<IRefreshResponse>,
+    install: (params: IInstallParams) => request('install', params) as Promise<IInstallResponse>,
+    refresh: (token: string) => request('refresh', { token }) as Promise<IRefreshResponse>,
 
     // Level 1
-    getUid: async () => await request('getuid', null, { method: 'GET', body: null }) as Promise<IGetUidResponse>,
-    signTest: async (forSign: string, privateKey: string, publicKey: string) => await request('signtest/', {
+    getUid: () => request('getuid', null, { method: 'GET', body: null }) as Promise<IGetUidResponse>,
+    signTest: (forSign: string, privateKey: string, publicKey: string) => request('signtest/', {
         private: privateKey,
         forsign: forSign,
         pubkey: publicKey
     }) as Promise<ISignTestResponse>,
-    login: async (session: string, publicKey: string, signature: string, state: number = 0) => await securedRequest('login', session, {
+    login: (session: string, publicKey: string, signature: string, state: number = 0) => securedRequest('login', session, {
         pubkey: publicKey.slice(2),
         signature,
         state
     }) as Promise<ILoginResponse>,
 
     // Level 2
-    contentMenu: async (session: string, name: string) => await securedRequest(`content/menu/${name}`, session, null, { method: 'GET' }) as Promise<IContentResponse>,
-    contentPage: async (session: string, name: string) => await securedRequest(`content/page/${name}`, session, null, { method: 'GET' }) as Promise<IContentResponse>,
-    contentTest: async (session: string, template: string) => await securedRequest(`content`, session, { template }) as Promise<IContentResponse>
+    contentMenu: (session: string, name: string) => securedRequest(`content/menu/${name}`, session, null, { method: 'GET' }) as Promise<IContentResponse>,
+    contentPage: (session: string, name: string) => securedRequest(`content/page/${name}`, session, null, { method: 'GET' }) as Promise<IContentResponse>,
+    contentTest: (session: string, template: string) => securedRequest(`content`, session, { template }) as Promise<IContentResponse>,
+    table: (session: string, name: string) => securedRequest(`table/${name}`, session, null, { method: 'GET' }) as Promise<ITableResponse>,
+    tables: (session: string, offset?: number, limit?: number) => securedRequest(`tables?offset=${offset || 0}&limit=${limit || 0}`, session, null, { method: 'GET' }) as Promise<ITablesResponse>,
+    list: (session: string, name: string, offset?: number, limit?: number, columns?: string) => securedRequest(`list/${name}?offset=${offset || 0}&limit=${limit || 0}&columns=${columns || ''}`, session, null, { method: 'GET' }) as Promise<IListResponse>,
+    pages: (session: string) => Promise.all([
+        api.list(session, 'pages', 0, 0, 'name'),
+        api.list(session, 'menu', 0, 0, 'name'),
+    ]).then(results => ({
+        pages: results[0].list,
+        menus: results[1].list,
+
+        // TODO: Blocks are not supported
+        blocks: []
+    })) as Promise<IPagesResponse>
 };
+
+export default api;

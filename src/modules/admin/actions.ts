@@ -15,12 +15,10 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { push } from 'react-router-redux';
-import { IInstallParams } from 'lib/api';
+import { IListResponse, ITableResponse, ITablesResponse, IPagesResponse } from 'lib/api';
 
-const actionCreator = actionCreatorFactory('engine');
-export const navigate = (url: string) => push(url);
-export const checkOnline = actionCreator.async<undefined, boolean, string>('CHECK_ONLINE');
-export const install = actionCreator.async<IInstallParams, { uid: string, session: string }, string>('INSTALL');
-export const setLoading = actionCreator<boolean>('SET_LOADING');
-export const setCollapsed = actionCreator<boolean>('SET_COLLAPSED');
+const actionCreator = actionCreatorFactory('admin');
+export const createTable = actionCreator.async<{ session: string, table: string }, void, void>('CREATE_TABLE');
+export const getTable = actionCreator.async<{ session: string, table: string }, { table: ITableResponse, data: IListResponse }, string>('GET_TABLE');
+export const getTables = actionCreator.async<{ session: string, offset?: number, limit?: number }, ITablesResponse, string>('GET_TABLES');
+export const getPages = actionCreator.async<{ session: string }, IPagesResponse, string>('GET_PAGES');

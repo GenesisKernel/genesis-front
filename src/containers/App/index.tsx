@@ -87,7 +87,7 @@ class App extends React.Component<IAppProps> {
         });
 
         return (
-            <IntlProvider locale={this.props.locale}>
+            <IntlProvider locale={this.props.locale} defaultLocale={this.props.locale}>
                 <div className={classes}>
                     <AnimatedSwitch animation={animations.fade()}>
                         {this.props.isLoading && (

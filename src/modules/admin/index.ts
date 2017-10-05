@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import actionCreatorFactory from 'typescript-fsa';
-import { push } from 'react-router-redux';
-import { IInstallParams } from 'lib/api';
+import reducer, { State } from './reducer';
+import epic from './epic';
+import * as actions from './actions';
 
-const actionCreator = actionCreatorFactory('engine');
-export const navigate = (url: string) => push(url);
-export const checkOnline = actionCreator.async<undefined, boolean, string>('CHECK_ONLINE');
-export const install = actionCreator.async<IInstallParams, { uid: string, session: string }, string>('INSTALL');
-export const setLoading = actionCreator<boolean>('SET_LOADING');
-export const setCollapsed = actionCreator<boolean>('SET_COLLAPSED');
+export type State = State;
+export {
+    actions,
+    reducer,
+    epic
+};

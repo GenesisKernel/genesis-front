@@ -17,20 +17,36 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
+import { getTables } from 'modules/admin/actions';
+import { ITablesResponse } from 'lib/api';
 
-import Backup, { IBackupProps } from 'components/Main/Backup';
+import Tables from 'components/Main/Admin/Tables';
 
-const BackupContainer: React.SFC<IBackupProps> = (props) => (
-    <Backup {...props} />
-);
+interface ITablesContainerProps {
+    session: string;
+    tables: ITablesResponse;
+    getTables: typeof getTables.started;
+}
+
+class TablesContainer extends React.Component<ITablesContainerProps & { match?: { params: { tableName: string } } }> {
+    componentWillMount() {
+        this.props.getTables({ session: this.props.session });
+    }
+
+    render() {
+        return (
+            <Tables tables={this.props.tables} />
+        );
+    }
+}
 
 const mapStateToProps = (state: IRootState) => ({
-    account: state.auth.account,
-    privateKey: state.auth.privateKey
+    session: state.auth.sessionToken,
+    tables: state.admin.tables
 });
 
 const mapDispatchToProps = {
-
+    getTables: getTables.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(BackupContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(TablesContainer);

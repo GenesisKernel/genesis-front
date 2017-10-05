@@ -17,20 +17,38 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
+import { getTable } from 'modules/admin/actions';
+import { ITableResponse, IListResponse } from 'lib/api';
 
-import Backup, { IBackupProps } from 'components/Main/Backup';
+import View from 'components/Main/Admin/Tables/View';
 
-const BackupContainer: React.SFC<IBackupProps> = (props) => (
-    <Backup {...props} />
-);
+interface IViewContainerProps {
+    session: string;
+    table: ITableResponse;
+    tableData: IListResponse;
+    getTable: typeof getTable.started;
+}
+
+class ViewContainer extends React.Component<IViewContainerProps & { match?: { params: { tableName: string } } }> {
+    componentWillMount() {
+        this.props.getTable({ session: this.props.session, table: this.props.match.params.tableName });
+    }
+
+    render() {
+        return (
+            <View tableName={this.props.match.params.tableName} table={this.props.table} tableData={this.props.tableData} />
+        )
+    }
+}
 
 const mapStateToProps = (state: IRootState) => ({
-    account: state.auth.account,
-    privateKey: state.auth.privateKey
+    session: state.auth.sessionToken,
+    table: state.admin.table,
+    tableData: state.admin.tableData
 });
 
 const mapDispatchToProps = {
-
+    getTable: getTable.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(BackupContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(ViewContainer);

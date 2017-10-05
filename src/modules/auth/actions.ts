@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import actionCreatorFactory from 'typescript-fsa';
+import actionCreatorFactory, { EmptyActionCreator } from 'typescript-fsa';
 import { ILoginResponse } from 'lib/api';
 import { IStoredKey } from 'lib/storage';
 
 const actionCreator = actionCreatorFactory('auth');
 export const login = actionCreator.async<{ privateKey: string, publicKey: string, remember: boolean }, ILoginResponse & { account: IStoredKey, privateKey: string }, string>('LOGIN');
 export const setAction = actionCreator<string>('SET_ACTION');
-export const importSeed = actionCreator.async<Blob, string, void>('IMPORT_SEED');
-export const createAccount = actionCreator.async<{ privateKey: string, publicKey: string, password: string }, { id: string, address: string, privateKey: string, publicKey: string, password: string }, void>('CREATE_ACCOUNT');
-export const clearCreatedAccount = actionCreator<void>('CLEAR_CREATED_ACCOUNT');
+export const importSeed = actionCreator.async<Blob, string, undefined>('IMPORT_SEED');
+export const createAccount = actionCreator.async<{ privateKey: string, publicKey: string, password: string }, { id: string, address: string, privateKey: string, publicKey: string, password: string }, undefined>('CREATE_ACCOUNT');
+export const clearCreatedAccount = actionCreator<undefined>('CLEAR_CREATED_ACCOUNT') as EmptyActionCreator;

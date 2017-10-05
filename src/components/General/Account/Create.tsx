@@ -87,7 +87,7 @@ export default class extends React.Component<ICreateProps, ICreateState> {
         }
 
         if (props.createdAccount) {
-            props.clearCreatedAccount(null);
+            props.clearCreatedAccount();
             const encKey = keyring.encryptAES(props.createdAccount.privateKey, props.createdAccount.password);
 
             storage.accounts.save({

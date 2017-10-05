@@ -74,10 +74,6 @@ const Sidebar: React.SFC = (props) => {
                             <em className="icon-book-open" />
                             <span><FormattedMessage id="general.history" defaultMessage="History" /></span>
                         </LinkButton>
-                        <LinkButton to="/forging">
-                            <em className="icon-graph" />
-                            <span><FormattedMessage id="general.forging" defaultMessage="Forging" /></span>
-                        </LinkButton>
                         <LinkButton to="/backup">
                             <em className="icon-shield" />
                             <span><FormattedMessage id="general.backup" defaultMessage="Backup" /></span>
@@ -109,6 +105,18 @@ const Sidebar: React.SFC = (props) => {
                         <LinkButton to="/debug">
                             <em className="icon-speedometer" />
                             <span>Debug page</span>
+                        </LinkButton>
+
+                        <li className="nav-heading">
+                            <span>Admin tools</span>
+                        </li>
+                        <LinkButton to="/admin/tables">
+                            <em className="icon-speedometer" />
+                            <span>Tables</span>
+                        </LinkButton>
+                        <LinkButton to="/admin/interface">
+                            <em className="icon-speedometer" />
+                            <span>Interface</span>
                         </LinkButton>
                     </ul>
                 </nav>
