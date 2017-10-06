@@ -37,7 +37,7 @@ class ViewContainer extends React.Component<IViewContainerProps & { match?: { pa
     render() {
         return (
             <View tableName={this.props.match.params.tableName} table={this.props.table} tableData={this.props.tableData} />
-        )
+        );
     }
 }
 

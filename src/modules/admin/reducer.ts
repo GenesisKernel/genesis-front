@@ -59,7 +59,7 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             pending: false,
             pages: action.payload.result
-        }
+        };
     }
 
     if (isType(action, actions.getPages.failed)) {
@@ -84,7 +84,7 @@ export default (state: State = initialState, action: Action): State => {
             pending: false,
             page: action.payload.result.page,
             menus: action.payload.result.menus
-        }
+        };
     }
 
     if (isType(action, actions.getPage.failed)) {
@@ -109,7 +109,7 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             pending: false,
             tables: action.payload.result
-        }
+        };
     }
 
     if (isType(action, actions.getTables.failed)) {
@@ -135,7 +135,7 @@ export default (state: State = initialState, action: Action): State => {
             pending: false,
             table: action.payload.result.table,
             tableData: action.payload.result.data
-        }
+        };
     }
 
     if (isType(action, actions.getTable.failed)) {
@@ -163,7 +163,7 @@ export default (state: State = initialState, action: Action): State => {
                 block: action.payload.result,
                 error: null
             }
-        }
+        };
     }
 
     if (isType(action, actions.createPage.failed)) {
@@ -193,7 +193,7 @@ export default (state: State = initialState, action: Action): State => {
                 block: action.payload.result,
                 error: null
             }
-        }
+        };
     }
 
     if (isType(action, actions.editPage.failed)) {
@@ -223,7 +223,7 @@ export default (state: State = initialState, action: Action): State => {
                 block: action.payload.result,
                 error: null
             }
-        }
+        };
     }
 
     if (isType(action, actions.createMenu.failed)) {
@@ -250,7 +250,7 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             pending: false,
             menus: action.payload.result
-        }
+        };
     }
 
     if (isType(action, actions.getMenus.failed)) {

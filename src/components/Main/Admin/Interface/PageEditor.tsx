@@ -66,6 +66,7 @@ const PageEditor: React.SFC<IPageEditorProps> = (props) => (
                         <div className="form-control" style={{ height: 'auto', padding: 0 }}>
                             <MonacoEditor
                                 height={400}
+                                language="protypo"
                                 value={props.template}
                                 onChange={props.onSourceEdit}
                                 options={{
@@ -80,7 +81,6 @@ const PageEditor: React.SFC<IPageEditorProps> = (props) => (
                             <FormattedMessage id="admin.interface.menu" defaultMessage="Menu" />
                         </label>
                         <Validation.components.ValidatedSelect name="menu" validators={[Validation.validators.required]} onChange={props.onMenuSelect} value={props.menu ? (props.menu.name || '') : ' '}>
-                            <option></option>
                             {props.menus.map(menu => (
                                 <option key={menu.id} value={menu.name}>{menu.name}</option>
                             ))}

@@ -39,13 +39,13 @@ export const createPageEpic = (actions$: Observable<Action>) =>
                     signature,
                     time: response.time
                 });
-            })
+            });
 
             return Observable.from(promise).map(payload => {
                 return actions.createPage.done({
                     params: action.payload,
                     result: payload.blockid
-                })
+                });
             }).catch((error: ITxStatusResponse) =>
                 Observable.of(actions.createPage.failed({
                     params: action.payload,
@@ -71,13 +71,13 @@ export const editPageEpic = (actions$: Observable<Action>) =>
                     signature,
                     time: response.time
                 });
-            })
+            });
 
             return Observable.from(promise).map(payload => {
                 return actions.editPage.done({
                     params: action.payload,
                     result: payload.blockid
-                })
+                });
             }).catch((error: ITxStatusResponse) =>
                 Observable.of(actions.editPage.failed({
                     params: action.payload,
@@ -102,13 +102,13 @@ export const createMenuEpic = (actions$: Observable<Action>) =>
                     signature,
                     time: response.time
                 });
-            })
+            });
 
             return Observable.from(promise).map(payload => {
                 return actions.createMenu.done({
                     params: action.payload,
                     result: payload.blockid
-                })
+                });
             }).catch((error: ITxStatusResponse) =>
                 Observable.of(actions.createMenu.failed({
                     params: action.payload,
@@ -167,7 +167,7 @@ export const getTablesEpic = (actions$: Observable<Action>) =>
                 return actions.getTables.done({
                     params: null,
                     result: payload
-                })
+                });
             }).catch((error: IAPIError) => {
                 return Observable.of(actions.getTables.failed({
                     params: null,
@@ -183,7 +183,7 @@ export const getPagesEpic = (actions$: Observable<Action>) =>
                 return actions.getPages.done({
                     params: null,
                     result: payload
-                })
+                });
             }).catch((error: IAPIError) => {
                 return Observable.of(actions.getPages.failed({
                     params: null,
@@ -199,7 +199,7 @@ export const getPageEpic = (actions$: Observable<Action>) =>
                 return actions.getPage.done({
                     params: null,
                     result: payload
-                })
+                });
             }).catch((error: IAPIError) => {
                 return Observable.of(actions.getPage.failed({
                     params: null,

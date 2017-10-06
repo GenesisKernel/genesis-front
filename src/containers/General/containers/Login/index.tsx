@@ -23,7 +23,7 @@ import Login, { ILoginProps } from 'components/General/Login';
 
 const LoginContainer: React.SFC<ILoginProps> = (props) => (
     <Login {...props} intl={null} />
-)
+);
 
 const mapDispatchToProps = {
     navigate,

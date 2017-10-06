@@ -33,7 +33,7 @@ const DataPresenter: React.SFC<{ type: string, data: any }> = (props) => {
 
         case 'money':
         case 'numbers':
-            return (<span>{props.data}</span>)
+            return (<span>{props.data}</span>);
 
         default:
             return (<span className="text-muted">[BLOB]</span>);
@@ -71,7 +71,7 @@ const View: React.SFC<IViewProps> = (props) => (
                             </tr>
                         </thead>
                         <tbody>
-                            {props.table && props.tableData.list.sort((a, b) => parseInt(a.id) - parseInt(b.id)).map((row) => (
+                            {props.table && props.tableData.list.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10)).map((row) => (
                                 <tr key={row.id}>
                                     <td>{row.id}</td>
                                     {props.table.columns.map(col => (

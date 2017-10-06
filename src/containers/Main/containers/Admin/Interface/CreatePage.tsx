@@ -31,7 +31,7 @@ class CreatePageContainer extends React.Component<ICreatePageProps & { getMenus:
             <CreatePage {...this.props} />
         );
     }
-};
+}
 
 const mapStateToProps = (state: IRootState) => ({
     session: state.auth.sessionToken,

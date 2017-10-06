@@ -49,7 +49,6 @@ export const loginEpic = (actions$: Observable<Action>) =>
             });
         });
 
-
 export const importSeedEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.importSeed.started.match)
         .switchMap(action => {

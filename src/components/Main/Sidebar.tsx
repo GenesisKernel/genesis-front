@@ -18,6 +18,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { NavLink, NavLinkProps } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
+import * as propTypes from 'prop-types';
 
 const SidebarWrapper: React.SFC<{ className?: string }> = (props) => (
     <aside className={`aside ${props.className}`}>
@@ -30,23 +31,16 @@ const StyledSidebar = styled(SidebarWrapper) `
     overflow: hidden;
 `;
 
-class LinkButton extends React.Component<NavLinkProps> {
-    render() {
-        const { router } = this.context;
-        const isActive = (router.route.location.pathname) === this.props.to;
+const LinkButton: React.SFC<NavLinkProps> = (props, context) => (
+    <li className={(context.router.route.location.pathname) === props.to ? 'active' : ''}>
+        <NavLink {...props}>
+            {props.children}
+        </NavLink>
+    </li>
+);
 
-        return (
-            <li className={isActive ? 'active' : ''}>
-                <NavLink {...this.props}>
-                    {this.props.children}
-                </NavLink>
-            </li>
-        );
-    }
-}
-
-LinkButton['contextTypes'] = {
-    router: React.PropTypes.object.isRequired
+LinkButton.contextTypes = {
+    router: propTypes.object.isRequired
 };
 
 const Sidebar: React.SFC = (props) => {

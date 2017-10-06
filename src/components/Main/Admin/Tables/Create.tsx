@@ -40,8 +40,7 @@ const Create: React.SFC<ICreateProps> = (props) => (
                 <FormattedMessage id="admin.tables.create" defaultMessage="Create" />
             </li>
         </ol>
-        <Panel bsStyle="default">
-        </Panel>
+        <Panel bsStyle="default" />
     </div>
 );
 

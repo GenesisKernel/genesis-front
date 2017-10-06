@@ -31,7 +31,7 @@ class EditPageContainer extends React.Component<IEditPageProps & { getPage: type
             <EditPage {...this.props} />
         );
     }
-};
+}
 
 const mapStateToProps = (state: IRootState) => ({
     session: state.auth.sessionToken,

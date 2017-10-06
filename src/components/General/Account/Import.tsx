@@ -61,7 +61,7 @@ interface IImportState {
     seed?: string;
 }
 
-class Import extends React.Component<IImportProps, IImportState>{
+class Import extends React.Component<IImportProps, IImportState> {
     inputFile: HTMLInputElement;
 
     constructor(props: IImportProps) {

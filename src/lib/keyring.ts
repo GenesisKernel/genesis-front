@@ -270,7 +270,7 @@ const keyring = {
     backup: (key: IKeyBackup) => {
         return [
             `ID: ${key.id}`,
-            //`Seed: e2cfd8ff56f96996a65261c78aceff2a12ceb748d5459e6120f4ba612d67633d`,
+            // `Seed: e2cfd8ff56f96996a65261c78aceff2a12ceb748d5459e6120f4ba612d67633d`,
             `Private Key: ${key.privateKey}`,
             `Public Key: ${key.publicKey}`,
             `Address: ${key.address}`

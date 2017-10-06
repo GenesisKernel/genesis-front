@@ -56,8 +56,9 @@ export default class extends React.Component<IProtypoProps> {
     }
 
     renderElements(elements: IProtypoElement[]): React.ReactNode[] {
-        if (!elements)
+        if (!elements) {
             return null;
+        }
 
         return elements.map(element => (
             this.renderElement(element)

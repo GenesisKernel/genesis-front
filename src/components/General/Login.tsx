@@ -55,11 +55,10 @@ class Login extends React.Component<ILoginProps, ILoginState> {
     }
 
     onCreateAccount() {
-        this.props.navigate(`/account`);
+        this.props.navigate('/account');
     }
 
     onSubmit(values: { [key: string]: any }) {
-        //const keyring = new Keyring(values.password, this.state.account.publicKey, this.state.account.encKey);
         const privateKey = keyring.decryptAES(this.state.account.encKey, values.password);
         if (privateKey) {
             if (values.remember) {

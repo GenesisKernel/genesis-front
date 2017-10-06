@@ -17,7 +17,7 @@
 import * as React from 'react';
 
 export interface ISpanProps {
-    'class'?: string
+    'class'?: string;
 }
 
 const Span: React.SFC<ISpanProps> = (props) => (

@@ -17,7 +17,7 @@
 import * as React from 'react';
 
 export interface IEmProps {
-    'class'?: string
+    'class'?: string;
 }
 
 const Em: React.SFC<IEmProps> = (props) => (

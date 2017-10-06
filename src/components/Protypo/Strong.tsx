@@ -17,7 +17,7 @@
 import * as React from 'react';
 
 export interface IStrongProps {
-    'class'?: string
+    'class'?: string;
 }
 
 const Strong: React.SFC<IStrongProps> = (props) => (

@@ -207,7 +207,7 @@ const api = {
     row: (session: string, table: string, id: string, columns?: string) => securedRequest(`row/${table}/${id}?columns=${columns || ''}`, session, null, { method: 'GET' }) as Promise<IRowResponse>,
     contentMenu: (session: string, name: string) => securedRequest(`content/menu/${name}`, session, null, { method: 'GET' }) as Promise<IContentResponse>,
     contentPage: (session: string, name: string) => securedRequest(`content/page/${name}`, session, null, { method: 'GET' }) as Promise<IContentResponse>,
-    contentTest: (session: string, template: string) => securedRequest(`content`, session, { template }) as Promise<IContentResponse>,
+    contentTest: (session: string, template: string) => securedRequest('content', session, { template }) as Promise<IContentResponse>,
     table: (session: string, name: string) => securedRequest(`table/${name}`, session, null, { method: 'GET' }) as Promise<ITableResponse>,
     tables: (session: string, offset?: number, limit?: number) => securedRequest(`tables?offset=${offset || 0}&limit=${limit || 0}`, session, null, { method: 'GET' }) as Promise<ITablesResponse>,
     list: (session: string, name: string, offset?: number, limit?: number, columns?: string) => securedRequest(`list/${name}?offset=${offset || 0}&limit=${limit || 0}&columns=${columns || ''}`, session, null, { method: 'GET' }) as Promise<IListResponse>,
@@ -233,12 +233,12 @@ const api = {
     txExec: (session: string, name: string, params: { [key: string]: any }) => securedRequest(`contract/${name}`, session, params).then((result: ITxExecResponse) => {
         return new Promise((resolve, reject) => {
             const resolver = () => {
-                api.txStatus(session, result.hash).then(result => {
-                    if (result.errmsg) {
-                        reject(result);
+                api.txStatus(session, result.hash).then(status => {
+                    if (status.errmsg) {
+                        reject(status);
                     }
-                    else if (result.blockid) {
-                        resolve(result);
+                    else if (status.blockid) {
+                        resolve(status);
                     }
                     else {
                         setTimeout(resolver, 1500);

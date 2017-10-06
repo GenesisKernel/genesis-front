@@ -17,7 +17,7 @@
 import * as React from 'react';
 
 export interface IDivProps {
-    'class'?: string
+    'class'?: string;
 }
 
 const Div: React.SFC<IDivProps> = (props) => (
