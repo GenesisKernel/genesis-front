@@ -15,10 +15,15 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IListResponse, ITableResponse, ITablesResponse, IPagesResponse } from 'lib/api';
+import { IListResponse, ITableResponse, ITablesResponse, IPagesResponse, IPageResponse } from 'lib/api';
 
 const actionCreator = actionCreatorFactory('admin');
-export const createTable = actionCreator.async<{ session: string, table: string }, void, void>('CREATE_TABLE');
+export const createTable = actionCreator.async<{ session: string, table: string }, string, string>('CREATE_TABLE');
+export const createPage = actionCreator.async<{ session: string, privateKey: string, publicKey: string, name: string, template: string, conditions: string, menu: string }, string, string>('CREATE_PAGE');
+export const editPage = actionCreator.async<{ session: string, privateKey: string, publicKey: string, id: string, template: string, conditions: string, menu: string }, string, string>('EDIT_PAGE');
+export const getPage = actionCreator.async<{ session: string, id: string }, IPageResponse, string>('GET_PAGE');
+export const createMenu = actionCreator.async<{ session: string, privateKey: string, publicKey: string, name: string, template: string, conditions: string }, string, string>('CREATE_MENU');
 export const getTable = actionCreator.async<{ session: string, table: string }, { table: ITableResponse, data: IListResponse }, string>('GET_TABLE');
 export const getTables = actionCreator.async<{ session: string, offset?: number, limit?: number }, ITablesResponse, string>('GET_TABLES');
 export const getPages = actionCreator.async<{ session: string }, IPagesResponse, string>('GET_PAGES');
+export const getMenus = actionCreator.async<{ session: string }, { id: string, name: string, conditions: string, value: string }[], string>('GET_MENUS');

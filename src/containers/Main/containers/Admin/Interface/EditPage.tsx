@@ -17,20 +17,35 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { createTable } from 'modules/admin/actions';
+import { getPage, editPage } from 'modules/admin/actions';
 
-import Create, { ICreateProps } from 'components/Main/Admin/Tables/Create';
+import EditPage, { IEditPageProps } from 'components/Main/Admin/Interface/EditPage';
 
-const CreateContainer: React.SFC<ICreateProps> = (props) => (
-    <Create {...props} />
-);
+class EditPageContainer extends React.Component<IEditPageProps & { getPage: typeof getPage.started, match?: { params: { pageID: string } } }> {
+    componentWillMount() {
+        this.props.getPage({ session: this.props.session, id: this.props.match.params.pageID });
+    }
+
+    render() {
+        return (
+            <EditPage {...this.props} />
+        );
+    }
+};
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken
+    session: state.auth.sessionToken,
+    pending: state.admin.pending,
+    page: state.admin.page,
+    menus: state.admin.menus,
+    editPageStatus: state.admin.editPageStatus,
+    privateKey: state.auth.privateKey,
+    publicKey: state.auth.account.publicKey
 });
 
 const mapDispatchToProps = {
-    createTable: createTable.started
+    editPage: editPage.started,
+    getPage: getPage.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(EditPageContainer);

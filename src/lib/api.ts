@@ -101,9 +101,35 @@ export interface IListResponse extends IResponse {
 }
 
 export interface IPagesResponse extends IResponse {
-    pages: [IDBValue & { name: string }];
     menus: [IDBValue & { name: string }];
+    pages: [IDBValue & { name: string }];
     blocks: [IDBValue & { name: string }];
+}
+
+export interface IPageResponse extends IResponse {
+    page: IDBValue & { name: string };
+    menus: [IDBValue & { name: string }];
+}
+
+export interface IRowResponse extends IResponse {
+    value: {
+        [key: string]: any;
+    } & IDBValue;
+}
+
+export interface ITxPrepareResponse extends IResponse {
+    forsign: string;
+    time: number;
+}
+
+export interface ITxExecResponse extends IResponse {
+    hash: string;
+}
+
+export interface ITxStatusResponse extends IResponse {
+    blockid: string;
+    result: string;
+    errmsg: string;
 }
 
 export interface IDBValue {
@@ -178,12 +204,20 @@ const api = {
     }) as Promise<ILoginResponse>,
 
     // Level 2
+    row: (session: string, table: string, id: string, columns?: string) => securedRequest(`row/${table}/${id}?columns=${columns || ''}`, session, null, { method: 'GET' }) as Promise<IRowResponse>,
     contentMenu: (session: string, name: string) => securedRequest(`content/menu/${name}`, session, null, { method: 'GET' }) as Promise<IContentResponse>,
     contentPage: (session: string, name: string) => securedRequest(`content/page/${name}`, session, null, { method: 'GET' }) as Promise<IContentResponse>,
     contentTest: (session: string, template: string) => securedRequest(`content`, session, { template }) as Promise<IContentResponse>,
     table: (session: string, name: string) => securedRequest(`table/${name}`, session, null, { method: 'GET' }) as Promise<ITableResponse>,
     tables: (session: string, offset?: number, limit?: number) => securedRequest(`tables?offset=${offset || 0}&limit=${limit || 0}`, session, null, { method: 'GET' }) as Promise<ITablesResponse>,
     list: (session: string, name: string, offset?: number, limit?: number, columns?: string) => securedRequest(`list/${name}?offset=${offset || 0}&limit=${limit || 0}&columns=${columns || ''}`, session, null, { method: 'GET' }) as Promise<IListResponse>,
+    page: (session: string, id: string) => Promise.all([
+        api.row(session, 'pages', id),
+        api.list(session, 'menu', 0, 0),
+    ]).then(results => ({
+        page: results[0].value,
+        menus: results[1].list
+    })) as Promise<IPageResponse>,
     pages: (session: string) => Promise.all([
         api.list(session, 'pages', 0, 0, 'name'),
         api.list(session, 'menu', 0, 0, 'name'),
@@ -193,7 +227,30 @@ const api = {
 
         // TODO: Blocks are not supported
         blocks: []
-    })) as Promise<IPagesResponse>
+    })) as Promise<IPagesResponse>,
+
+    txPrepare: (session: string, name: string, params: { [key: string]: any }) => securedRequest(`prepare/${name}`, session, params) as Promise<ITxPrepareResponse>,
+    txExec: (session: string, name: string, params: { [key: string]: any }) => securedRequest(`contract/${name}`, session, params).then((result: ITxExecResponse) => {
+        return new Promise((resolve, reject) => {
+            const resolver = () => {
+                api.txStatus(session, result.hash).then(result => {
+                    if (result.errmsg) {
+                        reject(result);
+                    }
+                    else if (result.blockid) {
+                        resolve(result);
+                    }
+                    else {
+                        setTimeout(resolver, 1500);
+                    }
+                }).catch(e => {
+                    reject(e);
+                });
+            };
+            resolver();
+        });
+    }) as Promise<ITxStatusResponse>,
+    txStatus: (session: string, hash: string) => securedRequest(`txstatus/${hash}`, session, null, { method: 'GET' }) as Promise<ITxStatusResponse>
 };
 
 export default api;

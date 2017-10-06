@@ -15,6 +15,7 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { Button, Col, Panel, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
@@ -29,24 +30,28 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
         <div className="content-heading">
             <div>
                 <div className="pull-right">
-                    <button className="btn btn-default ml">
-                        <em className="fa fa-plus-circle fa-fw mr-sm" />
-                        <span>
-                            <FormattedMessage id="admin.interface.page.create" defaultMessage="Create page" />
-                        </span>
-                    </button>
+                    <Link to="/admin/interface/create-page" className="ml">
+                        <button className="btn btn-default ml">
+                            <em className="fa fa-plus-circle fa-fw mr-sm" />
+                            <span>
+                                <FormattedMessage id="admin.interface.page.create" defaultMessage="Create page" />
+                            </span>
+                        </button>
+                    </Link>
                     <button className="btn btn-default ml">
                         <em className="fa fa-plus-circle fa-fw mr-sm" />
                         <span>
                             <FormattedMessage id="admin.interface.block.create" defaultMessage="Create block" />
                         </span>
                     </button>
-                    <button className="btn btn-default ml">
-                        <em className="fa fa-plus-circle fa-fw mr-sm" />
-                        <span>
-                            <FormattedMessage id="admin.interface.menu.create" defaultMessage="Create menu" />
-                        </span>
-                    </button>
+                    <Link to="/admin/interface/create-menu" className="ml">
+                        <button className="btn btn-default">
+                            <em className="fa fa-plus-circle fa-fw mr-sm" />
+                            <span>
+                                <FormattedMessage id="admin.interface.menu.create" defaultMessage="Create menu" />
+                            </span>
+                        </button>
+                    </Link>
                 </div>
             </div>
             <FormattedMessage id="admin.interface" defaultMessage="Interface" />
@@ -70,11 +75,13 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                         <tr key={page.id}>
                                             <td>{page.name}</td>
                                             <td style={{ width: 1 }}>
-                                                <Button bsStyle="default" className="btn-labeled btn-icon">
-                                                    <span className="btn-label">
-                                                        <em className="fa fa-edit" />
-                                                    </span>
-                                                </Button>
+                                                <Link to={`/admin/interface/page/${page.id}-${page.name}`}>
+                                                    <Button bsStyle="default" className="btn-labeled btn-icon">
+                                                        <span className="btn-label">
+                                                            <em className="fa fa-edit" />
+                                                        </span>
+                                                    </Button>
+                                                </Link>
                                             </td>
                                         </tr>
                                     ))}

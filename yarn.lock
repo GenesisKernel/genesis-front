@@ -4751,6 +4751,19 @@ react-redux@^5.0.6:
     loose-envify "^1.1.0"
     prop-types "^15.5.10"
 
+react-resize-aware-monaco@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/react-resize-aware-monaco/-/react-resize-aware-monaco-0.1.4.tgz#4f164f06d5558ee561c901c36db4981cdddda89b"
+  dependencies:
+    monaco-editor "^0.10.0"
+    react-resize-detector "^0.6.0"
+
+react-resize-detector@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/react-resize-detector/-/react-resize-detector-0.6.0.tgz#7625d60edf6d89c812d4833d49ef53696dd9bca9"
+  dependencies:
+    prop-types "^15.5.10"
+
 react-router-dom@^4.1.1, react-router-dom@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-4.1.2.tgz#7f8a7ca868d32acadd19ca09543b40d26df8ec37"

@@ -14,11 +14,107 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import api, { IAPIError } from 'lib/api';
+import api, { IAPIError, ITxStatusResponse } from 'lib/api';
+import keyring from 'lib/keyring';
 import { Action } from 'redux';
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
 import * as actions from './actions';
+
+export const createPageEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.createPage.started.match)
+        .switchMap(action => {
+            const execParams = {
+                Name: action.payload.name,
+                Value: action.payload.template,
+                Menu: action.payload.menu,
+                Conditions: action.payload.conditions
+            };
+
+            const promise = api.txPrepare(action.payload.session, 'NewPage', execParams).then(response => {
+                const signature = keyring.sign(response.forsign, action.payload.privateKey);
+                return api.txExec(action.payload.session, 'NewPage', {
+                    ...execParams,
+                    pubkey: action.payload.publicKey,
+                    signature,
+                    time: response.time
+                });
+            })
+
+            return Observable.from(promise).map(payload => {
+                return actions.createPage.done({
+                    params: action.payload,
+                    result: payload.blockid
+                })
+            }).catch((error: ITxStatusResponse) =>
+                Observable.of(actions.createPage.failed({
+                    params: action.payload,
+                    error: error.error || error.errmsg
+                })));
+        });
+
+export const editPageEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.editPage.started.match)
+        .switchMap(action => {
+            const execParams = {
+                Id: action.payload.id,
+                Value: action.payload.template,
+                Menu: action.payload.menu,
+                Conditions: action.payload.conditions
+            };
+
+            const promise = api.txPrepare(action.payload.session, 'EditPage', execParams).then(response => {
+                const signature = keyring.sign(response.forsign, action.payload.privateKey);
+                return api.txExec(action.payload.session, 'EditPage', {
+                    ...execParams,
+                    pubkey: action.payload.publicKey,
+                    signature,
+                    time: response.time
+                });
+            })
+
+            return Observable.from(promise).map(payload => {
+                return actions.editPage.done({
+                    params: action.payload,
+                    result: payload.blockid
+                })
+            }).catch((error: ITxStatusResponse) =>
+                Observable.of(actions.editPage.failed({
+                    params: action.payload,
+                    error: error.error || error.errmsg
+                })));
+        });
+
+export const createMenuEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.createMenu.started.match)
+        .switchMap(action => {
+            const execParams = {
+                Name: action.payload.name,
+                Value: action.payload.template,
+                Conditions: action.payload.conditions
+            };
+
+            const promise = api.txPrepare(action.payload.session, 'NewMenu', execParams).then(response => {
+                const signature = keyring.sign(response.forsign, action.payload.privateKey);
+                return api.txExec(action.payload.session, 'NewMenu', {
+                    ...execParams,
+                    pubkey: action.payload.publicKey,
+                    signature,
+                    time: response.time
+                });
+            })
+
+            return Observable.from(promise).map(payload => {
+                return actions.createMenu.done({
+                    params: action.payload,
+                    result: payload.blockid
+                })
+            }).catch((error: ITxStatusResponse) =>
+                Observable.of(actions.createMenu.failed({
+                    params: action.payload,
+                    error: error.error || error.errmsg
+                })));
+        });
 
 export const getTableEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.getTable.started.match)
@@ -37,6 +133,27 @@ export const getTableEpic = (actions$: Observable<Action>) =>
                 });
             }).catch((error: IAPIError) => {
                 return Observable.of(actions.getTable.failed({
+                    params: null,
+                    error: error.error
+                }));
+            });
+        });
+
+export const getMenusEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.getMenus.started.match)
+        .switchMap(action => {
+            return Observable.from(api.list(action.payload.session, 'menu')).map(payload => {
+                return actions.getMenus.done({
+                    params: action.payload,
+                    result: payload.list.map(v => ({
+                        id: v.id,
+                        name: v.name,
+                        conditions: v.conditions,
+                        value: v.value
+                    }))
+                });
+            }).catch((error: IAPIError) => {
+                return Observable.of(actions.getMenus.failed({
                     params: null,
                     error: error.error
                 }));
@@ -75,4 +192,20 @@ export const getPagesEpic = (actions$: Observable<Action>) =>
             });
         });
 
-export default combineEpics(getTableEpic, getTablesEpic, getPagesEpic);
+export const getPageEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.getPage.started.match)
+        .switchMap(action => {
+            return Observable.from(api.page(action.payload.session, action.payload.id)).map(payload => {
+                return actions.getPage.done({
+                    params: null,
+                    result: payload
+                })
+            }).catch((error: IAPIError) => {
+                return Observable.of(actions.getPage.failed({
+                    params: null,
+                    error: error.error
+                }));
+            });
+        });
+
+export default combineEpics(getTableEpic, getTablesEpic, getPagesEpic, getPageEpic, getMenusEpic, createPageEpic, createMenuEpic, editPageEpic);

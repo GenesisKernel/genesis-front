@@ -57,7 +57,7 @@ class App extends React.Component<IAppProps> {
             if (props.isConnected) {
                 const privateKey = storage.settings.load('privateKey');
                 const publicKey = storage.settings.load('publicKey');
-                if (privateKey && publicKey) {
+                if (privateKey && publicKey && props.isInstalled) {
                     this.props.login({
                         privateKey,
                         publicKey,

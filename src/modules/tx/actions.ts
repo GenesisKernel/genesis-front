@@ -18,7 +18,7 @@ import actionCreatorFactory from 'typescript-fsa';
 import { push } from 'react-router-redux';
 import { IInstallParams } from 'lib/api';
 
-const actionCreator = actionCreatorFactory('engine');
+const actionCreator = actionCreatorFactory('tx');
 export const navigate = (url: string) => push(url);
 export const checkOnline = actionCreator.async<void, boolean, string>('CHECK_ONLINE');
 export const install = actionCreator.async<IInstallParams, { uid: string, session: string }, string>('INSTALL');

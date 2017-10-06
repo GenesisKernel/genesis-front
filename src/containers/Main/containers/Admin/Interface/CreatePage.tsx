@@ -17,20 +17,34 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { createTable } from 'modules/admin/actions';
+import { createPage, getMenus } from 'modules/admin/actions';
 
-import Create, { ICreateProps } from 'components/Main/Admin/Tables/Create';
+import CreatePage, { ICreatePageProps } from 'components/Main/Admin/Interface/CreatePage';
 
-const CreateContainer: React.SFC<ICreateProps> = (props) => (
-    <Create {...props} />
-);
+class CreatePageContainer extends React.Component<ICreatePageProps & { getMenus: typeof getMenus.started }> {
+    componentWillMount() {
+        this.props.getMenus({ session: this.props.session });
+    }
+
+    render() {
+        return (
+            <CreatePage {...this.props} />
+        );
+    }
+};
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken
+    session: state.auth.sessionToken,
+    pending: state.admin.pending,
+    menus: state.admin.menus,
+    createPageStatus: state.admin.createPageStatus,
+    privateKey: state.auth.privateKey,
+    publicKey: state.auth.account.publicKey
 });
 
 const mapDispatchToProps = {
-    createTable: createTable.started
+    createPage: createPage.started,
+    getMenus: getMenus.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(CreatePageContainer);

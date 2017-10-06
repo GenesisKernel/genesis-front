@@ -32,6 +32,7 @@
         "react-monaco-editor": "^0.10.1",
         "react-redux": "^5.0.6",
         "react-redux-loading-bar": "^2.9.2",
+        "react-resize-aware-monaco": "^0.1.4",
         "react-router-dom": "^4.1.2",
         "react-router-redux": "next",
         "react-router-transition": "^1.1.0",

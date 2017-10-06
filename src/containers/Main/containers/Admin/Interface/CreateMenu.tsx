@@ -17,20 +17,24 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { createTable } from 'modules/admin/actions';
+import { createMenu } from 'modules/admin/actions';
 
-import Create, { ICreateProps } from 'components/Main/Admin/Tables/Create';
+import CreateMenu, { ICreateMenuProps } from 'components/Main/Admin/Interface/CreateMenu';
 
-const CreateContainer: React.SFC<ICreateProps> = (props) => (
-    <Create {...props} />
+const CreateMenuContainer: React.SFC<ICreateMenuProps> = (props) => (
+    <CreateMenu {...props} />
 );
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken
+    session: state.auth.sessionToken,
+    pending: state.admin.pending,
+    createMenuStatus: state.admin.createMenuStatus,
+    privateKey: state.auth.privateKey,
+    publicKey: state.auth.account.publicKey
 });
 
 const mapDispatchToProps = {
-    createTable: createTable.started
+    createMenu: createMenu.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateMenuContainer);

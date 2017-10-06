@@ -25,6 +25,9 @@ import Tables from 'containers/Main/containers/Admin/Tables';
 import TablesCreate from 'containers/Main/containers/Admin/Tables/Create';
 import TablesView from 'containers/Main/containers/Admin/Tables/View';
 import Interface from 'containers/Main/containers/Admin/Interface';
+import CreatePage from 'containers/Main/containers/Admin/Interface/CreatePage';
+import EditPage from 'containers/Main/containers/Admin/Interface/EditPage';
+import CreateMenu from 'containers/Main/containers/Admin/Interface/CreateMenu';
 import Dashboard from 'containers/Main/containers/Dashboard';
 import Debug from 'containers/Main/containers/Debug';
 import Backup from 'containers/Main/containers/Backup';
@@ -42,6 +45,9 @@ const MainContainer: React.SFC<IMainProps> = (props, context) => {
                 <Route exact path="/admin/tables/create" component={TablesCreate} />
                 <Route exact path="/admin/tables/:tableName" component={TablesView} />
                 <Route exact path="/admin/interface" component={Interface} />
+                <Route exact path="/admin/interface/create-page" component={CreatePage} />
+                <Route exact path="/admin/interface/page/:pageID-:pageName" component={EditPage} />
+                <Route exact path="/admin/interface/create-menu" component={CreateMenu} />
                 <Route exact path="/debug" component={Debug} />
                 <Route exact path="/backup" component={Backup} />
                 <Route exact path="/create-ecosystem" component={EcosystemCreate} />
