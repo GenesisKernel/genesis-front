@@ -30,6 +30,7 @@ import EditPage from 'containers/Main/containers/Admin/Interface/EditPage';
 import CreateMenu from 'containers/Main/containers/Admin/Interface/CreateMenu';
 import EditMenu from 'containers/Main/containers/Admin/Interface/EditMenu';
 import Dashboard from 'containers/Main/containers/Dashboard';
+import Page from 'containers/Main/containers/Page';
 import Debug from 'containers/Main/containers/Debug';
 import Backup from 'containers/Main/containers/Backup';
 import EcosystemCreate from 'containers/Main/containers/EcosystemCreate';
@@ -42,6 +43,7 @@ const MainContainer: React.SFC<IMainProps> = (props, context) => {
         <Main {...props}>
             <Switch>
                 <Route exact path="/" component={Dashboard} />
+
                 <Route exact path="/admin/tables" component={Tables} />
                 <Route exact path="/admin/tables/create" component={TablesCreate} />
                 <Route exact path="/admin/tables/:tableName" component={TablesView} />
@@ -50,6 +52,9 @@ const MainContainer: React.SFC<IMainProps> = (props, context) => {
                 <Route exact path="/admin/interface/page/:pageID-:pageName" component={EditPage} />
                 <Route exact path="/admin/interface/menu/:menuID-:menuName" component={EditMenu} />
                 <Route exact path="/admin/interface/create-menu" component={CreateMenu} />
+
+                <Route exact path="/page/:pageName" component={Page} />
+
                 <Route exact path="/debug" component={Debug} />
                 <Route exact path="/backup" component={Backup} />
                 <Route exact path="/create-ecosystem" component={EcosystemCreate} />

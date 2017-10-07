@@ -18,6 +18,7 @@ import * as React from 'react';
 import { resolveHandler } from 'components/Protypo';
 
 export interface IProtypoProps {
+    wrapper?: JSX.Element;
     payload: IProtypoElement[];
 }
 
@@ -28,7 +29,7 @@ export interface IProtypoElement {
     children?: IProtypoElement[];
 }
 
-export default class extends React.Component<IProtypoProps> {
+export default class Protypo extends React.Component<IProtypoProps> {
     private _lastID: number;
 
     renderElement(element: IProtypoElement): React.ReactNode {
@@ -68,10 +69,6 @@ export default class extends React.Component<IProtypoProps> {
     render() {
         this._lastID = 0;
 
-        return (
-            <div>
-                {this.renderElements(this.props.payload)}
-            </div>
-        );
+        return React.cloneElement(this.props.wrapper || <div />, null, this.renderElements(this.props.payload));
     }
 }

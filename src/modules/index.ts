@@ -17,30 +17,34 @@
 import { combineReducers } from 'redux';
 import { combineEpics } from 'redux-observable';
 import { routerReducer as router, RouterState } from 'react-router-redux';
+import * as admin from './admin';
 import * as auth from './auth';
+import * as content from './content';
 import * as engine from './engine';
 import * as tx from './tx';
-import * as admin from './admin';
 
 export interface IRootState {
-    engine: engine.State;
     auth: auth.State;
-    tx: tx.State;
     admin: admin.State;
+    content: content.State;
+    engine: engine.State;
+    tx: tx.State;
     router: RouterState;
 }
 
-export const rootEpic = combineEpics<any>(
-    engine.epic,
+export const rootEpic = combineEpics(
+    admin.epic,
     auth.epic,
+    content.epic,
+    engine.epic,
     tx.epic,
-    admin.epic
 );
 
 export default combineReducers<IRootState>({
-    engine: engine.reducer,
-    auth: auth.reducer,
-    tx: tx.reducer,
     admin: admin.reducer,
+    auth: auth.reducer,
+    content: content.reducer,
+    engine: engine.reducer,
+    tx: tx.reducer,
     router
 });
