@@ -15,6 +15,7 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { Button, Col, FormGroup, Panel, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import MonacoEditor from 'react-monaco-editor';
@@ -73,7 +74,8 @@ const PageEditor: React.SFC<IPageEditorProps> = (props) => (
                                 onChange={props.onSourceEdit}
                                 options={{
                                     automaticLayout: true,
-                                    contextmenu: false
+                                    contextmenu: false,
+                                    scrollBeyondLastLine: false
                                 }}
                             />
                         </div>
@@ -102,9 +104,11 @@ const PageEditor: React.SFC<IPageEditorProps> = (props) => (
                 bsStyle="primary"
                 header={<FormattedMessage id="admin.interface.menu" defaultMessage="Menu" />}
                 footer={props.menu && (
-                    <Button bsStyle="primary">
-                        <FormattedMessage id="admin.edit" defaultMessage="Edit" />
-                    </Button>
+                    <Link to={`/admin/interface/menu/${props.menu.id}-${props.menu.name}`}>
+                        <Button bsStyle="primary">
+                            <FormattedMessage id="admin.edit" defaultMessage="Edit" />
+                        </Button>
+                    </Link>
                 )}
             >
                 {props.menu ?

@@ -28,6 +28,7 @@ import Interface from 'containers/Main/containers/Admin/Interface';
 import CreatePage from 'containers/Main/containers/Admin/Interface/CreatePage';
 import EditPage from 'containers/Main/containers/Admin/Interface/EditPage';
 import CreateMenu from 'containers/Main/containers/Admin/Interface/CreateMenu';
+import EditMenu from 'containers/Main/containers/Admin/Interface/EditMenu';
 import Dashboard from 'containers/Main/containers/Dashboard';
 import Debug from 'containers/Main/containers/Debug';
 import Backup from 'containers/Main/containers/Backup';
@@ -47,6 +48,7 @@ const MainContainer: React.SFC<IMainProps> = (props, context) => {
                 <Route exact path="/admin/interface" component={Interface} />
                 <Route exact path="/admin/interface/create-page" component={CreatePage} />
                 <Route exact path="/admin/interface/page/:pageID-:pageName" component={EditPage} />
+                <Route exact path="/admin/interface/menu/:menuID-:menuName" component={EditMenu} />
                 <Route exact path="/admin/interface/create-menu" component={CreateMenu} />
                 <Route exact path="/debug" component={Debug} />
                 <Route exact path="/backup" component={Backup} />

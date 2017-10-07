@@ -116,6 +116,37 @@ export const createMenuEpic = (actions$: Observable<Action>) =>
                 })));
         });
 
+export const editMenuEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.editMenu.started.match)
+        .switchMap(action => {
+            const execParams = {
+                Id: action.payload.id,
+                Value: action.payload.template,
+                Conditions: action.payload.conditions
+            };
+
+            const promise = api.txPrepare(action.payload.session, 'EditMenu', execParams).then(response => {
+                const signature = keyring.sign(response.forsign, action.payload.privateKey);
+                return api.txExec(action.payload.session, 'EditMenu', {
+                    ...execParams,
+                    pubkey: action.payload.publicKey,
+                    signature,
+                    time: response.time
+                });
+            });
+
+            return Observable.from(promise).map(payload => {
+                return actions.editMenu.done({
+                    params: action.payload,
+                    result: payload.blockid
+                });
+            }).catch((error: ITxStatusResponse) =>
+                Observable.of(actions.editMenu.failed({
+                    params: action.payload,
+                    error: error.error || error.errmsg
+                })));
+        });
+
 export const getTableEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.getTable.started.match)
         .switchMap(action => {
@@ -208,4 +239,31 @@ export const getPageEpic = (actions$: Observable<Action>) =>
             });
         });
 
-export default combineEpics(getTableEpic, getTablesEpic, getPagesEpic, getPageEpic, getMenusEpic, createPageEpic, createMenuEpic, editPageEpic);
+export const getMenuEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.getMenu.started.match)
+        .switchMap(action => {
+            return Observable.from(api.row(action.payload.session, 'menu', action.payload.id)).map(payload => {
+                return actions.getMenu.done({
+                    params: null,
+                    result: payload.value as any
+                });
+            }).catch((error: IAPIError) => {
+                return Observable.of(actions.getMenu.failed({
+                    params: null,
+                    error: error.error
+                }));
+            });
+        });
+
+export default combineEpics(
+    getTableEpic,
+    getTablesEpic,
+    getPagesEpic,
+    getPageEpic,
+    getMenuEpic,
+    getMenusEpic,
+    createPageEpic,
+    createMenuEpic,
+    editPageEpic,
+    editMenuEpic
+);

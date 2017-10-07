@@ -24,6 +24,8 @@ export type State = {
     readonly createPageStatus: { block: string, error: string };
     readonly editPageStatus: { block: string, error: string };
     readonly createMenuStatus: { block: string, error: string };
+    readonly editMenuStatus: { block: string, error: string };
+    readonly menu: { id: string, name: string, value: string, conditions: string };
     readonly menus: { id: string, name: string }[];
     readonly tables: ITablesResponse;
     readonly table: ITableResponse;
@@ -36,6 +38,8 @@ export const initialState: State = {
     createPageStatus: null,
     editPageStatus: null,
     createMenuStatus: null,
+    editMenuStatus: null,
+    menu: null,
     menus: null,
     pending: false,
     tables: null,
@@ -93,6 +97,30 @@ export default (state: State = initialState, action: Action): State => {
             pending: false,
             page: null,
             menus: null
+        };
+    }
+
+    if (isType(action, actions.getMenu.started)) {
+        return {
+            ...state,
+            pending: true,
+            menu: null
+        };
+    }
+
+    if (isType(action, actions.getMenu.done)) {
+        return {
+            ...state,
+            pending: false,
+            menu: action.payload.result
+        };
+    }
+
+    if (isType(action, actions.getMenu.failed)) {
+        return {
+            ...state,
+            pending: false,
+            menu: null
         };
     }
 
@@ -231,6 +259,36 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             pending: false,
             createMenuStatus: {
+                block: null,
+                error: action.payload.error
+            }
+        };
+    }
+
+    if (isType(action, actions.editMenu.started)) {
+        return {
+            ...state,
+            pending: true,
+            editMenuStatus: null
+        };
+    }
+
+    if (isType(action, actions.editMenu.done)) {
+        return {
+            ...state,
+            pending: false,
+            editMenuStatus: {
+                block: action.payload.result,
+                error: null
+            }
+        };
+    }
+
+    if (isType(action, actions.editMenu.failed)) {
+        return {
+            ...state,
+            pending: false,
+            editMenuStatus: {
                 block: null,
                 error: action.payload.error
             }

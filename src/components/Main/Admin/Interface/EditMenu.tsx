@@ -17,51 +17,59 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
-import { createMenu } from 'modules/admin/actions';
+import { editMenu } from 'modules/admin/actions';
 
 import MenuEditor from './MenuEditor';
 
-export interface ICreateMenuProps {
+export interface IEditMenuProps {
     pending: boolean;
     session: string;
     privateKey: string;
     publicKey: string;
-    createMenuStatus: { block: string, error: string };
-    createMenu: typeof createMenu.started;
+    menu: { id: string, name: string, conditions: string, value: string };
+    editMenuStatus: { block: string, error: string };
+    editMenu: typeof editMenu.started;
 }
 
-interface ICreateMenuState {
+interface IEditMenuState {
     template: string;
     conditions: string;
 }
 
-class CreateMenu extends React.Component<ICreateMenuProps, ICreateMenuState> {
-    constructor(props: ICreateMenuProps) {
+class EditMenu extends React.Component<IEditMenuProps, IEditMenuState> {
+    constructor(props: IEditMenuProps) {
         super(props);
         this.state = {
-            template: '',
-            conditions: ''
+            template: props.menu ? props.menu.value : '',
+            conditions: props.menu ? props.menu.conditions : ''
         };
     }
 
-    componentWillReceiveProps(props: ICreateMenuProps) {
-        if (props.createMenuStatus) {
+    componentWillReceiveProps(props: IEditMenuProps) {
+        if (props.editMenuStatus && this.props.editMenuStatus !== props.editMenuStatus) {
             // TODO: Notification stub
-            if (props.createMenuStatus.error) {
-                alert('Error:: ' + props.createMenuStatus.error);
+            if (props.editMenuStatus.error) {
+                alert('Error:: ' + props.editMenuStatus.error);
             }
             else {
-                alert('Success:: ' + props.createMenuStatus.block);
+                alert('Success:: ' + props.editMenuStatus.block);
             }
+        }
+
+        if (props.menu && this.props.menu !== props.menu) {
+            this.setState({
+                template: props.menu.value,
+                conditions: props.menu.conditions
+            });
         }
     }
 
     onSubmit(values: { [key: string]: any }) {
-        this.props.createMenu({
+        this.props.editMenu({
             session: this.props.session,
             privateKey: this.props.privateKey,
             publicKey: this.props.publicKey,
-            name: values.name,
+            id: this.props.menu.id,
             template: this.state.template,
             conditions: values.conditions
         });
@@ -90,13 +98,14 @@ class CreateMenu extends React.Component<ICreateMenuProps, ICreateMenuState> {
                         </Link>
                     </li>
                     <li>
-                        <FormattedMessage id="admin.interface.menu.create" defaultMessage="Create menu" />
+                        {this.props.menu && this.props.menu.name}
                     </li>
                 </ol>
                 <MenuEditor
                     pending={this.props.pending}
                     template={this.state.template}
                     conditions={this.state.conditions}
+                    menu={this.props.menu}
                     onSubmit={this.onSubmit.bind(this)}
                     onSourceEdit={this.onSourceEdit.bind(this)}
                     onConditionsEdit={this.onConditionsEdit.bind(this)}
@@ -106,4 +115,4 @@ class CreateMenu extends React.Component<ICreateMenuProps, ICreateMenuState> {
     }
 }
 
-export default CreateMenu;
+export default EditMenu;

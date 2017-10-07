@@ -110,11 +110,13 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                         <tr key={menu.id}>
                                             <td>{menu.name}</td>
                                             <td style={{ width: 1 }}>
-                                                <Button bsStyle="default" className="btn-labeled btn-icon">
-                                                    <span className="btn-label">
-                                                        <em className="fa fa-edit" />
-                                                    </span>
-                                                </Button>
+                                                <Link to={`/admin/interface/menu/${menu.id}-${menu.name}`}>
+                                                    <Button bsStyle="default" className="btn-labeled btn-icon">
+                                                        <span className="btn-label">
+                                                            <em className="fa fa-edit" />
+                                                        </span>
+                                                    </Button>
+                                                </Link>
                                             </td>
                                         </tr>
                                     ))}
