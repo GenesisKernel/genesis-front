@@ -24,11 +24,13 @@ import Validation from 'components/Validation';
 interface IPageEditorProps {
     pending: boolean;
     template: string;
+    conditions: string;
     page?: { id: string, name: string, conditions: string, value: string };
     menu: { id: string, name: string, conditions: string, value: string };
     menus: { id: string, name: string, conditions: string, value: string }[];
     onSubmit: (values: { [key: string]: any }) => void;
     onSourceEdit: (code: string) => void;
+    onConditionsEdit: React.ChangeEventHandler<HTMLTextAreaElement>;
     onMenuSelect: React.ChangeEventHandler<HTMLSelectElement>;
 }
 
@@ -53,7 +55,7 @@ const PageEditor: React.SFC<IPageEditorProps> = (props) => (
                         </label>
                         {props.page ?
                             (
-                                <Validation.components.ValidatedControl key="nameEdit" name="name" readOnly value={props.page.name} validators={[Validation.validators.required]} />
+                                <Validation.components.ValidatedControl key="nameEdit" name="name" readOnly value={props.page.name} />
                             ) : (
                                 <Validation.components.ValidatedControl key="nameCreate" name="name" validators={[Validation.validators.required]} />
                             )
@@ -90,13 +92,7 @@ const PageEditor: React.SFC<IPageEditorProps> = (props) => (
                         <label htmlFor="conditions">
                             <FormattedMessage id="admin.conditions.change" defaultMessage="Change conditions" />
                         </label>
-                        {props.page ?
-                            (
-                                <Validation.components.ValidatedTextarea key="conditionsEdit" name="conditions" value={props.page.conditions} validators={[Validation.validators.required]} />
-                            ) : (
-                                <Validation.components.ValidatedTextarea key="conditionsCreate" name="conditions" validators={[Validation.validators.required]} />
-                            )
-                        }
+                        <Validation.components.ValidatedTextarea name="conditions" onChange={props.onConditionsEdit} value={props.conditions} validators={[Validation.validators.required]} />
                     </Validation.components.ValidatedFormGroup>
                 </Panel>
             </Validation.components.ValidatedForm>

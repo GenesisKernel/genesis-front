@@ -34,6 +34,7 @@ export interface IEditPageProps {
 
 interface IEditPageState {
     template?: string;
+    conditions?: string;
     menu?: { id: string, name: string, conditions: string, value: string };
 }
 
@@ -41,7 +42,8 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
     constructor(props: IEditPageProps) {
         super(props);
         this.state = {
-            template: '',
+            template: props.page ? props.page.value : '',
+            conditions: props.page ? props.page.conditions : '',
             menu: null
         };
     }
@@ -60,6 +62,7 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
         if (props.page && this.props.page !== props.page) {
             this.setState({
                 template: props.page.value,
+                conditions: props.page.conditions,
                 menu: props.menus.find(l => l.name === props.page.menu)
             });
         }
@@ -72,13 +75,19 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
             publicKey: this.props.publicKey,
             id: this.props.page.id,
             template: this.state.template,
-            menu: values.menu,
-            conditions: values.conditions
+            menu: this.state.menu.name,
+            conditions: this.state.conditions
         });
     }
 
     onSourceEdit(template: string) {
         this.setState({ template });
+    }
+
+    onConditionsEdit(e: React.ChangeEvent<HTMLTextAreaElement>) {
+        this.setState({
+            conditions: e.target.value
+        });
     }
 
     onMenuSelect(e: React.ChangeEvent<HTMLSelectElement>) {
@@ -107,10 +116,12 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
                 <PageEditor
                     pending={this.props.pending}
                     template={this.state.template}
+                    conditions={this.state.conditions}
                     page={this.props.page}
                     menu={this.state.menu}
                     menus={this.props.menus || []}
                     onSubmit={this.onSubmit.bind(this)}
+                    onConditionsEdit={this.onConditionsEdit.bind(this)}
                     onSourceEdit={this.onSourceEdit.bind(this)}
                     onMenuSelect={this.onMenuSelect.bind(this)}
                 />

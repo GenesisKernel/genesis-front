@@ -33,6 +33,7 @@ export interface ICreatePageProps {
 
 interface ICreatePageState {
     template?: string;
+    conditions?: string;
     menu?: { id: string, name: string, conditions: string, value: string };
 }
 
@@ -73,6 +74,12 @@ class CreatePage extends React.Component<ICreatePageProps, ICreatePageState> {
         this.setState({ template });
     }
 
+    onConditionsEdit(e: React.ChangeEvent<HTMLTextAreaElement>) {
+        this.setState({
+            conditions: e.target.value
+        });
+    }
+
     onMenuSelect(e: React.ChangeEvent<HTMLSelectElement>) {
         const menu = this.props.menus && this.props.menus.find(l => l.name === e.target.value);
         this.setState({
@@ -99,9 +106,11 @@ class CreatePage extends React.Component<ICreatePageProps, ICreatePageState> {
                 <PageEditor
                     pending={this.props.pending}
                     template={this.state.template}
+                    conditions={this.state.conditions}
                     menu={this.state.menu}
                     menus={this.props.menus || []}
                     onSubmit={this.onSubmit.bind(this)}
+                    onConditionsEdit={this.onConditionsEdit.bind(this)}
                     onSourceEdit={this.onSourceEdit.bind(this)}
                     onMenuSelect={this.onMenuSelect.bind(this)}
                 />
