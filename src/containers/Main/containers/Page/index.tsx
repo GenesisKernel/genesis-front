@@ -25,7 +25,7 @@ import Page from 'components/Main/Page';
 interface IPageContainerProps {
     session: string;
     pending: boolean;
-    content: IProtypoElement[];
+    page: { name: string, content: IProtypoElement[] };
     match?: { params: { pageName: string } };
     renderPage: typeof renderPage.started;
 }
@@ -38,9 +38,18 @@ class PageContainer extends React.Component<IPageContainerProps> {
         });
     }
 
+    componentWillReceiveProps(props: IPageContainerProps) {
+        if (this.props.page && this.props.page.name !== props.match.params.pageName) {
+            props.renderPage({
+                session: this.props.session,
+                name: this.props.match.params.pageName
+            });
+        }
+    }
+
     render() {
         return (
-            <Page payload={this.props.content} />
+            <Page payload={this.props.page && this.props.page.content} />
         );
     }
 }
@@ -48,7 +57,7 @@ class PageContainer extends React.Component<IPageContainerProps> {
 const mapStateToProps = (state: IRootState) => ({
     session: state.auth.sessionToken,
     pending: state.content.pending,
-    content: state.content.content
+    page: state.content.page
 });
 
 const mapDispatchToProps = {

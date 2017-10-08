@@ -30,6 +30,7 @@ export interface IRootState {
     content: content.State;
     engine: engine.State;
     tx: tx.State;
+    loadingBarReducer: number;
     router: RouterState;
 }
 

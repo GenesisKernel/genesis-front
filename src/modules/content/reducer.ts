@@ -21,12 +21,14 @@ import { IProtypoElement } from 'components/Protypo/Protypo';
 
 export type State = {
     readonly pending: boolean;
-    readonly content: IProtypoElement[];
+    readonly menu: { name: string, content: IProtypoElement[] };
+    readonly page: { name: string, content: IProtypoElement[] };
 };
 
 export const initialState: State = {
     pending: false,
-    content: null
+    menu: null,
+    page: null
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -34,7 +36,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            content: null
+            page: null
         };
     }
 
@@ -42,7 +44,8 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            content: action.payload.result
+            menu: action.payload.result.menu,
+            page: action.payload.result.page
         };
     }
 
@@ -50,7 +53,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            content: null
+            page: null
         };
     }
 

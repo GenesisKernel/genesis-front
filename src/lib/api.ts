@@ -69,6 +69,7 @@ export interface ISignTestResponse extends IResponse {
 }
 
 export interface IContentResponse extends IResponse {
+    menu: string;
     tree: string;
 }
 
@@ -205,8 +206,8 @@ const api = {
 
     // Level 2
     row: (session: string, table: string, id: string, columns?: string) => securedRequest(`row/${table}/${id}?columns=${columns || ''}`, session, null, { method: 'GET' }) as Promise<IRowResponse>,
-    contentMenu: (session: string, name: string) => securedRequest(`content/menu/${name}`, session, null, { method: 'GET' }) as Promise<IContentResponse>,
-    contentPage: (session: string, name: string, params: { [key: string]: any }) => securedRequest(`content/page/${name}`, session, null, { method: 'GET' }) as Promise<IContentResponse>,
+    contentMenu: (session: string, name: string) => securedRequest(`content/menu/${name}`, session, null) as Promise<IContentResponse>,
+    contentPage: (session: string, name: string, params: { [key: string]: any }) => securedRequest(`content/page/${name}`, session, params) as Promise<IContentResponse>,
     contentTest: (session: string, template: string) => securedRequest('content', session, { template }) as Promise<IContentResponse>,
     table: (session: string, name: string) => securedRequest(`table/${name}`, session, null, { method: 'GET' }) as Promise<ITableResponse>,
     tables: (session: string, offset?: number, limit?: number) => securedRequest(`tables?offset=${offset || 0}&limit=${limit || 0}`, session, null, { method: 'GET' }) as Promise<ITablesResponse>,

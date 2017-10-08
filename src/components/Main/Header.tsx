@@ -15,10 +15,12 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import { LoadingBar } from 'react-redux-loading-bar';
 
 import UserMenu from 'components/Main/UserMenu';
 
 interface IHeaderProps {
+    loading: number;
     toggleCollapsed: () => void;
 }
 
@@ -102,6 +104,7 @@ const Header: React.SFC<IHeaderProps> = (props) => (
                 <button type="submit" className="hidden btn btn-default">Submit</button>
             </form>
         </nav>
+        <LoadingBar showFastActions loading={props.loading} style={{ backgroundColor: '#2b9fe9', height: 2 }} />
     </header>
 );
 

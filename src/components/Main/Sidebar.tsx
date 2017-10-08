@@ -16,9 +16,10 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
-import { NavLink, NavLinkProps } from 'react-router-dom';
-import { FormattedMessage } from 'react-intl';
-import * as propTypes from 'prop-types';
+//import { FormattedMessage } from 'react-intl';
+
+import Protypo from 'components/Protypo';
+import { IProtypoElement } from 'components/Protypo/Protypo';
 
 const SidebarWrapper: React.SFC<{ className?: string }> = (props) => (
     <aside className={`aside ${props.className}`}>
@@ -31,25 +32,21 @@ const StyledSidebar = styled(SidebarWrapper) `
     overflow: hidden;
 `;
 
-const LinkButton: React.SFC<NavLinkProps> = (props, context) => (
-    <li className={(context.router.route.location.pathname) === props.to ? 'active' : ''}>
-        <NavLink {...props}>
-            {props.children}
-        </NavLink>
-    </li>
-);
+export interface ISidebarProps {
+    menu: {
+        name: string;
+        content: IProtypoElement[];
+    };
+}
 
-LinkButton.contextTypes = {
-    router: propTypes.object.isRequired
-};
-
-const Sidebar: React.SFC = (props) => {
+const Sidebar: React.SFC<ISidebarProps> = (props) => {
     return (
         <StyledSidebar>
             <div className="aside-inner">
                 <nav className="sidebar">
-                    <ul className="nav">
-                        <li className="nav-heading text-center pr0 pl0 pb0 m0">
+                    <Protypo payload={props.menu && props.menu.content} />
+                    {/*<ul className="nav">
+                        {<li className="nav-heading text-center pr0 pl0 pb0 m0">
                             <span>Account</span>
                             <hr />
                         </li>
@@ -113,6 +110,7 @@ const Sidebar: React.SFC = (props) => {
                             <span>Interface</span>
                         </LinkButton>
                     </ul>
+                    */}
                 </nav>
             </div>
         </StyledSidebar>

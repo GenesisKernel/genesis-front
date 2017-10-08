@@ -23,12 +23,23 @@ import * as actions from './actions';
 export const renderPageEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.renderPage.started.match)
         .switchMap(action => {
-            const promise = api.contentPage(action.payload.session, action.payload.name, action.payload.params);
+            const promise = api.contentPage(action.payload.session, action.payload.name, action.payload.params).then(page => {
+                return api.contentMenu(action.payload.session, page.menu).then(menu => ({
+                    menu: {
+                        name: page.menu,
+                        content: JSON.parse(menu.tree)
+                    },
+                    page: {
+                        name: action.payload.name,
+                        content: JSON.parse(page.tree)
+                    }
+                }));
+            });
 
             return Observable.from(promise).map(payload => {
                 return actions.renderPage.done({
                     params: action.payload,
-                    result: JSON.parse(payload.tree)
+                    result: payload
                 });
             }).catch((error: IAPIError) =>
                 Observable.of(actions.renderPage.failed({

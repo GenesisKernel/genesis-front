@@ -19,8 +19,8 @@ import { IStoredKey } from 'lib/storage';
 import * as classnames from 'classnames';
 import { setCollapsed } from 'modules/engine/actions';
 import styled from 'styled-components';
-import { LoadingBar } from 'react-redux-loading-bar';
 
+import { IProtypoElement } from 'components/Protypo/Protypo';
 import Sidebar from 'components/Main/Sidebar';
 import Header from 'components/Main/Header';
 
@@ -32,6 +32,7 @@ export interface IMainProps {
     account: IStoredKey;
     isCollapsed: boolean;
     loading: number;
+    menu: { name: string, content: IProtypoElement[] };
     setCollapsed?: typeof setCollapsed;
 }
 
@@ -50,10 +51,9 @@ export default class extends React.Component<IMainProps> {
         });
         return (
             <StyledWrapper className={classes}>
-                <Sidebar />
-                <Header toggleCollapsed={this.onSidebarToggle.bind(this)} />
+                <Sidebar menu={this.props.menu} />
+                <Header toggleCollapsed={this.onSidebarToggle.bind(this)} loading={this.props.loading} />
                 <section>
-                    <LoadingBar showFastActions loading={this.props.loading} style={{ backgroundColor: '#2b9fe9', height: 2 }} />
                     {this.props.children}
                 </section>
             </StyledWrapper>
