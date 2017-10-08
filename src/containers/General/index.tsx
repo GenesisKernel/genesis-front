@@ -20,7 +20,7 @@ import { Route } from 'react-router-dom';
 import { IRootState } from 'modules';
 import { navigate } from 'modules/engine/actions';
 
-import AnimatedSwitch, { animations } from 'components/Animation';
+import { AnimatedSwitch } from 'components/Animation';
 import Login from './containers/Login';
 import Account from './containers/Account';
 import Import from './containers/Account/Import';
@@ -33,7 +33,7 @@ interface IGeneralContainerProps {
 }
 
 const GeneralContainer: React.SFC<IGeneralContainerProps> = (props) => (
-    <AnimatedSwitch animation={animations.fade()}>
+    <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
         {!props.isInstalled && (
             <Route path="/" component={Install} />
         )}

@@ -18,6 +18,7 @@ import 'rxjs';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { routerMiddleware } from 'react-router-redux';
 import { createEpicMiddleware } from 'redux-observable';
+import { loadingBarMiddleware } from 'react-redux-loading-bar';
 import txMiddleware from 'modules/middleware/tx';
 import createHistory from 'history/createBrowserHistory';
 import rootReducer, { rootEpic, IRootState } from './modules';
@@ -29,6 +30,9 @@ const configureStore = (initialState?: IRootState) => {
     const middleware = [
         routerMiddleware(history),
         createEpicMiddleware(rootEpic),
+        loadingBarMiddleware({
+            promiseTypeSuffixes: ['STARTED', 'DONE', 'FAILED']
+        }),
         txMiddleware
     ];
 

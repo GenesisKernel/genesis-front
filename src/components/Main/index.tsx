@@ -19,6 +19,7 @@ import { IStoredKey } from 'lib/storage';
 import * as classnames from 'classnames';
 import { setCollapsed } from 'modules/engine/actions';
 import styled from 'styled-components';
+import { LoadingBar } from 'react-redux-loading-bar';
 
 import Sidebar from 'components/Main/Sidebar';
 import Header from 'components/Main/Header';
@@ -30,6 +31,7 @@ const StyledWrapper = styled.div`
 export interface IMainProps {
     account: IStoredKey;
     isCollapsed: boolean;
+    loading: number;
     setCollapsed?: typeof setCollapsed;
 }
 
@@ -51,6 +53,7 @@ export default class extends React.Component<IMainProps> {
                 <Sidebar />
                 <Header toggleCollapsed={this.onSidebarToggle.bind(this)} />
                 <section>
+                    <LoadingBar showFastActions loading={this.props.loading} style={{ backgroundColor: '#2b9fe9', height: 2 }} />
                     {this.props.children}
                 </section>
             </StyledWrapper>

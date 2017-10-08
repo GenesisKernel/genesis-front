@@ -17,6 +17,7 @@
 import { combineReducers } from 'redux';
 import { combineEpics } from 'redux-observable';
 import { routerReducer as router, RouterState } from 'react-router-redux';
+import { loadingBarReducer } from 'react-redux-loading-bar';
 import * as admin from './admin';
 import * as auth from './auth';
 import * as content from './content';
@@ -46,5 +47,6 @@ export default combineReducers<IRootState>({
     content: content.reducer,
     engine: engine.reducer,
     tx: tx.reducer,
+    loadingBarReducer,
     router
 });

@@ -24,7 +24,7 @@ import { navigate, checkOnline, setLoading } from 'modules/engine/actions';
 import storage from 'lib/storage';
 import * as classnames from 'classnames';
 
-import AnimatedSwitch, { animations } from 'components/Animation';
+import { AnimatedSwitch } from 'components/Animation';
 import Splash from 'components/Splash';
 import Offline from 'containers/Offline';
 import Main from 'containers/Main';
@@ -89,7 +89,7 @@ class App extends React.Component<IAppProps> {
         return (
             <IntlProvider locale={this.props.locale} defaultLocale={this.props.locale}>
                 <div className={classes}>
-                    <AnimatedSwitch animation={animations.fade()}>
+                    <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
                         {this.props.isLoading && (
                             <Route path="/" component={Splash} />
                         )}

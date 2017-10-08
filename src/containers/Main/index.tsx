@@ -68,6 +68,7 @@ const MainContainer: React.SFC<IMainProps> = (props, context) => {
 
 const mapStateToProps = (state: IRootState) => ({
     account: state.auth.account,
+    loading: state['loadingBarReducer'],
     isCollapsed: state.engine.isCollapsed
 });
 

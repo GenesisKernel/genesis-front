@@ -24,7 +24,7 @@ export interface IAnimation {
     mapStyles?: (styles: { [key: string]: any }) => { [key: string]: any };
 }
 
-export const animations = {
+const animations = {
     fade: () => ({
         atEnter: { opacity: 0 },
         atLeave: { opacity: 0 },
@@ -57,10 +57,10 @@ export interface IAnimatedSwitchProps {
     className?: string;
 }
 
-const AnimatedSwitch: React.SFC<IAnimatedSwitchProps> = (props) => (
+export const AnimatedSwitch: React.SFC<IAnimatedSwitchProps> & { animations?: typeof animations } = (props) => (
     <NativeAnimatedSwitch className={props.className || 'switch-wrapper'} {...props.animation}>
         {props.children}
     </NativeAnimatedSwitch>
 );
 
-export default AnimatedSwitch;
+AnimatedSwitch.animations = animations;
