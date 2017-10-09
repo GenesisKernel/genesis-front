@@ -19,6 +19,7 @@ import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { IRootState } from 'modules';
 import { setCollapsed } from 'modules/engine/actions';
+import { menuPop } from 'modules/content/actions';
 
 import Main, { IMainProps } from 'components/Main';
 import Tables from 'containers/Main/containers/Admin/Tables';
@@ -69,12 +70,13 @@ const MainContainer: React.SFC<IMainProps> = (props, context) => {
 const mapStateToProps = (state: IRootState) => ({
     account: state.auth.account,
     loading: state.loadingBarReducer,
-    menu: state.content.menu,
+    menus: state.content.menus,
     isCollapsed: state.engine.isCollapsed
 });
 
 const mapDispatchToProps = {
-    setCollapsed
+    setCollapsed,
+    menuPop
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainContainer);

@@ -73,15 +73,26 @@ const LinkButton: React.SFC<ILabelProps> = (props, context) => {
         active: isActive
     });
 
+    const linkBody = (
+        <div className="link-body">
+            {props.icon && (<em className={`icon ${props.icon}`} />)}
+            <span>{props.title}</span>
+        </div>
+    );
+
     return (
         <StyledLinkButton className={classes}>
             <div className="link-active-decorator" />
-            <NavLink to={`/page/${props.page}`}>
-                <div className="link-body">
-                    {props.icon && (<em className={`icon ${props.icon}`} />)}
-                    <span>{props.title}</span>
-                </div>
-            </NavLink>
+            {props.page ?
+                (
+                    <NavLink to={props.page ? `/page/${props.page}` : ''}>
+                        {linkBody}
+                    </NavLink>
+                ) : (
+                    <a href="#">
+                        {linkBody}
+                    </a>
+                )}
         </StyledLinkButton>
     );
 };

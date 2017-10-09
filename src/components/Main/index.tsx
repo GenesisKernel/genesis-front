@@ -18,6 +18,7 @@ import * as React from 'react';
 import { IStoredKey } from 'lib/storage';
 import * as classnames from 'classnames';
 import { setCollapsed } from 'modules/engine/actions';
+import { menuPop } from 'modules/content/actions';
 import styled from 'styled-components';
 
 import { IProtypoElement } from 'components/Protypo/Protypo';
@@ -37,11 +38,12 @@ export interface IMainProps {
     account: IStoredKey;
     isCollapsed: boolean;
     loading: number;
-    menu: { name: string, content: IProtypoElement[] };
-    setCollapsed?: typeof setCollapsed;
+    menus: { name: string, content: IProtypoElement[] }[];
+    menuPop: typeof menuPop;
+    setCollapsed: typeof setCollapsed;
 }
 
-export default class extends React.Component<IMainProps> {
+export default class Main extends React.Component<IMainProps> {
     onSidebarToggle(e: React.MouseEvent<HTMLLinkElement>) {
         e.preventDefault();
         this.props.setCollapsed(!this.props.isCollapsed);
@@ -56,7 +58,7 @@ export default class extends React.Component<IMainProps> {
         });
         return (
             <StyledWrapper className={classes}>
-                <Sidebar menu={this.props.menu} collapsed={this.props.isCollapsed} />
+                <Sidebar menus={this.props.menus} collapsed={this.props.isCollapsed} menuPop={this.props.menuPop.bind(this)} />
                 <StyledContent style={{ marginLeft: this.props.isCollapsed ? 0 : sidebarStyle.sidebarWidth, transition: sidebarStyle.collapseTransition }}>
                     <Header toggleCollapsed={this.onSidebarToggle.bind(this)} loading={this.props.loading} leftOffset={this.props.isCollapsed ? 0 : sidebarStyle.sidebarWidth} collapseTransition={sidebarStyle.collapseTransition} />
                     {this.props.children}

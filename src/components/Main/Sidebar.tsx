@@ -47,11 +47,16 @@ const StyledBackButton = styled.button`
     padding: 0 14px;
     color: #b2b2b2;
     text-decoration: none;
-    background: transparent;
     outline: none;
     border: none;
     border-bottom: solid 1px #e5e5e5;
     text-align: center;
+    background: transparent;
+    transition: background-color .1s ease-in-out;
+
+    &:active {
+        background-color: rgba(0,0,0,0.05);
+    }
 
     > .icon {
         position: absolute;
@@ -107,25 +112,27 @@ const StyledDevButton = styled.div`
 
 export interface ISidebarProps {
     collapsed: boolean;
-    menu: {
+    menus: {
         name: string;
         content: IProtypoElement[];
-    };
+    }[];
+    menuPop: () => void;
 }
 
 const Sidebar: React.SFC<ISidebarProps> = (props) => {
+    const menu = props.menus.length && props.menus[props.menus.length - 1];
     return (
         <StyledSidebar className="aside" style={{ marginLeft: props.collapsed ? -style.sidebarWidth : 0 }}>
             <nav>
                 <StyledLogo>
                     <img src={imgLogo} />
                 </StyledLogo>
-                <StyledBackButton>
-                    <em className="icon icon-arrow-left" />
+                <StyledBackButton onClick={() => props.menuPop()} disabled={1 >= props.menus.length}>
+                    {props.menus.length > 1 && (<em className="icon icon-arrow-left" />)}
                     <span>Welcome</span>
                 </StyledBackButton>
                 <StyledMenuContent>
-                    <Protypo payload={props.menu && props.menu.content} />
+                    <Protypo payload={menu && menu.content} />
                 </StyledMenuContent>
                 <StyledDevButton>
                     <button>

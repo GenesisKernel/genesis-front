@@ -21,13 +21,13 @@ import { IProtypoElement } from 'components/Protypo/Protypo';
 
 export type State = {
     readonly pending: boolean;
-    readonly menu: { name: string, content: IProtypoElement[] };
+    readonly menus: { name: string, content: IProtypoElement[] }[];
     readonly page: { name: string, content: IProtypoElement[] };
 };
 
 export const initialState: State = {
     pending: false,
-    menu: null,
+    menus: [],
     page: null
 };
 
@@ -41,10 +41,13 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.renderPage.done)) {
+        const menuNeedsPush = !state.menus.length || state.menus[state.menus.length - 1].name !== action.payload.result.menu.name;
         return {
             ...state,
             pending: false,
-            menu: action.payload.result.menu,
+            menus: menuNeedsPush ?
+                [...state.menus, action.payload.result.menu] :
+                [...state.menus],
             page: action.payload.result.page
         };
     }
@@ -55,6 +58,18 @@ export default (state: State = initialState, action: Action): State => {
             pending: false,
             page: null
         };
+    }
+
+    if (isType(action, actions.menuPop)) {
+        if (1 >= state.menus.length) {
+            return state;
+        }
+        else {
+            return {
+                ...state,
+                menus: state.menus.slice(0, -1)
+            };
+        }
     }
 
     return state;
