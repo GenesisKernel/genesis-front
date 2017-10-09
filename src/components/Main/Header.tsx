@@ -16,16 +16,20 @@
 
 import * as React from 'react';
 import { LoadingBar } from 'react-redux-loading-bar';
+import styled from 'styled-components';
 
 import UserMenu from 'components/Main/UserMenu';
 
-interface IHeaderProps {
+export interface IHeaderProps {
+    collapseTransition?: string;
+    leftOffset?: number;
     loading: number;
+    className?: string;
     toggleCollapsed: () => void;
 }
 
 const Header: React.SFC<IHeaderProps> = (props) => (
-    <header className="topnavbar-wrapper">
+    <header className={props.className}>
         <nav role="navigation" className="navbar topnavbar">
             <div className="nav-wrapper">
                 <ul className="nav navbar-nav">
@@ -96,16 +100,17 @@ const Header: React.SFC<IHeaderProps> = (props) => (
                     </li>
                 </ul>
             </div>
-            <form role="search" action="search.html" className="navbar-form">
-                <div className="form-group has-feedback">
-                    <input type="text" placeholder="Type and hit enter ..." className="form-control" />
-                    <div data-search-dismiss="" className="fa fa-times form-control-feedback" />
-                </div>
-                <button type="submit" className="hidden btn btn-default">Submit</button>
-            </form>
         </nav>
         <LoadingBar showFastActions loading={props.loading} style={{ backgroundColor: '#2b9fe9', height: 2 }} />
     </header>
 );
 
-export default Header;
+const StyledHeader = styled(Header) `
+    position: fixed;
+    transition: left ${props => props.collapseTransition || 'none'};
+    left: ${props => props.leftOffset}px;
+    right: 0;
+    top: 0;
+`;
+
+export default StyledHeader;

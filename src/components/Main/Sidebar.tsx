@@ -16,23 +16,64 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
-//import { FormattedMessage } from 'react-intl';
+import imgLogo from 'images/logoInverse.svg';
 
 import Protypo from 'components/Protypo';
 import { IProtypoElement } from 'components/Protypo/Protypo';
 
-const SidebarWrapper: React.SFC<{ className?: string }> = (props) => (
-    <aside className={`aside ${props.className}`}>
-        {props.children}
-    </aside>
-);
+export const style = {
+    sidebarWidth: 300,
+    collapseTransition: '0.3s ease-in-out !important'
+};
 
-const StyledSidebar = styled(SidebarWrapper) `
+const StyledSidebar = styled.aside`
     box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.15);
     overflow: hidden;
+    width: ${style.sidebarWidth}px !important;
+    transition: max-width ${style.collapseTransition};
+
+    .aside-inner {
+        width: ${style.sidebarWidth}px !important;
+    }
+`;
+
+const StyledBackButton = styled.button`
+    position: relative;
+    display: block;
+    width: ${style.sidebarWidth}px;
+    height: 45px;
+    line-height: 45px;
+    padding: 0 14px;
+    color: #b2b2b2;
+    text-decoration: none;
+    background: transparent;
+    outline: none;
+    border: none;
+    border-bottom: solid 1px #e5e5e5;
+    text-align: center;
+
+    > .icon {
+        position: absolute;
+        left: 15px;
+        color: #b2b2b2;
+        line-height: 45px;
+    }
+`;
+
+const StyledLogo = styled.div`
+    width: ${style.sidebarWidth}px;
+    height: 55px;
+    text-align: center;
+    border-bottom: solid 1px #e5e5e5;
+
+    > img {
+        max-height: 100%;
+        max-width: 100%;
+    }
 `;
 
 export interface ISidebarProps {
+    collapsed: boolean;
     menu: {
         name: string;
         content: IProtypoElement[];
@@ -41,11 +82,17 @@ export interface ISidebarProps {
 
 const Sidebar: React.SFC<ISidebarProps> = (props) => {
     return (
-        <StyledSidebar>
-            <div className="aside-inner">
-                <nav className="sidebar">
-                    <Protypo payload={props.menu && props.menu.content} />
-                    {/*<ul className="nav">
+        <StyledSidebar className="aside" style={{ maxWidth: props.collapsed ? 0 : style.sidebarWidth + 20 }}>
+            <nav>
+                <StyledLogo>
+                    <img src={imgLogo} />
+                </StyledLogo>
+                <StyledBackButton>
+                    <em className="icon icon-arrow-left" />
+                    <span>Welcome</span>
+                </StyledBackButton>
+                <Protypo payload={props.menu && props.menu.content} />
+                {/*<ul className="nav">
                         {<li className="nav-heading text-center pr0 pl0 pb0 m0">
                             <span>Account</span>
                             <hr />
@@ -111,8 +158,7 @@ const Sidebar: React.SFC<ISidebarProps> = (props) => {
                         </LinkButton>
                     </ul>
                     */}
-                </nav>
-            </div>
+            </nav>
         </StyledSidebar>
     );
 };

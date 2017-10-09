@@ -16,6 +16,8 @@
 
 import * as React from 'react';
 import { NavLink } from 'react-router-dom';
+import * as classnames from 'classnames';
+import styled from 'styled-components';
 import * as propTypes from 'prop-types';
 
 export interface ILabelProps {
@@ -25,15 +27,64 @@ export interface ILabelProps {
     'params'?: { [key: string]: any };
 }
 
+const StyledLinkButton = styled.div`
+    &.active {
+        > .link-active-decorator {
+            opacity: 1;
+        }
+    }
+
+    > .link-active-decorator {
+        width: 3px;
+        background: #1fafe1;
+        float: left;
+        height: 45px;
+        opacity: 0;
+        transition: opacity .2s ease-in-out;
+    }
+
+    > a {
+        display: block;
+        height: 45px;
+        line-height: 45px;
+        padding: 0 14px;
+        color: #6c6c6c;
+        text-decoration: none;
+    }
+
+    .link-body {
+        display: block;
+        margin: 0 5px;
+        border-bottom: solid 1px #e5e5e5;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+
+        .icon {
+            margin-right: 14px;
+        }
+    }
+`;
+
 // TODO: Missing page params
-const LinkButton: React.SFC<ILabelProps> = (props, context) => (
-    <div className={(context.router.route.location.pathname) === props.page ? 'active' : ''}>
-        <NavLink to={`/page/${props.page}`}>
-            {props.icon && (<em className={props.icon} />)}
-            <span>{props.title}</span>
-        </NavLink>
-    </div>
-);
+const LinkButton: React.SFC<ILabelProps> = (props, context) => {
+    const isActive = (context.router.route.location.pathname) === `/page/${props.page}`;
+    const classes = classnames({
+        active: isActive
+    });
+
+    return (
+        <StyledLinkButton className={classes}>
+            <div className="link-active-decorator" />
+            <NavLink to={`/page/${props.page}`}>
+                <span className="link-body">
+                    {props.icon && (<em className={`icon ${props.icon}`} />)}
+                    <span>{props.title}</span>
+                </span>
+            </NavLink>
+        </StyledLinkButton>
+    );
+};
 
 LinkButton.contextTypes = {
     router: propTypes.object.isRequired

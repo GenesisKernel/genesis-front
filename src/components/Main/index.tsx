@@ -21,11 +21,16 @@ import { setCollapsed } from 'modules/engine/actions';
 import styled from 'styled-components';
 
 import { IProtypoElement } from 'components/Protypo/Protypo';
-import Sidebar from 'components/Main/Sidebar';
+import Sidebar, { style as sidebarStyle } from 'components/Main/Sidebar';
 import Header from 'components/Main/Header';
 
 const StyledWrapper = styled.div`
     background: #f5f7fa;
+`;
+
+const StyledContent = styled.section`
+    margin-left: ${props => props.style.marginLeft || 0}px;
+    transition: margin-left ${props => props.style.transition};
 `;
 
 export interface IMainProps {
@@ -51,11 +56,11 @@ export default class extends React.Component<IMainProps> {
         });
         return (
             <StyledWrapper className={classes}>
-                <Sidebar menu={this.props.menu} />
-                <Header toggleCollapsed={this.onSidebarToggle.bind(this)} loading={this.props.loading} />
-                <section>
+                <Sidebar menu={this.props.menu} collapsed={this.props.isCollapsed} />
+                <StyledContent style={{ marginLeft: this.props.isCollapsed ? 0 : sidebarStyle.sidebarWidth, transition: sidebarStyle.collapseTransition }}>
+                    <Header toggleCollapsed={this.onSidebarToggle.bind(this)} loading={this.props.loading} leftOffset={this.props.isCollapsed ? 0 : sidebarStyle.sidebarWidth} collapseTransition={sidebarStyle.collapseTransition} />
                     {this.props.children}
-                </section>
+                </StyledContent>
             </StyledWrapper>
         );
     }
