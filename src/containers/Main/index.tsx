@@ -29,7 +29,7 @@ import CreatePage from 'containers/Main/containers/Admin/Interface/CreatePage';
 import EditPage from 'containers/Main/containers/Admin/Interface/EditPage';
 import CreateMenu from 'containers/Main/containers/Admin/Interface/CreateMenu';
 import EditMenu from 'containers/Main/containers/Admin/Interface/EditMenu';
-import Dashboard from 'containers/Main/containers/Dashboard';
+import DefaultPage from 'containers/Main/containers/DefaultPage';
 import Page from 'containers/Main/containers/Page';
 import Debug from 'containers/Main/containers/Debug';
 import Backup from 'containers/Main/containers/Backup';
@@ -42,7 +42,7 @@ const MainContainer: React.SFC<IMainProps> = (props, context) => {
     return (
         <Main {...props}>
             <Switch>
-                <Route exact path="/" component={Dashboard} />
+                <Route exact path="/" component={DefaultPage} />
 
                 <Route exact path="/admin/tables" component={Tables} />
                 <Route exact path="/admin/tables/create" component={TablesCreate} />

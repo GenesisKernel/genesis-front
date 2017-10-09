@@ -106,6 +106,7 @@ const Header: React.SFC<IHeaderProps> = (props) => (
 );
 
 const StyledHeader = styled(Header) `
+    z-index: 1000;
     position: fixed;
     transition: left ${props => props.collapseTransition || 'none'};
     left: ${props => props.leftOffset}px;

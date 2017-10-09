@@ -17,6 +17,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import imgLogo from 'images/logoInverse.svg';
+import { FormattedMessage } from 'react-intl';
 
 import Protypo from 'components/Protypo';
 import { IProtypoElement } from 'components/Protypo/Protypo';
@@ -72,6 +73,38 @@ const StyledLogo = styled.div`
     }
 `;
 
+const StyledMenuContent = styled.div`
+    padding-bottom: 50px;
+`;
+
+const StyledDevButton = styled.div`
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
+
+    > button {
+        background: transparent;
+        outline: none;
+        border: none;
+        display: block;
+        margin: 0 auto;
+        font-weight: bold;
+        color: #888;
+        font-size: 14px;
+
+        > .icon {
+            vertical-align: middle;
+            margin-right: 8px;
+            margin-top: -0.1em;
+        }
+
+        &:hover {
+            color: #999;
+        }
+    }
+`;
+
 export interface ISidebarProps {
     collapsed: boolean;
     menu: {
@@ -91,7 +124,15 @@ const Sidebar: React.SFC<ISidebarProps> = (props) => {
                     <em className="icon icon-arrow-left" />
                     <span>Welcome</span>
                 </StyledBackButton>
-                <Protypo payload={props.menu && props.menu.content} />
+                <StyledMenuContent>
+                    <Protypo payload={props.menu && props.menu.content} />
+                </StyledMenuContent>
+                <StyledDevButton>
+                    <button>
+                        <em className="icon fa fa-cog" />
+                        <FormattedMessage id="admin.tools" defaultMessage="Admin tools" />
+                    </button>
+                </StyledDevButton>
                 {/*<ul className="nav">
                         {<li className="nav-heading text-center pr0 pl0 pb0 m0">
                             <span>Account</span>

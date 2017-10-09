@@ -35,11 +35,11 @@ const StyledLinkButton = styled.div`
     }
 
     > .link-active-decorator {
-        width: 3px;
+        opacity: 0;
         background: #1fafe1;
         float: left;
+        width: 3px;
         height: 45px;
-        opacity: 0;
         transition: opacity .2s ease-in-out;
     }
 
@@ -77,10 +77,10 @@ const LinkButton: React.SFC<ILabelProps> = (props, context) => {
         <StyledLinkButton className={classes}>
             <div className="link-active-decorator" />
             <NavLink to={`/page/${props.page}`}>
-                <span className="link-body">
+                <div className="link-body">
                     {props.icon && (<em className={`icon ${props.icon}`} />)}
                     <span>{props.title}</span>
-                </span>
+                </div>
             </NavLink>
         </StyledLinkButton>
     );
