@@ -30,7 +30,7 @@ const StyledSidebar = styled.aside`
     box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.15);
     overflow: hidden;
     width: ${style.sidebarWidth}px !important;
-    transition: max-width ${style.collapseTransition};
+    transition: margin-left ${style.collapseTransition};
 
     .aside-inner {
         width: ${style.sidebarWidth}px !important;
@@ -82,7 +82,7 @@ export interface ISidebarProps {
 
 const Sidebar: React.SFC<ISidebarProps> = (props) => {
     return (
-        <StyledSidebar className="aside" style={{ maxWidth: props.collapsed ? 0 : style.sidebarWidth + 20 }}>
+        <StyledSidebar className="aside" style={{ marginLeft: props.collapsed ? -style.sidebarWidth : 0 }}>
             <nav>
                 <StyledLogo>
                     <img src={imgLogo} />
