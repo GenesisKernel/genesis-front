@@ -61,7 +61,7 @@ const Tables: React.SFC<ITablesProps> = (props) => (
         </ol>
         <Panel bsStyle="default">
             <div className="table-responsive">
-                <table className="table table-striped table-bordered table-hover ui-responsive ui-table ui-table-reflow">
+                <table className="table table-striped table-bordered table-hover">
                     <thead>
                         <tr>
                             <th>

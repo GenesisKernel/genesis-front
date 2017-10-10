@@ -16,10 +16,13 @@
 
 import * as React from 'react';
 import { resolveHandler } from 'components/Protypo';
+import { menuPush } from 'modules/content/actions';
+import * as propTypes from 'prop-types';
 
 export interface IProtypoProps {
     wrapper?: JSX.Element;
     payload: IProtypoElement[];
+    menuPush: typeof menuPush;
 }
 
 export interface IProtypoElement {
@@ -31,6 +34,18 @@ export interface IProtypoElement {
 
 export default class Protypo extends React.Component<IProtypoProps> {
     private _lastID: number;
+    private _menuPushBind: Function;
+
+    constructor(props: IProtypoProps) {
+        super(props);
+        this._menuPushBind = props.menuPush.bind(this);
+    }
+
+    getChildContext() {
+        return {
+            menuPush: this._menuPushBind
+        };
+    }
 
     renderElement(element: IProtypoElement): React.ReactNode {
         switch (element.tag) {
@@ -41,7 +56,7 @@ export default class Protypo extends React.Component<IProtypoProps> {
                 const Handler = resolveHandler(element.tag);
                 if (Handler) {
                     return (
-                        <Handler {...element.attr} key={this._lastID++}>
+                        <Handler {...element.attr} key={this._lastID++} childrenTree={element.children}>
                             {this.renderElements(element.children)}
                         </Handler>
                     );
@@ -72,3 +87,7 @@ export default class Protypo extends React.Component<IProtypoProps> {
         return React.cloneElement(this.props.wrapper || <div />, null, this.renderElements(this.props.payload));
     }
 }
+
+(Protypo as any).childContextTypes = {
+    menuPush: propTypes.func.isRequired
+};

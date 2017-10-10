@@ -18,7 +18,7 @@ import * as React from 'react';
 import { IStoredKey } from 'lib/storage';
 import * as classnames from 'classnames';
 import { setCollapsed } from 'modules/engine/actions';
-import { menuPop } from 'modules/content/actions';
+import { menuPop, menuPush } from 'modules/content/actions';
 import styled from 'styled-components';
 
 import { IProtypoElement } from 'components/Protypo/Protypo';
@@ -40,6 +40,7 @@ export interface IMainProps {
     loading: number;
     menus: { name: string, content: IProtypoElement[] }[];
     menuPop: typeof menuPop;
+    menuPush: typeof menuPush;
     setCollapsed: typeof setCollapsed;
 }
 
@@ -58,7 +59,12 @@ export default class Main extends React.Component<IMainProps> {
         });
         return (
             <StyledWrapper className={classes}>
-                <Sidebar menus={this.props.menus} collapsed={this.props.isCollapsed} menuPop={this.props.menuPop.bind(this)} />
+                <Sidebar
+                    menus={this.props.menus}
+                    collapsed={this.props.isCollapsed}
+                    menuPop={this.props.menuPop.bind(this)}
+                    menuPush={this.props.menuPush.bind(this)}
+                />
                 <StyledContent style={{ marginLeft: this.props.isCollapsed ? 0 : sidebarStyle.sidebarWidth, transition: sidebarStyle.collapseTransition }}>
                     <Header toggleCollapsed={this.onSidebarToggle.bind(this)} loading={this.props.loading} leftOffset={this.props.isCollapsed ? 0 : sidebarStyle.sidebarWidth} collapseTransition={sidebarStyle.collapseTransition} />
                     {this.props.children}

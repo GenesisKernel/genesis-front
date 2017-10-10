@@ -20,14 +20,14 @@ import * as classnames from 'classnames';
 import styled from 'styled-components';
 import * as propTypes from 'prop-types';
 
-export interface ILabelProps {
+export interface IMenuItemProps {
     'title'?: string;
     'page'?: string;
     'icon'?: string;
     'params'?: { [key: string]: any };
 }
 
-const StyledLinkButton = styled.div`
+export const StyledLinkButton = styled.div`
     &.active {
         > .link-active-decorator {
             opacity: 1;
@@ -67,7 +67,7 @@ const StyledLinkButton = styled.div`
 `;
 
 // TODO: Missing page params
-const LinkButton: React.SFC<ILabelProps> = (props, context) => {
+const LinkButton: React.SFC<IMenuItemProps> = (props, context) => {
     const isActive = (context.router.route.location.pathname) === `/page/${props.page}`;
     const classes = classnames({
         active: isActive

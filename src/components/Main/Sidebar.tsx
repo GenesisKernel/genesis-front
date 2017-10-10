@@ -18,6 +18,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import imgLogo from 'images/logoInverse.svg';
 import { FormattedMessage } from 'react-intl';
+import { menuPop, menuPush } from 'modules/content/actions';
 
 import Protypo from 'components/Protypo';
 import { IProtypoElement } from 'components/Protypo/Protypo';
@@ -63,6 +64,10 @@ const StyledBackButton = styled.button`
         left: 15px;
         color: #b2b2b2;
         line-height: 45px;
+    }
+
+    > .backbutton-label {
+        height: 100%;
     }
 `;
 
@@ -116,7 +121,8 @@ export interface ISidebarProps {
         name: string;
         content: IProtypoElement[];
     }[];
-    menuPop: () => void;
+    menuPop: typeof menuPop;
+    menuPush: typeof menuPush;
 }
 
 const Sidebar: React.SFC<ISidebarProps> = (props) => {
@@ -129,10 +135,13 @@ const Sidebar: React.SFC<ISidebarProps> = (props) => {
                 </StyledLogo>
                 <StyledBackButton onClick={() => props.menuPop()} disabled={1 >= props.menus.length}>
                     {props.menus.length > 1 && (<em className="icon icon-arrow-left" />)}
-                    <span>Welcome</span>
+                    <div className="backbutton-label">{menu && menu.name}</div>
                 </StyledBackButton>
                 <StyledMenuContent>
-                    <Protypo payload={menu && menu.content} />
+                    <Protypo
+                        payload={menu && menu.content}
+                        menuPush={props.menuPush}
+                    />
                 </StyledMenuContent>
                 <StyledDevButton>
                     <button>

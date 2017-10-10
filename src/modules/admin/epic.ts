@@ -255,7 +255,24 @@ export const getMenuEpic = (actions$: Observable<Action>) =>
             });
         });
 
+/*export const getContractsEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.getContracts.started.match)
+        .switchMap(action => {
+            return Observable.from(api.contracts(action.payload.session, action.payload.offset, action.payload.limit)).map(payload => {
+                return actions.getContracts.done({
+                    params: null,
+                    result: payload
+                });
+            }).catch((error: IAPIError) => {
+                return Observable.of(actions.getContracts.failed({
+                    params: null,
+                    error: error.error
+                }));
+            });
+        });*/
+
 export default combineEpics(
+    //getContractsEpic,
     getTableEpic,
     getTablesEpic,
     getPagesEpic,

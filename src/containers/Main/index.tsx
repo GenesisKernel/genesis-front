@@ -19,7 +19,7 @@ import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { IRootState } from 'modules';
 import { setCollapsed } from 'modules/engine/actions';
-import { menuPop } from 'modules/content/actions';
+import { menuPop, menuPush } from 'modules/content/actions';
 
 import Main, { IMainProps } from 'components/Main';
 import Tables from 'containers/Main/containers/Admin/Tables';
@@ -76,7 +76,8 @@ const mapStateToProps = (state: IRootState) => ({
 
 const mapDispatchToProps = {
     setCollapsed,
-    menuPop
+    menuPop,
+    menuPush
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainContainer);

@@ -17,46 +17,35 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { renderPage, menuPush } from 'modules/content/actions';
+import { getContracts } from 'modules/admin/actions';
 
-import { IProtypoElement } from 'components/Protypo/Protypo';
-import Page from 'components/Main/Page';
+import Contracts from 'components/Main/Admin/Contracts';
 
-interface IDefaultPageContainerProps {
+interface IContractsContainerProps {
     session: string;
-    pending: boolean;
-    page: { name: string, content: IProtypoElement[] };
-    renderPage: typeof renderPage.started;
-    menuPush: typeof menuPush;
+    contracts: any;
+    getContracts: typeof getContracts.started;
 }
 
-class DefaultPageContainer extends React.Component<IDefaultPageContainerProps> {
+class ContractsContainer extends React.Component<IContractsContainerProps> {
     componentWillMount() {
-        this.props.renderPage({
-            session: this.props.session,
-            name: 'default_page'
-        });
+        this.props.getContracts({ session: this.props.session });
     }
 
     render() {
         return (
-            <Page
-                payload={this.props.page && this.props.page.content}
-                menuPush={this.props.menuPush.bind(this)}
-            />
+            <Contracts contracts={this.props.contracts} />
         );
     }
 }
 
 const mapStateToProps = (state: IRootState) => ({
     session: state.auth.sessionToken,
-    pending: state.content.pending,
-    page: state.content.page
+    //contracts: state.admin.contracts
 });
 
 const mapDispatchToProps = {
-    renderPage: renderPage.started,
-    menuPush: menuPush
+    getContracts: getContracts.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DefaultPageContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(ContractsContainer);

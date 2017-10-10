@@ -19,6 +19,9 @@ import { IListResponse, ITableResponse, ITablesResponse, IPagesResponse, IPageRe
 
 const actionCreator = actionCreatorFactory('admin');
 
+// Contracts
+export const getContracts = actionCreator.async<{ session: string, offset?: number, limit?: number }, void, string>('GET_CONTRACTS');
+
 // Tables
 export const getTable = actionCreator.async<{ session: string, table: string }, { table: ITableResponse, data: IListResponse }, string>('GET_TABLE');
 export const getTables = actionCreator.async<{ session: string, offset?: number, limit?: number }, ITablesResponse, string>('GET_TABLES');

@@ -72,5 +72,18 @@ export default (state: State = initialState, action: Action): State => {
         }
     }
 
+    if (isType(action, actions.menuPush)) {
+        const menuNeedsPush = !state.menus.length || state.menus[state.menus.length - 1].name !== action.payload.name;
+        if (menuNeedsPush) {
+            return {
+                ...state,
+                menus: [...state.menus, action.payload]
+            };
+        }
+        else {
+            return state;
+        }
+    }
+
     return state;
 };

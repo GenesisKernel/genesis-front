@@ -20,6 +20,12 @@ import styled from 'styled-components';
 
 import UserMenu from 'components/Main/UserMenu';
 
+const StyledLoadingBar = styled(LoadingBar) `
+    position: fixed;
+    right: 0;
+    left: ${props => props.style.left};
+`;
+
 export interface IHeaderProps {
     collapseTransition?: string;
     leftOffset?: number;
@@ -101,7 +107,16 @@ const Header: React.SFC<IHeaderProps> = (props) => (
                 </ul>
             </div>
         </nav>
-        <LoadingBar showFastActions loading={props.loading} style={{ backgroundColor: '#2b9fe9', height: 2 }} />
+        <StyledLoadingBar
+            showFastActions
+            loading={props.loading}
+            style={{
+                backgroundColor: '#2b9fe9',
+                width: 'auto',
+                height: 2,
+                left: props.leftOffset + 'px'
+            }}
+        />
     </header>
 );
 

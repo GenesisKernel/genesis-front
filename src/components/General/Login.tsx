@@ -119,20 +119,6 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                                 </Validation.components.ValidatedFormGroup>
                             </fieldset>
                             <fieldset>
-                                <FormGroup>
-                                    <Col md={3}>
-                                        <label className="control-label">
-                                            <FormattedMessage id="general.ecosystem" defaultMessage="Ecosystem" />
-                                        </label>
-                                    </Col>
-                                    <Col md={9}>
-                                        <Validation.components.ValidatedSelect name="ecosystem" disabled={!this.state.account}>
-                                            <option>{this.props.intl.formatMessage({ id: 'ecosystem.none', defaultMessage: 'None' })}</option>
-                                        </Validation.components.ValidatedSelect>
-                                    </Col>
-                                </FormGroup>
-                            </fieldset>
-                            <fieldset>
                                 <Validation.components.ValidatedFormGroup for="password">
                                     <Col md={3}>
                                         <label className="control-label">

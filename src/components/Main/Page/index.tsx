@@ -17,14 +17,16 @@
 import * as React from 'react';
 import Protypo from 'components/Protypo';
 import { IProtypoElement } from 'components/Protypo/Protypo';
+import { menuPush } from 'modules/content/actions';
 
 export interface IPageProps {
     payload: IProtypoElement[];
+    menuPush: typeof menuPush;
 }
 
 const Page: React.SFC<IPageProps> = (props) => (
     <Protypo
-        payload={props.payload}
+        {...props}
         wrapper={<div className="content-wrapper" />}
     />
 );

@@ -93,7 +93,12 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                     />
                 </Col>
                 <Col md={6}>
-                    {this.state.result && (<Protypo payload={this.state.result} />)}
+                    {this.state.result && (
+                        <Protypo
+                            payload={this.state.result}
+                            menuPush={(() => null as any) as any}
+                        />
+                    )}
                 </Col>
                 <hr />
                 <Button bsStyle="primary" className="btn-block" onClick={this.onSubmit.bind(this)}>Request template</Button>

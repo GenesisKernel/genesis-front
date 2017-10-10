@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { renderPage } from 'modules/content/actions';
+import { renderPage, menuPush } from 'modules/content/actions';
 
 import { IProtypoElement } from 'components/Protypo/Protypo';
 import Page from 'components/Main/Page';
@@ -28,6 +28,7 @@ interface IPageContainerProps {
     page: { name: string, content: IProtypoElement[] };
     match?: { params: { pageName: string } };
     renderPage: typeof renderPage.started;
+    menuPush: typeof menuPush;
 }
 
 class PageContainer extends React.Component<IPageContainerProps> {
@@ -49,7 +50,10 @@ class PageContainer extends React.Component<IPageContainerProps> {
 
     render() {
         return (
-            <Page payload={this.props.page && this.props.page.content} />
+            <Page
+                payload={this.props.page && this.props.page.content}
+                menuPush={this.props.menuPush.bind(this)}
+            />
         );
     }
 }
@@ -61,7 +65,8 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    renderPage: renderPage.started
+    renderPage: renderPage.started,
+    menuPush: menuPush
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PageContainer);

@@ -21,6 +21,7 @@ import Em from 'components/Protypo/Em';
 import Input from 'components/Protypo/Input';
 import Label from 'components/Protypo/Label';
 import MenuItem from 'components/Protypo/MenuItem';
+import MenuGroup from 'components/Protypo/MenuGroup';
 import P from 'components/Protypo/P';
 import Span from 'components/Protypo/Span';
 import Strong from 'components/Protypo/Strong';
@@ -32,6 +33,7 @@ const handlers = {
     'input': Input,
     'label': Label,
     'menuitem': MenuItem,
+    'menugroup': MenuGroup,
     'p': P,
     'span': Span,
     'strong': Strong
