@@ -20,6 +20,8 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { ITableResponse, IListResponse } from 'lib/api';
 
+import Money from 'components/Money';
+
 export interface IViewProps {
     tableName: string;
     table: ITableResponse;
@@ -27,12 +29,17 @@ export interface IViewProps {
 }
 
 const DataPresenter: React.SFC<{ type: string, data: any }> = (props) => {
+    // http://egaas-ru.readthedocs.io/ru/latest/introduction/api2.html#table-name
+    // varchar,bytea,number,money,text,double,character.
     switch (props.type) {
-        case '':
-            return (<span className="text-muted">[SYSTEM]</span>);
-
         case 'money':
-        case 'numbers':
+            return (<Money value={props.data} />);
+
+        case 'varchar':
+        case 'text':
+        case 'double':
+        case 'character':
+        case 'number':
             return (<span>{props.data}</span>);
 
         default:
