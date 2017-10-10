@@ -134,7 +134,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                                 <FormGroup>
                                     <Col md={3} />
                                     <Col md={9}>
-                                        <Validation.components.ValidatedCheckbox className="pt0" name="remember" title={this.props.intl.formatMessage({ id: 'general.remember', defaultMessage: 'Remember password' })} />
+                                        <Validation.components.ValidatedCheckbox className="pt0" name="remember" checked disabled title={this.props.intl.formatMessage({ id: 'general.remember', defaultMessage: 'Remember password' })} />
                                     </Col>
                                 </FormGroup>
                             </fieldset>

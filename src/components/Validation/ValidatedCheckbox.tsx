@@ -27,6 +27,7 @@ interface IValidatedCheckboxProps {
     defaultChecked?: boolean;
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
     checked?: boolean;
+    disabled?: boolean;
 }
 
 export default class ValidatedCheckbox extends React.Component<IValidatedCheckboxProps> {
