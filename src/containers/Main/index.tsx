@@ -30,6 +30,8 @@ import CreatePage from 'containers/Main/containers/Admin/Interface/CreatePage';
 import EditPage from 'containers/Main/containers/Admin/Interface/EditPage';
 import CreateMenu from 'containers/Main/containers/Admin/Interface/CreateMenu';
 import EditMenu from 'containers/Main/containers/Admin/Interface/EditMenu';
+import Contracts from 'containers/Main/containers/Admin/Contracts';
+import CreateContract from 'containers/Main/containers/Admin/Contracts/Create';
 import DefaultPage from 'containers/Main/containers/DefaultPage';
 import Page from 'containers/Main/containers/Page';
 import Debug from 'containers/Main/containers/Debug';
@@ -40,7 +42,15 @@ import RequestMembership from 'containers/Main/containers/RequestMembership';
 import NotFound from 'containers/Main/containers/NotFound';
 
 class MainContainer extends React.Component<IMainProps & { menuInit: typeof menuInit.started }> {
+    componentDidMount() {
+        this.preloadMenu(this.props);
+    }
+
     componentWillReceiveProps(props: IMainProps) {
+        this.preloadMenu(props);
+    }
+
+    preloadMenu(props: IMainProps) {
         if (!props.pending && !props.menus.find(l => l.name === 'default_menu')) {
             this.props.menuInit({
                 session: props.session
@@ -62,6 +72,8 @@ class MainContainer extends React.Component<IMainProps & { menuInit: typeof menu
                     <Route exact path="/admin/interface/page/:pageID-:pageName" component={EditPage} />
                     <Route exact path="/admin/interface/menu/:menuID-:menuName" component={EditMenu} />
                     <Route exact path="/admin/interface/create-menu" component={CreateMenu} />
+                    <Route exact path="/admin/contracts" component={Contracts} />
+                    <Route exact path="/admin/contracts/create" component={CreateContract} />
 
                     <Route exact path="/page/:pageName" component={Page} />
 
