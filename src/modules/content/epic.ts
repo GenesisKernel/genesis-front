@@ -41,11 +41,12 @@ export const renderPageEpic = (actions$: Observable<Action>) =>
                     params: action.payload,
                     result: payload
                 });
-            }).catch((error: IAPIError) =>
-                Observable.of(actions.renderPage.failed({
+            }).catch((error: IAPIError) => {
+                return Observable.of(actions.renderPage.failed({
                     params: action.payload,
                     error: error.error
-                })));
+                }));
+            });
         });
 
 export default combineEpics(

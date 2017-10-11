@@ -22,7 +22,7 @@ import { IProtypoElement } from 'components/Protypo/Protypo';
 export type State = {
     readonly pending: boolean;
     readonly menus: { name: string, content: IProtypoElement[] }[];
-    readonly page: { name: string, content: IProtypoElement[] };
+    readonly page: { name: string, content: IProtypoElement[], error?: string };
 };
 
 export const initialState: State = {
@@ -56,7 +56,11 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            page: null
+            page: {
+                name: null,
+                content: null,
+                error: action.payload.error
+            }
         };
     }
 

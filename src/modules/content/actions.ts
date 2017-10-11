@@ -21,4 +21,4 @@ const actionCreator = actionCreatorFactory('content');
 
 export const menuPop = actionCreator('MENU_POP');
 export const menuPush = actionCreator<{ name: string, content: IProtypoElement[] }>('MENU_PUSH');
-export const renderPage = actionCreator.async<{ session: string, name: string, params?: { [key: string]: any } }, { menu: { name: string, content: IProtypoElement[] }, page: { name: string, content: IProtypoElement[] } }, string>('GET_PAGE');
+export const renderPage = actionCreator.async<{ session: string, name: string, params?: { [key: string]: any } }, { menu: { name: string, content: IProtypoElement[] }, page: { name: string, content: IProtypoElement[], error?: string } }, string>('GET_PAGE');
