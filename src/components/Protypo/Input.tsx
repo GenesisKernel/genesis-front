@@ -25,6 +25,7 @@ export interface IInputProps {
     'validate'?: string;
 }
 
+// TODO: type is not handled correctly
 const Input: React.SFC<IInputProps> = (props) => (
     <input className={props.class} name={props.name} placeholder={props.placeholder} type={props.type} defaultValue={props.value} />
 );

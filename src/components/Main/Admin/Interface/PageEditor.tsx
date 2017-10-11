@@ -84,7 +84,7 @@ const PageEditor: React.SFC<IPageEditorProps> = (props) => (
                         <label htmlFor="menu">
                             <FormattedMessage id="admin.interface.menu" defaultMessage="Menu" />
                         </label>
-                        <Validation.components.ValidatedSelect name="menu" validators={[Validation.validators.required]} onChange={props.onMenuSelect} value={props.menu ? (props.menu.name || '') : ' '}>
+                        <Validation.components.ValidatedSelect name="menu" validators={[Validation.validators.required]} onChange={props.onMenuSelect} value={props.menu ? props.menu.name : ''}>
                             {props.menus.map(menu => (
                                 <option key={menu.id} value={menu.name}>{menu.name}</option>
                             ))}

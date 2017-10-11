@@ -56,6 +56,12 @@ class CreatePage extends React.Component<ICreatePageProps, ICreatePageState> {
                 alert('Success:: ' + props.createPageStatus.block);
             }
         }
+
+        if (props.menus && !this.state.menu) {
+            this.setState({
+                menu: props.menus[0]
+            });
+        }
     }
 
     onSubmit(values: { [key: string]: any }) {
