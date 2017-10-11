@@ -37,7 +37,6 @@ const StyledContent = styled.section`
 export interface IMainProps {
     account: IStoredKey;
     isCollapsed: boolean;
-    loading: number;
     menus: { name: string, content: IProtypoElement[] }[];
     menuPop: typeof menuPop;
     menuPush: typeof menuPush;
@@ -66,7 +65,7 @@ export default class Main extends React.Component<IMainProps> {
                     menuPush={this.props.menuPush.bind(this)}
                 />
                 <StyledContent style={{ marginLeft: this.props.isCollapsed ? 0 : sidebarStyle.sidebarWidth, transition: sidebarStyle.collapseTransition }}>
-                    <Header toggleCollapsed={this.onSidebarToggle.bind(this)} loading={this.props.loading} leftOffset={this.props.isCollapsed ? 0 : sidebarStyle.sidebarWidth} collapseTransition={sidebarStyle.collapseTransition} />
+                    <Header toggleCollapsed={this.onSidebarToggle.bind(this)} leftOffset={this.props.isCollapsed ? 0 : sidebarStyle.sidebarWidth} collapseTransition={sidebarStyle.collapseTransition} />
                     {this.props.children}
                 </StyledContent>
             </StyledWrapper>

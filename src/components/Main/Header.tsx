@@ -15,7 +15,7 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { LoadingBar } from 'react-redux-loading-bar';
+import LoadingBar from 'react-redux-loading-bar';
 import styled from 'styled-components';
 
 import UserMenu from 'components/Main/UserMenu';
@@ -29,7 +29,6 @@ const StyledLoadingBar = styled(LoadingBar) `
 export interface IHeaderProps {
     collapseTransition?: string;
     leftOffset?: number;
-    loading: number;
     className?: string;
     toggleCollapsed: () => void;
 }
@@ -107,9 +106,9 @@ const Header: React.SFC<IHeaderProps> = (props) => (
                 </ul>
             </div>
         </nav>
+        {/*loading={props.loading*/}
         <StyledLoadingBar
             showFastActions
-            loading={props.loading}
             style={{
                 backgroundColor: '#2b9fe9',
                 width: 'auto',

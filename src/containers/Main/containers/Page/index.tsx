@@ -40,10 +40,10 @@ class PageContainer extends React.Component<IPageContainerProps> {
     }
 
     componentWillReceiveProps(props: IPageContainerProps) {
-        if (this.props.page && this.props.page.name !== props.match.params.pageName) {
+        if (this.props.page && (this.props.match.params.pageName !== props.match.params.pageName)) {
             props.renderPage({
                 session: this.props.session,
-                name: this.props.match.params.pageName
+                name: props.match.params.pageName
             });
         }
     }

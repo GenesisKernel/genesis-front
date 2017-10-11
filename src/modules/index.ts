@@ -30,7 +30,7 @@ export interface IRootState {
     content: content.State;
     engine: engine.State;
     tx: tx.State;
-    loadingBarReducer: number;
+    loadingBar: number;
     router: RouterState;
 }
 
@@ -48,6 +48,6 @@ export default combineReducers<IRootState>({
     content: content.reducer,
     engine: engine.reducer,
     tx: tx.reducer,
-    loadingBarReducer,
+    loadingBar: loadingBarReducer,
     router
 });
