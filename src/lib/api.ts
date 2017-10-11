@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-// FIXME - Stub value
-const apiRoot = 'http://127.0.0.1:7079/api/v2';
+const apiRoot = process.env.REACT_APP_API_URL || 'http://127.0.0.1:7079/api/v2';
 const defaultOptions: RequestInit = {
     method: 'POST'
 };
