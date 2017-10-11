@@ -111,6 +111,33 @@ export interface IPageResponse extends IResponse {
     menus: [IDBValue & { name: string }];
 }
 
+export interface IContractResponse extends IResponse {
+    name: string;
+    active: boolean;
+    tableid: number;
+    fields: {
+        name: string;
+        htmltype: string;
+        type: string;
+        tags: string;
+    }[];
+}
+
+export interface IContractsResponse extends IResponse {
+    count: number;
+    list: IContract[];
+}
+
+export interface IContract extends IDBValue {
+    name: string;
+    value: string;
+    wallet_id: string;
+    address: string;
+    conditions: string;
+    token_id: string;
+    active: string;
+}
+
 export interface IRowResponse extends IResponse {
     value: {
         [key: string]: any;
@@ -228,6 +255,8 @@ const api = {
         // TODO: Blocks are not supported
         blocks: []
     })) as Promise<IPagesResponse>,
+    contract: (session: string, name: string) => securedRequest(`contract/${name}`, session, null, { method: 'GET' }) as Promise<IContractResponse>,
+    contracts: (session: string, offset?: number, limit?: number) => securedRequest(`contracts?offset=${offset || 0}&limit=${limit || 0}`, session, null, { method: 'GET' }) as Promise<IContractsResponse>,
 
     txPrepare: (session: string, name: string, params: { [key: string]: any }) => securedRequest(`prepare/${name}`, session, params) as Promise<ITxPrepareResponse>,
     txExec: (session: string, name: string, params: { [key: string]: any }) => securedRequest(`contract/${name}`, session, params).then((result: ITxExecResponse) => {

@@ -18,14 +18,10 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Col, Panel, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
+import { IContract } from 'lib/api';
 
 export interface IContractsProps {
-    contracts: {
-        id: string;
-        name: string;
-        wallet: string;
-        active: string;
-    }[];
+    contracts: IContract[];
 }
 
 const Contracts: React.SFC<IContractsProps> = (props) => (
@@ -78,13 +74,13 @@ const Contracts: React.SFC<IContractsProps> = (props) => (
                             </tr>
                         </thead>
                         <tbody>
-                            {props.contracts.length && (
-                                props.contracts.map(contract => (
+                            {props.contracts && props.contracts.length && (
+                                props.contracts.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10)).map(contract => (
                                     <tr key={contract.id}>
                                         <td>{contract.id}</td>
                                         <td>{contract.name}</td>
-                                        <td>{contract.wallet}</td>
-                                        <td>{contract.active}</td>
+                                        <td>{contract.address}</td>
+                                        <td className="text-center">{contract.active}</td>
                                         <td style={{ width: 1 }}>
                                             <Link to={`/admin/contracts/${contract.id}-${contract.name}`}>
                                                 <Button bsStyle="default" className="btn-labeled btn-icon">

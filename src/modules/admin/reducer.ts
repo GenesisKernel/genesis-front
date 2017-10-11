@@ -17,7 +17,7 @@
 import * as actions from './actions';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
-import { IListResponse, ITableResponse, ITablesResponse, IPagesResponse } from 'lib/api';
+import { IListResponse, ITableResponse, ITablesResponse, IPagesResponse, IContract } from 'lib/api';
 
 export type State = {
     readonly pending: boolean;
@@ -25,6 +25,9 @@ export type State = {
     readonly editPageStatus: { block: string, error: string };
     readonly createMenuStatus: { block: string, error: string };
     readonly editMenuStatus: { block: string, error: string };
+    readonly createContractStatus: { block: string, error: string };
+    readonly editContractStatus: { block: string, error: string };
+    readonly activateContractStatus: { block: string, error: string };
     readonly menu: { id: string, name: string, value: string, conditions: string };
     readonly menus: { id: string, name: string }[];
     readonly tables: ITablesResponse;
@@ -32,6 +35,8 @@ export type State = {
     readonly tableData: IListResponse;
     readonly page: { id: string, [key: string]: any };
     readonly pages: IPagesResponse;
+    readonly contract: { id: string, name: string, conditions: string, address: string, value: string };
+    readonly contracts: IContract[];
 };
 
 export const initialState: State = {
@@ -39,6 +44,9 @@ export const initialState: State = {
     editPageStatus: null,
     createMenuStatus: null,
     editMenuStatus: null,
+    createContractStatus: null,
+    editContractStatus: null,
+    activateContractStatus: null,
     menu: null,
     menus: null,
     pending: false,
@@ -46,7 +54,9 @@ export const initialState: State = {
     table: null,
     tableData: null,
     page: null,
-    pages: null
+    pages: null,
+    contract: null,
+    contracts: null
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -316,6 +326,144 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             pending: false,
             menus: null
+        };
+    }
+
+    if (isType(action, actions.getContract.started)) {
+        return {
+            ...state,
+            pending: true,
+            contract: null
+        };
+    }
+
+    if (isType(action, actions.getContract.done)) {
+        return {
+            ...state,
+            pending: false,
+            contract: action.payload.result
+        };
+    }
+
+    if (isType(action, actions.getContract.failed)) {
+        return {
+            ...state,
+            pending: false,
+            contract: null
+        };
+    }
+
+    if (isType(action, actions.getContracts.started)) {
+        return {
+            ...state,
+            pending: true,
+            contracts: null
+        };
+    }
+
+    if (isType(action, actions.getContracts.done)) {
+        return {
+            ...state,
+            pending: false,
+            contracts: action.payload.result.list
+        };
+    }
+
+    if (isType(action, actions.getContracts.failed)) {
+        return {
+            ...state,
+            pending: false,
+            contracts: null
+        };
+    }
+
+    if (isType(action, actions.createContract.started)) {
+        return {
+            ...state,
+            pending: true,
+            createContractStatus: null
+        };
+    }
+
+    if (isType(action, actions.createContract.done)) {
+        return {
+            ...state,
+            pending: false,
+            createContractStatus: {
+                block: action.payload.result,
+                error: null
+            }
+        };
+    }
+
+    if (isType(action, actions.createContract.failed)) {
+        return {
+            ...state,
+            pending: false,
+            createContractStatus: {
+                block: null,
+                error: action.payload.error
+            }
+        };
+    }
+
+    if (isType(action, actions.editContract.started)) {
+        return {
+            ...state,
+            pending: true,
+            editContractStatus: null
+        };
+    }
+
+    if (isType(action, actions.editContract.done)) {
+        return {
+            ...state,
+            pending: false,
+            editContractStatus: {
+                block: action.payload.result,
+                error: null
+            }
+        };
+    }
+
+    if (isType(action, actions.editContract.failed)) {
+        return {
+            ...state,
+            pending: false,
+            editContractStatus: {
+                block: null,
+                error: action.payload.error
+            }
+        };
+    }
+
+    if (isType(action, actions.activateContract.started)) {
+        return {
+            ...state,
+            pending: true,
+            activateContractStatus: null
+        };
+    }
+
+    if (isType(action, actions.activateContract.done)) {
+        return {
+            ...state,
+            pending: false,
+            activateContractStatus: {
+                block: action.payload.result,
+                error: null
+            }
+        };
+    }
+
+    if (isType(action, actions.activateContract.failed)) {
+        return {
+            ...state,
+            pending: false,
+            activateContractStatus: {
+                block: null,
+                error: action.payload.error
+            }
         };
     }
 

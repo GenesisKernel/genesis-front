@@ -17,35 +17,24 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { getContracts } from 'modules/admin/actions';
+import { createContract } from 'modules/admin/actions';
 
-import Contracts from 'components/Main/Admin/Contracts';
+import Create, { ICreateProps } from 'components/Main/Admin/Contracts/Create';
 
-interface IContractsContainerProps {
-    session: string;
-    contracts: any;
-    getContracts: typeof getContracts.started;
-}
-
-class ContractsContainer extends React.Component<IContractsContainerProps> {
-    componentWillMount() {
-        this.props.getContracts({ session: this.props.session });
-    }
-
-    render() {
-        return (
-            <Contracts contracts={this.props.contracts} />
-        );
-    }
-}
+const CreateContainer: React.SFC<ICreateProps> = (props) => (
+    <Create {...props} />
+);
 
 const mapStateToProps = (state: IRootState) => ({
     session: state.auth.sessionToken,
-    contracts: state.admin.contracts
+    pending: state.admin.pending,
+    createContractStatus: state.admin.createContractStatus,
+    privateKey: state.auth.privateKey,
+    publicKey: state.auth.account.publicKey
 });
 
 const mapDispatchToProps = {
-    getContracts: getContracts.started
+    createContract: createContract.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContractsContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateContainer);

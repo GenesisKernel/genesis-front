@@ -32,6 +32,7 @@ import CreateMenu from 'containers/Main/containers/Admin/Interface/CreateMenu';
 import EditMenu from 'containers/Main/containers/Admin/Interface/EditMenu';
 import Contracts from 'containers/Main/containers/Admin/Contracts';
 import CreateContract from 'containers/Main/containers/Admin/Contracts/Create';
+import EditContract from 'containers/Main/containers/Admin/Contracts/Edit';
 import DefaultPage from 'containers/Main/containers/DefaultPage';
 import Page from 'containers/Main/containers/Page';
 import Debug from 'containers/Main/containers/Debug';
@@ -74,6 +75,7 @@ class MainContainer extends React.Component<IMainProps & { menuInit: typeof menu
                     <Route exact path="/admin/interface/create-menu" component={CreateMenu} />
                     <Route exact path="/admin/contracts" component={Contracts} />
                     <Route exact path="/admin/contracts/create" component={CreateContract} />
+                    <Route exact path="/admin/contracts/:contractID-:contractName" component={EditContract} />
 
                     <Route exact path="/page/:pageName" component={Page} />
 

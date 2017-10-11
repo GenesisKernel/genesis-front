@@ -17,35 +17,39 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { getContracts } from 'modules/admin/actions';
+import { activateContract, getContract, editContract } from 'modules/admin/actions';
 
-import Contracts from 'components/Main/Admin/Contracts';
+import Edit, { IEditProps } from 'components/Main/Admin/Contracts/Edit';
 
-interface IContractsContainerProps {
-    session: string;
-    contracts: any;
-    getContracts: typeof getContracts.started;
-}
-
-class ContractsContainer extends React.Component<IContractsContainerProps> {
+class EditContainer extends React.Component<IEditProps> {
     componentWillMount() {
-        this.props.getContracts({ session: this.props.session });
+        this.props.getContract({
+            session: this.props.session,
+            id: this.props.match.params.contractID
+        });
     }
 
     render() {
         return (
-            <Contracts contracts={this.props.contracts} />
+            <Edit {...this.props} />
         );
     }
 }
 
 const mapStateToProps = (state: IRootState) => ({
     session: state.auth.sessionToken,
-    contracts: state.admin.contracts
+    pending: state.admin.pending,
+    contract: state.admin.contract,
+    activateContractStatus: state.admin.activateContractStatus,
+    editContractStatus: state.admin.editContractStatus,
+    privateKey: state.auth.privateKey,
+    publicKey: state.auth.account.publicKey
 });
 
 const mapDispatchToProps = {
-    getContracts: getContracts.started
+    activateContract: activateContract.started,
+    editContract: editContract.started,
+    getContract: getContract.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContractsContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(EditContainer);

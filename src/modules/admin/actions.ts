@@ -15,12 +15,16 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IListResponse, ITableResponse, ITablesResponse, IPagesResponse, IPageResponse } from 'lib/api';
+import { IListResponse, ITableResponse, ITablesResponse, IPagesResponse, IPageResponse, IContractsResponse } from 'lib/api';
 
 const actionCreator = actionCreatorFactory('admin');
 
 // Contracts
-export const getContracts = actionCreator.async<{ session: string, offset?: number, limit?: number }, void, string>('GET_CONTRACTS');
+export const activateContract = actionCreator.async<{ session: string, privateKey: string, publicKey: string, id: string }, string, string>('ACTIVATE_CONTRACT');
+export const getContract = actionCreator.async<{ session: string, id: string }, { id: string, active: string, name: string, conditions: string, address: string, value: string }, string>('GET_CONTRACT');
+export const getContracts = actionCreator.async<{ session: string, offset?: number, limit?: number }, IContractsResponse, string>('GET_CONTRACTS');
+export const createContract = actionCreator.async<{ session: string, privateKey: string, publicKey: string, code: string, wallet: string, conditions: string }, string, string>('CREATE_CONTRACT');
+export const editContract = actionCreator.async<{ session: string, privateKey: string, publicKey: string, id: string, code: string, conditions: string }, string, string>('EDIT_CONTRACT');
 
 // Tables
 export const getTable = actionCreator.async<{ session: string, table: string }, { table: ITableResponse, data: IListResponse }, string>('GET_TABLE');

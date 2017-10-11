@@ -255,7 +255,32 @@ export const getMenuEpic = (actions$: Observable<Action>) =>
             });
         });
 
-/* export const getContractsEpic = (actions$: Observable<Action>) =>
+export const getContractEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.getContract.started.match)
+        .switchMap(action => {
+            const promise = api.row(action.payload.session, 'contracts', action.payload.id);
+
+            return Observable.from(promise).map(payload => {
+                return actions.getContract.done({
+                    params: null,
+                    result: {
+                        id: action.payload.id,
+                        active: payload.value.active,
+                        name: payload.value.name,
+                        conditions: payload.value.conditions,
+                        address: keyring.walletIdToAddr(payload.value.wallet_id),
+                        value: payload.value.value
+                    }
+                });
+            }).catch((error: IAPIError) => {
+                return Observable.of(actions.getContract.failed({
+                    params: null,
+                    error: error.error
+                }));
+            });
+        });
+
+export const getContractsEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.getContracts.started.match)
         .switchMap(action => {
             return Observable.from(api.contracts(action.payload.session, action.payload.offset, action.payload.limit)).map(payload => {
@@ -269,10 +294,102 @@ export const getMenuEpic = (actions$: Observable<Action>) =>
                     error: error.error
                 }));
             });
-        });*/
+        });
+
+export const createContractEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.createContract.started.match)
+        .switchMap(action => {
+            const execParams = {
+                Wallet: action.payload.wallet,
+                Value: action.payload.code,
+                Conditions: action.payload.conditions
+            };
+
+            const promise = api.txPrepare(action.payload.session, 'NewContract', execParams).then(response => {
+                const signature = keyring.sign(response.forsign, action.payload.privateKey);
+                return api.txExec(action.payload.session, 'NewContract', {
+                    ...execParams,
+                    pubkey: action.payload.publicKey,
+                    signature,
+                    time: response.time
+                });
+            });
+
+            return Observable.from(promise).map(payload => {
+                return actions.createContract.done({
+                    params: action.payload,
+                    result: payload.blockid
+                });
+            }).catch((error: ITxStatusResponse) =>
+                Observable.of(actions.createContract.failed({
+                    params: action.payload,
+                    error: error.error || error.errmsg
+                })));
+        });
+
+export const editContractEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.editContract.started.match)
+        .switchMap(action => {
+            const execParams = {
+                Id: action.payload.id,
+                Value: action.payload.code,
+                Conditions: action.payload.conditions
+            };
+
+            const promise = api.txPrepare(action.payload.session, 'EditContract', execParams).then(response => {
+                const signature = keyring.sign(response.forsign, action.payload.privateKey);
+                return api.txExec(action.payload.session, 'EditContract', {
+                    ...execParams,
+                    pubkey: action.payload.publicKey,
+                    signature,
+                    time: response.time
+                });
+            });
+
+            return Observable.from(promise).map(payload => {
+                return actions.editContract.done({
+                    params: action.payload,
+                    result: payload.blockid
+                });
+            }).catch((error: ITxStatusResponse) =>
+                Observable.of(actions.editContract.failed({
+                    params: action.payload,
+                    error: error.error || error.errmsg
+                })));
+        });
+
+export const activateContractEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.activateContract.started.match)
+        .switchMap(action => {
+            const execParams = {
+                Id: action.payload.id
+            };
+
+            const promise = api.txPrepare(action.payload.session, 'ActivateContract', execParams).then(response => {
+                const signature = keyring.sign(response.forsign, action.payload.privateKey);
+                return api.txExec(action.payload.session, 'ActivateContract', {
+                    ...execParams,
+                    pubkey: action.payload.publicKey,
+                    signature,
+                    time: response.time
+                });
+            });
+
+            return Observable.from(promise).map(payload => {
+                return actions.activateContract.done({
+                    params: action.payload,
+                    result: payload.blockid
+                });
+            }).catch((error: ITxStatusResponse) =>
+                Observable.of(actions.activateContract.failed({
+                    params: action.payload,
+                    error: error.error || error.errmsg
+                })));
+        });
 
 export default combineEpics(
-    // getContractsEpic,
+    getContractEpic,
+    getContractsEpic,
     getTableEpic,
     getTablesEpic,
     getPagesEpic,
@@ -281,6 +398,9 @@ export default combineEpics(
     getMenusEpic,
     createPageEpic,
     createMenuEpic,
+    createContractEpic,
     editPageEpic,
-    editMenuEpic
+    editMenuEpic,
+    editContractEpic,
+    activateContractEpic
 );
