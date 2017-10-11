@@ -19,7 +19,7 @@ import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { IRootState } from 'modules';
 import { setCollapsed } from 'modules/engine/actions';
-import { menuPop, menuPush } from 'modules/content/actions';
+import { menuPop, menuPush, menuInit } from 'modules/content/actions';
 
 import Main, { IMainProps } from 'components/Main';
 import Tables from 'containers/Main/containers/Admin/Tables';
@@ -39,44 +39,57 @@ import MoneyTransfer from 'containers/Main/containers/MoneyTransfer';
 import RequestMembership from 'containers/Main/containers/RequestMembership';
 import NotFound from 'containers/Main/containers/NotFound';
 
-const MainContainer: React.SFC<IMainProps> = (props, context) => {
-    return (
-        <Main {...props}>
-            <Switch>
-                <Route exact path="/" component={DefaultPage} />
+class MainContainer extends React.Component<IMainProps & { menuInit: typeof menuInit.started }> {
+    componentWillReceiveProps(props: IMainProps) {
+        if (!props.pending && !props.menus.find(l => l.name === 'default_menu')) {
+            this.props.menuInit({
+                session: props.session
+            });
+        }
+    }
 
-                <Route exact path="/admin/tables" component={Tables} />
-                <Route exact path="/admin/tables/create" component={TablesCreate} />
-                <Route exact path="/admin/tables/:tableName" component={TablesView} />
-                <Route exact path="/admin/interface" component={Interface} />
-                <Route exact path="/admin/interface/create-page" component={CreatePage} />
-                <Route exact path="/admin/interface/page/:pageID-:pageName" component={EditPage} />
-                <Route exact path="/admin/interface/menu/:menuID-:menuName" component={EditMenu} />
-                <Route exact path="/admin/interface/create-menu" component={CreateMenu} />
+    render() {
+        return (
+            <Main {...this.props}>
+                <Switch>
+                    <Route exact path="/" component={DefaultPage} />
 
-                <Route exact path="/page/:pageName" component={Page} />
+                    <Route exact path="/admin/tables" component={Tables} />
+                    <Route exact path="/admin/tables/create" component={TablesCreate} />
+                    <Route exact path="/admin/tables/:tableName" component={TablesView} />
+                    <Route exact path="/admin/interface" component={Interface} />
+                    <Route exact path="/admin/interface/create-page" component={CreatePage} />
+                    <Route exact path="/admin/interface/page/:pageID-:pageName" component={EditPage} />
+                    <Route exact path="/admin/interface/menu/:menuID-:menuName" component={EditMenu} />
+                    <Route exact path="/admin/interface/create-menu" component={CreateMenu} />
 
-                <Route exact path="/debug" component={Debug} />
-                <Route exact path="/backup" component={Backup} />
-                <Route exact path="/create-ecosystem" component={EcosystemCreate} />
-                <Route exact path="/request-membership" component={RequestMembership} />
-                <Route exact path="/transfer" component={MoneyTransfer} />
-                <Route path="*" component={NotFound} />
-            </Switch>
-        </Main>
-    );
-};
+                    <Route exact path="/page/:pageName" component={Page} />
+
+                    <Route exact path="/debug" component={Debug} />
+                    <Route exact path="/backup" component={Backup} />
+                    <Route exact path="/create-ecosystem" component={EcosystemCreate} />
+                    <Route exact path="/request-membership" component={RequestMembership} />
+                    <Route exact path="/transfer" component={MoneyTransfer} />
+                    <Route path="*" component={NotFound} />
+                </Switch>
+            </Main>
+        );
+    }
+}
 
 const mapStateToProps = (state: IRootState) => ({
+    session: state.auth.sessionToken,
     account: state.auth.account,
     menus: state.content.menus,
+    pending: state.content.pending,
     isCollapsed: state.engine.isCollapsed
 });
 
 const mapDispatchToProps = {
     setCollapsed,
     menuPop,
-    menuPush
+    menuPush,
+    menuInit: menuInit.started
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainContainer);

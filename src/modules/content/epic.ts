@@ -49,6 +49,28 @@ export const renderPageEpic = (actions$: Observable<Action>) =>
             });
         });
 
+export const menuInitEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.menuInit.started.match)
+        .switchMap(action => {
+            const promise = api.contentMenu(action.payload.session, 'default_menu');
+
+            return Observable.from(promise).map(payload => {
+                return actions.menuInit.done({
+                    params: action.payload,
+                    result: {
+                        name: 'default_menu',
+                        content: JSON.parse(payload.tree)
+                    }
+                });
+            }).catch((error: IAPIError) => {
+                return Observable.of(actions.menuInit.failed({
+                    params: action.payload,
+                    error: error.error
+                }));
+            });
+        });
+
 export default combineEpics(
-    renderPageEpic
+    renderPageEpic,
+    menuInitEpic
 );

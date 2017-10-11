@@ -89,5 +89,33 @@ export default (state: State = initialState, action: Action): State => {
         }
     }
 
+    if (isType(action, actions.menuInit.started)) {
+        return {
+            ...state,
+            pending: true
+        };
+    }
+
+    if (isType(action, actions.menuInit.done)) {
+        const menuNeedsPush = !state.menus.length || state.menus.find(l => l.name === action.payload.result.name);
+        if (menuNeedsPush) {
+            return {
+                ...state,
+                pending: false,
+                menus: [action.payload.result, ...state.menus]
+            };
+        }
+        else {
+            return state;
+        }
+    }
+
+    if (isType(action, actions.menuInit.failed)) {
+        return {
+            ...state,
+            pending: false
+        };
+    }
+
     return state;
 };

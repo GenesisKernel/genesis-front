@@ -35,8 +35,10 @@ const StyledContent = styled.section`
 `;
 
 export interface IMainProps {
+    session: string;
     account: IStoredKey;
     isCollapsed: boolean;
+    pending: boolean;
     menus: { name: string, content: IProtypoElement[] }[];
     menuPop: typeof menuPop;
     menuPush: typeof menuPush;
