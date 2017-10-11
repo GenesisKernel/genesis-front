@@ -38,7 +38,7 @@ export const loginEpic = (actions$: Observable<Action>) =>
                     result: {
                         ...payload,
                         // TODO: Not remembering the key is not implemented yet
-                        //privateKey: action.payload.remember ? action.payload.privateKey : null,
+                        // privateKey: action.payload.remember ? action.payload.privateKey : null,
                         privateKey: action.payload.privateKey,
                         account
                     }

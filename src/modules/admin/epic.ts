@@ -255,7 +255,7 @@ export const getMenuEpic = (actions$: Observable<Action>) =>
             });
         });
 
-/*export const getContractsEpic = (actions$: Observable<Action>) =>
+/* export const getContractsEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.getContracts.started.match)
         .switchMap(action => {
             return Observable.from(api.contracts(action.payload.session, action.payload.offset, action.payload.limit)).map(payload => {
@@ -272,7 +272,7 @@ export const getMenuEpic = (actions$: Observable<Action>) =>
         });*/
 
 export default combineEpics(
-    //getContractsEpic,
+    // getContractsEpic,
     getTableEpic,
     getTablesEpic,
     getPagesEpic,
