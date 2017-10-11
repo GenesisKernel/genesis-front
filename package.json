@@ -21,6 +21,7 @@
         "font-awesome": "^4.7.0",
         "jsrsasign": "^8.0.3",
         "lodash": "^4.17.4",
+        "n64": "^0.0.18",
         "node-sass-chokidar": "^0.0.3",
         "prop-types": "^15.6.0",
         "random-js": "^1.0.8",

@@ -27,3 +27,13 @@ declare module '*.png' {
     const content: string;
     export default content;
 }
+
+declare module 'n64' {
+    abstract class N64 {
+        constructor(value: string, radix?: number);
+        toU64(): U64;
+        toI64(): I64;
+    }
+    class I64 extends N64 { }
+    class U64 extends N64 { }
+}

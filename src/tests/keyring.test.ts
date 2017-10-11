@@ -85,3 +85,19 @@ test('Key backup scenario', () => {
     const restored = keyring.restore(backup);
     expect(restored).toEqual(key);
 });
+
+test('Wallet id to address', () => {
+    const walletID = '-6258391547979339691';
+    const addr = keyring.walletIdToAddr(walletID);
+    const walletIDConverted = keyring.walletAddrToId(addr);
+    expect(addr).toEqual('1218-8352-5257-3021-1925');
+    expect(walletIDConverted).toEqual(walletID);
+});
+
+test('Wallet address to id', () => {
+    const addr = '1218-8352-5257-3021-1925';
+    const walletID = keyring.walletAddrToId(addr);
+    const addrConverted = keyring.walletIdToAddr(walletID);
+    expect(walletID).toEqual('-6258391547979339691');
+    expect(addrConverted).toEqual(addr);
+});
