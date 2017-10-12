@@ -90,10 +90,6 @@ class Create extends React.Component<ICreateProps, ICreateState> {
     }
 
     onSubmit(values: { [key: string]: any }) {
-        console.log('CREATE_TABLE::', {
-            name: values.name,
-            columns: this.state.columns
-        });
         this.props.createTable({
             session: this.props.session,
             privateKey: this.props.privateKey,
