@@ -157,7 +157,6 @@ export const createTableEpic = (actions$: Observable<Action>) =>
             };
 
             const promise = api.txPrepare(action.payload.session, 'NewTable', execParams).then(response => {
-                console.log(response.forsign, action.payload.privateKey);
                 const signature = keyring.sign(response.forsign, action.payload.privateKey);
                 return api.txExec(action.payload.session, 'NewTable', {
                     ...execParams,

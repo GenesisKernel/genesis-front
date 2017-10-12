@@ -107,9 +107,6 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                 new_column: 'true'
             })
         });
-        /*Name       string
-    	Columns      string
-    	Permissions string*/
     }
 
     onNewColumn() {
@@ -284,7 +281,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                                                         onClick={this.onDropColumn.bind(this, index)}
                                                     >
                                                         (-)
-                                                        </Button>
+                                                    </Button>
                                                 </td>
                                             </tr>
                                         ))}
