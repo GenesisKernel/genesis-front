@@ -35,7 +35,21 @@ export interface IEditColumnProps {
     editColumn: typeof editColumn.started;
 }
 
-export default class EditColumn extends React.Component<IEditColumnProps> {
+interface IEditColumnState {
+    permissions: string;
+}
+
+export default class EditColumn extends React.Component<IEditColumnProps, IEditColumnState> {
+    constructor(props: IEditColumnProps) {
+        super(props);
+        this.state = props.column ?
+            {
+                permissions: props.column.permissions
+            } : {
+                permissions: ''
+            };
+    }
+
     componentWillReceiveProps(props: IEditColumnProps) {
         if (props.editColumnStatus && this.props.editColumnStatus !== props.editColumnStatus) {
             // TODO: Notification stub
@@ -45,6 +59,12 @@ export default class EditColumn extends React.Component<IEditColumnProps> {
             else {
                 alert('Success:: ' + props.editColumnStatus.block);
             }
+        }
+
+        if (!this.props.column && props.column) {
+            this.setState({
+                permissions: props.column.permissions
+            });
         }
     }
 
@@ -56,6 +76,12 @@ export default class EditColumn extends React.Component<IEditColumnProps> {
             table: this.props.table.name,
             name: this.props.column.name,
             permissions: values.permissions
+        });
+    }
+
+    onPermissionsChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+        this.setState({
+            permissions: e.target.value
         });
     }
 
@@ -139,7 +165,7 @@ export default class EditColumn extends React.Component<IEditColumnProps> {
                             <label htmlFor="permissions">
                                 <FormattedMessage id="admin.tables.permissions" defaultMessage="Permissions" />
                             </label>
-                            <Validation.components.ValidatedTextarea name="permissions" validators={[Validation.validators.required]} />
+                            <Validation.components.ValidatedTextarea name="permissions" validators={[Validation.validators.required]} value={this.state.permissions} onChange={this.onPermissionsChange.bind(this)} />
                         </Validation.components.ValidatedFormGroup>
                     </Panel>
                 </Validation.components.ValidatedForm>
