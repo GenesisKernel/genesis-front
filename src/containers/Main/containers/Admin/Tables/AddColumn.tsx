@@ -29,7 +29,8 @@ const mapStateToProps = (state: IRootState) => ({
     session: state.auth.sessionToken,
     privateKey: state.auth.privateKey,
     publicKey: state.auth.account.publicKey,
-    addColumnStatus: state.admin.addColumnStatus
+    addColumnStatus: state.admin.addColumnStatus,
+    pending: state.admin.pending
 });
 
 const mapDispatchToProps = {

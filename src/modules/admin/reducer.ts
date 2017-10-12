@@ -23,6 +23,7 @@ export type State = {
     readonly pending: boolean;
     readonly createTableStatus: { block: string, error: string };
     readonly addColumnStatus: { block: string, error: string };
+    readonly editColumnStatus: { block: string, error: string };
     readonly createPageStatus: { block: string, error: string };
     readonly editPageStatus: { block: string, error: string };
     readonly createMenuStatus: { block: string, error: string };
@@ -44,6 +45,7 @@ export type State = {
 export const initialState: State = {
     createTableStatus: null,
     addColumnStatus: null,
+    editColumnStatus: null,
     createPageStatus: null,
     editPageStatus: null,
     createMenuStatus: null,
@@ -243,6 +245,36 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             pending: false,
             addColumnStatus: {
+                block: null,
+                error: action.payload.error
+            }
+        };
+    }
+
+    if (isType(action, actions.editColumn.started)) {
+        return {
+            ...state,
+            pending: true,
+            editColumnStatus: null
+        };
+    }
+
+    if (isType(action, actions.editColumn.done)) {
+        return {
+            ...state,
+            pending: false,
+            editColumnStatus: {
+                block: action.payload.result,
+                error: null
+            }
+        };
+    }
+
+    if (isType(action, actions.editColumn.failed)) {
+        return {
+            ...state,
+            pending: false,
+            editColumnStatus: {
                 block: null,
                 error: action.payload.error
             }

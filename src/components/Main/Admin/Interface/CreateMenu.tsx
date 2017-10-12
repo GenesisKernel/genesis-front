@@ -45,7 +45,7 @@ class CreateMenu extends React.Component<ICreateMenuProps, ICreateMenuState> {
     }
 
     componentWillReceiveProps(props: ICreateMenuProps) {
-        if (props.createMenuStatus) {
+        if (props.createMenuStatus && this.props.createMenuStatus !== props.createMenuStatus) {
             // TODO: Notification stub
             if (props.createMenuStatus.error) {
                 alert('Error:: ' + props.createMenuStatus.error);

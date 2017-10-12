@@ -32,6 +32,7 @@ export const getTableStruct = actionCreator.async<{ session: string, table: stri
 export const getTables = actionCreator.async<{ session: string, offset?: number, limit?: number }, ITablesResponse, string>('GET_TABLES');
 export const createTable = actionCreator.async<{ session: string, privateKey: string, publicKey: string, name: string, columns: string, permissions: string }, string, string>('CREATE_TABLE');
 export const addColumn = actionCreator.async<{ session: string, privateKey: string, publicKey: string, table: string, name: string, type: string, permissions: string, index: boolean }, string, string>('ADD_COLUMN');
+export const editColumn = actionCreator.async<{ session: string, privateKey: string, publicKey: string, table: string, name: string, permissions: string }, string, string>('EDIT_COLUMN');
 
 // Pages
 export const getPage = actionCreator.async<{ session: string, id: string }, IPageResponse, string>('GET_PAGE');

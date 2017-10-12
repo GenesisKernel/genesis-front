@@ -28,6 +28,7 @@ export interface IAddColumnProps {
     privateKey: string;
     publicKey: string;
     table: string;
+    pending: boolean;
     addColumnStatus: { block: string, error: string };
     addColumn: typeof addColumn.started;
 }
@@ -47,7 +48,7 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
     }
 
     componentWillReceiveProps(props: IAddColumnProps) {
-        if (props.addColumnStatus) {
+        if (props.addColumnStatus && this.props.addColumnStatus !== props.addColumnStatus) {
             // TODO: Notification stub
             if (props.addColumnStatus.error) {
                 alert('Error:: ' + props.addColumnStatus.error);
@@ -90,7 +91,7 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
 
     render() {
         return (
-            <div className="content-wrapper">
+            <div className="content-wrapper" >
                 <div className="content-heading">
                     <FormattedMessage id="admin.tables" defaultMessage="Tables" />
                 </div>
@@ -117,11 +118,11 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
                 <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit.bind(this)}>
                     <Panel
                         bsStyle="default"
-                        footer={
-                            <Button bsStyle="primary" type="submit">
+                        footer={(
+                            <Button bsStyle="primary" type="submit" disabled={this.props.pending}>
                                 <FormattedMessage id="admin.save" defaultMessage="Save" />
                             </Button>
-                        }
+                        )}
                     >
                         <Validation.components.ValidatedFormGroup for="name">
                             <label htmlFor="name">

@@ -107,9 +107,13 @@ const EditTable: React.SFC<IEditTableProps> = (props) => (
                                 </td>
                                 <td>{col.perm}</td>
                                 <td>
-                                    <Button bsStyle="primary">
-                                        <FormattedMessage id="admin.tables.column.edit" defaultMessage="Edit" />
-                                    </Button>
+                                    {props.table && (
+                                        <Link to={`/admin/tables/${props.table.name}/edit/column/${col.name}`}>
+                                            <Button bsStyle="primary">
+                                                <FormattedMessage id="admin.tables.column.edit" defaultMessage="Edit" />
+                                            </Button>
+                                        </Link>
+                                    )}
                                 </td>
                             </tr>
                         ))}

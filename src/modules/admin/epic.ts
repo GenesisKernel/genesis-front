@@ -210,6 +210,37 @@ export const addColumnEpic = (actions$: Observable<Action>) =>
                 })));
         });
 
+export const editColumnEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.editColumn.started.match)
+        .switchMap(action => {
+            const execParams = {
+                TableName: action.payload.table,
+                Name: action.payload.name,
+                Permissions: action.payload.permissions
+            };
+
+            const promise = api.txPrepare(action.payload.session, 'EditColumn', execParams).then(response => {
+                const signature = keyring.sign(response.forsign, action.payload.privateKey);
+                return api.txExec(action.payload.session, 'EditColumn', {
+                    ...execParams,
+                    pubkey: action.payload.publicKey,
+                    signature,
+                    time: response.time
+                });
+            });
+
+            return Observable.from(promise).map(payload => {
+                return actions.editColumn.done({
+                    params: action.payload,
+                    result: payload.blockid
+                });
+            }).catch((error: ITxStatusResponse) =>
+                Observable.of(actions.editColumn.failed({
+                    params: action.payload,
+                    error: error.error || error.errmsg
+                })));
+        });
+
 export const getTableEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.getTable.started.match)
         .switchMap(action => {
@@ -484,6 +515,7 @@ export default combineEpics(
     editPageEpic,
     editMenuEpic,
     editContractEpic,
+    editColumnEpic,
     activateContractEpic,
     addColumnEpic
 );

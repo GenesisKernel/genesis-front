@@ -29,6 +29,7 @@ const mapStateToProps = (state: IRootState) => ({
     session: state.auth.sessionToken,
     privateKey: state.auth.privateKey,
     publicKey: state.auth.account.publicKey,
+    pending: state.admin.pending,
     createTableStatus: state.admin.createTableStatus
 });
 

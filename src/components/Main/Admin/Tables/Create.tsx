@@ -70,6 +70,7 @@ export interface ICreateProps {
     session: string;
     privateKey: string;
     publicKey: string;
+    pending: boolean;
     createTableStatus: { block: string, error: string };
     createTable: typeof createTable.started;
 }
@@ -93,7 +94,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
     }
 
     componentWillReceiveProps(props: ICreateProps) {
-        if (props.createTableStatus) {
+        if (props.createTableStatus && this.props.createTableStatus !== props.createTableStatus) {
             // TODO: Notification stub
             if (props.createTableStatus.error) {
                 alert('Error:: ' + props.createTableStatus.error);
@@ -211,7 +212,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                                     </Button>
                                 </div>
                                 <div className="pull-right">
-                                    <Button bsStyle="primary" type="submit">
+                                    <Button bsStyle="primary" type="submit" disabled={this.props.pending}>
                                         <FormattedMessage id="admin.save" defaultMessage="Save" />
                                     </Button>
                                 </div>

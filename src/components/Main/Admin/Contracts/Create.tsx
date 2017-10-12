@@ -63,7 +63,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
     }
 
     componentWillReceiveProps(props: ICreateProps) {
-        if (props.createContractStatus) {
+        if (props.createContractStatus && this.props.createContractStatus !== props.createContractStatus) {
             // TODO: Notification stub
             if (props.createContractStatus.error) {
                 alert('Error:: ' + props.createContractStatus.error);

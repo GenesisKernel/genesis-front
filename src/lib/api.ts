@@ -82,6 +82,7 @@ export interface ITableResponse extends IResponse {
         name: string;
         type: string;
         perm: string;
+        index: string;
     }[];
 }
 
