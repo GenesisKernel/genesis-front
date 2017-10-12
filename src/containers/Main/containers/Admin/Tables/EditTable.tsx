@@ -17,23 +17,34 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { createTable } from 'modules/admin/actions';
+import { getTableStruct } from 'modules/admin/actions';
 
-import Create, { ICreateProps } from 'components/Main/Admin/Tables/Create';
+import EditTable, { IEditTableProps } from 'components/Main/Admin/Tables/EditTable';
 
-const CreateContainer: React.SFC<ICreateProps> = (props) => (
-    <Create {...props} />
-);
+class EditTableContainer extends React.Component<IEditTableProps & { getTableStruct: typeof getTableStruct.started, match: { params: { tableName: string } } }> {
+    componentWillMount() {
+        this.props.getTableStruct({
+            session: this.props.session,
+            table: this.props.match.params.tableName
+        });
+    }
+
+    render() {
+        return (
+            <EditTable {...this.props} />
+        );
+    }
+}
 
 const mapStateToProps = (state: IRootState) => ({
     session: state.auth.sessionToken,
     privateKey: state.auth.privateKey,
     publicKey: state.auth.account.publicKey,
-    createTableStatus: state.admin.createTableStatus
+    table: state.admin.table
 });
 
 const mapDispatchToProps = {
-    createTable: createTable.started
+    getTableStruct: getTableStruct.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(EditTableContainer);

@@ -24,6 +24,8 @@ import { menuPop, menuPush, menuInit } from 'modules/content/actions';
 import Main, { IMainProps } from 'components/Main';
 import Tables from 'containers/Main/containers/Admin/Tables';
 import TablesCreate from 'containers/Main/containers/Admin/Tables/Create';
+import TablesEdit from 'containers/Main/containers/Admin/Tables/EditTable';
+import TablesAddColumn from 'containers/Main/containers/Admin/Tables/AddColumn';
 import TablesView from 'containers/Main/containers/Admin/Tables/View';
 import Interface from 'containers/Main/containers/Admin/Interface';
 import CreatePage from 'containers/Main/containers/Admin/Interface/CreatePage';
@@ -67,6 +69,8 @@ class MainContainer extends React.Component<IMainProps & { menuInit: typeof menu
 
                     <Route exact path="/admin/tables" component={Tables} />
                     <Route exact path="/admin/tables/create" component={TablesCreate} />
+                    <Route exact path="/admin/tables/:tableName/edit" component={TablesEdit} />
+                    <Route exact path="/admin/tables/:tableName/edit/add-column" component={TablesAddColumn} />
                     <Route exact path="/admin/tables/:tableName" component={TablesView} />
                     <Route exact path="/admin/interface" component={Interface} />
                     <Route exact path="/admin/interface/create-page" component={CreatePage} />

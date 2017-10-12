@@ -103,9 +103,11 @@ const Tables: React.SFC<ITablesProps> = (props) => (
                                     }
                                 </td>
                                 <td style={{ width: 1 }}>
-                                    <button type="button" className="btn btn-primary lang">
-                                        <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
-                                    </button>
+                                    <Link to={`/admin/tables/${table.name}/edit`}>
+                                        <Button bsStyle="primary" type="button">
+                                            <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
+                                        </Button>
+                                    </Link>
                                 </td>
                             </tr>
                         ))}

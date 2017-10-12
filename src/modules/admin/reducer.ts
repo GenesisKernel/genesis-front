@@ -21,6 +21,8 @@ import { IListResponse, ITableResponse, ITablesResponse, IPagesResponse, IContra
 
 export type State = {
     readonly pending: boolean;
+    readonly createTableStatus: { block: string, error: string };
+    readonly addColumnStatus: { block: string, error: string };
     readonly createPageStatus: { block: string, error: string };
     readonly editPageStatus: { block: string, error: string };
     readonly createMenuStatus: { block: string, error: string };
@@ -40,6 +42,8 @@ export type State = {
 };
 
 export const initialState: State = {
+    createTableStatus: null,
+    addColumnStatus: null,
     createPageStatus: null,
     editPageStatus: null,
     createMenuStatus: null,
@@ -182,6 +186,90 @@ export default (state: State = initialState, action: Action): State => {
             pending: false,
             table: null,
             tableData: null
+        };
+    }
+
+    if (isType(action, actions.createTable.started)) {
+        return {
+            ...state,
+            pending: true,
+            createTableStatus: null
+        };
+    }
+
+    if (isType(action, actions.createTable.done)) {
+        return {
+            ...state,
+            pending: false,
+            createTableStatus: {
+                block: action.payload.result,
+                error: null
+            }
+        };
+    }
+
+    if (isType(action, actions.createTable.failed)) {
+        return {
+            ...state,
+            pending: false,
+            createTableStatus: {
+                block: null,
+                error: action.payload.error
+            }
+        };
+    }
+
+    if (isType(action, actions.addColumn.started)) {
+        return {
+            ...state,
+            pending: true,
+            addColumnStatus: null
+        };
+    }
+
+    if (isType(action, actions.addColumn.done)) {
+        return {
+            ...state,
+            pending: false,
+            addColumnStatus: {
+                block: action.payload.result,
+                error: null
+            }
+        };
+    }
+
+    if (isType(action, actions.addColumn.failed)) {
+        return {
+            ...state,
+            pending: false,
+            addColumnStatus: {
+                block: null,
+                error: action.payload.error
+            }
+        };
+    }
+
+    if (isType(action, actions.getTableStruct.started)) {
+        return {
+            ...state,
+            pending: true,
+            table: null
+        };
+    }
+
+    if (isType(action, actions.getTableStruct.done)) {
+        return {
+            ...state,
+            pending: false,
+            table: action.payload.result
+        };
+    }
+
+    if (isType(action, actions.getTableStruct.failed)) {
+        return {
+            ...state,
+            pending: false,
+            table: null
         };
     }
 

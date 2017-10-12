@@ -23,7 +23,7 @@ import { createTable } from 'modules/admin/actions';
 import Checkbox from 'components/Checkbox';
 import Validation from 'components/Validation';
 
-const columnTypes = [
+export const columnTypes = [
     {
         name: 'text',
         title: 'Text',
@@ -70,6 +70,7 @@ export interface ICreateProps {
     session: string;
     privateKey: string;
     publicKey: string;
+    createTableStatus: { block: string, error: string };
     createTable: typeof createTable.started;
 }
 
@@ -85,8 +86,22 @@ class Create extends React.Component<ICreateProps, ICreateState> {
     constructor(props: ICreateProps) {
         super(props);
         this.state = {
-            columns: []
+            columns: [
+                { name: '', type: columnTypes[0].name, index: false }
+            ]
         };
+    }
+
+    componentWillReceiveProps(props: ICreateProps) {
+        if (props.createTableStatus) {
+            // TODO: Notification stub
+            if (props.createTableStatus.error) {
+                alert('Error:: ' + props.createTableStatus.error);
+            }
+            else {
+                alert('Success:: ' + props.createTableStatus.block);
+            }
+        }
     }
 
     onSubmit(values: { [key: string]: any }) {
@@ -113,12 +128,16 @@ class Create extends React.Component<ICreateProps, ICreateState> {
         this.setState({
             columns: [
                 ...this.state.columns,
-                { name: '', type: 'text', index: false }
+                { name: '', type: columnTypes[0].name, index: false }
             ]
         });
     }
 
     onDropColumn(index: number) {
+        if (1 >= this.state.columns.length) {
+            return;
+        }
+
         this.setState({
             columns: [
                 ...this.state.columns.slice(0, index),
@@ -279,6 +298,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                                                         type="button"
                                                         bsStyle="primary"
                                                         onClick={this.onDropColumn.bind(this, index)}
+                                                        disabled={1 >= this.state.columns.length}
                                                     >
                                                         (-)
                                                     </Button>

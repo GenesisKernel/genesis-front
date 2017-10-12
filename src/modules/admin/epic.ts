@@ -178,6 +178,38 @@ export const createTableEpic = (actions$: Observable<Action>) =>
                 })));
         });
 
+export const addColumnEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.addColumn.started.match)
+        .switchMap(action => {
+            const execParams = {
+                TableName: action.payload.table,
+                Name: action.payload.name,
+                Type: action.payload.type,
+                Permissions: action.payload.permissions
+            };
+
+            const promise = api.txPrepare(action.payload.session, 'NewColumn', execParams).then(response => {
+                const signature = keyring.sign(response.forsign, action.payload.privateKey);
+                return api.txExec(action.payload.session, 'NewColumn', {
+                    ...execParams,
+                    pubkey: action.payload.publicKey,
+                    signature,
+                    time: response.time
+                });
+            });
+
+            return Observable.from(promise).map(payload => {
+                return actions.addColumn.done({
+                    params: action.payload,
+                    result: payload.blockid
+                });
+            }).catch((error: ITxStatusResponse) =>
+                Observable.of(actions.addColumn.failed({
+                    params: action.payload,
+                    error: error.error || error.errmsg
+                })));
+        });
+
 export const getTableEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.getTable.started.match)
         .switchMap(action => {
@@ -195,6 +227,23 @@ export const getTableEpic = (actions$: Observable<Action>) =>
                 });
             }).catch((error: IAPIError) => {
                 return Observable.of(actions.getTable.failed({
+                    params: null,
+                    error: error.error
+                }));
+            });
+        });
+
+export const getTableStructEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.getTableStruct.started.match)
+        .switchMap(action => {
+            const promise = api.table(action.payload.session, action.payload.table);
+            return Observable.from(promise).map(payload => {
+                return actions.getTableStruct.done({
+                    params: null,
+                    result: payload
+                });
+            }).catch((error: IAPIError) => {
+                return Observable.of(actions.getTableStruct.failed({
                     params: null,
                     error: error.error
                 }));
@@ -421,18 +470,20 @@ export const activateContractEpic = (actions$: Observable<Action>) =>
 export default combineEpics(
     getContractEpic,
     getContractsEpic,
-    createTableEpic,
     getTableEpic,
     getTablesEpic,
+    getTableStructEpic,
     getPagesEpic,
     getPageEpic,
     getMenuEpic,
     getMenusEpic,
+    createTableEpic,
     createPageEpic,
     createMenuEpic,
     createContractEpic,
     editPageEpic,
     editMenuEpic,
     editContractEpic,
-    activateContractEpic
+    activateContractEpic,
+    addColumnEpic
 );
