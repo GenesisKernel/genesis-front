@@ -44,7 +44,7 @@ const ContractEditor: React.SFC<IContractEditorProps> = (props) => (
                         <div className="clearfix">
                             <Button bsStyle="default" type="button" className="pull-left" disabled>
                                 <em className="fa fa-code fa-fw mr-sm" />
-                                <FormattedMessage id="admin.save" defaultMessage="Format code" />
+                                <FormattedMessage id="admin.contract.format" defaultMessage="Format code" />
                             </Button>
 
                             <Button bsStyle="primary" type="submit" className="pull-right" disabled={props.pending}>
@@ -55,7 +55,7 @@ const ContractEditor: React.SFC<IContractEditorProps> = (props) => (
                 >
                     <Validation.components.ValidatedFormGroup for="content">
                         <label htmlFor="content">
-                            <FormattedMessage id="admin.interface.contract.code" defaultMessage="Code" />
+                            <FormattedMessage id="admin.contract.code" defaultMessage="Code" />
                         </label>
                         <div className="form-control" style={{ height: 'auto', padding: 0 }}>
                             <MonacoEditor
