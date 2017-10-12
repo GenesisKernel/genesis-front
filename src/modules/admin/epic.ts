@@ -147,6 +147,38 @@ export const editMenuEpic = (actions$: Observable<Action>) =>
                 })));
         });
 
+export const createTableEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.createTable.started.match)
+        .switchMap(action => {
+            const execParams = {
+                Name: action.payload.name,
+                Columns: action.payload.columns,
+                Permissions: action.payload.permissions
+            };
+
+            const promise = api.txPrepare(action.payload.session, 'NewTable', execParams).then(response => {
+                console.log(response.forsign, action.payload.privateKey);
+                const signature = keyring.sign(response.forsign, action.payload.privateKey);
+                return api.txExec(action.payload.session, 'NewTable', {
+                    ...execParams,
+                    pubkey: action.payload.publicKey,
+                    signature,
+                    time: response.time
+                });
+            });
+
+            return Observable.from(promise).map(payload => {
+                return actions.createTable.done({
+                    params: action.payload,
+                    result: payload.blockid
+                });
+            }).catch((error: ITxStatusResponse) =>
+                Observable.of(actions.createTable.failed({
+                    params: action.payload,
+                    error: error.error || error.errmsg
+                })));
+        });
+
 export const getTableEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.getTable.started.match)
         .switchMap(action => {
@@ -390,6 +422,7 @@ export const activateContractEpic = (actions$: Observable<Action>) =>
 export default combineEpics(
     getContractEpic,
     getContractsEpic,
+    createTableEpic,
     getTableEpic,
     getTablesEpic,
     getPagesEpic,

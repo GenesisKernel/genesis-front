@@ -26,7 +26,9 @@ const CreateContainer: React.SFC<ICreateProps> = (props) => (
 );
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken
+    session: state.auth.sessionToken,
+    privateKey: state.auth.privateKey,
+    publicKey: state.auth.account.publicKey
 });
 
 const mapDispatchToProps = {

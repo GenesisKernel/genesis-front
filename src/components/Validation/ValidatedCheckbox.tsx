@@ -22,7 +22,7 @@ interface IValidatedCheckboxProps {
     _registerElement?: (value: boolean) => void;
     _unregisterElement?: () => void;
     name: string;
-    title: string;
+    title?: string;
     className?: string;
     defaultChecked?: boolean;
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
@@ -43,7 +43,7 @@ export default class ValidatedCheckbox extends React.Component<IValidatedCheckbo
         return (
             <div className={`checkbox c-checkbox ${this.props.className}`}>
                 <label>
-                    <input type="checkbox" name={this.props.name} defaultChecked={this.props.defaultChecked} onChange={this.props.onChange} checked={this.props.checked} />
+                    <input type="checkbox" name={this.props.name} defaultChecked={this.props.defaultChecked} onChange={this.props.onChange} checked={this.props.checked} disabled={this.props.disabled} />
                     <em className="fa fa-check" />
                     <span>{this.props.title}</span>
                 </label>

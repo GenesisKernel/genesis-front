@@ -29,7 +29,7 @@ export const editContract = actionCreator.async<{ session: string, privateKey: s
 // Tables
 export const getTable = actionCreator.async<{ session: string, table: string }, { table: ITableResponse, data: IListResponse }, string>('GET_TABLE');
 export const getTables = actionCreator.async<{ session: string, offset?: number, limit?: number }, ITablesResponse, string>('GET_TABLES');
-export const createTable = actionCreator.async<{ session: string, table: string }, string, string>('CREATE_TABLE');
+export const createTable = actionCreator.async<{ session: string, privateKey: string, publicKey: string, name: string, columns: string, permissions: string }, string, string>('CREATE_TABLE');
 
 // Pages
 export const getPage = actionCreator.async<{ session: string, id: string }, IPageResponse, string>('GET_PAGE');
