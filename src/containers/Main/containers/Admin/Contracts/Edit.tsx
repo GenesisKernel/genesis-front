@@ -21,7 +21,7 @@ import { activateContract, getContract, editContract } from 'modules/admin/actio
 
 import Edit, { IEditProps } from 'components/Main/Admin/Contracts/Edit';
 
-class EditContainer extends React.Component<IEditProps> {
+class EditContainer extends React.Component<IEditProps & { match: { params: { contractID: string } } }> {
     componentWillMount() {
         this.props.getContract({
             session: this.props.session,

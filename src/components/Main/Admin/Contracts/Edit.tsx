@@ -37,7 +37,7 @@ export interface IEditProps {
     };
     editContractStatus: { block: string, error: string };
     activateContractStatus: { block: string, error: string };
-    getContract: typeof getContract.started, match?: { params: { contractID: string } };
+    getContract: typeof getContract.started;
     editContract: typeof editContract.started;
     activateContract: typeof activateContract.started;
 }

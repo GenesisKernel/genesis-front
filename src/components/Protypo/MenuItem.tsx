@@ -25,6 +25,9 @@ export interface IMenuItemProps {
     'page'?: string;
     'icon'?: string;
     'params'?: { [key: string]: any };
+
+    // TODO: Stub value
+    '_systemPageHook'?: string;
 }
 
 export const StyledLinkButton = styled.div`
@@ -83,9 +86,9 @@ const LinkButton: React.SFC<IMenuItemProps> = (props, context) => {
     return (
         <StyledLinkButton className={classes}>
             <div className="link-active-decorator" />
-            {props.page ?
+            {props._systemPageHook || props.page ?
                 (
-                    <NavLink to={props.page ? `/page/${props.page}` : ''}>
+                    <NavLink to={props._systemPageHook ? props._systemPageHook : (props.page ? `/page/${props.page}` : '')}>
                         {linkBody}
                     </NavLink>
                 ) : (

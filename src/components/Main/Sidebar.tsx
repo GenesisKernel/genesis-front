@@ -17,7 +17,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import imgLogo from 'images/logoInverse.svg';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, InjectedIntl, FormattedMessage } from 'react-intl';
 import { menuPop, menuPush } from 'modules/content/actions';
 
 import Protypo from 'components/Protypo';
@@ -117,6 +117,7 @@ const StyledDevButton = styled.div`
 
 export interface ISidebarProps {
     collapsed: boolean;
+    intl?: InjectedIntl;
     menus: {
         name: string;
         content: IProtypoElement[];
@@ -127,6 +128,40 @@ export interface ISidebarProps {
 
 const Sidebar: React.SFC<ISidebarProps> = (props) => {
     const menu = props.menus.length && props.menus[props.menus.length - 1];
+
+    // TODO: This function is a stub. In future, admin menu will be reworked to show through the API call
+    const onAdminTools = () => {
+        props.menuPush({
+            name: 'adminTools',
+            content: [
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-screen-desktop',
+                        _systemPageHook: '/admin/interface',
+                        title: props.intl.formatMessage({ id: 'admin.interface', defaultMessage: 'Interface' })
+                    }
+                },
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-docs',
+                        _systemPageHook: '/admin/tables',
+                        title: props.intl.formatMessage({ id: 'admin.tables', defaultMessage: 'Tables' })
+                    }
+                },
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-briefcase',
+                        _systemPageHook: '/admin/contracts',
+                        title: props.intl.formatMessage({ id: 'admin.contracts', defaultMessage: 'Smart contracts' })
+                    }
+                }
+            ]
+        });
+    };
+
     return (
         <StyledSidebar className="aside" style={{ marginLeft: props.collapsed ? -style.sidebarWidth : 0 }}>
             <nav>
@@ -144,7 +179,7 @@ const Sidebar: React.SFC<ISidebarProps> = (props) => {
                     />
                 </StyledMenuContent>
                 <StyledDevButton>
-                    <button>
+                    <button onClick={onAdminTools}>
                         <em className="icon fa fa-cog" />
                         <FormattedMessage id="admin.tools" defaultMessage="Admin tools" />
                     </button>
@@ -220,4 +255,4 @@ const Sidebar: React.SFC<ISidebarProps> = (props) => {
     );
 };
 
-export default Sidebar;
+export default injectIntl(Sidebar);
