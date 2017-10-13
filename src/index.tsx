@@ -19,6 +19,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import store, { history } from './store';
+import { overrideSettings } from 'lib/api';
 // import { addLocaleData } from 'react-intl';
 import 'whatwg-fetch';
 import 'font-awesome/css/font-awesome.css';
@@ -29,14 +30,24 @@ import 'styles/index.css';
 
 import App from './containers/App';
 
-// addLocaleData([locale_enUS]);
-const TARGET_ROOT = document.querySelector('#root');
+fetch('/settings.json')
+    .then(response => response.json())
+    .then(json => {
+        overrideSettings(json);
 
-render(
-    <Provider store={store} >
-        <ConnectedRouter history={history} >
-            <App />
-        </ConnectedRouter>
-    </Provider>,
-    TARGET_ROOT
-);
+    }).catch(e => {
+        // Fall back to the default settings defined through env parameters or const value
+
+    }).then(() => {
+        // addLocaleData([locale_enUS]);
+        const TARGET_ROOT = document.querySelector('#root');
+
+        render(
+            <Provider store={store} >
+                <ConnectedRouter history={history} >
+                    <App />
+                </ConnectedRouter>
+            </Provider>,
+            TARGET_ROOT
+        );
+    });

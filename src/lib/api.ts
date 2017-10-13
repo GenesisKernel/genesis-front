@@ -14,9 +14,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-const apiRoot = process.env.REACT_APP_API_URL || 'http://127.0.0.1:7079/api/v2';
+let apiUrl = process.env.REACT_APP_API_URL || 'http://127.0.0.1:7079/api/v2';
 const defaultOptions: RequestInit = {
     method: 'POST'
+};
+
+export const overrideSettings = (settings: { apiUrl: string }) => {
+    apiUrl = settings.apiUrl;
 };
 
 export interface IResponse extends IAPIError {
@@ -166,7 +170,7 @@ export interface IDBValue {
 
 const request = async (endpoint: string, body: { [key: string]: any }, options?: RequestInit) => {
     // TODO: Set request timeout
-    const requestUrl = `${apiRoot}/${endpoint}`;
+    const requestUrl = `${apiUrl}/${endpoint}`;
     let requestBody: URLSearchParams = null;
 
     if (body) {
