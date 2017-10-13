@@ -302,7 +302,7 @@ const keyring = {
     },
 
     walletIdToAddr(id: string | number) {
-        const addr = new I64('-6258391547979339691', 10).toU64().toString();
+        const addr = new I64(id.toString(), 10).toU64().toString();
         return addr.match(new RegExp('.{1,4}', 'g')).join('-');
     },
 
