@@ -289,7 +289,8 @@ const keyring = {
 
         for (let i = 0; i < tokens.length; i++) {
             const token = tokens[i];
-            const matches = token.match(/^([a-zA-Z ]*): *(.*)$/);
+            const matches = token.match(/^([a-zA-Z ]*): *(.*)$/) || [];
+
             switch (matches[1]) {
                 case 'ID': backup.id = matches[2]; break;
                 case 'Private Key': backup.privateKey = matches[2]; break;
