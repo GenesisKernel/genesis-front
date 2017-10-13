@@ -17,7 +17,7 @@
 import * as CryptoJS from 'crypto-js';
 import * as KJUR from 'jsrsasign';
 import * as Random from 'random-js';
-import { I64, U64 } from 'n64';
+import { Int64BE, Uint64BE } from 'int64-buffer';
 
 // https://github.com/bitcoin/bips/blob/master/bip-0039/bip-0039-wordlists.md
 const WORD_LIST = ['abandon', 'ability', 'able', 'about', 'above', 'absent', 'absorb', 'abstract', 'absurd', 'abuse', 'access', 'accident',
@@ -302,13 +302,15 @@ const keyring = {
     },
 
     walletIdToAddr(id: string | number) {
-        const addr = new I64(id.toString(), 10).toU64().toString();
+        const num = new Int64BE(id.toString(), 10);
+        const addr = new Uint64BE(num.toString(10), 10).toString(10);
         return addr.match(new RegExp('.{1,4}', 'g')).join('-');
     },
 
     walletAddrToId(addr: string) {
         const truncated = addr.replace(/-/g, '');
-        return new U64(truncated, 10).toI64().toString();
+        const num = new Uint64BE(truncated, 10);
+        return new Int64BE(num.toString(10), 10).toString(10);
     }
 };
 

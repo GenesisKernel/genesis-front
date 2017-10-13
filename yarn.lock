@@ -2572,6 +2572,10 @@ inquirer@3.2.1:
     strip-ansi "^4.0.0"
     through "^2.3.6"
 
+int64-buffer@^0.1.9:
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/int64-buffer/-/int64-buffer-0.1.9.tgz#9e039da043b24f78b196b283e04653ef5e990f61"
+
 internal-ip@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/internal-ip/-/internal-ip-1.2.0.tgz#ae9fbf93b984878785d50a8de1b356956058cf5c"
@@ -3622,10 +3626,6 @@ mz@^2.4.0:
     any-promise "^1.0.0"
     object-assign "^4.0.1"
     thenify-all "^1.0.0"
-
-n64@^0.0.18:
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/n64/-/n64-0.0.18.tgz#dfdf8dc8f1a02fffab4204a22031607561abc718"
 
 nan@^2.3.0, nan@^2.3.2:
   version "2.6.2"
