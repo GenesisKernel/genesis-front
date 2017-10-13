@@ -89,7 +89,7 @@ export default class Protypo extends React.Component<IProtypoProps> {
 
         return React.cloneElement(this.props.wrapper || <div />, null, [
             this._errors.length ? (
-                <div key='errors'>
+                <div key="errors">
                     {this._errors.map((error, errorIndex) => (
                         <div key={errorIndex} className="alert alert-danger">
                             <strong>[{error.name}]</strong>
