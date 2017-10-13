@@ -35,6 +35,7 @@ export interface IProtypoElement {
 export default class Protypo extends React.Component<IProtypoProps> {
     private _lastID: number;
     private _menuPushBind: Function;
+    private _errors: { name: string, description: string }[];
 
     constructor(props: IProtypoProps) {
         super(props);
@@ -62,11 +63,11 @@ export default class Protypo extends React.Component<IProtypoProps> {
                     );
                 }
                 else {
-                    throw {
-                        error: 'E_UNREGISTERED_HANDLER',
-                        data: element.tag,
-                        value: element
-                    };
+                    this._errors.push({
+                        name: 'E_UNREGISTERED_HANDLER',
+                        description: `Unknown template handler '${element.tag}'. This error must be reported`
+                    });
+                    return null;
                 }
         }
     }
@@ -83,8 +84,23 @@ export default class Protypo extends React.Component<IProtypoProps> {
 
     render() {
         this._lastID = 0;
+        this._errors = [];
+        const body = this.renderElements(this.props.payload);
 
-        return React.cloneElement(this.props.wrapper || <div />, null, this.renderElements(this.props.payload));
+        return React.cloneElement(this.props.wrapper || <div />, null, [
+            this._errors.length ? (
+                <div key='errors'>
+                    {this._errors.map((error, errorIndex) => (
+                        <div key={errorIndex} className="alert alert-danger">
+                            <strong>[{error.name}]</strong>
+                            <span className="mr">:</span>
+                            <span>{error.description}</span>
+                        </div>
+                    ))}
+                </div>
+            ) : null,
+            ...body
+        ]);
     }
 }
 
