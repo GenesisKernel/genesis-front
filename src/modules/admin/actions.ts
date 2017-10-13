@@ -15,7 +15,7 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IListResponse, ITableResponse, ITablesResponse, IPagesResponse, IPageResponse, IContractsResponse } from 'lib/api';
+import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IPageResponse, IContractsResponse } from 'lib/api';
 
 const actionCreator = actionCreatorFactory('admin');
 
@@ -36,7 +36,7 @@ export const editColumn = actionCreator.async<{ session: string, privateKey: str
 
 // Pages
 export const getPage = actionCreator.async<{ session: string, id: string }, IPageResponse, string>('GET_PAGE');
-export const getPages = actionCreator.async<{ session: string }, IPagesResponse, string>('GET_PAGES');
+export const getInterface = actionCreator.async<{ session: string }, IInterfacesResponse, string>('GET_PAGES');
 export const createPage = actionCreator.async<{ session: string, privateKey: string, publicKey: string, name: string, template: string, conditions: string, menu: string }, string, string>('CREATE_PAGE');
 export const editPage = actionCreator.async<{ session: string, privateKey: string, publicKey: string, id: string, template: string, conditions: string, menu: string }, string, string>('EDIT_PAGE');
 
@@ -45,3 +45,8 @@ export const getMenu = actionCreator.async<{ session: string, id: string }, { id
 export const getMenus = actionCreator.async<{ session: string }, { id: string, name: string, conditions: string, value: string }[], string>('GET_MENUS');
 export const createMenu = actionCreator.async<{ session: string, privateKey: string, publicKey: string, name: string, template: string, conditions: string }, string, string>('CREATE_MENU');
 export const editMenu = actionCreator.async<{ session: string, privateKey: string, publicKey: string, id: string, template: string, conditions: string }, string, string>('EDIT_MENU');
+
+// Blocks
+export const getBlock = actionCreator.async<{ session: string, id: string }, { id: string, name: string, value: string, conditions: string }, string>('GET_BLOCK');
+export const createBlock = actionCreator.async<{ session: string, privateKey: string, publicKey: string, name: string, template: string, conditions: string }, string, string>('CREATE_BLOCK');
+export const editBlock = actionCreator.async<{ session: string, privateKey: string, publicKey: string, id: string, template: string, conditions: string }, string, string>('EDIT_BLOCK');

@@ -17,7 +17,7 @@
 import * as actions from './actions';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
-import { IListResponse, ITableResponse, ITablesResponse, IPagesResponse, IContract } from 'lib/api';
+import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract } from 'lib/api';
 
 export type State = {
     readonly pending: boolean;
@@ -31,13 +31,16 @@ export type State = {
     readonly createContractStatus: { block: string, error: string };
     readonly editContractStatus: { block: string, error: string };
     readonly activateContractStatus: { block: string, error: string };
+    readonly createBlockStatus: { block: string, error: string };
+    readonly editBlockStatus: { block: string, error: string };
+    readonly block: { id: string, name: string, value: string, conditions: string };
     readonly menu: { id: string, name: string, value: string, conditions: string };
     readonly menus: { id: string, name: string }[];
     readonly tables: ITablesResponse;
     readonly table: ITableResponse;
     readonly tableData: IListResponse;
     readonly page: { id: string, [key: string]: any };
-    readonly pages: IPagesResponse;
+    readonly interfaces: IInterfacesResponse;
     readonly contract: { id: string, name: string, conditions: string, address: string, value: string };
     readonly contracts: IContract[];
 };
@@ -53,6 +56,9 @@ export const initialState: State = {
     createContractStatus: null,
     editContractStatus: null,
     activateContractStatus: null,
+    createBlockStatus: null,
+    editBlockStatus: null,
+    block: null,
     menu: null,
     menus: null,
     pending: false,
@@ -60,33 +66,31 @@ export const initialState: State = {
     table: null,
     tableData: null,
     page: null,
-    pages: null,
+    interfaces: null,
     contract: null,
     contracts: null
 };
 
 export default (state: State = initialState, action: Action): State => {
-    if (isType(action, actions.getPages.started)) {
+    if (isType(action, actions.getInterface.started)) {
         return {
             ...state,
             pending: true,
-            pages: null
+            interfaces: null
         };
     }
-
-    if (isType(action, actions.getPages.done)) {
+    else if (isType(action, actions.getInterface.done)) {
         return {
             ...state,
             pending: false,
-            pages: action.payload.result
+            interfaces: action.payload.result
         };
     }
-
-    if (isType(action, actions.getPages.failed)) {
+    else if (isType(action, actions.getInterface.failed)) {
         return {
             ...state,
             pending: false,
-            pages: null
+            interfaces: null
         };
     }
 
@@ -97,8 +101,7 @@ export default (state: State = initialState, action: Action): State => {
             page: null
         };
     }
-
-    if (isType(action, actions.getPage.done)) {
+    else if (isType(action, actions.getPage.done)) {
         return {
             ...state,
             pending: false,
@@ -106,8 +109,7 @@ export default (state: State = initialState, action: Action): State => {
             menus: action.payload.result.menus
         };
     }
-
-    if (isType(action, actions.getPage.failed)) {
+    else if (isType(action, actions.getPage.failed)) {
         return {
             ...state,
             pending: false,
@@ -123,16 +125,14 @@ export default (state: State = initialState, action: Action): State => {
             menu: null
         };
     }
-
-    if (isType(action, actions.getMenu.done)) {
+    else if (isType(action, actions.getMenu.done)) {
         return {
             ...state,
             pending: false,
             menu: action.payload.result
         };
     }
-
-    if (isType(action, actions.getMenu.failed)) {
+    else if (isType(action, actions.getMenu.failed)) {
         return {
             ...state,
             pending: false,
@@ -147,16 +147,14 @@ export default (state: State = initialState, action: Action): State => {
             tables: null
         };
     }
-
-    if (isType(action, actions.getTables.done)) {
+    else if (isType(action, actions.getTables.done)) {
         return {
             ...state,
             pending: false,
             tables: action.payload.result
         };
     }
-
-    if (isType(action, actions.getTables.failed)) {
+    else if (isType(action, actions.getTables.failed)) {
         return {
             ...state,
             pending: false,
@@ -172,8 +170,7 @@ export default (state: State = initialState, action: Action): State => {
             tableData: null
         };
     }
-
-    if (isType(action, actions.getTable.done)) {
+    else if (isType(action, actions.getTable.done)) {
         return {
             ...state,
             pending: false,
@@ -181,8 +178,7 @@ export default (state: State = initialState, action: Action): State => {
             tableData: action.payload.result.data
         };
     }
-
-    if (isType(action, actions.getTable.failed)) {
+    else if (isType(action, actions.getTable.failed)) {
         return {
             ...state,
             pending: false,
@@ -198,8 +194,7 @@ export default (state: State = initialState, action: Action): State => {
             createTableStatus: null
         };
     }
-
-    if (isType(action, actions.createTable.done)) {
+    else if (isType(action, actions.createTable.done)) {
         return {
             ...state,
             pending: false,
@@ -209,8 +204,7 @@ export default (state: State = initialState, action: Action): State => {
             }
         };
     }
-
-    if (isType(action, actions.createTable.failed)) {
+    else if (isType(action, actions.createTable.failed)) {
         return {
             ...state,
             pending: false,
@@ -228,8 +222,7 @@ export default (state: State = initialState, action: Action): State => {
             addColumnStatus: null
         };
     }
-
-    if (isType(action, actions.addColumn.done)) {
+    else if (isType(action, actions.addColumn.done)) {
         return {
             ...state,
             pending: false,
@@ -239,8 +232,7 @@ export default (state: State = initialState, action: Action): State => {
             }
         };
     }
-
-    if (isType(action, actions.addColumn.failed)) {
+    else if (isType(action, actions.addColumn.failed)) {
         return {
             ...state,
             pending: false,
@@ -258,8 +250,7 @@ export default (state: State = initialState, action: Action): State => {
             editColumnStatus: null
         };
     }
-
-    if (isType(action, actions.editColumn.done)) {
+    else if (isType(action, actions.editColumn.done)) {
         return {
             ...state,
             pending: false,
@@ -269,8 +260,7 @@ export default (state: State = initialState, action: Action): State => {
             }
         };
     }
-
-    if (isType(action, actions.editColumn.failed)) {
+    else if (isType(action, actions.editColumn.failed)) {
         return {
             ...state,
             pending: false,
@@ -288,16 +278,14 @@ export default (state: State = initialState, action: Action): State => {
             table: null
         };
     }
-
-    if (isType(action, actions.getTableStruct.done)) {
+    else if (isType(action, actions.getTableStruct.done)) {
         return {
             ...state,
             pending: false,
             table: action.payload.result
         };
     }
-
-    if (isType(action, actions.getTableStruct.failed)) {
+    else if (isType(action, actions.getTableStruct.failed)) {
         return {
             ...state,
             pending: false,
@@ -312,8 +300,7 @@ export default (state: State = initialState, action: Action): State => {
             createPageStatus: null
         };
     }
-
-    if (isType(action, actions.createPage.done)) {
+    else if (isType(action, actions.createPage.done)) {
         return {
             ...state,
             pending: false,
@@ -323,8 +310,7 @@ export default (state: State = initialState, action: Action): State => {
             }
         };
     }
-
-    if (isType(action, actions.createPage.failed)) {
+    else if (isType(action, actions.createPage.failed)) {
         return {
             ...state,
             pending: false,
@@ -342,8 +328,7 @@ export default (state: State = initialState, action: Action): State => {
             editPageStatus: null
         };
     }
-
-    if (isType(action, actions.editPage.done)) {
+    else if (isType(action, actions.editPage.done)) {
         return {
             ...state,
             pending: false,
@@ -353,8 +338,7 @@ export default (state: State = initialState, action: Action): State => {
             }
         };
     }
-
-    if (isType(action, actions.editPage.failed)) {
+    else if (isType(action, actions.editPage.failed)) {
         return {
             ...state,
             pending: false,
@@ -372,8 +356,7 @@ export default (state: State = initialState, action: Action): State => {
             createMenuStatus: null
         };
     }
-
-    if (isType(action, actions.createMenu.done)) {
+    else if (isType(action, actions.createMenu.done)) {
         return {
             ...state,
             pending: false,
@@ -383,8 +366,7 @@ export default (state: State = initialState, action: Action): State => {
             }
         };
     }
-
-    if (isType(action, actions.createMenu.failed)) {
+    else if (isType(action, actions.createMenu.failed)) {
         return {
             ...state,
             pending: false,
@@ -402,8 +384,7 @@ export default (state: State = initialState, action: Action): State => {
             editMenuStatus: null
         };
     }
-
-    if (isType(action, actions.editMenu.done)) {
+    else if (isType(action, actions.editMenu.done)) {
         return {
             ...state,
             pending: false,
@@ -413,8 +394,7 @@ export default (state: State = initialState, action: Action): State => {
             }
         };
     }
-
-    if (isType(action, actions.editMenu.failed)) {
+    else if (isType(action, actions.editMenu.failed)) {
         return {
             ...state,
             pending: false,
@@ -432,16 +412,14 @@ export default (state: State = initialState, action: Action): State => {
             menus: null
         };
     }
-
-    if (isType(action, actions.getMenus.done)) {
+    else if (isType(action, actions.getMenus.done)) {
         return {
             ...state,
             pending: false,
             menus: action.payload.result
         };
     }
-
-    if (isType(action, actions.getMenus.failed)) {
+    else if (isType(action, actions.getMenus.failed)) {
         return {
             ...state,
             pending: false,
@@ -456,16 +434,14 @@ export default (state: State = initialState, action: Action): State => {
             contract: null
         };
     }
-
-    if (isType(action, actions.getContract.done)) {
+    else if (isType(action, actions.getContract.done)) {
         return {
             ...state,
             pending: false,
             contract: action.payload.result
         };
     }
-
-    if (isType(action, actions.getContract.failed)) {
+    else if (isType(action, actions.getContract.failed)) {
         return {
             ...state,
             pending: false,
@@ -480,16 +456,14 @@ export default (state: State = initialState, action: Action): State => {
             contracts: null
         };
     }
-
-    if (isType(action, actions.getContracts.done)) {
+    else if (isType(action, actions.getContracts.done)) {
         return {
             ...state,
             pending: false,
             contracts: action.payload.result.list
         };
     }
-
-    if (isType(action, actions.getContracts.failed)) {
+    else if (isType(action, actions.getContracts.failed)) {
         return {
             ...state,
             pending: false,
@@ -504,8 +478,7 @@ export default (state: State = initialState, action: Action): State => {
             createContractStatus: null
         };
     }
-
-    if (isType(action, actions.createContract.done)) {
+    else if (isType(action, actions.createContract.done)) {
         return {
             ...state,
             pending: false,
@@ -515,8 +488,7 @@ export default (state: State = initialState, action: Action): State => {
             }
         };
     }
-
-    if (isType(action, actions.createContract.failed)) {
+    else if (isType(action, actions.createContract.failed)) {
         return {
             ...state,
             pending: false,
@@ -534,8 +506,7 @@ export default (state: State = initialState, action: Action): State => {
             editContractStatus: null
         };
     }
-
-    if (isType(action, actions.editContract.done)) {
+    else if (isType(action, actions.editContract.done)) {
         return {
             ...state,
             pending: false,
@@ -545,8 +516,7 @@ export default (state: State = initialState, action: Action): State => {
             }
         };
     }
-
-    if (isType(action, actions.editContract.failed)) {
+    else if (isType(action, actions.editContract.failed)) {
         return {
             ...state,
             pending: false,
@@ -564,8 +534,7 @@ export default (state: State = initialState, action: Action): State => {
             activateContractStatus: null
         };
     }
-
-    if (isType(action, actions.activateContract.done)) {
+    else if (isType(action, actions.activateContract.done)) {
         return {
             ...state,
             pending: false,
@@ -575,12 +544,89 @@ export default (state: State = initialState, action: Action): State => {
             }
         };
     }
-
-    if (isType(action, actions.activateContract.failed)) {
+    else if (isType(action, actions.activateContract.failed)) {
         return {
             ...state,
             pending: false,
             activateContractStatus: {
+                block: null,
+                error: action.payload.error
+            }
+        };
+    }
+
+    if (isType(action, actions.createBlock.started)) {
+        return {
+            ...state,
+            pending: true,
+            createBlockStatus: null
+        };
+    }
+    else if (isType(action, actions.createBlock.done)) {
+        return {
+            ...state,
+            pending: false,
+            createBlockStatus: {
+                block: action.payload.result,
+                error: null
+            }
+        };
+    }
+    else if (isType(action, actions.createBlock.failed)) {
+        return {
+            ...state,
+            pending: false,
+            createBlockStatus: {
+                block: null,
+                error: action.payload.error
+            }
+        };
+    }
+
+    if (isType(action, actions.getBlock.started)) {
+        return {
+            ...state,
+            pending: true,
+            block: null
+        };
+    }
+    else if (isType(action, actions.getBlock.done)) {
+        return {
+            ...state,
+            pending: false,
+            block: action.payload.result
+        };
+    }
+    else if (isType(action, actions.getBlock.failed)) {
+        return {
+            ...state,
+            pending: false,
+            block: null
+        };
+    }
+
+    if (isType(action, actions.editBlock.started)) {
+        return {
+            ...state,
+            pending: true,
+            editBlockStatus: null
+        };
+    }
+    else if (isType(action, actions.editBlock.done)) {
+        return {
+            ...state,
+            pending: false,
+            editBlockStatus: {
+                block: action.payload.result,
+                error: null
+            }
+        };
+    }
+    else if (isType(action, actions.editBlock.failed)) {
+        return {
+            ...state,
+            pending: false,
+            editBlockStatus: {
                 block: null,
                 error: action.payload.error
             }

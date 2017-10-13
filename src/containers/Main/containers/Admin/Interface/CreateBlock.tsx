@@ -17,40 +17,24 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { getInterface } from 'modules/admin/actions';
-import { IInterfacesResponse } from 'lib/api';
+import { createBlock } from 'modules/admin/actions';
 
-import Interface from 'components/Main/Admin/Interface';
+import CreateBlock, { ICreateBlockProps } from 'components/Main/Admin/Interface/CreateBlock';
 
-interface IInterfaceContainerProps {
-    session: string;
-    pages: IInterfacesResponse;
-    getInterface: typeof getInterface.started;
-}
-
-class InterfaceContainer extends React.Component<IInterfaceContainerProps> {
-    componentWillMount() {
-        this.props.getInterface({ session: this.props.session });
-    }
-
-    render() {
-        return (
-            <Interface
-                pages={this.props.pages && this.props.pages.pages || []}
-                menus={this.props.pages && this.props.pages.menus || []}
-                blocks={this.props.pages && this.props.pages.blocks || []}
-            />
-        );
-    }
-}
+const CreateBlockContainer: React.SFC<ICreateBlockProps> = (props) => (
+    <CreateBlock {...props} />
+);
 
 const mapStateToProps = (state: IRootState) => ({
     session: state.auth.sessionToken,
-    pages: state.admin.interfaces
+    pending: state.admin.pending,
+    createBlockStatus: state.admin.createBlockStatus,
+    privateKey: state.auth.privateKey,
+    publicKey: state.auth.account.publicKey
 });
 
 const mapDispatchToProps = {
-    getInterface: getInterface.started
+    createBlock: createBlock.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(InterfaceContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateBlockContainer);

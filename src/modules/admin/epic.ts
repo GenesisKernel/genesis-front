@@ -319,15 +319,15 @@ export const getTablesEpic = (actions$: Observable<Action>) =>
         });
 
 export const getPagesEpic = (actions$: Observable<Action>) =>
-    actions$.filter(actions.getPages.started.match)
+    actions$.filter(actions.getInterface.started.match)
         .switchMap(action => {
             return Observable.from(api.pages(action.payload.session)).map(payload => {
-                return actions.getPages.done({
+                return actions.getInterface.done({
                     params: null,
                     result: payload
                 });
             }).catch((error: IAPIError) => {
-                return Observable.of(actions.getPages.failed({
+                return Observable.of(actions.getInterface.failed({
                     params: null,
                     error: error.error
                 }));
@@ -498,7 +498,86 @@ export const activateContractEpic = (actions$: Observable<Action>) =>
                 })));
         });
 
+export const getBlockEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.getBlock.started.match)
+        .switchMap(action => {
+            return Observable.from(api.row(action.payload.session, 'blocks', action.payload.id)).map(payload => {
+                return actions.getBlock.done({
+                    params: null,
+                    result: payload.value as any
+                });
+            }).catch((error: IAPIError) => {
+                return Observable.of(actions.getBlock.failed({
+                    params: null,
+                    error: error.error
+                }));
+            });
+        });
+
+export const createBlockEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.createBlock.started.match)
+        .switchMap(action => {
+            const execParams = {
+                Name: action.payload.name,
+                Value: action.payload.template,
+                Conditions: action.payload.conditions
+            };
+
+            const promise = api.txPrepare(action.payload.session, 'NewBlock', execParams).then(response => {
+                const signature = keyring.sign(response.forsign, action.payload.privateKey);
+                return api.txExec(action.payload.session, 'NewBlock', {
+                    ...execParams,
+                    pubkey: action.payload.publicKey,
+                    signature,
+                    time: response.time
+                });
+            });
+
+            return Observable.from(promise).map(payload => {
+                return actions.createBlock.done({
+                    params: action.payload,
+                    result: payload.blockid
+                });
+            }).catch((error: ITxStatusResponse) =>
+                Observable.of(actions.createBlock.failed({
+                    params: action.payload,
+                    error: error.error || error.errmsg
+                })));
+        });
+
+export const editBlockEpic = (actions$: Observable<Action>) =>
+    actions$.filter(actions.editBlock.started.match)
+        .switchMap(action => {
+            const execParams = {
+                Id: action.payload.id,
+                Value: action.payload.template,
+                Conditions: action.payload.conditions
+            };
+
+            const promise = api.txPrepare(action.payload.session, 'EditBlock', execParams).then(response => {
+                const signature = keyring.sign(response.forsign, action.payload.privateKey);
+                return api.txExec(action.payload.session, 'EditBlock', {
+                    ...execParams,
+                    pubkey: action.payload.publicKey,
+                    signature,
+                    time: response.time
+                });
+            });
+
+            return Observable.from(promise).map(payload => {
+                return actions.editBlock.done({
+                    params: action.payload,
+                    result: payload.blockid
+                });
+            }).catch((error: ITxStatusResponse) =>
+                Observable.of(actions.editBlock.failed({
+                    params: action.payload,
+                    error: error.error || error.errmsg
+                })));
+        });
+
 export default combineEpics(
+    getBlockEpic,
     getContractEpic,
     getContractsEpic,
     getTableEpic,
@@ -508,10 +587,12 @@ export default combineEpics(
     getPageEpic,
     getMenuEpic,
     getMenusEpic,
+    createBlockEpic,
     createTableEpic,
     createPageEpic,
     createMenuEpic,
     createContractEpic,
+    editBlockEpic,
     editPageEpic,
     editMenuEpic,
     editContractEpic,

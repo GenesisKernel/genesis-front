@@ -21,7 +21,7 @@ import { getMenu, editMenu } from 'modules/admin/actions';
 
 import EditMenu, { IEditMenuProps } from 'components/Main/Admin/Interface/EditMenu';
 
-class EditPageContainer extends React.Component<IEditMenuProps & { getMenu: typeof getMenu.started, match?: { params: { menuID: string } } }> {
+class EditMenuContainer extends React.Component<IEditMenuProps & { getMenu: typeof getMenu.started, match?: { params: { menuID: string } } }> {
     componentWillMount() {
         this.props.getMenu({ session: this.props.session, id: this.props.match.params.menuID });
     }
@@ -47,4 +47,4 @@ const mapDispatchToProps = {
     getMenu: getMenu.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditPageContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(EditMenuContainer);

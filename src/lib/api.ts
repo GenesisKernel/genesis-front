@@ -101,7 +101,7 @@ export interface IListResponse extends IResponse {
     }];
 }
 
-export interface IPagesResponse extends IResponse {
+export interface IInterfacesResponse extends IResponse {
     menus: [IDBValue & { name: string }];
     pages: [IDBValue & { name: string }];
     blocks: [IDBValue & { name: string }];
@@ -249,13 +249,12 @@ const api = {
     pages: (session: string) => Promise.all([
         api.list(session, 'pages', 0, 0, 'name'),
         api.list(session, 'menu', 0, 0, 'name'),
+        api.list(session, 'blocks', 0, 0, 'name'),
     ]).then(results => ({
         pages: results[0].list,
         menus: results[1].list,
-
-        // TODO: Blocks are not supported
-        blocks: []
-    })) as Promise<IPagesResponse>,
+        blocks: results[2].list,
+    })) as Promise<IInterfacesResponse>,
     contract: (session: string, name: string) => securedRequest(`contract/${name}`, session, null, { method: 'GET' }) as Promise<IContractResponse>,
     contracts: (session: string, offset?: number, limit?: number) => securedRequest(`contracts?offset=${offset || 0}&limit=${limit || 0}`, session, null, { method: 'GET' }) as Promise<IContractsResponse>,
 

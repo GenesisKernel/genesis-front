@@ -38,12 +38,14 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                             </span>
                         </button>
                     </Link>
-                    <button className="btn btn-default ml">
-                        <em className="fa fa-plus-circle fa-fw mr-sm" />
-                        <span>
-                            <FormattedMessage id="admin.interface.block.create" defaultMessage="Create block" />
-                        </span>
-                    </button>
+                    <Link to="/admin/interface/create-block" className="ml">
+                        <button className="btn btn-default">
+                            <em className="fa fa-plus-circle fa-fw mr-sm" />
+                            <span>
+                                <FormattedMessage id="admin.interface.block.create" defaultMessage="Create block" />
+                            </span>
+                        </button>
+                    </Link>
                     <Link to="/admin/interface/create-menu" className="ml">
                         <button className="btn btn-default">
                             <em className="fa fa-plus-circle fa-fw mr-sm" />
@@ -143,11 +145,13 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                         <tr key={block.id}>
                                             <td>{block.name}</td>
                                             <td style={{ width: 1 }}>
-                                                <Button bsStyle="default" className="btn-labeled btn-icon">
-                                                    <span className="btn-label">
-                                                        <em className="fa fa-edit" />
-                                                    </span>
-                                                </Button>
+                                                <Link to={`/admin/interface/block/${block.id}-${block.name}`}>
+                                                    <Button bsStyle="default" className="btn-labeled btn-icon">
+                                                        <span className="btn-label">
+                                                            <em className="fa fa-edit" />
+                                                        </span>
+                                                    </Button>
+                                                </Link>
                                             </td>
                                         </tr>
                                     ))}
