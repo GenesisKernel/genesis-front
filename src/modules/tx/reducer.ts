@@ -14,120 +14,37 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
+import { Map } from 'immutable';
+import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import * as actions from './actions';
-import { Action } from 'redux';
-import { isType } from 'typescript-fsa';
 
 export type State = {
-    readonly locale: string;
-    readonly isInstalled: boolean;
-    readonly isInstalling: boolean;
-    readonly isLoading: boolean;
-    readonly isConnected: boolean;
-    readonly isConnecting: boolean;
-    readonly isCollapsed: boolean;
+    readonly transactions: Map<string, { block: string, error: string }>;
 };
 
 export const initialState: State = {
-    locale: 'en-US',
-    isInstalled: null,
-    isInstalling: false,
-    isLoading: true,
-    isConnected: null,
-    isConnecting: false,
-    isCollapsed: false
+    transactions: Map()
 };
 
-export default (state: State = initialState, action: Action): State => {
-    if (isType(action, actions.checkOnline.started)) {
-        return {
-            ...state,
-            isConnecting: true
-        };
-    }
-
-    if (isType(action, actions.checkOnline.failed)) {
-        switch (action.payload.error) {
-            case 'E_NOTINSTALLED':
-                return {
-                    ...state,
-                    isInstalled: false,
-                    isConnected: true,
-                    isConnecting: false
-                };
-
-            default:
-                return {
-                    ...state,
-                    isConnected: false,
-                    isConnecting: false
-                };
-        }
-    }
-
-    if (isType(action, actions.checkOnline.done)) {
-        return {
-            ...state,
-            isInstalled: true,
-            isConnected: action.payload.result,
-            isConnecting: false
-        };
-    }
-
-    if (isType(action, actions.checkOnline.failed)) {
-        switch (action.payload.error) {
-            case 'E_NOTINSTALLED':
-                return {
-                    ...state,
-                    isInstalled: false,
-                    isConnected: true,
-                    isConnecting: false
-                };
-
-            default:
-                return {
-                    ...state,
-                    isConnected: false,
-                    isConnecting: false
-                };
-        }
-    }
-
-    if (isType(action, actions.setLoading)) {
-        return {
-            ...state,
-            isLoading: action.payload
-        };
-    }
-
-    if (isType(action, actions.install.started)) {
-        return {
-            ...state,
-            isInstalling: true
-        };
-    }
-
-    if (isType(action, actions.install.done)) {
-        return {
-            ...state,
-            isInstalled: true,
-            isInstalling: false
-        };
-    }
-
-    if (isType(action, actions.install.failed)) {
-        return {
-            ...state,
-            isInstalling: false
-        };
-    }
-
-    if (isType(action, actions.setCollapsed)) {
-        return {
-            ...state,
-            isCollapsed: action.payload
-        };
-    }
-
-    return state;
-};
+export default reducerWithInitialState(initialState)
+    .case(actions.contractExec.started, (state, payload) => ({
+        ...state,
+        transactions: state.transactions.set(payload.uuid, {
+            block: null,
+            error: null
+        })
+    }))
+    .case(actions.contractExec.done, (state, payload) => ({
+        ...state,
+        transactions: state.transactions.set(payload.params.uuid, {
+            block: payload.result,
+            error: null
+        })
+    }))
+    .case(actions.contractExec.failed, (state, payload) => ({
+        ...state,
+        transactions: state.transactions.set(payload.params.uuid, {
+            block: null,
+            error: payload.error
+        })
+    }));

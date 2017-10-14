@@ -18,11 +18,14 @@ import * as React from 'react';
 import { Button, Col } from 'react-bootstrap';
 import MonacoEditor from 'react-monaco-editor';
 import api from 'lib/api';
+import { contractExec } from 'modules/tx/actions';
 
 import Protypo from 'components/Protypo';
+import TxButton from 'containers/Widgets/TxButton';
 
 export interface IDebugProps {
     session: string;
+    contractExec: typeof contractExec.started;
 }
 
 interface IDebugState {
@@ -81,6 +84,16 @@ export default class extends React.Component<IDebugProps, IDebugState> {
         this.setState({ code });
     }
 
+    onExecContract() {
+        this.props.contractExec({
+            uuid: 'test',
+            name: 'TEST_CONTRACT',
+            params: {
+                hello: 'world'
+            }
+        });
+    }
+
     render() {
         return (
             <div className="content-wrapper">
@@ -102,6 +115,40 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                 </Col>
                 <hr />
                 <Button bsStyle="primary" className="btn-block" onClick={this.onSubmit.bind(this)}>Request template</Button>
+                <Button bsStyle="danger" className="btn-block" onClick={this.onExecContract.bind(this)}>Execute contract</Button>
+                <div className="row">
+                    <div className="col-md-4">
+                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 1</TxButton>
+                    </div>
+                    <div className="col-md-4">
+                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 2</TxButton>
+                    </div>
+                    <div className="col-md-4">
+                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-4">
+                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 1</TxButton>
+                    </div>
+                    <div className="col-md-4">
+                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 2</TxButton>
+                    </div>
+                    <div className="col-md-4">
+                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-4">
+                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 1</TxButton>
+                    </div>
+                    <div className="col-md-4">
+                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 2</TxButton>
+                    </div>
+                    <div className="col-md-4">
+                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
+                    </div>
+                </div>
             </div>
         );
     }

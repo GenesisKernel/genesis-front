@@ -16,9 +16,11 @@
         "@types/react": "^16.0.2",
         "@types/react-dom": "^15.5.3",
         "@types/react-router-redux": "^5.0.6",
+        "@types/uuid": "^3.4.2",
         "classnames": "^2.2.5",
         "crypto-js": "^3.1.9-1",
         "font-awesome": "^4.7.0",
+        "immutable": "^3.8.2",
         "int64-buffer": "^0.1.9",
         "jsrsasign": "^8.0.3",
         "lodash": "^4.17.4",
@@ -45,6 +47,8 @@
         "simple-line-icons": "^2.4.1",
         "styled-components": "^2.1.2",
         "typescript-fsa": "^2.5.0",
+        "typescript-fsa-redux-observable": "^0.16.2",
+        "uuid": "^3.1.0",
         "whatwg-fetch": "^2.0.3"
     },
     "scripts": {

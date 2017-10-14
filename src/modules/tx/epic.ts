@@ -14,48 +14,36 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import api, { IAPIError } from 'lib/api';
+import { IRootState } from 'modules';
+import { combineEpics, Epic } from 'redux-observable';
 import { Action } from 'redux';
 import { Observable } from 'rxjs';
-import { combineEpics } from 'redux-observable';
 import * as actions from './actions';
+import keyring from 'lib/keyring';
+import api, { ITxStatusResponse } from 'lib/api';
 
-export const checkOnlineEpic = (actions$: Observable<Action>) =>
-    actions$.filter(actions.checkOnline.started.match)
-        .switchMap(action => {
-            return Observable.from(api.getUid()).map(payload => {
-                return actions.checkOnline.done({
-                    params: null,
-                    result: true
-                });
-            }).catch((error: IAPIError) => {
-                return Observable.of(actions.checkOnline.failed({
-                    params: null,
-                    error: error.error
-                }));
-            }).delay(600);
+export const contractExecEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.contractExec.started)
+        .flatMap(action => {
+            const state = store.getState();
+            return Observable.fromPromise(api.txPrepare(state.auth.sessionToken, action.payload.name, action.payload.params)
+                .then(response => {
+                    const signature = keyring.sign(response.forsign, state.auth.privateKey);
+                    return api.txExec(state.auth.sessionToken, action.payload.name, {
+                        ...action.payload.params,
+                        pubkey: state.auth.account.publicKey,
+                        signature,
+                        time: response.time
+                    });
+                }))
+                .map(payload => actions.contractExec.done({
+                    params: action.payload,
+                    result: payload.blockid
+                }))
+                .catch((error: ITxStatusResponse) => Observable.of(actions.contractExec.failed({
+                    params: action.payload,
+                    error: error.error || error.errmsg
+                })));
         });
 
-export const installEpic = (actions$: Observable<Action>) =>
-    actions$.filter(actions.install.started.match)
-        .switchMap(action => {
-            return Observable.from(api.install(action.payload)).map(payload => {
-                return actions.install.done({
-                    params: null,
-                    result: null
-                });
-            }).catch((error: IAPIError) => {
-                switch (error.error) {
-                    // TODO: NOTIFICATION STUB
-                    case 'E_DBNIL': alert('NL_DATABASE_IS_NIL'); break;
-                    default: break;
-                }
-
-                return Observable.of(actions.install.failed({
-                    params: null,
-                    error: error.error
-                }));
-            }).delay(600);
-        });
-
-export default combineEpics(checkOnlineEpic, installEpic);
+export default combineEpics(contractExecEpic);

@@ -16,8 +16,9 @@
 
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { navigate } from 'modules/engine/actions';
 import { IRootState } from 'modules';
+import { navigate } from 'modules/engine/actions';
+import { contractExec } from 'modules/tx/actions';
 
 import Debug, { IDebugProps } from 'components/Debug';
 
@@ -30,7 +31,8 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    navigate
+    navigate,
+    contractExec: contractExec.started
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(BackupContainer);
