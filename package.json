@@ -47,7 +47,7 @@
         "simple-line-icons": "^2.4.1",
         "styled-components": "^2.1.2",
         "typescript-fsa": "^2.5.0",
-        "typescript-fsa-redux-observable": "^0.16.2",
+        "typescript-fsa-reducers": "^0.4.4",
         "uuid": "^3.1.0",
         "whatwg-fetch": "^2.0.3"
     },

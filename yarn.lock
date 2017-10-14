@@ -109,10 +109,6 @@
   version "16.0.2"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.0.2.tgz#0b31a73cdde6272b719e5b05a7df6d1e2654a804"
 
-"@types/redux@^3.6.0":
-  version "3.6.31"
-  resolved "https://registry.yarnpkg.com/@types/redux/-/redux-3.6.31.tgz#40eafa7575db36b912ce0059b85de98c205b0708"
-
 "@types/rx-core-binding@*":
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/@types/rx-core-binding/-/rx-core-binding-4.0.4.tgz#d969d32f15a62b89e2862c17b3ee78fe329818d3"
@@ -5158,7 +5154,7 @@ rx-lite@*, rx-lite@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/rx-lite/-/rx-lite-4.0.8.tgz#0b1e11af8bc44836f04a6407e92da42467b79444"
 
-rxjs@^5.4.2, rxjs@^5.4.3:
+rxjs@^5.4.3:
   version "5.4.3"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.4.3.tgz#0758cddee6033d68e0fd53676f0f3596ce3d483f"
   dependencies:
@@ -5913,16 +5909,6 @@ typescript-fsa-reducers@^0.4.4:
   resolved "https://registry.yarnpkg.com/typescript-fsa-reducers/-/typescript-fsa-reducers-0.4.4.tgz#54a8b8fd0b9cf5fffafad575b6c93b97fa4dc568"
   dependencies:
     typescript-fsa "^2.0.0"
-
-typescript-fsa-redux-observable@^0.16.2:
-  version "0.16.2"
-  resolved "https://registry.yarnpkg.com/typescript-fsa-redux-observable/-/typescript-fsa-redux-observable-0.16.2.tgz#f1e8f083720a0ecc16626579aca91edaa68323f5"
-  dependencies:
-    "@types/redux" "^3.6.0"
-    redux "^3.7.2"
-    redux-observable "^0.16.0"
-    rxjs "^5.4.2"
-    typescript-fsa-reducers "^0.4.4"
 
 typescript-fsa@^2.0.0, typescript-fsa@^2.5.0:
   version "2.5.0"
