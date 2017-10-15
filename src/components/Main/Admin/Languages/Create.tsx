@@ -127,7 +127,7 @@ class Create extends React.Component<{}, ICreateState> {
                         </Link>
                     </li>
                     <li>
-                        <FormattedMessage id="admin.languages.create" defaultMessage="Create" />
+                        <FormattedMessage id="admin.languages.create" defaultMessage="Create localization" />
                     </li>
                 </ol>
                 <LocaleEditor
