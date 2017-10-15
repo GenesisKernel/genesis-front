@@ -25,7 +25,7 @@ import Validation from 'components/Validation';
 
 interface IValidatedContractFormProps {
     contractName: string;
-    mapContractParams: (values: { [key: string]: any }) => { values: { [key: string]: any } };
+    mapContractParams: (values: { [key: string]: any }) => { [key: string]: any };
     onExec?: (block: string, error: string) => void;
 }
 
