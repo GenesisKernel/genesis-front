@@ -45,8 +45,25 @@ const Header: React.SFC<IHeaderProps> = (props) => (
                     </li>
                 </ul>
                 <ul className="nav navbar-nav navbar-right">
+                    <li className="dropdown-list dropdown open">
+                        <a href="#" className="dropdown-toggle">
+                            <span>
+                                <em className="icon-hourglass" />
+                                <span className="label label-warning">1</span>
+                            </span>
+                        </a>
+                        <ul className="dropdown-menu animated flipInX">
+                            <li>
+                                <div className="list-group">
+                                    <div className="list-group-item">
+                                        <small>No notifications</small>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
                     <li className="dropdown-list dropdown">
-                        <a id="basic-nav-dropdown" role="button" className="dropdown-toggle" aria-haspopup="true" aria-expanded="false" href="#">
+                        <a role="button" className="dropdown-toggle" aria-haspopup="true" aria-expanded="false" href="#">
                             <span>
                                 <em className="icon-bell" />
                                 <span className="label label-danger">11</span>

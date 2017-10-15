@@ -17,57 +17,58 @@
 import api, { IAPIError } from 'lib/api';
 import { Action } from 'redux';
 import { Observable } from 'rxjs';
-import { combineEpics } from 'redux-observable';
+import { combineEpics, Epic } from 'redux-observable';
+import { IRootState } from 'modules';
 import * as actions from './actions';
 
-export const renderPageEpic = (actions$: Observable<Action>) =>
-    actions$.filter(actions.renderPage.started.match)
-        .switchMap(action => {
-            const promise = api.contentPage(action.payload.session, action.payload.name, action.payload.params).then(page => {
-                return api.contentMenu(action.payload.session, page.menu).then(menu => ({
-                    menu: {
-                        name: page.menu,
-                        content: JSON.parse(menu.tree)
-                    },
-                    page: {
-                        name: action.payload.name,
-                        content: JSON.parse(page.tree)
-                    }
-                }));
-            });
-
-            return Observable.from(promise).map(payload => {
-                return actions.renderPage.done({
+export const renderPageEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.renderPage.started)
+        .flatMap(action => {
+            const state = store.getState();
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, action.payload.name, action.payload.params)
+                .then(page => {
+                    return api.contentMenu(state.auth.sessionToken, page.menu)
+                        .then(menu => ({
+                            menu: {
+                                name: page.menu,
+                                content: JSON.parse(menu.tree)
+                            },
+                            page: {
+                                name: action.payload.name,
+                                content: JSON.parse(page.tree)
+                            }
+                        }));
+                }))
+                .map(payload => actions.renderPage.done({
                     params: action.payload,
                     result: payload
-                });
-            }).catch((error: IAPIError) => {
-                return Observable.of(actions.renderPage.failed({
-                    params: action.payload,
-                    error: error.error
-                }));
-            });
+                }))
+                .catch((e: IAPIError) =>
+                    Observable.of(actions.renderPage.failed({
+                        params: action.payload,
+                        error: e.error
+                    }))
+                );
         });
 
-export const menuInitEpic = (actions$: Observable<Action>) =>
-    actions$.filter(actions.menuInit.started.match)
-        .switchMap(action => {
-            const promise = api.contentMenu(action.payload.session, 'default_menu');
-
-            return Observable.from(promise).map(payload => {
-                return actions.menuInit.done({
+export const menuInitEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.menuInit.started)
+        .flatMap(action => {
+            const state = store.getState();
+            return Observable.fromPromise(api.contentMenu(state.auth.sessionToken, 'default_menu'))
+                .map(payload => actions.menuInit.done({
                     params: action.payload,
                     result: {
                         name: 'default_menu',
                         content: JSON.parse(payload.tree)
                     }
-                });
-            }).catch((error: IAPIError) => {
-                return Observable.of(actions.menuInit.failed({
-                    params: action.payload,
-                    error: error.error
-                }));
-            });
+                }))
+                .catch((e: IAPIError) =>
+                    Observable.of(actions.menuInit.failed({
+                        params: action.payload,
+                        error: e.error
+                    }))
+                );
         });
 
 export default combineEpics(
