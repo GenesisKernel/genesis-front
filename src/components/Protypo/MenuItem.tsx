@@ -71,7 +71,7 @@ export const StyledLinkButton = styled.div`
 
 // TODO: Missing page params
 const LinkButton: React.SFC<IMenuItemProps> = (props, context) => {
-    const isActive = (context.router.route.location.pathname) === `/page/${props.page}`;
+    const isActive = context.router.route.location.pathname === `/page/${props.page}` || (context.router.route.location.pathname) === props._systemPageHook;
     const classes = classnames({
         active: isActive
     });
