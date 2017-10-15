@@ -31,6 +31,8 @@ export type State = {
     readonly interfaces: IInterfacesResponse;
     readonly contract: { id: string, name: string, conditions: string, address: string, value: string };
     readonly contracts: IContract[];
+    readonly language: { id: string, res: any, name: string, conditions: string };
+    readonly languages: { id: string, res: any, name: string, conditions: string }[];
 };
 
 export const initialState: State = {
@@ -44,7 +46,9 @@ export const initialState: State = {
     page: null,
     interfaces: null,
     contract: null,
-    contracts: null
+    contracts: null,
+    language: null,
+    languages: null,
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -270,6 +274,50 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             pending: false,
             block: null
+        };
+    }
+
+    if (isType(action, actions.getLanguages.started)) {
+        return {
+            ...state,
+            pending: true,
+            languages: null
+        };
+    }
+    else if (isType(action, actions.getLanguages.done)) {
+        return {
+            ...state,
+            pending: false,
+            languages: action.payload.result
+        };
+    }
+    else if (isType(action, actions.getLanguages.failed)) {
+        return {
+            ...state,
+            pending: false,
+            languages: null
+        };
+    }
+
+    if (isType(action, actions.getLanguage.started)) {
+        return {
+            ...state,
+            pending: true,
+            language: null
+        };
+    }
+    else if (isType(action, actions.getLanguage.done)) {
+        return {
+            ...state,
+            pending: false,
+            language: action.payload.result
+        };
+    }
+    else if (isType(action, actions.getLanguage.failed)) {
+        return {
+            ...state,
+            pending: false,
+            language: null
         };
     }
 

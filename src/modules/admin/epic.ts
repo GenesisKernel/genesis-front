@@ -221,6 +221,40 @@ export const getBlockEpic: Epic<Action, IRootState> =
                 );
         });
 
+export const getLanguagesEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.getLanguages.started)
+        .flatMap(action => {
+            const state = store.getState();
+            return Observable.fromPromise(api.list(state.auth.sessionToken, 'languages', action.payload.offset, action.payload.limit))
+                .map(payload => actions.getLanguages.done({
+                    params: action.payload,
+                    result: payload.list as any
+                }))
+                .catch((e: IAPIError) =>
+                    Observable.of(actions.getLanguages.failed({
+                        params: action.payload,
+                        error: e.error
+                    }))
+                );
+        });
+
+export const getLanguageEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.getLanguage.started)
+        .flatMap(action => {
+            const state = store.getState();
+            return Observable.fromPromise(api.row(state.auth.sessionToken, 'languages', action.payload.id))
+                .map(payload => actions.getLanguage.done({
+                    params: action.payload,
+                    result: payload.value as any
+                }))
+                .catch((e: IAPIError) =>
+                    Observable.of(actions.getLanguage.failed({
+                        params: action.payload,
+                        error: e.error
+                    }))
+                );
+        });
+
 export default combineEpics(
     getBlockEpic,
     getContractEpic,
@@ -231,5 +265,7 @@ export default combineEpics(
     getInterfaceEpic,
     getPageEpic,
     getMenuEpic,
-    getMenusEpic
+    getMenusEpic,
+    getLanguagesEpic,
+    getLanguageEpic
 );

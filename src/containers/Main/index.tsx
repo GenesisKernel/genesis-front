@@ -37,6 +37,9 @@ import CreateBlock from 'components/Main/Admin/Interface/CreateBlock';
 import EditBlock from 'containers/Main/containers/Admin/Interface/EditBlock';
 import Contracts from 'containers/Main/containers/Admin/Contracts';
 import CreateContract from 'components/Main/Admin/Contracts/Create';
+import Languages from 'containers/Main/containers/Admin/Languages';
+import CreateLanguage from 'components/Main/Admin/Languages/Create';
+import EditLanguage from 'containers/Main/containers/Admin/Languages/Edit';
 import EditContract from 'containers/Main/containers/Admin/Contracts/Edit';
 import DefaultPage from 'containers/Main/containers/DefaultPage';
 import Page from 'containers/Main/containers/Page';
@@ -86,6 +89,9 @@ class MainContainer extends React.Component<IMainProps & { menuInit: typeof menu
                     <Route exact path="/admin/contracts" component={Contracts} />
                     <Route exact path="/admin/contracts/create" component={CreateContract} />
                     <Route exact path="/admin/contracts/:contractID-:contractName" component={EditContract} />
+                    <Route exact path="/admin/languages" component={Languages} />
+                    <Route exact path="/admin/languages/create" component={CreateLanguage} />
+                    <Route exact path="/admin/languages/:translationID-:translationName" component={EditLanguage} />
 
                     <Route exact path="/page/:pageName" component={Page} />
 

@@ -38,3 +38,7 @@ export const getMenus = actionCreator.async<undefined, { id: string, name: strin
 
 // Blocks
 export const getBlock = actionCreator.async<{ id: string }, { id: string, name: string, value: string, conditions: string }, string>('GET_BLOCK');
+
+// Lanauages
+export const getLanguage = actionCreator.async<{ id: string }, { id: string, res: any, name: string, conditions: string }, string>('GET_LANGUAGE');
+export const getLanguages = actionCreator.async<{ offset?: number, limit?: number }, { id: string, res: any, name: string, conditions: string }[], string>('GET_LANGUAGES');

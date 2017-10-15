@@ -160,6 +160,14 @@ const Sidebar: React.SFC<ISidebarProps> = (props) => {
                         _systemPageHook: '/admin/contracts',
                         title: props.intl.formatMessage({ id: 'admin.contracts', defaultMessage: 'Smart contracts' })
                     }
+                },
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-globe',
+                        _systemPageHook: '/admin/languages',
+                        title: props.intl.formatMessage({ id: 'admin.languages', defaultMessage: 'Language resources' })
+                    }
                 }
             ]
         });
