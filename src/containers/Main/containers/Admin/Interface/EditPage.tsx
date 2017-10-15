@@ -17,13 +17,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { getPage, editPage } from 'modules/admin/actions';
+import { getPage } from 'modules/admin/actions';
 
 import EditPage, { IEditPageProps } from 'components/Main/Admin/Interface/EditPage';
 
 class EditPageContainer extends React.Component<IEditPageProps & { getPage: typeof getPage.started, match?: { params: { pageID: string } } }> {
     componentWillMount() {
-        this.props.getPage({ session: this.props.session, id: this.props.match.params.pageID });
+        this.props.getPage({ id: this.props.match.params.pageID });
     }
 
     render() {
@@ -34,17 +34,11 @@ class EditPageContainer extends React.Component<IEditPageProps & { getPage: type
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken,
-    pending: state.admin.pending,
     page: state.admin.page,
-    menus: state.admin.menus,
-    editPageStatus: state.admin.editPageStatus,
-    privateKey: state.auth.privateKey,
-    publicKey: state.auth.account.publicKey
+    menus: state.admin.menus
 });
 
 const mapDispatchToProps = {
-    editPage: editPage.started,
     getPage: getPage.started
 };
 

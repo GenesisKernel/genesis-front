@@ -23,10 +23,7 @@ import EditTable, { IEditTableProps } from 'components/Main/Admin/Tables/EditTab
 
 class EditTableContainer extends React.Component<IEditTableProps & { getTableStruct: typeof getTableStruct.started, match: { params: { tableName: string } } }> {
     componentWillMount() {
-        this.props.getTableStruct({
-            session: this.props.session,
-            table: this.props.match.params.tableName
-        });
+        this.props.getTableStruct({ name: this.props.match.params.tableName });
     }
 
     render() {
@@ -37,9 +34,6 @@ class EditTableContainer extends React.Component<IEditTableProps & { getTableStr
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken,
-    privateKey: state.auth.privateKey,
-    publicKey: state.auth.account.publicKey,
     table: state.admin.table
 });
 

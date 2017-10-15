@@ -17,26 +17,19 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
-import { editBlock } from 'modules/admin/actions';
 
 import BlockEditor from './BlockEditor';
 
 export interface IEditBlockProps {
-    pending: boolean;
-    session: string;
-    privateKey: string;
-    publicKey: string;
     block: { id: string, name: string, conditions: string, value: string };
-    editBlockStatus: { block: string, error: string };
-    editBlock: typeof editBlock.started;
 }
 
-interface IEditMenuState {
+interface IEditBlockState {
     template: string;
     conditions: string;
 }
 
-class EditMenu extends React.Component<IEditBlockProps, IEditMenuState> {
+class EditBlock extends React.Component<IEditBlockProps, IEditBlockState> {
     constructor(props: IEditBlockProps) {
         super(props);
         this.state = {
@@ -46,16 +39,6 @@ class EditMenu extends React.Component<IEditBlockProps, IEditMenuState> {
     }
 
     componentWillReceiveProps(props: IEditBlockProps) {
-        if (props.editBlockStatus && this.props.editBlockStatus !== props.editBlockStatus) {
-            // TODO: Notification stub
-            if (props.editBlockStatus.error) {
-                alert('Error:: ' + props.editBlockStatus.error);
-            }
-            else {
-                alert('Success:: ' + props.editBlockStatus.block);
-            }
-        }
-
         if (props.block && this.props.block !== props.block) {
             this.setState({
                 template: props.block.value,
@@ -64,15 +47,22 @@ class EditMenu extends React.Component<IEditBlockProps, IEditMenuState> {
         }
     }
 
-    onSubmit(values: { [key: string]: any }) {
-        this.props.editBlock({
-            session: this.props.session,
-            privateKey: this.props.privateKey,
-            publicKey: this.props.publicKey,
-            id: this.props.block.id,
-            template: this.state.template,
-            conditions: values.conditions
-        });
+    mapContractParams(values: { [key: string]: any }) {
+        return {
+            Id: this.props.block.id,
+            Value: this.state.template,
+            Conditions: this.state.conditions
+        };
+    }
+
+    onExec(block: string, error: string) {
+        // TODO: Notification stub
+        if (block) {
+            alert('Success:: ' + block);
+        }
+        else if (error) {
+            alert('Error:: ' + error);
+        }
     }
 
     onSourceEdit(template: string) {
@@ -102,17 +92,19 @@ class EditMenu extends React.Component<IEditBlockProps, IEditMenuState> {
                     </li>
                 </ol>
                 <BlockEditor
-                    pending={this.props.pending}
+                    contractName="EditBlock"
+                    mapContractParams={this.mapContractParams.bind(this)}
+
                     template={this.state.template}
                     conditions={this.state.conditions}
                     block={this.props.block}
-                    onSubmit={this.onSubmit.bind(this)}
                     onSourceEdit={this.onSourceEdit.bind(this)}
                     onConditionsEdit={this.onConditionsEdit.bind(this)}
+                    onExec={this.onExec.bind(this)}
                 />
             </div>
         );
     }
 }
 
-export default EditMenu;
+export default EditBlock;

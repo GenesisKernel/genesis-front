@@ -20,6 +20,7 @@ import ValidatedSelect from './ValidatedSelect';
 import ValidatedTextarea from './ValidatedTextarea';
 import ValidatedForm from './ValidatedForm';
 import ValidatedFormGroup from './ValidatedFormGroup';
+import ValidatedSubmit from './ValidatedSubmit';
 import * as validators from './Validators';
 
 export default {
@@ -29,7 +30,8 @@ export default {
         ValidatedSelect,
         ValidatedTextarea,
         ValidatedForm,
-        ValidatedFormGroup
+        ValidatedFormGroup,
+        ValidatedSubmit
     },
     validators
 };

@@ -23,14 +23,13 @@ import { IInterfacesResponse } from 'lib/api';
 import Interface from 'components/Main/Admin/Interface';
 
 interface IInterfaceContainerProps {
-    session: string;
     pages: IInterfacesResponse;
     getInterface: typeof getInterface.started;
 }
 
 class InterfaceContainer extends React.Component<IInterfaceContainerProps> {
     componentWillMount() {
-        this.props.getInterface({ session: this.props.session });
+        this.props.getInterface(null);
     }
 
     render() {
@@ -45,7 +44,6 @@ class InterfaceContainer extends React.Component<IInterfaceContainerProps> {
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken,
     pages: state.admin.interfaces
 });
 

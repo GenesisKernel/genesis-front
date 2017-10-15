@@ -17,13 +17,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { getMenu, editMenu } from 'modules/admin/actions';
+import { getMenu } from 'modules/admin/actions';
 
 import EditMenu, { IEditMenuProps } from 'components/Main/Admin/Interface/EditMenu';
 
 class EditMenuContainer extends React.Component<IEditMenuProps & { getMenu: typeof getMenu.started, match?: { params: { menuID: string } } }> {
     componentWillMount() {
-        this.props.getMenu({ session: this.props.session, id: this.props.match.params.menuID });
+        this.props.getMenu({ id: this.props.match.params.menuID });
     }
 
     render() {
@@ -34,16 +34,10 @@ class EditMenuContainer extends React.Component<IEditMenuProps & { getMenu: type
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken,
-    pending: state.admin.pending,
-    menu: state.admin.menu,
-    editMenuStatus: state.admin.editMenuStatus,
-    privateKey: state.auth.privateKey,
-    publicKey: state.auth.account.publicKey
+    menu: state.admin.menu
 });
 
 const mapDispatchToProps = {
-    editMenu: editMenu.started,
     getMenu: getMenu.started
 };
 

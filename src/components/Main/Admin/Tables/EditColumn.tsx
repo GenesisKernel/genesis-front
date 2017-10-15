@@ -15,24 +15,17 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { Button, Panel } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { columnTypes } from './Create';
-import { editColumn } from 'modules/admin/actions';
 import { ITableResponse } from 'lib/api';
 
+import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 
 export interface IEditColumnProps {
-    session: string;
-    privateKey: string;
-    publicKey: string;
     table: ITableResponse;
-    pending: boolean;
     column: { name: string, type: string, index: boolean, permissions: string };
-    editColumnStatus: { block: string, error: string };
-    editColumn: typeof editColumn.started;
 }
 
 interface IEditColumnState {
@@ -51,16 +44,6 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
     }
 
     componentWillReceiveProps(props: IEditColumnProps) {
-        if (props.editColumnStatus && this.props.editColumnStatus !== props.editColumnStatus) {
-            // TODO: Notification stub
-            if (props.editColumnStatus.error) {
-                alert('Error:: ' + props.editColumnStatus.error);
-            }
-            else {
-                alert('Success:: ' + props.editColumnStatus.block);
-            }
-        }
-
         if (!this.props.column && props.column) {
             this.setState({
                 permissions: props.column.permissions
@@ -68,15 +51,22 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
         }
     }
 
-    onSubmit(values: { [key: string]: any }) {
-        this.props.editColumn({
-            session: this.props.session,
-            privateKey: this.props.privateKey,
-            publicKey: this.props.publicKey,
-            table: this.props.table.name,
-            name: this.props.column.name,
-            permissions: values.permissions
-        });
+    mapContractParams(values: { [key: string]: any }) {
+        return {
+            TableName: this.props.table.name,
+            Name: this.props.column.name,
+            Permissions: this.state.permissions
+        };
+    }
+
+    onExec(block: string, error: string) {
+        // TODO: Notification stub
+        if (block) {
+            alert('Success:: ' + block);
+        }
+        else if (error) {
+            alert('Error:: ' + error);
+        }
     }
 
     onPermissionsChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -118,24 +108,18 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
                         <FormattedMessage id="admin.tables.column.edit" defaultMessage="Edit column" />
                     </li>
                 </ol>
-                <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit.bind(this)}>
-                    <Panel
-                        bsStyle="default"
-                        footer={(
-                            <Button bsStyle="primary" type="submit" disabled={this.props.pending}>
-                                <FormattedMessage id="admin.save" defaultMessage="Save" />
-                            </Button>
-                        )}
-                    >
-                        <div className="form-group">
-                            <label>
-                                <FormattedMessage id="admin.tables.column" defaultMessage="Column" />
-                            </label>
-                            <p className="form-control-static">
-                                {this.props.column && this.props.column.name}
-                            </p>
-                        </div>
-                        {/*<div className="form-group">
+                <ValidatedContractForm contractName="EditColumn" mapContractParams={this.mapContractParams.bind(this)} onExec={this.onExec.bind(this)}>
+                    <div className="panel panel-default">
+                        <div className="panel-body">
+                            <div className="form-group">
+                                <label>
+                                    <FormattedMessage id="admin.tables.column" defaultMessage="Column" />
+                                </label>
+                                <p className="form-control-static">
+                                    {this.props.column && this.props.column.name}
+                                </p>
+                            </div>
+                            {/*<div className="form-group">
                             <label>
                                 <FormattedMessage id="admin.tables.column.index" defaultMessage="Index" />
                             </label>
@@ -149,26 +133,32 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
                                 }
                             </p>
                         </div>*/}
-                        <div className="form-group">
-                            <label>
-                                <FormattedMessage id="admin.tables.column.type" defaultMessage="Type" />
-                            </label>
-                            <p className="form-control-static">
-                                {columnType || (
-                                    <span className="text-muted">
-                                        <FormattedMessage id="admin.tables.column.type.unknown" defaultMessage="Unknown" />
-                                    </span>
-                                )}
-                            </p>
+                            <div className="form-group">
+                                <label>
+                                    <FormattedMessage id="admin.tables.column.type" defaultMessage="Type" />
+                                </label>
+                                <p className="form-control-static">
+                                    {columnType || (
+                                        <span className="text-muted">
+                                            <FormattedMessage id="admin.tables.column.type.unknown" defaultMessage="Unknown" />
+                                        </span>
+                                    )}
+                                </p>
+                            </div>
+                            <Validation.components.ValidatedFormGroup for="permissions" className="mb0">
+                                <label htmlFor="permissions">
+                                    <FormattedMessage id="admin.tables.permissions" defaultMessage="Permissions" />
+                                </label>
+                                <Validation.components.ValidatedTextarea name="permissions" validators={[Validation.validators.required]} value={this.state.permissions} onChange={this.onPermissionsChange.bind(this)} />
+                            </Validation.components.ValidatedFormGroup>
                         </div>
-                        <Validation.components.ValidatedFormGroup for="permissions" className="mb0">
-                            <label htmlFor="permissions">
-                                <FormattedMessage id="admin.tables.permissions" defaultMessage="Permissions" />
-                            </label>
-                            <Validation.components.ValidatedTextarea name="permissions" validators={[Validation.validators.required]} value={this.state.permissions} onChange={this.onPermissionsChange.bind(this)} />
-                        </Validation.components.ValidatedFormGroup>
-                    </Panel>
-                </Validation.components.ValidatedForm>
+                        <div className="panel-footer">
+                            <Validation.components.ValidatedSubmit bsStyle="primary">
+                                <FormattedMessage id="admin.save" defaultMessage="Save" />
+                            </Validation.components.ValidatedSubmit>
+                        </div>
+                    </div>
+                </ValidatedContractForm>
             </div>
         );
     }

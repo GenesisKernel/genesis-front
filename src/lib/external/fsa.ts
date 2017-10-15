@@ -34,6 +34,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+/* tslint:disable */
 import { ActionsObservable } from 'redux-observable';
 import { Action, ActionCreator, isType } from 'typescript-fsa';
 import * as Redux from 'redux';

@@ -16,6 +16,7 @@
 
 import * as React from 'react';
 import { Form, FormProps } from 'react-bootstrap';
+import ValidatedSubmit from './ValidatedSubmit';
 import ValidatedFormGroup from './ValidatedFormGroup';
 import ValidatedControl from './ValidatedControl';
 import ValidatedCheckbox from './ValidatedCheckbox';
@@ -24,6 +25,7 @@ import ValidatedSelect from './ValidatedSelect';
 import { IValidator } from './Validators';
 
 export interface IValidatedFormProps extends FormProps {
+    pending?: boolean;
     onSubmitSuccess?: (payload: { [key: string]: string }) => void;
     onSubmitError?: (payload: { [key: string]: IValidationResult }) => void;
 }
@@ -111,6 +113,12 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
             const inputFor = node.props && node.props.for;
             const newProps = {
                 error: this.state.payload[inputFor] === false
+            };
+            return React.cloneElement(node, newProps, this._renderChildren(node.props && node.props.children));
+        }
+        else if (ValidatedSubmit === node.type) {
+            const newProps = {
+                disabled: !!(this.props.pending || node.props.pending)
             };
             return React.cloneElement(node, newProps, this._renderChildren(node.props && node.props.children));
         }

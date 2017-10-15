@@ -17,26 +17,16 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
-import { createMenu } from 'modules/admin/actions';
 
 import MenuEditor from './MenuEditor';
-
-export interface ICreateMenuProps {
-    pending: boolean;
-    session: string;
-    privateKey: string;
-    publicKey: string;
-    createMenuStatus: { block: string, error: string };
-    createMenu: typeof createMenu.started;
-}
 
 interface ICreateMenuState {
     template: string;
     conditions: string;
 }
 
-class CreateMenu extends React.Component<ICreateMenuProps, ICreateMenuState> {
-    constructor(props: ICreateMenuProps) {
+class CreateMenu extends React.Component<{}, ICreateMenuState> {
+    constructor(props: {}) {
         super(props);
         this.state = {
             template: '',
@@ -44,27 +34,22 @@ class CreateMenu extends React.Component<ICreateMenuProps, ICreateMenuState> {
         };
     }
 
-    componentWillReceiveProps(props: ICreateMenuProps) {
-        if (props.createMenuStatus && this.props.createMenuStatus !== props.createMenuStatus) {
-            // TODO: Notification stub
-            if (props.createMenuStatus.error) {
-                alert('Error:: ' + props.createMenuStatus.error);
-            }
-            else {
-                alert('Success:: ' + props.createMenuStatus.block);
-            }
-        }
+    mapContractParams(values: { [key: string]: any }) {
+        return {
+            Name: values.name,
+            Value: this.state.template,
+            Conditions: this.state.conditions
+        };
     }
 
-    onSubmit(values: { [key: string]: any }) {
-        this.props.createMenu({
-            session: this.props.session,
-            privateKey: this.props.privateKey,
-            publicKey: this.props.publicKey,
-            name: values.name,
-            template: this.state.template,
-            conditions: values.conditions
-        });
+    onExec(block: string, error: string) {
+        // TODO: Notification stub
+        if (block) {
+            alert('Success:: ' + block);
+        }
+        else if (error) {
+            alert('Error:: ' + error);
+        }
     }
 
     onSourceEdit(template: string) {
@@ -94,12 +79,14 @@ class CreateMenu extends React.Component<ICreateMenuProps, ICreateMenuState> {
                     </li>
                 </ol>
                 <MenuEditor
-                    pending={this.props.pending}
+                    contractName="NewMenu"
+                    mapContractParams={this.mapContractParams.bind(this)}
+
                     template={this.state.template}
                     conditions={this.state.conditions}
-                    onSubmit={this.onSubmit.bind(this)}
                     onSourceEdit={this.onSourceEdit.bind(this)}
                     onConditionsEdit={this.onConditionsEdit.bind(this)}
+                    onExec={this.onExec.bind(this)}
                 />
             </div>
         );

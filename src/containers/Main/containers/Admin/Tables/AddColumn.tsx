@@ -17,24 +17,19 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { addColumn } from 'modules/admin/actions';
 
-import AddColumn, { IAddColumnProps } from 'components/Main/Admin/Tables/AddColumn';
+import AddColumn from 'components/Main/Admin/Tables/AddColumn';
 
-const AddColumnContainer: React.SFC<IAddColumnProps & { match: { params: { tableName: string } } }> = (props) => (
-    <AddColumn {...props} table={props.match.params.tableName} />
+const AddColumnContainer: React.SFC<{ match: { params: { tableName: string } } }> = (props) => (
+    <AddColumn table={props.match.params.tableName} />
 );
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken,
-    privateKey: state.auth.privateKey,
-    publicKey: state.auth.account.publicKey,
-    addColumnStatus: state.admin.addColumnStatus,
-    pending: state.admin.pending
+
 });
 
 const mapDispatchToProps = {
-    addColumn: addColumn.started
+
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddColumnContainer);

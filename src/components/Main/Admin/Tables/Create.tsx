@@ -15,11 +15,11 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { Button, Panel } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
-import { createTable } from 'modules/admin/actions';
 
+import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Checkbox from 'components/Checkbox';
 import Validation from 'components/Validation';
 
@@ -66,15 +66,6 @@ export const columnTypes = [
     },
 ];
 
-export interface ICreateProps {
-    session: string;
-    privateKey: string;
-    publicKey: string;
-    pending: boolean;
-    createTableStatus: { block: string, error: string };
-    createTable: typeof createTable.started;
-}
-
 interface ICreateState {
     columns: {
         name: string;
@@ -83,8 +74,8 @@ interface ICreateState {
     }[];
 }
 
-class Create extends React.Component<ICreateProps, ICreateState> {
-    constructor(props: ICreateProps) {
+class Create extends React.Component<{}, ICreateState> {
+    constructor(props: {}) {
         super(props);
         this.state = {
             columns: [
@@ -93,36 +84,31 @@ class Create extends React.Component<ICreateProps, ICreateState> {
         };
     }
 
-    componentWillReceiveProps(props: ICreateProps) {
-        if (props.createTableStatus && this.props.createTableStatus !== props.createTableStatus) {
-            // TODO: Notification stub
-            if (props.createTableStatus.error) {
-                alert('Error:: ' + props.createTableStatus.error);
-            }
-            else {
-                alert('Success:: ' + props.createTableStatus.block);
-            }
-        }
-    }
-
-    onSubmit(values: { [key: string]: any }) {
-        this.props.createTable({
-            session: this.props.session,
-            privateKey: this.props.privateKey,
-            publicKey: this.props.publicKey,
-            name: values.name,
-            columns: JSON.stringify(this.state.columns.map(col => ({
+    mapContractParams(values: { [key: string]: any }) {
+        return {
+            Name: values.name,
+            Columns: JSON.stringify(this.state.columns.map(col => ({
                 name: col.name,
                 type: col.type,
                 index: Number(col.index).toString(),
                 conditions: 'true'
             }))),
-            permissions: JSON.stringify({
+            Permissions: JSON.stringify({
                 insert: 'true',
                 update: 'true',
                 new_column: 'true'
             })
-        });
+        };
+    }
+
+    onExec(block: string, error: string) {
+        // TODO: Notification stub
+        if (block) {
+            alert('Success:: ' + block);
+        }
+        else if (error) {
+            alert('Error:: ' + error);
+        }
     }
 
     onNewColumn() {
@@ -201,10 +187,102 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                         <FormattedMessage id="admin.tables.create" defaultMessage="Create" />
                     </li>
                 </ol>
-                <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit.bind(this)}>
-                    <Panel
-                        bsStyle="default"
-                        footer={
+                <ValidatedContractForm contractName="NewTable" mapContractParams={this.mapContractParams.bind(this)} onExec={this.onExec.bind(this)}>
+                    <div className="panel panel-default">
+                        <div className="panel-body">
+                            <Validation.components.ValidatedFormGroup for="name">
+                                <label htmlFor="name">
+                                    <FormattedMessage id="admin.tables.name" defaultMessage="Name" />
+                                </label>
+                                <Validation.components.ValidatedControl name="name" type="text" validators={[Validation.validators.required]} />
+                            </Validation.components.ValidatedFormGroup>
+                            <div className="form-group mb0">
+                                <div className="table-responsive">
+                                    <table className="table table-striped table-bordered table-hover preline">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <FormattedMessage id="admin.tables.column" defaultMessage="Column" />
+                                                </th>
+                                                <th>
+                                                    <FormattedMessage id="admin.tables.column.type" defaultMessage="Type" />
+                                                </th>
+                                                <th style={{ width: 1 }}>
+                                                    <FormattedMessage id="admin.tables.column.index" defaultMessage="Index" />
+                                                </th>
+                                                <th style={{ width: 1 }}>
+                                                    <FormattedMessage id="admin.tables.column.action" defaultMessage="Action" />
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <p className="form-control-static">id</p>
+                                                </td>
+                                                <td>
+                                                    <select className="form-control" disabled>
+                                                        <option>Number</option>
+                                                    </select>
+
+                                                </td>
+                                                <td>
+                                                    <Checkbox readOnly checked />
+                                                </td>
+                                                <td />
+                                            </tr>
+                                            {this.state.columns.map((col, index) => (
+                                                <tr key={index}>
+                                                    <td>
+                                                        <Validation.components.ValidatedFormGroup for={index + '_name'} className="m0">
+                                                            <Validation.components.ValidatedControl
+                                                                type="text"
+                                                                name={index + '_name'}
+                                                                value={this.resolveColumnValue(index, 'name')}
+                                                                validators={[Validation.validators.required]}
+                                                                onChange={(e: any) => this.onColumnUpdate(index, 'name', e.target.value)}
+                                                            />
+                                                        </Validation.components.ValidatedFormGroup>
+                                                    </td>
+                                                    <td>
+                                                        <Validation.components.ValidatedSelect
+                                                            name={index + '_type'}
+                                                            value={this.resolveColumnValue(index, 'type')}
+                                                            onChange={e => this.onColumnUpdate(index, 'type', e.target.value)}
+                                                        >
+                                                            {columnTypes.map(type => (
+                                                                <option key={type.name} value={type.name}>
+                                                                    {type.title}
+                                                                </option>
+                                                            ))}
+                                                        </Validation.components.ValidatedSelect>
+                                                    </td>
+                                                    <td>
+                                                        <Validation.components.ValidatedCheckbox
+                                                            name={index + '_index'}
+                                                            checked={this.isIndexDenied(index) ? false : (this.resolveColumnValue(index, 'index') || false)}
+                                                            disabled={this.isIndexDenied(index)}
+                                                            onChange={e => this.onColumnUpdate(index, 'index', e.target.checked || false)}
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <Button
+                                                            type="button"
+                                                            bsStyle="primary"
+                                                            onClick={this.onDropColumn.bind(this, index)}
+                                                            disabled={1 >= this.state.columns.length}
+                                                        >
+                                                            <span>(-)</span>
+                                                        </Button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="panel-footer">
                             <div className="clearfix">
                                 <div className="pull-left">
                                     <Button bsStyle="primary" onClick={this.onNewColumn.bind(this)}>
@@ -212,106 +290,14 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                                     </Button>
                                 </div>
                                 <div className="pull-right">
-                                    <Button bsStyle="primary" type="submit" disabled={this.props.pending}>
+                                    <Validation.components.ValidatedSubmit bsStyle="primary">
                                         <FormattedMessage id="admin.save" defaultMessage="Save" />
-                                    </Button>
+                                    </Validation.components.ValidatedSubmit>
                                 </div>
                             </div>
-                        }
-                    >
-                        <Validation.components.ValidatedFormGroup for="name">
-                            <label htmlFor="name">
-                                <FormattedMessage id="admin.tables.name" defaultMessage="Name" />
-                            </label>
-                            <Validation.components.ValidatedControl name="name" type="text" validators={[Validation.validators.required]} />
-                        </Validation.components.ValidatedFormGroup>
-                        <div className="form-group mb0">
-                            <div className="table-responsive">
-                                <table className="table table-striped table-bordered table-hover preline">
-                                    <thead>
-                                        <tr>
-                                            <th>
-                                                <FormattedMessage id="admin.tables.column" defaultMessage="Column" />
-                                            </th>
-                                            <th>
-                                                <FormattedMessage id="admin.tables.column.type" defaultMessage="Type" />
-                                            </th>
-                                            <th style={{ width: 1 }}>
-                                                <FormattedMessage id="admin.tables.column.index" defaultMessage="Index" />
-                                            </th>
-                                            <th style={{ width: 1 }}>
-                                                <FormattedMessage id="admin.tables.column.action" defaultMessage="Action" />
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <p className="form-control-static">id</p>
-                                            </td>
-                                            <td>
-                                                <select className="form-control" disabled>
-                                                    <option>Number</option>
-                                                </select>
-
-                                            </td>
-                                            <td>
-                                                <Checkbox readOnly checked />
-                                            </td>
-                                            <td />
-                                        </tr>
-                                        {this.state.columns.map((col, index) => (
-                                            <tr key={index}>
-                                                <td>
-                                                    <Validation.components.ValidatedFormGroup for={index + '_name'} className="m0">
-                                                        <Validation.components.ValidatedControl
-                                                            type="text"
-                                                            name={index + '_name'}
-                                                            value={this.resolveColumnValue(index, 'name')}
-                                                            validators={[Validation.validators.required]}
-                                                            onChange={(e: any) => this.onColumnUpdate(index, 'name', e.target.value)}
-                                                        />
-                                                    </Validation.components.ValidatedFormGroup>
-                                                </td>
-                                                <td>
-                                                    <Validation.components.ValidatedSelect
-                                                        name={index + '_type'}
-                                                        value={this.resolveColumnValue(index, 'type')}
-                                                        onChange={e => this.onColumnUpdate(index, 'type', e.target.value)}
-                                                    >
-                                                        {columnTypes.map(type => (
-                                                            <option key={type.name} value={type.name}>
-                                                                {type.title}
-                                                            </option>
-                                                        ))}
-                                                    </Validation.components.ValidatedSelect>
-                                                </td>
-                                                <td>
-                                                    <Validation.components.ValidatedCheckbox
-                                                        name={index + '_index'}
-                                                        checked={this.isIndexDenied(index) ? false : (this.resolveColumnValue(index, 'index') || false)}
-                                                        disabled={this.isIndexDenied(index)}
-                                                        onChange={e => this.onColumnUpdate(index, 'index', e.target.checked || false)}
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <Button
-                                                        type="button"
-                                                        bsStyle="primary"
-                                                        onClick={this.onDropColumn.bind(this, index)}
-                                                        disabled={1 >= this.state.columns.length}
-                                                    >
-                                                        (-)
-                                                    </Button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
-                    </Panel>
-                </Validation.components.ValidatedForm>
+                    </div>
+                </ValidatedContractForm>
             </div >
         );
     }

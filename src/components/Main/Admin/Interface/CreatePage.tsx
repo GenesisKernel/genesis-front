@@ -17,18 +17,11 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
-import { createPage } from 'modules/admin/actions';
 
 import PageEditor from './PageEditor';
 
 export interface ICreatePageProps {
-    pending: boolean;
-    session: string;
-    privateKey: string;
-    publicKey: string;
     menus: { id: string, name: string, conditions: string, value: string }[];
-    createPageStatus: { block: string, error: string };
-    createPage: typeof createPage.started;
 }
 
 interface ICreatePageState {
@@ -47,16 +40,6 @@ class CreatePage extends React.Component<ICreatePageProps, ICreatePageState> {
     }
 
     componentWillReceiveProps(props: ICreatePageProps) {
-        if (props.createPageStatus && this.props.createPageStatus !== props.createPageStatus) {
-            // TODO: Notification stub
-            if (props.createPageStatus.error) {
-                alert('Error:: ' + props.createPageStatus.error);
-            }
-            else {
-                alert('Success:: ' + props.createPageStatus.block);
-            }
-        }
-
         if (props.menus && !this.state.menu) {
             this.setState({
                 menu: props.menus[0]
@@ -64,16 +47,23 @@ class CreatePage extends React.Component<ICreatePageProps, ICreatePageState> {
         }
     }
 
-    onSubmit(values: { [key: string]: any }) {
-        this.props.createPage({
-            session: this.props.session,
-            privateKey: this.props.privateKey,
-            publicKey: this.props.publicKey,
-            name: values.name,
-            template: this.state.template,
-            menu: values.menu,
-            conditions: values.conditions
-        });
+    mapContractParams(values: { [key: string]: any }) {
+        return {
+            Name: values.name,
+            Value: this.state.template,
+            Menu: this.state.menu.name,
+            Conditions: this.state.conditions
+        };
+    }
+
+    onExec(block: string, error: string) {
+        // TODO: Notification stub
+        if (block) {
+            alert('Success:: ' + block);
+        }
+        else if (error) {
+            alert('Error:: ' + error);
+        }
     }
 
     onSourceEdit(template: string) {
@@ -110,15 +100,17 @@ class CreatePage extends React.Component<ICreatePageProps, ICreatePageState> {
                     </li>
                 </ol>
                 <PageEditor
-                    pending={this.props.pending}
+                    contractName="NewPage"
+                    mapContractParams={this.mapContractParams.bind(this)}
+
                     template={this.state.template}
                     conditions={this.state.conditions}
                     menu={this.state.menu}
                     menus={this.props.menus || []}
-                    onSubmit={this.onSubmit.bind(this)}
                     onConditionsEdit={this.onConditionsEdit.bind(this)}
                     onSourceEdit={this.onSourceEdit.bind(this)}
                     onMenuSelect={this.onMenuSelect.bind(this)}
+                    onExec={this.onExec.bind(this)}
                 />
             </div>
         );

@@ -17,14 +17,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { activateContract, getContract, editContract } from 'modules/admin/actions';
+import { getContract } from 'modules/admin/actions';
 
 import Edit, { IEditProps } from 'components/Main/Admin/Contracts/Edit';
 
 class EditContainer extends React.Component<IEditProps & { match: { params: { contractID: string } } }> {
     componentWillMount() {
         this.props.getContract({
-            session: this.props.session,
             id: this.props.match.params.contractID
         });
     }
@@ -37,18 +36,10 @@ class EditContainer extends React.Component<IEditProps & { match: { params: { co
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken,
-    pending: state.admin.pending,
-    contract: state.admin.contract,
-    activateContractStatus: state.admin.activateContractStatus,
-    editContractStatus: state.admin.editContractStatus,
-    privateKey: state.auth.privateKey,
-    publicKey: state.auth.account.publicKey
+    contract: state.admin.contract
 });
 
 const mapDispatchToProps = {
-    activateContract: activateContract.started,
-    editContract: editContract.started,
     getContract: getContract.started
 };
 

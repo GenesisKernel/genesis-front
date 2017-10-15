@@ -17,26 +17,16 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
-import { createBlock } from 'modules/admin/actions';
 
 import BlockEditor from './BlockEditor';
-
-export interface ICreateBlockProps {
-    pending: boolean;
-    session: string;
-    privateKey: string;
-    publicKey: string;
-    createBlockStatus: { block: string, error: string };
-    createBlock: typeof createBlock.started;
-}
 
 interface ICreateBlockState {
     template: string;
     conditions: string;
 }
 
-class CreateBlock extends React.Component<ICreateBlockProps, ICreateBlockState> {
-    constructor(props: ICreateBlockProps) {
+class CreateBlock extends React.Component<{}, ICreateBlockState> {
+    constructor(props: {}) {
         super(props);
         this.state = {
             template: '',
@@ -44,27 +34,22 @@ class CreateBlock extends React.Component<ICreateBlockProps, ICreateBlockState> 
         };
     }
 
-    componentWillReceiveProps(props: ICreateBlockProps) {
-        if (props.createBlockStatus && this.props.createBlockStatus !== props.createBlockStatus) {
-            // TODO: Notification stub
-            if (props.createBlockStatus.error) {
-                alert('Error:: ' + props.createBlockStatus.error);
-            }
-            else {
-                alert('Success:: ' + props.createBlockStatus.block);
-            }
-        }
+    mapContractParams(values: { [key: string]: any }) {
+        return {
+            Name: values.name,
+            Value: this.state.template,
+            Conditions: this.state.conditions
+        };
     }
 
-    onSubmit(values: { [key: string]: any }) {
-        this.props.createBlock({
-            session: this.props.session,
-            privateKey: this.props.privateKey,
-            publicKey: this.props.publicKey,
-            name: values.name,
-            template: this.state.template,
-            conditions: values.conditions
-        });
+    onExec(block: string, error: string) {
+        // TODO: Notification stub
+        if (block) {
+            alert('Success:: ' + block);
+        }
+        else if (error) {
+            alert('Error:: ' + error);
+        }
     }
 
     onSourceEdit(template: string) {
@@ -94,12 +79,14 @@ class CreateBlock extends React.Component<ICreateBlockProps, ICreateBlockState> 
                     </li>
                 </ol>
                 <BlockEditor
-                    pending={this.props.pending}
+                    contractName="NewBlock"
+                    mapContractParams={this.mapContractParams.bind(this)}
+
                     template={this.state.template}
                     conditions={this.state.conditions}
-                    onSubmit={this.onSubmit.bind(this)}
                     onSourceEdit={this.onSourceEdit.bind(this)}
                     onConditionsEdit={this.onConditionsEdit.bind(this)}
+                    onExec={this.onExec.bind(this)}
                 />
             </div>
         );

@@ -23,14 +23,13 @@ import { ITablesResponse } from 'lib/api';
 import Tables from 'components/Main/Admin/Tables';
 
 interface ITablesContainerProps {
-    session: string;
     tables: ITablesResponse;
     getTables: typeof getTables.started;
 }
 
 class TablesContainer extends React.Component<ITablesContainerProps & { match?: { params: { tableName: string } } }> {
     componentWillMount() {
-        this.props.getTables({ session: this.props.session });
+        this.props.getTables({});
     }
 
     render() {
@@ -41,7 +40,6 @@ class TablesContainer extends React.Component<ITablesContainerProps & { match?: 
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken,
     tables: state.admin.tables
 });
 

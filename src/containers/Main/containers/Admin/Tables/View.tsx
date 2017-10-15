@@ -31,7 +31,7 @@ interface IViewContainerProps {
 
 class ViewContainer extends React.Component<IViewContainerProps & { match?: { params: { tableName: string } } }> {
     componentWillMount() {
-        this.props.getTable({ session: this.props.session, table: this.props.match.params.tableName });
+        this.props.getTable({ table: this.props.match.params.tableName });
     }
 
     render() {

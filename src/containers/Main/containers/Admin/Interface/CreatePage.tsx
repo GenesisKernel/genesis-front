@@ -17,13 +17,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { createPage, getMenus } from 'modules/admin/actions';
+import { getMenus } from 'modules/admin/actions';
 
 import CreatePage, { ICreatePageProps } from 'components/Main/Admin/Interface/CreatePage';
 
 class CreatePageContainer extends React.Component<ICreatePageProps & { getMenus: typeof getMenus.started }> {
     componentWillMount() {
-        this.props.getMenus({ session: this.props.session });
+        this.props.getMenus(null);
     }
 
     render() {
@@ -34,16 +34,10 @@ class CreatePageContainer extends React.Component<ICreatePageProps & { getMenus:
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken,
-    pending: state.admin.pending,
-    menus: state.admin.menus,
-    createPageStatus: state.admin.createPageStatus,
-    privateKey: state.auth.privateKey,
-    publicKey: state.auth.account.publicKey
+    menus: state.admin.menus
 });
 
 const mapDispatchToProps = {
-    createPage: createPage.started,
     getMenus: getMenus.started
 };
 

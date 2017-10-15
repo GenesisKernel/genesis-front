@@ -17,15 +17,14 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { editColumn, getTableStruct } from 'modules/admin/actions';
+import { getTableStruct } from 'modules/admin/actions';
 
 import EditColumn, { IEditColumnProps } from 'components/Main/Admin/Tables/EditColumn';
 
 class EditColumnContainer extends React.Component<IEditColumnProps & { getTableStruct: typeof getTableStruct.started, match: { params: { tableName: string, columnName: string } } }> {
     componentWillMount() {
         this.props.getTableStruct({
-            session: this.props.session,
-            table: this.props.match.params.tableName
+            name: this.props.match.params.tableName
         });
     }
 
@@ -46,17 +45,11 @@ class EditColumnContainer extends React.Component<IEditColumnProps & { getTableS
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken,
-    privateKey: state.auth.privateKey,
-    publicKey: state.auth.account.publicKey,
-    pending: state.admin.pending,
-    table: state.admin.table,
-    editColumnStatus: state.admin.editColumnStatus
+    table: state.admin.table
 });
 
 const mapDispatchToProps = {
-    getTableStruct: getTableStruct.started,
-    editColumn: editColumn.started
+    getTableStruct: getTableStruct.started
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditColumnContainer);

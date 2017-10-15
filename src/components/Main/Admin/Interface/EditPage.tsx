@@ -17,19 +17,12 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
-import { editPage } from 'modules/admin/actions';
 
 import PageEditor from './PageEditor';
 
 export interface IEditPageProps {
-    pending: boolean;
-    session: string;
-    privateKey: string;
-    publicKey: string;
     page: { id: string, name: string, menu: string, conditions: string, value: string };
     menus: { id: string, name: string, conditions: string, value: string }[];
-    editPageStatus: { block: string, error: string };
-    editPage: typeof editPage.started;
 }
 
 interface IEditPageState {
@@ -49,16 +42,6 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
     }
 
     componentWillReceiveProps(props: IEditPageProps) {
-        if (props.editPageStatus && this.props.editPageStatus !== props.editPageStatus) {
-            // TODO: Notification stub
-            if (props.editPageStatus.error) {
-                alert('Error:: ' + props.editPageStatus.error);
-            }
-            else {
-                alert('Success:: ' + props.editPageStatus.block);
-            }
-        }
-
         if (props.page && this.props.page !== props.page) {
             this.setState({
                 template: props.page.value,
@@ -68,16 +51,23 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
         }
     }
 
-    onSubmit(values: { [key: string]: any }) {
-        this.props.editPage({
-            session: this.props.session,
-            privateKey: this.props.privateKey,
-            publicKey: this.props.publicKey,
-            id: this.props.page.id,
-            template: this.state.template,
-            menu: this.state.menu.name,
-            conditions: this.state.conditions
-        });
+    mapContractParams(values: { [key: string]: any }) {
+        return {
+            Id: this.props.page.id,
+            Value: this.state.template,
+            Menu: this.state.menu.name,
+            Conditions: this.state.conditions
+        };
+    }
+
+    onExec(block: string, error: string) {
+        // TODO: Notification stub
+        if (block) {
+            alert('Success:: ' + block);
+        }
+        else if (error) {
+            alert('Error:: ' + error);
+        }
     }
 
     onSourceEdit(template: string) {
@@ -114,13 +104,15 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
                     </li>
                 </ol>
                 <PageEditor
-                    pending={this.props.pending}
+                    contractName="EditPage"
+                    mapContractParams={this.mapContractParams.bind(this)}
+                    onExec={this.onExec.bind(this)}
+
                     template={this.state.template}
                     conditions={this.state.conditions}
                     page={this.props.page}
                     menu={this.state.menu}
                     menus={this.props.menus || []}
-                    onSubmit={this.onSubmit.bind(this)}
                     onConditionsEdit={this.onConditionsEdit.bind(this)}
                     onSourceEdit={this.onSourceEdit.bind(this)}
                     onMenuSelect={this.onMenuSelect.bind(this)}

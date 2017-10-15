@@ -17,18 +17,11 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
-import { editMenu } from 'modules/admin/actions';
 
 import MenuEditor from './MenuEditor';
 
 export interface IEditMenuProps {
-    pending: boolean;
-    session: string;
-    privateKey: string;
-    publicKey: string;
     menu: { id: string, name: string, conditions: string, value: string };
-    editMenuStatus: { block: string, error: string };
-    editMenu: typeof editMenu.started;
 }
 
 interface IEditMenuState {
@@ -46,16 +39,6 @@ class EditMenu extends React.Component<IEditMenuProps, IEditMenuState> {
     }
 
     componentWillReceiveProps(props: IEditMenuProps) {
-        if (props.editMenuStatus && this.props.editMenuStatus !== props.editMenuStatus) {
-            // TODO: Notification stub
-            if (props.editMenuStatus.error) {
-                alert('Error:: ' + props.editMenuStatus.error);
-            }
-            else {
-                alert('Success:: ' + props.editMenuStatus.block);
-            }
-        }
-
         if (props.menu && this.props.menu !== props.menu) {
             this.setState({
                 template: props.menu.value,
@@ -64,15 +47,22 @@ class EditMenu extends React.Component<IEditMenuProps, IEditMenuState> {
         }
     }
 
-    onSubmit(values: { [key: string]: any }) {
-        this.props.editMenu({
-            session: this.props.session,
-            privateKey: this.props.privateKey,
-            publicKey: this.props.publicKey,
-            id: this.props.menu.id,
-            template: this.state.template,
-            conditions: values.conditions
-        });
+    mapContractParams(values: { [key: string]: any }) {
+        return {
+            Id: this.props.menu.id,
+            Value: this.state.template,
+            Conditions: this.state.conditions
+        };
+    }
+
+    onExec(block: string, error: string) {
+        // TODO: Notification stub
+        if (block) {
+            alert('Success:: ' + block);
+        }
+        else if (error) {
+            alert('Error:: ' + error);
+        }
     }
 
     onSourceEdit(template: string) {
@@ -102,13 +92,15 @@ class EditMenu extends React.Component<IEditMenuProps, IEditMenuState> {
                     </li>
                 </ol>
                 <MenuEditor
-                    pending={this.props.pending}
+                    contractName="EditMenu"
+                    mapContractParams={this.mapContractParams.bind(this)}
+
                     template={this.state.template}
                     conditions={this.state.conditions}
                     menu={this.props.menu}
-                    onSubmit={this.onSubmit.bind(this)}
                     onSourceEdit={this.onSourceEdit.bind(this)}
                     onConditionsEdit={this.onConditionsEdit.bind(this)}
+                    onExec={this.onExec.bind(this)}
                 />
             </div>
         );

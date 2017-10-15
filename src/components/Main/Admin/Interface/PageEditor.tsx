@@ -20,84 +20,88 @@ import { Button, Col, FormGroup, Panel, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import MonacoEditor from 'react-monaco-editor';
 
+import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 
 interface IPageEditorProps {
-    pending: boolean;
+    contractName: string;
     template: string;
     conditions: string;
     page?: { id: string, name: string, conditions: string, value: string };
     menu: { id: string, name: string, conditions: string, value: string };
     menus: { id: string, name: string, conditions: string, value: string }[];
-    onSubmit: (values: { [key: string]: any }) => void;
     onSourceEdit: (code: string) => void;
     onConditionsEdit: React.ChangeEventHandler<HTMLTextAreaElement>;
     onMenuSelect: React.ChangeEventHandler<HTMLSelectElement>;
+    onExec?: (block: string, error: string) => void;
+    mapContractParams: (values: { [key: string]: any }) => { values: { [key: string]: any } };
 }
 
 const PageEditor: React.SFC<IPageEditorProps> = (props) => (
     <Row>
         <Col md={8}>
-            <Validation.components.ValidatedForm onSubmitSuccess={props.onSubmit}>
-                <Panel
-                    bsStyle="primary"
-                    header={<FormattedMessage id="admin.interface.page" defaultMessage="Page" />}
-                    footer={(
+            <ValidatedContractForm contractName={props.contractName} mapContractParams={props.mapContractParams} onExec={props.onExec && props.onExec}>
+                <div className="panel panel-primary">
+                    <div className="panel-heading">
+                        <FormattedMessage id="admin.interface.page" defaultMessage="Page" />
+                    </div>
+                    <div className="panel-body">
+                        <Validation.components.ValidatedFormGroup for="name">
+                            <label htmlFor="name">
+                                <FormattedMessage id="admin.interface.page.name" defaultMessage="Name" />
+                            </label>
+                            {props.page ?
+                                (
+                                    <Validation.components.ValidatedControl key="nameEdit" name="name" readOnly value={props.page.name} />
+                                ) : (
+                                    <Validation.components.ValidatedControl key="nameCreate" name="name" validators={[Validation.validators.required]} />
+                                )
+                            }
+                        </Validation.components.ValidatedFormGroup>
+                        <Validation.components.ValidatedFormGroup for="content">
+                            <label htmlFor="content">
+                                <FormattedMessage id="admin.interface.page.content" defaultMessage="Content" />
+                            </label>
+                            <div className="form-control" style={{ height: 'auto', padding: 0 }}>
+                                <MonacoEditor
+                                    height={400}
+                                    language="protypo"
+                                    value={props.template}
+                                    onChange={props.onSourceEdit}
+                                    options={{
+                                        automaticLayout: true,
+                                        contextmenu: false,
+                                        scrollBeyondLastLine: false
+                                    }}
+                                />
+                            </div>
+                        </Validation.components.ValidatedFormGroup>
+                        <Validation.components.ValidatedFormGroup for="menu">
+                            <label htmlFor="menu">
+                                <FormattedMessage id="admin.interface.menu" defaultMessage="Menu" />
+                            </label>
+                            <Validation.components.ValidatedSelect name="menu" validators={[Validation.validators.required]} onChange={props.onMenuSelect} value={props.menu ? props.menu.name : ''}>
+                                {props.menus.map(menu => (
+                                    <option key={menu.id} value={menu.name}>{menu.name}</option>
+                                ))}
+                            </Validation.components.ValidatedSelect>
+                        </Validation.components.ValidatedFormGroup>
+                        <Validation.components.ValidatedFormGroup for="conditions" className="mb0">
+                            <label htmlFor="conditions">
+                                <FormattedMessage id="admin.conditions.change" defaultMessage="Change conditions" />
+                            </label>
+                            <Validation.components.ValidatedTextarea name="conditions" onChange={props.onConditionsEdit} value={props.conditions} validators={[Validation.validators.required]} />
+                        </Validation.components.ValidatedFormGroup>
+                    </div>
+                    <div className="panel-footer">
                         <div className="text-right">
-                            <Button bsStyle="primary" type="submit" disabled={props.pending}>
+                            <Validation.components.ValidatedSubmit bsStyle="primary">
                                 <FormattedMessage id="admin.save" defaultMessage="Save" />
-                            </Button>
+                            </Validation.components.ValidatedSubmit>
                         </div>
-                    )}
-                >
-                    <Validation.components.ValidatedFormGroup for="name">
-                        <label htmlFor="name">
-                            <FormattedMessage id="admin.interface.page.name" defaultMessage="Name" />
-                        </label>
-                        {props.page ?
-                            (
-                                <Validation.components.ValidatedControl key="nameEdit" name="name" readOnly value={props.page.name} />
-                            ) : (
-                                <Validation.components.ValidatedControl key="nameCreate" name="name" validators={[Validation.validators.required]} />
-                            )
-                        }
-                    </Validation.components.ValidatedFormGroup>
-                    <Validation.components.ValidatedFormGroup for="content">
-                        <label htmlFor="content">
-                            <FormattedMessage id="admin.interface.page.content" defaultMessage="Content" />
-                        </label>
-                        <div className="form-control" style={{ height: 'auto', padding: 0 }}>
-                            <MonacoEditor
-                                height={400}
-                                language="protypo"
-                                value={props.template}
-                                onChange={props.onSourceEdit}
-                                options={{
-                                    automaticLayout: true,
-                                    contextmenu: false,
-                                    scrollBeyondLastLine: false
-                                }}
-                            />
-                        </div>
-                    </Validation.components.ValidatedFormGroup>
-                    <Validation.components.ValidatedFormGroup for="menu">
-                        <label htmlFor="menu">
-                            <FormattedMessage id="admin.interface.menu" defaultMessage="Menu" />
-                        </label>
-                        <Validation.components.ValidatedSelect name="menu" validators={[Validation.validators.required]} onChange={props.onMenuSelect} value={props.menu ? props.menu.name : ''}>
-                            {props.menus.map(menu => (
-                                <option key={menu.id} value={menu.name}>{menu.name}</option>
-                            ))}
-                        </Validation.components.ValidatedSelect>
-                    </Validation.components.ValidatedFormGroup>
-                    <Validation.components.ValidatedFormGroup for="conditions" className="mb0">
-                        <label htmlFor="conditions">
-                            <FormattedMessage id="admin.conditions.change" defaultMessage="Change conditions" />
-                        </label>
-                        <Validation.components.ValidatedTextarea name="conditions" onChange={props.onConditionsEdit} value={props.conditions} validators={[Validation.validators.required]} />
-                    </Validation.components.ValidatedFormGroup>
-                </Panel>
-            </Validation.components.ValidatedForm>
+                    </div>
+                </div>
+            </ValidatedContractForm>
         </Col>
         <Col md={4}>
             <Panel

@@ -20,33 +20,21 @@ import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IP
 const actionCreator = actionCreatorFactory('admin');
 
 // Contracts
-export const activateContract = actionCreator.async<{ session: string, privateKey: string, publicKey: string, id: string }, string, string>('ACTIVATE_CONTRACT');
-export const getContract = actionCreator.async<{ session: string, id: string }, { id: string, active: string, name: string, conditions: string, address: string, value: string }, string>('GET_CONTRACT');
-export const getContracts = actionCreator.async<{ session: string, offset?: number, limit?: number }, IContractsResponse, string>('GET_CONTRACTS');
-export const createContract = actionCreator.async<{ session: string, privateKey: string, publicKey: string, code: string, wallet: string, conditions: string }, string, string>('CREATE_CONTRACT');
-export const editContract = actionCreator.async<{ session: string, privateKey: string, publicKey: string, id: string, code: string, conditions: string }, string, string>('EDIT_CONTRACT');
+export const getContract = actionCreator.async<{ id: string }, { id: string, active: string, name: string, conditions: string, address: string, value: string }, string>('GET_CONTRACT');
+export const getContracts = actionCreator.async<{ offset?: number, limit?: number }, IContractsResponse, string>('GET_CONTRACTS');
 
 // Tables
-export const getTable = actionCreator.async<{ session: string, table: string }, { table: ITableResponse, data: IListResponse }, string>('GET_TABLE');
-export const getTableStruct = actionCreator.async<{ session: string, table: string }, ITableResponse, string>('GET_TABLE_STRUCT');
-export const getTables = actionCreator.async<{ session: string, offset?: number, limit?: number }, ITablesResponse, string>('GET_TABLES');
-export const createTable = actionCreator.async<{ session: string, privateKey: string, publicKey: string, name: string, columns: string, permissions: string }, string, string>('CREATE_TABLE');
-export const addColumn = actionCreator.async<{ session: string, privateKey: string, publicKey: string, table: string, name: string, type: string, permissions: string, index: boolean }, string, string>('ADD_COLUMN');
-export const editColumn = actionCreator.async<{ session: string, privateKey: string, publicKey: string, table: string, name: string, permissions: string }, string, string>('EDIT_COLUMN');
+export const getTable = actionCreator.async<{ table: string }, { table: ITableResponse, data: IListResponse }, string>('GET_TABLE');
+export const getTableStruct = actionCreator.async<{ name: string }, ITableResponse, string>('GET_TABLE_STRUCT');
+export const getTables = actionCreator.async<{ offset?: number, limit?: number }, ITablesResponse, string>('GET_TABLES');
 
 // Pages
-export const getPage = actionCreator.async<{ session: string, id: string }, IPageResponse, string>('GET_PAGE');
-export const getInterface = actionCreator.async<{ session: string }, IInterfacesResponse, string>('GET_PAGES');
-export const createPage = actionCreator.async<{ session: string, privateKey: string, publicKey: string, name: string, template: string, conditions: string, menu: string }, string, string>('CREATE_PAGE');
-export const editPage = actionCreator.async<{ session: string, privateKey: string, publicKey: string, id: string, template: string, conditions: string, menu: string }, string, string>('EDIT_PAGE');
+export const getPage = actionCreator.async<{ id: string }, IPageResponse, string>('GET_PAGE');
+export const getInterface = actionCreator.async<undefined, IInterfacesResponse, string>('GET_INTERFACE');
 
 // Menus
-export const getMenu = actionCreator.async<{ session: string, id: string }, { id: string, name: string, value: string, conditions: string }, string>('GET_MENU');
-export const getMenus = actionCreator.async<{ session: string }, { id: string, name: string, conditions: string, value: string }[], string>('GET_MENUS');
-export const createMenu = actionCreator.async<{ session: string, privateKey: string, publicKey: string, name: string, template: string, conditions: string }, string, string>('CREATE_MENU');
-export const editMenu = actionCreator.async<{ session: string, privateKey: string, publicKey: string, id: string, template: string, conditions: string }, string, string>('EDIT_MENU');
+export const getMenu = actionCreator.async<{ id: string }, { id: string, name: string, value: string, conditions: string }, string>('GET_MENU');
+export const getMenus = actionCreator.async<undefined, { id: string, name: string, conditions: string, value: string }[], string>('GET_MENUS');
 
 // Blocks
-export const getBlock = actionCreator.async<{ session: string, id: string }, { id: string, name: string, value: string, conditions: string }, string>('GET_BLOCK');
-export const createBlock = actionCreator.async<{ session: string, privateKey: string, publicKey: string, name: string, template: string, conditions: string }, string, string>('CREATE_BLOCK');
-export const editBlock = actionCreator.async<{ session: string, privateKey: string, publicKey: string, id: string, template: string, conditions: string }, string, string>('EDIT_BLOCK');
+export const getBlock = actionCreator.async<{ id: string }, { id: string, name: string, value: string, conditions: string }, string>('GET_BLOCK');

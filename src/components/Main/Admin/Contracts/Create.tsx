@@ -18,18 +18,8 @@ import * as React from 'react';
 import { FormControlProps } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
-import { createContract } from 'modules/admin/actions';
 
 import ContractEditor from './ContractEditor';
-
-export interface ICreateProps {
-    pending: boolean;
-    session: string;
-    privateKey: string;
-    publicKey: string;
-    createContractStatus: { block: string, error: string };
-    createContract: typeof createContract.started;
-}
 
 interface ICreateState {
     code: string;
@@ -52,8 +42,8 @@ const contractTemplate =
     }
 }`;
 
-class Create extends React.Component<ICreateProps, ICreateState> {
-    constructor(props: ICreateProps) {
+class Create extends React.Component<{}, ICreateState> {
+    constructor(props: {}) {
         super(props);
         this.state = {
             code: contractTemplate,
@@ -62,27 +52,22 @@ class Create extends React.Component<ICreateProps, ICreateState> {
         };
     }
 
-    componentWillReceiveProps(props: ICreateProps) {
-        if (props.createContractStatus && this.props.createContractStatus !== props.createContractStatus) {
-            // TODO: Notification stub
-            if (props.createContractStatus.error) {
-                alert('Error:: ' + props.createContractStatus.error);
-            }
-            else {
-                alert('Success:: ' + props.createContractStatus.block);
-            }
-        }
+    mapContractParams(values: { [key: string]: any }) {
+        return {
+            Wallet: this.state.wallet,
+            Value: this.state.code,
+            Conditions: this.state.conditions
+        };
     }
 
-    onSubmit(values: { [key: string]: any }) {
-        this.props.createContract({
-            session: this.props.session,
-            privateKey: this.props.privateKey,
-            publicKey: this.props.publicKey,
-            code: this.state.code,
-            wallet: this.state.wallet,
-            conditions: this.state.conditions
-        });
+    onExec(block: string, error: string) {
+        // TODO: Notification stub
+        if (block) {
+            alert('Success:: ' + block);
+        }
+        else if (error) {
+            alert('Error:: ' + error);
+        }
     }
 
     onSourceEdit(code: string) {
@@ -118,14 +103,16 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                     </li>
                 </ol>
                 <ContractEditor
-                    pending={this.props.pending}
+                    contractName="NewContract"
+                    mapContractParams={this.mapContractParams.bind(this)}
+
                     code={this.state.code}
                     wallet={this.state.wallet}
                     conditions={this.state.conditions}
-                    onSubmit={this.onSubmit.bind(this)}
                     onSourceEdit={this.onSourceEdit.bind(this)}
                     onWalletEdit={this.onWalletEdit.bind(this)}
                     onConditionsEdit={this.onConditionsEdit.bind(this)}
+                    onExec={this.onExec.bind(this)}
                 />
             </div>
         );

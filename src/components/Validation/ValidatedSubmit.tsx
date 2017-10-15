@@ -15,26 +15,28 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { IRootState } from 'modules';
-import { createContract } from 'modules/admin/actions';
+import { Button, ButtonProps } from 'react-bootstrap';
 
-import Create, { ICreateProps } from 'components/Main/Admin/Contracts/Create';
+interface IValidatedSubmitProps extends ButtonProps {
+    className?: string;
+    disabled?: boolean;
+}
 
-const CreateContainer: React.SFC<ICreateProps> = (props) => (
-    <Create {...props} />
+const ValidatedSubmit: React.SFC<IValidatedSubmitProps> = (props) => (
+    <Button
+        type="submit"
+        onClick={props.onClick && props.onClick}
+        className={props.className}
+        bsClass={props.bsClass}
+        active={props.active}
+        block={props.block}
+        bsStyle={props.bsStyle}
+        bsSize={props.bsSize}
+        componentClass={props.componentClass}
+        disabled={props.disabled}
+    >
+        {props.children}
+    </Button>
 );
 
-const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken,
-    pending: state.admin.pending,
-    createContractStatus: state.admin.createContractStatus,
-    privateKey: state.auth.privateKey,
-    publicKey: state.auth.account.publicKey
-});
-
-const mapDispatchToProps = {
-    createContract: createContract.started
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CreateContainer);
+export default ValidatedSubmit;

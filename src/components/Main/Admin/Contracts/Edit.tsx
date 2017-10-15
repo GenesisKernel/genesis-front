@@ -18,15 +18,11 @@ import * as React from 'react';
 import { FormControlProps } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
-import { activateContract, getContract, editContract } from 'modules/admin/actions';
+import { getContract } from 'modules/admin/actions';
 
 import ContractEditor from './ContractEditor';
 
 export interface IEditProps {
-    pending: boolean;
-    session: string;
-    privateKey: string;
-    publicKey: string;
     contract: {
         id: string;
         active: string;
@@ -35,11 +31,7 @@ export interface IEditProps {
         address: string;
         value: string;
     };
-    editContractStatus: { block: string, error: string };
-    activateContractStatus: { block: string, error: string };
     getContract: typeof getContract.started;
-    editContract: typeof editContract.started;
-    activateContract: typeof activateContract.started;
 }
 
 interface IEditState {
@@ -64,27 +56,6 @@ class Edit extends React.Component<IEditProps, IEditState> {
     }
 
     componentWillReceiveProps(props: IEditProps) {
-        if (props.editContractStatus && this.props.editContractStatus !== props.editContractStatus) {
-            // TODO: Notification stub
-            if (props.editContractStatus.error) {
-                alert('Error:: ' + props.editContractStatus.error);
-            }
-            else {
-                alert('Success:: ' + props.editContractStatus.block);
-            }
-        }
-
-        if (props.activateContractStatus && this.props.activateContractStatus !== props.activateContractStatus) {
-            // TODO: Notification stub
-            if (props.activateContractStatus.error) {
-                alert('Error:: ' + props.activateContractStatus.error);
-            }
-            else {
-                alert('Success:: ' + props.activateContractStatus.block);
-                props.getContract({ session: props.session, id: props.contract.id });
-            }
-        }
-
         if (props.contract && this.props.contract !== props.contract) {
             this.setState({
                 code: props.contract.value,
@@ -94,15 +65,33 @@ class Edit extends React.Component<IEditProps, IEditState> {
         }
     }
 
-    onSubmit(values: { [key: string]: any }) {
-        this.props.editContract({
-            session: this.props.session,
-            privateKey: this.props.privateKey,
-            publicKey: this.props.publicKey,
-            id: this.props.contract.id,
-            code: this.state.code,
-            conditions: this.state.conditions
-        });
+    mapContractParams(values: { [key: string]: any }) {
+        return {
+            Id: this.props.contract.id,
+            Value: this.state.code,
+            Conditions: this.state.conditions
+        };
+    }
+
+    onExec(block: string, error: string) {
+        // TODO: Notification stub
+        if (block) {
+            alert('Success:: ' + block);
+        }
+        else if (error) {
+            alert('Error:: ' + error);
+        }
+    }
+
+    onContractActivation(block: string, error: string) {
+        // TODO: Notification stub
+        if (block) {
+            this.props.getContract({ id: this.props.contract.id });
+            alert('Success:: ' + block);
+        }
+        else if (error) {
+            alert('Error:: ' + error);
+        }
     }
 
     onSourceEdit(code: string) {
@@ -118,15 +107,6 @@ class Edit extends React.Component<IEditProps, IEditState> {
     onWalletEdit(e: React.ChangeEvent<FormControlProps>) {
         this.setState({
             wallet: e.target.value as string
-        });
-    }
-
-    onActivateContract() {
-        this.props.activateContract({
-            session: this.props.session,
-            privateKey: this.props.privateKey,
-            publicKey: this.props.publicKey,
-            id: this.props.contract.id
         });
     }
 
@@ -147,16 +127,18 @@ class Edit extends React.Component<IEditProps, IEditState> {
                     </li>
                 </ol>
                 <ContractEditor
-                    active={this.props.contract && '1' === this.props.contract.active}
-                    pending={this.props.pending}
+                    contractName="EditContract"
+                    mapContractParams={this.mapContractParams.bind(this)}
+
                     code={this.state.code}
                     wallet={this.state.wallet}
                     conditions={this.state.conditions}
-                    onSubmit={this.onSubmit.bind(this)}
+                    contract={this.props.contract}
                     onSourceEdit={this.onSourceEdit.bind(this)}
                     onWalletEdit={this.onWalletEdit.bind(this)}
                     onConditionsEdit={this.onConditionsEdit.bind(this)}
-                    onContractActivation={this.props.contract && this.onActivateContract.bind(this)}
+                    onContractActivation={this.onContractActivation.bind(this)}
+                    onExec={this.onExec.bind(this)}
                 />
             </div>
         );

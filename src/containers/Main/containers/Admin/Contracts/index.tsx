@@ -18,18 +18,18 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getContracts } from 'modules/admin/actions';
+import { IContract } from 'lib/api';
 
 import Contracts from 'components/Main/Admin/Contracts';
 
 interface IContractsContainerProps {
-    session: string;
-    contracts: any;
+    contracts: IContract[];
     getContracts: typeof getContracts.started;
 }
 
 class ContractsContainer extends React.Component<IContractsContainerProps> {
     componentWillMount() {
-        this.props.getContracts({ session: this.props.session });
+        this.props.getContracts({});
     }
 
     render() {
@@ -40,7 +40,6 @@ class ContractsContainer extends React.Component<IContractsContainerProps> {
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken,
     contracts: state.admin.contracts
 });
 

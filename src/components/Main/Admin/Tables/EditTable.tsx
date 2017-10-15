@@ -22,9 +22,6 @@ import { ITableResponse } from 'lib/api';
 import { columnTypes } from './Create';
 
 export interface IEditTableProps {
-    session: string;
-    privateKey: string;
-    publicKey: string;
     table: ITableResponse;
 }
 

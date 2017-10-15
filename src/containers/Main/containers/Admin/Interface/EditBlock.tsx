@@ -17,13 +17,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { getBlock, editBlock } from 'modules/admin/actions';
+import { getBlock } from 'modules/admin/actions';
 
 import EditBlock, { IEditBlockProps } from 'components/Main/Admin/Interface/EditBlock';
 
 class EditBlockContainer extends React.Component<IEditBlockProps & { getBlock: typeof getBlock.started, match?: { params: { blockID: string } } }> {
     componentWillMount() {
-        this.props.getBlock({ session: this.props.session, id: this.props.match.params.blockID });
+        this.props.getBlock({ id: this.props.match.params.blockID });
     }
 
     render() {
@@ -34,16 +34,10 @@ class EditBlockContainer extends React.Component<IEditBlockProps & { getBlock: t
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken,
-    pending: state.admin.pending,
-    block: state.admin.block,
-    editBlockStatus: state.admin.editBlockStatus,
-    privateKey: state.auth.privateKey,
-    publicKey: state.auth.account.publicKey
+    block: state.admin.block
 });
 
 const mapDispatchToProps = {
-    editBlock: editBlock.started,
     getBlock: getBlock.started
 };
 

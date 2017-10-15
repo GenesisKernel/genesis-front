@@ -15,37 +15,29 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import * as uuid from 'uuid';
-import { Map } from 'immutable';
 import { connect } from 'react-redux';
+import { Map } from 'immutable';
 import { IRootState } from 'modules';
-import { Button, Sizes } from 'react-bootstrap';
 import { contractExec } from 'modules/tx/actions';
+import * as uuid from 'uuid';
 
-interface ITxButtonProps {
-    className?: string;
-    bsClass?: string;
-    active?: boolean;
-    block?: boolean;
-    bsStyle?: string;
-    bsSize?: Sizes;
-    componentClass?: React.ReactType;
-    disabled?: boolean;
+import Validation from 'components/Validation';
+
+interface IValidatedContractFormProps {
     contractName: string;
-    contractParams?: { [name: string]: any };
-    onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+    mapContractParams: (values: { [key: string]: any }) => { values: { [key: string]: any } };
     onExec?: (block: string, error: string) => void;
 }
 
-interface ITxButtonStateProps {
+interface IValidatedContractFormStateProps {
     transactions: Map<string, { block: string, error: string }>;
 }
 
-interface ITxButtonDispatchProps {
+interface IValidatedContractFormDispatchProps {
     contractExec: typeof contractExec.started;
 }
 
-class TxButton extends React.Component<ITxButtonProps & ITxButtonStateProps & ITxButtonDispatchProps> {
+class ValidatedContractForm extends React.Component<IValidatedContractFormProps & IValidatedContractFormStateProps & IValidatedContractFormDispatchProps> {
     private _uuid: string;
     private _pending: boolean;
 
@@ -53,7 +45,7 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonStateProps & IT
         this._uuid = uuid.v4();
     }
 
-    componentWillReceiveProps(props: ITxButtonProps & ITxButtonStateProps & ITxButtonDispatchProps) {
+    componentWillReceiveProps(props: IValidatedContractFormProps & IValidatedContractFormStateProps & IValidatedContractFormDispatchProps) {
         const transaction = props.transactions.get(this._uuid);
         if (this._pending && this.props.onExec && transaction && (transaction.block || transaction.error)) {
             this._pending = false;
@@ -61,16 +53,13 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonStateProps & IT
         }
     }
 
-    onClick(e: React.MouseEventHandler<Button>) {
+    onSubmit(values: { [key: string]: any }) {
+        const params = this.props.mapContractParams(values);
         this._pending = true;
-        if (this.props.onClick) {
-            this.props.onClick.apply(this, arguments);
-        }
-
         this.props.contractExec({
             uuid: this._uuid,
             name: this.props.contractName,
-            params: this.props.contractParams,
+            params
         });
     }
 
@@ -79,19 +68,9 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonStateProps & IT
         const pending = transaction && !transaction.block && !transaction.error;
 
         return (
-            <Button
-                onClick={this.onClick.bind(this)}
-                disabled={pending || this.props.disabled}
-                className={this.props.className}
-                bsClass={this.props.bsClass}
-                active={this.props.active}
-                block={this.props.block}
-                bsStyle={this.props.bsStyle}
-                bsSize={this.props.bsSize}
-                componentClass={this.props.componentClass}
-            >
+            <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit.bind(this)} pending={pending}>
                 {this.props.children}
-            </Button>
+            </Validation.components.ValidatedForm>
         );
     }
 }
@@ -104,4 +83,4 @@ const mapDispatchToProps = {
     contractExec: contractExec.started
 };
 
-export default connect<ITxButtonStateProps, ITxButtonDispatchProps, void>(mapStateToProps, mapDispatchToProps)(TxButton);
+export default connect<IValidatedContractFormStateProps, IValidatedContractFormDispatchProps, void>(mapStateToProps, mapDispatchToProps)(ValidatedContractForm);

@@ -84,14 +84,13 @@ export default class extends React.Component<IDebugProps, IDebugState> {
         this.setState({ code });
     }
 
-    onExecContract() {
-        this.props.contractExec({
-            uuid: 'test',
-            name: 'TEST_CONTRACT',
-            params: {
-                hello: 'world'
-            }
-        });
+    onExecContract(block: string, error: string) {
+        if (error) {
+            alert('Error::' + error);
+        }
+        else {
+            alert('Block:: ' + block);
+        }
     }
 
     render() {
@@ -115,7 +114,7 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                 </Col>
                 <hr />
                 <Button bsStyle="primary" className="btn-block" onClick={this.onSubmit.bind(this)}>Request template</Button>
-                <Button bsStyle="danger" className="btn-block" onClick={this.onExecContract.bind(this)}>Execute contract</Button>
+                <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT" onExec={this.onExecContract.bind(this)}>Execute contract</TxButton>
                 <div className="row">
                     <div className="col-md-4">
                         <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 1</TxButton>

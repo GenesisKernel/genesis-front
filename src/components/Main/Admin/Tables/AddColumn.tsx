@@ -15,22 +15,16 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { Button, Col, Panel, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { columnTypes } from './Create';
-import { addColumn } from 'modules/admin/actions';
 
+import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 
 export interface IAddColumnProps {
-    session: string;
-    privateKey: string;
-    publicKey: string;
     table: string;
-    pending: boolean;
-    addColumnStatus: { block: string, error: string };
-    addColumn: typeof addColumn.started;
 }
 
 interface IAddColumnState {
@@ -47,15 +41,22 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
         };
     }
 
-    componentWillReceiveProps(props: IAddColumnProps) {
-        if (props.addColumnStatus && this.props.addColumnStatus !== props.addColumnStatus) {
-            // TODO: Notification stub
-            if (props.addColumnStatus.error) {
-                alert('Error:: ' + props.addColumnStatus.error);
-            }
-            else {
-                alert('Success:: ' + props.addColumnStatus.block);
-            }
+    mapContractParams(values: { [key: string]: any }) {
+        return {
+            TableName: this.props.table,
+            Name: values.name,
+            Type: this.state.type,
+            Permissions: values.permissions
+        };
+    }
+
+    onExec(block: string, error: string) {
+        // TODO: Notification stub
+        if (block) {
+            alert('Success:: ' + block);
+        }
+        else if (error) {
+            alert('Error:: ' + error);
         }
     }
 
@@ -69,19 +70,6 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
         this.setState({
             type: e.target.value,
             index: this.isIndexDenied(e.target.value) ? false : this.state.index
-        });
-    }
-
-    onSubmit(values: { [key: string]: any }) {
-        this.props.addColumn({
-            session: this.props.session,
-            privateKey: this.props.privateKey,
-            publicKey: this.props.publicKey,
-            table: this.props.table,
-            name: values.name,
-            type: this.state.type,
-            index: this.state.index,
-            permissions: values.permissions
         });
     }
 
@@ -115,58 +103,58 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
                         <FormattedMessage id="admin.tables.column.add" defaultMessage="Add column" />
                     </li>
                 </ol>
-                <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit.bind(this)}>
-                    <Panel
-                        bsStyle="default"
-                        footer={(
-                            <Button bsStyle="primary" type="submit" disabled={this.props.pending}>
+                <ValidatedContractForm contractName="NewColumn" mapContractParams={this.mapContractParams.bind(this)} onExec={this.onExec.bind(this)}>
+                    <div className="panel panel-default">
+                        <div className="panel-body">
+                            <Validation.components.ValidatedFormGroup for="name">
+                                <label htmlFor="name">
+                                    <FormattedMessage id="admin.tables.column" defaultMessage="Column" />
+                                </label>
+                                <Validation.components.ValidatedControl type="text" name="name" validators={[Validation.validators.required]} />
+                            </Validation.components.ValidatedFormGroup>
+                            <Row>
+                                <Col md={11}>
+                                    <Validation.components.ValidatedFormGroup for="type">
+                                        <label htmlFor="type">
+                                            <FormattedMessage id="admin.tables.column.type" defaultMessage="Type" />
+                                        </label>
+                                        <Validation.components.ValidatedSelect name="type" onChange={this.onTypeChange.bind(this)} value={this.state.type}>
+                                            {columnTypes.map(type => (
+                                                <option key={type.name} value={type.name}>
+                                                    {type.title}
+                                                </option>
+                                            ))}
+                                        </Validation.components.ValidatedSelect>
+                                    </Validation.components.ValidatedFormGroup>
+                                </Col>
+                                <Col md={1}>
+                                    <Validation.components.ValidatedFormGroup for="index">
+                                        <label htmlFor="index">
+                                            <FormattedMessage id="admin.tables.column.index" defaultMessage="Index" />
+                                        </label>
+                                        <Validation.components.ValidatedCheckbox
+                                            name="index"
+                                            checked={this.state.index}
+                                            onChange={this.onIndexChange.bind(this)}
+                                            disabled={this.isIndexDenied()}
+                                        />
+                                    </Validation.components.ValidatedFormGroup>
+                                </Col>
+                            </Row>
+                            <Validation.components.ValidatedFormGroup for="permissions">
+                                <label htmlFor="permissions">
+                                    <FormattedMessage id="admin.tables.permissions" defaultMessage="Permissions" />
+                                </label>
+                                <Validation.components.ValidatedTextarea name="permissions" validators={[Validation.validators.required]} />
+                            </Validation.components.ValidatedFormGroup>
+                        </div>
+                        <div className="panel-footer">
+                            <Validation.components.ValidatedSubmit bsStyle="primary">
                                 <FormattedMessage id="admin.save" defaultMessage="Save" />
-                            </Button>
-                        )}
-                    >
-                        <Validation.components.ValidatedFormGroup for="name">
-                            <label htmlFor="name">
-                                <FormattedMessage id="admin.tables.column" defaultMessage="Column" />
-                            </label>
-                            <Validation.components.ValidatedControl type="text" name="name" validators={[Validation.validators.required]} />
-                        </Validation.components.ValidatedFormGroup>
-                        <Row>
-                            <Col md={11}>
-                                <Validation.components.ValidatedFormGroup for="type">
-                                    <label htmlFor="type">
-                                        <FormattedMessage id="admin.tables.column.type" defaultMessage="Type" />
-                                    </label>
-                                    <Validation.components.ValidatedSelect name="type" onChange={this.onTypeChange.bind(this)} value={this.state.type}>
-                                        {columnTypes.map(type => (
-                                            <option key={type.name} value={type.name}>
-                                                {type.title}
-                                            </option>
-                                        ))}
-                                    </Validation.components.ValidatedSelect>
-                                </Validation.components.ValidatedFormGroup>
-                            </Col>
-                            <Col md={1}>
-                                <Validation.components.ValidatedFormGroup for="index">
-                                    <label htmlFor="index">
-                                        <FormattedMessage id="admin.tables.column.index" defaultMessage="Index" />
-                                    </label>
-                                    <Validation.components.ValidatedCheckbox
-                                        name="index"
-                                        checked={this.state.index}
-                                        onChange={this.onIndexChange.bind(this)}
-                                        disabled={this.isIndexDenied()}
-                                    />
-                                </Validation.components.ValidatedFormGroup>
-                            </Col>
-                        </Row>
-                        <Validation.components.ValidatedFormGroup for="permissions">
-                            <label htmlFor="permissions">
-                                <FormattedMessage id="admin.tables.permissions" defaultMessage="Permissions" />
-                            </label>
-                            <Validation.components.ValidatedTextarea name="permissions" validators={[Validation.validators.required]} />
-                        </Validation.components.ValidatedFormGroup>
-                    </Panel>
-                </Validation.components.ValidatedForm>
+                            </Validation.components.ValidatedSubmit>
+                        </div>
+                    </div>
+                </ValidatedContractForm>
             </div>
         );
     }
