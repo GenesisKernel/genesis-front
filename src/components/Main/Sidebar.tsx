@@ -17,6 +17,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import imgLogo from 'images/logoInverse.svg';
+import { Link } from 'react-router-dom';
 import { injectIntl, InjectedIntl, FormattedMessage } from 'react-intl';
 import { menuPop, menuPush } from 'modules/content/actions';
 
@@ -71,11 +72,13 @@ const StyledBackButton = styled.button`
     }
 `;
 
-const StyledLogo = styled.div`
+const StyledLogo = styled(Link) `
     width: ${style.sidebarWidth}px;
     height: 55px;
     text-align: center;
     border-bottom: solid 1px #e5e5e5;
+    display: block;
+    text-tecoration: none;
 
     > img {
         max-height: 100%;
@@ -165,7 +168,7 @@ const Sidebar: React.SFC<ISidebarProps> = (props) => {
     return (
         <StyledSidebar className="aside" style={{ marginLeft: props.collapsed ? -style.sidebarWidth : 0 }}>
             <nav>
-                <StyledLogo>
+                <StyledLogo to="/">
                     <img src={imgLogo} />
                 </StyledLogo>
                 <StyledBackButton onClick={() => props.menuPop()} disabled={1 >= props.menus.length}>
