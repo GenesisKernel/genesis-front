@@ -142,7 +142,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
                         </Link>
                     </li>
                     <li>
-                        <FormattedMessage id="admin.languages.create" defaultMessage="Create" />
+                        {this.props.translation && this.props.translation.name}
                     </li>
                 </ol>
                 <LocaleEditor
