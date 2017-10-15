@@ -45,6 +45,11 @@ export const columnTypes = [
         denyIndex: true
     },
     {
+        name: 'jsonb',
+        title: 'JSON',
+        denyIndex: true
+    },
+    {
         name: 'number',
         title: 'Number',
         denyIndex: false

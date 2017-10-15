@@ -37,6 +37,7 @@ const DataPresenter: React.SFC<{ type: string, data: any }> = (props) => {
 
         case 'varchar':
         case 'text':
+        case 'jsonb':
         case 'double':
         case 'character':
         case 'number':
