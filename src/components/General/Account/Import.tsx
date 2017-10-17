@@ -111,6 +111,11 @@ class Import extends React.Component<IImportProps, IImportState> {
                 publicKey: backup.publicKey,
                 address: backup.address
             });
+
+            // TODO: Fix remeber password fn
+            storage.settings.save('privateKey', backup.privateKey);
+            storage.settings.save('publicKey', backup.publicKey);
+
             this.props.login({
                 privateKey: backup.privateKey,
                 publicKey: backup.publicKey,

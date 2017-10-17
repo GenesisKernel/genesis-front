@@ -90,6 +90,10 @@ export default class extends React.Component<ICreateProps, ICreateState> {
             props.clearCreatedAccount();
             const encKey = keyring.encryptAES(props.createdAccount.privateKey, props.createdAccount.password);
 
+            // TODO: Fix remeber password fn
+            storage.settings.save('privateKey', props.createdAccount.privateKey);
+            storage.settings.save('publicKey', props.createdAccount.publicKey);
+
             storage.accounts.save({
                 encKey,
                 publicKey: props.createdAccount.publicKey,
