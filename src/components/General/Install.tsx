@@ -78,16 +78,6 @@ class InstallForm extends React.Component<IInstallProps, IInstallState> {
         });
     }
 
-    renderFooter() {
-        return (
-            <div className="clearfix">
-                <Button disabled={this.props.isInstalling} bsStyle="primary" type="submit" className="pull-right">
-                    <FormattedMessage id="install.confirm" defaultMessage="Install" />
-                </Button>
-            </div>
-        );
-    }
-
     render() {
         return (
             <General>
@@ -101,7 +91,7 @@ class InstallForm extends React.Component<IInstallProps, IInstallState> {
                                     </label>
                                 </Col>
                                 <Col md={9}>
-                                    <Validation.components.ValidatedSelect name="type" defaultValue="PRIVATE_NET" onChange={this.onTypeChange.bind(this)}>
+                                    <Validation.components.ValidatedSelect name="type" defaultValue="PRIVATE_NET" onChange={this.onTypeChange.bind(this)} id="installMode">
                                         <option value="PRIVATE_NET">{this.props.intl.formatMessage({ id: 'install.mode.private_net', defaultMessage: 'Private network' })}</option>
                                         <option value="TESTNET_NODE">{this.props.intl.formatMessage({ id: 'install.mode.testnet_node', defaultMessage: 'Testned nodes' })}</option>
                                         <option value="TESTNET_URL">{this.props.intl.formatMessage({ id: 'install.mode.testnet_url', defaultMessage: 'Testnet URL' })}</option>
@@ -113,11 +103,11 @@ class InstallForm extends React.Component<IInstallProps, IInstallState> {
                             <FormGroup>
                                 <Col md={3}>
                                     <label className="control-label">
-                                        <FormattedMessage id="install.log_level" defaultMessage="Log level" />
+                                        <FormattedMessage id="installLogLevel" defaultMessage="Log level" />
                                     </label>
                                 </Col>
                                 <Col md={9}>
-                                    <Validation.components.ValidatedSelect name="logLevel" defaultValue="ERROR">
+                                    <Validation.components.ValidatedSelect id="installLogLevel" name="logLevel" defaultValue="ERROR">
                                         <option value="ERROR">ERROR</option>
                                         <option value="DEBUG">DEBUG</option>
                                     </Validation.components.ValidatedSelect>
@@ -129,7 +119,7 @@ class InstallForm extends React.Component<IInstallProps, IInstallState> {
                                 <FormGroup>
                                     <Col md={3} />
                                     <Col md={9}>
-                                        <Checkbox title={this.props.intl.formatMessage({ id: 'install.first_block_generate', defaultMessage: 'Generate first block' })} checked={this.state.generateFirst} onChange={this.onGenerateFirstChange.bind(this)} />
+                                        <Checkbox id="installGenerateFirstBlock" title={this.props.intl.formatMessage({ id: 'install.first_block_generate', defaultMessage: 'Generate first block' })} checked={this.state.generateFirst} onChange={this.onGenerateFirstChange.bind(this)} />
                                     </Col>
                                 </FormGroup>
                             </fieldset>
@@ -144,7 +134,7 @@ class InstallForm extends React.Component<IInstallProps, IInstallState> {
                                         </label>
                                     </Col>
                                     <Col md={9}>
-                                        <Validation.components.ValidatedControl type="text" name="blockDir" validators={[Validation.validators.required]} />
+                                        <Validation.components.ValidatedControl id="installFirstBlockDir" type="text" name="blockDir" validators={[Validation.validators.required]} />
                                     </Col>
                                 </Validation.components.ValidatedFormGroup>
                             </fieldset>
@@ -167,7 +157,7 @@ class InstallForm extends React.Component<IInstallProps, IInstallState> {
                                         </label>
                                     </Col>
                                     <Col md={9}>
-                                        <Validation.components.ValidatedControl name="dbHost" type="text" defaultValue="localhost" validators={[Validation.validators.required]} />
+                                        <Validation.components.ValidatedControl id="installDbHost" name="dbHost" type="text" defaultValue="localhost" validators={[Validation.validators.required]} />
                                     </Col>
                                 </Validation.components.ValidatedFormGroup>
                             </fieldset>
@@ -180,7 +170,7 @@ class InstallForm extends React.Component<IInstallProps, IInstallState> {
                                         </label>
                                     </Col>
                                     <Col md={9}>
-                                        <Validation.components.ValidatedControl name="dbPort" type="number" defaultValue="5432" validators={[Validation.validators.required]} />
+                                        <Validation.components.ValidatedControl id="installDbPort" name="dbPort" type="number" defaultValue="5432" validators={[Validation.validators.required]} />
                                     </Col>
                                 </Validation.components.ValidatedFormGroup>
                             </fieldset>
@@ -193,7 +183,7 @@ class InstallForm extends React.Component<IInstallProps, IInstallState> {
                                         </label>
                                     </Col>
                                     <Col md={9}>
-                                        <Validation.components.ValidatedControl name="dbName" type="text" validators={[Validation.validators.required]} />
+                                        <Validation.components.ValidatedControl id="installDbName" name="dbName" type="text" validators={[Validation.validators.required]} />
                                     </Col>
                                 </Validation.components.ValidatedFormGroup>
                             </fieldset>
@@ -206,7 +196,7 @@ class InstallForm extends React.Component<IInstallProps, IInstallState> {
                                         </label>
                                     </Col>
                                     <Col md={9}>
-                                        <Validation.components.ValidatedControl name="dbUser" type="text" defaultValue="postgres" validators={[Validation.validators.required]} />
+                                        <Validation.components.ValidatedControl id="installDbUser" name="dbUser" type="text" defaultValue="postgres" validators={[Validation.validators.required]} />
                                     </Col>
                                 </Validation.components.ValidatedFormGroup>
                             </fieldset>
@@ -218,13 +208,13 @@ class InstallForm extends React.Component<IInstallProps, IInstallState> {
                                         </label>
                                     </Col>
                                     <Col md={9}>
-                                        <Validation.components.ValidatedControl name="dbPass" type="password" />
+                                        <Validation.components.ValidatedControl id="installDbPass" name="dbPass" type="password" />
                                     </Col>
                                 </Validation.components.ValidatedFormGroup>
                             </fieldset>
                         </Well>
                         <div>
-                            <Button disabled={this.props.isInstalling} bsStyle="primary" type="submit" className="btn-block">
+                            <Button disabled={this.props.isInstalling} id="installConfirm" bsStyle="primary" type="submit" className="btn-block">
                                 <FormattedMessage id="install.confirm" defaultMessage="Install" />
                             </Button>
                         </div>

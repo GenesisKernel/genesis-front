@@ -198,7 +198,7 @@ const Sidebar: React.SFC<ISidebarProps> = (props) => {
                     />
                 </StyledMenuContent>
                 <StyledDevButton>
-                    <button onClick={onAdminTools}>
+                    <button id="mainAdminTools" onClick={onAdminTools}>
                         <em className="icon fa fa-cog" />
                         <FormattedMessage id="admin.tools" defaultMessage="Admin tools" />
                     </button>

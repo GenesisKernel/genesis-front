@@ -142,7 +142,7 @@ class Import extends React.Component<IImportProps, IImportState> {
                                     </Col>
                                     <Col md={9}>
                                         <div>
-                                            <Validation.components.ValidatedTextarea className="input-seed" onChange={this.onSeedChange.bind(this)} value={this.state.seed} name="seed" validators={[Validation.validators.required]} />
+                                            <Validation.components.ValidatedTextarea id="importSeed" className="input-seed" onChange={this.onSeedChange.bind(this)} value={this.state.seed} name="seed" validators={[Validation.validators.required]} />
                                         </div>
                                         <Col md={12} className="pl0 pr0">
                                             <Button className="btn-block" onClick={this.onLoad.bind(this)}>
@@ -160,12 +160,12 @@ class Import extends React.Component<IImportProps, IImportState> {
                                         </label>
                                     </Col>
                                     <Col md={9}>
-                                        <Validation.components.ValidatedControl name="password" type="password" validators={[Validation.validators.required, Validation.validators.minLength(6)]} />
+                                        <Validation.components.ValidatedControl id="importPassword" name="password" type="password" validators={[Validation.validators.required, Validation.validators.minLength(6)]} />
                                     </Col>
                                 </Validation.components.ValidatedFormGroup>
                             </fieldset>
                             <hr className="mt0" />
-                            <Button type="submit" bsStyle="primary" className="btn-block">
+                            <Button id="importSubmit" type="submit" bsStyle="primary" className="btn-block">
                                 <FormattedMessage id="auth.import" defaultMessage="Import" />
                             </Button>
                         </Validation.components.ValidatedForm>
