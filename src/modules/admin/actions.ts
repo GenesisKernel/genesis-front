@@ -15,7 +15,7 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IPageResponse, IContractsResponse } from 'lib/api';
+import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IPageResponse, IContractsResponse, IParameterResponse } from 'lib/api';
 
 const actionCreator = actionCreatorFactory('admin');
 
@@ -39,6 +39,10 @@ export const getMenus = actionCreator.async<undefined, { id: string, name: strin
 // Blocks
 export const getBlock = actionCreator.async<{ id: string }, { id: string, name: string, value: string, conditions: string }, string>('GET_BLOCK');
 
-// Lanauages
+// Parameters
+export const getParameter = actionCreator.async<{ name: string }, IParameterResponse, string>('GET_PARAMETER');
+export const getParameters = actionCreator.async<{ params?: string[] }, IParameterResponse[], string>('GET_PARAMETERS');
+
+// Languages
 export const getLanguage = actionCreator.async<{ id: string }, { id: string, res: any, name: string, conditions: string }, string>('GET_LANGUAGE');
 export const getLanguages = actionCreator.async<{ offset?: number, limit?: number }, { id: string, res: any, name: string, conditions: string }[], string>('GET_LANGUAGES');

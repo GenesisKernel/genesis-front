@@ -17,7 +17,7 @@
 import * as actions from './actions';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
-import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract } from 'lib/api';
+import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse } from 'lib/api';
 
 export type State = {
     readonly pending: boolean;
@@ -33,6 +33,8 @@ export type State = {
     readonly contracts: IContract[];
     readonly language: { id: string, res: any, name: string, conditions: string };
     readonly languages: { id: string, res: any, name: string, conditions: string }[];
+    readonly parameter: IParameterResponse;
+    readonly parameters: IParameterResponse[];
 };
 
 export const initialState: State = {
@@ -49,6 +51,8 @@ export const initialState: State = {
     contracts: null,
     language: null,
     languages: null,
+    parameter: null,
+    parameters: null
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -318,6 +322,50 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             pending: false,
             language: null
+        };
+    }
+
+    if (isType(action, actions.getParameters.started)) {
+        return {
+            ...state,
+            pending: true,
+            parameters: null
+        };
+    }
+    else if (isType(action, actions.getParameters.done)) {
+        return {
+            ...state,
+            pending: false,
+            parameters: action.payload.result
+        };
+    }
+    else if (isType(action, actions.getParameters.failed)) {
+        return {
+            ...state,
+            pending: false,
+            parameters: null
+        };
+    }
+
+    if (isType(action, actions.getParameter.started)) {
+        return {
+            ...state,
+            pending: true,
+            parameter: null
+        };
+    }
+    else if (isType(action, actions.getParameter.done)) {
+        return {
+            ...state,
+            pending: false,
+            parameter: action.payload.result
+        };
+    }
+    else if (isType(action, actions.getParameter.failed)) {
+        return {
+            ...state,
+            pending: false,
+            parameter: null
         };
     }
 

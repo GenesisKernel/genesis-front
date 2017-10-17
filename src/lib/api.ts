@@ -164,6 +164,12 @@ export interface ITxStatusResponse extends IResponse {
     errmsg: string;
 }
 
+export interface IParameterResponse extends IResponse {
+    name: string;
+    value: string;
+    conditions: string;
+}
+
 export interface IDBValue {
     id: string;
 }
@@ -261,6 +267,8 @@ const api = {
     })) as Promise<IInterfacesResponse>,
     contract: (session: string, name: string) => securedRequest(`contract/${name}`, session, null, { method: 'GET' }) as Promise<IContractResponse>,
     contracts: (session: string, offset?: number, limit?: number) => securedRequest(`contracts?offset=${offset || 0}&limit=${limit || 0}`, session, null, { method: 'GET' }) as Promise<IContractsResponse>,
+    parameter: (session: string, name: string) => securedRequest(`ecosystemparam/${name}`, session, null, { method: 'GET' }) as Promise<IParameterResponse>,
+    parameters: (session: string, params: string[]) => securedRequest(`ecosystemparams?names=${(params || []).join(',')}`, session, null, { method: 'GET' }).then(r => r.list) as Promise<IParameterResponse[]>,
 
     txPrepare: (session: string, name: string, params: { [key: string]: any }) => securedRequest(`prepare/${name}`, session, params) as Promise<ITxPrepareResponse>,
     txExec: (session: string, name: string, params: { [key: string]: any }) => securedRequest(`contract/${name}`, session, params).then((result: ITxExecResponse) => {

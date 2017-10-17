@@ -164,6 +164,14 @@ const Sidebar: React.SFC<ISidebarProps> = (props) => {
                 {
                     tag: 'menuitem',
                     attr: {
+                        icon: 'icon-settings',
+                        _systemPageHook: '/admin/parameters',
+                        title: props.intl.formatMessage({ id: 'admin.parameters', defaultMessage: 'Ecosystem parameters' })
+                    }
+                },
+                {
+                    tag: 'menuitem',
+                    attr: {
                         icon: 'icon-globe',
                         _systemPageHook: '/admin/languages',
                         title: props.intl.formatMessage({ id: 'admin.languages', defaultMessage: 'Language resources' })

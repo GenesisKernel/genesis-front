@@ -41,6 +41,9 @@ import Languages from 'containers/Main/containers/Admin/Languages';
 import CreateLanguage from 'components/Main/Admin/Languages/Create';
 import EditLanguage from 'containers/Main/containers/Admin/Languages/Edit';
 import EditContract from 'containers/Main/containers/Admin/Contracts/Edit';
+import Parameters from 'containers/Main/containers/Admin/Parameters';
+import ParametersCreate from 'components/Main/Admin/Parameters/Create';
+import ParametersEdit from 'containers/Main/containers/Admin/Parameters/Edit';
 import DefaultPage from 'containers/Main/containers/DefaultPage';
 import Page from 'containers/Main/containers/Page';
 import Debug from 'containers/Main/containers/Debug';
@@ -92,6 +95,9 @@ class MainContainer extends React.Component<IMainProps & { menuInit: typeof menu
                     <Route exact path="/admin/languages" component={Languages} />
                     <Route exact path="/admin/languages/create" component={CreateLanguage} />
                     <Route exact path="/admin/languages/:translationID-:translationName" component={EditLanguage} />
+                    <Route exact path="/admin/parameters" component={Parameters} />
+                    <Route exact path="/admin/parameters/create" component={ParametersCreate} />
+                    <Route exact path="/admin/parameters/:parameterName" component={ParametersEdit} />
 
                     <Route exact path="/page/:pageName" component={Page} />
 

@@ -255,6 +255,40 @@ export const getLanguageEpic: Epic<Action, IRootState> =
                 );
         });
 
+export const getParametersEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.getParameters.started)
+        .flatMap(action => {
+            const state = store.getState();
+            return Observable.fromPromise(api.parameters(state.auth.sessionToken, action.payload.params))
+                .map(payload => actions.getParameters.done({
+                    params: action.payload,
+                    result: payload
+                }))
+                .catch((e: IAPIError) =>
+                    Observable.of(actions.getParameters.failed({
+                        params: action.payload,
+                        error: e.error
+                    }))
+                );
+        });
+
+export const getParameterEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.getParameter.started)
+        .flatMap(action => {
+            const state = store.getState();
+            return Observable.fromPromise(api.parameter(state.auth.sessionToken, action.payload.name))
+                .map(payload => actions.getParameter.done({
+                    params: action.payload,
+                    result: payload
+                }))
+                .catch((e: IAPIError) =>
+                    Observable.of(actions.getParameter.failed({
+                        params: action.payload,
+                        error: e.error
+                    }))
+                );
+        });
+
 export default combineEpics(
     getBlockEpic,
     getContractEpic,
@@ -267,5 +301,7 @@ export default combineEpics(
     getMenuEpic,
     getMenusEpic,
     getLanguagesEpic,
-    getLanguageEpic
+    getLanguageEpic,
+    getParameterEpic,
+    getParametersEpic
 );
