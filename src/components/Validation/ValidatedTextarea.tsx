@@ -35,6 +35,7 @@ export default class ValidatedTextarea extends React.Component<IValidatedTextare
     render() {
         return (
             <textarea
+                id={this.props.id}
                 className={`form-control ${this.props.className}`}
                 value={this.props.value}
                 defaultValue={this.props.defaultValue}
