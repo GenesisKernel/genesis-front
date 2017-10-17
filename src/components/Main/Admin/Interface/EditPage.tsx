@@ -100,6 +100,9 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
                         </Link>
                     </li>
                     <li>
+                        <FormattedMessage id="admin.interface.pages" defaultMessage="Pages" />
+                    </li>
+                    <li>
                         {this.props.page && this.props.page.name}
                     </li>
                 </ol>

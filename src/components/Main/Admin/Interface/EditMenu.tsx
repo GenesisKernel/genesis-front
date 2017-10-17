@@ -88,6 +88,9 @@ class EditMenu extends React.Component<IEditMenuProps, IEditMenuState> {
                         </Link>
                     </li>
                     <li>
+                        <FormattedMessage id="admin.interface.menu" defaultMessage="Menu" />
+                    </li>
+                    <li>
                         {this.props.menu && this.props.menu.name}
                     </li>
                 </ol>

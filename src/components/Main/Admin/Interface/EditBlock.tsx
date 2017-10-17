@@ -88,6 +88,9 @@ class EditBlock extends React.Component<IEditBlockProps, IEditBlockState> {
                         </Link>
                     </li>
                     <li>
+                        <FormattedMessage id="admin.interface.blocks" defaultMessage="Blocks" />
+                    </li>
+                    <li>
                         {this.props.block && this.props.block.name}
                     </li>
                 </ol>

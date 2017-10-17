@@ -29,12 +29,6 @@ const Contracts: React.SFC<IContractsProps> = (props) => (
         <div className="content-heading">
             <div>
                 <div className="pull-right">
-                    <button className="btn btn-green ml">
-                        <em className="fa fa-globe fa-fw mr-sm" />
-                        <span>
-                            <FormattedMessage id="admin.tables.global" defaultMessage="Global" />
-                        </span>
-                    </button>
                     <Link to="/admin/contracts/create" className="ml">
                         <button className="btn btn-default ml">
                             <em className="fa fa-plus-circle fa-fw mr-sm" />

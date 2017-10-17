@@ -30,18 +30,6 @@ const Tables: React.SFC<ITablesProps> = (props) => (
         <div className="content-heading">
             <div>
                 <div className="pull-right">
-                    <button className="btn btn-green ml">
-                        <em className="fa fa-globe fa-fw mr-sm" />
-                        <span>
-                            <FormattedMessage id="admin.tables.global" defaultMessage="Global" />
-                        </span>
-                    </button>
-                    <button className="btn btn-default ml">
-                        <em className="fa fa-cogs fa-fw mr-sm" />
-                        <span>
-                            <FormattedMessage id="admin.tables.parameters" defaultMessage="Ecosystem parameters" />
-                        </span>
-                    </button>
                     <Link to="/admin/tables/create" className="ml">
                         <button className="btn btn-default">
                             <em className="fa fa-plus-circle fa-fw mr-sm" />
