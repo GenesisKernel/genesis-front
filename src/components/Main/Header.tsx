@@ -45,7 +45,7 @@ const Header: React.SFC<IHeaderProps> = (props) => (
                     </li>
                 </ul>
                 <ul className="nav navbar-nav navbar-right">
-                    <li className="dropdown-list dropdown open">
+                    <li className="dropdown-list dropdown">
                         <a href="#" className="dropdown-toggle">
                             <span>
                                 <em className="icon-hourglass" />
