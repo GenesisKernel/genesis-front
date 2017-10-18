@@ -16,8 +16,9 @@
 
 import api, { IAPIError } from 'lib/api';
 import { Action } from 'redux';
-import { combineEpics } from 'redux-observable';
+import { combineEpics, Epic } from 'redux-observable';
 import { Observable } from 'rxjs';
+import { IRootState } from 'modules';
 import * as actions from './actions';
 import { readTextFile } from 'lib/fs';
 import keyring from 'lib/keyring';
@@ -92,4 +93,24 @@ export const createAccountEpic = (actions$: Observable<Action>) =>
             });
         });
 
-export default combineEpics(loginEpic, importSeedEpic, createAccountEpic);
+export const refreshSessionEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofType(actions.refreshSession.started)
+        .switchMap(action => {
+            const state = store.getState();
+            return Observable.fromPromise(api.refresh(state.auth.refreshToken))
+                .map(payload => actions.refreshSession.done({
+                    params: null,
+                    result: payload
+                }))
+                .catch((e: IAPIError) => Observable.of(actions.refreshSession.failed({
+                    params: null,
+                    error: e.error
+                })));
+        });
+
+export default combineEpics(
+    loginEpic,
+    importSeedEpic,
+    createAccountEpic,
+    refreshSessionEpic
+);

@@ -64,6 +64,7 @@ export interface ILoginResponse extends IResponse {
     state: string;
     wallet: string;
     address: string;
+    expiry: Date;
 }
 
 export interface ISignTestResponse extends IResponse {
@@ -235,11 +236,15 @@ const api = {
         forsign: forSign,
         pubkey: publicKey
     }) as Promise<ISignTestResponse>,
-    login: (session: string, publicKey: string, signature: string, state: number = 0) => securedRequest('login', session, {
+    login: (session: string, publicKey: string, signature: string, expirySeconds: number = 5, state: number = 0) => securedRequest('login', session, {
         pubkey: publicKey.slice(2),
         signature,
-        state
-    }) as Promise<ILoginResponse>,
+        state,
+        expire: expirySeconds
+    }).then((result: ILoginResponse) => ({
+        ...result,
+        expiry: new Date(Date.now() + expirySeconds * 1000)
+    })) as Promise<ILoginResponse>,
 
     // Level 2
     row: (session: string, table: string, id: string, columns?: string) => securedRequest(`row/${table}/${id}?columns=${columns || ''}`, session, null, { method: 'GET' }) as Promise<IRowResponse>,

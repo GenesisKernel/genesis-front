@@ -27,6 +27,7 @@ export type State = {
     readonly wallet: string;
     readonly sessionToken: string;
     readonly refreshToken: string;
+    readonly sessionExpiry: Date;
     readonly createdAccount: {
         id: string;
         address: string;
@@ -46,6 +47,7 @@ export const initialState: State = {
     wallet: null,
     sessionToken: null,
     refreshToken: null,
+    sessionExpiry: null,
     createdAccount: null,
     account: null,
     privateKey: null,
@@ -73,7 +75,8 @@ export default (state: State = initialState, action: Action): State => {
             ecosystem: action.payload.result.state,
             sessionToken: action.payload.result.token,
             refreshToken: action.payload.result.refresh,
-            privateKey: action.payload.result.privateKey
+            privateKey: action.payload.result.privateKey,
+            sessionExpiry: action.payload.result.expiry
         };
     }
 
