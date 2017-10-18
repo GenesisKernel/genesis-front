@@ -69,6 +69,12 @@
     "@types/react" "*"
     monaco-editor "0.8.3"
 
+"@types/react-onclickoutside@^6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@types/react-onclickoutside/-/react-onclickoutside-6.0.1.tgz#de83afae071067b7f67cf31843bc8b4c994302e6"
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-redux@^5.0.4":
   version "5.0.4"
   resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-5.0.4.tgz#7b52b6b6bd5be77e8b7ed58a9e6ff00a9a933138"
@@ -4726,6 +4732,10 @@ react-motion@^0.5.0:
     performance-now "^0.2.0"
     prop-types "^15.5.8"
     raf "^3.1.0"
+
+react-onclickoutside@^6.6.0:
+  version "6.6.0"
+  resolved "https://registry.yarnpkg.com/react-onclickoutside/-/react-onclickoutside-6.6.0.tgz#8526d0675fad26558e9f0a400c983b813c99ef3c"
 
 react-overlays@^0.7.0:
   version "0.7.0"

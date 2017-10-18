@@ -19,6 +19,7 @@ import { IStoredKey } from 'lib/storage';
 import * as classnames from 'classnames';
 import { setCollapsed } from 'modules/engine/actions';
 import { menuPop, menuPush } from 'modules/content/actions';
+import { OrderedMap } from 'immutable';
 import styled from 'styled-components';
 
 import { IProtypoElement } from 'components/Protypo/Protypo';
@@ -40,6 +41,8 @@ export interface IMainProps {
     isCollapsed: boolean;
     pending: boolean;
     menus: { name: string, content: IProtypoElement[] }[];
+    pendingTransactions: OrderedMap<string, { uuid: string, block: string, error: string, contract: string }>;
+    transactionsCount: number;
     menuPop: typeof menuPop;
     menuPush: typeof menuPush;
     setCollapsed: typeof setCollapsed;
@@ -67,7 +70,13 @@ export default class Main extends React.Component<IMainProps> {
                     menuPush={this.props.menuPush.bind(this)}
                 />
                 <StyledContent style={{ marginLeft: this.props.isCollapsed ? 0 : sidebarStyle.sidebarWidth, transition: sidebarStyle.collapseTransition }}>
-                    <Header toggleCollapsed={this.onSidebarToggle.bind(this)} leftOffset={this.props.isCollapsed ? 0 : sidebarStyle.sidebarWidth} collapseTransition={sidebarStyle.collapseTransition} />
+                    <Header
+                        toggleCollapsed={this.onSidebarToggle.bind(this)}
+                        leftOffset={this.props.isCollapsed ? 0 : sidebarStyle.sidebarWidth}
+                        collapseTransition={sidebarStyle.collapseTransition}
+                        pendingTransactions={this.props.pendingTransactions}
+                        transactionsCount={this.props.transactionsCount}
+                    />
                     {this.props.children}
                 </StyledContent>
             </StyledWrapper>

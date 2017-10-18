@@ -120,7 +120,7 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                         <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 1</TxButton>
                     </div>
                     <div className="col-md-4">
-                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 2</TxButton>
+                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
                     </div>
                     <div className="col-md-4">
                         <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
@@ -131,7 +131,7 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                         <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 1</TxButton>
                     </div>
                     <div className="col-md-4">
-                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 2</TxButton>
+                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
                     </div>
                     <div className="col-md-4">
                         <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
@@ -142,7 +142,7 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                         <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 1</TxButton>
                     </div>
                     <div className="col-md-4">
-                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 2</TxButton>
+                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
                     </div>
                     <div className="col-md-4">
                         <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>

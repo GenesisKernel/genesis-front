@@ -49,10 +49,6 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonStateProps & IT
     private _uuid: string;
     private _pending: boolean;
 
-    componentDidMount() {
-        this._uuid = uuid.v4();
-    }
-
     componentWillReceiveProps(props: ITxButtonProps & ITxButtonStateProps & ITxButtonDispatchProps) {
         const transaction = props.transactions.get(this._uuid);
         if (this._pending && this.props.onExec && transaction && (transaction.block || transaction.error)) {
@@ -66,6 +62,8 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonStateProps & IT
         if (this.props.onClick) {
             this.props.onClick.apply(this, arguments);
         }
+
+        this._uuid = uuid.v4();
 
         this.props.contractExec({
             uuid: this._uuid,

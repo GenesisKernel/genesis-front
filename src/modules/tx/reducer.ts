@@ -14,16 +14,16 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { Map } from 'immutable';
+import { OrderedMap } from 'immutable';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import * as actions from './actions';
 
 export type State = {
-    readonly transactions: Map<string, { block: string, error: string }>;
+    readonly transactions: OrderedMap<string, { uuid: string, contract: string, block: string, error: string }>;
 };
 
 export const initialState: State = {
-    transactions: Map()
+    transactions: OrderedMap()
 };
 
 export default reducerWithInitialState(initialState)
@@ -31,20 +31,26 @@ export default reducerWithInitialState(initialState)
         ...state,
         transactions: state.transactions.set(payload.uuid, {
             block: null,
-            error: null
+            error: null,
+            contract: payload.name,
+            uuid: payload.uuid
         })
     }))
     .case(actions.contractExec.done, (state, payload) => ({
         ...state,
         transactions: state.transactions.set(payload.params.uuid, {
             block: payload.result,
-            error: null
+            error: null,
+            contract: payload.params.name,
+            uuid: payload.params.uuid
         })
     }))
     .case(actions.contractExec.failed, (state, payload) => ({
         ...state,
         transactions: state.transactions.set(payload.params.uuid, {
             block: null,
-            error: payload.error
+            error: payload.error,
+            contract: payload.params.name,
+            uuid: payload.params.uuid
         })
     }));

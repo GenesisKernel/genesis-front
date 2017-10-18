@@ -118,7 +118,9 @@ const mapStateToProps = (state: IRootState) => ({
     account: state.auth.account,
     menus: state.content.menus,
     pending: state.content.pending,
-    isCollapsed: state.engine.isCollapsed
+    isCollapsed: state.engine.isCollapsed,
+    transactionsCount: state.tx.transactions.count(),
+    pendingTransactions: state.tx.transactions.takeLast(5)
 });
 
 const mapDispatchToProps = {
