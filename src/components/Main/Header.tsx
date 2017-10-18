@@ -144,7 +144,7 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
                                             ) :
                                             (
                                                 <div className="list-group">
-                                                    {this.props.pendingTransactions.reverse().map((t, index) => (
+                                                    {this.props.pendingTransactions.reverse().toArray().map((t, index) => (
                                                         <div className="list-group-item" key={t.uuid}>
                                                             <div className="media-box">
                                                                 <div className="pull-left" style={{ width: 20, textAlign: 'center' }}>
