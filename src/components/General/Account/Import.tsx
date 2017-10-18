@@ -33,10 +33,11 @@
 import * as React from 'react';
 import { Button, Col } from 'react-bootstrap';
 import styled from 'styled-components';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import keyring from 'lib/keyring';
 import { navigate } from 'modules/engine/actions';
 import { importSeed, login } from 'modules/auth/actions';
+import { alertShow } from 'modules/content/actions';
 import storage from 'lib/storage';
 
 import General from 'components/General';
@@ -49,10 +50,11 @@ const StyledForm = styled.div`
     }
 `;
 
-export interface IImportProps {
+export interface IImportProps extends InjectedIntlProps {
     return: string;
     loadedSeed: string;
     navigate: typeof navigate;
+    alertShow: typeof alertShow;
     login: typeof login.started;
     importSeed: typeof importSeed.started;
 }
@@ -79,11 +81,20 @@ class Import extends React.Component<IImportProps, IImportState> {
         }
     }
 
+    onInvalidKey() {
+        this.props.alertShow({
+            id: 'E_KEY_CORRUPTED',
+            title: this.props.intl.formatMessage({ id: 'alert.error', defaultMessage: 'Error' }),
+            type: 'error',
+            text: this.props.intl.formatMessage({ id: 'auth.backup.invalid', defaultMessage: 'Provided key is corrupted or contains invalid data' }),
+            cancelButton: this.props.intl.formatMessage({ id: 'alert.close', defaultMessage: 'Close' }),
+        });
+    }
+
     onLoadSuccess(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.files && e.target.files[0]) {
             if (keyring.MAX_KEY_SIZE < e.target.files[0].size) {
-                // TODO: Notification stub
-                alert('Uploaded key is too big or contains incorrect data');
+                this.onInvalidKey();
             }
             else {
                 this.props.importSeed(e.target.files[0]);
@@ -124,8 +135,7 @@ class Import extends React.Component<IImportProps, IImportState> {
             this.props.navigate('/');
         }
         else {
-            // TODO: Notification stub
-            alert('The key is corrupted or contains invalid data');
+            this.onInvalidKey();
         }
     }
 
@@ -181,4 +191,4 @@ class Import extends React.Component<IImportProps, IImportState> {
     }
 }
 
-export default Import;
+export default injectIntl(Import);

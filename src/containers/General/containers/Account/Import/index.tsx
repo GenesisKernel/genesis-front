@@ -18,6 +18,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { navigate } from 'modules/engine/actions';
 import { importSeed, login } from 'modules/auth/actions';
+import { alertShow } from 'modules/content/actions';
 import { IRootState } from 'modules';
 
 import Import, { IImportProps } from 'components/General/Account/Import';
@@ -35,6 +36,7 @@ const mapStateToProps = (state: IRootState) => ({
 const mapDispatchToProps = {
     navigate,
     importSeed: importSeed.started,
+    alertShow: alertShow,
     login: login.started
 };
 

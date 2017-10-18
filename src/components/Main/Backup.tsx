@@ -16,23 +16,25 @@
 
 import * as React from 'react';
 import { Button, Panel } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import Validation from 'components/Validation';
 import keyring from 'lib/keyring';
 import { sendAttachment } from 'lib/fs';
 import { IStoredKey } from 'lib/storage';
+import { alertShow } from 'modules/content/actions';
 import * as CopyToClipboard from 'react-copy-to-clipboard';
 
-export interface IBackupProps {
+export interface IBackupProps extends InjectedIntlProps {
     account: IStoredKey;
     privateKey: string;
+    alertShow: typeof alertShow;
 }
 
 interface IBackupState {
     privateKey: string;
 }
 
-export default class extends React.Component<IBackupProps, IBackupState> {
+class Backup extends React.Component<IBackupProps, IBackupState> {
     constructor(props: any) {
         super(props);
         this.state = {
@@ -49,14 +51,24 @@ export default class extends React.Component<IBackupProps, IBackupState> {
             });
         }
         else {
-            // TODO: Notification stub
-            alert('Incorrect password');
+            this.props.alertShow({
+                id: 'E_INVALID_PASSWORD',
+                title: this.props.intl.formatMessage({ id: 'alert.error', defaultMessage: 'Error' }),
+                type: 'error',
+                text: this.props.intl.formatMessage({ id: 'auth.password.invalid', defaultMessage: 'Invalid password' }),
+                cancelButton: this.props.intl.formatMessage({ id: 'alert.close', defaultMessage: 'Close' }),
+            });
         }
     }
 
     onCopy() {
-        // TODO: Notification stub
-        alert('Copied to clipboard');
+        this.props.alertShow({
+            id: 'I_COPIED_TO_CLIPBOARD',
+            title: this.props.intl.formatMessage({ id: 'alert.info', defaultMessage: 'Information' }),
+            type: 'info',
+            text: this.props.intl.formatMessage({ id: 'alert.clipboard.copied', defaultMessage: 'Copied to clipboard' }),
+            cancelButton: this.props.intl.formatMessage({ id: 'alert.close', defaultMessage: 'Close' }),
+        });
     }
 
     onKeyDownlaod() {
@@ -163,3 +175,5 @@ export default class extends React.Component<IBackupProps, IBackupState> {
         );
     }
 }
+
+export default injectIntl(Backup);

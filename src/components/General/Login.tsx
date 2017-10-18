@@ -21,6 +21,7 @@ import storage, { IStoredKey } from 'lib/storage';
 import keyring from 'lib/keyring';
 import { navigate } from 'modules/engine/actions';
 import { login } from 'modules/auth/actions';
+import { alertShow } from 'modules/content/actions';
 
 import General from 'components/General';
 import Welcome from 'components/General/Welcome';
@@ -29,6 +30,7 @@ import Validation from 'components/Validation';
 export interface ILoginProps extends InjectedIntlProps {
     navigate: typeof navigate;
     login: typeof login.started;
+    alertShow: typeof alertShow;
 }
 
 interface ILoginState {
@@ -60,7 +62,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
 
     onSubmit(values: { [key: string]: any }) {
         const privateKey = keyring.decryptAES(this.state.account.encKey, values.password);
-        if (privateKey) {
+        if (keyring.KEY_LENGTH === privateKey.length) {
             if (values.remember) {
                 storage.settings.save('privateKey', privateKey);
                 storage.settings.save('publicKey', this.state.account.publicKey);
@@ -77,8 +79,13 @@ class Login extends React.Component<ILoginProps, ILoginState> {
             this.props.navigate('/');
         }
         else {
-            // TODO: Notification stub
-            alert('Invalid password');
+            this.props.alertShow({
+                id: 'E_INVALID_PASSWORD',
+                title: this.props.intl.formatMessage({ id: 'alert.error', defaultMessage: 'Error' }),
+                type: 'error',
+                text: this.props.intl.formatMessage({ id: 'auth.password.invalid', defaultMessage: 'Invalid password' }),
+                cancelButton: this.props.intl.formatMessage({ id: 'alert.close', defaultMessage: 'Close' }),
+            });
         }
     }
 

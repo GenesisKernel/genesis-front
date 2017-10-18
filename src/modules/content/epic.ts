@@ -18,6 +18,7 @@ import api, { IAPIError } from 'lib/api';
 import { Action } from 'redux';
 import { Observable } from 'rxjs';
 import { combineEpics, Epic } from 'redux-observable';
+import swal from 'sweetalert2';
 import { IRootState } from 'modules';
 import * as actions from './actions';
 
@@ -71,7 +72,30 @@ export const menuInitEpic: Epic<Action, IRootState> =
                 );
         });
 
+export const alertEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.alertShow)
+        .flatMap(action => {
+            return Observable.fromPromise(swal({
+                title: action.payload.title,
+                text: action.payload.text,
+                type: action.payload.type,
+                showCancelButton: true,
+                showCloseButton: !!action.payload.cancelButton,
+                showConfirmButton: !!action.payload.confirmButton,
+                confirmButtonText: action.payload.confirmButton,
+                cancelButtonText: action.payload.cancelButton
+            })
+                .then(result => ({ success: result, error: null }))
+                .catch(error => ({ success: null, error }))
+            )
+                .map(payload => actions.alertClose({
+                    id: action.payload.id,
+                    ...payload
+                }));
+        });
+
 export default combineEpics(
     renderPageEpic,
-    menuInitEpic
+    menuInitEpic,
+    alertEpic
 );

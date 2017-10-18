@@ -16,9 +16,10 @@
 
 import * as React from 'react';
 import { Button, Col } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { navigate } from 'modules/engine/actions';
 import { importSeed, createAccount, login, clearCreatedAccount } from 'modules/auth/actions';
+import { alertShow } from 'modules/content/actions';
 import styled from 'styled-components';
 import storage from 'lib/storage';
 import keyring from 'lib/keyring';
@@ -34,7 +35,7 @@ const StyledForm = styled.div`
     }
 `;
 
-export interface ICreateProps {
+export interface ICreateProps extends InjectedIntlProps {
     return: string;
     loadedSeed: string;
     isCreatingAccount: boolean;
@@ -46,6 +47,7 @@ export interface ICreateProps {
         password: string;
     };
     navigate: typeof navigate;
+    alertShow: typeof alertShow;
     login: typeof login.started;
     importSeed: typeof importSeed.started;
     createAccount: typeof createAccount.started;
@@ -59,7 +61,7 @@ interface ICreateState {
     isConfirming?: boolean;
 }
 
-export default class extends React.Component<ICreateProps, ICreateState> {
+class Create extends React.Component<ICreateProps, ICreateState> {
     private inputFile: HTMLInputElement;
 
     constructor(props: ICreateProps) {
@@ -129,6 +131,16 @@ export default class extends React.Component<ICreateProps, ICreateState> {
         }
     }
 
+    onInvalidSeed() {
+        this.props.alertShow({
+            id: 'E_SEED_CORRUPTED',
+            title: this.props.intl.formatMessage({ id: 'alert.error', defaultMessage: 'Error' }),
+            type: 'error',
+            text: this.props.intl.formatMessage({ id: 'auth.seed.invalid', defaultMessage: 'Provided seed is corrupted or contains invalid data' }),
+            cancelButton: this.props.intl.formatMessage({ id: 'alert.close', defaultMessage: 'Close' }),
+        });
+    }
+
     onGenerate() {
         this.setState({
             seed: keyring.generateSeed()
@@ -158,8 +170,7 @@ export default class extends React.Component<ICreateProps, ICreateState> {
     onLoadSuccess(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.files && e.target.files[0]) {
             if (keyring.MAX_KEY_SIZE < e.target.files[0].size) {
-                // TODO: Notification stub
-                alert('Uploaded key is too big or contains incorrect data');
+                this.onInvalidSeed();
             }
             else {
                 this.props.importSeed(e.target.files[0]);
@@ -303,3 +314,5 @@ export default class extends React.Component<ICreateProps, ICreateState> {
         );
     }
 }
+
+export default injectIntl(Create);

@@ -23,12 +23,14 @@ export type State = {
     readonly pending: boolean;
     readonly menus: { name: string, content: IProtypoElement[] }[];
     readonly page: { name: string, content: IProtypoElement[], error?: string };
+    readonly alert: { id: string, success: string, error: string };
 };
 
 export const initialState: State = {
     pending: false,
     menus: [],
-    page: null
+    page: null,
+    alert: null
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -114,6 +116,19 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false
+        };
+    }
+
+    if (isType(action, actions.alertShow)) {
+        return {
+            ...state,
+            alert: null
+        };
+    }
+    else if (isType(action, actions.alertClose)) {
+        return {
+            ...state,
+            alert: action.payload
         };
     }
 

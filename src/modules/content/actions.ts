@@ -19,6 +19,8 @@ import { IProtypoElement } from 'components/Protypo/Protypo';
 
 const actionCreator = actionCreatorFactory('content');
 
+export const alertShow = actionCreator<{ id: string, type: 'success' | 'error' | 'warning' | 'info' | 'question' | undefined, title: string, text: string, confirmButton?: string, cancelButton?: string }>('ALERT_SHOW');
+export const alertClose = actionCreator<{ id: string, success: string, error: string }>('ALERT_CLOSE');
 export const menuPop = actionCreator('MENU_POP');
 export const menuPush = actionCreator<{ name: string, content: IProtypoElement[] }>('MENU_PUSH');
 export const menuInit = actionCreator.async<{ session: string }, { name: string, content: IProtypoElement[] }, string>('MENU_INIT');

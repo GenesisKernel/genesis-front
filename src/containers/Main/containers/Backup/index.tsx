@@ -17,6 +17,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
+import { alertShow } from 'modules/content/actions';
 
 import Backup, { IBackupProps } from 'components/Main/Backup';
 
@@ -30,7 +31,7 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-
+    alertShow
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(BackupContainer);

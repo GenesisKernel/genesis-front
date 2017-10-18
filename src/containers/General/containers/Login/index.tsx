@@ -18,6 +18,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { navigate } from 'modules/engine/actions';
 import { login } from 'modules/auth/actions';
+import { alertShow } from 'modules/content/actions';
 
 import Login, { ILoginProps } from 'components/General/Login';
 
@@ -27,7 +28,8 @@ const LoginContainer: React.SFC<ILoginProps> = (props) => (
 
 const mapDispatchToProps = {
     navigate,
-    login: login.started
+    login: login.started,
+    alertShow
 };
 
 export default connect(null, mapDispatchToProps)(LoginContainer);
