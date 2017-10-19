@@ -142,7 +142,7 @@ class Import extends React.Component<IImportProps, IImportState> {
     render() {
         return (
             <General return={this.props.return}>
-                <input type="file" className="hidden" onChange={this.onLoadSuccess.bind(this)} ref={l => this.inputFile = l} />
+                <input id="importFileLoader" type="file" className="hidden" onChange={this.onLoadSuccess.bind(this)} ref={l => this.inputFile = l} />
                 <div className="text-center">
                     <p>To begin creating your new private key you will need to enter account seed. This is a unique passphrase used by our cryptographic algorithms to generate the private key. In future, you can use your passphrase to re-generate your private key in case you lost it</p>
                     <hr />
