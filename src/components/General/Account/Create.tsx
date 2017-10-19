@@ -207,20 +207,20 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                         </Col>
                         <Col md={9}>
                             <div>
-                                <Validation.components.ValidatedTextarea className="input-seed" onChange={this.onSeedChange.bind(this)} value={this.state.seed} name="seed" validators={[Validation.validators.required]} />
+                                <Validation.components.ValidatedTextarea id="registerSeed" className="input-seed" onChange={this.onSeedChange.bind(this)} value={this.state.seed} name="seed" validators={[Validation.validators.required]} />
                             </div>
                             <Col md={4} className="pl0 pr0">
-                                <Button className="btn-block" onClick={this.onGenerate.bind(this)}>
+                                <Button id="registerGenerate" className="btn-block" onClick={this.onGenerate.bind(this)}>
                                     <FormattedMessage id="auth.seed.generate" defaultMessage="Generate" />
                                 </Button>
                             </Col>
                             <Col md={4} className="pl0 pr0">
-                                <Button className="btn-block" disabled={!this.state.seed} onClick={this.onSave.bind(this)}>
+                                <Button id="registerSave" className="btn-block" disabled={!this.state.seed} onClick={this.onSave.bind(this)}>
                                     <FormattedMessage id="auth.seed.save" defaultMessage="Save" />
                                 </Button>
                             </Col>
                             <Col md={4} className="pl0 pr0">
-                                <Button className="btn-block" onClick={this.onLoad.bind(this)}>
+                                <Button id="registerLoad" className="btn-block" onClick={this.onLoad.bind(this)}>
                                     <FormattedMessage id="auth.seed.load" defaultMessage="Load" />
                                 </Button>
                             </Col>
@@ -235,7 +235,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                             </label>
                         </Col>
                         <Col md={9}>
-                            <Validation.components.ValidatedControl onChange={this.onPasswordChange.bind(this)} value={this.state.password} name="password" type="password" validators={[Validation.validators.required, Validation.validators.minLength(6)]} />
+                            <Validation.components.ValidatedControl id="registerPassword" onChange={this.onPasswordChange.bind(this)} value={this.state.password} name="password" type="password" validators={[Validation.validators.required, Validation.validators.minLength(6)]} />
                         </Col>
                     </Validation.components.ValidatedFormGroup>
                 </fieldset>
@@ -245,7 +245,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                     </p>
                 </fieldset>
                 <hr className="mt0" />
-                <Button type="submit" bsStyle="primary" className="btn-block">
+                <Button id="registerContinue" type="submit" bsStyle="primary" className="btn-block">
                     <FormattedMessage id="process.continue" defaultMessage="Continue" />
                 </Button>
             </div>
@@ -264,9 +264,9 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                         </Col>
                         <Col md={9}>
                             <div>
-                                <Validation.components.ValidatedTextarea className="input-seed" onChange={this.onSeedConfirmationChange.bind(this)} value={this.state.seedConfirm} name="seedConfirm" validators={[Validation.validators.required, Validation.validators.compare(this.state.seed)]} />
+                                <Validation.components.ValidatedTextarea id="registerSeedConfirmation" className="input-seed" onChange={this.onSeedConfirmationChange.bind(this)} value={this.state.seedConfirm} name="seedConfirm" validators={[Validation.validators.required, Validation.validators.compare(this.state.seed)]} />
                             </div>
-                            <Button className="btn-block" onClick={this.onLoad.bind(this)}>
+                            <Button id="registerLoadConfirmation" className="btn-block" onClick={this.onLoad.bind(this)}>
                                 <FormattedMessage id="auth.seed.load" defaultMessage="Load" />
                             </Button>
                         </Col>
@@ -280,7 +280,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                             </label>
                         </Col>
                         <Col md={9}>
-                            <Validation.components.ValidatedControl name="passwordConfirm" type="password" validators={[Validation.validators.compare(this.state.password)]} />
+                            <Validation.components.ValidatedControl id="registerPasswordRepeat" name="passwordConfirm" type="password" validators={[Validation.validators.compare(this.state.password)]} />
                         </Col>
                     </Validation.components.ValidatedFormGroup>
                 </fieldset>
@@ -290,7 +290,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                     </p>
                 </fieldset>
                 <hr className="mt0" />
-                <Button type="submit" bsStyle="primary" className="btn-block">
+                <Button id="registerConfirm" type="submit" bsStyle="primary" className="btn-block">
                     <FormattedMessage id="process.confirm" defaultMessage="Confirm" />
                 </Button>
             </div>
@@ -300,7 +300,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
     render() {
         return (
             <General return={this.state.isConfirming ? this.onBack.bind(this) : this.props.return}>
-                <input type="file" className="hidden" onChange={this.onLoadSuccess.bind(this)} ref={l => this.inputFile = l} />
+                <input id="registerFileLoader" type="file" className="hidden" onChange={this.onLoadSuccess.bind(this)} ref={l => this.inputFile = l} />
                 <div className="text-center">
                     <p>To begin creating your new private key you will need to enter account seed. This is a unique passphrase used by our cryptographic algorithms to generate the private key. In future, you can use your passphrase to re-generate your private key in case you lost it</p>
                     <hr />
