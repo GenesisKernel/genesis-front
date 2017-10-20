@@ -112,3 +112,14 @@ body {
     top: 0;
     bottom: 0;
 }
+
+/* Hide HTML5 input[type="number"] up/down arrows */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+ 
+input[type="number"] {
+    -moz-appearance: textfield;
+}
