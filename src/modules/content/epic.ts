@@ -26,23 +26,19 @@ export const renderPageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.renderPage.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, action.payload.name, action.payload.params)
-                .then(page => {
-                    return api.contentMenu(state.auth.sessionToken, page.menu)
-                        .then(menu => ({
-                            menu: {
-                                name: page.menu,
-                                content: JSON.parse(menu.tree)
-                            },
-                            page: {
-                                name: action.payload.name,
-                                content: JSON.parse(page.tree)
-                            }
-                        }));
-                }))
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, action.payload.name, action.payload.params))
                 .map(payload => actions.renderPage.done({
                     params: action.payload,
-                    result: payload
+                    result: {
+                        menu: {
+                            name: payload.menu,
+                            content: JSON.parse(payload.menutree)
+                        },
+                        page: {
+                            name: action.payload.name,
+                            content: JSON.parse(payload.tree)
+                        }
+                    }
                 }))
                 .catch((e: IAPIError) =>
                     Observable.of(actions.renderPage.failed({

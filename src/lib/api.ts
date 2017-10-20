@@ -75,6 +75,7 @@ export interface ISignTestResponse extends IResponse {
 export interface IContentResponse extends IResponse {
     menu: string;
     tree: string;
+    menutree?: string;
 }
 
 export interface ITableResponse extends IResponse {
