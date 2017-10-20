@@ -21,7 +21,26 @@ import onClickOutside from 'react-onclickoutside';
 import { OrderedMap } from 'immutable';
 import styled from 'styled-components';
 
-import UserMenu from 'components/Main/UserMenu';
+import UserMenu from 'containers/Widgets/UserMenu';
+
+const StyledNavbar = styled.ul`
+    > li {
+        > .dropdown-menu {
+            transition: opacity .2s ease-in-out;
+            opacity: 0;
+            display: block;
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        &.open {
+            > .dropdown-menu {
+                opacity: 1;
+                max-height: none;
+            }   
+        }
+    }
+`;
 
 const StyledLoadingBar = styled(LoadingBar) `
     position: fixed;
@@ -115,7 +134,7 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
                                 </a>
                             </li>
                         </ul>
-                        <ul className="nav navbar-nav navbar-right">
+                        <StyledNavbar className="nav navbar-nav navbar-right">
                             <li className={`dropdown-list dropdown ${this.isDropdownVisible('tx') ? 'open' : ''}`}>
                                 <a href="#" className="dropdown-toggle" onClick={this.onDropdownToggle.bind(this, 'tx')}>
                                     <span>
@@ -130,69 +149,67 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
                                         }
                                     </span>
                                 </a>
-                                {this.isDropdownVisible('tx') && (
-                                    <div className="dropdown-menu" style={{ minWidth: '25vw' }}>
-                                        {this.props.pendingTransactions.isEmpty() ?
-                                            (
-                                                <div className="list-group">
-                                                    <div className="list-group-item">
-                                                        <div className="small">
-                                                            <FormattedMessage id="tx.history.empty" defaultMessage="Transactions list is empty" />
-                                                        </div>
+                                <div className="dropdown-menu" style={{ minWidth: '25vw' }}>
+                                    {this.props.pendingTransactions.isEmpty() ?
+                                        (
+                                            <div className="list-group">
+                                                <div className="list-group-item">
+                                                    <div className="small">
+                                                        <FormattedMessage id="tx.history.empty" defaultMessage="Transactions list is empty" />
                                                     </div>
                                                 </div>
-                                            ) :
-                                            (
-                                                <div className="list-group">
-                                                    {this.props.pendingTransactions.reverse().toArray().map((t, index) => (
-                                                        <div className="list-group-item" key={t.uuid}>
-                                                            <div className="media-box">
-                                                                <div className="pull-left" style={{ width: 20, textAlign: 'center' }}>
+                                            </div>
+                                        ) :
+                                        (
+                                            <div className="list-group">
+                                                {this.props.pendingTransactions.reverse().toArray().map((t, index) => (
+                                                    <div className="list-group-item" key={t.uuid}>
+                                                        <div className="media-box">
+                                                            <div className="pull-left" style={{ width: 20, textAlign: 'center' }}>
+                                                                {t.block && (
+                                                                    <em className="fa fa-check text-success" />
+                                                                )}
+                                                                {t.error && (
+                                                                    <em className="fa fa-exclamation text-danger" />
+                                                                )}
+                                                                {!t.block && !t.error && (
+                                                                    <em className="fa fa-refresh text-warning fa-pulse" />
+                                                                )}
+                                                            </div>
+                                                            <div className="media-box-body clearfix">
+                                                                <p className="m0">{t.contract}</p>
+                                                                <p className="m0 text-muted small">
                                                                     {t.block && (
-                                                                        <em className="fa fa-check text-success" />
+                                                                        <span>
+                                                                            <FormattedMessage id="tx.imprinted" defaultMessage="Imprinted in the blockchain" />
+                                                                        </span>
                                                                     )}
                                                                     {t.error && (
-                                                                        <em className="fa fa-exclamation text-danger" />
+                                                                        <span>
+                                                                            <FormattedMessage id="tx.error" defaultMessage="Error executing transaction" />
+                                                                        </span>
                                                                     )}
                                                                     {!t.block && !t.error && (
-                                                                        <em className="fa fa-refresh text-warning fa-pulse" />
+                                                                        <span>
+                                                                            <FormattedMessage id="tx.pending" defaultMessage="Executing transaction..." />
+                                                                        </span>
                                                                     )}
-                                                                </div>
-                                                                <div className="media-box-body clearfix">
-                                                                    <p className="m0">{t.contract}</p>
-                                                                    <p className="m0 text-muted small">
-                                                                        {t.block && (
-                                                                            <span>
-                                                                                <FormattedMessage id="tx.imprinted" defaultMessage="Imprinted in the blockchain" />
-                                                                            </span>
-                                                                        )}
-                                                                        {t.error && (
-                                                                            <span>
-                                                                                <FormattedMessage id="tx.error" defaultMessage="Error executing transaction" />
-                                                                            </span>
-                                                                        )}
-                                                                        {!t.block && !t.error && (
-                                                                            <span>
-                                                                                <FormattedMessage id="tx.pending" defaultMessage="Executing transaction..." />
-                                                                            </span>
-                                                                        )}
-                                                                    </p>
-                                                                    <StyledProgressBar>
-                                                                        <ProgressBar className="bar-fill" loading={(!t.block && !t.error) ? 1 : 0} />
-                                                                    </StyledProgressBar>
-                                                                </div>
+                                                                </p>
+                                                                <StyledProgressBar>
+                                                                    <ProgressBar className="bar-fill" loading={(!t.block && !t.error) ? 1 : 0} />
+                                                                </StyledProgressBar>
                                                             </div>
                                                         </div>
-                                                    ))
-                                                    }
-                                                    <StyledHistoryButton>
-                                                        <FormattedMessage id="tx.history.view" defaultMessage="View session history({count})" values={{ count: this.props.transactionsCount }} />
-                                                    </StyledHistoryButton>
-                                                </div>
-                                            )
-                                        }
-                                    </div>
-                                )}
+                                                    </div>
+                                                ))
+                                                }
+                                                <StyledHistoryButton>
+                                                    <FormattedMessage id="tx.history.view" defaultMessage="View session history({count})" values={{ count: this.props.transactionsCount }} />
+                                                </StyledHistoryButton>
+                                            </div>
+                                        )
+                                    }
+                                </div>
                             </li>
                             <li className={`dropdown-list dropdown ${this.isDropdownVisible('notifications') ? 'open' : ''}`}>
                                 <a className="dropdown-toggle" href="#" onClick={this.onDropdownToggle.bind(this, 'notifications')}>
@@ -201,60 +218,59 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
                                         <span className="label label-danger">11</span>
                                     </span>
                                 </a>
-                                {this.isDropdownVisible('notifications') && (
-                                    <ul className="dropdown-menu" aria-labelledby="basic-nav-dropdown">
-                                        <ul className="list-group">
-                                            <a href="javascript:void(0)" className="list-group-item">
-                                                <div className="media-box">
-                                                    <div className="pull-left">
-                                                        <em className="fa fa-twitter fa-2x text-info" />
-                                                    </div>
-                                                    <div className="media-box-body clearfix">
-                                                        <p className="m0">New followers</p>
-                                                        <p className="m0 text-muted">
-                                                            <small>1 new follower</small>
-                                                        </p>
-                                                    </div>
+                                <ul className="dropdown-menu" aria-labelledby="basic-nav-dropdown">
+                                    <ul className="list-group">
+                                        <a href="javascript:void(0)" className="list-group-item">
+                                            <div className="media-box">
+                                                <div className="pull-left">
+                                                    <em className="fa fa-twitter fa-2x text-info" />
                                                 </div>
-                                            </a>
-                                            <a href="javascript:void(0)" className="list-group-item">
-                                                <div className="media-box">
-                                                    <div className="pull-left">
-                                                        <em className="fa fa-envelope fa-2x text-warning" />
-                                                    </div>
-                                                    <div className="media-box-body clearfix">
-                                                        <p className="m0">New e-mails</p>
-                                                        <p className="m0 text-muted">
-                                                            <small>You have 10 new emails</small>
-                                                        </p>
-                                                    </div>
+                                                <div className="media-box-body clearfix">
+                                                    <p className="m0">New followers</p>
+                                                    <p className="m0 text-muted">
+                                                        <small>1 new follower</small>
+                                                    </p>
                                                 </div>
-                                            </a>
-                                            <a href="javascript:void(0)" className="list-group-item">
-                                                <div className="media-box">
-                                                    <div className="pull-left">
-                                                        <em className="fa fa-tasks fa-2x text-success" />
-                                                    </div>
-                                                    <div className="media-box-body clearfix">
-                                                        <p className="m0">Pending Tasks</p>
-                                                        <p className="m0 text-muted">
-                                                            <small>11 pending task</small>
-                                                        </p>
-                                                    </div>
+                                            </div>
+                                        </a>
+                                        <a href="javascript:void(0)" className="list-group-item">
+                                            <div className="media-box">
+                                                <div className="pull-left">
+                                                    <em className="fa fa-envelope fa-2x text-warning" />
                                                 </div>
-                                            </a>
-                                            <a href="javascript:void(0)" className="list-group-item">
-                                                <small>More notifications</small>
-                                                <span className="label label-danger pull-right">14</span>
-                                            </a>
-                                        </ul>
+                                                <div className="media-box-body clearfix">
+                                                    <p className="m0">New e-mails</p>
+                                                    <p className="m0 text-muted">
+                                                        <small>You have 10 new emails</small>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <a href="javascript:void(0)" className="list-group-item">
+                                            <div className="media-box">
+                                                <div className="pull-left">
+                                                    <em className="fa fa-tasks fa-2x text-success" />
+                                                </div>
+                                                <div className="media-box-body clearfix">
+                                                    <p className="m0">Pending Tasks</p>
+                                                    <p className="m0 text-muted">
+                                                        <small>11 pending task</small>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <a href="javascript:void(0)" className="list-group-item">
+                                            <small>More notifications</small>
+                                            <span className="label label-danger pull-right">14</span>
+                                        </a>
                                     </ul>
-                                )}
+                                </ul>
                             </li>
-                            <li>
-                                <UserMenu />
-                            </li>
-                        </ul>
+                            <UserMenu
+                                collapsed={!this.isDropdownVisible('user')}
+                                onToggleCollapsed={this.onDropdownToggle.bind(this, 'user')}
+                            />
+                        </StyledNavbar>
                     </div>
                 </nav>
                 <StyledLoadingBar

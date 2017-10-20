@@ -19,7 +19,9 @@ import { Action } from 'redux';
 import { combineEpics, Epic } from 'redux-observable';
 import { Observable } from 'rxjs';
 import { IRootState } from 'modules';
+import * as engineActions from 'modules/engine/actions';
 import * as actions from './actions';
+import { reset } from 'modules/content/actions';
 import { readTextFile } from 'lib/fs';
 import keyring from 'lib/keyring';
 import storage from 'lib/storage';
@@ -50,6 +52,51 @@ export const loginEpic = (actions$: Observable<Action>) =>
                     error: e.error
                 }));
             });
+        });
+
+export const logoutEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.logout.started)
+        .map(action => {
+            localStorage.removeItem('privateKey');
+            localStorage.removeItem('publicKey');
+            return engineActions.navigate('/');
+        })
+        .map(action =>
+            actions.logout.done({
+                params: action.payload,
+                result: null
+            })
+        );
+
+export const switchEcosystemEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.switchEcosystem.started)
+        .flatMap(action => {
+            const state = store.getState();
+            const promise = api.getUid().then(uid => {
+                const signature = keyring.sign(uid.uid, state.auth.privateKey);
+                return api.login(uid.token, state.auth.account.publicKey, signature, null, action.payload);
+            });
+
+            return Observable.fromPromise(promise);
+        })
+        .flatMap(payload =>
+            Observable.concat(
+                Observable.of(actions.switchEcosystem.done({
+                    params: payload.state,
+                    result: {
+                        token: payload.token,
+                        refresh: payload.refresh,
+                        expiry: payload.expiry
+                    }
+                })),
+                Observable.of(reset.started(null))
+            )
+        )
+        .catch((e: IAPIError) => {
+            return Observable.of(actions.switchEcosystem.failed({
+                params: null,
+                error: e.error
+            }));
         });
 
 export const importSeedEpic = (actions$: Observable<Action>) =>
@@ -110,6 +157,8 @@ export const refreshSessionEpic: Epic<Action, IRootState> =
 
 export default combineEpics(
     loginEpic,
+    logoutEpic,
+    switchEcosystemEpic,
     importSeedEpic,
     createAccountEpic,
     refreshSessionEpic

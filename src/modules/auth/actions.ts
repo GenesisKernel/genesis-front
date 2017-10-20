@@ -20,6 +20,9 @@ import { IStoredKey } from 'lib/storage';
 
 const actionCreator = actionCreatorFactory('auth');
 export const login = actionCreator.async<{ privateKey: string, publicKey: string, remember: boolean }, ILoginResponse & { account: IStoredKey, privateKey: string }, string>('LOGIN');
+export const logout = actionCreator.async('LOGOUT');
+export const switchEcosystem = actionCreator.async<string, { token: string, refresh: string, expiry: Date }, string>('SWITCH_ECOSYSTEM');
+export const createEcosystem = actionCreator<{ name: string, id: string }>('CREATE_ECOSYSTEM');
 export const setAction = actionCreator<string>('SET_ACTION');
 export const importSeed = actionCreator.async<Blob, string, undefined>('IMPORT_SEED');
 export const createAccount = actionCreator.async<{ privateKey: string, publicKey: string, password: string }, { id: string, address: string, privateKey: string, publicKey: string, password: string }, undefined>('CREATE_ACCOUNT');

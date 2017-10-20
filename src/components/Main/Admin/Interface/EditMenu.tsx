@@ -95,7 +95,7 @@ class EditMenu extends React.Component<IEditMenuProps, IEditMenuState> {
                     </li>
                 </ol>
                 <MenuEditor
-                    contractName="EditMenu"
+                    contractName="@1EditMenu"
                     mapContractParams={this.mapContractParams.bind(this)}
 
                     template={this.state.template}

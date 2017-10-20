@@ -15,7 +15,6 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { IStoredKey } from 'lib/storage';
 import * as classnames from 'classnames';
 import { setCollapsed } from 'modules/engine/actions';
 import { menuPop, menuPush } from 'modules/content/actions';
@@ -37,7 +36,6 @@ const StyledContent = styled.section`
 
 export interface IMainProps {
     session: string;
-    account: IStoredKey;
     isCollapsed: boolean;
     pending: boolean;
     menus: { name: string, content: IProtypoElement[] }[];

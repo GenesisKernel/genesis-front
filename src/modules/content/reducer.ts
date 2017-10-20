@@ -41,8 +41,7 @@ export default (state: State = initialState, action: Action): State => {
             page: null
         };
     }
-
-    if (isType(action, actions.renderPage.done)) {
+    else if (isType(action, actions.renderPage.done)) {
         const menuNeedsPush = !state.menus.length || state.menus[state.menus.length - 1].name !== action.payload.result.menu.name;
         return {
             ...state,
@@ -53,8 +52,7 @@ export default (state: State = initialState, action: Action): State => {
             page: action.payload.result.page
         };
     }
-
-    if (isType(action, actions.renderPage.failed)) {
+    else if (isType(action, actions.renderPage.failed)) {
         return {
             ...state,
             pending: false,
@@ -129,6 +127,34 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             alert: action.payload
+        };
+    }
+
+    if (isType(action, actions.reset.started)) {
+        return {
+            ...state,
+            pending: true,
+            page: null,
+            menus: []
+        };
+    }
+    else if (isType(action, actions.reset.done)) {
+        return {
+            ...state,
+            pending: false,
+            menus: [action.payload.result.menu],
+            page: action.payload.result.page
+        };
+    }
+    else if (isType(action, actions.reset.failed)) {
+        return {
+            ...state,
+            pending: false,
+            page: {
+                name: null,
+                content: null,
+                error: action.payload.error
+            }
         };
     }
 

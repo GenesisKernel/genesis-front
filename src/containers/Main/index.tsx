@@ -115,7 +115,6 @@ class MainContainer extends React.Component<IMainProps & { menuInit: typeof menu
 
 const mapStateToProps = (state: IRootState) => ({
     session: state.auth.sessionToken,
-    account: state.auth.account,
     menus: state.content.menus,
     pending: state.content.pending,
     isCollapsed: state.engine.isCollapsed,

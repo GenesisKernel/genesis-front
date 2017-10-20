@@ -65,8 +65,7 @@ export default (state: State = initialState, action: Action): State => {
             refreshToken: null
         };
     }
-
-    if (isType(action, actions.login.done)) {
+    else if (isType(action, actions.login.done)) {
         return {
             ...state,
             isAuthenticated: true,
@@ -79,11 +78,65 @@ export default (state: State = initialState, action: Action): State => {
             sessionExpiry: action.payload.result.expiry
         };
     }
-
-    if (isType(action, actions.login.failed)) {
+    else if (isType(action, actions.login.failed)) {
         return {
             ...state,
             isLoggingIn: false
+        };
+    }
+
+    if (isType(action, actions.logout.done)) {
+        return {
+            ...state,
+            isAuthenticated: false,
+            isLoggingIn: false,
+            account: null,
+            sessionToken: null,
+            refreshToken: null
+        };
+    }
+
+    if (isType(action, actions.switchEcosystem.started)) {
+        return {
+            ...state,
+            isAuthenticated: false,
+            isLoggingIn: true,
+            sessionToken: null,
+            refreshToken: null
+        };
+    }
+    else if (isType(action, actions.switchEcosystem.done)) {
+        return {
+            ...state,
+            isAuthenticated: true,
+            isLoggingIn: false,
+            ecosystem: action.payload.params,
+            sessionToken: action.payload.result.token,
+            refreshToken: action.payload.result.refresh,
+            sessionExpiry: action.payload.result.expiry
+        };
+    }
+    else if (isType(action, actions.switchEcosystem.failed)) {
+        return {
+            ...state,
+            isAuthenticated: false,
+            isLoggingIn: false,
+            account: null,
+            sessionToken: null,
+            refreshToken: null
+        };
+    }
+
+    if (isType(action, actions.createEcosystem)) {
+        return {
+            ...state,
+            account: {
+                ...state.account,
+                ecosystems: {
+                    ...state.account.ecosystems,
+                    [action.payload.id]: action.payload.name
+                }
+            }
         };
     }
 
@@ -93,8 +146,7 @@ export default (state: State = initialState, action: Action): State => {
             loadedSeed: action.payload.result
         };
     }
-
-    if (isType(action, actions.createAccount.started)) {
+    else if (isType(action, actions.createAccount.started)) {
         return {
             ...state,
             isCreatingAccount: true,

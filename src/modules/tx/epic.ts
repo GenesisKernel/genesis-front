@@ -19,7 +19,9 @@ import { combineEpics, Epic } from 'redux-observable';
 import { Action } from 'redux';
 import { Observable } from 'rxjs';
 import * as actions from './actions';
+import { createEcosystem } from 'modules/auth/actions';
 import keyring from 'lib/keyring';
+import storage from 'lib/storage';
 import api, { ITxStatusResponse } from 'lib/api';
 
 export const contractExecEpic: Epic<Action, IRootState> =
@@ -36,10 +38,38 @@ export const contractExecEpic: Epic<Action, IRootState> =
                         time: response.time
                     });
                 }))
-                .map(payload => actions.contractExec.done({
-                    params: action.payload,
-                    result: payload.blockid
-                }))
+                .flatMap(payload => {
+                    // We must listen to this transaction or we will never catch
+                    // the ID of newly created ecosystem. It's name is constant
+                    if ('NewEcosystem' === action.payload.name) {
+                        const ecosystemName = (action.payload.params && action.payload.params.Name) || payload.result;
+                        const account = state.auth.account;
+
+                        storage.accounts.save({
+                            ...account,
+                            ecosystems: {
+                                ...account.ecosystems,
+                                [payload.result]: ecosystemName
+                            }
+                        });
+
+                        return Observable.concat(
+                            Observable.of(createEcosystem({
+                                id: payload.result,
+                                name: ecosystemName
+                            })),
+                            Observable.of(actions.contractExec.done({
+                                params: action.payload,
+                                result: payload.blockid
+                            }))
+                        );
+                    }
+
+                    return Observable.of(actions.contractExec.done({
+                        params: action.payload,
+                        result: payload.blockid
+                    }));
+                })
                 .catch((error: ITxStatusResponse) => Observable.of(actions.contractExec.failed({
                     params: action.payload,
                     error: error.error || error.errmsg

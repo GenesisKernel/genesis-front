@@ -90,8 +90,35 @@ export const alertEpic: Epic<Action, IRootState> =
                 }));
         });
 
+export const resetEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.reset.started)
+        .flatMap(action => {
+            const state = store.getState();
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, 'default_page', {}))
+                .map(payload => actions.reset.done({
+                    params: action.payload,
+                    result: {
+                        menu: {
+                            name: payload.menu,
+                            content: JSON.parse(payload.menutree)
+                        },
+                        page: {
+                            name: 'default_page',
+                            content: JSON.parse(payload.tree)
+                        }
+                    }
+                }))
+                .catch((e: IAPIError) =>
+                    Observable.of(actions.reset.failed({
+                        params: action.payload,
+                        error: e.error
+                    }))
+                );
+        });
+
 export default combineEpics(
     renderPageEpic,
     menuInitEpic,
+    resetEpic,
     alertEpic
 );
