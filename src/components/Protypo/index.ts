@@ -25,6 +25,7 @@ import MenuGroup from 'components/Protypo/MenuGroup';
 import P from 'components/Protypo/P';
 import Span from 'components/Protypo/Span';
 import Strong from 'components/Protypo/Strong';
+import Style from 'components/Protypo/Style';
 
 const handlers = {
     'button': Button,
@@ -36,7 +37,8 @@ const handlers = {
     'menugroup': MenuGroup,
     'p': P,
     'span': Span,
-    'strong': Strong
+    'strong': Strong,
+    'style': Style
 };
 
 export const resolveHandler = (name: string) => {
