@@ -103,7 +103,7 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
                         <FormattedMessage id="admin.tables.column.add" defaultMessage="Add column" />
                     </li>
                 </ol>
-                <ValidatedContractForm contractName="NewColumn" mapContractParams={this.mapContractParams.bind(this)} onExec={this.onExec.bind(this)}>
+                <ValidatedContractForm contractName="@1NewColumn" mapContractParams={this.mapContractParams.bind(this)} onExec={this.onExec.bind(this)}>
                     <div className="panel panel-default">
                         <div className="panel-body">
                             <Validation.components.ValidatedFormGroup for="name">

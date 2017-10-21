@@ -100,7 +100,7 @@ class CreatePage extends React.Component<ICreatePageProps, ICreatePageState> {
                     </li>
                 </ol>
                 <PageEditor
-                    contractName="NewPage"
+                    contractName="@1NewPage"
                     mapContractParams={this.mapContractParams.bind(this)}
 
                     template={this.state.template}

@@ -95,7 +95,7 @@ class EditBlock extends React.Component<IEditBlockProps, IEditBlockState> {
                     </li>
                 </ol>
                 <BlockEditor
-                    contractName="EditBlock"
+                    contractName="@1EditBlock"
                     mapContractParams={this.mapContractParams.bind(this)}
 
                     template={this.state.template}

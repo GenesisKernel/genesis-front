@@ -103,7 +103,7 @@ class Create extends React.Component<{}, ICreateState> {
                     </li>
                 </ol>
                 <ContractEditor
-                    contractName="NewContract"
+                    contractName="@1NewContract"
                     mapContractParams={this.mapContractParams.bind(this)}
 
                     code={this.state.code}

@@ -79,7 +79,7 @@ class CreateMenu extends React.Component<{}, ICreateMenuState> {
                     </li>
                 </ol>
                 <MenuEditor
-                    contractName="NewMenu"
+                    contractName="@1NewMenu"
                     mapContractParams={this.mapContractParams.bind(this)}
 
                     template={this.state.template}

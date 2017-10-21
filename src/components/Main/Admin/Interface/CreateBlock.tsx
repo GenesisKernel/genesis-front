@@ -79,7 +79,7 @@ class CreateBlock extends React.Component<{}, ICreateBlockState> {
                     </li>
                 </ol>
                 <BlockEditor
-                    contractName="NewBlock"
+                    contractName="@1NewBlock"
                     mapContractParams={this.mapContractParams.bind(this)}
 
                     template={this.state.template}

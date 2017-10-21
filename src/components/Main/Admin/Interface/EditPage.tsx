@@ -107,7 +107,7 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
                     </li>
                 </ol>
                 <PageEditor
-                    contractName="EditPage"
+                    contractName="@1EditPage"
                     mapContractParams={this.mapContractParams.bind(this)}
                     onExec={this.onExec.bind(this)}
 

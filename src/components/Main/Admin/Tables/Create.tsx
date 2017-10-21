@@ -192,7 +192,7 @@ class Create extends React.Component<{}, ICreateState> {
                         <FormattedMessage id="admin.tables.create" defaultMessage="Create" />
                     </li>
                 </ol>
-                <ValidatedContractForm contractName="NewTable" mapContractParams={this.mapContractParams.bind(this)} onExec={this.onExec.bind(this)}>
+                <ValidatedContractForm contractName="@1NewTable" mapContractParams={this.mapContractParams.bind(this)} onExec={this.onExec.bind(this)}>
                     <div className="panel panel-default">
                         <div className="panel-body">
                             <Validation.components.ValidatedFormGroup for="name">

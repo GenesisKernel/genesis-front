@@ -131,7 +131,7 @@ class Create extends React.Component<{}, ICreateState> {
                     </li>
                 </ol>
                 <LocaleEditor
-                    contractName="NewLang"
+                    contractName="@1NewLang"
                     translations={this.state.translations}
                     onNewLocale={this.onNewLocale.bind(this)}
                     onDropLocale={this.onDropLocale.bind(this)}

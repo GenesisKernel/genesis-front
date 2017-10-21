@@ -146,7 +146,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
                     </li>
                 </ol>
                 <LocaleEditor
-                    contractName="EditLang"
+                    contractName="@1EditLang"
                     translation={this.props.translation && this.props.translation.name}
                     translations={this.state.translations}
                     onNewLocale={this.onNewLocale.bind(this)}

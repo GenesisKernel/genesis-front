@@ -127,7 +127,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
                     </li>
                 </ol>
                 <ContractEditor
-                    contractName="EditContract"
+                    contractName="@1EditContract"
                     mapContractParams={this.mapContractParams.bind(this)}
 
                     code={this.state.code}
