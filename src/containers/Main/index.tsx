@@ -48,9 +48,6 @@ import DefaultPage from 'containers/Main/containers/DefaultPage';
 import Page from 'containers/Main/containers/Page';
 import Debug from 'containers/Main/containers/Debug';
 import Backup from 'containers/Main/containers/Backup';
-import EcosystemCreate from 'containers/Main/containers/EcosystemCreate';
-import MoneyTransfer from 'containers/Main/containers/MoneyTransfer';
-import RequestMembership from 'containers/Main/containers/RequestMembership';
 import NotFound from 'containers/Main/containers/NotFound';
 
 class MainContainer extends React.Component<IMainProps & { menuInit: typeof menuInit.started }> {
@@ -103,9 +100,6 @@ class MainContainer extends React.Component<IMainProps & { menuInit: typeof menu
 
                     <Route exact path="/debug" component={Debug} />
                     <Route exact path="/backup" component={Backup} />
-                    <Route exact path="/create-ecosystem" component={EcosystemCreate} />
-                    <Route exact path="/request-membership" component={RequestMembership} />
-                    <Route exact path="/transfer" component={MoneyTransfer} />
                     <Route path="*" component={NotFound} />
                 </Switch>
             </Main>
