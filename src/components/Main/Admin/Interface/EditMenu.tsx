@@ -18,6 +18,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 
+import DocumentTitle from 'components/DocumentTitle';
 import MenuEditor from './MenuEditor';
 
 export interface IEditMenuProps {
@@ -77,35 +78,37 @@ class EditMenu extends React.Component<IEditMenuProps, IEditMenuState> {
 
     render() {
         return (
-            <div className="content-wrapper">
-                <div className="content-heading">
-                    <FormattedMessage id="admin.interface" defaultMessage="Interface" />
-                </div>
-                <ol className="breadcrumb">
-                    <li>
-                        <Link to="/admin/interface">
-                            <FormattedMessage id="admin.interface" defaultMessage="Interface" />
-                        </Link>
-                    </li>
-                    <li>
-                        <FormattedMessage id="admin.interface.menu" defaultMessage="Menu" />
-                    </li>
-                    <li>
-                        {this.props.menu && this.props.menu.name}
-                    </li>
-                </ol>
-                <MenuEditor
-                    contractName="@1EditMenu"
-                    mapContractParams={this.mapContractParams.bind(this)}
+            <DocumentTitle title={this.props.menu && this.props.menu.name}>
+                <div className="content-wrapper">
+                    <div className="content-heading">
+                        <FormattedMessage id="admin.interface" defaultMessage="Interface" />
+                    </div>
+                    <ol className="breadcrumb">
+                        <li>
+                            <Link to="/admin/interface">
+                                <FormattedMessage id="admin.interface" defaultMessage="Interface" />
+                            </Link>
+                        </li>
+                        <li>
+                            <FormattedMessage id="admin.interface.menu" defaultMessage="Menu" />
+                        </li>
+                        <li>
+                            {this.props.menu && this.props.menu.name}
+                        </li>
+                    </ol>
+                    <MenuEditor
+                        contractName="@1EditMenu"
+                        mapContractParams={this.mapContractParams.bind(this)}
 
-                    template={this.state.template}
-                    conditions={this.state.conditions}
-                    menu={this.props.menu}
-                    onSourceEdit={this.onSourceEdit.bind(this)}
-                    onConditionsEdit={this.onConditionsEdit.bind(this)}
-                    onExec={this.onExec.bind(this)}
-                />
-            </div>
+                        template={this.state.template}
+                        conditions={this.state.conditions}
+                        menu={this.props.menu}
+                        onSourceEdit={this.onSourceEdit.bind(this)}
+                        onConditionsEdit={this.onConditionsEdit.bind(this)}
+                        onExec={this.onExec.bind(this)}
+                    />
+                </div>
+            </DocumentTitle>
         );
     }
 }

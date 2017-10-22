@@ -51,6 +51,7 @@ class PageContainer extends React.Component<IPageContainerProps> {
     render() {
         return (
             <Page
+                name={this.props.page && this.props.page.name}
                 payload={this.props.page && this.props.page.content}
                 menuPush={this.props.menuPush.bind(this)}
             />

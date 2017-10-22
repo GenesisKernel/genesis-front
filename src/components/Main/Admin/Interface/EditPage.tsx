@@ -18,6 +18,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 
+import DocumentTitle from 'components/DocumentTitle';
 import PageEditor from './PageEditor';
 
 export interface IEditPageProps {
@@ -89,38 +90,40 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
 
     render() {
         return (
-            <div className="content-wrapper">
-                <div className="content-heading">
-                    <FormattedMessage id="admin.interface" defaultMessage="Interface" />
-                </div>
-                <ol className="breadcrumb">
-                    <li>
-                        <Link to="/admin/interface">
-                            <FormattedMessage id="admin.interface" defaultMessage="Interface" />
-                        </Link>
-                    </li>
-                    <li>
-                        <FormattedMessage id="admin.interface.pages" defaultMessage="Pages" />
-                    </li>
-                    <li>
-                        {this.props.page && this.props.page.name}
-                    </li>
-                </ol>
-                <PageEditor
-                    contractName="@1EditPage"
-                    mapContractParams={this.mapContractParams.bind(this)}
-                    onExec={this.onExec.bind(this)}
+            <DocumentTitle title={this.props.page && this.props.page.name}>
+                <div className="content-wrapper">
+                    <div className="content-heading">
+                        <FormattedMessage id="admin.interface" defaultMessage="Interface" />
+                    </div>
+                    <ol className="breadcrumb">
+                        <li>
+                            <Link to="/admin/interface">
+                                <FormattedMessage id="admin.interface" defaultMessage="Interface" />
+                            </Link>
+                        </li>
+                        <li>
+                            <FormattedMessage id="admin.interface.pages" defaultMessage="Pages" />
+                        </li>
+                        <li>
+                            {this.props.page && this.props.page.name}
+                        </li>
+                    </ol>
+                    <PageEditor
+                        contractName="@1EditPage"
+                        mapContractParams={this.mapContractParams.bind(this)}
+                        onExec={this.onExec.bind(this)}
 
-                    template={this.state.template}
-                    conditions={this.state.conditions}
-                    page={this.props.page}
-                    menu={this.state.menu}
-                    menus={this.props.menus || []}
-                    onConditionsEdit={this.onConditionsEdit.bind(this)}
-                    onSourceEdit={this.onSourceEdit.bind(this)}
-                    onMenuSelect={this.onMenuSelect.bind(this)}
-                />
-            </div>
+                        template={this.state.template}
+                        conditions={this.state.conditions}
+                        page={this.props.page}
+                        menu={this.state.menu}
+                        menus={this.props.menus || []}
+                        onConditionsEdit={this.onConditionsEdit.bind(this)}
+                        onSourceEdit={this.onSourceEdit.bind(this)}
+                        onMenuSelect={this.onMenuSelect.bind(this)}
+                    />
+                </div>
+            </DocumentTitle>
         );
     }
 }

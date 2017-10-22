@@ -20,79 +20,83 @@ import { Button, Col, Panel, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { IContract } from 'lib/api';
 
+import DocumentTitle from 'components/DocumentTitle';
+
 export interface IContractsProps {
     contracts: IContract[];
 }
 
 const Contracts: React.SFC<IContractsProps> = (props) => (
-    <div className="content-wrapper">
-        <div className="content-heading">
-            <div>
-                <div className="pull-right">
-                    <Link to="/admin/contracts/create" className="ml">
-                        <button className="btn btn-default ml">
-                            <em className="fa fa-plus-circle fa-fw mr-sm" />
-                            <span>
-                                <FormattedMessage id="admin.contracts.create" defaultMessage="Create contract" />
-                            </span>
-                        </button>
-                    </Link>
+    <DocumentTitle title="admin.contracts" defaultTitle="Smart contracts">
+        <div className="content-wrapper">
+            <div className="content-heading">
+                <div>
+                    <div className="pull-right">
+                        <Link to="/admin/contracts/create" className="ml">
+                            <button className="btn btn-default ml">
+                                <em className="fa fa-plus-circle fa-fw mr-sm" />
+                                <span>
+                                    <FormattedMessage id="admin.contracts.create" defaultMessage="Create contract" />
+                                </span>
+                            </button>
+                        </Link>
+                    </div>
                 </div>
-            </div>
-            <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
-        </div>
-        <ol className="breadcrumb">
-            <li>
                 <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
-            </li>
-        </ol>
-        <Row>
-            <Col md={12}>
-                <Panel bsStyle="default">
-                    <table className="table table-striped table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th className="text-center">
-                                    <FormattedMessage id="admin.contracts.name" defaultMessage="Name" />
-                                </th>
-                                <th className="text-center">
-                                    <FormattedMessage id="admin.contracts.wallet" defaultMessage="Wallet" />
-                                </th>
-                                <th className="text-center">
-                                    <FormattedMessage id="admin.contracts.active" defaultMessage="Active" />
-                                </th>
-                                <th className="text-center">
-                                    <FormattedMessage id="admin.contracts.edit" defaultMessage="Edit" />
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {props.contracts && props.contracts.length && (
-                                props.contracts.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10)).map(contract => (
-                                    <tr key={contract.id}>
-                                        <td>{contract.id}</td>
-                                        <td>{contract.name}</td>
-                                        <td>{contract.address}</td>
-                                        <td className="text-center">{contract.active}</td>
-                                        <td style={{ width: 1 }}>
-                                            <Link to={`/admin/contracts/${contract.id}-${contract.name}`}>
-                                                <Button bsStyle="default" className="btn-labeled btn-icon">
-                                                    <span className="btn-label">
-                                                        <em className="fa fa-edit" />
-                                                    </span>
-                                                </Button>
-                                            </Link>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
-                </Panel>
-            </Col>
-        </Row>
-    </div>
+            </div>
+            <ol className="breadcrumb">
+                <li>
+                    <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
+                </li>
+            </ol>
+            <Row>
+                <Col md={12}>
+                    <Panel bsStyle="default">
+                        <table className="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th className="text-center">
+                                        <FormattedMessage id="admin.contracts.name" defaultMessage="Name" />
+                                    </th>
+                                    <th className="text-center">
+                                        <FormattedMessage id="admin.contracts.wallet" defaultMessage="Wallet" />
+                                    </th>
+                                    <th className="text-center">
+                                        <FormattedMessage id="admin.contracts.active" defaultMessage="Active" />
+                                    </th>
+                                    <th className="text-center">
+                                        <FormattedMessage id="admin.contracts.edit" defaultMessage="Edit" />
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {props.contracts && props.contracts.length && (
+                                    props.contracts.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10)).map(contract => (
+                                        <tr key={contract.id}>
+                                            <td>{contract.id}</td>
+                                            <td>{contract.name}</td>
+                                            <td>{contract.address}</td>
+                                            <td className="text-center">{contract.active}</td>
+                                            <td style={{ width: 1 }}>
+                                                <Link to={`/admin/contracts/${contract.id}-${contract.name}`}>
+                                                    <Button bsStyle="default" className="btn-labeled btn-icon">
+                                                        <span className="btn-label">
+                                                            <em className="fa fa-edit" />
+                                                        </span>
+                                                    </Button>
+                                                </Link>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </Panel>
+                </Col>
+            </Row>
+        </div>
+    </DocumentTitle>
 );
 
 export default Contracts;

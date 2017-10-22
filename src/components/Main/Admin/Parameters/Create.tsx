@@ -18,6 +18,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 
+import DocumentTitle from 'components/DocumentTitle';
 import ParameterEditor from './ParameterEditor';
 
 interface ICreateState {
@@ -66,30 +67,32 @@ class Create extends React.Component<{}, ICreateState> {
 
     render() {
         return (
-            <div className="content-wrapper">
-                <div className="content-heading">
-                    <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
+            <DocumentTitle title="admin.parameters.create" defaultTitle="Create parameter">
+                <div className="content-wrapper">
+                    <div className="content-heading">
+                        <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
+                    </div>
+                    <ol className="breadcrumb">
+                        <li>
+                            <Link to="/admin/parameters">
+                                <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
+                            </Link>
+                        </li>
+                        <li>
+                            <FormattedMessage id="admin.create" defaultMessage="Create" />
+                        </li>
+                    </ol>
+                    <ParameterEditor
+                        value={this.state.value}
+                        conditions={this.state.conditions}
+                        contractName="@1NewParameter"
+                        mapContractParams={this.mapContractParams.bind(this)}
+                        onExec={this.onExec.bind(this)}
+                        onValueEdit={this.onValueEdit.bind(this)}
+                        onConditionsEdit={this.onConditionsEdit.bind(this)}
+                    />
                 </div>
-                <ol className="breadcrumb">
-                    <li>
-                        <Link to="/admin/parameters">
-                            <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
-                        </Link>
-                    </li>
-                    <li>
-                        <FormattedMessage id="admin.parameters.create" defaultMessage="Create" />
-                    </li>
-                </ol>
-                <ParameterEditor
-                    value={this.state.value}
-                    conditions={this.state.conditions}
-                    contractName="@1NewParameter"
-                    mapContractParams={this.mapContractParams.bind(this)}
-                    onExec={this.onExec.bind(this)}
-                    onValueEdit={this.onValueEdit.bind(this)}
-                    onConditionsEdit={this.onConditionsEdit.bind(this)}
-                />
-            </div>
+            </DocumentTitle>
         );
     }
 }

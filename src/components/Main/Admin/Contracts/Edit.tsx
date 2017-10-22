@@ -20,6 +20,7 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { getContract } from 'modules/admin/actions';
 
+import DocumentTitle from 'components/DocumentTitle';
 import ContractEditor from './ContractEditor';
 
 export interface IEditProps {
@@ -112,35 +113,37 @@ class Edit extends React.Component<IEditProps, IEditState> {
 
     render() {
         return (
-            <div className="content-wrapper">
-                <div className="content-heading">
-                    <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
-                </div>
-                <ol className="breadcrumb">
-                    <li>
-                        <Link to="/admin/contracts">
-                            <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
-                        </Link>
-                    </li>
-                    <li>
-                        <FormattedMessage id="admin.contracts.edit" defaultMessage="Edit" />
-                    </li>
-                </ol>
-                <ContractEditor
-                    contractName="@1EditContract"
-                    mapContractParams={this.mapContractParams.bind(this)}
+            <DocumentTitle title="admin.contracts.edit" defaultTitle="Edit contract">
+                <div className="content-wrapper">
+                    <div className="content-heading">
+                        <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
+                    </div>
+                    <ol className="breadcrumb">
+                        <li>
+                            <Link to="/admin/contracts">
+                                <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
+                            </Link>
+                        </li>
+                        <li>
+                            <FormattedMessage id="admin.edit" defaultMessage="Edit" />
+                        </li>
+                    </ol>
+                    <ContractEditor
+                        contractName="@1EditContract"
+                        mapContractParams={this.mapContractParams.bind(this)}
 
-                    code={this.state.code}
-                    wallet={this.state.wallet}
-                    conditions={this.state.conditions}
-                    contract={this.props.contract}
-                    onSourceEdit={this.onSourceEdit.bind(this)}
-                    onWalletEdit={this.onWalletEdit.bind(this)}
-                    onConditionsEdit={this.onConditionsEdit.bind(this)}
-                    onContractActivation={this.onContractActivation.bind(this)}
-                    onExec={this.onExec.bind(this)}
-                />
-            </div>
+                        code={this.state.code}
+                        wallet={this.state.wallet}
+                        conditions={this.state.conditions}
+                        contract={this.props.contract}
+                        onSourceEdit={this.onSourceEdit.bind(this)}
+                        onWalletEdit={this.onWalletEdit.bind(this)}
+                        onConditionsEdit={this.onConditionsEdit.bind(this)}
+                        onContractActivation={this.onContractActivation.bind(this)}
+                        onExec={this.onExec.bind(this)}
+                    />
+                </div>
+            </DocumentTitle>
         );
     }
 }

@@ -17,12 +17,14 @@
 import * as React from 'react';
 import { Button, Panel } from 'react-bootstrap';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
-import Validation from 'components/Validation';
 import keyring from 'lib/keyring';
 import { sendAttachment } from 'lib/fs';
 import { IStoredKey } from 'lib/storage';
 import { alertShow } from 'modules/content/actions';
 import * as CopyToClipboard from 'react-copy-to-clipboard';
+
+import DocumentTitle from 'components/DocumentTitle';
+import Validation from 'components/Validation';
 
 export interface IBackupProps extends InjectedIntlProps {
     account: IStoredKey;
@@ -164,14 +166,16 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
 
     render() {
         return (
-            <div className="content-wrapper">
-                <div className="content-heading">
-                    <FormattedMessage id="general.backup" defaultMessage="Backup" />
+            <DocumentTitle title="general.account.backup" defaultTitle="Backup account">
+                <div className="content-wrapper">
+                    <div className="content-heading">
+                        <FormattedMessage id="general.backup" defaultMessage="Backup" />
+                    </div>
+                    <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit.bind(this)}>
+                        {this.state.privateKey ? this.renderSecond() : this.renderFirst()}
+                    </Validation.components.ValidatedForm>
                 </div>
-                <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit.bind(this)}>
-                    {this.state.privateKey ? this.renderSecond() : this.renderFirst()}
-                </Validation.components.ValidatedForm>
-            </div>
+            </DocumentTitle>
         );
     }
 }

@@ -25,6 +25,7 @@ import storage from 'lib/storage';
 import keyring from 'lib/keyring';
 import { sendAttachment } from 'lib/fs';
 
+import DocumentTitle from 'components/DocumentTitle';
 import General from 'components/General';
 import Validation from 'components/Validation';
 
@@ -299,18 +300,20 @@ class Create extends React.Component<ICreateProps, ICreateState> {
 
     render() {
         return (
-            <General return={this.state.isConfirming ? this.onBack.bind(this) : this.props.return}>
-                <input id="registerFileLoader" type="file" className="hidden" onChange={this.onLoadSuccess.bind(this)} ref={l => this.inputFile = l} />
-                <div className="text-center">
-                    <p>To begin creating your new private key you will need to enter account seed. This is a unique passphrase used by our cryptographic algorithms to generate the private key. In future, you can use your passphrase to re-generate your private key in case you lost it</p>
-                    <hr />
-                    <StyledForm>
-                        <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit.bind(this)}>
-                            {this.state.isConfirming ? this.renderSecond() : this.renderFirst()}
-                        </Validation.components.ValidatedForm>
-                    </StyledForm>
-                </div>
-            </General>
+            <DocumentTitle title="account.create" defaultTitle="Create account">
+                <General return={this.state.isConfirming ? this.onBack.bind(this) : this.props.return}>
+                    <input id="registerFileLoader" type="file" className="hidden" onChange={this.onLoadSuccess.bind(this)} ref={l => this.inputFile = l} />
+                    <div className="text-center">
+                        <p>To begin creating your new private key you will need to enter account seed. This is a unique passphrase used by our cryptographic algorithms to generate the private key. In future, you can use your passphrase to re-generate your private key in case you lost it</p>
+                        <hr />
+                        <StyledForm>
+                            <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit.bind(this)}>
+                                {this.state.isConfirming ? this.renderSecond() : this.renderFirst()}
+                            </Validation.components.ValidatedForm>
+                        </StyledForm>
+                    </div>
+                </General>
+            </DocumentTitle>
         );
     }
 }

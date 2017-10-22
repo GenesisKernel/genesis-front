@@ -21,6 +21,8 @@ import { Link } from 'react-router-dom';
 import { ITableResponse } from 'lib/api';
 import { columnTypes } from './Create';
 
+import DocumentTitle from 'components/DocumentTitle';
+
 export interface IEditTableProps {
     table: ITableResponse;
 }
@@ -36,89 +38,91 @@ const resolveColumnType = (type: string) => {
 };
 
 const EditTable: React.SFC<IEditTableProps> = (props) => (
-    <div className="content-wrapper">
-        <div className="content-heading">
-            <FormattedMessage id="admin.tables" defaultMessage="Tables" />
-        </div>
-        <ol className="breadcrumb">
-            <li>
-                <Link to="/admin/tables">
-                    <FormattedMessage id="admin.tables" defaultMessage="Tables" />
-                </Link>
-            </li>
-            {props.table && (
+    <DocumentTitle title={props.table && props.table.name}>
+        <div className="content-wrapper">
+            <div className="content-heading">
+                <FormattedMessage id="admin.tables" defaultMessage="Tables" />
+            </div>
+            <ol className="breadcrumb">
                 <li>
-                    <Link to={`/admin/tables/${props.table.name}`}>
-                        {props.table.name}
+                    <Link to="/admin/tables">
+                        <FormattedMessage id="admin.tables" defaultMessage="Tables" />
                     </Link>
                 </li>
-            )}
-            <li>
-                <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
-            </li>
-        </ol>
-        <Panel
-            bsStyle="default"
-            footer={
-                <div className="clearfix">
-                    <div className="pull-left">
-                        {props.table && (
-                            <Link to={`/admin/tables/${props.table.name}/edit/add-column`}>
-                                <Button bsStyle="primary">
-                                    <FormattedMessage id="admin.tables.column.add" defaultMessage="Add column" />
-                                </Button>
-                            </Link>
-                        )}
+                {props.table && (
+                    <li>
+                        <Link to={`/admin/tables/${props.table.name}`}>
+                            {props.table.name}
+                        </Link>
+                    </li>
+                )}
+                <li>
+                    <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
+                </li>
+            </ol>
+            <Panel
+                bsStyle="default"
+                footer={
+                    <div className="clearfix">
+                        <div className="pull-left">
+                            {props.table && (
+                                <Link to={`/admin/tables/${props.table.name}/edit/add-column`}>
+                                    <Button bsStyle="primary">
+                                        <FormattedMessage id="admin.tables.column.add" defaultMessage="Add column" />
+                                    </Button>
+                                </Link>
+                            )}
+                        </div>
                     </div>
-                </div>
-            }
-        >
-            <div className="table-responsive">
-                <table className="table table-striped table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>
-                                <FormattedMessage id="admin.tables.column" defaultMessage="Column" />
-                            </th>
-                            <th>
-                                <FormattedMessage id="admin.tables.column.type" defaultMessage="Type" />
-                            </th>
-                            <th>
-                                <FormattedMessage id="admin.tables.column.permissions" defaultMessage="Permissions" />
-                            </th>
-                            <th style={{ width: 1 }}>
-                                <FormattedMessage id="admin.tables.column.action" defaultMessage="Action" />
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {props.table && props.table.columns.map(col => (
-                            <tr key={col.name}>
-                                <td>{col.name}</td>
-                                <td>
-                                    {resolveColumnType(col.type) || (
-                                        <span className="text-muted">
-                                            <FormattedMessage id="admin.tables.column.type.unknown" defaultMessage="Unknown" />
-                                        </span>
-                                    )}
-                                </td>
-                                <td>{col.perm}</td>
-                                <td>
-                                    {props.table && (
-                                        <Link to={`/admin/tables/${props.table.name}/edit/column/${col.name}`}>
-                                            <Button bsStyle="primary">
-                                                <FormattedMessage id="admin.tables.column.edit" defaultMessage="Edit" />
-                                            </Button>
-                                        </Link>
-                                    )}
-                                </td>
+                }
+            >
+                <div className="table-responsive">
+                    <table className="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <FormattedMessage id="admin.tables.column" defaultMessage="Column" />
+                                </th>
+                                <th>
+                                    <FormattedMessage id="admin.tables.column.type" defaultMessage="Type" />
+                                </th>
+                                <th>
+                                    <FormattedMessage id="admin.tables.column.permissions" defaultMessage="Permissions" />
+                                </th>
+                                <th style={{ width: 1 }}>
+                                    <FormattedMessage id="admin.tables.column.action" defaultMessage="Action" />
+                                </th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </Panel>
-    </div>
+                        </thead>
+                        <tbody>
+                            {props.table && props.table.columns.map(col => (
+                                <tr key={col.name}>
+                                    <td>{col.name}</td>
+                                    <td>
+                                        {resolveColumnType(col.type) || (
+                                            <span className="text-muted">
+                                                <FormattedMessage id="admin.tables.column.type.unknown" defaultMessage="Unknown" />
+                                            </span>
+                                        )}
+                                    </td>
+                                    <td>{col.perm}</td>
+                                    <td>
+                                        {props.table && (
+                                            <Link to={`/admin/tables/${props.table.name}/edit/column/${col.name}`}>
+                                                <Button bsStyle="primary">
+                                                    <FormattedMessage id="admin.tables.column.edit" defaultMessage="Edit" />
+                                                </Button>
+                                            </Link>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </Panel>
+        </div>
+    </DocumentTitle>
 );
 
 export default EditTable;

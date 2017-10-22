@@ -20,6 +20,7 @@ import { Link } from 'react-router-dom';
 import { columnTypes } from './Create';
 import { ITableResponse } from 'lib/api';
 
+import DocumentTitle from 'components/DocumentTitle';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 
@@ -80,86 +81,74 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
         const columnType = columnDef && columnDef.title;
 
         return (
-            <div className="content-wrapper">
-                <div className="content-heading">
-                    <FormattedMessage id="admin.tables" defaultMessage="Tables" />
-                </div>
-                <ol className="breadcrumb">
-                    <li>
-                        <Link to="/admin/tables">
-                            <FormattedMessage id="admin.tables" defaultMessage="Tables" />
-                        </Link>
-                    </li>
-                    {this.props.table && (
-                        <li>
-                            <Link to={`/admin/tables/${this.props.table.name}`}>
-                                {this.props.table.name}
-                            </Link>
-                        </li>
-                    )}
-                    {this.props.table && (
-                        <li>
-                            <Link to={`/admin/tables/${this.props.table.name}/edit`}>
-                                <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
-                            </Link>
-                        </li>
-                    )}
-                    <li>
-                        <FormattedMessage id="admin.tables.column.edit" defaultMessage="Edit column" />
-                    </li>
-                </ol>
-                <ValidatedContractForm contractName="@1EditColumn" mapContractParams={this.mapContractParams.bind(this)} onExec={this.onExec.bind(this)}>
-                    <div className="panel panel-default">
-                        <div className="panel-body">
-                            <div className="form-group">
-                                <label>
-                                    <FormattedMessage id="admin.tables.column" defaultMessage="Column" />
-                                </label>
-                                <p className="form-control-static">
-                                    {this.props.column && this.props.column.name}
-                                </p>
-                            </div>
-                            {/*<div className="form-group">
-                            <label>
-                                <FormattedMessage id="admin.tables.column.index" defaultMessage="Index" />
-                            </label>
-                            <p className="form-control-static">
-                                {(this.props.column && this.props.column.index) ?
-                                    (
-                                        <FormattedMessage id="admin.tables.column.index.true" defaultMessage="True" />
-                                    ) : (
-                                        <FormattedMessage id="admin.tables.column.index.false" defaultMessage="False" />
-                                    )
-                                }
-                            </p>
-                        </div>*/}
-                            <div className="form-group">
-                                <label>
-                                    <FormattedMessage id="admin.tables.column.type" defaultMessage="Type" />
-                                </label>
-                                <p className="form-control-static">
-                                    {columnType || (
-                                        <span className="text-muted">
-                                            <FormattedMessage id="admin.tables.column.type.unknown" defaultMessage="Unknown" />
-                                        </span>
-                                    )}
-                                </p>
-                            </div>
-                            <Validation.components.ValidatedFormGroup for="permissions" className="mb0">
-                                <label htmlFor="permissions">
-                                    <FormattedMessage id="admin.tables.permissions" defaultMessage="Permissions" />
-                                </label>
-                                <Validation.components.ValidatedTextarea name="permissions" validators={[Validation.validators.required]} value={this.state.permissions} onChange={this.onPermissionsChange.bind(this)} />
-                            </Validation.components.ValidatedFormGroup>
-                        </div>
-                        <div className="panel-footer">
-                            <Validation.components.ValidatedSubmit bsStyle="primary">
-                                <FormattedMessage id="admin.save" defaultMessage="Save" />
-                            </Validation.components.ValidatedSubmit>
-                        </div>
+            <DocumentTitle title="admin.tables.column.edit" defaultTitle="Edit column">
+                <div className="content-wrapper">
+                    <div className="content-heading">
+                        <FormattedMessage id="admin.tables" defaultMessage="Tables" />
                     </div>
-                </ValidatedContractForm>
-            </div>
+                    <ol className="breadcrumb">
+                        <li>
+                            <Link to="/admin/tables">
+                                <FormattedMessage id="admin.tables" defaultMessage="Tables" />
+                            </Link>
+                        </li>
+                        {this.props.table && (
+                            <li>
+                                <Link to={`/admin/tables/${this.props.table.name}`}>
+                                    {this.props.table.name}
+                                </Link>
+                            </li>
+                        )}
+                        {this.props.table && (
+                            <li>
+                                <Link to={`/admin/tables/${this.props.table.name}/edit`}>
+                                    <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
+                                </Link>
+                            </li>
+                        )}
+                        <li>
+                            <FormattedMessage id="admin.tables.column.edit" defaultMessage="Edit column" />
+                        </li>
+                    </ol>
+                    <ValidatedContractForm contractName="@1EditColumn" mapContractParams={this.mapContractParams.bind(this)} onExec={this.onExec.bind(this)}>
+                        <div className="panel panel-default">
+                            <div className="panel-body">
+                                <div className="form-group">
+                                    <label>
+                                        <FormattedMessage id="admin.tables.column" defaultMessage="Column" />
+                                    </label>
+                                    <p className="form-control-static">
+                                        {this.props.column && this.props.column.name}
+                                    </p>
+                                </div>
+                                <div className="form-group">
+                                    <label>
+                                        <FormattedMessage id="admin.tables.column.type" defaultMessage="Type" />
+                                    </label>
+                                    <p className="form-control-static">
+                                        {columnType || (
+                                            <span className="text-muted">
+                                                <FormattedMessage id="admin.tables.column.type.unknown" defaultMessage="Unknown" />
+                                            </span>
+                                        )}
+                                    </p>
+                                </div>
+                                <Validation.components.ValidatedFormGroup for="permissions" className="mb0">
+                                    <label htmlFor="permissions">
+                                        <FormattedMessage id="admin.tables.permissions" defaultMessage="Permissions" />
+                                    </label>
+                                    <Validation.components.ValidatedTextarea name="permissions" validators={[Validation.validators.required]} value={this.state.permissions} onChange={this.onPermissionsChange.bind(this)} />
+                                </Validation.components.ValidatedFormGroup>
+                            </div>
+                            <div className="panel-footer">
+                                <Validation.components.ValidatedSubmit bsStyle="primary">
+                                    <FormattedMessage id="admin.save" defaultMessage="Save" />
+                                </Validation.components.ValidatedSubmit>
+                            </div>
+                        </div>
+                    </ValidatedContractForm>
+                </div>
+            </DocumentTitle>
         );
     }
 }

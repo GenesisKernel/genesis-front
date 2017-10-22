@@ -15,25 +15,29 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import Protypo from 'components/Protypo';
-import { IProtypoElement } from 'components/Protypo/Protypo';
-import { menuPush } from 'modules/content/actions';
+import { injectIntl, InjectedIntlProps } from 'react-intl';
+import NativeDocumentTitle from 'react-document-title';
 
-import DocumentTitle from 'components/DocumentTitle';
-
-export interface IPageProps {
-    name: string;
-    payload: IProtypoElement[];
-    menuPush: typeof menuPush;
+export interface IDocumentTitleProps {
+    title: string;
+    defaultTitle?: string;
 }
 
-const Page: React.SFC<IPageProps> = (props) => (
-    <DocumentTitle title={props.name}>
-        <Protypo
-            {...props}
-            wrapper={<div className="content-wrapper" />}
-        />
-    </DocumentTitle>
+const DocumentTitle: React.SFC<IDocumentTitleProps & InjectedIntlProps> = (props) => (
+    <NativeDocumentTitle
+        title={props.title ? props.intl.formatMessage(
+            {
+                id: 'general.title',
+                defaultMessage: '{title} | Apla'
+            }, {
+                title: props.intl.formatMessage({
+                    id: props.title,
+                    defaultMessage: props.defaultTitle || props.title
+                })
+            }) : ''}
+    >
+        {props.children}
+    </NativeDocumentTitle>
 );
 
-export default Page;
+export default injectIntl(DocumentTitle);

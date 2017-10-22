@@ -20,6 +20,7 @@ import styled from 'styled-components';
 import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { install } from 'modules/engine/actions';
 
+import DocumentTitle from 'components/DocumentTitle';
 import General from 'components/General';
 
 const fieldsetMargin = 10;
@@ -80,147 +81,149 @@ class InstallForm extends React.Component<IInstallProps, IInstallState> {
 
     render() {
         return (
-            <General>
-                <StyledInstallForm>
-                    <Validation.components.ValidatedForm className="form-horizontal component-install-form" onSubmitSuccess={this.onSubmit.bind(this)}>
-                        <fieldset>
-                            <FormGroup>
-                                <Col md={3}>
-                                    <label className="control-label">
-                                        <FormattedMessage id="install.mode" defaultMessage="Mode" />
-                                    </label>
-                                </Col>
-                                <Col md={9}>
-                                    <Validation.components.ValidatedSelect name="type" defaultValue="PRIVATE_NET" onChange={this.onTypeChange.bind(this)} id="installMode">
-                                        <option value="PRIVATE_NET">{this.props.intl.formatMessage({ id: 'install.mode.private_net', defaultMessage: 'Private network' })}</option>
-                                        <option value="TESTNET_NODE">{this.props.intl.formatMessage({ id: 'install.mode.testnet_node', defaultMessage: 'Testned nodes' })}</option>
-                                        <option value="TESTNET_URL">{this.props.intl.formatMessage({ id: 'install.mode.testnet_url', defaultMessage: 'Testnet URL' })}</option>
-                                    </Validation.components.ValidatedSelect>
-                                </Col>
-                            </FormGroup>
-                        </fieldset>
-                        <fieldset>
-                            <FormGroup>
-                                <Col md={3}>
-                                    <label className="control-label">
-                                        <FormattedMessage id="installLogLevel" defaultMessage="Log level" />
-                                    </label>
-                                </Col>
-                                <Col md={9}>
-                                    <Validation.components.ValidatedSelect id="installLogLevel" name="logLevel" defaultValue="ERROR">
-                                        <option value="ERROR">ERROR</option>
-                                        <option value="DEBUG">DEBUG</option>
-                                    </Validation.components.ValidatedSelect>
-                                </Col>
-                            </FormGroup>
-                        </fieldset>
-                        {'PRIVATE_NET' === this.state.type && (
-                            <fieldset className="mb0 bb0">
+            <DocumentTitle title="general.install" defaultTitle="Install">
+                <General>
+                    <StyledInstallForm>
+                        <Validation.components.ValidatedForm className="form-horizontal component-install-form" onSubmitSuccess={this.onSubmit.bind(this)}>
+                            <fieldset>
                                 <FormGroup>
-                                    <Col md={3} />
+                                    <Col md={3}>
+                                        <label className="control-label">
+                                            <FormattedMessage id="install.mode" defaultMessage="Mode" />
+                                        </label>
+                                    </Col>
                                     <Col md={9}>
-                                        <Checkbox id="installGenerateFirstBlock" title={this.props.intl.formatMessage({ id: 'install.first_block_generate', defaultMessage: 'Generate first block' })} checked={this.state.generateFirst} onChange={this.onGenerateFirstChange.bind(this)} />
+                                        <Validation.components.ValidatedSelect name="type" defaultValue="PRIVATE_NET" onChange={this.onTypeChange.bind(this)} id="installMode">
+                                            <option value="PRIVATE_NET">{this.props.intl.formatMessage({ id: 'install.mode.private_net', defaultMessage: 'Private network' })}</option>
+                                            <option value="TESTNET_NODE">{this.props.intl.formatMessage({ id: 'install.mode.testnet_node', defaultMessage: 'Testned nodes' })}</option>
+                                            <option value="TESTNET_URL">{this.props.intl.formatMessage({ id: 'install.mode.testnet_url', defaultMessage: 'Testnet URL' })}</option>
+                                        </Validation.components.ValidatedSelect>
                                     </Col>
                                 </FormGroup>
                             </fieldset>
-                        )}
-                        {('PRIVATE_NET' !== this.state.type || !this.state.generateFirst) && (
-                            <fieldset className="mb0 bb0">
-                                <Validation.components.ValidatedFormGroup for="blockDir">
-                                    <Col md={3}>
-                                        <label className="control-label">
-                                            <FormattedMessage id="install.first_block_dir" defaultMessage="First block dir" />
-                                            <strong className="text-danger">*</strong>
-                                        </label>
-                                    </Col>
-                                    <Col md={9}>
-                                        <Validation.components.ValidatedControl id="installFirstBlockDir" type="text" name="blockDir" validators={[Validation.validators.required]} />
-                                    </Col>
-                                </Validation.components.ValidatedFormGroup>
-                            </fieldset>
-                        )}
-                        <Well className="box-placeholder pb0">
-                            <legend>
-                                <h4 className="clearfix mt0">
-                                    <span className="pull-left"><FormattedMessage id="install.database_settings" defaultMessage="Database settings" /></span>
-                                    <a href="https://github.com/EGaaS/go-egaas-mvp/wiki/eGaaS-app-installation-instruction" className="pull-right small align-middle">
-                                        <FormattedMessage id="install.instructions" defaultMessage="Instructions" />
-                                    </a>
-                                </h4>
-                            </legend>
                             <fieldset>
-                                <Validation.components.ValidatedFormGroup for="dbHost">
+                                <FormGroup>
                                     <Col md={3}>
                                         <label className="control-label">
-                                            <FormattedMessage id="install.database.host" defaultMessage="Host" />
-                                            <strong className="text-danger">*</strong>
+                                            <FormattedMessage id="installLogLevel" defaultMessage="Log level" />
                                         </label>
                                     </Col>
                                     <Col md={9}>
-                                        <Validation.components.ValidatedControl id="installDbHost" name="dbHost" type="text" defaultValue="localhost" validators={[Validation.validators.required]} />
+                                        <Validation.components.ValidatedSelect id="installLogLevel" name="logLevel" defaultValue="ERROR">
+                                            <option value="ERROR">ERROR</option>
+                                            <option value="DEBUG">DEBUG</option>
+                                        </Validation.components.ValidatedSelect>
                                     </Col>
-                                </Validation.components.ValidatedFormGroup>
+                                </FormGroup>
                             </fieldset>
-                            <fieldset>
-                                <Validation.components.ValidatedFormGroup for="dbPort">
-                                    <Col md={3}>
-                                        <label className="control-label">
-                                            <FormattedMessage id="install.database.port" defaultMessage="Port" />
-                                            <strong className="text-danger">*</strong>
-                                        </label>
-                                    </Col>
-                                    <Col md={9}>
-                                        <Validation.components.ValidatedControl id="installDbPort" name="dbPort" type="number" defaultValue="5432" validators={[Validation.validators.required]} />
-                                    </Col>
-                                </Validation.components.ValidatedFormGroup>
-                            </fieldset>
-                            <fieldset>
-                                <Validation.components.ValidatedFormGroup for="dbName">
-                                    <Col md={3}>
-                                        <label className="control-label">
-                                            <FormattedMessage id="install.database.name" defaultMessage="DB name" />
-                                            <strong className="text-danger">*</strong>
-                                        </label>
-                                    </Col>
-                                    <Col md={9}>
-                                        <Validation.components.ValidatedControl id="installDbName" name="dbName" type="text" validators={[Validation.validators.required]} />
-                                    </Col>
-                                </Validation.components.ValidatedFormGroup>
-                            </fieldset>
-                            <fieldset>
-                                <Validation.components.ValidatedFormGroup for="dbUser">
-                                    <Col md={3}>
-                                        <label className="control-label">
-                                            <FormattedMessage id="install.database.user" defaultMessage="Username" />
-                                            <strong className="text-danger">*</strong>
-                                        </label>
-                                    </Col>
-                                    <Col md={9}>
-                                        <Validation.components.ValidatedControl id="installDbUser" name="dbUser" type="text" defaultValue="postgres" validators={[Validation.validators.required]} />
-                                    </Col>
-                                </Validation.components.ValidatedFormGroup>
-                            </fieldset>
-                            <fieldset className="mb0">
-                                <Validation.components.ValidatedFormGroup for="dbPass">
-                                    <Col md={3}>
-                                        <label className="control-label">
-                                            <FormattedMessage id="install.database.pass" defaultMessage="Password" />
-                                        </label>
-                                    </Col>
-                                    <Col md={9}>
-                                        <Validation.components.ValidatedControl id="installDbPass" name="dbPass" type="password" />
-                                    </Col>
-                                </Validation.components.ValidatedFormGroup>
-                            </fieldset>
-                        </Well>
-                        <div>
-                            <Button disabled={this.props.isInstalling} id="installConfirm" bsStyle="primary" type="submit" className="btn-block">
-                                <FormattedMessage id="install.confirm" defaultMessage="Install" />
-                            </Button>
-                        </div>
-                    </Validation.components.ValidatedForm>
-                </StyledInstallForm>
-            </General>
+                            {'PRIVATE_NET' === this.state.type && (
+                                <fieldset className="mb0 bb0">
+                                    <FormGroup>
+                                        <Col md={3} />
+                                        <Col md={9}>
+                                            <Checkbox id="installGenerateFirstBlock" title={this.props.intl.formatMessage({ id: 'install.first_block_generate', defaultMessage: 'Generate first block' })} checked={this.state.generateFirst} onChange={this.onGenerateFirstChange.bind(this)} />
+                                        </Col>
+                                    </FormGroup>
+                                </fieldset>
+                            )}
+                            {('PRIVATE_NET' !== this.state.type || !this.state.generateFirst) && (
+                                <fieldset className="mb0 bb0">
+                                    <Validation.components.ValidatedFormGroup for="blockDir">
+                                        <Col md={3}>
+                                            <label className="control-label">
+                                                <FormattedMessage id="install.first_block_dir" defaultMessage="First block dir" />
+                                                <strong className="text-danger">*</strong>
+                                            </label>
+                                        </Col>
+                                        <Col md={9}>
+                                            <Validation.components.ValidatedControl id="installFirstBlockDir" type="text" name="blockDir" validators={[Validation.validators.required]} />
+                                        </Col>
+                                    </Validation.components.ValidatedFormGroup>
+                                </fieldset>
+                            )}
+                            <Well className="box-placeholder pb0">
+                                <legend>
+                                    <h4 className="clearfix mt0">
+                                        <span className="pull-left"><FormattedMessage id="install.database_settings" defaultMessage="Database settings" /></span>
+                                        <a href="https://github.com/EGaaS/go-egaas-mvp/wiki/eGaaS-app-installation-instruction" className="pull-right small align-middle">
+                                            <FormattedMessage id="install.instructions" defaultMessage="Instructions" />
+                                        </a>
+                                    </h4>
+                                </legend>
+                                <fieldset>
+                                    <Validation.components.ValidatedFormGroup for="dbHost">
+                                        <Col md={3}>
+                                            <label className="control-label">
+                                                <FormattedMessage id="install.database.host" defaultMessage="Host" />
+                                                <strong className="text-danger">*</strong>
+                                            </label>
+                                        </Col>
+                                        <Col md={9}>
+                                            <Validation.components.ValidatedControl id="installDbHost" name="dbHost" type="text" defaultValue="localhost" validators={[Validation.validators.required]} />
+                                        </Col>
+                                    </Validation.components.ValidatedFormGroup>
+                                </fieldset>
+                                <fieldset>
+                                    <Validation.components.ValidatedFormGroup for="dbPort">
+                                        <Col md={3}>
+                                            <label className="control-label">
+                                                <FormattedMessage id="install.database.port" defaultMessage="Port" />
+                                                <strong className="text-danger">*</strong>
+                                            </label>
+                                        </Col>
+                                        <Col md={9}>
+                                            <Validation.components.ValidatedControl id="installDbPort" name="dbPort" type="number" defaultValue="5432" validators={[Validation.validators.required]} />
+                                        </Col>
+                                    </Validation.components.ValidatedFormGroup>
+                                </fieldset>
+                                <fieldset>
+                                    <Validation.components.ValidatedFormGroup for="dbName">
+                                        <Col md={3}>
+                                            <label className="control-label">
+                                                <FormattedMessage id="install.database.name" defaultMessage="DB name" />
+                                                <strong className="text-danger">*</strong>
+                                            </label>
+                                        </Col>
+                                        <Col md={9}>
+                                            <Validation.components.ValidatedControl id="installDbName" name="dbName" type="text" validators={[Validation.validators.required]} />
+                                        </Col>
+                                    </Validation.components.ValidatedFormGroup>
+                                </fieldset>
+                                <fieldset>
+                                    <Validation.components.ValidatedFormGroup for="dbUser">
+                                        <Col md={3}>
+                                            <label className="control-label">
+                                                <FormattedMessage id="install.database.user" defaultMessage="Username" />
+                                                <strong className="text-danger">*</strong>
+                                            </label>
+                                        </Col>
+                                        <Col md={9}>
+                                            <Validation.components.ValidatedControl id="installDbUser" name="dbUser" type="text" defaultValue="postgres" validators={[Validation.validators.required]} />
+                                        </Col>
+                                    </Validation.components.ValidatedFormGroup>
+                                </fieldset>
+                                <fieldset className="mb0">
+                                    <Validation.components.ValidatedFormGroup for="dbPass">
+                                        <Col md={3}>
+                                            <label className="control-label">
+                                                <FormattedMessage id="install.database.pass" defaultMessage="Password" />
+                                            </label>
+                                        </Col>
+                                        <Col md={9}>
+                                            <Validation.components.ValidatedControl id="installDbPass" name="dbPass" type="password" />
+                                        </Col>
+                                    </Validation.components.ValidatedFormGroup>
+                                </fieldset>
+                            </Well>
+                            <div>
+                                <Button disabled={this.props.isInstalling} id="installConfirm" bsStyle="primary" type="submit" className="btn-block">
+                                    <FormattedMessage id="install.confirm" defaultMessage="Install" />
+                                </Button>
+                            </div>
+                        </Validation.components.ValidatedForm>
+                    </StyledInstallForm>
+                </General>
+            </DocumentTitle>
         );
     }
 }

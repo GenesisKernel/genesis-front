@@ -18,36 +18,42 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
+import DocumentTitle from 'components/DocumentTitle';
 import Center from 'components/Center';
 
-// <div className="abs-center wd-xl">
 const NotFound: React.SFC = (props) => (
-    <Center>
-        <div className="text-center mb-xl">
-            <div className="text-lg mb-lg">404</div>
-            <p className="lead m0">We couldn't find this page.</p>
-            <p>The page you are looking for does not exists.</p>
-        </div>
-        <ul className="list-inline text-center text-sm mb-xl">
-            <li>
-                <Link className="text-muted" to="/">
-                    <FormattedMessage id="general.home" defaultMessage="Home" />
-                </Link>
-            </li>
-            <li className="text-muted">|</li>
-            <li>
-                <Link className="text-muted" to="">
-                    <FormattedMessage id="account.login" defaultMessage="Login" />
-                </Link>
-            </li>
-            <li className="text-muted">|</li>
-            <li>
-                <Link className="text-muted" to="/account/create">
-                    <FormattedMessage id="account.create" defaultMessage="Create account" />
-                </Link>
-            </li>
-        </ul>
-    </Center>
+    <DocumentTitle title="general.notfound" defaultTitle="Not found">
+        <Center>
+            <div className="text-center mb-xl">
+                <div className="text-lg mb-lg">404</div>
+                <p className="lead m0">
+                    <FormattedMessage id="general.notfound.page" defaultMessage="We couldn't find this page" />
+                </p>
+                <p>
+                    <FormattedMessage id="general.notfound.page.notexists" defaultMessage="The page you are looking for does not exists" />
+                </p>
+            </div>
+            <ul className="list-inline text-center text-sm mb-xl">
+                <li>
+                    <Link className="text-muted" to="/">
+                        <FormattedMessage id="general.home" defaultMessage="Home" />
+                    </Link>
+                </li>
+                <li className="text-muted">|</li>
+                <li>
+                    <Link className="text-muted" to="">
+                        <FormattedMessage id="account.login" defaultMessage="Login" />
+                    </Link>
+                </li>
+                <li className="text-muted">|</li>
+                <li>
+                    <Link className="text-muted" to="/account/create">
+                        <FormattedMessage id="account.create" defaultMessage="Create account" />
+                    </Link>
+                </li>
+            </ul>
+        </Center>
+    </DocumentTitle>
 );
 
 export default NotFound;

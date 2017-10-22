@@ -18,6 +18,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 
+import DocumentTitle from 'components/DocumentTitle';
 import PageEditor from './PageEditor';
 
 export interface ICreatePageProps {
@@ -85,34 +86,36 @@ class CreatePage extends React.Component<ICreatePageProps, ICreatePageState> {
 
     render() {
         return (
-            <div className="content-wrapper">
-                <div className="content-heading">
-                    <FormattedMessage id="admin.interface" defaultMessage="Interface" />
-                </div>
-                <ol className="breadcrumb">
-                    <li>
-                        <Link to="/admin/interface">
-                            <FormattedMessage id="admin.interface" defaultMessage="Interface" />
-                        </Link>
-                    </li>
-                    <li>
-                        <FormattedMessage id="admin.interface.page.create" defaultMessage="Create page" />
-                    </li>
-                </ol>
-                <PageEditor
-                    contractName="@1NewPage"
-                    mapContractParams={this.mapContractParams.bind(this)}
+            <DocumentTitle title="admin.interface.page.create" defaultTitle="Create page">
+                <div className="content-wrapper">
+                    <div className="content-heading">
+                        <FormattedMessage id="admin.interface" defaultMessage="Interface" />
+                    </div>
+                    <ol className="breadcrumb">
+                        <li>
+                            <Link to="/admin/interface">
+                                <FormattedMessage id="admin.interface" defaultMessage="Interface" />
+                            </Link>
+                        </li>
+                        <li>
+                            <FormattedMessage id="admin.interface.page.create" defaultMessage="Create page" />
+                        </li>
+                    </ol>
+                    <PageEditor
+                        contractName="@1NewPage"
+                        mapContractParams={this.mapContractParams.bind(this)}
 
-                    template={this.state.template}
-                    conditions={this.state.conditions}
-                    menu={this.state.menu}
-                    menus={this.props.menus || []}
-                    onConditionsEdit={this.onConditionsEdit.bind(this)}
-                    onSourceEdit={this.onSourceEdit.bind(this)}
-                    onMenuSelect={this.onMenuSelect.bind(this)}
-                    onExec={this.onExec.bind(this)}
-                />
-            </div>
+                        template={this.state.template}
+                        conditions={this.state.conditions}
+                        menu={this.state.menu}
+                        menus={this.props.menus || []}
+                        onConditionsEdit={this.onConditionsEdit.bind(this)}
+                        onSourceEdit={this.onSourceEdit.bind(this)}
+                        onMenuSelect={this.onMenuSelect.bind(this)}
+                        onExec={this.onExec.bind(this)}
+                    />
+                </div>
+            </DocumentTitle>
         );
     }
 }

@@ -40,6 +40,7 @@ import { importSeed, login } from 'modules/auth/actions';
 import { alertShow } from 'modules/content/actions';
 import storage from 'lib/storage';
 
+import DocumentTitle from 'components/DocumentTitle';
 import General from 'components/General';
 import Validation from 'components/Validation';
 
@@ -141,52 +142,54 @@ class Import extends React.Component<IImportProps, IImportState> {
 
     render() {
         return (
-            <General return={this.props.return}>
-                <input id="importFileLoader" type="file" className="hidden" onChange={this.onLoadSuccess.bind(this)} ref={l => this.inputFile = l} />
-                <div className="text-center">
-                    <p>To begin creating your new private key you will need to enter account seed. This is a unique passphrase used by our cryptographic algorithms to generate the private key. In future, you can use your passphrase to re-generate your private key in case you lost it</p>
-                    <hr />
-                    <StyledForm>
-                        <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit.bind(this)}>
-                            <fieldset>
-                                <Validation.components.ValidatedFormGroup for="seed">
-                                    <Col md={3}>
-                                        <label className="control-label">
-                                            <FormattedMessage id="auth.seed" defaultMessage="Account seed" />
-                                        </label>
-                                    </Col>
-                                    <Col md={9}>
-                                        <div>
-                                            <Validation.components.ValidatedTextarea id="importSeed" className="input-seed" onChange={this.onSeedChange.bind(this)} value={this.state.seed} name="seed" validators={[Validation.validators.required]} />
-                                        </div>
-                                        <Col md={12} className="pl0 pr0">
-                                            <Button className="btn-block" onClick={this.onLoad.bind(this)}>
-                                                <FormattedMessage id="auth.seed.load" defaultMessage="Load" />
-                                            </Button>
+            <DocumentTitle title="account.import" defaultTitle="Import account">
+                <General return={this.props.return}>
+                    <input id="importFileLoader" type="file" className="hidden" onChange={this.onLoadSuccess.bind(this)} ref={l => this.inputFile = l} />
+                    <div className="text-center">
+                        <p>To begin creating your new private key you will need to enter account seed. This is a unique passphrase used by our cryptographic algorithms to generate the private key. In future, you can use your passphrase to re-generate your private key in case you lost it</p>
+                        <hr />
+                        <StyledForm>
+                            <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit.bind(this)}>
+                                <fieldset>
+                                    <Validation.components.ValidatedFormGroup for="seed">
+                                        <Col md={3}>
+                                            <label className="control-label">
+                                                <FormattedMessage id="auth.seed" defaultMessage="Account seed" />
+                                            </label>
                                         </Col>
-                                    </Col>
-                                </Validation.components.ValidatedFormGroup>
-                            </fieldset>
-                            <fieldset className="mb0">
-                                <Validation.components.ValidatedFormGroup for="password">
-                                    <Col md={3}>
-                                        <label className="control-label">
-                                            <FormattedMessage id="general.password" defaultMessage="Password" />
-                                        </label>
-                                    </Col>
-                                    <Col md={9}>
-                                        <Validation.components.ValidatedControl id="importPassword" name="password" type="password" validators={[Validation.validators.required, Validation.validators.minLength(6)]} />
-                                    </Col>
-                                </Validation.components.ValidatedFormGroup>
-                            </fieldset>
-                            <hr className="mt0" />
-                            <Button id="importSubmit" type="submit" bsStyle="primary" className="btn-block">
-                                <FormattedMessage id="auth.import" defaultMessage="Import" />
-                            </Button>
-                        </Validation.components.ValidatedForm>
-                    </StyledForm>
-                </div>
-            </General>
+                                        <Col md={9}>
+                                            <div>
+                                                <Validation.components.ValidatedTextarea id="importSeed" className="input-seed" onChange={this.onSeedChange.bind(this)} value={this.state.seed} name="seed" validators={[Validation.validators.required]} />
+                                            </div>
+                                            <Col md={12} className="pl0 pr0">
+                                                <Button className="btn-block" onClick={this.onLoad.bind(this)}>
+                                                    <FormattedMessage id="auth.seed.load" defaultMessage="Load" />
+                                                </Button>
+                                            </Col>
+                                        </Col>
+                                    </Validation.components.ValidatedFormGroup>
+                                </fieldset>
+                                <fieldset className="mb0">
+                                    <Validation.components.ValidatedFormGroup for="password">
+                                        <Col md={3}>
+                                            <label className="control-label">
+                                                <FormattedMessage id="general.password" defaultMessage="Password" />
+                                            </label>
+                                        </Col>
+                                        <Col md={9}>
+                                            <Validation.components.ValidatedControl id="importPassword" name="password" type="password" validators={[Validation.validators.required, Validation.validators.minLength(6)]} />
+                                        </Col>
+                                    </Validation.components.ValidatedFormGroup>
+                                </fieldset>
+                                <hr className="mt0" />
+                                <Button id="importSubmit" type="submit" bsStyle="primary" className="btn-block">
+                                    <FormattedMessage id="auth.import" defaultMessage="Import" />
+                                </Button>
+                            </Validation.components.ValidatedForm>
+                        </StyledForm>
+                    </div>
+                </General>
+            </DocumentTitle>
         );
     }
 }

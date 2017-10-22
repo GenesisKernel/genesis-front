@@ -41,6 +41,7 @@ class DefaultPageContainer extends React.Component<IDefaultPageContainerProps> {
     render() {
         return (
             <Page
+                name={this.props.page && this.props.page.name}
                 payload={this.props.page && this.props.page.content}
                 menuPush={this.props.menuPush.bind(this)}
             />

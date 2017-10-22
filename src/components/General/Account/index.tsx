@@ -34,6 +34,7 @@ import * as React from 'react';
 import { Button, Col } from 'react-bootstrap';
 import { navigate } from 'modules/engine/actions';
 
+import DocumentTitle from 'components/DocumentTitle';
 import General from 'components/General';
 
 export interface IAccountProps {
@@ -42,32 +43,34 @@ export interface IAccountProps {
 }
 
 const Account: React.SFC<IAccountProps> = (props) => (
-    <General return={props.return}>
-        <div className="text-center">
-            <div className="clearfix">
-                <Col md={6}>
-                    <em className="fa fa-key fa-5x text-muted p-lg" />
-                    <h4>I have a key</h4>
-                    <p>If you are already familiar with Apla and have a backup of your private key - choose this option to guide you through the process of restoring of your account data</p>
+    <DocumentTitle title="auth.account" defaultTitle="Account">
+        <General return={props.return}>
+            <div className="text-center">
+                <div className="clearfix">
+                    <Col md={6}>
+                        <em className="fa fa-key fa-5x text-muted p-lg" />
+                        <h4>I have a key</h4>
+                        <p>If you are already familiar with Apla and have a backup of your private key - choose this option to guide you through the process of restoring of your account data</p>
 
+                    </Col>
+                    <Col md={6}>
+                        <em className="fa fa-lock fa-5x text-muted p-lg" />
+                        <h4>I don't have a key</h4>
+                        <p>If you are new to the system or just want to create a new account - proceed with this option to generate new private key and protect it with your password</p>
+
+                    </Col>
+                </div>
+                <Col md={6}>
+                    <hr />
+                    <Button bsStyle="primary" className="btn-block" onClick={props.navigate.bind(null, '/account/import')}>Import existing key</Button>
                 </Col>
                 <Col md={6}>
-                    <em className="fa fa-lock fa-5x text-muted p-lg" />
-                    <h4>I don't have a key</h4>
-                    <p>If you are new to the system or just want to create a new account - proceed with this option to generate new private key and protect it with your password</p>
-
+                    <hr />
+                    <Button bsStyle="primary" className="btn-block" onClick={props.navigate.bind(null, '/account/create')}>Generate new key</Button>
                 </Col>
             </div>
-            <Col md={6}>
-                <hr />
-                <Button bsStyle="primary" className="btn-block" onClick={props.navigate.bind(null, '/account/import')}>Import existing key</Button>
-            </Col>
-            <Col md={6}>
-                <hr />
-                <Button bsStyle="primary" className="btn-block" onClick={props.navigate.bind(null, '/account/create')}>Generate new key</Button>
-            </Col>
-        </div>
-    </General>
+        </General>
+    </DocumentTitle>
 );
 
 export default Account;

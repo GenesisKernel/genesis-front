@@ -19,7 +19,9 @@ import { Button, Col } from 'react-bootstrap';
 import MonacoEditor from 'react-monaco-editor';
 import api from 'lib/api';
 import { contractExec } from 'modules/tx/actions';
+import styled from 'styled-components';
 
+import DocumentTitle from 'components/DocumentTitle';
 import Protypo from 'components/Protypo';
 import TxButton from 'containers/Widgets/TxButton';
 
@@ -31,6 +33,7 @@ export interface IDebugProps {
 interface IDebugState {
     code?: string;
     result?: any;
+    style?: any;
 }
 
 export default class extends React.Component<IDebugProps, IDebugState> {
@@ -93,63 +96,78 @@ export default class extends React.Component<IDebugProps, IDebugState> {
         }
     }
 
+    setStyle(e: React.ChangeEvent<HTMLTextAreaElement>) {
+        const style = styled.div`${e.target.value}`;
+        this.setState({
+            style
+        });
+    }
+
     render() {
         return (
-            <div className="content-wrapper">
-                <div className="content-heading">Debug page</div>
-                <Col md={6}>
-                    <MonacoEditor
-                        value={this.state.code}
-                        height={500}
-                        onChange={this.onChange.bind(this)}
-                    />
-                </Col>
-                <Col md={6}>
-                    {this.state.result && (
-                        <Protypo
-                            payload={this.state.result}
-                            menuPush={(() => null as any) as any}
+            <DocumentTitle title="Debug page">
+                <div className="content-wrapper">
+                    <div className="content-heading">Debug page</div>
+                    <Col md={6}>
+                        <MonacoEditor
+                            value={this.state.code}
+                            height={500}
+                            onChange={this.onChange.bind(this)}
                         />
-                    )}
-                </Col>
-                <hr />
-                <Button bsStyle="primary" className="btn-block" onClick={this.onSubmit.bind(this)}>Request template</Button>
-                <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT" onExec={this.onExecContract.bind(this)}>Execute contract</TxButton>
-                <TxButton bsStyle="danger" className="btn-block" contractName="NewEcosystem" onExec={this.onExecContract.bind(this)}>CreateEcosystem</TxButton>
-                <div className="row">
-                    <div className="col-md-4">
-                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 1</TxButton>
+                        <textarea onChange={this.setStyle.bind(this)} />
+                    </Col>
+                    <Col md={6}>
+                        {this.state.result && (
+                            <Protypo
+                                payload={this.state.result}
+                                menuPush={(() => null as any) as any}
+                            />
+                        )}
+                        <div>
+                            {this.state.style && (
+                                React.createElement(this.state.style, {}, <div>This is content</div>)
+                            )}
+                        </div>
+                    </Col>
+                    <hr />
+                    <Button bsStyle="primary" className="btn-block" onClick={this.onSubmit.bind(this)}>Request template</Button>
+                    <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT" onExec={this.onExecContract.bind(this)}>Execute contract</TxButton>
+                    <TxButton bsStyle="danger" className="btn-block" contractName="NewEcosystem" onExec={this.onExecContract.bind(this)}>CreateEcosystem</TxButton>
+                    <div className="row">
+                        <div className="col-md-4">
+                            <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 1</TxButton>
+                        </div>
+                        <div className="col-md-4">
+                            <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
+                        </div>
+                        <div className="col-md-4">
+                            <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
+                        </div>
                     </div>
-                    <div className="col-md-4">
-                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
+                    <div className="row">
+                        <div className="col-md-4">
+                            <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 1</TxButton>
+                        </div>
+                        <div className="col-md-4">
+                            <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
+                        </div>
+                        <div className="col-md-4">
+                            <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
+                        </div>
                     </div>
-                    <div className="col-md-4">
-                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
+                    <div className="row">
+                        <div className="col-md-4">
+                            <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 1</TxButton>
+                        </div>
+                        <div className="col-md-4">
+                            <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
+                        </div>
+                        <div className="col-md-4">
+                            <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
+                        </div>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-md-4">
-                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 1</TxButton>
-                    </div>
-                    <div className="col-md-4">
-                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
-                    </div>
-                    <div className="col-md-4">
-                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-md-4">
-                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 1</TxButton>
-                    </div>
-                    <div className="col-md-4">
-                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
-                    </div>
-                    <div className="col-md-4">
-                        <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
-                    </div>
-                </div>
-            </div>
+            </DocumentTitle>
         );
     }
 }
