@@ -36,7 +36,7 @@ import EditMenu from 'containers/Main/containers/Admin/Interface/EditMenu';
 import CreateBlock from 'components/Main/Admin/Interface/CreateBlock';
 import EditBlock from 'containers/Main/containers/Admin/Interface/EditBlock';
 import Contracts from 'containers/Main/containers/Admin/Contracts';
-import CreateContract from 'components/Main/Admin/Contracts/Create';
+import CreateContract from 'containers/Main/containers/Admin/Contracts/Create';
 import Languages from 'containers/Main/containers/Admin/Languages';
 import CreateLanguage from 'components/Main/Admin/Languages/Create';
 import EditLanguage from 'containers/Main/containers/Admin/Languages/Edit';

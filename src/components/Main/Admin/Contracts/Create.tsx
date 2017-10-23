@@ -22,6 +22,10 @@ import { Link } from 'react-router-dom';
 import DocumentTitle from 'components/DocumentTitle';
 import ContractEditor from './ContractEditor';
 
+interface ICreateProps {
+    navigate: (url: string) => void;
+}
+
 interface ICreateState {
     code: string;
     wallet: string;
@@ -43,8 +47,8 @@ const contractTemplate =
     }
 }`;
 
-class Create extends React.Component<{}, ICreateState> {
-    constructor(props: {}) {
+class Create extends React.Component<ICreateProps, ICreateState> {
+    constructor(props: ICreateProps) {
         super(props);
         this.state = {
             code: contractTemplate,
@@ -64,6 +68,7 @@ class Create extends React.Component<{}, ICreateState> {
     onExec(block: string, error: string) {
         // TODO: Notification stub
         if (block) {
+            this.props.navigate('/admin/contracts');
             alert('Success:: ' + block);
         }
         else if (error) {

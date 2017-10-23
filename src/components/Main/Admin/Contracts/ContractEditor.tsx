@@ -101,9 +101,9 @@ const ContractEditor: React.SFC<IContractEditorProps> = (props) => (
                             </label>
                             {props.contract ?
                                 (
-                                    <Validation.components.ValidatedControl key="walletCreate" name="wallet" onChange={props.onWalletEdit} value={props.wallet} />
-                                ) : (
                                     <Validation.components.ValidatedControl key="walletEdit" name="wallet" value={props.wallet} readOnly />
+                                ) : (
+                                    <Validation.components.ValidatedControl key="walletCreate" name="wallet" onChange={props.onWalletEdit} value={props.wallet} />
                                 )
                             }
                         </Validation.components.ValidatedFormGroup>
