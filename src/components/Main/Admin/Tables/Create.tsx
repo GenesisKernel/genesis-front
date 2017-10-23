@@ -72,6 +72,10 @@ export const columnTypes = [
     },
 ];
 
+export interface ICreateProps {
+    navigate: (url: string) => void;
+}
+
 interface ICreateState {
     columns: {
         name: string;
@@ -80,8 +84,8 @@ interface ICreateState {
     }[];
 }
 
-class Create extends React.Component<{}, ICreateState> {
-    constructor(props: {}) {
+class Create extends React.Component<ICreateProps, ICreateState> {
+    constructor(props: ICreateProps) {
         super(props);
         this.state = {
             columns: [
@@ -110,6 +114,7 @@ class Create extends React.Component<{}, ICreateState> {
     onExec(block: string, error: string) {
         // TODO: Notification stub
         if (block) {
+            this.props.navigate('/admin/tables');
             alert('Success:: ' + block);
         }
         else if (error) {

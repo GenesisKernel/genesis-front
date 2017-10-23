@@ -21,13 +21,17 @@ import { Link } from 'react-router-dom';
 import DocumentTitle from 'components/DocumentTitle';
 import BlockEditor from './BlockEditor';
 
+export interface ICreateBlockProps {
+    navigate: (url: string) => void;
+}
+
 interface ICreateBlockState {
     template: string;
     conditions: string;
 }
 
-class CreateBlock extends React.Component<{}, ICreateBlockState> {
-    constructor(props: {}) {
+class CreateBlock extends React.Component<ICreateBlockProps, ICreateBlockState> {
+    constructor(props: ICreateBlockProps) {
         super(props);
         this.state = {
             template: '',
@@ -46,6 +50,7 @@ class CreateBlock extends React.Component<{}, ICreateBlockState> {
     onExec(block: string, error: string) {
         // TODO: Notification stub
         if (block) {
+            this.props.navigate('/admin/interface');
             alert('Success:: ' + block);
         }
         else if (error) {

@@ -23,7 +23,7 @@ export type State = {
     readonly pending: boolean;
     readonly block: { id: string, name: string, value: string, conditions: string };
     readonly menu: { id: string, name: string, value: string, conditions: string };
-    readonly menus: { id: string, name: string }[];
+    readonly menus: { id: string, name: string, value: string, conditions: string }[];
     readonly tables: ITablesResponse;
     readonly table: ITableResponse;
     readonly tableData: IListResponse;

@@ -21,13 +21,17 @@ import { Link } from 'react-router-dom';
 import DocumentTitle from 'components/DocumentTitle';
 import MenuEditor from './MenuEditor';
 
+export interface ICreateMenuProps {
+    navigate: (url: string) => void;
+}
+
 interface ICreateMenuState {
     template: string;
     conditions: string;
 }
 
-class CreateMenu extends React.Component<{}, ICreateMenuState> {
-    constructor(props: {}) {
+class CreateMenu extends React.Component<ICreateMenuProps, ICreateMenuState> {
+    constructor(props: ICreateMenuProps) {
         super(props);
         this.state = {
             template: '',
@@ -46,6 +50,7 @@ class CreateMenu extends React.Component<{}, ICreateMenuState> {
     onExec(block: string, error: string) {
         // TODO: Notification stub
         if (block) {
+            this.props.navigate('/admin/interface');
             alert('Success:: ' + block);
         }
         else if (error) {

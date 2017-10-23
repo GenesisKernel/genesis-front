@@ -115,7 +115,7 @@ export interface IInterfacesResponse extends IResponse {
 
 export interface IPageResponse extends IResponse {
     page: IDBValue & { name: string };
-    menus: [IDBValue & { name: string }];
+    menus: [IDBValue & { name: string, value: string, conditions: string }];
 }
 
 export interface IContractResponse extends IResponse {

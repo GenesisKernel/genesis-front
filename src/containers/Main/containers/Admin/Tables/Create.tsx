@@ -17,44 +17,28 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { getMenus } from 'modules/admin/actions';
 import { navigate } from 'modules/engine/actions';
 
-import CreatePage, { ICreatePageProps } from 'components/Main/Admin/Interface/CreatePage';
+import Create, { ICreateProps } from 'components/Main/Admin/Tables/Create';
 
-interface ICreatePageContainerState {
-    menus: {
-        id: string;
-        name: string;
-        value: string;
-        conditions: string;
-    }[];
+interface ICreateContainerState {
+
 }
 
-interface ICreatePageContainerDispatch {
-    getMenus: typeof getMenus.started;
+interface ICreateContainerDispatch {
     navigate: typeof navigate;
 }
 
-class CreatePageContainer extends React.Component<ICreatePageContainerState & ICreatePageContainerDispatch> {
-    componentWillMount() {
-        this.props.getMenus(null);
-    }
-
-    render() {
-        return (
-            <CreatePage {...this.props} />
-        );
-    }
-}
+const CreateContainer: React.SFC<ICreateContainerState & ICreateContainerDispatch> = (props) => (
+    <Create {...props} />
+);
 
 const mapStateToProps = (state: IRootState) => ({
-    menus: state.admin.menus
+
 });
 
 const mapDispatchToProps = {
-    getMenus: getMenus.started,
     navigate: navigate
 };
 
-export default connect<ICreatePageContainerState, ICreatePageContainerDispatch, ICreatePageProps>(mapStateToProps, mapDispatchToProps)(CreatePageContainer);
+export default connect<ICreateContainerState, ICreateContainerDispatch, ICreateProps>(mapStateToProps, mapDispatchToProps)(CreateContainer);

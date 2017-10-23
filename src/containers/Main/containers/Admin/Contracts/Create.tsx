@@ -37,4 +37,4 @@ const mapDispatchToProps = {
     navigate: navigate
 };
 
-export default connect<{}, {}, ICreateContainerDispatch>(mapStateToProps, mapDispatchToProps)(CreateContainer);
+export default connect<{}, ICreateContainerDispatch, {}>(mapStateToProps, mapDispatchToProps)(CreateContainer);

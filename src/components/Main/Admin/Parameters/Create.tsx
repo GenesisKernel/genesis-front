@@ -21,13 +21,17 @@ import { Link } from 'react-router-dom';
 import DocumentTitle from 'components/DocumentTitle';
 import ParameterEditor from './ParameterEditor';
 
+export interface ICreateProps {
+    navigate: (url: string) => void;
+}
+
 interface ICreateState {
     value: string;
     conditions: string;
 }
 
-class Create extends React.Component<{}, ICreateState> {
-    constructor(props: {}) {
+class Create extends React.Component<ICreateProps, ICreateState> {
+    constructor(props: ICreateProps) {
         super(props);
         this.state = {
             value: '',
@@ -46,6 +50,7 @@ class Create extends React.Component<{}, ICreateState> {
     onExec(block: string, error: string) {
         // TODO: Notification stub
         if (block) {
+            this.props.navigate('/admin/parameters');
             alert('Success:: ' + block);
         }
         else if (error) {

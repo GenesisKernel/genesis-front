@@ -23,6 +23,7 @@ import PageEditor from './PageEditor';
 
 export interface ICreatePageProps {
     menus: { id: string, name: string, conditions: string, value: string }[];
+    navigate: (url: string) => void;
 }
 
 interface ICreatePageState {
@@ -60,6 +61,7 @@ class CreatePage extends React.Component<ICreatePageProps, ICreatePageState> {
     onExec(block: string, error: string) {
         // TODO: Notification stub
         if (block) {
+            this.props.navigate('/admin/interface');
             alert('Success:: ' + block);
         }
         else if (error) {
