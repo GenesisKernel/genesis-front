@@ -61,9 +61,11 @@ const ParameterEditor: React.SFC<IParameterEditorProps> = (props) => (
                 </Validation.components.ValidatedFormGroup>
             </div>
             <div className="panel-footer">
-                <Validation.components.ValidatedSubmit bsStyle="primary">
-                    <FormattedMessage id="admin.save" defaultMessage="Save" />
-                </Validation.components.ValidatedSubmit>
+                <div className="clearfix">
+                    <Validation.components.ValidatedSubmit bsStyle="primary" className="pull-right">
+                        <FormattedMessage id="admin.save" defaultMessage="Save" />
+                    </Validation.components.ValidatedSubmit>
+                </div>
             </div>
         </div>
     </ValidatedContractForm>
