@@ -93,6 +93,18 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
             <DocumentTitle title={this.props.page && this.props.page.name}>
                 <div className="content-wrapper">
                     <div className="content-heading">
+                        <div>
+                            <div className="pull-right">
+                                <Link to={`/page/${this.props.page && this.props.page.name}`} className="ml">
+                                    <button className="btn btn-default ml">
+                                        <em className="fa fa-external-link fa-fw mr-sm" />
+                                        <span>
+                                            <FormattedMessage id="admin.interface.page.show" defaultMessage="Show page" />
+                                        </span>
+                                    </button>
+                                </Link>
+                            </div>
+                        </div>
                         <FormattedMessage id="admin.interface" defaultMessage="Interface" />
                     </div>
                     <ol className="breadcrumb">
