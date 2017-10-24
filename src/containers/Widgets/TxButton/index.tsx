@@ -19,57 +19,90 @@ import * as uuid from 'uuid';
 import { Map } from 'immutable';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { Button, Sizes } from 'react-bootstrap';
+import { navigate } from 'modules/engine/actions';
 import { contractExec } from 'modules/tx/actions';
+import { alertShow } from 'modules/content/actions';
 
-interface ITxButtonProps {
-    className?: string;
-    bsClass?: string;
-    active?: boolean;
-    block?: boolean;
+import TxButton, { ITxButtonConfirm } from 'components/TxButton';
+
+interface ITxButtonContainerProps {
     bsStyle?: string;
-    bsSize?: Sizes;
-    componentClass?: React.ReactType;
-    disabled?: boolean;
-    contractName: string;
+    className?: string;
+    contractName?: string;
     contractParams?: { [name: string]: any };
+    confirm?: ITxButtonConfirm;
+    page?: string;
+    pageParams?: { [key: string]: any };
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
     onExec?: (block: string, error: string) => void;
 }
 
 interface ITxButtonStateProps {
     transactions: Map<string, { block: string, error: string }>;
+    confirmation: { id: string, success: string, error: string };
 }
 
 interface ITxButtonDispatchProps {
     contractExec: typeof contractExec.started;
+    alertShow: typeof alertShow;
+    navigate: typeof navigate;
 }
 
-class TxButton extends React.Component<ITxButtonProps & ITxButtonStateProps & ITxButtonDispatchProps> {
+class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxButtonStateProps & ITxButtonDispatchProps> {
     private _uuid: string;
-    private _pending: boolean;
 
-    componentWillReceiveProps(props: ITxButtonProps & ITxButtonStateProps & ITxButtonDispatchProps) {
-        const transaction = props.transactions.get(this._uuid);
-        if (this._pending && this.props.onExec && transaction && (transaction.block || transaction.error)) {
-            this._pending = false;
-            this.props.onExec(transaction.block, transaction.error);
+    componentWillReceiveProps(props: ITxButtonContainerProps & ITxButtonStateProps & ITxButtonDispatchProps) {
+        if (props.confirmation && props.confirmation.id === this._uuid && props.confirmation.success) {
+            this._uuid = uuid.v4();
+
+            if (this.props.contractName) {
+                this.onExecContract(this.props.contractName, this.props.contractParams);
+            }
+            else if (this.props.page) {
+                this.onNavigate(this.props.page, this.props.pageParams);
+            }
         }
     }
 
-    onClick(e: React.MouseEventHandler<Button>) {
-        this._pending = true;
-        if (this.props.onClick) {
-            this.props.onClick.apply(this, arguments);
-        }
-
+    onExecContract(name: string, params: { [key: string]: any }, confirm?: ITxButtonConfirm) {
         this._uuid = uuid.v4();
 
-        this.props.contractExec({
-            uuid: this._uuid,
-            name: this.props.contractName,
-            params: this.props.contractParams,
-        });
+        if (confirm) {
+            this.props.alertShow({
+                id: this._uuid,
+                type: confirm.icon,
+                title: confirm.title,
+                text: confirm.text,
+                confirmButton: confirm.confirmButton,
+                cancelButton: confirm.cancelButton
+            });
+        }
+        else {
+            this.props.contractExec({
+                uuid: this._uuid,
+                name: this.props.contractName,
+                params: this.props.contractParams,
+            });
+        }
+    }
+
+    onNavigate(page: string, params: { [key: string]: any }, confirm?: ITxButtonConfirm) {
+        this._uuid = uuid.v4();
+
+        if (confirm) {
+            this.props.alertShow({
+                id: this._uuid,
+                type: confirm.icon,
+                title: confirm.title,
+                text: confirm.text,
+                confirmButton: confirm.confirmButton,
+                cancelButton: confirm.cancelButton
+            });
+        }
+        else {
+            // TODO: Missing params
+            this.props.navigate(`/page/${page}`);
+        }
     }
 
     render() {
@@ -77,29 +110,33 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonStateProps & IT
         const pending = transaction && !transaction.block && !transaction.error;
 
         return (
-            <Button
-                onClick={this.onClick.bind(this)}
-                disabled={pending || this.props.disabled}
-                className={this.props.className}
-                bsClass={this.props.bsClass}
-                active={this.props.active}
-                block={this.props.block}
+            <TxButton
+                {...this.props}
                 bsStyle={this.props.bsStyle}
-                bsSize={this.props.bsSize}
-                componentClass={this.props.componentClass}
+                pending={pending}
+                className={this.props.className}
+                contractName={this.props.contractName}
+                contractParams={this.props.contractParams}
+                contractStatus={this.props.transactions.get(this._uuid)}
+                execContract={this.onExecContract.bind(this)}
+                onExec={this.props.onExec}
+                navigate={this.onNavigate.bind(this)}
             >
                 {this.props.children}
-            </Button>
+            </TxButton>
         );
     }
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    transactions: state.tx.transactions
+    transactions: state.tx.transactions,
+    confirmation: state.content.alert
 });
 
 const mapDispatchToProps = {
-    contractExec: contractExec.started
+    contractExec: contractExec.started,
+    alertShow,
+    navigate
 };
 
-export default connect<ITxButtonStateProps, ITxButtonDispatchProps, void>(mapStateToProps, mapDispatchToProps)(TxButton);
+export default connect<ITxButtonStateProps, ITxButtonDispatchProps, ITxButtonContainerProps>(mapStateToProps, mapDispatchToProps)(TxButtonContainer);

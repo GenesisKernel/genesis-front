@@ -16,13 +16,13 @@
 
 import * as React from 'react';
 import { resolveHandler } from 'components/Protypo';
-import { menuPush } from 'modules/content/actions';
 import * as propTypes from 'prop-types';
 
 export interface IProtypoProps {
     wrapper?: JSX.Element;
     payload: IProtypoElement[];
-    menuPush: typeof menuPush;
+    menuPush: (params: { name: string, content: IProtypoElement[] }) => void;
+    navigate: (url: string) => void;
 }
 
 export interface IProtypoElement {
@@ -35,16 +35,19 @@ export interface IProtypoElement {
 export default class Protypo extends React.Component<IProtypoProps> {
     private _lastID: number;
     private _menuPushBind: Function;
+    private _navigateBind: Function;
     private _errors: { name: string, description: string }[];
 
     constructor(props: IProtypoProps) {
         super(props);
         this._menuPushBind = props.menuPush.bind(this);
+        this._navigateBind = props.navigate.bind(this);
     }
 
     getChildContext() {
         return {
-            menuPush: this._menuPushBind
+            menuPush: this._menuPushBind,
+            navigate: this._navigateBind
         };
     }
 
@@ -105,5 +108,6 @@ export default class Protypo extends React.Component<IProtypoProps> {
 }
 
 (Protypo as any).childContextTypes = {
+    navigate: propTypes.func.isRequired,
     menuPush: propTypes.func.isRequired
 };

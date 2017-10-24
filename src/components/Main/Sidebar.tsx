@@ -21,7 +21,7 @@ import { Link } from 'react-router-dom';
 import { injectIntl, InjectedIntl, FormattedMessage } from 'react-intl';
 import { menuPop, menuPush } from 'modules/content/actions';
 
-import Protypo from 'components/Protypo';
+import Protypo from 'containers/Widgets/Protypo';
 import { IProtypoElement } from 'components/Protypo/Protypo';
 
 export const style = {
@@ -194,7 +194,6 @@ const Sidebar: React.SFC<ISidebarProps> = (props) => {
                 <StyledMenuContent>
                     <Protypo
                         payload={menu && menu.content}
-                        menuPush={props.menuPush}
                     />
                 </StyledMenuContent>
                 <StyledDevButton>

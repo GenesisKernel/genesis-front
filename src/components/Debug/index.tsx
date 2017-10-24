@@ -22,7 +22,7 @@ import { contractExec } from 'modules/tx/actions';
 import styled from 'styled-components';
 
 import DocumentTitle from 'components/DocumentTitle';
-import Protypo from 'components/Protypo';
+import Protypo from 'containers/Widgets/Protypo';
 import TxButton from 'containers/Widgets/TxButton';
 
 export interface IDebugProps {
@@ -87,15 +87,6 @@ export default class extends React.Component<IDebugProps, IDebugState> {
         this.setState({ code });
     }
 
-    onExecContract(block: string, error: string) {
-        if (error) {
-            alert('Error::' + error);
-        }
-        else {
-            alert('Block:: ' + block);
-        }
-    }
-
     setStyle(e: React.ChangeEvent<HTMLTextAreaElement>) {
         const style = styled.div`${e.target.value}`;
         this.setState({
@@ -120,7 +111,6 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                         {this.state.result && (
                             <Protypo
                                 payload={this.state.result}
-                                menuPush={(() => null as any) as any}
                             />
                         )}
                         <div>
@@ -131,8 +121,24 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                     </Col>
                     <hr />
                     <Button bsStyle="primary" className="btn-block" onClick={this.onSubmit.bind(this)}>Request template</Button>
-                    <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT" onExec={this.onExecContract.bind(this)}>Execute contract</TxButton>
-                    <TxButton bsStyle="danger" className="btn-block" contractName="NewEcosystem" onExec={this.onExecContract.bind(this)}>CreateEcosystem</TxButton>
+                    <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Execute contract</TxButton>
+                    <TxButton
+                        bsStyle="info"
+                        className="btn-block"
+                        contractName="TEST_CONTRACT"
+                        confirm={{ icon: 'info', title: 'CONFIRM_TITLE', text: 'CONFIRM_TEXT', confirmButton: 'CONFIRM_BUTTON', cancelButton: 'CANCEL_BUTTON' }}
+                        page="page_default"
+                    >
+                        Confirm button
+                    </TxButton>
+                    <TxButton
+                        bsStyle="info"
+                        className="btn-block"
+                        page="page_default"
+                    >
+                        Confirm button
+                    </TxButton>
+                    <TxButton bsStyle="danger" className="btn-block" contractName="NewEcosystem">CreateEcosystem</TxButton>
                     <div className="row">
                         <div className="col-md-4">
                             <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 1</TxButton>
@@ -167,7 +173,7 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                         </div>
                     </div>
                 </div>
-            </DocumentTitle>
+            </DocumentTitle >
         );
     }
 }

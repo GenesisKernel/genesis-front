@@ -17,34 +17,25 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { renderPage, menuPush } from 'modules/content/actions';
+import { renderPage } from 'modules/content/actions';
 
 import { IProtypoElement } from 'components/Protypo/Protypo';
 import Page from 'components/Main/Page';
 
 interface IPageContainerProps {
-    session: string;
-    pending: boolean;
     page: { name: string, content: IProtypoElement[] };
     match?: { params: { pageName: string } };
     renderPage: typeof renderPage.started;
-    menuPush: typeof menuPush;
 }
 
 class PageContainer extends React.Component<IPageContainerProps> {
     componentWillMount() {
-        this.props.renderPage({
-            session: this.props.session,
-            name: this.props.match.params.pageName
-        });
+        this.props.renderPage({ name: this.props.match.params.pageName });
     }
 
     componentWillReceiveProps(props: IPageContainerProps) {
         if (this.props.page && (this.props.match.params.pageName !== props.match.params.pageName)) {
-            props.renderPage({
-                session: this.props.session,
-                name: props.match.params.pageName
-            });
+            props.renderPage({ name: props.match.params.pageName });
         }
     }
 
@@ -53,21 +44,17 @@ class PageContainer extends React.Component<IPageContainerProps> {
             <Page
                 name={this.props.page && this.props.page.name}
                 payload={this.props.page && this.props.page.content}
-                menuPush={this.props.menuPush.bind(this)}
             />
         );
     }
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken,
-    pending: state.content.pending,
     page: state.content.page
 });
 
 const mapDispatchToProps = {
-    renderPage: renderPage.started,
-    menuPush: menuPush
+    renderPage: renderPage.started
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PageContainer);

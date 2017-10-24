@@ -16,37 +16,56 @@
 
 import * as React from 'react';
 
+import TxButton from 'containers/Widgets/TxButton';
+
 export interface IButtonProps {
     'class'?: string;
-    'alert'?: string;
+    'alert'?: {
+        icon: string;
+        text: string;
+        confirmbutton: string;
+        cancelbutton: string;
+    };
     'contract'?: string;
     'page'?: string;
-    'pageparams'?: string;
+    'pageparams'?: { [key: string]: string };
     'params'?: { [key: string]: string };
 }
 
-export default class Button extends React.Component<IButtonProps> {
-    onClickBinding: () => void;
+/*confirm ?: {
+    icon: string;
+    title: string;
+    text: string;
+    confirmButton: string;
+    cancelButton: string;
+};
+*/
+const Button: React.SFC<IButtonProps> = (props) => {
+    console.log(props.alert && {
+        icon: props.alert.icon,
+        title: 'DND',
+        text: props.alert.text,
+        confirmButton: props.alert.confirmbutton,
+        cancelButton: props.alert.cancelbutton
+    });
+    return (
+        <TxButton
+            className={props.class}
+            contractName={props.contract}
+            contractParams={props.params}
+            confirm={props.alert && {
+                icon: props.alert.icon,
+                title: 'DND',
+                text: props.alert.text,
+                confirmButton: props.alert.confirmbutton,
+                cancelButton: props.alert.cancelbutton
+            }}
+            page={props.page}
+            pageParams={props.pageparams}
+        >
+            {props.children}
+        </TxButton>
+    );
+};
 
-    constructor(props: IButtonProps) {
-        super(props);
-        this.onClickBinding = this.onClick.bind(this);
-    }
-
-    onClick() {
-        if (this.props.alert) {
-            // TODO: Alert stub
-            if (!confirm(this.props.alert)) {
-                return;
-            }
-
-            // TODO: Actions stub
-        }
-    }
-
-    render() {
-        return (
-            <button className={this.props.class} onClick={this.onClickBinding}>{this.props.children}</button>
-        );
-    }
-}
+export default Button;

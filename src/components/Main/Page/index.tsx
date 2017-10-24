@@ -15,24 +15,19 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import Protypo from 'components/Protypo';
+import Protypo from 'containers/Widgets/Protypo';
 import { IProtypoElement } from 'components/Protypo/Protypo';
-import { menuPush } from 'modules/content/actions';
 
 import DocumentTitle from 'components/DocumentTitle';
 
 export interface IPageProps {
     name: string;
     payload: IProtypoElement[];
-    menuPush: typeof menuPush;
 }
 
 const Page: React.SFC<IPageProps> = (props) => (
     <DocumentTitle title={props.name}>
-        <Protypo
-            {...props}
-            wrapper={<div className="content-wrapper" />}
-        />
+        <Protypo {...props} />
     </DocumentTitle>
 );
 

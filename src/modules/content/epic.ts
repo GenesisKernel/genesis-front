@@ -18,7 +18,7 @@ import api, { IAPIError } from 'lib/api';
 import { Action } from 'redux';
 import { Observable } from 'rxjs';
 import { combineEpics, Epic } from 'redux-observable';
-import swal from 'sweetalert2';
+import swal, { SweetAlertType } from 'sweetalert2';
 import { IRootState } from 'modules';
 import * as actions from './actions';
 
@@ -74,7 +74,7 @@ export const alertEpic: Epic<Action, IRootState> =
             return Observable.fromPromise(swal({
                 title: action.payload.title,
                 text: action.payload.text,
-                type: action.payload.type,
+                type: action.payload.type as SweetAlertType,
                 showCancelButton: true,
                 showCloseButton: !!action.payload.cancelButton,
                 showConfirmButton: !!action.payload.confirmButton,

@@ -38,7 +38,6 @@ const LinkButton: React.SFC<IMenuGroupProps> = (props, context) => (
 );
 
 LinkButton.contextTypes = {
-    router: propTypes.object.isRequired,
     menuPush: propTypes.func.isRequired
 };
 

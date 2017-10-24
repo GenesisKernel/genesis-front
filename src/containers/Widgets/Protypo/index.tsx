@@ -17,41 +17,37 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { renderPage } from 'modules/content/actions';
+import { navigate } from 'modules/engine/actions';
+import { menuPush } from 'modules/content/actions';
 
+import Protypo from 'components/Protypo';
 import { IProtypoElement } from 'components/Protypo/Protypo';
-import Page from 'components/Main/Page';
 
-interface IDefaultPageContainerProps {
-    session: string;
-    pending: boolean;
-    page: { name: string, content: IProtypoElement[] };
-    renderPage: typeof renderPage.started;
+export interface IProtypoContainerProps {
+    wrapper?: JSX.Element;
+    payload: IProtypoElement[];
 }
 
-class DefaultPageContainer extends React.Component<IDefaultPageContainerProps> {
-    componentWillMount() {
-        this.props.renderPage({
-            name: 'default_page'
-        });
-    }
+interface IProtypoContainerState {
 
-    render() {
-        return (
-            <Page
-                name={this.props.page && this.props.page.name}
-                payload={this.props.page && this.props.page.content}
-            />
-        );
-    }
 }
+
+interface IProtypoContainerDispatch {
+    navigate: typeof navigate;
+    menuPush: typeof menuPush;
+}
+
+const ProtypoContainer: React.SFC<IProtypoContainerState & IProtypoContainerDispatch & IProtypoContainerProps> = (props) => (
+    <Protypo {...props} />
+);
 
 const mapStateToProps = (state: IRootState) => ({
-    page: state.content.page
+
 });
 
 const mapDispatchToProps = {
-    renderPage: renderPage.started
+    navigate,
+    menuPush
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DefaultPageContainer);
+export default connect<IProtypoContainerState, IProtypoContainerDispatch, IProtypoContainerProps>(mapStateToProps, mapDispatchToProps)(ProtypoContainer);
