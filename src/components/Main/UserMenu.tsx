@@ -29,7 +29,7 @@ export interface IUserMenuProps {
     onLogout: () => void;
 }
 
-const UserMenu: React.SFC<IUserMenuProps> = (props) => (
+const UserMenu: React.SFC<IUserMenuProps> = (props) => props.account ? (
     <li className={`dropdown-list dropdown ${props.collapsed ? '' : 'open'}`}>
         <a className="dropdown-toggle" href="#" onClick={props.onToggleCollapsed}>
             <span>
@@ -86,6 +86,6 @@ const UserMenu: React.SFC<IUserMenuProps> = (props) => (
             </ul>
         </ul>
     </li>
-);
+) : null;
 
 export default UserMenu;
