@@ -15,6 +15,7 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import { injectIntl, InjectedIntlProps } from 'react-intl';
 
 import TxButton from 'containers/Widgets/TxButton';
 
@@ -32,22 +33,7 @@ export interface IButtonProps {
     'params'?: { [key: string]: string };
 }
 
-/*confirm ?: {
-    icon: string;
-    title: string;
-    text: string;
-    confirmButton: string;
-    cancelButton: string;
-};
-*/
-const Button: React.SFC<IButtonProps> = (props) => {
-    console.log(props.alert && {
-        icon: props.alert.icon,
-        title: 'DND',
-        text: props.alert.text,
-        confirmButton: props.alert.confirmbutton,
-        cancelButton: props.alert.cancelbutton
-    });
+const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props) => {
     return (
         <TxButton
             className={props.class}
@@ -55,7 +41,7 @@ const Button: React.SFC<IButtonProps> = (props) => {
             contractParams={props.params}
             confirm={props.alert && {
                 icon: props.alert.icon,
-                title: 'DND',
+                title: props.intl.formatMessage({ id: 'alert.confirmation', defaultMessage: 'Confirmation' }),
                 text: props.alert.text,
                 confirmButton: props.alert.confirmbutton,
                 cancelButton: props.alert.cancelbutton
@@ -68,4 +54,4 @@ const Button: React.SFC<IButtonProps> = (props) => {
     );
 };
 
-export default Button;
+export default injectIntl(Button);
