@@ -29,7 +29,7 @@ interface ITxButtonContainerProps {
     bsStyle?: string;
     className?: string;
     contractName?: string;
-    contractParams?: { [name: string]: any };
+    contractParams?: { [name: string]: any } | (() => { [name: string]: any });
     confirm?: ITxButtonConfirm;
     page?: string;
     pageParams?: { [key: string]: any };
@@ -64,7 +64,7 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
         }
     }
 
-    onExecContract(name: string, params: { [key: string]: any }, confirm?: ITxButtonConfirm) {
+    onExecContract(name: string, params: { [name: string]: any } | (() => { [name: string]: any }), confirm?: ITxButtonConfirm) {
         this._uuid = uuid.v4();
 
         if (confirm) {
@@ -81,7 +81,7 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
             this.props.contractExec({
                 uuid: this._uuid,
                 name: this.props.contractName,
-                params: this.props.contractParams,
+                params: 'function' === typeof this.props.contractParams ? this.props.contractParams() : this.props.contractParams,
             });
         }
     }

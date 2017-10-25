@@ -16,32 +16,83 @@
 
 import * as React from 'react';
 import { IValidator } from './Validators';
+import * as propTypes from 'prop-types';
 
-interface IValidatedTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+import ValidatedForm, { IValidatedControl } from './ValidatedForm';
+
+export interface IValidatedTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
     validators?: IValidator[];
-    _registerElement?: (value: string) => void;
-    _unregisterElement?: () => void;
 }
 
-export default class ValidatedTextarea extends React.Component<IValidatedTextareaProps> {
+interface IValidatedTextareaState {
+    value: string;
+}
+
+export default class ValidatedTextarea extends React.Component<IValidatedTextareaProps, IValidatedTextareaState> implements IValidatedControl {
+    constructor(props: IValidatedTextareaProps) {
+        super(props);
+
+        this.state = {
+            value: (props.value || props.defaultValue || '') as string
+        };
+    }
+
     componentDidMount() {
-        this.props._registerElement(this.props.defaultValue as string);
+        if (this.context.form) {
+            (this.context.form as ValidatedForm)._registerElement(this.props.name, this);
+        }
     }
 
     componentWillUnmount() {
-        this.props._unregisterElement();
+        if (this.context.form) {
+            (this.context.form as ValidatedForm)._unregisterElement(this.props.name);
+        }
+    }
+
+    componentWillReceiveProps(props: IValidatedTextareaProps) {
+        if (this.props.value !== props.value) {
+            this.setState({
+                value: props.value as string
+            });
+            (this.context.form as ValidatedForm).updateState(props.name, props.value);
+        }
+    }
+
+    getValue() {
+        return this.state.value;
+    }
+
+    onChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+        this.setState({
+            value: (e.target as any).value
+        });
+
+        if (this.props.onChange) {
+            this.props.onChange(e);
+        }
+    }
+
+    onBlur(e: React.FocusEvent<HTMLTextAreaElement>) {
+        (this.context.form as ValidatedForm).updateState(this.props.name);
+
+        if (this.props.onBlur) {
+            this.props.onBlur(e);
+        }
     }
 
     render() {
         return (
             <textarea
                 id={this.props.id}
-                className={`form-control ${this.props.className}`}
-                value={this.props.value}
-                defaultValue={this.props.defaultValue}
-                onChange={this.props.onChange}
-                onBlur={this.props.onBlur}
+                className={`form-control ${this.props.className || ''}`}
+                value={this.state.value}
+                onChange={this.onChange.bind(this)}
+                onBlur={this.onBlur.bind(this)}
             />
         );
     }
 }
+
+(ValidatedTextarea as React.ComponentClass).contextTypes = {
+    form: propTypes.instanceOf(ValidatedForm)
+};

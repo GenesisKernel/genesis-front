@@ -26,7 +26,7 @@ export interface IMenuGroupProps {
     'childrenTree'?: IProtypoElement[];
 }
 
-const LinkButton: React.SFC<IMenuGroupProps> = (props, context) => (
+const MenuGroup: React.SFC<IMenuGroupProps> = (props, context) => (
     <StyledLinkButton>
         <a href="#" onClick={() => context.menuPush({ name: props.title, content: props.childrenTree })}>
             <div className="link-body">
@@ -37,8 +37,8 @@ const LinkButton: React.SFC<IMenuGroupProps> = (props, context) => (
     </StyledLinkButton>
 );
 
-LinkButton.contextTypes = {
+MenuGroup.contextTypes = {
     menuPush: propTypes.func.isRequired
 };
 
-export default LinkButton;
+export default MenuGroup;

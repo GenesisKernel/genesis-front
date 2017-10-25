@@ -16,7 +16,9 @@
 
 import * as React from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
+import * as propTypes from 'prop-types';
 
+import ValidatedForm from 'components/Validation/ValidatedForm';
 import TxButton from 'containers/Widgets/TxButton';
 
 export interface IButtonProps {
@@ -31,14 +33,37 @@ export interface IButtonProps {
     'page'?: string;
     'pageparams'?: { [key: string]: string };
     'params'?: { [key: string]: string };
+    'formID'?: number;
 }
 
-const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props) => {
+interface IButtonContext {
+    form: ValidatedForm;
+}
+
+const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IButtonContext) => {
+    const getParams = () => {
+        const params = {};
+
+        if (context.form) {
+            const payload = context.form.validateAll().payload;
+            for (let itr in payload) {
+                if (payload.hasOwnProperty(itr)) {
+                    params[itr] = payload[itr].value;
+                }
+            }
+        }
+
+        return {
+            ...params,
+            ...props.params
+        };
+    };
+
     return (
         <TxButton
             className={props.class}
             contractName={props.contract}
-            contractParams={props.params}
+            contractParams={getParams}
             confirm={props.alert && {
                 icon: props.alert.icon,
                 title: props.intl.formatMessage({ id: 'alert.confirmation', defaultMessage: 'Confirmation' }),
@@ -52,6 +77,10 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props) => {
             {props.children}
         </TxButton>
     );
+};
+
+Button.contextTypes = {
+    form: propTypes.instanceOf(ValidatedForm)
 };
 
 export default injectIntl(Button);

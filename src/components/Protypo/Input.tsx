@@ -16,6 +16,8 @@
 
 import * as React from 'react';
 
+import ValidatedControl from 'components/Validation/ValidatedControl';
+
 export interface IInputProps {
     'class'?: string;
     'name'?: string;
@@ -26,8 +28,21 @@ export interface IInputProps {
 }
 
 // TODO: type is not handled correctly
-const Input: React.SFC<IInputProps> = (props) => (
-    <input className={props.class} name={props.name} placeholder={props.placeholder} type={props.type} defaultValue={props.value} />
-);
+/*const Input: React.SFC<IInputProps> = (props) => (
+    <ValidatedControl className={props.class} name={props.name} placeholder={props.placeholder} type={props.type} defaultValue={props.value} />
+);*/
+class Input extends React.Component<IInputProps> {
+    render() {
+        return (
+            <ValidatedControl
+                className={this.props.class}
+                name={this.props.name}
+                placeholder={this.props.placeholder}
+                type={this.props.type}
+                defaultValue={this.props.value}
+            />
+        );
+    }
+}
 
 export default Input;

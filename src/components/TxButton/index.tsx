@@ -32,7 +32,7 @@ export interface ITxButtonProps {
     pending?: boolean;
     className?: string;
     contractName?: string;
-    contractParams?: { [key: string]: any };
+    contractParams?: { [key: string]: any } | (() => { [key: string]: any });
     contractStatus?: { block: string, error: string };
     confirm?: ITxButtonConfirm;
     page?: string;

@@ -17,20 +17,68 @@
 import * as React from 'react';
 import { FormControl, FormControlProps } from 'react-bootstrap';
 import { IValidator } from './Validators';
+import * as propTypes from 'prop-types';
 
-interface IValidatedControlProps extends FormControlProps {
+import ValidatedForm, { IValidatedControl } from './ValidatedForm';
+
+export interface IValidatedControlProps extends FormControlProps {
     validators?: IValidator[];
-    _registerElement?: (value: string) => void;
-    _unregisterElement?: () => void;
 }
 
-export default class ValidatedControl extends React.Component<IValidatedControlProps> {
+interface IValidatedControlState {
+    value: string;
+}
+
+export default class ValidatedControl extends React.Component<IValidatedControlProps, IValidatedControlState> implements IValidatedControl {
+    constructor(props: IValidatedControlProps) {
+        super(props);
+
+        this.state = {
+            value: (props.value || props.defaultValue || '') as string
+        };
+    }
+
     componentDidMount() {
-        this.props._registerElement(this.props.defaultValue as string);
+        if (this.context.form) {
+            (this.context.form as ValidatedForm)._registerElement(this.props.name, this);
+        }
     }
 
     componentWillUnmount() {
-        this.props._unregisterElement();
+        if (this.context.form) {
+            (this.context.form as ValidatedForm)._unregisterElement(this.props.name);
+        }
+    }
+
+    componentWillReceiveProps(props: IValidatedControlProps) {
+        if (this.props.value !== props.value) {
+            this.setState({
+                value: props.value as string
+            });
+            (this.context.form as ValidatedForm).updateState(props.name, props.value);
+        }
+    }
+
+    getValue() {
+        return this.state.value;
+    }
+
+    onChange(e: React.ChangeEvent<FormControl>) {
+        this.setState({
+            value: (e.target as any).value
+        });
+
+        if (this.props.onChange) {
+            this.props.onChange(e);
+        }
+    }
+
+    onBlur(e: React.FocusEvent<FormControl>) {
+        (this.context.form as ValidatedForm).updateState(this.props.name);
+
+        if (this.props.onBlur) {
+            this.props.onBlur(e);
+        }
     }
 
     render() {
@@ -38,17 +86,16 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
             <FormControl
                 readOnly={this.props.readOnly}
                 disabled={this.props.disabled}
-                onChange={this.props.onChange}
-                onBlur={this.props.onBlur}
+                onChange={this.onChange.bind(this)}
+                onBlur={this.onBlur.bind(this)}
                 bsClass={this.props.bsClass}
                 bsSize={this.props.bsSize}
                 componentClass={this.props.componentClass}
                 id={this.props.id}
                 inputRef={this.props.inputRef}
                 type={this.props.type}
-                defaultValue={this.props.defaultValue}
                 placeholder={this.props.placeholder}
-                value={this.props.value}
+                value={this.state.value}
                 noValidate
             >
                 {this.props.children}
@@ -56,3 +103,7 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
         );
     }
 }
+
+(ValidatedControl as React.ComponentClass).contextTypes = {
+    form: propTypes.instanceOf(ValidatedForm)
+};

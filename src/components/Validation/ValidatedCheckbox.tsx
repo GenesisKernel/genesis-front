@@ -16,34 +16,90 @@
 
 import * as React from 'react';
 import { IValidator } from './Validators';
+import * as propTypes from 'prop-types';
 
-interface IValidatedCheckboxProps {
+import ValidatedForm, { IValidatedControl } from './ValidatedForm';
+
+export interface IValidatedCheckboxProps {
     validators?: IValidator[];
-    _registerElement?: (value: boolean) => void;
-    _unregisterElement?: () => void;
     name: string;
     title?: string;
     className?: string;
     defaultChecked?: boolean;
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
+    onBlur?: React.FocusEventHandler<HTMLInputElement>;
     checked?: boolean;
     disabled?: boolean;
 }
 
-export default class ValidatedCheckbox extends React.Component<IValidatedCheckboxProps> {
+interface IValidatedCheckboxState {
+    checked: boolean;
+}
+
+export default class ValidatedCheckbox extends React.Component<IValidatedCheckboxProps, IValidatedCheckboxState> implements IValidatedControl {
+    constructor(props: IValidatedCheckboxProps) {
+        super(props);
+
+        this.state = {
+            checked: props.checked || props.defaultChecked || false
+        };
+    }
+
     componentDidMount() {
-        this.props._registerElement(this.props.defaultChecked);
+        if (this.context.form) {
+            (this.context.form as ValidatedForm)._registerElement(this.props.name, this);
+        }
     }
 
     componentWillUnmount() {
-        this.props._unregisterElement();
+        if (this.context.form) {
+            (this.context.form as ValidatedForm)._unregisterElement(this.props.name);
+        }
+    }
+
+    componentWillReceiveProps(props: IValidatedCheckboxProps) {
+        if (this.props.checked !== props.checked) {
+            this.setState({
+                checked: props.checked
+            });
+            (this.context.form as ValidatedForm).updateState(props.name, props.checked);
+        }
+    }
+
+    getValue() {
+        return this.state.checked;
+    }
+
+    onChange(e: React.ChangeEvent<HTMLInputElement>) {
+        this.setState({
+            checked: e.target.checked
+        });
+
+        if (this.props.onChange) {
+            this.props.onChange(e);
+        }
+    }
+
+    onBlur(e: React.FocusEvent<HTMLInputElement>) {
+        (this.context.form as ValidatedForm).updateState(this.props.name);
+
+        if (this.props.onBlur) {
+            this.props.onBlur(e);
+        }
     }
 
     render() {
         return (
-            <div className={`checkbox c-checkbox ${this.props.className}`}>
+            <div className={`checkbox c-checkbox ${this.props.className || ''}`}>
                 <label>
-                    <input type="checkbox" name={this.props.name} defaultChecked={this.props.defaultChecked} onChange={this.props.onChange} checked={this.props.checked} disabled={this.props.disabled} />
+                    <input
+                        type="checkbox"
+                        name={this.props.name}
+                        onChange={this.onChange.bind(this)}
+                        onBlur={this.onBlur.bind(this)}
+                        checked={this.state.checked}
+                        disabled={this.props.disabled}
+                    />
                     <em className="fa fa-check" />
                     <span>{this.props.title}</span>
                 </label>
@@ -51,3 +107,7 @@ export default class ValidatedCheckbox extends React.Component<IValidatedCheckbo
         );
     }
 }
+
+(ValidatedCheckbox as React.ComponentClass).contextTypes = {
+    form: propTypes.instanceOf(ValidatedForm)
+};

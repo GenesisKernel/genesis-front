@@ -16,13 +16,8 @@
 
 import * as React from 'react';
 import { Form, FormProps } from 'react-bootstrap';
-import ValidatedSubmit from './ValidatedSubmit';
-import ValidatedFormGroup from './ValidatedFormGroup';
-import ValidatedControl from './ValidatedControl';
-import ValidatedCheckbox from './ValidatedCheckbox';
-import ValidatedTextarea from './ValidatedTextarea';
-import ValidatedSelect from './ValidatedSelect';
 import { IValidator } from './Validators';
+import * as propTypes from 'prop-types';
 
 export interface IValidatedFormProps extends FormProps {
     pending?: boolean;
@@ -31,7 +26,12 @@ export interface IValidatedFormProps extends FormProps {
 }
 
 export interface IValidatedFormState {
-    payload: { [key: string]: boolean };
+    payload: {
+        [key: string]: {
+            dirty: boolean;
+            invalid: boolean;
+        };
+    };
 }
 
 export interface IValidationResult {
@@ -41,28 +41,19 @@ export interface IValidationResult {
     value?: any;
 }
 
-interface IValidationElement {
-    name: string;
-    node: React.ReactNode;
-    validators: IValidator[];
+export interface IValidatedControl {
+    getValue: () => any;
+    props: { validators?: IValidator[] };
 }
 
-interface IFormControl {
-    type: React.ReactNode;
-    binding: string;
-    getValue: (props: any) => any;
-    events: { event: string, handler: (e: React.SyntheticEvent<any>) => any }[];
+interface IValidationElement {
+    name: string;
+    node: React.ReactNode & IValidatedControl;
+    validators: IValidator[];
 }
 
 export default class ValidatedForm extends React.Component<IValidatedFormProps, IValidatedFormState> {
     private _elements: { [name: string]: IValidationElement } = {};
-    private _payload: { [key: string]: IValidationResult } = {};
-
-    static handlers: IFormControl[] = [];
-
-    static registerHandler(handler: IFormControl) {
-        ValidatedForm.handlers.push(handler);
-    }
 
     constructor(props: IValidatedFormProps) {
         super(props);
@@ -71,119 +62,22 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
         };
     }
 
-    private _registerElement(name: string, node: React.ReactNode, validators?: IValidator[]) {
+    getChildContext() {
+        return {
+            form: this
+        };
+    }
+
+    _registerElement(name: string, node: IValidatedControl) {
         this._elements[name] = {
             name,
             node,
-            validators
+            validators: node.props.validators
         };
     }
 
-    private _unregisterElement(name: string) {
+    _unregisterElement(name: string) {
         delete this._elements[name];
-    }
-
-    private _renderChildren(children: React.ReactNode) {
-        if ('object' !== typeof children || null === children) {
-            return children;
-        }
-
-        const childrenCount = React.Children.count(children);
-
-        if (1 < childrenCount) {
-            return React.Children.map(children, child => this._renderChild(child));
-        }
-        else if (1 === childrenCount) {
-            return this._renderChild(Array.isArray(children) ? children[0] : children);
-        }
-        else {
-            return null;
-        }
-    }
-
-    private _renderChild(child: React.ReactNode): React.ReactNode {
-        if ('object' !== typeof child || null === child) {
-            return child;
-        }
-
-        const node = child as JSX.Element;
-        const handler = ValidatedForm.handlers.find(l => l.type === node.type);
-
-        if (ValidatedFormGroup === node.type) {
-            const inputFor = node.props && node.props.for;
-            const newProps = {
-                error: this.state.payload[inputFor] === false
-            };
-            return React.cloneElement(node, newProps, this._renderChildren(node.props && node.props.children));
-        }
-        else if (ValidatedSubmit === node.type) {
-            const newProps = {
-                disabled: !!(this.props.pending || node.props.pending)
-            };
-            return React.cloneElement(node, newProps, this._renderChildren(node.props && node.props.children));
-        }
-        else if (handler) {
-            const inputName = node.props && node.props.name;
-
-            if (!inputName) {
-                throw new Error('Validation input is missing "name" attribute');
-            }
-
-            const newProps = {
-                _registerElement: (defaultValue: any) => {
-                    // Traverse props to find corresponding field value and fire validation events
-                    // this is a required behavior to validate controlled items that have values passed through props
-                    const controlledValue = handler.getValue(node.props);
-                    if (controlledValue) {
-                        this._reactListener(inputName, controlledValue, false);
-                    }
-                    else if (defaultValue) {
-                        this._payload[inputName] = this.validate(inputName, defaultValue);
-                    }
-                },
-                _unregisterElement: this._unregisterElement.bind(this, inputName),
-            };
-
-            handler.events.forEach(event => {
-                newProps[event.event] = this._setListener(inputName, event.handler, node.props[event.event]);
-            });
-
-            if (node.props) {
-                const controlledValue = handler.getValue(node.props);
-                if (controlledValue) {
-                    this._reactListener(inputName, controlledValue, false);
-                }
-            }
-
-            const element = React.cloneElement(node, newProps);
-            this._registerElement(node.props.name, element, node.props.validators);
-
-            return element;
-        }
-        else {
-            return React.cloneElement(node, {}, this._renderChildren(node.props && node.props.children));
-        }
-    }
-
-    private _setListener(name: string, valueResolver: (e: React.SyntheticEvent<any>) => any, oldHandler?: Function) {
-        return (e: React.SyntheticEvent<any>) => {
-            const value = valueResolver(e);
-            this._reactListener(name, value);
-            return oldHandler && oldHandler(e);
-        };
-    }
-
-    private _reactListener(name: string, value: string, updateState: boolean = true) {
-        const result = this.validate(name, value);
-        if (updateState) {
-            this.setState({
-                payload: {
-                    ...this.state.payload,
-                    [name]: result && !result.error
-                }
-            });
-        }
-        this._payload[name] = result;
     }
 
     private _onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -204,15 +98,45 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
         }
     }
 
-    validate(name: string, value: any): IValidationResult {
+    isPending() {
+        return this.props.pending;
+    }
+
+    updateState(name: string, value?: any) {
+        const result = this.validate(name, value);
+        this.setState({
+            payload: {
+                ...this.state.payload,
+                [name]: {
+                    dirty: true,
+                    invalid: result.error
+                }
+            }
+        });
+    }
+
+    getState(name: string) {
+        const value = this.state.payload[name];
+        return (!value || !value.dirty || !value.invalid);
+    }
+
+    validate(name: string, withValue?: any): IValidationResult {
         const element = this._elements[name];
+
         if (!element) {
-            return null;
+            return {
+                name,
+                error: false,
+                value: null
+            };
         }
+
+        const value = withValue || element.node.getValue();
 
         if (element.validators) {
             for (let i = 0; i < element.validators.length; i++) {
                 const validator = element.validators[i];
+
                 if (!validator(value)) {
                     return {
                         name,
@@ -241,14 +165,16 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
 
         for (let itr in this._elements) {
             if (this._elements.hasOwnProperty(itr)) {
-                const value = this._payload[itr] && this._payload[itr].value;
-                const error = this.validate(itr, value);
+                const error = this.validate(itr);
                 values.payload[itr] = error;
                 if (error) {
                     if (error.error) {
                         values.valid = false;
                     }
-                    payload[itr] = !error.error;
+                    payload[itr] = {
+                        dirty: true,
+                        invalid: error.error
+                    };
                 }
             }
         }
@@ -268,64 +194,12 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
                 horizontal={this.props.horizontal}
                 inline={this.props.inline}
             >
-                {this._renderChildren(this.props.children)}
+                {this.props.children}
             </Form>
         );
     }
 }
 
-ValidatedForm.registerHandler({
-    type: ValidatedControl,
-    binding: 'name',
-    getValue: (props: { value: string }) => props.value,
-    events: [
-        {
-            event: 'onChange',
-            handler: (e: React.ChangeEvent<HTMLInputElement>) => e.target.value
-        },
-        {
-            event: 'onBlur',
-            handler: (e: React.ChangeEvent<HTMLInputElement>) => e.target.value
-        }
-    ]
-});
-
-ValidatedForm.registerHandler({
-    type: ValidatedCheckbox,
-    binding: 'name',
-    getValue: (props: { checked: boolean }) => props.checked,
-    events: [
-        {
-            event: 'onChange',
-            handler: (e: React.ChangeEvent<HTMLInputElement>) => e.target.checked
-        }
-    ]
-});
-
-ValidatedForm.registerHandler({
-    type: ValidatedSelect,
-    binding: 'name',
-    getValue: (props: { value: string }) => props.value,
-    events: [
-        {
-            event: 'onChange',
-            handler: (e: React.ChangeEvent<HTMLSelectElement>) => e.target.value
-        }
-    ]
-});
-
-ValidatedForm.registerHandler({
-    type: ValidatedTextarea,
-    binding: 'name',
-    getValue: (props: { value: string }) => props.value,
-    events: [
-        {
-            event: 'onChange',
-            handler: (e: React.ChangeEvent<HTMLInputElement>) => e.target.value
-        },
-        {
-            event: 'onBlur',
-            handler: (e: React.ChangeEvent<HTMLInputElement>) => e.target.value
-        }
-    ]
-});
+(ValidatedForm as React.ComponentClass).childContextTypes = {
+    form: propTypes.instanceOf(ValidatedForm)
+};

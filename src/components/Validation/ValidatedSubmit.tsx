@@ -16,13 +16,16 @@
 
 import * as React from 'react';
 import { Button, ButtonProps } from 'react-bootstrap';
+import * as propTypes from 'prop-types';
+
+import ValidatedForm from './ValidatedForm';
 
 interface IValidatedSubmitProps extends ButtonProps {
     className?: string;
     disabled?: boolean;
 }
 
-const ValidatedSubmit: React.SFC<IValidatedSubmitProps> = (props) => (
+const ValidatedSubmit: React.SFC<IValidatedSubmitProps> = (props, context: { form: ValidatedForm }) => (
     <Button
         type="submit"
         onClick={props.onClick && props.onClick}
@@ -33,10 +36,14 @@ const ValidatedSubmit: React.SFC<IValidatedSubmitProps> = (props) => (
         bsStyle={props.bsStyle}
         bsSize={props.bsSize}
         componentClass={props.componentClass}
-        disabled={props.disabled}
+        disabled={(context.form ? context.form.isPending() : false) || props.disabled}
     >
         {props.children}
     </Button>
 );
+
+ValidatedSubmit.contextTypes = {
+    form: propTypes.instanceOf(ValidatedForm)
+};
 
 export default ValidatedSubmit;

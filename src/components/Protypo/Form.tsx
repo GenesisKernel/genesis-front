@@ -15,32 +15,52 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { FormGroup, FormGroupProps } from 'react-bootstrap';
 import * as propTypes from 'prop-types';
 
-import ValidatedForm from './ValidatedForm';
+// import Button from './Button';
+import ValidatedForm from 'components/Validation/ValidatedForm';
 
-interface IValidatedFormGroupProps extends FormGroupProps {
-    for: string;
+export interface IFormProps {
+    'class'?: string;
 }
 
-export default class ValidatedFormGroup extends React.Component<IValidatedFormGroupProps> {
+interface IFormState {
+    form: ValidatedForm;
+}
+
+class Form extends React.Component<IFormProps, IFormState> {
+    constructor(props: IFormProps) {
+        super(props);
+        this.state = {
+            form: null
+        };
+    }
+
+    getChildContext() {
+        return {
+            form: this.state.form
+        };
+    }
+
+    bindForm(form: ValidatedForm) {
+        if (!this.state.form) {
+            this.setState({
+                form
+            });
+        }
+    }
+
     render() {
-        const valid = this.context.form ? (this.context.form as ValidatedForm).getState(this.props.for) : true;
         return (
-            <FormGroup
-                className={this.props.className}
-                validationState={valid ? null : 'error'}
-                bsClass={this.props.bsClass}
-                bsSize={this.props.bsSize}
-                controlId={this.props.controlId}
-            >
+            <ValidatedForm ref={this.bindForm.bind(this)} className={this.props.class}>
                 {this.props.children}
-            </FormGroup >
+            </ValidatedForm>
         );
     }
 }
 
-(ValidatedFormGroup as React.ComponentClass).contextTypes = {
+(Form as React.ComponentClass).childContextTypes = {
     form: propTypes.instanceOf(ValidatedForm)
 };
+
+export default Form;
