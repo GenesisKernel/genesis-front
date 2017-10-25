@@ -60,16 +60,6 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
         };
     }
 
-    onExec(block: string, error: string) {
-        // TODO: Notification stub
-        if (block) {
-            alert('Success:: ' + block);
-        }
-        else if (error) {
-            alert('Error:: ' + error);
-        }
-    }
-
     onPermissionsChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
         this.setState({
             permissions: e.target.value
@@ -110,7 +100,7 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
                             <FormattedMessage id="admin.tables.column.edit" defaultMessage="Edit column" />
                         </li>
                     </ol>
-                    <ValidatedContractForm contractName="@1EditColumn" mapContractParams={this.mapContractParams.bind(this)} onExec={this.onExec.bind(this)}>
+                    <ValidatedContractForm contractName="@1EditColumn" mapContractParams={this.mapContractParams.bind(this)}>
                         <div className="panel panel-default">
                             <div className="panel-body">
                                 <div className="form-group">

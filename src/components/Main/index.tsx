@@ -16,6 +16,7 @@
 
 import * as React from 'react';
 import * as classnames from 'classnames';
+import ReduxToastr from 'react-redux-toastr';
 import { setCollapsed } from 'modules/engine/actions';
 import { menuPop, menuPush } from 'modules/content/actions';
 import { OrderedMap } from 'immutable';
@@ -74,6 +75,13 @@ export default class Main extends React.Component<IMainProps> {
                         collapseTransition={sidebarStyle.collapseTransition}
                         pendingTransactions={this.props.pendingTransactions}
                         transactionsCount={this.props.transactionsCount}
+                    />
+                    <ReduxToastr
+                        timeOut={3000}
+                        newestOnTop
+                        position="top-center"
+                        transitionIn="fadeIn"
+                        transitionOut="fadeOut"
                     />
                     {this.props.children}
                 </StyledContent>

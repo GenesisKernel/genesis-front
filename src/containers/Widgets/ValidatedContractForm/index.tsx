@@ -16,6 +16,8 @@
 
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { injectIntl, InjectedIntlProps } from 'react-intl';
+import { toastr } from 'react-redux-toastr';
 import { Map } from 'immutable';
 import { IRootState } from 'modules';
 import { contractExec } from 'modules/tx/actions';
@@ -37,7 +39,7 @@ interface IValidatedContractFormDispatchProps {
     contractExec: typeof contractExec.started;
 }
 
-class ValidatedContractForm extends React.Component<IValidatedContractFormProps & IValidatedContractFormStateProps & IValidatedContractFormDispatchProps> {
+class ValidatedContractForm extends React.Component<IValidatedContractFormProps & IValidatedContractFormStateProps & IValidatedContractFormDispatchProps & InjectedIntlProps> {
     private _uuid: string;
     private _pending: boolean;
 
@@ -47,9 +49,32 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
 
     componentWillReceiveProps(props: IValidatedContractFormProps & IValidatedContractFormStateProps & IValidatedContractFormDispatchProps) {
         const transaction = props.transactions.get(this._uuid);
-        if (this._pending && this.props.onExec && transaction && (transaction.block || transaction.error)) {
+        if (this._pending && transaction && (transaction.block || transaction.error)) {
             this._pending = false;
-            this.props.onExec(transaction.block, transaction.error);
+
+            if (transaction.block) {
+                toastr.success(
+                    props.contractName,
+                    this.props.intl.formatMessage(
+                        {
+                            id: 'tx.imprinted.block',
+                            defaultMessage: 'Imprinted in the blockchain (block #{block})'
+                        }, {
+                            block: transaction.block
+                        }
+                    ),
+                );
+            }
+            else if (transaction.error) {
+                toastr.error(
+                    props.contractName,
+                    this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error executing transaction' })
+                );
+            }
+
+            if (this.props.onExec) {
+                this.props.onExec(transaction.block, transaction.error);
+            }
         }
     }
 
@@ -83,4 +108,5 @@ const mapDispatchToProps = {
     contractExec: contractExec.started
 };
 
-export default connect<IValidatedContractFormStateProps, IValidatedContractFormDispatchProps, void>(mapStateToProps, mapDispatchToProps)(ValidatedContractForm);
+const LocalizedValidatedContractForm = injectIntl(ValidatedContractForm);
+export default connect<IValidatedContractFormStateProps, IValidatedContractFormDispatchProps, void>(mapStateToProps, mapDispatchToProps)(LocalizedValidatedContractForm);

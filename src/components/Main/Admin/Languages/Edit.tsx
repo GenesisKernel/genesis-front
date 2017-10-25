@@ -78,16 +78,6 @@ class Edit extends React.Component<IEditProps, IEditState> {
         };
     }
 
-    onExec(block: string, error: string) {
-        // TODO: Notification stub
-        if (block) {
-            alert('Success:: ' + block);
-        }
-        else if (error) {
-            alert('Error:: ' + error);
-        }
-    }
-
     onNewLocale() {
         this.setState({
             translations: [
@@ -155,7 +145,6 @@ class Edit extends React.Component<IEditProps, IEditState> {
                         onTranslationUpdate={this.onTranslationUpdate.bind(this)}
                         resolveTranslationValue={this.resolveTranslationValue.bind(this)}
                         mapContractParams={this.mapContractParams.bind(this)}
-                        onExec={this.onExec.bind(this)}
                     />
                 </div>
             </DocumentTitle>

@@ -56,16 +56,6 @@ class EditMenu extends React.Component<IEditMenuProps, IEditMenuState> {
         };
     }
 
-    onExec(block: string, error: string) {
-        // TODO: Notification stub
-        if (block) {
-            alert('Success:: ' + block);
-        }
-        else if (error) {
-            alert('Error:: ' + error);
-        }
-    }
-
     onSourceEdit(template: string) {
         this.setState({ template });
     }
@@ -99,13 +89,11 @@ class EditMenu extends React.Component<IEditMenuProps, IEditMenuState> {
                     <MenuEditor
                         contractName="@1EditMenu"
                         mapContractParams={this.mapContractParams.bind(this)}
-
                         template={this.state.template}
                         conditions={this.state.conditions}
                         menu={this.props.menu}
                         onSourceEdit={this.onSourceEdit.bind(this)}
                         onConditionsEdit={this.onConditionsEdit.bind(this)}
-                        onExec={this.onExec.bind(this)}
                     />
                 </div>
             </DocumentTitle>

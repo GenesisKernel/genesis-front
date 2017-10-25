@@ -61,16 +61,6 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
         };
     }
 
-    onExec(block: string, error: string) {
-        // TODO: Notification stub
-        if (block) {
-            alert('Success:: ' + block);
-        }
-        else if (error) {
-            alert('Error:: ' + error);
-        }
-    }
-
     onSourceEdit(template: string) {
         this.setState({ template });
     }
@@ -123,8 +113,6 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
                     <PageEditor
                         contractName="@1EditPage"
                         mapContractParams={this.mapContractParams.bind(this)}
-                        onExec={this.onExec.bind(this)}
-
                         template={this.state.template}
                         conditions={this.state.conditions}
                         page={this.props.page}

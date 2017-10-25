@@ -40,35 +40,37 @@ export const contractExecEpic: Epic<Action, IRootState> =
                 }))
                 .flatMap(payload => {
                     // We must listen to this transaction or we will never catch
-                    // the ID of newly created ecosystem. It's name is constant
-                    if ('NewEcosystem' === action.payload.name) {
-                        const ecosystemName = (action.payload.params && action.payload.params.Name) || payload.result;
-                        const account = state.auth.account;
+                    // the ID of newly created ecosystem. Contract name is constant
+                    const hooks: Observable<any>[] = [];
+                    switch (action.payload.name) {
+                        case 'NewEcosystem':
+                            const ecosystemName = (action.payload.params && action.payload.params.Name) || payload.result;
+                            const account = state.auth.account;
 
-                        storage.accounts.save({
-                            ...account,
-                            ecosystems: {
-                                ...account.ecosystems,
-                                [payload.result]: ecosystemName
-                            }
-                        });
+                            storage.accounts.save({
+                                ...account,
+                                ecosystems: {
+                                    ...account.ecosystems,
+                                    [payload.result]: ecosystemName
+                                }
+                            });
 
-                        return Observable.concat(
-                            Observable.of(createEcosystem({
-                                id: payload.result,
-                                name: ecosystemName
-                            })),
-                            Observable.of(actions.contractExec.done({
-                                params: action.payload,
-                                result: payload.blockid
-                            }))
-                        );
+                            hooks.push(
+                                Observable.of(createEcosystem({
+                                    id: payload.result,
+                                    name: ecosystemName
+                                }))
+                            );
+                            break;
+
+                        default:
+                            break;
                     }
 
-                    return Observable.of(actions.contractExec.done({
+                    return Observable.concat(...hooks, Observable.of(actions.contractExec.done({
                         params: action.payload,
                         result: payload.blockid
-                    }));
+                    })));
                 })
                 .catch((error: ITxStatusResponse) => Observable.of(actions.contractExec.failed({
                     params: action.payload,

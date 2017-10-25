@@ -15,6 +15,7 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { combineReducers } from 'redux';
+import { reducer as toastrReducer } from 'react-redux-toastr';
 import { combineEpics } from 'redux-observable';
 import { routerReducer as router, RouterState } from 'react-router-redux';
 import { loadingBarReducer } from 'react-redux-loading-bar';
@@ -49,5 +50,6 @@ export default combineReducers<IRootState>({
     engine: engine.reducer,
     tx: tx.reducer,
     loadingBar: loadingBarReducer,
+    toastr: toastrReducer,
     router
 });

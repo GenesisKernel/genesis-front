@@ -58,16 +58,6 @@ class Edit extends React.Component<IEditProps, IEditState> {
         };
     }
 
-    onExec(block: string, error: string) {
-        // TODO: Notification stub
-        if (block) {
-            alert('Success:: ' + block);
-        }
-        else if (error) {
-            alert('Error:: ' + error);
-        }
-    }
-
     onValueEdit(value: string) {
         this.setState({
             value
@@ -105,7 +95,6 @@ class Edit extends React.Component<IEditProps, IEditState> {
                         conditions={this.state.conditions}
                         contractName="@1EditParameter"
                         mapContractParams={this.mapContractParams.bind(this)}
-                        onExec={this.onExec.bind(this)}
                         onValueEdit={this.onValueEdit.bind(this)}
                         onConditionsEdit={this.onConditionsEdit.bind(this)}
                     />

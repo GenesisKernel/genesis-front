@@ -74,24 +74,9 @@ class Edit extends React.Component<IEditProps, IEditState> {
         };
     }
 
-    onExec(block: string, error: string) {
-        // TODO: Notification stub
-        if (block) {
-            alert('Success:: ' + block);
-        }
-        else if (error) {
-            alert('Error:: ' + error);
-        }
-    }
-
     onContractActivation(block: string, error: string) {
-        // TODO: Notification stub
         if (block) {
             this.props.getContract({ id: this.props.contract.id });
-            alert('Success:: ' + block);
-        }
-        else if (error) {
-            alert('Error:: ' + error);
         }
     }
 
@@ -140,7 +125,6 @@ class Edit extends React.Component<IEditProps, IEditState> {
                         onWalletEdit={this.onWalletEdit.bind(this)}
                         onConditionsEdit={this.onConditionsEdit.bind(this)}
                         onContractActivation={this.onContractActivation.bind(this)}
-                        onExec={this.onExec.bind(this)}
                     />
                 </div>
             </DocumentTitle>

@@ -56,16 +56,6 @@ class EditBlock extends React.Component<IEditBlockProps, IEditBlockState> {
         };
     }
 
-    onExec(block: string, error: string) {
-        // TODO: Notification stub
-        if (block) {
-            alert('Success:: ' + block);
-        }
-        else if (error) {
-            alert('Error:: ' + error);
-        }
-    }
-
     onSourceEdit(template: string) {
         this.setState({ template });
     }
@@ -105,7 +95,6 @@ class EditBlock extends React.Component<IEditBlockProps, IEditBlockState> {
                         block={this.props.block}
                         onSourceEdit={this.onSourceEdit.bind(this)}
                         onConditionsEdit={this.onConditionsEdit.bind(this)}
-                        onExec={this.onExec.bind(this)}
                     />
                 </div>
             </DocumentTitle>

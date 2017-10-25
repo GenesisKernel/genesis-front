@@ -123,3 +123,25 @@ input[type="number"]::-webkit-inner-spin-button {
 input[type="number"] {
     -moz-appearance: textfield;
 }
+
+
+.redux-toastr .top-left, .redux-toastr .top-right, .redux-toastr .top-center {
+    position: fixed;
+    margin: -12px 0 0 0;
+    top: auto;
+    z-index: 900;
+    left: 50%;
+    width: 350px;
+    transform: translateX(-175px);
+}
+
+.redux-toastr .toastr.rrt-success {
+    background-color: #23ba43;
+    border: solid 1px #1fa73c;
+}
+
+.redux-toastr .toastr {
+    box-shadow: none;
+    opacity: 1;
+    font-size: 13px;
+}

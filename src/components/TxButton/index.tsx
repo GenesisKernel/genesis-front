@@ -15,6 +15,8 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import { injectIntl, InjectedIntlProps } from 'react-intl';
+import { toastr } from 'react-redux-toastr';
 import { Button } from 'react-bootstrap';
 
 export interface ITxButtonConfirm {
@@ -40,20 +42,25 @@ export interface ITxButtonProps {
     onExec?: (block: string, error: string) => void;
 }
 
-export default class TxButton extends React.Component<ITxButtonProps> {
+class TxButton extends React.Component<ITxButtonProps & InjectedIntlProps> {
     componentWillReceiveProps(props: ITxButtonProps) {
         // Received non-empty transaction status, proceed to actions
         if (!props.pending && props.contractStatus && this.props.contractStatus !== props.contractStatus) {
-            // TODO: Notification stub
             if (props.contractStatus.block) {
-                alert('Success::' + props.contractStatus.block);
+                toastr.success(
+                    props.contractName,
+                    this.props.intl.formatMessage({ id: 'tx.imprinted.block', defaultMessage: 'Imprinted in the blockchain (block #{block})' }, { block: props.contractStatus.block }),
+                );
 
                 if (this.props.page) {
                     this.props.navigate(this.props.page, this.props.pageParams);
                 }
             }
             else if (props.contractStatus.error) {
-                alert('Error::' + props.contractStatus.error);
+                toastr.error(
+                    props.contractName,
+                    this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error executing transaction' })
+                );
             }
 
             if (this.props.onExec) {
@@ -84,3 +91,5 @@ export default class TxButton extends React.Component<ITxButtonProps> {
         );
     }
 }
+
+export default injectIntl(TxButton);

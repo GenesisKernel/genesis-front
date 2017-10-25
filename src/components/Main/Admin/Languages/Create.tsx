@@ -55,13 +55,8 @@ class Create extends React.Component<ICreateProps, ICreateState> {
     }
 
     onExec(block: string, error: string) {
-        // TODO: Notification stub
         if (block) {
             this.props.navigate('/admin/languages');
-            alert('Success:: ' + block);
-        }
-        else if (error) {
-            alert('Error:: ' + error);
         }
     }
 

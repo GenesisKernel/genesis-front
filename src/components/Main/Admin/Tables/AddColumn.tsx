@@ -51,16 +51,6 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
         };
     }
 
-    onExec(block: string, error: string) {
-        // TODO: Notification stub
-        if (block) {
-            alert('Success:: ' + block);
-        }
-        else if (error) {
-            alert('Error:: ' + error);
-        }
-    }
-
     onIndexChange(e: React.ChangeEvent<HTMLInputElement>) {
         this.setState({
             index: e.target.checked
@@ -105,7 +95,7 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
                             <FormattedMessage id="admin.tables.column.add" defaultMessage="Add column" />
                         </li>
                     </ol>
-                    <ValidatedContractForm contractName="@1NewColumn" mapContractParams={this.mapContractParams.bind(this)} onExec={this.onExec.bind(this)}>
+                    <ValidatedContractForm contractName="@1NewColumn" mapContractParams={this.mapContractParams.bind(this)}>
                         <div className="panel panel-default">
                             <div className="panel-body">
                                 <Validation.components.ValidatedFormGroup for="name">

@@ -48,13 +48,8 @@ class CreateBlock extends React.Component<ICreateBlockProps, ICreateBlockState> 
     }
 
     onExec(block: string, error: string) {
-        // TODO: Notification stub
         if (block) {
             this.props.navigate('/admin/interface');
-            alert('Success:: ' + block);
-        }
-        else if (error) {
-            alert('Error:: ' + error);
         }
     }
 

@@ -33,7 +33,7 @@ export interface ILocaleEditorProps {
     onTranslationUpdate: (index: number, property: string, value: any) => void;
     resolveTranslationValue: (index: number, property: string) => any;
     mapContractParams: (values: { [key: string]: any }) => { [key: string]: any };
-    onExec: (block: string, error: string) => void;
+    onExec?: (block: string, error: string) => void;
 }
 
 const LocaleEditor: React.SFC<ILocaleEditorProps> = (props) => (

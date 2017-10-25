@@ -44,8 +44,8 @@ fetch('/settings.json')
         const TARGET_ROOT = document.querySelector('#root');
 
         render(
-            <Provider store={store} >
-                <ConnectedRouter history={history} >
+            <Provider store={store}>
+                <ConnectedRouter history={history}>
                     <App />
                 </ConnectedRouter>
             </Provider>,

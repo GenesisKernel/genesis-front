@@ -141,7 +141,7 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                     <TxButton bsStyle="danger" className="btn-block" contractName="NewEcosystem">CreateEcosystem</TxButton>
                     <div className="row">
                         <div className="col-md-4">
-                            <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 1</TxButton>
+                            <TxButton bsStyle="danger" className="btn-block" contractName="MainCondition">Contract 1</TxButton>
                         </div>
                         <div className="col-md-4">
                             <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
@@ -152,7 +152,7 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                     </div>
                     <div className="row">
                         <div className="col-md-4">
-                            <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 1</TxButton>
+                            <TxButton bsStyle="danger" className="btn-block" contractName="MainCondition">Contract 1</TxButton>
                         </div>
                         <div className="col-md-4">
                             <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
@@ -163,7 +163,7 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                     </div>
                     <div className="row">
                         <div className="col-md-4">
-                            <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 1</TxButton>
+                            <TxButton bsStyle="danger" className="btn-block" contractName="MainCondition">Contract 1</TxButton>
                         </div>
                         <div className="col-md-4">
                             <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
