@@ -16,6 +16,7 @@
 
 import Protypo from 'components/Protypo/Protypo';
 import Button from 'components/Protypo/Button';
+import DBFind from 'components/Protypo/DBFind';
 import Div from 'components/Protypo/Div';
 import Em from 'components/Protypo/Em';
 import Form from 'components/Protypo/Form';
@@ -28,9 +29,11 @@ import P from 'components/Protypo/P';
 import Span from 'components/Protypo/Span';
 import Strong from 'components/Protypo/Strong';
 import Style from 'components/Protypo/Style';
+import Table from 'components/Protypo/Table';
 
 const handlers = {
     'button': Button,
+    'dbfind': DBFind,
     'div': Div,
     'em': Em,
     'form': Form,
@@ -42,7 +45,8 @@ const handlers = {
     'p': P,
     'span': Span,
     'strong': Strong,
-    'style': Style
+    'style': Style,
+    'table': Table
 };
 
 export const resolveHandler = (name: string) => {
