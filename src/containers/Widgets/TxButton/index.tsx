@@ -90,7 +90,7 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
                 contractParams = this.props.contractParams();
 
                 // Stop executing contract if provided parameters were invalid
-                if (null === params) {
+                if (null === contractParams) {
                     return;
                 }
             }
