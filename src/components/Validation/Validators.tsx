@@ -44,7 +44,8 @@ export const minlength = (count: number | string) => {
             throw new Error(`Unrecognized value type "${typeof value}"`);
         }
 
-        return parseInt(count.toString(), 10) <= value.length;
+        // Do not affect empty strings. 'required' must do this job
+        return value.length === 0 || parseInt(count.toString(), 10) <= value.length;
     } as IValidator;
 };
 
