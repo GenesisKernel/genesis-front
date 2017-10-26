@@ -20,6 +20,7 @@ import Div from 'components/Protypo/Div';
 import Em from 'components/Protypo/Em';
 import Form from 'components/Protypo/Form';
 import Input from 'components/Protypo/Input';
+import InputErr from 'components/Protypo/InputErr';
 import Label from 'components/Protypo/Label';
 import MenuItem from 'components/Protypo/MenuItem';
 import MenuGroup from 'components/Protypo/MenuGroup';
@@ -34,6 +35,7 @@ const handlers = {
     'em': Em,
     'form': Form,
     'input': Input,
+    'inputerr': InputErr,
     'label': Label,
     'menuitem': MenuItem,
     'menugroup': MenuGroup,

@@ -225,6 +225,14 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                                     <FormattedMessage id="auth.seed.load" defaultMessage="Load" />
                                 </Button>
                             </Col>
+                            <div className="text-left">
+                                <Validation.components.ValidationMessage
+                                    for="seed"
+                                    messages={{
+                                        required: { id: 'validation.required', defaultMessage: 'This field is required' }
+                                    }}
+                                />
+                            </div>
                         </Col>
                     </Validation.components.ValidatedFormGroup>
                 </fieldset>
@@ -236,7 +244,16 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                             </label>
                         </Col>
                         <Col md={9}>
-                            <Validation.components.ValidatedControl id="registerPassword" onChange={this.onPasswordChange.bind(this)} value={this.state.password} name="password" type="password" validators={[Validation.validators.required, Validation.validators.minLength(6)]} />
+                            <Validation.components.ValidatedControl id="registerPassword" onChange={this.onPasswordChange.bind(this)} value={this.state.password} name="password" type="password" validators={[Validation.validators.required, Validation.validators.minlength(6)]} />
+                            <div className="text-left">
+                                <Validation.components.ValidationMessage
+                                    for="password"
+                                    messages={{
+                                        required: { id: 'validation.required', defaultMessage: 'This field is required' },
+                                        minlength: { id: 'validation.minlength', defaultMessage: 'Password must be at least {value} characters long', values: { value: 6 } }
+                                    }}
+                                />
+                            </div>
                         </Col>
                     </Validation.components.ValidatedFormGroup>
                 </fieldset>

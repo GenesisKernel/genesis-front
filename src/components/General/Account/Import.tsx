@@ -177,7 +177,7 @@ class Import extends React.Component<IImportProps, IImportState> {
                                             </label>
                                         </Col>
                                         <Col md={9}>
-                                            <Validation.components.ValidatedControl id="importPassword" name="password" type="password" validators={[Validation.validators.required, Validation.validators.minLength(6)]} />
+                                            <Validation.components.ValidatedControl id="importPassword" name="password" type="password" validators={[Validation.validators.required, Validation.validators.minlength(6)]} />
                                         </Col>
                                     </Validation.components.ValidatedFormGroup>
                                 </fieldset>

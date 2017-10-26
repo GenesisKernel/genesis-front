@@ -122,7 +122,6 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
 
     validate(name: string, withValue?: any): IValidationResult {
         const element = this._elements[name];
-
         if (!element) {
             return {
                 name,

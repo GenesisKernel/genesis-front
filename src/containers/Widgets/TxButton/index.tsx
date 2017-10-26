@@ -68,6 +68,13 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
         this._uuid = uuid.v4();
 
         if (confirm) {
+            // Stop executing contract if provided parameters were invalid
+            if ('function' === typeof this.props.contractParams) {
+                if (null === this.props.contractParams()) {
+                    return;
+                }
+            }
+
             this.props.alertShow({
                 id: this._uuid,
                 type: confirm.icon,
@@ -78,10 +85,23 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
             });
         }
         else {
+            let contractParams = {};
+            if ('function' === typeof this.props.contractParams) {
+                contractParams = this.props.contractParams();
+
+                // Stop executing contract if provided parameters were invalid
+                if (null === params) {
+                    return;
+                }
+            }
+            else {
+                contractParams = this.props.contractParams;
+            }
+
             this.props.contractExec({
                 uuid: this._uuid,
                 name: this.props.contractName,
-                params: 'function' === typeof this.props.contractParams ? this.props.contractParams() : this.props.contractParams,
+                params: contractParams
             });
         }
     }

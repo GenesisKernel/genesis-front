@@ -14,10 +14,16 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
+// Validation component uses function name to check if current validation is a match
+// Some validation functions are generators, so we need to preserve their initial name
+/* tslint:disable:no-shadowed-variable */
+
 export interface IValidator {
     (value: string): boolean;
 }
 
+// Validator name must be lowercase because of how Protypo works on the server side
+// If you will write your validator using different case - it will not work properly
 export const required: IValidator = (value: string) => {
     const type = typeof value;
 
@@ -32,18 +38,28 @@ export const required: IValidator = (value: string) => {
     }
 };
 
-export const minLength = (count: number) => {
-    return ((value: string) => {
+export const minlength = (count: number | string) => {
+    return function minlength(value: string) {
         if ('string' !== typeof value) {
             throw new Error(`Unrecognized value type "${typeof value}"`);
         }
 
-        return count <= value.length;
-    }) as IValidator;
+        return parseInt(count.toString(), 10) <= value.length;
+    } as IValidator;
+};
+
+export const maxlength = (count: number | string) => {
+    return function maxlength(value: string) {
+        if ('string' !== typeof value) {
+            throw new Error(`Unrecognized value type "${typeof value}"`);
+        }
+
+        return parseInt(count.toString(), 10) >= value.length;
+    } as IValidator;
 };
 
 export const compare = (compareValue: any) => {
-    return ((value: any) => {
+    return function compare(value: any) {
         return compareValue === value;
-    }) as IValidator;
+    } as IValidator;
 };

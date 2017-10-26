@@ -14,26 +14,17 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import ValidatedControl from './ValidatedControl';
-import ValidatedCheckbox from './ValidatedCheckbox';
-import ValidatedSelect from './ValidatedSelect';
-import ValidationMessage from './ValidationMessage';
-import ValidatedTextarea from './ValidatedTextarea';
-import ValidatedForm from './ValidatedForm';
-import ValidatedFormGroup from './ValidatedFormGroup';
-import ValidatedSubmit from './ValidatedSubmit';
-import * as validators from './Validators';
+import * as React from 'react';
 
-export default {
-    components: {
-        ValidatedControl,
-        ValidatedCheckbox,
-        ValidatedSelect,
-        ValidatedTextarea,
-        ValidatedForm,
-        ValidatedFormGroup,
-        ValidatedSubmit,
-        ValidationMessage
-    },
-    validators
-};
+import ValidationMessage from 'components/Validation/ValidationMessage';
+
+export interface IInputErrProps {
+    'name'?: string;
+    [key: string]: string;
+}
+
+const InputErr: React.SFC<IInputErrProps> = (props) => (
+    <ValidationMessage for={props.name} messages={props} />
+);
+
+export default InputErr;

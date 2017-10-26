@@ -45,10 +45,14 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
         const params = {};
 
         if (context.form) {
-            const payload = context.form.validateAll().payload;
-            for (let itr in payload) {
-                if (payload.hasOwnProperty(itr)) {
-                    params[itr] = payload[itr].value;
+            const payload = context.form.validateAll();
+            if (!payload.valid) {
+                return null;
+            }
+
+            for (let itr in payload.payload) {
+                if (payload.payload.hasOwnProperty(itr)) {
+                    params[itr] = payload.payload[itr].value;
                 }
             }
         }
