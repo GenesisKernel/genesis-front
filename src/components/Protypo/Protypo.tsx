@@ -36,6 +36,7 @@ export default class Protypo extends React.Component<IProtypoProps> {
     private _lastID: number;
     private _menuPushBind: Function;
     private _navigateBind: Function;
+    private _sources: { [key: string]: { columns: string[], data: string[][] } };
     private _errors: { name: string, description: string }[];
 
     constructor(props: IProtypoProps) {
@@ -46,9 +47,18 @@ export default class Protypo extends React.Component<IProtypoProps> {
 
     getChildContext() {
         return {
+            protypo: this,
             menuPush: this._menuPushBind,
             navigate: this._navigateBind
         };
+    }
+
+    registerSource(name: string, payload: { columns: string[], data: string[][] }) {
+        this._sources[name] = payload;
+    }
+
+    resolveSource(name: string) {
+        return this._sources[name];
     }
 
     renderElement(element: IProtypoElement): React.ReactNode {
@@ -59,8 +69,10 @@ export default class Protypo extends React.Component<IProtypoProps> {
             default:
                 const Handler = resolveHandler(element.tag);
                 if (Handler) {
+                    // TODO: Woodleg, rework on the server side
+                    const dbFindParams = element.tag === 'dbfind' ? { columns: (element as any).columns, data: (element as any).data } : {};
                     return (
-                        <Handler {...element.attr} key={this._lastID++} childrenTree={element.children}>
+                        <Handler {...element.attr} {...dbFindParams} key={this._lastID++} childrenTree={element.children}>
                             {this.renderElements(element.children)}
                         </Handler>
                     );
@@ -87,6 +99,7 @@ export default class Protypo extends React.Component<IProtypoProps> {
 
     render() {
         this._lastID = 0;
+        this._sources = {};
         this._errors = [];
         const body = this.renderElements(this.props.payload);
 
@@ -108,6 +121,7 @@ export default class Protypo extends React.Component<IProtypoProps> {
 }
 
 (Protypo as any).childContextTypes = {
+    protypo: propTypes.object.isRequired,
     navigate: propTypes.func.isRequired,
     menuPush: propTypes.func.isRequired
 };
