@@ -63,9 +63,6 @@ const Table: React.SFC<ITableProps> = (props, context: ITableContext) => {
             if (Array.isArray(payload)) {
                 return context.protypo.renderElements(payload);
             }
-            else if ('object' === typeof payload) {
-                return context.protypo.renderElement(payload);
-            }
             else {
                 return value;
             }
