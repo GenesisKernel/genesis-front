@@ -16,12 +16,15 @@
 
 import * as React from 'react';
 
+import StyledComponent from './StyledComponent';
+
 export interface IDivProps {
+    'className'?: string;
     'class'?: string;
 }
 
 const Div: React.SFC<IDivProps> = (props) => (
-    <div className={props.class}>{props.children}</div>
+    <div className={[props.class, props.className].join(' ')}>{props.children}</div>
 );
 
-export default Div;
+export default StyledComponent(Div);

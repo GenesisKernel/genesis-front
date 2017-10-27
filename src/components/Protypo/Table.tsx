@@ -19,8 +19,10 @@ import * as propTypes from 'prop-types';
 import * as _ from 'lodash';
 
 import Protypo from './';
+import StyledComponent from './StyledComponent';
 
 export interface ITableProps {
+    className?: string;
     source?: string;
     columns?: { [key: string]: string };
 }
@@ -73,7 +75,7 @@ const Table: React.SFC<ITableProps> = (props, context: ITableContext) => {
     };
 
     return (
-        <table className="table">
+        <table className={['table', props.className].join(' ')}>
             <thead>
                 <tr>
                     {columns.map((col, index) => (
@@ -100,4 +102,4 @@ Table.contextTypes = {
     protypo: propTypes.object.isRequired
 };
 
-export default Table;
+export default StyledComponent(Table);

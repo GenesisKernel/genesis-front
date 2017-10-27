@@ -16,13 +16,16 @@
 
 import * as React from 'react';
 
+import StyledComponent from './StyledComponent';
+
 export interface ILabelProps {
+    'className'?: string;
     'class'?: string;
     'for'?: string;
 }
 
 const Label: React.SFC<ILabelProps> = (props) => (
-    <label className={props.class} htmlFor={props.for}>{props.children}</label>
+    <label htmlFor={props.for} className={[props.class, props.className].join(' ')}>{props.children}</label>
 );
 
-export default Label;
+export default StyledComponent(Label);

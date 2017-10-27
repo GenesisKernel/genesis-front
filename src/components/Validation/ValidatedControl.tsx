@@ -84,6 +84,8 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
     render() {
         return (
             <FormControl
+                style={this.props.style}
+                className={this.props.className}
                 readOnly={this.props.readOnly}
                 disabled={this.props.disabled}
                 onChange={this.onChange.bind(this)}

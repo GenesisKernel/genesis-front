@@ -15,16 +15,14 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import styled from 'styled-components';
 
-import StyledComponent from './StyledComponent';
+type TComponentConstructor<T> = React.ComponentClass<T & IStyledComponentProps> | React.SFC<T & IStyledComponentProps>;
 
-export interface ISpanProps {
-    'className'?: string;
-    'class'?: string;
+interface IStyledComponentProps {
+    style?: string;
 }
 
-const Span: React.SFC<ISpanProps> = (props) => (
-    <span className={[props.class, props.className].join(' ')}>{props.children}</span>
-);
-
-export default StyledComponent(Span);
+export default function styledComponent<T>(Component: TComponentConstructor<T & IStyledComponentProps>) {
+    return styled(Component) `${props => props.style}`;
+}

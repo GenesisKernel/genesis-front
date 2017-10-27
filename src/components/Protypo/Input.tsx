@@ -17,11 +17,13 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 
+import StyledComponent from './StyledComponent';
 import Validation from 'components/Validation';
 import { IValidator } from 'components/Validation/Validators';
 import ValidatedControl from 'components/Validation/ValidatedControl';
 
 export interface IInputProps {
+    'className'?: string;
     'class'?: string;
     'name'?: string;
     'placeholder'?: string;
@@ -44,7 +46,7 @@ const Input: React.SFC<IInputProps> = (props) => {
 
     return (
         <ValidatedControl
-            className={props.class}
+            className={[props.class, props.className].join(' ')}
             name={props.name}
             placeholder={props.placeholder}
             type={props.type}
@@ -54,4 +56,4 @@ const Input: React.SFC<IInputProps> = (props) => {
     );
 };
 
-export default Input;
+export default StyledComponent(Input);

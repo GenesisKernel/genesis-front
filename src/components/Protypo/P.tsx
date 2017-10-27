@@ -16,13 +16,15 @@
 
 import * as React from 'react';
 
+import StyledComponent from './StyledComponent';
+
 export interface IPProps {
+    'className'?: string;
     'class'?: string;
-    'for'?: string;
 }
 
 const P: React.SFC<IPProps> = (props) => (
-    <p className={props.class}>{props.children}</p>
+    <p className={[props.class, props.className].join(' ')}>{props.children}</p>
 );
 
-export default P;
+export default StyledComponent(P);

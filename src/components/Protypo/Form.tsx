@@ -17,11 +17,12 @@
 import * as React from 'react';
 import * as propTypes from 'prop-types';
 
-// import Button from './Button';
+import StyledComponent from './StyledComponent';
 import ValidatedForm from 'components/Validation/ValidatedForm';
 
 export interface IFormProps {
     'class'?: string;
+    'className'?: string;
 }
 
 interface IFormState {
@@ -52,7 +53,7 @@ class Form extends React.Component<IFormProps, IFormState> {
 
     render() {
         return (
-            <ValidatedForm ref={this.bindForm.bind(this)} className={this.props.class}>
+            <ValidatedForm ref={this.bindForm.bind(this)} className={[this.props.class, this.props.className].join(' ')}>
                 {this.props.children}
             </ValidatedForm>
         );
@@ -63,4 +64,4 @@ class Form extends React.Component<IFormProps, IFormState> {
     form: propTypes.instanceOf(ValidatedForm)
 };
 
-export default Form;
+export default StyledComponent(Form);
