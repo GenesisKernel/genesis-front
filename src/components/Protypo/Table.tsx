@@ -55,6 +55,26 @@ const Table: React.SFC<ITableProps> = (props, context: ITableContext) => {
         }));
     }
 
+    // TODO: Move this handler to Protypo. We'll maybe need to use it in the future
+    // for now it's just an exception
+    const renderValue = (value: any) => {
+        try {
+            const payload = JSON.parse(value);
+            if (Array.isArray(payload)) {
+                return context.protypo.renderElements(payload);
+            }
+            else if ('object' === typeof payload) {
+                return context.protypo.renderElement(payload);
+            }
+            else {
+                return value;
+            }
+        }
+        catch (e) {
+            return value;
+        }
+    };
+
     return (
         <table className="table">
             <thead>
@@ -68,7 +88,9 @@ const Table: React.SFC<ITableProps> = (props, context: ITableContext) => {
                 {source.data.map((row, rowIndex) => (
                     <tr key={rowIndex}>
                         {columns.map((col, cellIndex) => (
-                            <td key={cellIndex}>{row[col.index]}</td>
+                            <td key={cellIndex}>
+                                {renderValue(row[col.index])}
+                            </td>
                         ))}
                     </tr>
                 ))}
