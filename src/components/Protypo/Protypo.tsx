@@ -69,10 +69,8 @@ export default class Protypo extends React.Component<IProtypoProps> {
             default:
                 const Handler = resolveHandler(element.tag);
                 if (Handler) {
-                    // TODO: Woodleg, rework on the server side
-                    const dbFindParams = element.tag === 'dbfind' ? { columns: (element as any).columns, data: (element as any).data } : {};
                     return (
-                        <Handler {...element.attr} {...dbFindParams} key={this._lastID++} childrenTree={element.children}>
+                        <Handler {...element.attr} key={this._lastID++} childrenTree={element.children}>
                             {this.renderElements(element.children)}
                         </Handler>
                     );

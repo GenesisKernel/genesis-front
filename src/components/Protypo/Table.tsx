@@ -39,10 +39,10 @@ const Table: React.SFC<ITableProps> = (props, context: ITableContext) => {
     let columns: { title: string, index: number }[] = [];
     if (props.columns) {
         _.forEach(props.columns, (value, key) => {
-            const index = source.columns.indexOf(key);
+            const index = source.columns.indexOf(value);
             if (-1 !== index) {
                 columns.push({
-                    title: value,
+                    title: key,
                     index
                 });
             }
