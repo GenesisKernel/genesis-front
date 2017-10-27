@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { Button, Col, Row, FormControlProps } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import MonacoEditor from 'react-monaco-editor';
+import Editor from 'components/Editor';
 
 import TxButton from 'containers/Widgets/TxButton';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
@@ -55,7 +55,7 @@ const ContractEditor: React.SFC<IContractEditorProps> = (props) => (
                                 <FormattedMessage id="admin.contract.code" defaultMessage="Code" />
                             </label>
                             <div className="form-control" style={{ height: 'auto', padding: 0 }}>
-                                <MonacoEditor
+                                <Editor
                                     height={400}
                                     language="simvolio"
                                     value={props.code}

@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import MonacoEditor from 'react-monaco-editor';
+import Editor from 'components/Editor';
 
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
@@ -59,7 +59,7 @@ const MenuEditor: React.SFC<IMenuEditorProps> = (props) => (
                                 <FormattedMessage id="admin.interface.menu.content" defaultMessage="Content" />
                             </label>
                             <div className="form-control" style={{ height: 'auto', padding: 0 }}>
-                                <MonacoEditor
+                                <Editor
                                     height={400}
                                     language="protypo"
                                     value={props.template}

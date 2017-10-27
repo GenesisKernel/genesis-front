@@ -16,11 +16,11 @@
 
 import * as React from 'react';
 import { Button, Col } from 'react-bootstrap';
-import MonacoEditor from 'react-monaco-editor';
 import api from 'lib/api';
 import { contractExec } from 'modules/tx/actions';
 import styled from 'styled-components';
 
+import Editor from 'components/Editor';
 import DocumentTitle from 'components/DocumentTitle';
 import Protypo from 'containers/Widgets/Protypo';
 import TxButton from 'containers/Widgets/TxButton';
@@ -100,7 +100,8 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                 <div className="content-wrapper">
                     <div className="content-heading">Debug page</div>
                     <Col md={6}>
-                        <MonacoEditor
+                        <Editor
+                            language="protypo"
                             value={this.state.code}
                             height={500}
                             onChange={this.onChange.bind(this)}

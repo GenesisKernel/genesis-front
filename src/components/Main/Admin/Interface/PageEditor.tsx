@@ -18,7 +18,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Col, FormGroup, Panel, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import MonacoEditor from 'react-monaco-editor';
+import Editor from 'components/Editor';
 
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
@@ -63,7 +63,7 @@ const PageEditor: React.SFC<IPageEditorProps> = (props) => (
                                 <FormattedMessage id="admin.interface.page.content" defaultMessage="Content" />
                             </label>
                             <div className="form-control" style={{ height: 'auto', padding: 0 }}>
-                                <MonacoEditor
+                                <Editor
                                     height={400}
                                     language="protypo"
                                     value={props.template}
