@@ -136,7 +136,7 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
             for (let i = 0; i < element.validators.length; i++) {
                 const validator = element.validators[i];
 
-                if (!validator(value)) {
+                if (!validator.validate(value)) {
                     return {
                         name,
                         error: true,
