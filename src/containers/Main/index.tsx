@@ -19,7 +19,7 @@ import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { IRootState } from 'modules';
 import { setCollapsed } from 'modules/engine/actions';
-import { menuPop, menuPush, menuInit } from 'modules/content/actions';
+import { menuPop, menuPush, ecosystemInit } from 'modules/content/actions';
 
 import Main, { IMainProps } from 'components/Main';
 import Tables from 'containers/Main/containers/Admin/Tables';
@@ -50,7 +50,7 @@ import Debug from 'containers/Main/containers/Debug';
 import Backup from 'containers/Main/containers/Backup';
 import NotFound from 'containers/Main/containers/NotFound';
 
-class MainContainer extends React.Component<IMainProps & { menuInit: typeof menuInit.started }> {
+class MainContainer extends React.Component<IMainProps & { ecosystemInit: typeof ecosystemInit.started }> {
     componentDidMount() {
         this.preloadMenu(this.props);
     }
@@ -61,9 +61,7 @@ class MainContainer extends React.Component<IMainProps & { menuInit: typeof menu
 
     preloadMenu(props: IMainProps) {
         if (!props.pending && !props.menus.find(l => l.name === 'default_menu')) {
-            this.props.menuInit({
-                session: props.session
-            });
+            this.props.ecosystemInit(null);
         }
     }
 
@@ -111,6 +109,7 @@ const mapStateToProps = (state: IRootState) => ({
     session: state.auth.sessionToken,
     menus: state.content.menus,
     pending: state.content.pending,
+    stylesheet: state.content.stylesheet,
     isCollapsed: state.engine.isCollapsed,
     transactionsCount: state.tx.transactions.count(),
     pendingTransactions: state.tx.transactions.takeLast(5)
@@ -120,7 +119,7 @@ const mapDispatchToProps = {
     setCollapsed,
     menuPop,
     menuPush,
-    menuInit: menuInit.started
+    ecosystemInit: ecosystemInit.started
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainContainer);

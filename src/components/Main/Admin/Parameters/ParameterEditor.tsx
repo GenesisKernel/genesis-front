@@ -17,6 +17,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 
+import Editor from 'components/Editor';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 
@@ -51,7 +52,25 @@ const ParameterEditor: React.SFC<IParameterEditorProps> = (props) => (
                     <label htmlFor="value">
                         <FormattedMessage id="admin.parameters.value" defaultMessage="Value" />
                     </label>
-                    <Validation.components.ValidatedTextarea name="value" onChange={e => props.onValueEdit(e.target.value)} value={props.value || ''} validators={[Validation.validators.required]} />
+                    {'stylesheet' === props.name ?
+                        (
+                            <div className="form-control" style={{ height: 'auto', padding: 0 }}>
+                                <Editor
+                                    height={400}
+                                    language="css"
+                                    value={props.value}
+                                    onChange={value => props.onValueEdit(value)}
+                                    options={{
+                                        automaticLayout: true,
+                                        contextmenu: false,
+                                        scrollBeyondLastLine: false
+                                    }}
+                                />
+                            </div>
+                        ) : (
+                            <Validation.components.ValidatedTextarea name="value" onChange={e => props.onValueEdit(e.target.value)} value={props.value || ''} validators={[Validation.validators.required]} />
+                        )
+                    }
                 </Validation.components.ValidatedFormGroup>
                 <Validation.components.ValidatedFormGroup for="conditions" className="mb0">
                     <label htmlFor="conditions">

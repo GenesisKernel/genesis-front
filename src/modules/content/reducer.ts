@@ -21,6 +21,7 @@ import { IProtypoElement } from 'components/Protypo/Protypo';
 
 export type State = {
     readonly pending: boolean;
+    readonly stylesheet: string;
     readonly menus: { name: string, content: IProtypoElement[] }[];
     readonly page: { name: string, content: IProtypoElement[], error?: string };
     readonly alert: { id: string, success: string, error: string };
@@ -28,6 +29,7 @@ export type State = {
 
 export const initialState: State = {
     pending: false,
+    stylesheet: null,
     menus: [],
     page: null,
     alert: null
@@ -89,28 +91,33 @@ export default (state: State = initialState, action: Action): State => {
         }
     }
 
-    if (isType(action, actions.menuInit.started)) {
+    if (isType(action, actions.ecosystemInit.started)) {
         return {
             ...state,
             pending: true
         };
     }
 
-    if (isType(action, actions.menuInit.done)) {
-        const menuNeedsPush = !state.menus.length || state.menus.find(l => l.name === action.payload.result.name);
+    if (isType(action, actions.ecosystemInit.done)) {
+        // TODO: Move this logic to the Epic
+        const menuNeedsPush = !state.menus.length || state.menus.find(l => l.name === action.payload.result.defaultMenu.name);
         if (menuNeedsPush) {
             return {
                 ...state,
                 pending: false,
-                menus: [action.payload.result, ...state.menus]
+                stylesheet: action.payload.result.stylesheet,
+                menus: [action.payload.result.defaultMenu, ...state.menus]
             };
         }
         else {
-            return state;
+            return {
+                ...state,
+                stylesheet: action.payload.result.stylesheet
+            };
         }
     }
 
-    if (isType(action, actions.menuInit.failed)) {
+    if (isType(action, actions.ecosystemInit.failed)) {
         return {
             ...state,
             pending: false

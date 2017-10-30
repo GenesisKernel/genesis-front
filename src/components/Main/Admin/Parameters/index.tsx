@@ -32,6 +32,14 @@ const Parameters: React.SFC<IParametersProps> = (props) => (
             <div className="content-heading">
                 <div>
                     <div className="pull-right">
+                        <Link to="/admin/parameters/stylesheet" className="ml">
+                            <button className="btn btn-default">
+                                <em className="fa fa-paint-brush fa-fw mr-sm" />
+                                <span>
+                                    <FormattedMessage id="admin.parameters.stylesheet" defaultMessage="Manage stylesheet" />
+                                </span>
+                            </button>
+                        </Link>
                         <Link to="/admin/parameters/create" className="ml">
                             <button className="btn btn-default">
                                 <em className="fa fa-plus-circle fa-fw mr-sm" />

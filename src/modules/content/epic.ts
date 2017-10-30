@@ -49,19 +49,28 @@ export const renderPageEpic: Epic<Action, IRootState> =
         });
 
 export const menuInitEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(actions.menuInit.started)
+    (action$, store) => action$.ofAction(actions.ecosystemInit.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.contentMenu(state.auth.sessionToken, 'default_menu'))
-                .map(payload => actions.menuInit.done({
+
+            const promise = Promise.all([
+                api.contentMenu(state.auth.sessionToken, 'default_menu'),
+                api.parameter(state.auth.sessionToken, 'stylesheet')
+            ]);
+
+            return Observable.fromPromise(promise)
+                .map(payload => actions.ecosystemInit.done({
                     params: action.payload,
                     result: {
-                        name: 'default_menu',
-                        content: JSON.parse(payload.tree)
+                        stylesheet: payload[1].value || null,
+                        defaultMenu: {
+                            name: 'default_menu',
+                            content: JSON.parse(payload[0].tree)
+                        }
                     }
                 }))
                 .catch((e: IAPIError) =>
-                    Observable.of(actions.menuInit.failed({
+                    Observable.of(actions.ecosystemInit.failed({
                         params: action.payload,
                         error: e.error
                     }))

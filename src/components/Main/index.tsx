@@ -39,6 +39,7 @@ export interface IMainProps {
     session: string;
     isCollapsed: boolean;
     pending: boolean;
+    stylesheet: string;
     menus: { name: string, content: IProtypoElement[] }[];
     pendingTransactions: OrderedMap<string, { uuid: string, block: string, error: string, contract: string }>;
     transactionsCount: number;
@@ -62,6 +63,9 @@ export default class Main extends React.Component<IMainProps> {
         });
         return (
             <StyledWrapper className={classes}>
+                <style type="text/css">
+                    {this.props.stylesheet}
+                </style>
                 <Sidebar
                     menus={this.props.menus}
                     collapsed={this.props.isCollapsed}
