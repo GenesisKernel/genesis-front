@@ -85,6 +85,7 @@ export default class ValidatedTextarea extends React.Component<IValidatedTextare
             <textarea
                 id={this.props.id}
                 className={`form-control ${this.props.className || ''}`}
+                placeholder={this.props.placeholder}
                 value={this.state.value}
                 onChange={this.onChange.bind(this)}
                 onBlur={this.onBlur.bind(this)}

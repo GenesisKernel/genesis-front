@@ -20,7 +20,6 @@ import * as _ from 'lodash';
 import StyledComponent from './StyledComponent';
 import Validation from 'components/Validation';
 import { IValidator } from 'components/Validation/Validators';
-import ValidatedControl from 'components/Validation/ValidatedControl';
 
 export interface IInputProps {
     'className'?: string;
@@ -37,6 +36,7 @@ export interface IInputProps {
 // TODO: type is not handled correctly
 const Input: React.SFC<IInputProps> = (props) => {
     const compiledValidators: IValidator[] = [];
+    const className = [props.class, props.className].join(' ');
     _.forEach(props.validate, (value, name) => {
         const validator = Validation.validators[name];
         if (validator) {
@@ -44,16 +44,30 @@ const Input: React.SFC<IInputProps> = (props) => {
         }
     });
 
-    return (
-        <ValidatedControl
-            className={[props.class, props.className].join(' ')}
-            name={props.name}
-            placeholder={props.placeholder}
-            type={props.type}
-            defaultValue={props.value}
-            validators={compiledValidators}
-        />
-    );
+    switch (props.type) {
+        case 'textarea':
+            return (
+                <Validation.components.ValidatedTextarea
+                    className={className}
+                    name={props.name}
+                    placeholder={props.placeholder}
+                    defaultValue={props.value}
+                    validators={compiledValidators}
+                />
+            );
+
+        default:
+            return (
+                <Validation.components.ValidatedControl
+                    className={className}
+                    name={props.name}
+                    placeholder={props.placeholder}
+                    type={props.type}
+                    defaultValue={props.value}
+                    validators={compiledValidators}
+                />
+            );
+    }
 };
 
 export default StyledComponent(Input);
