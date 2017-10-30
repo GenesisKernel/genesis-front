@@ -81,7 +81,7 @@ const View: React.SFC<IViewProps> = (props) => (
                                 </tr>
                             </thead>
                             <tbody>
-                                {props.table && props.tableData.list.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10)).map((row) => (
+                                {props.table && props.tableData.list && props.tableData.list.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10)).map((row) => (
                                     <tr key={row.id}>
                                         <td>{row.id}</td>
                                         {props.table.columns.map(col => (
