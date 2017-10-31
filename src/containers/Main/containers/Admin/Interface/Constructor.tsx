@@ -34,7 +34,8 @@ class ConstructorContainer extends React.Component<IConstructorProps & { getPage
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    page: state.admin.page
+    page: state.admin.page,
+    session: state.auth.sessionToken
 });
 
 const mapDispatchToProps = {

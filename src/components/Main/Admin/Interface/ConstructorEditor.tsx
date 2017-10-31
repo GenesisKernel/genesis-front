@@ -40,6 +40,9 @@ import imgLowercase from 'images/constructor/tt-lower.svg';
 import imgUppercase from 'images/constructor/tt-upper.svg';
 
 interface IConstructorEditorProps {
+    session: string;
+    template: string;
+    treeCode: any;
     page?: { id: string, name: string, value: string };
 }
 
@@ -194,7 +197,12 @@ const ConstructorEditor: React.SFC<IConstructorEditorProps> = (props) => (
                 <div className="b-instrument-panel__inner pull-right"/>
             </div>
 
-            <div className="b-grid"/>
+            <div className="b-grid">
+                {props.template}
+                <br/>
+                <br/>
+                {JSON.stringify(props.treeCode)}
+            </div>
 
         </div>
         <div className="b-constructor__right-panel">

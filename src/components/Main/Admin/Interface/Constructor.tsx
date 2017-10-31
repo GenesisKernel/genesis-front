@@ -17,15 +17,20 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
+import api from 'lib/api';
 
 import DocumentTitle from 'components/DocumentTitle';
 import ConstructorEditor from './ConstructorEditor';
 
 export interface IConstructorProps {
     page: { id: string, name: string, value: string };
+    // template: string;
+    treeCode?: any;
+    session: string;
 }
 
 interface IConstructorState {
+    treeCode?: any;
     template?: string;
 }
 
@@ -41,6 +46,11 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
         if (props.page && this.props.page !== props.page) {
             this.setState({
                 template: props.page.value
+            });
+            api.contentTest(this.props.session, props.page.value).then(r => {
+                this.setState({
+                    treeCode: JSON.parse(r.tree)
+                });
             });
         }
     }
@@ -92,7 +102,10 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                         </li>
                     </ol>
                     <ConstructorEditor
+                        session={this.props.session}
                         page={this.props.page}
+                        template={this.state.template}
+                        treeCode={this.state.treeCode}
                     />
                 </div>
             </DocumentTitle>
