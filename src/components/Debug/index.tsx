@@ -122,10 +122,9 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                     </Col>
                     <hr />
                     <Button bsStyle="primary" className="btn-block" onClick={this.onSubmit.bind(this)}>Request template</Button>
-                    <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Execute contract</TxButton>
+                    <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT">Execute contract</TxButton>
                     <TxButton
-                        bsStyle="info"
-                        className="btn-block"
+                        className="btn btn-info btn-block"
                         contractName="TEST_CONTRACT"
                         confirm={{ icon: 'info', title: 'CONFIRM_TITLE', text: 'CONFIRM_TEXT', confirmButton: 'CONFIRM_BUTTON', cancelButton: 'CANCEL_BUTTON' }}
                         page="page_default"
@@ -133,44 +132,43 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                         Confirm button
                     </TxButton>
                     <TxButton
-                        bsStyle="info"
-                        className="btn-block"
+                        className="btn btn-info btn-block"
                         page="page_default"
                     >
                         Confirm button
                     </TxButton>
-                    <TxButton bsStyle="danger" className="btn-block" contractName="NewEcosystem">CreateEcosystem</TxButton>
+                    <TxButton className="btn btn-danger btn-block" contractName="NewEcosystem">CreateEcosystem</TxButton>
                     <div className="row">
                         <div className="col-md-4">
-                            <TxButton bsStyle="danger" className="btn-block" contractName="MainCondition">Contract 1</TxButton>
+                            <TxButton className="btn btn-danger btn-block" contractName="MainCondition">Contract 1</TxButton>
                         </div>
                         <div className="col-md-4">
-                            <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
+                            <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
                         </div>
                         <div className="col-md-4">
-                            <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
+                            <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col-md-4">
-                            <TxButton bsStyle="danger" className="btn-block" contractName="MainCondition">Contract 1</TxButton>
+                            <TxButton className="btn btn-danger btn-block" contractName="MainCondition">Contract 1</TxButton>
                         </div>
                         <div className="col-md-4">
-                            <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
+                            <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
                         </div>
                         <div className="col-md-4">
-                            <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
+                            <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col-md-4">
-                            <TxButton bsStyle="danger" className="btn-block" contractName="MainCondition">Contract 1</TxButton>
+                            <TxButton className="btn btn-danger btn-block" contractName="MainCondition">Contract 1</TxButton>
                         </div>
                         <div className="col-md-4">
-                            <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
+                            <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
                         </div>
                         <div className="col-md-4">
-                            <TxButton bsStyle="danger" className="btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
+                            <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
                         </div>
                     </div>
                 </div>

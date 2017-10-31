@@ -17,7 +17,6 @@
 import * as React from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import { toastr } from 'react-redux-toastr';
-import { Button } from 'react-bootstrap';
 
 export interface ITxButtonConfirm {
     icon: string;
@@ -28,7 +27,6 @@ export interface ITxButtonConfirm {
 }
 
 export interface ITxButtonProps {
-    bsStyle?: string;
     pending?: boolean;
     className?: string;
     contractName?: string;
@@ -80,14 +78,13 @@ class TxButton extends React.Component<ITxButtonProps & InjectedIntlProps> {
 
     render() {
         return (
-            <Button
-                bsStyle={this.props.bsStyle}
+            <button
                 onClick={this.onClick.bind(this)}
                 disabled={this.props.pending}
                 className={this.props.className}
             >
                 {this.props.children}
-            </Button>
+            </button>
         );
     }
 }

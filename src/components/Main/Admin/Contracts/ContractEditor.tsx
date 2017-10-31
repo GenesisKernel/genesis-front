@@ -83,8 +83,7 @@ const ContractEditor: React.SFC<IContractEditorProps> = (props) => (
                                                 <TxButton
                                                     contractName="@1ActivateContract"
                                                     contractParams={{ Id: props.contract.id }}
-                                                    bsStyle="primary"
-                                                    className="pull-right"
+                                                    className="btn btn-primary pull-right"
                                                     onExec={props.onContractActivation}
                                                 >
                                                     <FormattedMessage id="admin.contracts.activate" defaultMessage="Activate" />

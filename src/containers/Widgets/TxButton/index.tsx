@@ -26,7 +26,6 @@ import { alertShow } from 'modules/content/actions';
 import TxButton, { ITxButtonConfirm } from 'components/TxButton';
 
 interface ITxButtonContainerProps {
-    bsStyle?: string;
     className?: string;
     contractName?: string;
     contractParams?: { [name: string]: any } | (() => { [name: string]: any });
@@ -132,7 +131,6 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
         return (
             <TxButton
                 {...this.props}
-                bsStyle={this.props.bsStyle}
                 pending={pending}
                 className={this.props.className}
                 contractName={this.props.contractName}
