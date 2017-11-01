@@ -17,17 +17,20 @@
 import * as React from 'react';
 import { NavLink } from 'react-router-dom';
 
+import StyledComponent from './StyledComponent';
+
 export interface ILinkPageProps {
     'class'?: string;
+    'className'?: string;
     'page'?: string;
     'pageparams'?: { [key: string]: string };
 }
 
 const LinkPage: React.SFC<ILinkPageProps> = (props) => (
     // TODO: Missing params
-    <NavLink to={props.page ? `/page/${props.page}` : ''}>
+    <NavLink to={props.page ? `/page/${props.page}` : ''} className={[props.class, props.className].join(' ')}>
         {props.children}
     </NavLink>
 );
 
-export default LinkPage;
+export default StyledComponent(LinkPage);
