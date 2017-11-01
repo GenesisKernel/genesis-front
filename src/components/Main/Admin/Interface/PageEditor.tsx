@@ -95,6 +95,18 @@ const PageEditor: React.SFC<IPageEditorProps> = (props) => (
                     </div>
                     <div className="panel-footer">
                         <div className="text-right">
+                            {props.page ?
+                                (
+                                    <Link to={`/admin/interface/page/${props.page.id}-${props.page.name}/constructor`} className="btn btn-primary pull-left">
+                                        Open in Constructor
+                                    </Link>
+                                ) : (
+                                <Link to={'/admin/interface/create-page/constructor'} className="btn btn-primary pull-left">
+                                    Open in Constructor
+                                </Link>
+                                )
+                            }
+
                             <Validation.components.ValidatedSubmit bsStyle="primary">
                                 <FormattedMessage id="admin.save" defaultMessage="Save" />
                             </Validation.components.ValidatedSubmit>
