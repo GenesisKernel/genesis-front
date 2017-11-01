@@ -107,6 +107,29 @@ const register = (editor: typeof monaco) => {
                 }
             ]
         },
+        Data: {
+            label: 'Data',
+            documentation: 'Data emitter that is filled with data by hand',
+            kind: monaco.languages.CompletionItemKind.Function,
+            insertText: 'Data(',
+            params: [
+                {
+                    label: 'Source',
+                    documentation: 'Source identificator to bind results',
+                    insertText: 'Source: '
+                },
+                {
+                    label: 'Columns',
+                    documentation: 'List of columns separated with comma',
+                    insertText: 'Columns: '
+                },
+                {
+                    label: 'Data',
+                    documentation: 'Emitted data separated with comma line by line for each row',
+                    insertText: 'Data: '
+                }
+            ]
+        },
         Div: {
             label: 'Div',
             documentation: 'Generic container for the content. You can use it to group other elements and apply specific styling or classes',
@@ -164,6 +187,27 @@ const register = (editor: typeof monaco) => {
                     documentation: 'Condition to met for this function to succeed',
                     insertText: 'Condition: '
                 }
+            ]
+        },
+        Image: {
+            label: 'Image',
+            documentation: 'Static image element',
+            kind: monaco.languages.CompletionItemKind.Method,
+            insertText: 'Image(',
+            params: [
+                {
+                    label: 'Src',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Image URI',
+                    insertText: 'Src: '
+                },
+                {
+                    label: 'Alt',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Alternative text that is displayed when image is unable to load',
+                    insertText: 'Alt: '
+                },
+                staticParamTypes.Class
             ]
         },
         Include: {
@@ -261,6 +305,28 @@ const register = (editor: typeof monaco) => {
                     kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Explicitly set language of the resource to get',
                     insertText: 'Lang: '
+                }
+            ]
+        },
+        LinkPage: {
+            label: 'LinkPage',
+            documentation: 'Static redirect link',
+            kind: monaco.languages.CompletionItemKind.Method,
+            insertText: 'LinkPage(',
+            params: [
+                staticParamTypes.Body,
+                {
+                    label: 'Page',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Page that will be loaded on click',
+                    insertText: 'Page: '
+                },
+                staticParamTypes.Class,
+                {
+                    label: 'PageParams',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Parameters which will be passed to the page upon redirection',
+                    insertText: 'Params: '
                 }
             ]
         },
