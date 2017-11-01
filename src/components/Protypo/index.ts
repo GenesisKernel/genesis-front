@@ -20,6 +20,7 @@ import DBFind from 'components/Protypo/DBFind';
 import Div from 'components/Protypo/Div';
 import Em from 'components/Protypo/Em';
 import Form from 'components/Protypo/Form';
+import Image from 'components/Protypo/Image';
 import Input from 'components/Protypo/Input';
 import InputErr from 'components/Protypo/InputErr';
 import Label from 'components/Protypo/Label';
@@ -37,6 +38,7 @@ const handlers = {
     'div': Div,
     'em': Em,
     'form': Form,
+    'image': Image,
     'input': Input,
     'inputerr': InputErr,
     'label': Label,
