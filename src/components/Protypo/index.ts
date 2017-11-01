@@ -16,6 +16,7 @@
 
 import Protypo from 'components/Protypo/Protypo';
 import Button from 'components/Protypo/Button';
+import Data from 'components/Protypo/Data';
 import DBFind from 'components/Protypo/DBFind';
 import Div from 'components/Protypo/Div';
 import Em from 'components/Protypo/Em';
@@ -34,6 +35,7 @@ import Table from 'components/Protypo/Table';
 
 const handlers = {
     'button': Button,
+    'data': Data,
     'dbfind': DBFind,
     'div': Div,
     'em': Em,
