@@ -29,6 +29,7 @@ import LinkPage from 'components/Protypo/LinkPage';
 import MenuItem from 'components/Protypo/MenuItem';
 import MenuGroup from 'components/Protypo/MenuGroup';
 import P from 'components/Protypo/P';
+import Select from 'components/Protypo/Select';
 import Span from 'components/Protypo/Span';
 import Strong from 'components/Protypo/Strong';
 import Table from 'components/Protypo/Table';
@@ -48,6 +49,7 @@ const handlers = {
     'menuitem': MenuItem,
     'menugroup': MenuGroup,
     'p': P,
+    'select': Select,
     'span': Span,
     'strong': Strong,
     'table': Table
