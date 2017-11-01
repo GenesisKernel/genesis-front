@@ -46,3 +46,6 @@ export const getParameters = actionCreator.async<{ params?: string[] }, IParamet
 // Languages
 export const getLanguage = actionCreator.async<{ id: string }, { id: string, res: any, name: string, conditions: string }, string>('GET_LANGUAGE');
 export const getLanguages = actionCreator.async<{ offset?: number, limit?: number }, { id: string, res: any, name: string, conditions: string }[], string>('GET_LANGUAGES');
+
+// Import/export
+export const exportData = actionCreator.async<{ pages: string[], blocks: string[], menus: string[], parameters: string[], languages: string[] }, object, string>('EXPORT_DATA');

@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
+import * as Bluebird from 'bluebird';
 import api, { IAPIError } from 'lib/api';
 import keyring from 'lib/keyring';
 import { combineEpics, Epic } from 'redux-observable';
@@ -289,6 +290,67 @@ export const getParameterEpic: Epic<Action, IRootState> =
                 );
         });
 
+export const exportDataEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.exportData.started)
+        .flatMap(action => {
+            const state = store.getState();
+            const promise = Bluebird.all([
+                Bluebird.map(action.payload.pages, page => api.row(state.auth.sessionToken, 'pages', page), { concurrency: 3 }),
+                Bluebird.map(action.payload.blocks, block => api.row(state.auth.sessionToken, 'blocks', block), { concurrency: 3 }),
+                Bluebird.map(action.payload.menus, menu => api.row(state.auth.sessionToken, 'menu', menu), { concurrency: 3 }),
+                action.payload.parameters.length ? api.parameters(state.auth.sessionToken, action.payload.parameters) : [],
+                Bluebird.map(action.payload.languages, language => api.row(state.auth.sessionToken, 'languages', language), { concurrency: 3 })
+
+            ]).spread((
+                pages: { value: { id: string, name: string, conditions: string, menu: string, value: string } }[],
+                blocks: { value: { id: string, name: string, conditions: string, menu: string, value: string } }[],
+                menus: { value: { id: string, name: string, conditions: string, menu: string, value: string } }[],
+                parameters: { name: string, value: string, conditions: string }[],
+                languages: { value: { id: string, name: string, conditions: string, res: string } }[],
+            ) => ({
+                // There are more fields so we'll need to pick only those we really need
+                pages: pages.map(page => ({
+                    name: page.value.name,
+                    conditions: page.value.conditions,
+                    menu: page.value.menu,
+                    value: page.value.value
+                })),
+                blocks: blocks.map(block => ({
+                    name: block.value.name,
+                    conditions: block.value.conditions,
+                    value: block.value.value
+                })),
+                menus: menus.map(menu => ({
+                    name: menu.value.name,
+                    conditions: menu.value.conditions,
+                    value: menu.value.value
+                })),
+                parameters: parameters.map(parameter => ({
+                    name: parameter.name,
+                    value: parameter.value,
+                    conditions: parameter.conditions
+                })),
+                languages: languages.map(language => ({
+                    name: language.value.name,
+                    res: language.value.res,
+                    conditions: language.value.conditions
+                }))
+            }));
+
+            return Observable.fromPromise(promise)
+                .map(payload =>
+                    actions.exportData.done({
+                        params: action.payload,
+                        result: payload
+                    }))
+                .catch((e: IAPIError) =>
+                    Observable.of(actions.exportData.failed({
+                        params: action.payload,
+                        error: e.error
+                    }))
+                );
+        });
+
 export default combineEpics(
     getBlockEpic,
     getContractEpic,
@@ -303,5 +365,6 @@ export default combineEpics(
     getLanguagesEpic,
     getLanguageEpic,
     getParameterEpic,
-    getParametersEpic
+    getParametersEpic,
+    exportDataEpic
 );

@@ -35,6 +35,7 @@ export type State = {
     readonly languages: { id: string, res: any, name: string, conditions: string }[];
     readonly parameter: IParameterResponse;
     readonly parameters: IParameterResponse[];
+    readonly exportPayload: Object;
 };
 
 export const initialState: State = {
@@ -52,7 +53,8 @@ export const initialState: State = {
     language: null,
     languages: null,
     parameter: null,
-    parameters: null
+    parameters: null,
+    exportPayload: null
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -366,6 +368,28 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             pending: false,
             parameter: null
+        };
+    }
+
+    if (isType(action, actions.exportData.started)) {
+        return {
+            ...state,
+            pending: true,
+            exportPayload: null
+        };
+    }
+    else if (isType(action, actions.exportData.done)) {
+        return {
+            ...state,
+            pending: false,
+            exportPayload: action.payload.result
+        };
+    }
+    else if (isType(action, actions.exportData.failed)) {
+        return {
+            ...state,
+            pending: false,
+            exportPayload: null
         };
     }
 

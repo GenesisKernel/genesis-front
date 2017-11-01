@@ -176,6 +176,14 @@ const Sidebar: React.SFC<ISidebarProps> = (props) => {
                         _systemPageHook: '/admin/languages',
                         title: props.intl.formatMessage({ id: 'admin.languages', defaultMessage: 'Language resources' })
                     }
+                },
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-share-alt',
+                        _systemPageHook: '/admin/export',
+                        title: props.intl.formatMessage({ id: 'admin.export', defaultMessage: 'Export' })
+                    }
                 }
             ]
         });
