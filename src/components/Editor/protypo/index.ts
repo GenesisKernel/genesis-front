@@ -399,6 +399,41 @@ const register = (editor: typeof monaco) => {
                 staticParamTypes.Class
             ]
         },
+        Select: {
+            label: 'Select',
+            documentation: 'Element with dropdown menu used to select one value from multiple choices',
+            kind: monaco.languages.CompletionItemKind.Method,
+            insertText: 'Select(',
+            params: [
+                {
+                    label: 'Name',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Unique input name to bind the value to',
+                    insertText: 'Name: '
+                },
+                {
+                    label: 'Source',
+                    documentation: 'Source identificator to fetch the results',
+                    insertText: 'Source: '
+                },
+                {
+                    label: 'NameColumn',
+                    documentation: 'Name of the column that will be shown in the dropdown menu',
+                    insertText: 'NameColumn: '
+                },
+                {
+                    label: 'ValueColumn',
+                    documentation: 'Value that will be passed to the form',
+                    insertText: 'ValueColumn: '
+                },
+                {
+                    label: 'Value',
+                    documentation: 'Default value that will be selected',
+                    insertText: 'Value: '
+                },
+                staticParamTypes.Class
+            ]
+        },
         SetVar: {
             label: 'SetVar',
             documentation: 'Set variable value by name',

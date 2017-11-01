@@ -27,7 +27,9 @@ export interface ISelectProps {
     'className'?: string;
     'class'?: string;
     'source'?: string;
-    'column'?: string;
+    'namecolumn'?: string;
+    'valuecolumn'?: string;
+    'value'?: string;
     'name'?: string;
     'validate'?: {
         [validator: string]: string
@@ -48,10 +50,14 @@ const Select: React.SFC<ISelectProps> = (props, context: ISelectContext) => {
     });
 
     const source = context.protypo.resolveSource(props.source);
-    let options: string[] = [];
+    let options: { name: string, value: string }[] = [];
     if (source) {
-        const columnIndex = source.columns.indexOf(props.column);
-        options = source.data.map(row => row[columnIndex]);
+        const nameIndex = source.columns.indexOf(props.namecolumn);
+        const valueIndex = source.columns.indexOf(props.valuecolumn);
+        options = source.data.map(row => ({
+            name: row[nameIndex],
+            value: row[valueIndex]
+        }));
     }
 
     return (
@@ -59,10 +65,11 @@ const Select: React.SFC<ISelectProps> = (props, context: ISelectContext) => {
             className={[props.class, props.className].join(' ')}
             name={props.name}
             validators={compiledValidators}
+            defaultValue={props.value}
         >
             {options.map((l, index) => (
-                <option key={index} value={l}>
-                    {l}
+                <option key={index} value={l.value}>
+                    {l.name}
                 </option>
             ))}
         </Validation.components.ValidatedSelect>
