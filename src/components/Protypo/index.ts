@@ -23,6 +23,7 @@ import Form from 'components/Protypo/Form';
 import Input from 'components/Protypo/Input';
 import InputErr from 'components/Protypo/InputErr';
 import Label from 'components/Protypo/Label';
+import LinkPage from 'components/Protypo/LinkPage';
 import MenuItem from 'components/Protypo/MenuItem';
 import MenuGroup from 'components/Protypo/MenuGroup';
 import P from 'components/Protypo/P';
@@ -39,6 +40,7 @@ const handlers = {
     'input': Input,
     'inputerr': InputErr,
     'label': Label,
+    'linkpage': LinkPage,
     'menuitem': MenuItem,
     'menugroup': MenuGroup,
     'p': P,
