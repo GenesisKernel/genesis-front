@@ -14,9 +14,15 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
+import { CoreOptions } from 'request';
+import * as requestPromise from 'request-promise-native';
+
 let apiUrl = process.env.REACT_APP_API_URL || 'http://127.0.0.1:7079/api/v2';
 const defaultOptions: RequestInit = {
-    method: 'POST'
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+    }
 };
 
 export const overrideSettings = (settings: { apiUrl: string }) => {
@@ -176,26 +182,29 @@ export interface IDBValue {
     id: string;
 }
 
-const request = async (endpoint: string, body: { [key: string]: any }, options?: RequestInit) => {
+const request = async (endpoint: string, body: { [key: string]: any }, options?: CoreOptions) => {
     // TODO: Set request timeout
-    const requestUrl = `${apiUrl}/${endpoint}`;
-    let requestBody: URLSearchParams = null;
-
-    if (body) {
-        requestBody = new URLSearchParams();
-        for (let name in body) {
-            if (body.hasOwnProperty(name)) {
-                requestBody.append(name, body[name]);
+    const requestOptions = Object.assign({}, defaultOptions, { baseUrl: apiUrl, uri: endpoint, form: body }, options) as RequestInit;
+    let response = null;
+    try {
+        response = await requestPromise({
+            baseUrl: apiUrl,
+            uri: endpoint,
+            method: requestOptions.method,
+            form: body,
+            headers: {
+                ...requestOptions.headers
             }
-        }
+        });
     }
-    const requestOptions = Object.assign({}, defaultOptions, { body: requestBody }, options) as RequestInit;
-    const response = await fetch(requestUrl, requestOptions);
+    catch (e) {
+        response = e;
+    }
 
     let json: any = null;
 
     try {
-        json = await response.json();
+        json = JSON.parse(response);
     }
     catch (e) {
         throw {
