@@ -309,28 +309,29 @@ export const exportDataEpic: Epic<Action, IRootState> =
                 languages: { value: { id: string, name: string, conditions: string, res: string } }[],
             ) => ({
                 // There are more fields so we'll need to pick only those we really need
-                pages: pages.map(page => ({
+                // Property names must be PascalCase as required by simvolio
+                Pages: pages.map(page => ({
                     name: page.value.name,
                     conditions: page.value.conditions,
                     menu: page.value.menu,
                     value: page.value.value
                 })),
-                blocks: blocks.map(block => ({
+                Blocks: blocks.map(block => ({
                     name: block.value.name,
                     conditions: block.value.conditions,
                     value: block.value.value
                 })),
-                menus: menus.map(menu => ({
+                Menus: menus.map(menu => ({
                     name: menu.value.name,
                     conditions: menu.value.conditions,
                     value: menu.value.value
                 })),
-                parameters: parameters.map(parameter => ({
+                Parameters: parameters.map(parameter => ({
                     name: parameter.name,
                     value: parameter.value,
                     conditions: parameter.conditions
                 })),
-                languages: languages.map(language => ({
+                Languages: languages.map(language => ({
                     name: language.value.name,
                     res: language.value.res,
                     conditions: language.value.conditions
