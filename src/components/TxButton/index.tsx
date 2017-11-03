@@ -27,6 +27,7 @@ export interface ITxButtonConfirm {
 }
 
 export interface ITxButtonProps {
+    disabled?: boolean;
     pending?: boolean;
     className?: string;
     contractName?: string;
@@ -80,7 +81,7 @@ class TxButton extends React.Component<ITxButtonProps & InjectedIntlProps> {
         return (
             <button
                 onClick={this.onClick.bind(this)}
-                disabled={this.props.pending}
+                disabled={this.props.disabled || this.props.pending}
                 className={this.props.className}
             >
                 {this.props.children}

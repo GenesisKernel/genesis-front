@@ -54,8 +54,15 @@ class Import extends React.Component<IImportProps & InjectedIntlProps> {
         sendAttachment('backup.sim', JSON.stringify(this.props.payload));
     }
 
-    onConfirm() {
-        console.log('confirmed');
+    isPristine() {
+        return !this.props.payload || (
+            0 === this.props.payload.blocks.length &&
+            0 === this.props.payload.menus.length &&
+            0 === this.props.payload.pages.length &&
+            0 === this.props.payload.parameters.length &&
+            0 === this.props.payload.languages.length &&
+            0 === this.props.payload.contracts.length
+        );
     }
 
     renderItem(title: string, items: string[], badge: number) {
@@ -249,7 +256,7 @@ class Import extends React.Component<IImportProps & InjectedIntlProps> {
                                         </Button>
 
                                         <div className="pull-right">
-                                            <TxButton className="btn btn-primary" contractName="@1Import" contractParams={{ Data: JSON.stringify(this.props.payload) }}>
+                                            <TxButton className="btn btn-primary" contractName="@1Import" contractParams={{ Data: JSON.stringify(this.props.payload) }} disabled={this.isPristine()}>
                                                 <FormattedMessage id="admin.import.confirm" defaultMessage="Import" />
                                             </TxButton>
                                         </div>

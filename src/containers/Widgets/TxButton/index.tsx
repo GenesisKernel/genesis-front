@@ -32,6 +32,7 @@ interface ITxButtonContainerProps {
     confirm?: ITxButtonConfirm;
     page?: string;
     pageParams?: { [key: string]: any };
+    disabled?: boolean;
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
     onExec?: (block: string, error: string) => void;
 }
@@ -132,6 +133,7 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
             <TxButton
                 {...this.props}
                 pending={pending}
+                disabled={this.props.disabled}
                 className={this.props.className}
                 contractName={this.props.contractName}
                 contractParams={this.props.contractParams}
