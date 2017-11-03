@@ -198,11 +198,10 @@ const request = async (endpoint: string, body: { [key: string]: any }, options?:
         });
     }
     catch (e) {
-        response = e;
+        response = e.error;
     }
 
     let json: any = null;
-
     try {
         json = JSON.parse(response);
     }
@@ -262,8 +261,8 @@ const api = {
     contentPage: (session: string, name: string, params: { [key: string]: any }) => securedRequest(`content/page/${name}`, session, params) as Promise<IContentResponse>,
     contentTest: (session: string, template: string) => securedRequest('content', session, { template }) as Promise<IContentResponse>,
     table: (session: string, name: string) => securedRequest(`table/${name}`, session, null, { method: 'GET' }) as Promise<ITableResponse>,
-    tables: (session: string, offset?: number, limit?: number) => securedRequest(`tables?offset=${offset || 0}&limit=${limit || 0}`, session, null, { method: 'GET' }) as Promise<ITablesResponse>,
-    list: (session: string, name: string, offset?: number, limit?: number, columns?: string) => securedRequest(`list/${name}?offset=${offset || 0}&limit=${limit || 0}&columns=${columns || ''}`, session, null, { method: 'GET' }) as Promise<IListResponse>,
+    tables: (session: string, offset?: number, limit?: number) => securedRequest(`tables?offset=${offset || 0}&limit=${limit || 1000}`, session, null, { method: 'GET' }) as Promise<ITablesResponse>,
+    list: (session: string, name: string, offset?: number, limit?: number, columns?: string) => securedRequest(`list/${name}?offset=${offset || 0}&limit=${limit || 1000}&columns=${columns || ''}`, session, null, { method: 'GET' }) as Promise<IListResponse>,
     page: (session: string, id: string) => Promise.all([
         api.row(session, 'pages', id),
         api.list(session, 'menu', 0, 0),
@@ -281,7 +280,7 @@ const api = {
         blocks: results[2].list,
     })) as Promise<IInterfacesResponse>,
     contract: (session: string, name: string) => securedRequest(`contract/${name}`, session, null, { method: 'GET' }) as Promise<IContractResponse>,
-    contracts: (session: string, offset?: number, limit?: number) => securedRequest(`contracts?offset=${offset || 0}&limit=${limit || 0}`, session, null, { method: 'GET' }) as Promise<IContractsResponse>,
+    contracts: (session: string, offset?: number, limit?: number) => securedRequest(`contracts?offset=${offset || 0}&limit=${limit || 1000}`, session, null, { method: 'GET' }) as Promise<IContractsResponse>,
     parameter: (session: string, name: string) => securedRequest(`ecosystemparam/${name}`, session, null, { method: 'GET' }) as Promise<IParameterResponse>,
     parameters: (session: string, params: string[]) => securedRequest(`ecosystemparams?names=${(params || []).join(',')}`, session, null, { method: 'GET' }).then(r => r.list) as Promise<IParameterResponse[]>,
 
