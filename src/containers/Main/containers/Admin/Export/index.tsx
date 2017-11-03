@@ -17,8 +17,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { IInterfacesResponse, IParameterResponse } from 'lib/api';
-import { getInterface, getParameters, getLanguages, exportData } from 'modules/admin/actions';
+import { IInterfacesResponse, IParameterResponse, IContract } from 'lib/api';
+import { getContracts, getInterface, getParameters, getLanguages, exportData } from 'modules/admin/actions';
 
 import Export from 'components/Main/Admin/Export';
 
@@ -27,9 +27,9 @@ export interface IExportContainerProps {
 }
 
 interface IExportContainerState {
-    session: string;
     interfaces: IInterfacesResponse;
     parameters: IParameterResponse[];
+    contracts: IContract[];
     languages: { id: string, name: string }[];
     exportPayload: object;
 }
@@ -38,6 +38,7 @@ interface IExportContainerDispatch {
     getInterface: typeof getInterface.started;
     getParameters: typeof getParameters.started;
     getLanguages: typeof getLanguages.started;
+    getContracts: typeof getContracts.started;
     exportData: typeof exportData.started;
 }
 
@@ -47,6 +48,7 @@ class ExportContainer extends React.Component<IExportContainerProps & IExportCon
         this.props.getInterface(null);
         this.props.getParameters({});
         this.props.getLanguages({});
+        this.props.getContracts({});
     }
 
     render() {
@@ -59,16 +61,17 @@ class ExportContainer extends React.Component<IExportContainerProps & IExportCon
                 menus={this.props.interfaces && this.props.interfaces.menus}
                 parameters={this.props.parameters && this.props.parameters.map(l => ({ name: l.name }))}
                 languages={this.props.languages && this.props.languages.map(l => ({ id: l.id, name: l.name }))}
+                contracts={this.props.contracts && this.props.contracts.map(l => ({ id: l.id, name: l.name }))}
             />
         );
     }
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken,
     interfaces: state.admin.interfaces,
     parameters: state.admin.parameters,
     languages: state.admin.languages,
+    contracts: state.admin.contracts,
     exportPayload: state.admin.exportPayload
 });
 
@@ -76,6 +79,7 @@ const mapDispatchToProps = {
     getInterface: getInterface.started,
     getParameters: getParameters.started,
     getLanguages: getLanguages.started,
+    getContracts: getContracts.started,
     exportData: exportData.started
 };
 

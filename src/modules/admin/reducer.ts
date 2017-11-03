@@ -36,6 +36,14 @@ export type State = {
     readonly parameter: IParameterResponse;
     readonly parameters: IParameterResponse[];
     readonly exportPayload: Object;
+    readonly importPayload: {
+        pages: { Name: string }[];
+        blocks: { Name: string }[];
+        menus: { Name: string }[];
+        parameters: { Name: string }[];
+        languages: { Name: string }[];
+        contracts: { Name: string }[];
+    };
 };
 
 export const initialState: State = {
@@ -54,7 +62,8 @@ export const initialState: State = {
     languages: null,
     parameter: null,
     parameters: null,
-    exportPayload: null
+    exportPayload: null,
+    importPayload: null
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -390,6 +399,39 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             pending: false,
             exportPayload: null
+        };
+    }
+
+    if (isType(action, actions.importData.started)) {
+        return {
+            ...state,
+            pending: true,
+            importPayload: null
+        };
+    }
+    else if (isType(action, actions.importData.done)) {
+        return {
+            ...state,
+            pending: false,
+            importPayload: action.payload.result
+        };
+    }
+    else if (isType(action, actions.importData.failed)) {
+        return {
+            ...state,
+            pending: false,
+            importPayload: null
+        };
+    }
+
+    if (isType(action, actions.importDataPrune)) {
+        return {
+            ...state,
+            pending: true,
+            importPayload: {
+                ...state.importPayload,
+                [action.payload.name]: state.importPayload[action.payload.name].filter((l: any) => l.Name !== action.payload.key)
+            }
         };
     }
 

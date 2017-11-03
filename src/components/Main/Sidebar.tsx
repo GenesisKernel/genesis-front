@@ -180,7 +180,15 @@ const Sidebar: React.SFC<ISidebarProps> = (props) => {
                 {
                     tag: 'menuitem',
                     attr: {
-                        icon: 'icon-share-alt',
+                        icon: 'icon-cloud-upload',
+                        _systemPageHook: '/admin/import',
+                        title: props.intl.formatMessage({ id: 'admin.import', defaultMessage: 'Import' })
+                    }
+                },
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-cloud-download',
                         _systemPageHook: '/admin/export',
                         title: props.intl.formatMessage({ id: 'admin.export', defaultMessage: 'Export' })
                     }

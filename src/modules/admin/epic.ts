@@ -17,6 +17,7 @@
 import * as Bluebird from 'bluebird';
 import api, { IAPIError } from 'lib/api';
 import keyring from 'lib/keyring';
+import { readTextFile } from 'lib/fs';
 import { combineEpics, Epic } from 'redux-observable';
 import { Action } from 'redux';
 import { Observable } from 'rxjs';
@@ -299,7 +300,8 @@ export const exportDataEpic: Epic<Action, IRootState> =
                 Bluebird.map(action.payload.blocks, block => api.row(state.auth.sessionToken, 'blocks', block), { concurrency: 3 }),
                 Bluebird.map(action.payload.menus, menu => api.row(state.auth.sessionToken, 'menu', menu), { concurrency: 3 }),
                 action.payload.parameters.length ? api.parameters(state.auth.sessionToken, action.payload.parameters) : [],
-                Bluebird.map(action.payload.languages, language => api.row(state.auth.sessionToken, 'languages', language), { concurrency: 3 })
+                Bluebird.map(action.payload.languages, language => api.row(state.auth.sessionToken, 'languages', language), { concurrency: 3 }),
+                Bluebird.map(action.payload.contracts, contract => api.row(state.auth.sessionToken, 'contracts', contract.id).then(data => ({ name: contract.name, ...data })), { concurrency: 3 })
 
             ]).spread((
                 pages: { value: { id: string, name: string, conditions: string, menu: string, value: string } }[],
@@ -307,34 +309,40 @@ export const exportDataEpic: Epic<Action, IRootState> =
                 menus: { value: { id: string, name: string, conditions: string, menu: string, value: string } }[],
                 parameters: { name: string, value: string, conditions: string }[],
                 languages: { value: { id: string, name: string, conditions: string, res: string } }[],
+                contracts: { name: string, value: { id: string, conditions: string, value: string } }[],
             ) => ({
                 // There are more fields so we'll need to pick only those we really need
                 // Property names must be PascalCase as required by simvolio
-                Pages: pages.map(page => ({
-                    name: page.value.name,
-                    conditions: page.value.conditions,
-                    menu: page.value.menu,
-                    value: page.value.value
+                pages: pages.map(page => ({
+                    Name: page.value.name,
+                    Conditions: page.value.conditions,
+                    Menu: page.value.menu,
+                    Value: page.value.value
                 })),
-                Blocks: blocks.map(block => ({
-                    name: block.value.name,
-                    conditions: block.value.conditions,
-                    value: block.value.value
+                blocks: blocks.map(block => ({
+                    Name: block.value.name,
+                    Conditions: block.value.conditions,
+                    Value: block.value.value
                 })),
-                Menus: menus.map(menu => ({
-                    name: menu.value.name,
-                    conditions: menu.value.conditions,
-                    value: menu.value.value
+                menus: menus.map(menu => ({
+                    Name: menu.value.name,
+                    Conditions: menu.value.conditions,
+                    Value: menu.value.value
                 })),
-                Parameters: parameters.map(parameter => ({
-                    name: parameter.name,
-                    value: parameter.value,
-                    conditions: parameter.conditions
+                parameters: parameters.map(parameter => ({
+                    Name: parameter.name,
+                    Value: parameter.value,
+                    Conditions: parameter.conditions
                 })),
-                Languages: languages.map(language => ({
-                    name: language.value.name,
-                    res: language.value.res,
-                    conditions: language.value.conditions
+                languages: languages.map(language => ({
+                    Name: language.value.name,
+                    Trans: language.value.res,
+                    Conditions: language.value.conditions
+                })),
+                contracts: contracts.map(contract => ({
+                    Name: contract.name,
+                    Value: contract.value.value,
+                    Conditions: contract.value.conditions
                 }))
             }));
 
@@ -352,6 +360,35 @@ export const exportDataEpic: Epic<Action, IRootState> =
                 );
         });
 
+export const importDataEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.importData.started)
+        .flatMap(action => {
+            return Observable.from(readTextFile(action.payload)).map(payload => {
+                const result = JSON.parse(payload);
+
+                if (Array.isArray(result.pages) &&
+                    Array.isArray(result.blocks) &&
+                    Array.isArray(result.menus) &&
+                    Array.isArray(result.parameters) &&
+                    Array.isArray(result.languages) &&
+                    Array.isArray(result.contracts)) {
+
+                    return actions.importData.done({
+                        params: null,
+                        result
+                    });
+                }
+                else {
+                    throw { e: 'E_INVALID_PAYLOAD' };
+                }
+            }).catch(e => {
+                return Observable.of(actions.importData.failed({
+                    params: null,
+                    error: null
+                }));
+            });
+        });
+
 export default combineEpics(
     getBlockEpic,
     getContractEpic,
@@ -367,5 +404,6 @@ export default combineEpics(
     getLanguageEpic,
     getParameterEpic,
     getParametersEpic,
-    exportDataEpic
+    exportDataEpic,
+    importDataEpic
 );
