@@ -16,7 +16,6 @@
 
 import * as React from 'react';
 import * as propTypes from 'prop-types';
-import * as _ from 'lodash';
 
 import Protypo from './';
 import StyledComponent from './StyledComponent';
@@ -24,7 +23,7 @@ import StyledComponent from './StyledComponent';
 export interface ITableProps {
     className?: string;
     source?: string;
-    columns?: { [key: string]: string };
+    columns?: { Name: string, Title: string }[];
 }
 
 interface ITableContext {
@@ -40,11 +39,11 @@ const Table: React.SFC<ITableProps> = (props, context: ITableContext) => {
 
     let columns: { title: string, index: number }[] = [];
     if (props.columns) {
-        _.forEach(props.columns, (value, key) => {
-            const index = source.columns.indexOf(value);
+        props.columns.forEach(col => {
+            const index = source.columns.indexOf(col.Name);
             if (-1 !== index) {
                 columns.push({
-                    title: key,
+                    title: col.Title,
                     index
                 });
             }
