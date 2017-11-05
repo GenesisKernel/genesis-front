@@ -88,8 +88,6 @@ const LinkButton: React.SFC<IMenuItemProps> = (props, context: ILinkButtonContex
         active: isActive
     });
 
-    console.log(context.router);
-
     const linkBody = (
         <div className="link-body">
             {props.icon && (<em className={`icon ${props.icon}`} />)}
