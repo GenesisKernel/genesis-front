@@ -23,18 +23,15 @@ import { IProtypoElement } from 'components/Protypo/Protypo';
 import Page from 'components/Main/Page';
 
 interface IPageContainerProps {
+    pending: boolean;
     page: { name: string, content: IProtypoElement[] };
     match?: { params: { pageName: string } };
     renderPage: typeof renderPage.started;
 }
 
 class PageContainer extends React.Component<IPageContainerProps> {
-    componentWillMount() {
-        this.props.renderPage({ name: this.props.match.params.pageName });
-    }
-
     componentWillReceiveProps(props: IPageContainerProps) {
-        if (this.props.page && (this.props.match.params.pageName !== props.match.params.pageName)) {
+        if (!props.pending && (!props.page || props.match.params.pageName !== props.page.name)) {
             props.renderPage({ name: props.match.params.pageName });
         }
     }
@@ -50,7 +47,8 @@ class PageContainer extends React.Component<IPageContainerProps> {
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    page: state.content.page
+    page: state.content.page,
+    pending: state.content.pending
 });
 
 const mapDispatchToProps = {

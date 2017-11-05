@@ -18,7 +18,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { navigate } from 'modules/engine/actions';
-import { menuPush } from 'modules/content/actions';
+import { renderPage, menuPush } from 'modules/content/actions';
 
 import Protypo from 'components/Protypo';
 import { IProtypoElement } from 'components/Protypo/Protypo';
@@ -29,10 +29,11 @@ export interface IProtypoContainerProps {
 }
 
 interface IProtypoContainerState {
-
+    page: string;
 }
 
 interface IProtypoContainerDispatch {
+    navigatePage: typeof renderPage.started;
     navigate: typeof navigate;
     menuPush: typeof menuPush;
 }
@@ -42,10 +43,11 @@ const ProtypoContainer: React.SFC<IProtypoContainerState & IProtypoContainerDisp
 );
 
 const mapStateToProps = (state: IRootState) => ({
-
+    page: state.content.page && state.content.page.name
 });
 
 const mapDispatchToProps = {
+    navigatePage: renderPage.started,
     navigate,
     menuPush
 };

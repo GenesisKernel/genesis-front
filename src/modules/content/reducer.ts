@@ -59,7 +59,7 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             pending: false,
             page: {
-                name: null,
+                name: action.payload.params.name,
                 content: null,
                 error: action.payload.error
             }

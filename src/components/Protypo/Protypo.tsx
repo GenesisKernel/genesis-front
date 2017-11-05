@@ -20,8 +20,10 @@ import * as propTypes from 'prop-types';
 
 export interface IProtypoProps {
     wrapper?: JSX.Element;
+    page: string;
     payload: IProtypoElement[];
     menuPush: (params: { name: string, content: IProtypoElement[] }) => void;
+    navigatePage: (params: { name: string, params: any }) => void;
     navigate: (url: string) => void;
 }
 
@@ -35,6 +37,7 @@ export interface IProtypoElement {
 export default class Protypo extends React.Component<IProtypoProps> {
     private _lastID: number;
     private _menuPushBind: Function;
+    private _navigatePageBind: Function;
     private _navigateBind: Function;
     private _sources: { [key: string]: { columns: string[], data: string[][] } };
     private _errors: { name: string, description: string }[];
@@ -42,6 +45,7 @@ export default class Protypo extends React.Component<IProtypoProps> {
     constructor(props: IProtypoProps) {
         super(props);
         this._menuPushBind = props.menuPush.bind(this);
+        this._navigatePageBind = props.navigatePage.bind(this);
         this._navigateBind = props.navigate.bind(this);
     }
 
@@ -49,8 +53,13 @@ export default class Protypo extends React.Component<IProtypoProps> {
         return {
             protypo: this,
             menuPush: this._menuPushBind,
-            navigate: this._navigateBind
+            navigatePage: this._navigatePageBind,
+            navigate: this._navigateBind,
         };
+    }
+
+    getCurrentPage() {
+        return this.props.page;
     }
 
     registerSource(name: string, payload: { columns: string[], data: string[][] }) {
@@ -120,6 +129,7 @@ export default class Protypo extends React.Component<IProtypoProps> {
 
 (Protypo as any).childContextTypes = {
     protypo: propTypes.object.isRequired,
+    navigatePage: propTypes.func.isRequired,
     navigate: propTypes.func.isRequired,
     menuPush: propTypes.func.isRequired
 };

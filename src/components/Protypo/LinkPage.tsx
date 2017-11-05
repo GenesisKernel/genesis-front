@@ -15,7 +15,7 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { NavLink } from 'react-router-dom';
+import * as propTypes from 'prop-types';
 
 import StyledComponent from './StyledComponent';
 
@@ -26,11 +26,26 @@ export interface ILinkPageProps {
     'pageparams'?: { [key: string]: string };
 }
 
-const LinkPage: React.SFC<ILinkPageProps> = (props) => (
-    // TODO: Missing params
-    <NavLink to={props.page ? `/page/${props.page}` : ''} className={[props.class, props.className].join(' ')}>
-        {props.children}
-    </NavLink>
-);
+interface ILinkPageContext {
+    navigatePage: (params: { name: string, params: any }) => void;
+}
+
+const LinkPage: React.SFC<ILinkPageProps> = (props, context: ILinkPageContext) => {
+    const onNavigate = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault();
+        context.navigatePage({ name: props.page, params: props.pageparams });
+        return false;
+    };
+
+    return (
+        <a href={props.page ? `/page/${props.page}` : ''} className={[props.class, props.className].join(' ')} onClick={onNavigate}>
+            {props.children}
+        </a>
+    );
+};
+
+LinkPage.contextTypes = {
+    navigatePage: propTypes.func.isRequired
+};
 
 export default StyledComponent(LinkPage);

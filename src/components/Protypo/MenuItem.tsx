@@ -15,10 +15,11 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { NavLink } from 'react-router-dom';
 import * as classnames from 'classnames';
 import styled from 'styled-components';
 import * as propTypes from 'prop-types';
+
+import Protypo from './Protypo';
 
 export interface IMenuItemProps {
     'title'?: string;
@@ -69,9 +70,15 @@ export const StyledLinkButton = styled.div`
     }
 `;
 
+interface ILinkButtonContext {
+    protypo: Protypo;
+    navigate: (url: string) => void;
+    navigatePage: (params: { name: string, params: any }) => void;
+}
+
 // TODO: Missing page params
-const LinkButton: React.SFC<IMenuItemProps> = (props, context) => {
-    const isActive = context.router.route.location.pathname === `/page/${props.page}` || (context.router.route.location.pathname) === props._systemPageHook;
+const LinkButton: React.SFC<IMenuItemProps> = (props, context: ILinkButtonContext) => {
+    const isActive = context.protypo.getCurrentPage() === props.page;
     const classes = classnames({
         active: isActive
     });
@@ -83,14 +90,25 @@ const LinkButton: React.SFC<IMenuItemProps> = (props, context) => {
         </div>
     );
 
+    const onNavigate = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault();
+        if (props._systemPageHook) {
+            context.navigate(props._systemPageHook);
+        }
+        else {
+            context.navigatePage({ name: props.page, params: props.params });
+        }
+        return false;
+    };
+
     return (
         <StyledLinkButton className={classes}>
             <div className="link-active-decorator" />
             {props._systemPageHook || props.page ?
                 (
-                    <NavLink to={props._systemPageHook ? props._systemPageHook : (props.page ? `/page/${props.page}` : '')}>
+                    <a href={props._systemPageHook ? props._systemPageHook : (props.page ? `/page/${props.page}` : '')} onClick={onNavigate}>
                         {linkBody}
-                    </NavLink>
+                    </a>
                 ) : (
                     <a href="#">
                         {linkBody}
@@ -101,7 +119,9 @@ const LinkButton: React.SFC<IMenuItemProps> = (props, context) => {
 };
 
 LinkButton.contextTypes = {
-    router: propTypes.object.isRequired
+    protypo: propTypes.object.isRequired,
+    navigatePage: propTypes.func.isRequired,
+    navigate: propTypes.func.isRequired
 };
 
 export default LinkButton;

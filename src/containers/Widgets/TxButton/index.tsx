@@ -19,9 +19,8 @@ import * as uuid from 'uuid';
 import { Map } from 'immutable';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { navigate } from 'modules/engine/actions';
 import { contractExec } from 'modules/tx/actions';
-import { alertShow } from 'modules/content/actions';
+import { alertShow, renderPage } from 'modules/content/actions';
 
 import TxButton, { ITxButtonConfirm } from 'components/TxButton';
 
@@ -45,7 +44,7 @@ interface ITxButtonStateProps {
 interface ITxButtonDispatchProps {
     contractExec: typeof contractExec.started;
     alertShow: typeof alertShow;
-    navigate: typeof navigate;
+    renderPage: typeof renderPage.started;
 }
 
 class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxButtonStateProps & ITxButtonDispatchProps> {
@@ -120,8 +119,7 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
             });
         }
         else {
-            // TODO: Missing params
-            this.props.navigate(`/page/${page}`);
+            this.props.renderPage({ name: page, params });
         }
     }
 
@@ -155,8 +153,8 @@ const mapStateToProps = (state: IRootState) => ({
 
 const mapDispatchToProps = {
     contractExec: contractExec.started,
+    renderPage: renderPage.started,
     alertShow,
-    navigate
 };
 
 export default connect<ITxButtonStateProps, ITxButtonDispatchProps, ITxButtonContainerProps>(mapStateToProps, mapDispatchToProps)(TxButtonContainer);
