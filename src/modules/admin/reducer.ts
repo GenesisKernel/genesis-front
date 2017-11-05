@@ -43,6 +43,7 @@ export type State = {
         parameters: { Name: string }[];
         languages: { Name: string }[];
         contracts: { Name: string }[];
+        tables: { Name: string }[];
     };
 };
 

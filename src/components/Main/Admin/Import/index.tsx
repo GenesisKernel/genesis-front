@@ -32,6 +32,7 @@ export interface IImportProps {
         parameters: { Name: string }[];
         languages: { Name: string }[];
         contracts: { Name: string }[];
+        tables: { Name: string }[];
     };
     importData: (payload: File) => void;
     onPrunePage: (name: string) => void;
@@ -40,6 +41,7 @@ export interface IImportProps {
     onPruneParameter: (name: string) => void;
     onPruneLanguage: (name: string) => void;
     onPruneContract: (name: string) => void;
+    onPruneTable: (name: string) => void;
 }
 
 class Import extends React.Component<IImportProps & InjectedIntlProps> {
@@ -61,7 +63,8 @@ class Import extends React.Component<IImportProps & InjectedIntlProps> {
             0 === this.props.payload.pages.length &&
             0 === this.props.payload.parameters.length &&
             0 === this.props.payload.languages.length &&
-            0 === this.props.payload.contracts.length
+            0 === this.props.payload.contracts.length &&
+            0 === this.props.payload.tables.length
         );
     }
 
@@ -162,6 +165,16 @@ class Import extends React.Component<IImportProps & InjectedIntlProps> {
                 />
             );
         }
+        if (this.props.payload.tables.length) {
+            tabs.push(
+                <ImportTable
+                    key="tables"
+                    dataKey="Name"
+                    payload={this.props.payload.tables}
+                    onPrune={this.props.onPruneTable.bind(this)}
+                />
+            );
+        }
 
         return tabs;
     }
@@ -176,6 +189,7 @@ class Import extends React.Component<IImportProps & InjectedIntlProps> {
             if (this.props.payload.parameters.length) { tabs.push(this.props.intl.formatMessage({ id: 'admin.parameters.short', defaultMessage: 'Parameters' })); }
             if (this.props.payload.languages.length) { tabs.push(this.props.intl.formatMessage({ id: 'admin.languages.short', defaultMessage: 'Languages' })); }
             if (this.props.payload.contracts.length) { tabs.push(this.props.intl.formatMessage({ id: 'admin.contracts.short', defaultMessage: 'Contracts' })); }
+            if (this.props.payload.tables.length) { tabs.push(this.props.intl.formatMessage({ id: 'admin.tables', defaultMessage: 'Tables' })); }
         }
 
         return (
@@ -247,6 +261,11 @@ class Import extends React.Component<IImportProps & InjectedIntlProps> {
                                             { id: 'admin.contracts', defaultMessage: 'Smart contracts' }),
                                             this.props.payload.contracts.map(l => l.Name),
                                             this.props.payload.contracts.length
+                                        )}
+                                        {this.renderItem(this.props.intl.formatMessage(
+                                            { id: 'admin.tables', defaultMessage: 'Tables' }),
+                                            this.props.payload.tables.map(l => l.Name),
+                                            this.props.payload.tables.length
                                         )}
                                     </div>
 

@@ -33,6 +33,7 @@ interface IImportContainerState {
         parameters: { Name: string }[];
         languages: { Name: string }[];
         contracts: { Name: string }[];
+        tables: { Name: string }[];
     };
 }
 
@@ -56,6 +57,7 @@ const ImportContainer: React.SFC<IImportContainerProps & IImportContainerState &
             onPruneParameter={pruneFactory.bind(null, 'parameters')}
             onPruneLanguage={pruneFactory.bind(null, 'languages')}
             onPruneContract={pruneFactory.bind(null, 'contracts')}
+            onPruneTable={pruneFactory.bind(null, 'tables')}
         />
     );
 };

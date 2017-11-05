@@ -17,8 +17,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { IInterfacesResponse, IParameterResponse, IContract } from 'lib/api';
-import { getContracts, getInterface, getParameters, getLanguages, exportData } from 'modules/admin/actions';
+import { IInterfacesResponse, IParameterResponse, IContract, ITablesResponse } from 'lib/api';
+import { getContracts, getInterface, getParameters, getLanguages, getTables, exportData } from 'modules/admin/actions';
 
 import Export from 'components/Main/Admin/Export';
 
@@ -31,6 +31,7 @@ interface IExportContainerState {
     parameters: IParameterResponse[];
     contracts: IContract[];
     languages: { id: string, name: string }[];
+    tables: ITablesResponse;
     exportPayload: object;
 }
 
@@ -39,6 +40,7 @@ interface IExportContainerDispatch {
     getParameters: typeof getParameters.started;
     getLanguages: typeof getLanguages.started;
     getContracts: typeof getContracts.started;
+    getTables: typeof getTables.started;
     exportData: typeof exportData.started;
 }
 
@@ -49,6 +51,7 @@ class ExportContainer extends React.Component<IExportContainerProps & IExportCon
         this.props.getParameters({});
         this.props.getLanguages({});
         this.props.getContracts({});
+        this.props.getTables({});
     }
 
     render() {
@@ -62,6 +65,7 @@ class ExportContainer extends React.Component<IExportContainerProps & IExportCon
                 parameters={this.props.parameters && this.props.parameters.map(l => ({ name: l.name }))}
                 languages={this.props.languages && this.props.languages.map(l => ({ id: l.id, name: l.name }))}
                 contracts={this.props.contracts && this.props.contracts.map(l => ({ id: l.id, name: l.name }))}
+                tables={this.props.tables && this.props.tables.list.map(l => ({ name: l.name }))}
             />
         );
     }
@@ -72,6 +76,7 @@ const mapStateToProps = (state: IRootState) => ({
     parameters: state.admin.parameters,
     languages: state.admin.languages,
     contracts: state.admin.contracts,
+    tables: state.admin.tables,
     exportPayload: state.admin.exportPayload
 });
 
@@ -80,6 +85,7 @@ const mapDispatchToProps = {
     getParameters: getParameters.started,
     getLanguages: getLanguages.started,
     getContracts: getContracts.started,
+    getTables: getTables.started,
     exportData: exportData.started
 };
 

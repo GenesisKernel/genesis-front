@@ -26,13 +26,22 @@ import TabView from 'components/TabView';
 
 export interface IExportProps {
     exportPayload: object;
-    exportData: (params: { pages: string[], blocks: string[], menus: string[], parameters: string[], languages: string[], contracts: { id: string, name: string }[] }) => void;
+    exportData: (params: {
+        pages: string[];
+        blocks: string[];
+        menus: string[];
+        parameters: string[];
+        languages: string[];
+        contracts: { id: string, name: string }[];
+        tables: string[];
+    }) => void;
     pages: { id: string, name: string }[];
     menus: { id: string, name: string }[];
     blocks: { id: string, name: string }[];
     parameters: { name: string }[];
     languages: { id: string, name: string }[];
     contracts: { id: string, name: string }[];
+    tables: { name: string }[];
 }
 
 interface IExportState {
@@ -42,6 +51,7 @@ interface IExportState {
     parameters: { name: string }[];
     languages: { id: string, name: string }[];
     contracts: { id: string, name: string }[];
+    tables: { name: string }[];
     compress: boolean;
 }
 
@@ -55,6 +65,7 @@ class Export extends React.Component<IExportProps & InjectedIntlProps, IExportSt
             parameters: [],
             languages: [],
             contracts: [],
+            tables: [],
             compress: false
         };
     }
@@ -101,6 +112,12 @@ class Export extends React.Component<IExportProps & InjectedIntlProps, IExportSt
         });
     }
 
+    onSelectTables(tables: { name: string }[]) {
+        this.setState({
+            tables
+        });
+    }
+
     onConfirm() {
         this.props.exportData({
             pages: this.state.pages.map(page => page.id),
@@ -108,7 +125,8 @@ class Export extends React.Component<IExportProps & InjectedIntlProps, IExportSt
             menus: this.state.menus.map(menu => menu.id),
             parameters: this.state.parameters.map(param => param.name),
             languages: this.state.languages.map(lang => lang.id),
-            contracts: this.state.contracts.map(contract => ({ id: contract.id, name: contract.name }))
+            contracts: this.state.contracts.map(contract => ({ id: contract.id, name: contract.name })),
+            tables: this.state.tables.map(table => table.name)
         });
     }
 
@@ -124,7 +142,8 @@ class Export extends React.Component<IExportProps & InjectedIntlProps, IExportSt
             && 0 === this.state.pages.length
             && 0 === this.state.parameters.length
             && 0 === this.state.languages.length
-            && 0 === this.state.contracts.length;
+            && 0 === this.state.contracts.length
+            && 0 === this.state.tables.length;
     }
 
     renderItem(title: string, items: string[], badge: number) {
@@ -192,7 +211,8 @@ class Export extends React.Component<IExportProps & InjectedIntlProps, IExportSt
                                     this.props.intl.formatMessage({ id: 'admin.interface.menu', defaultMessage: 'Menu' }),
                                     this.props.intl.formatMessage({ id: 'admin.parameters.short', defaultMessage: 'Parameters' }),
                                     this.props.intl.formatMessage({ id: 'admin.languages.short', defaultMessage: 'Languages' }),
-                                    this.props.intl.formatMessage({ id: 'admin.contracts.short', defaultMessage: 'Contracts' })
+                                    this.props.intl.formatMessage({ id: 'admin.contracts.short', defaultMessage: 'Contracts' }),
+                                    this.props.intl.formatMessage({ id: 'admin.tables', defaultMessage: 'Tables' })
                                 ]}
                             >
                                 <div>
@@ -237,6 +257,13 @@ class Export extends React.Component<IExportProps & InjectedIntlProps, IExportSt
                                         onSelect={this.onSelectContracts.bind(this)}
                                     />
                                 </div>
+                                <div>
+                                    <ExportTable
+                                        dataKey="name"
+                                        payload={this.props.tables || []}
+                                        onSelect={this.onSelectTables.bind(this)}
+                                    />
+                                </div>
                             </TabView>
                         </Col>
                         <Col md={4} lg={3}>
@@ -273,6 +300,11 @@ class Export extends React.Component<IExportProps & InjectedIntlProps, IExportSt
                                     )}
                                     {this.renderItem(this.props.intl.formatMessage(
                                         { id: 'admin.contracts', defaultMessage: 'Smart contracts' }),
+                                        this.state.contracts.map(l => l.name),
+                                        this.state.contracts.length
+                                    )}
+                                    {this.renderItem(this.props.intl.formatMessage(
+                                        { id: 'admin.tables', defaultMessage: 'Tables' }),
                                         this.state.contracts.map(l => l.name),
                                         this.state.contracts.length
                                     )}

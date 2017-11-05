@@ -15,7 +15,7 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as Bluebird from 'bluebird';
-import api, { IAPIError } from 'lib/api';
+import api, { IAPIError, ITableResponse } from 'lib/api';
 import keyring from 'lib/keyring';
 import { readTextFile } from 'lib/fs';
 import { combineEpics, Epic } from 'redux-observable';
@@ -299,9 +299,10 @@ export const exportDataEpic: Epic<Action, IRootState> =
                 Bluebird.map(action.payload.pages, page => api.row(state.auth.sessionToken, 'pages', page), { concurrency: 3 }),
                 Bluebird.map(action.payload.blocks, block => api.row(state.auth.sessionToken, 'blocks', block), { concurrency: 3 }),
                 Bluebird.map(action.payload.menus, menu => api.row(state.auth.sessionToken, 'menu', menu), { concurrency: 3 }),
-                action.payload.parameters.length ? api.parameters(state.auth.sessionToken, action.payload.parameters) : [],
+                action.payload.parameters.length ? api.parameters(state.auth.sessionToken, action.payload.parameters) : Promise.resolve([]),
                 Bluebird.map(action.payload.languages, language => api.row(state.auth.sessionToken, 'languages', language), { concurrency: 3 }),
-                Bluebird.map(action.payload.contracts, contract => api.row(state.auth.sessionToken, 'contracts', contract.id).then(data => ({ name: contract.name, ...data })), { concurrency: 3 })
+                Bluebird.map(action.payload.contracts, contract => api.row(state.auth.sessionToken, 'contracts', contract.id).then(data => ({ name: contract.name, ...data })), { concurrency: 3 }),
+                Bluebird.map(action.payload.tables, table => api.table(state.auth.sessionToken, table), { concurrency: 3 })
 
             ]).spread((
                 pages: { value: { id: string, name: string, conditions: string, menu: string, value: string } }[],
@@ -310,6 +311,7 @@ export const exportDataEpic: Epic<Action, IRootState> =
                 parameters: { name: string, value: string, conditions: string }[],
                 languages: { value: { id: string, name: string, conditions: string, res: string } }[],
                 contracts: { name: string, value: { id: string, conditions: string, value: string } }[],
+                tables: ITableResponse[],
             ) => ({
                 // There are more fields so we'll need to pick only those we really need
                 // Property names must be PascalCase as required by simvolio
@@ -343,6 +345,20 @@ export const exportDataEpic: Epic<Action, IRootState> =
                     Name: contract.name,
                     Value: contract.value.value,
                     Conditions: contract.value.conditions
+                })),
+                tables: tables.map(table => ({
+                    Name: table.name,
+                    Columns: JSON.stringify(table.columns.map(col => ({
+                        name: col.name,
+                        type: col.type,
+                        index: col.index,
+                        conditions: col.perm
+                    }))),
+                    Permissions: JSON.stringify({
+                        insert: table.insert,
+                        update: table.update,
+                        new_column: table.new_column
+                    })
                 }))
             }));
 

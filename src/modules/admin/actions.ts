@@ -48,6 +48,6 @@ export const getLanguage = actionCreator.async<{ id: string }, { id: string, res
 export const getLanguages = actionCreator.async<{ offset?: number, limit?: number }, { id: string, res: any, name: string, conditions: string }[], string>('GET_LANGUAGES');
 
 // Import/export
-export const exportData = actionCreator.async<{ pages: string[], blocks: string[], menus: string[], parameters: string[], languages: string[], contracts: { id: string, name: string }[] }, object, string>('EXPORT_DATA');
+export const exportData = actionCreator.async<{ pages: string[], blocks: string[], menus: string[], parameters: string[], languages: string[], contracts: { id: string, name: string }[], tables: string[] }, object, string>('EXPORT_DATA');
 export const importData = actionCreator.async<File, any, undefined>('IMPORT_DATA');
-export const importDataPrune = actionCreator<{ name: string, key: string}>('IMPORT_DATA_PRUNE');
+export const importDataPrune = actionCreator<{ name: string, key: string }>('IMPORT_DATA_PRUNE');
