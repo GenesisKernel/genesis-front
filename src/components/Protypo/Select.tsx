@@ -54,10 +54,34 @@ const Select: React.SFC<ISelectProps> = (props, context: ISelectContext) => {
     if (source) {
         const nameIndex = source.columns.indexOf(props.namecolumn);
         const valueIndex = source.columns.indexOf(props.valuecolumn);
-        options = source.data.map(row => ({
-            name: row[nameIndex],
-            value: row[valueIndex]
-        }));
+        const nameType = source.types[nameIndex];
+
+        options = source.data.map(row => {
+            let name: any = null;
+            switch (nameType) {
+                // Default is on top because of linter bug that is warning about break statement
+                default:
+                    name = ''; break;
+
+                case 'text':
+                    name = row[nameIndex]; break;
+
+                case 'tags':
+                    try {
+                        const payload = JSON.parse(row[nameIndex]);
+                        name = context.protypo.renderElements(payload);
+                        break;
+                    }
+                    catch (e) {
+                        break;
+                    }
+            }
+
+            return {
+                name,
+                value: row[valueIndex]
+            };
+        });
     }
 
     return (

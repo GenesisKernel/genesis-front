@@ -21,6 +21,7 @@ import Protypo from './';
 
 export interface IDBFindProps {
     columns: string[];
+    types: string[];
     data: string[][];
     name: string;
     source: string;
@@ -33,6 +34,7 @@ interface IDBFindContext {
 const DBFind: React.SFC<IDBFindProps> = (props, context: IDBFindContext) => {
     context.protypo.registerSource(props.source, {
         columns: props.columns,
+        types: props.types,
         data: props.data
     });
     return null;

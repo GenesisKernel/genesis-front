@@ -58,18 +58,23 @@ const Table: React.SFC<ITableProps> = (props, context: ITableContext) => {
 
     // TODO: Move this handler to Protypo. We'll maybe need to use it in the future
     // for now it's just an exception
-    const renderValue = (value: any) => {
-        try {
-            const payload = JSON.parse(value);
-            if (Array.isArray(payload)) {
-                return context.protypo.renderElements(payload);
-            }
-            else {
+    const renderValue = (value: any, type: string) => {
+        switch (type) {
+            // Default is on top because of linter bug that is warning about break statement
+            default:
+                return null;
+
+            case 'text':
                 return value;
-            }
-        }
-        catch (e) {
-            return value;
+
+            case 'tags':
+                try {
+                    const payload = JSON.parse(value);
+                    return context.protypo.renderElements(payload);
+                }
+                catch (e) {
+                    return null;
+                }
         }
     };
 
@@ -85,9 +90,9 @@ const Table: React.SFC<ITableProps> = (props, context: ITableContext) => {
             <tbody>
                 {source.data.map((row, rowIndex) => (
                     <tr key={rowIndex}>
-                        {columns.map((col, cellIndex) => (
-                            <td key={cellIndex}>
-                                {renderValue(row[col.index])}
+                        {columns.map((col) => (
+                            <td key={col.index}>
+                                {renderValue(row[col.index], source.types[col.index])}
                             </td>
                         ))}
                     </tr>

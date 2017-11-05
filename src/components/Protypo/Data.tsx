@@ -22,6 +22,7 @@ import Protypo from './';
 export interface IDataProps {
     source: string;
     columns: string[];
+    types: string[];
     data: string[][];
 }
 
@@ -32,6 +33,7 @@ interface IDataContext {
 const Data: React.SFC<IDataProps> = (props, context: IDataContext) => {
     context.protypo.registerSource(props.source, {
         columns: props.columns,
+        types: props.types,
         data: props.data
     });
     return null;

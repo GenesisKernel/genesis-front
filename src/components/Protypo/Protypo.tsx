@@ -39,7 +39,7 @@ export default class Protypo extends React.Component<IProtypoProps> {
     private _menuPushBind: Function;
     private _navigatePageBind: Function;
     private _navigateBind: Function;
-    private _sources: { [key: string]: { columns: string[], data: string[][] } };
+    private _sources: { [key: string]: { columns: string[], types: string[], data: string[][] } };
     private _errors: { name: string, description: string }[];
 
     constructor(props: IProtypoProps) {
@@ -62,7 +62,7 @@ export default class Protypo extends React.Component<IProtypoProps> {
         return this.props.page;
     }
 
-    registerSource(name: string, payload: { columns: string[], data: string[][] }) {
+    registerSource(name: string, payload: { columns: string[], types: string[], data: string[][] }) {
         this._sources[name] = payload;
     }
 
