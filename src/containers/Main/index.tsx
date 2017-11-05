@@ -18,8 +18,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { IRootState } from 'modules';
-import { setCollapsed } from 'modules/engine/actions';
-import { menuPop, menuPush, ecosystemInit } from 'modules/content/actions';
 
 import Main, { IMainProps } from 'components/Main';
 import Tables from 'containers/Main/containers/Admin/Tables';
@@ -53,80 +51,55 @@ import Debug from 'containers/Main/containers/Debug';
 import Backup from 'containers/Main/containers/Backup';
 import NotFound from 'containers/Main/containers/NotFound';
 
-class MainContainer extends React.Component<IMainProps & { ecosystemInit: typeof ecosystemInit.started }> {
-    componentDidMount() {
-        this.preloadMenu(this.props);
-    }
+const MainContainer: React.SFC<IMainProps> = props => (
+    <Main {...props}>
+        <Switch>
+            <Route exact path="/" component={DefaultPage} />
 
-    componentWillReceiveProps(props: IMainProps) {
-        this.preloadMenu(props);
-    }
+            <Route exact path="/admin/tables" component={Tables} />
+            <Route exact path="/admin/tables/create" component={TablesCreate} />
+            <Route exact path="/admin/tables/:tableName/edit" component={TablesEdit} />
+            <Route exact path="/admin/tables/:tableName/edit/column/:columnName" component={TablesEditColumn} />
+            <Route exact path="/admin/tables/:tableName/edit/add-column" component={TablesAddColumn} />
+            <Route exact path="/admin/tables/:tableName" component={TablesView} />
+            <Route exact path="/admin/interface" component={Interface} />
+            <Route exact path="/admin/interface/create-page" component={CreatePage} />
+            <Route exact path="/admin/interface/page/:pageID-:pageName" component={EditPage} />
+            <Route exact path="/admin/interface/page/:pageID-:pageName/constructor" component={Constructor} />
+            <Route exact path="/admin/interface/menu/:menuID-:menuName" component={EditMenu} />
+            <Route exact path="/admin/interface/block/:blockID-:blockName" component={EditBlock} />
+            <Route exact path="/admin/interface/create-menu" component={CreateMenu} />
+            <Route exact path="/admin/interface/create-block" component={CreateBlock} />
+            <Route exact path="/admin/contracts" component={Contracts} />
+            <Route exact path="/admin/contracts/create" component={CreateContract} />
+            <Route exact path="/admin/contracts/:contractID-:contractName" component={EditContract} />
+            <Route exact path="/admin/languages" component={Languages} />
+            <Route exact path="/admin/languages/create" component={CreateLanguage} />
+            <Route exact path="/admin/languages/:translationID-:translationName" component={EditLanguage} />
+            <Route exact path="/admin/parameters" component={Parameters} />
+            <Route exact path="/admin/parameters/create" component={ParametersCreate} />
+            <Route exact path="/admin/parameters/:parameterName" component={ParametersEdit} />
+            <Route exact path="/admin/import" component={Import} />
+            <Route exact path="/admin/export" component={Export} />
 
-    preloadMenu(props: IMainProps) {
-        if (!props.pending && !props.menus.find(l => l.name === 'default_menu')) {
-            this.props.ecosystemInit(null);
-        }
-    }
+            <Route exact path="/page/:pageName" component={Page} />
 
-    render() {
-        return (
-            <Main {...this.props}>
-                <Switch>
-                    <Route exact path="/" component={DefaultPage} />
-
-                    <Route exact path="/admin/tables" component={Tables} />
-                    <Route exact path="/admin/tables/create" component={TablesCreate} />
-                    <Route exact path="/admin/tables/:tableName/edit" component={TablesEdit} />
-                    <Route exact path="/admin/tables/:tableName/edit/column/:columnName" component={TablesEditColumn} />
-                    <Route exact path="/admin/tables/:tableName/edit/add-column" component={TablesAddColumn} />
-                    <Route exact path="/admin/tables/:tableName" component={TablesView} />
-                    <Route exact path="/admin/interface" component={Interface} />
-                    <Route exact path="/admin/interface/create-page" component={CreatePage} />
-                    <Route exact path="/admin/interface/create-page/constructor" component={Constructor} />
-                    <Route exact path="/admin/interface/page/:pageID-:pageName" component={EditPage} />
-                    <Route exact path="/admin/interface/page/:pageID-:pageName/constructor" component={Constructor} />
-                    <Route exact path="/admin/interface/menu/:menuID-:menuName" component={EditMenu} />
-                    <Route exact path="/admin/interface/block/:blockID-:blockName" component={EditBlock} />
-                    <Route exact path="/admin/interface/create-menu" component={CreateMenu} />
-                    <Route exact path="/admin/interface/create-block" component={CreateBlock} />
-                    <Route exact path="/admin/contracts" component={Contracts} />
-                    <Route exact path="/admin/contracts/create" component={CreateContract} />
-                    <Route exact path="/admin/contracts/:contractID-:contractName" component={EditContract} />
-                    <Route exact path="/admin/languages" component={Languages} />
-                    <Route exact path="/admin/languages/create" component={CreateLanguage} />
-                    <Route exact path="/admin/languages/:translationID-:translationName" component={EditLanguage} />
-                    <Route exact path="/admin/parameters" component={Parameters} />
-                    <Route exact path="/admin/parameters/create" component={ParametersCreate} />
-                    <Route exact path="/admin/parameters/:parameterName" component={ParametersEdit} />
-                    <Route exact path="/admin/import" component={Import} />
-                    <Route exact path="/admin/export" component={Export} />
-
-                    <Route exact path="/page/:pageName" component={Page} />
-
-                    <Route exact path="/debug" component={Debug} />
-                    <Route exact path="/backup" component={Backup} />
-                    <Route path="*" component={NotFound} />
-                </Switch>
-            </Main>
-        );
-    }
-}
+            <Route exact path="/debug" component={Debug} />
+            <Route exact path="/backup" component={Backup} />
+            <Route path="*" component={NotFound} />
+        </Switch>
+    </Main>
+);
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken,
-    menus: state.content.menus,
     pending: state.content.pending,
     stylesheet: state.content.stylesheet,
-    isCollapsed: state.engine.isCollapsed,
     transactionsCount: state.tx.transactions.count(),
     pendingTransactions: state.tx.transactions.takeLast(5)
 });
 
 const mapDispatchToProps = {
-    setCollapsed,
-    menuPop,
-    menuPush,
-    ecosystemInit: ecosystemInit.started
+
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainContainer);
