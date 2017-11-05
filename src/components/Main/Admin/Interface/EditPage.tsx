@@ -24,6 +24,7 @@ import PageEditor from './PageEditor';
 export interface IEditPageProps {
     page: { id: string, name: string, menu: string, conditions: string, value: string };
     menus: { id: string, name: string, conditions: string, value: string }[];
+    renderPage: (params: { name: string, params?: any }) => void;
 }
 
 interface IEditPageState {
@@ -78,6 +79,12 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
         });
     }
 
+    onPreview(e: React.MouseEvent<HTMLAnchorElement>) {
+        e.preventDefault();
+        this.props.renderPage({ name: this.props.page.name });
+        return false;
+    }
+
     render() {
         return (
             <DocumentTitle title={this.props.page && this.props.page.name}>
@@ -85,14 +92,14 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
                     <div className="content-heading">
                         <div>
                             <div className="pull-right">
-                                <Link to={`/page/${this.props.page && this.props.page.name}`} className="ml">
+                                <a href={`/page/${this.props.page && this.props.page.name}`} className="ml" onClick={this.onPreview.bind(this)}>
                                     <button className="btn btn-default ml">
                                         <em className="fa fa-external-link fa-fw mr-sm" />
                                         <span>
                                             <FormattedMessage id="admin.interface.page.show" defaultMessage="Show page" />
                                         </span>
                                     </button>
-                                </Link>
+                                </a>
                             </div>
                         </div>
                         <FormattedMessage id="admin.interface" defaultMessage="Interface" />

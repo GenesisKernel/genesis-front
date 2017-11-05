@@ -18,6 +18,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getPage } from 'modules/admin/actions';
+import { renderPage } from 'modules/content/actions';
 
 import EditPage, { IEditPageProps } from 'components/Main/Admin/Interface/EditPage';
 
@@ -39,7 +40,8 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    getPage: getPage.started
+    getPage: getPage.started,
+    renderPage: renderPage.started
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditPageContainer);
