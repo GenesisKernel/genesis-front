@@ -14,16 +14,22 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-declare module 'centrifuge';
-declare module 'jsrsasign';
-declare module 'react-router-transition';
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { IRootState } from 'modules';
 
-declare module '*.svg' {
-    const content: string;
-    export default content;
-}
+import Ws, { IWsProps } from 'components/Debug/Ws';
 
-declare module '*.png' {
-    const content: string;
-    export default content;
-}
+const BackupContainer: React.SFC<IWsProps> = (props) => (
+    <Ws {...props} />
+);
+
+const mapStateToProps = (state: IRootState) => ({
+    session: state.auth.sessionToken
+});
+
+const mapDispatchToProps = {
+
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(BackupContainer);
