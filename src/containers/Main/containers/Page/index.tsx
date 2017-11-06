@@ -30,9 +30,9 @@ interface IPageContainerProps {
 }
 
 class PageContainer extends React.Component<IPageContainerProps> {
-    componentWillReceiveProps(props: IPageContainerProps) {
-        if (!props.pending && (!props.page || props.match.params.pageName !== props.page.name)) {
-            props.renderPage({ name: props.match.params.pageName });
+    componentDidMount() {
+        if (!this.props.pending && !this.props.page) {
+            this.props.renderPage({ name: this.props.match.params.pageName });
         }
     }
 
