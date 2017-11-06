@@ -50,6 +50,7 @@ import Export from 'containers/Main/containers/Admin/Export';
 import DefaultPage from 'containers/Main/containers/DefaultPage';
 import Page from 'containers/Main/containers/Page';
 import Debug from 'containers/Main/containers/Debug';
+import DebugWs from 'containers/Main/containers/Debug/Ws';
 import Backup from 'containers/Main/containers/Backup';
 import NotFound from 'containers/Main/containers/NotFound';
 
@@ -104,6 +105,7 @@ class MainContainer extends React.Component<IMainProps & { ecosystemInit: typeof
                     <Route exact path="/page/:pageName" component={Page} />
 
                     <Route exact path="/debug" component={Debug} />
+                    <Route exact path="/debug/ws" component={DebugWs} />
                     <Route exact path="/backup" component={Backup} />
                     <Route path="*" component={NotFound} />
                 </Switch>
