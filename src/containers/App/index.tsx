@@ -27,6 +27,7 @@ import * as classnames from 'classnames';
 import { AnimatedSwitch } from 'components/Animation';
 import Splash from 'components/Splash';
 import Offline from 'containers/Offline';
+import ModalDispatcher from 'containers/Widgets/ModalDispatcher';
 import Main from 'containers/Main';
 import General from 'containers/General';
 
@@ -89,6 +90,7 @@ class App extends React.Component<IAppProps> {
         return (
             <IntlProvider locale={this.props.locale} defaultLocale={this.props.locale}>
                 <div className={classes}>
+                    <ModalDispatcher />
                     <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
                         {this.props.isLoading && (
                             <Route path="/" component={Splash} />

@@ -25,6 +25,7 @@ export type State = {
     readonly menus: { name: string, content: IProtypoElement[] }[];
     readonly page: { name: string, content: IProtypoElement[], error?: string };
     readonly alert: { id: string, success: string, error: string };
+    readonly imageEditor: { data: string, aspectRatio: number, minWidth: number, result: string };
 };
 
 export const initialState: State = {
@@ -32,7 +33,8 @@ export const initialState: State = {
     stylesheet: null,
     menus: [],
     page: null,
-    alert: null
+    alert: null,
+    imageEditor: { data: null, aspectRatio: null, minWidth: null, result: null }
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -161,6 +163,29 @@ export default (state: State = initialState, action: Action): State => {
                 name: null,
                 content: null,
                 error: action.payload.error
+            }
+        };
+    }
+
+    if (isType(action, actions.imageEditorOpen)) {
+        return {
+            ...state,
+            imageEditor: {
+                data: action.payload.data,
+                aspectRatio: action.payload.aspectRatio,
+                minWidth: action.payload.width,
+                result: null
+            }
+        };
+    }
+    else if (isType(action, actions.imageEditorClose)) {
+        return {
+            ...state,
+            imageEditor: {
+                data: null,
+                aspectRatio: null,
+                minWidth: null,
+                result: action.payload
             }
         };
     }

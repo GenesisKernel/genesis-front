@@ -22,6 +22,7 @@ import Div from 'components/Protypo/Div';
 import Em from 'components/Protypo/Em';
 import Form from 'components/Protypo/Form';
 import Image from 'components/Protypo/Image';
+import ImageInput from 'components/Protypo/ImageInput';
 import Input from 'components/Protypo/Input';
 import InputErr from 'components/Protypo/InputErr';
 import Label from 'components/Protypo/Label';
@@ -42,6 +43,7 @@ const handlers = {
     'em': Em,
     'form': Form,
     'image': Image,
+    'imageinput': ImageInput,
     'input': Input,
     'inputerr': InputErr,
     'label': Label,

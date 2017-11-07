@@ -16,6 +16,7 @@
 
 import ValidatedControl from './ValidatedControl';
 import ValidatedCheckbox from './ValidatedCheckbox';
+import ValidatedImage from './ValidatedImage';
 import ValidatedSelect from './ValidatedSelect';
 import ValidationMessage from './ValidationMessage';
 import ValidatedTextarea from './ValidatedTextarea';
@@ -28,6 +29,7 @@ export default {
     components: {
         ValidatedControl,
         ValidatedCheckbox,
+        ValidatedImage,
         ValidatedSelect,
         ValidatedTextarea,
         ValidatedForm,

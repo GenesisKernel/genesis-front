@@ -30,13 +30,24 @@ export const sendAttachment = (filename: string, data: string) => {
     }
 };
 
-export const readTextFile = async (file: Blob) => {
-    return await new Promise<string>((resolve, reject) => {
+export const readTextFile = (file: Blob) => {
+    return new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => {
             const loadedFile = (e.target as any).result;
             loadedFile ? resolve(loadedFile) : reject();
         };
         reader.readAsText(file);
+    });
+};
+
+export const readBinaryFile = (file: Blob) => {
+    return new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const loadedFile = reader.result;
+            loadedFile ? resolve(loadedFile) : reject();
+        };
+        reader.readAsDataURL(file);
     });
 };
