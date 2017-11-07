@@ -35,7 +35,7 @@ export const initialState: State = {
     isLoading: true,
     isConnected: null,
     isConnecting: false,
-    isCollapsed: true
+    isCollapsed: false
 };
 
 export default (state: State = initialState, action: Action): State => {

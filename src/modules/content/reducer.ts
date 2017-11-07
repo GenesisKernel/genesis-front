@@ -21,7 +21,6 @@ import { IProtypoElement } from 'components/Protypo/Protypo';
 
 export type State = {
     readonly pending: boolean;
-    readonly preloading: boolean;
     readonly stylesheet: string;
     readonly menus: { name: string, content: IProtypoElement[] }[];
     readonly page: { name: string, content: IProtypoElement[], error?: string };
@@ -31,7 +30,6 @@ export type State = {
 
 export const initialState: State = {
     pending: false,
-    preloading: false,
     stylesheet: null,
     menus: [],
     page: null,
@@ -98,16 +96,17 @@ export default (state: State = initialState, action: Action): State => {
     if (isType(action, actions.ecosystemInit.started)) {
         return {
             ...state,
-            preloading: true,
+            pending: true
         };
     }
-    else if (isType(action, actions.ecosystemInit.done)) {
+
+    if (isType(action, actions.ecosystemInit.done)) {
         // TODO: Move this logic to the Epic
         const menuNeedsPush = !state.menus.length || state.menus.find(l => l.name === action.payload.result.defaultMenu.name);
         if (menuNeedsPush) {
             return {
                 ...state,
-                preloading: false,
+                pending: false,
                 stylesheet: action.payload.result.stylesheet,
                 menus: [action.payload.result.defaultMenu, ...state.menus]
             };
@@ -119,10 +118,11 @@ export default (state: State = initialState, action: Action): State => {
             };
         }
     }
-    else if (isType(action, actions.ecosystemInit.failed)) {
+
+    if (isType(action, actions.ecosystemInit.failed)) {
         return {
             ...state,
-            preloading: false
+            pending: false
         };
     }
 
