@@ -210,6 +210,33 @@ const register = (editor: typeof monaco) => {
                 staticParamTypes.Class
             ]
         },
+        ImageInput: {
+            label: 'ImageInput',
+            documentation: 'Image upload component with ability to crop images',
+            kind: monaco.languages.CompletionItemKind.Method,
+            insertText: 'ImageInput(',
+            params: [
+                {
+                    label: 'Name',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Unique input name to bind the value to',
+                    insertText: 'Name: '
+                },
+                {
+                    label: 'Width',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Minimum width of the resulting image',
+                    insertText: 'Width: '
+                },
+                {
+                    label: 'Ratio',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Aspect ratio of the resulting image (WIDTH / HEIGHT)',
+                    insertText: 'Ratio: '
+                },
+                staticParamTypes.Class
+            ]
+        },
         Include: {
             label: 'Include',
             documentation: 'Include another page or block and output its contents',
