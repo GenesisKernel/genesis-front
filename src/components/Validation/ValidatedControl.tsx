@@ -94,6 +94,7 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
                 bsSize={this.props.bsSize}
                 componentClass={this.props.componentClass}
                 id={this.props.id}
+                name={this.props.name}
                 inputRef={this.props.inputRef}
                 type={this.props.type}
                 placeholder={this.props.placeholder}
