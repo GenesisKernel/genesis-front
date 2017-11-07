@@ -19,13 +19,13 @@ import * as classnames from 'classnames';
 import styled from 'styled-components';
 import * as propTypes from 'prop-types';
 
-import Protypo from './Protypo';
+import Protypo, { IParamsSpec } from './Protypo';
 
 export interface IMenuItemProps {
     'title'?: string;
     'page'?: string;
     'icon'?: string;
-    'params'?: { [key: string]: any };
+    'params'?: IParamsSpec;
 
     // TODO: Stub value
     '_systemPageHook'?: string;
@@ -96,7 +96,7 @@ const LinkButton: React.SFC<IMenuItemProps> = (props, context: ILinkButtonContex
             context.navigate(props._systemPageHook);
         }
         else {
-            context.navigatePage({ name: props.page, params: props.params });
+            context.navigatePage({ name: props.page, params: context.protypo.resolveParams(props.params) });
         }
         return false;
     };
