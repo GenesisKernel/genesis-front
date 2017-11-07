@@ -105,7 +105,20 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
         }
     }
 
-    onNavigate(page: string, params: { [key: string]: any }, confirm?: ITxButtonConfirm) {
+    onNavigate(page: string, params: { [key: string]: any } | (() => { [key: string]: any }), confirm?: ITxButtonConfirm) {
+        let pageParams = {};
+        if ('function' === typeof params) {
+            pageParams = (this.props.pageParams as Function)();
+
+            // Stop redirection if provided parameters were invalid
+            if (null === pageParams) {
+                return;
+            }
+        }
+        else {
+            pageParams = params;
+        }
+
         this._uuid = uuid.v4();
 
         if (confirm) {
@@ -119,7 +132,7 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
             });
         }
         else {
-            this.props.renderPage({ name: page, params });
+            this.props.renderPage({ name: page, params: pageParams });
         }
     }
 
