@@ -31,7 +31,6 @@ class ImageEditorModal extends React.Component<IImageEditorModalProps> {
     private _cropper: Cropper = null;
 
     render() {
-        console.log('Width::', this.props.width);
         return (
             <Modal show={!!this.props.data} onHide={() => undefined as any}>
                 <Modal.Header>
