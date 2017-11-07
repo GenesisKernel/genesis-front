@@ -17,23 +17,25 @@
 import * as React from 'react';
 import * as propTypes from 'prop-types';
 
+import Protypo, { IParamsSpec } from './Protypo';
 import StyledComponent from './StyledComponent';
 
 export interface ILinkPageProps {
     'class'?: string;
     'className'?: string;
     'page'?: string;
-    'pageparams'?: { [key: string]: string };
+    'pageparams'?: IParamsSpec;
 }
 
 interface ILinkPageContext {
+    protypo: Protypo;
     navigatePage: (params: { name: string, params: any }) => void;
 }
 
 const LinkPage: React.SFC<ILinkPageProps> = (props, context: ILinkPageContext) => {
     const onNavigate = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
-        context.navigatePage({ name: props.page, params: props.pageparams });
+        context.navigatePage({ name: props.page, params: context.protypo.resolveParams(props.pageparams) });
         return false;
     };
 
@@ -45,6 +47,7 @@ const LinkPage: React.SFC<ILinkPageProps> = (props, context: ILinkPageContext) =
 };
 
 LinkPage.contextTypes = {
+    protypo: propTypes.object.isRequired,
     navigatePage: propTypes.func.isRequired
 };
 
