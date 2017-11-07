@@ -22,8 +22,11 @@ import styled from 'styled-components';
 
 import Editor from 'components/Editor';
 import DocumentTitle from 'components/DocumentTitle';
+import Validation from 'components/Validation';
 import Protypo from 'containers/Widgets/Protypo';
 import TxButton from 'containers/Widgets/TxButton';
+
+// tslint:disable:no-console
 
 export interface IDebugProps {
     session: string;
@@ -120,6 +123,11 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                             )}
                         </div>
                     </Col>
+                    <hr />
+                    <Validation.components.ValidatedForm onSubmitSuccess={r => console.log('Submit::', r)}>
+                        <Validation.components.ValidatedImage name="myImg" />
+                        <Validation.components.ValidatedSubmit>Submit</Validation.components.ValidatedSubmit>
+                    </Validation.components.ValidatedForm>
                     <hr />
                     <Button bsStyle="primary" className="btn-block" onClick={this.onSubmit.bind(this)}>Request template</Button>
                     <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT">Execute contract</TxButton>
