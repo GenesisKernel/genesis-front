@@ -18,6 +18,7 @@ import * as React from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import * as propTypes from 'prop-types';
 
+import Protypo, { IParamsSpec } from './Protypo';
 import ValidatedForm from 'components/Validation/ValidatedForm';
 import TxButton from 'containers/Widgets/TxButton';
 
@@ -31,13 +32,14 @@ export interface IButtonProps {
     };
     'contract'?: string;
     'page'?: string;
-    'pageparams'?: { [key: string]: string };
-    'params'?: { [key: string]: string };
+    'pageparams'?: IParamsSpec;
+    'params'?: IParamsSpec;
     'formID'?: number;
 }
 
 interface IButtonContext {
     form: ValidatedForm;
+    protypo: Protypo;
 }
 
 const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IButtonContext) => {
@@ -55,12 +57,31 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
                     params[itr] = payload.payload[itr].value;
                 }
             }
+
+            return {
+                ...params,
+                ...context.protypo.resolveParams(props.params, payload.payload)
+            };
         }
 
         return {
             ...params,
-            ...props.params
+            ...context.protypo.resolveParams(props.params)
         };
+    };
+
+    const getPageParams = () => {
+        if (context.form) {
+            const payload = context.form.validateAll();
+            if (!payload.valid) {
+                return null;
+            }
+
+            return context.protypo.resolveParams(props.pageparams, payload.payload);
+        }
+        else {
+            return context.protypo.resolveParams(props.pageparams);
+        }
     };
 
     return (
@@ -76,7 +97,7 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
                 cancelButton: props.alert.cancelbutton
             }}
             page={props.page}
-            pageParams={props.pageparams}
+            pageParams={getPageParams}
         >
             {props.children}
         </TxButton>
@@ -84,7 +105,8 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
 };
 
 Button.contextTypes = {
-    form: propTypes.instanceOf(ValidatedForm)
+    form: propTypes.object,
+    protypo: propTypes.object.isRequired
 };
 
 export default injectIntl(Button);

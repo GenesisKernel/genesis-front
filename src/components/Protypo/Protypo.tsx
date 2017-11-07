@@ -18,6 +18,8 @@ import * as React from 'react';
 import { resolveHandler } from 'components/Protypo';
 import * as propTypes from 'prop-types';
 
+import { IValidationResult } from 'components/Validation/ValidatedForm';
+
 export interface IProtypoProps {
     wrapper?: JSX.Element;
     page: string;
@@ -32,6 +34,16 @@ export interface IProtypoElement {
     text?: string;
     attr?: { [key: string]: string };
     children?: IProtypoElement[];
+}
+
+export interface IParamsSpec {
+    [key: string]: IParamSpec;
+}
+
+export interface IParamSpec {
+    type: string;
+    text?: string;
+    params: string[];
 }
 
 export default class Protypo extends React.Component<IProtypoProps> {
@@ -68,6 +80,25 @@ export default class Protypo extends React.Component<IProtypoProps> {
 
     resolveSource(name: string) {
         return this._sources[name];
+    }
+
+    resolveParams(values: IParamsSpec, formValues?: { [key: string]: IValidationResult }) {
+        const result: { [key: string]: string } = {};
+        for (let itr in values) {
+            if (values.hasOwnProperty(itr)) {
+                const param = values[itr];
+                switch (param.type) {
+                    case 'text': result[itr] = param.text; break;
+                    case 'Val':
+                        const inputName = param.params[0];
+                        const inputValue = formValues && formValues[inputName] && formValues[inputName].value;
+                        result[itr] = inputValue;
+                        break;
+                    default: break;
+                }
+            }
+        }
+        return result;
     }
 
     renderElement(element: IProtypoElement): React.ReactNode {
