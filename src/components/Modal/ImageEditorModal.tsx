@@ -15,6 +15,8 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import * as Pica from 'pica';
+import { readBinaryFile } from 'lib/fs';
 import { FormattedMessage } from 'react-intl';
 import { Button, Modal, Well } from 'react-bootstrap';
 import Cropper from 'react-cropper';
@@ -29,6 +31,34 @@ export interface IImageEditorModalProps {
 
 class ImageEditorModal extends React.Component<IImageEditorModalProps> {
     private _cropper: Cropper = null;
+
+    onSuccess() {
+        const input = this._cropper.getCroppedCanvas();
+
+        if (this.props.width) {
+            const output = document.createElement('canvas');
+            const pica = Pica();
+
+            if (input.width > input.height) {
+                const ratio = input.width / input.height;
+                output.width = this.props.width;
+                output.height = this.props.width / ratio;
+            }
+            else {
+                const ratio = input.height / input.width;
+                output.width = this.props.width / ratio;
+                output.height = this.props.width;
+            }
+
+            pica.resize(input, output)
+                .then((result: any) => pica.toBlob(result, 'image/png', 1))
+                .then((blob: any) => readBinaryFile(blob))
+                .then((result: string) => this.props.onSuccess(result));
+        }
+        else {
+            this.props.onSuccess(input.toDataURL());
+        }
+    }
 
     render() {
         return (
@@ -48,14 +78,13 @@ class ImageEditorModal extends React.Component<IImageEditorModalProps> {
                         style={{ maxHeight: 400, width: '100%' }}
                         aspectRatio={this.props.aspectRatio}
                         viewMode={1}
-                        minCropBoxWidth={this.props.width}
                     />
                 </Modal.Body>
                 <Modal.Footer className="text-right">
                     <Button type="button" bsStyle="link" onClick={this.props.onSuccess.bind(null, null)}>
                         <FormattedMessage id="modal.imageeditor.cancel" defaultMessage="Cancel" />
                     </Button>
-                    <Button type="button" bsStyle="primary" onClick={() => this.props.onSuccess(this._cropper.getCroppedCanvas().toDataURL())}>
+                    <Button type="button" bsStyle="primary" onClick={this.onSuccess.bind(this)}>
                         <FormattedMessage id="modal.imageeditor.confirm" defaultMessage="Confirm" />
                     </Button>
                 </Modal.Footer>

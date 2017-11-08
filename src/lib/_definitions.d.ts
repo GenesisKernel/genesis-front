@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
+declare module 'pica';
 declare module 'centrifuge';
 declare module 'jsrsasign';
 declare module 'react-router-transition';

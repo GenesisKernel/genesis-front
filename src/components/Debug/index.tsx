@@ -125,7 +125,7 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                     </Col>
                     <hr />
                     <Validation.components.ValidatedForm onSubmitSuccess={r => console.log('Submit::', r)}>
-                        <Validation.components.ValidatedImage name="myImg" />
+                        <Validation.components.ValidatedImage name="myImg" width={100} />
                         <Validation.components.ValidatedSubmit>Submit</Validation.components.ValidatedSubmit>
                     </Validation.components.ValidatedForm>
                     <hr />

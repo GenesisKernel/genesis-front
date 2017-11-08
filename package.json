@@ -28,6 +28,7 @@
         "jsrsasign": "^8.0.3",
         "lodash": "^4.17.4",
         "node-sass-chokidar": "^0.0.3",
+        "pica": "^4.0.1",
         "prop-types": "^15.6.0",
         "random-js": "^1.0.8",
         "react": "^15.6.1",
