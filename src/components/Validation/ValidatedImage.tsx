@@ -101,7 +101,7 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
 
     render() {
         return (
-            <div className="bootstrap-filestyle input-group">
+            <div className="input-group">
                 <ImageEditor
                     data={this.state.value}
                     aspectRatio={this.props.aspectRatio}
