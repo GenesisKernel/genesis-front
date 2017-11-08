@@ -67,8 +67,8 @@ export interface IGetUidResponse extends IResponse {
 export interface ILoginResponse extends IResponse {
     token: string;
     refresh: string;
-    state: string;
-    wallet: string;
+    key_id: string;
+    ecosystem_id: string;
     address: string;
     expiry: Date;
 }
@@ -245,10 +245,10 @@ const api = {
         forsign: forSign,
         pubkey: publicKey
     }) as Promise<ISignTestResponse>,
-    login: (session: string, publicKey: string, signature: string, expirySeconds: number = 36000, state: string = '1') => securedRequest('login', session, {
+    login: (session: string, publicKey: string, signature: string, expirySeconds: number = 36000, ecosystem: string = '1') => securedRequest('login', session, {
         pubkey: publicKey.slice(2),
         signature,
-        state,
+        ecosystem,
         expire: expirySeconds
     }).then((result: ILoginResponse) => ({
         ...result,

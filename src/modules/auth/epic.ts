@@ -35,7 +35,7 @@ export const loginEpic = (actions$: Observable<Action>) =>
             });
 
             return Observable.from(promise).map(payload => {
-                const account = storage.accounts.load(payload.wallet);
+                const account = storage.accounts.load(payload.address);
                 return actions.login.done({
                     params: action.payload,
                     result: {
@@ -82,7 +82,7 @@ export const switchEcosystemEpic: Epic<Action, IRootState> =
         .flatMap(payload =>
             Observable.concat(
                 Observable.of(actions.switchEcosystem.done({
-                    params: payload.state,
+                    params: payload.ecosystem_id,
                     result: {
                         token: payload.token,
                         refresh: payload.refresh,
@@ -127,7 +127,7 @@ export const createAccountEpic = (actions$: Observable<Action>) =>
                 return actions.createAccount.done({
                     params: null,
                     result: {
-                        id: payload.wallet,
+                        id: payload.address,
                         address: payload.address,
                         ...action.payload
                     }

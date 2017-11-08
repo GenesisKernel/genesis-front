@@ -71,7 +71,7 @@ export default (state: State = initialState, action: Action): State => {
             isAuthenticated: true,
             isLoggingIn: false,
             account: action.payload.result.account,
-            ecosystem: action.payload.result.state,
+            ecosystem: action.payload.result.ecosystem_id,
             sessionToken: action.payload.result.token,
             refreshToken: action.payload.result.refresh,
             privateKey: action.payload.result.privateKey,
