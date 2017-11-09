@@ -15,8 +15,6 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import * as Pica from 'pica';
-import { readBinaryFile } from 'lib/fs';
 import { FormattedMessage } from 'react-intl';
 import { Button, Modal, Well } from 'react-bootstrap';
 import Cropper from 'react-cropper';
@@ -36,24 +34,34 @@ class ImageEditorModal extends React.Component<IImageEditorModalProps> {
         const input = this._cropper.getCroppedCanvas();
 
         if (this.props.width) {
-            const output = document.createElement('canvas');
-            const pica = Pica();
+            const output = document.createElement('canvas'),
+                ctx = output.getContext('2d'),
+                oc = document.createElement('canvas'),
+                octx = oc.getContext('2d');
 
-            if (input.width > input.height) {
-                const ratio = input.width / input.height;
-                output.width = this.props.width;
-                output.height = this.props.width / ratio;
-            }
-            else {
-                const ratio = input.height / input.width;
-                output.width = this.props.width / ratio;
-                output.height = this.props.width;
+            output.width = this.props.width;
+            output.height = this.props.width * input.height / input.width;
+
+            let current = {
+                width: Math.floor(input.width * 0.5),
+                height: Math.floor(input.height * 0.5)
+            };
+
+            oc.width = current.width;
+            oc.height = current.height;
+
+            octx.drawImage(input, 0, 0, current.width, current.height);
+
+            while (current.width * 0.5 > this.props.width) {
+                current = {
+                    width: Math.floor(current.width * 0.5),
+                    height: Math.floor(current.height * 0.5)
+                };
+                octx.drawImage(oc, 0, 0, current.width * 2, current.height * 2, 0, 0, current.width, current.height);
             }
 
-            pica.resize(input, output)
-                .then((result: any) => pica.toBlob(result, 'image/png', 1))
-                .then((blob: any) => readBinaryFile(blob))
-                .then((result: string) => this.props.onSuccess(result));
+            ctx.drawImage(oc, 0, 0, current.width, current.height, 0, 0, output.width, output.height);
+            this.props.onSuccess(output.toDataURL());
         }
         else {
             this.props.onSuccess(input.toDataURL());
