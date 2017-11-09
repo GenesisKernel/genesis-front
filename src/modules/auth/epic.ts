@@ -127,7 +127,7 @@ export const createAccountEpic = (actions$: Observable<Action>) =>
                 return actions.createAccount.done({
                     params: null,
                     result: {
-                        id: payload.address,
+                        id: payload.key_id,
                         address: payload.address,
                         ...action.payload
                     }
