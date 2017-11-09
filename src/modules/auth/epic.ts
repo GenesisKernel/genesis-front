@@ -35,7 +35,7 @@ export const loginEpic = (actions$: Observable<Action>) =>
             });
 
             return Observable.from(promise).map(payload => {
-                const account = storage.accounts.load(payload.address);
+                const account = storage.accounts.load(payload.key_id);
                 return actions.login.done({
                     params: action.payload,
                     result: {
