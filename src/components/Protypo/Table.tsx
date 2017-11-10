@@ -21,6 +21,7 @@ import Protypo from './';
 import StyledComponent from './StyledComponent';
 
 export interface ITableProps {
+    id: string;
     className?: string;
     source?: string;
     columns?: { Name: string, Title: string }[];
@@ -70,7 +71,7 @@ const Table: React.SFC<ITableProps> = (props, context: ITableContext) => {
             case 'tags':
                 try {
                     const payload = JSON.parse(value);
-                    return context.protypo.renderElements(payload);
+                    return context.protypo.renderElements(payload, props.id);
                 }
                 catch (e) {
                     return null;

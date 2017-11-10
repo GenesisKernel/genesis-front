@@ -101,7 +101,7 @@ export default class Protypo extends React.Component<IProtypoProps> {
         return result;
     }
 
-    renderElement(element: IProtypoElement): React.ReactNode {
+    renderElement(element: IProtypoElement, optionalKey?: string): React.ReactNode {
         switch (element.tag) {
             case 'text':
                 return element.text;
@@ -109,8 +109,9 @@ export default class Protypo extends React.Component<IProtypoProps> {
             default:
                 const Handler = resolveHandler(element.tag);
                 if (Handler) {
+                    const key = optionalKey || (this._lastID++).toString();
                     return (
-                        <Handler {...element.attr} key={this._lastID++} childrenTree={element.children}>
+                        <Handler {...element.attr} key={key} id={key} childrenTree={element.children}>
                             {this.renderElements(element.children)}
                         </Handler>
                     );
@@ -125,13 +126,13 @@ export default class Protypo extends React.Component<IProtypoProps> {
         }
     }
 
-    renderElements(elements: IProtypoElement[]): React.ReactNode[] {
+    renderElements(elements: IProtypoElement[], keyPrefix?: string): React.ReactNode[] {
         if (!elements) {
             return null;
         }
 
-        return elements.map(element => (
-            this.renderElement(element)
+        return elements.map((element, index) => (
+            this.renderElement(element, keyPrefix ? `${keyPrefix}_${index}` : undefined)
         ));
     }
 
