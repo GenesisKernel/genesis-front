@@ -18,7 +18,7 @@ import * as React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import styled from 'styled-components';
 import * as classnames from 'classnames';
-import Protypo from 'containers/Widgets/Protypo';
+import ProtypoEditable from 'containers/Widgets/ProtypoEditable';
 
 import imgViewMobile from 'images/constructor/group-2.svg';
 import imgViewTablet from 'images/constructor/group.svg';
@@ -340,7 +340,7 @@ const ConstructorEditor: React.SFC<IConstructorEditorProps> = (props) => (
             <DivGrid>
                 {/*{props.template}*/}
                 {/*{JSON.stringify(props.treeCode)}*/}
-                <Protypo
+                <ProtypoEditable
                     payload={props.treeCode}
                 />
             </DivGrid>
