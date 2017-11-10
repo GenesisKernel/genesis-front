@@ -121,7 +121,8 @@ class Import extends React.Component<IImportProps, IImportState> {
                 id: backup.id,
                 encKey: keyring.encryptAES(backup.privateKey, values.password),
                 publicKey: backup.publicKey,
-                address: backup.address
+                address: backup.address,
+                ecosystems: backup.ecosystems
             });
 
             // TODO: Fix remeber password fn

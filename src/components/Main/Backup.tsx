@@ -86,7 +86,8 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
             id: this.props.account.id,
             privateKey: this.state.privateKey,
             publicKey: this.props.account.publicKey,
-            address: this.props.account.address
+            address: this.props.account.address,
+            ecosystems: this.props.account.ecosystems
         });
     }
 

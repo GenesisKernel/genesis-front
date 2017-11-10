@@ -170,6 +170,7 @@ export interface IKeyBackup {
     privateKey: string;
     publicKey: string;
     address: string;
+    ecosystems: { [id: string]: string };
 }
 
 const randomEngine = Random();
@@ -275,7 +276,8 @@ const keyring = {
             // `Seed: e2cfd8ff56f96996a65261c78aceff2a12ceb748d5459e6120f4ba612d67633d`,
             `Private Key: ${key.privateKey}`,
             `Public Key: ${key.publicKey}`,
-            `Address: ${key.address}`
+            `Address: ${key.address}`,
+            `Ecosystems: ${JSON.stringify(key.ecosystems)}`
         ].join('\n');
     },
 
@@ -285,7 +287,8 @@ const keyring = {
             id: null,
             privateKey: null,
             publicKey: null,
-            address: null
+            address: null,
+            ecosystems: null
         };
 
         for (let i = 0; i < tokens.length; i++) {
@@ -297,6 +300,7 @@ const keyring = {
                 case 'Private Key': backup.privateKey = matches[2]; break;
                 case 'Public Key': backup.publicKey = matches[2]; break;
                 case 'Address': backup.address = matches[2]; break;
+                case 'Ecosystems': backup.ecosystems = JSON.parse(matches[2]); break;
                 default: return null;
             }
         }
