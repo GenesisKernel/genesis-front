@@ -44,6 +44,11 @@ export type State = {
         languages: { Name: string }[];
         contracts: { Name: string }[];
         tables: { Name: string }[];
+        data: {
+            Table: string;
+            Columns: string[];
+            Data: any[][];
+        }[];
     };
 };
 
@@ -426,12 +431,30 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.importDataPrune)) {
+        let payload: any = null;
+        if ('number' === typeof action.payload.index) {
+            const table = state.importPayload[action.payload.name].find((l: any) => l.Table === action.payload.key);
+            const otherTables = state.importPayload[action.payload.name].filter((l: any) => l.Table !== action.payload.key);
+
+            payload = [
+                ...otherTables,
+                {
+                    Table: table.Table,
+                    Columns: table.Columns,
+                    Data: table.Data.filter((v: any, i: number) => i !== action.payload.index)
+                }
+            ];
+        }
+        else {
+            payload = state.importPayload[action.payload.name].filter((l: any) => l.Name !== action.payload.key);
+        }
+
         return {
             ...state,
             pending: true,
             importPayload: {
                 ...state.importPayload,
-                [action.payload.name]: state.importPayload[action.payload.name].filter((l: any) => l.Name !== action.payload.key)
+                [action.payload.name]: payload
             }
         };
     }

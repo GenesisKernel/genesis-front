@@ -20,6 +20,7 @@ import { Button, Row, Col } from 'react-bootstrap';
 import { sendAttachment } from 'lib/fs';
 
 import ImportTable from './ImportTable';
+import ImportTableData from './ImportTableData';
 import DocumentTitle from 'components/DocumentTitle';
 import TabView from 'components/TabView';
 import TxButton from 'containers/Widgets/TxButton';
@@ -33,6 +34,11 @@ export interface IImportProps {
         languages: { Name: string }[];
         contracts: { Name: string }[];
         tables: { Name: string }[];
+        data: {
+            Table: string;
+            Columns: string[];
+            Data: any[][];
+        }[];
     };
     importData: (payload: File) => void;
     onPrunePage: (name: string) => void;
@@ -42,6 +48,7 @@ export interface IImportProps {
     onPruneLanguage: (name: string) => void;
     onPruneContract: (name: string) => void;
     onPruneTable: (name: string) => void;
+    onPruneData: (table: string, index: number) => void;
 }
 
 class Import extends React.Component<IImportProps & InjectedIntlProps> {
@@ -64,7 +71,8 @@ class Import extends React.Component<IImportProps & InjectedIntlProps> {
             0 === this.props.payload.parameters.length &&
             0 === this.props.payload.languages.length &&
             0 === this.props.payload.contracts.length &&
-            0 === this.props.payload.tables.length
+            0 === this.props.payload.tables.length &&
+            0 === this.props.payload.data.length
         );
     }
 
@@ -175,6 +183,15 @@ class Import extends React.Component<IImportProps & InjectedIntlProps> {
                 />
             );
         }
+        if (this.props.payload.data.length) {
+            tabs.push(
+                <ImportTableData
+                    key="data"
+                    payload={this.props.payload.data}
+                    onPrune={this.props.onPruneData.bind(this)}
+                />
+            );
+        }
 
         return tabs;
     }
@@ -190,6 +207,7 @@ class Import extends React.Component<IImportProps & InjectedIntlProps> {
             if (this.props.payload.languages.length) { tabs.push(this.props.intl.formatMessage({ id: 'admin.languages.short', defaultMessage: 'Languages' })); }
             if (this.props.payload.contracts.length) { tabs.push(this.props.intl.formatMessage({ id: 'admin.contracts.short', defaultMessage: 'Contracts' })); }
             if (this.props.payload.tables.length) { tabs.push(this.props.intl.formatMessage({ id: 'admin.tables', defaultMessage: 'Tables' })); }
+            if (this.props.payload.data.length) { tabs.push(this.props.intl.formatMessage({ id: 'admin.tables.data', defaultMessage: 'Table data' })); }
         }
 
         return (
@@ -266,6 +284,11 @@ class Import extends React.Component<IImportProps & InjectedIntlProps> {
                                             { id: 'admin.tables', defaultMessage: 'Tables' }),
                                             this.props.payload.tables.map(l => l.Name),
                                             this.props.payload.tables.length
+                                        )}
+                                        {this.renderItem(this.props.intl.formatMessage(
+                                            { id: 'admin.tables.data', defaultMessage: 'Table data' }),
+                                            this.props.payload.data.map(l => l.Table),
+                                            this.props.payload.data.length
                                         )}
                                     </div>
 

@@ -35,17 +35,20 @@ export interface IExportTableDataProps {
     }[];
     dataKey: string;
     onSelect?: (values: { [key: string]: any }[]) => void;
+    onDataSelect?: (values: { [key: string]: any }[]) => void;
 }
 
 interface IExportTableDataState {
     selected: Set<string>;
+    selectedData: Set<string>;
 }
 
 class ExportTableData extends React.Component<IExportTableDataProps, IExportTableDataState> {
     constructor(props: IExportTableDataProps) {
         super(props);
         this.state = {
-            selected: Set()
+            selected: Set(),
+            selectedData: Set()
         };
     }
 
@@ -55,9 +58,14 @@ class ExportTableData extends React.Component<IExportTableDataProps, IExportTabl
         }
     }
 
-    onToggleSelect(key: string, e: React.MouseEvent<HTMLElement>) {
-        e.preventDefault();
-        const selected = this.isSelected(key) ? this.state.selected.remove(key) : this.state.selected.add(key);
+    onDataSelect(values: string[]) {
+        if (this.props.onDataSelect) {
+            this.props.onDataSelect(this.props.payload.filter(l => -1 !== values.indexOf(l[this.props.dataKey])));
+        }
+    }
+
+    onToggleSelect(key: string, e: React.ChangeEvent<HTMLInputElement>) {
+        const selected = !e.target.checked ? this.state.selected.remove(key) : this.state.selected.add(key);
         this.setState({
             selected
         });
@@ -65,24 +73,42 @@ class ExportTableData extends React.Component<IExportTableDataProps, IExportTabl
         this.onSelect(selected.toArray());
     }
 
-    onToggleSelectAll() {
-        const selected = this.isAllSelected() ?
-            Set<string>() :
-            Set<string>(this.props.payload.map(l => l[this.props.dataKey]));
-
+    onToggleSelectData(key: string, e: React.ChangeEvent<HTMLInputElement>) {
+        const selectedData = !e.target.checked ? this.state.selectedData.remove(key) : this.state.selectedData.add(key);
         this.setState({
-            selected
+            selectedData
         });
 
-        this.onSelect(selected.toArray());
+        this.onDataSelect(selectedData.toArray());
     }
 
     isSelected(key: string) {
         return this.state.selected.contains(key);
     }
 
+    isDataSelected(key: string) {
+        return this.state.selectedData.contains(key);
+    }
+
     isAllSelected() {
         return this.state.selected.count() === this.props.payload.length;
+    }
+
+    isAllDataSelected() {
+        return this.state.selectedData.count() === this.props.payload.length;
+    }
+
+    isSelectable(table: string) {
+        return [
+            'blocks',
+            'contracts',
+            'history',
+            'keys',
+            'languages',
+            'menu',
+            'pages',
+            'signatures'
+        ].indexOf(table) === -1;
     }
 
     render() {
@@ -90,27 +116,24 @@ class ExportTableData extends React.Component<IExportTableDataProps, IExportTabl
             <table className="table table-striped m0 bt0">
                 <thead>
                     <tr>
-                        <th className="text-center" style={{ width: 90 }}>
+                        <th style={{ width: '100%' }}>
                             <FormattedMessage id="admin.export.key" defaultMessage="Key" />
                         </th>
-                        {'name' !== this.props.dataKey ? (
-                            <th>
-                                <FormattedMessage id="admin.export.name" defaultMessage="Name" />
-                            </th>
-                        ) : null}
-                        <th className="text-center" style={{ width: 90 }}>
-                            <Checkbox onChange={this.onToggleSelectAll.bind(this)} checked={this.isAllSelected()} />
-                        </th>
+                        <th className="text-center">Structure</th>
+                        <th className="text-center">Data</th>
                     </tr>
                 </thead>
                 <tbody>
                     {this.props.payload.map(row => (
-                        <StyledTableRow key={row[this.props.dataKey]} onClick={this.onToggleSelect.bind(this, row[this.props.dataKey])}>
+                        <StyledTableRow key={row[this.props.dataKey]}>
                             {_.map(row, (value, key) => (
-                                <td key={key} className={this.props.dataKey === key ? 'text-center' : ''}>{value}</td>
+                                <td key={key}>{value}</td>
                             ))}
                             <td className="text-center">
-                                <Checkbox readOnly checked={this.isSelected(row[this.props.dataKey])} />
+                                <Checkbox checked={this.isSelected(row[this.props.dataKey])} onChange={this.onToggleSelect.bind(this, row[this.props.dataKey])} />
+                            </td>
+                            <td className="text-center">
+                                <Checkbox disabled={this.isSelectable(row[this.props.dataKey])} checked={this.isSelectable(row[this.props.dataKey]) ? this.isDataSelected(row[this.props.dataKey]) : false} onChange={this.isSelectable(row[this.props.dataKey]) ? this.onToggleSelectData.bind(this, row[this.props.dataKey]) : null} />
                             </td>
                         </StyledTableRow>
                     ))}

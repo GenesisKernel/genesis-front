@@ -19,6 +19,7 @@ import * as React from 'react';
 interface ICheckboxProps {
     id?: string;
     title?: string;
+    disabled?: boolean;
     className?: string;
     defaultChecked?: boolean;
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
@@ -27,9 +28,9 @@ interface ICheckboxProps {
 }
 
 const Checkbox: React.SFC<ICheckboxProps> = (props) => (
-    <div className={`checkbox c-checkbox ${props.className}`}>
+    <div className={`checkbox c-checkbox ${props.className || ''}`}>
         <label>
-            <input id={props.id} type="checkbox" defaultChecked={props.defaultChecked} onChange={props.onChange} checked={props.checked} readOnly={props.readOnly} />
+            <input id={props.id} type="checkbox" disabled={props.disabled} defaultChecked={props.defaultChecked} onChange={props.onChange} checked={props.checked} readOnly={props.readOnly} />
             <em className="fa fa-check" />
             <span>{props.title}</span>
         </label>

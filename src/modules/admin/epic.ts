@@ -15,7 +15,8 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as Bluebird from 'bluebird';
-import api, { IAPIError, ITableResponse } from 'lib/api';
+import * as _ from 'lodash';
+import api, { IAPIError, ITableResponse, IListResponse } from 'lib/api';
 import keyring from 'lib/keyring';
 import { readTextFile } from 'lib/fs';
 import { combineEpics, Epic } from 'redux-observable';
@@ -302,7 +303,39 @@ export const exportDataEpic: Epic<Action, IRootState> =
                 action.payload.parameters.length ? api.parameters(state.auth.sessionToken, action.payload.parameters) : Promise.resolve([]),
                 Bluebird.map(action.payload.languages, language => api.row(state.auth.sessionToken, 'languages', language), { concurrency: 3 }),
                 Bluebird.map(action.payload.contracts, contract => api.row(state.auth.sessionToken, 'contracts', contract.id).then(data => ({ name: contract.name, ...data })), { concurrency: 3 }),
-                Bluebird.map(action.payload.tables, table => api.table(state.auth.sessionToken, table), { concurrency: 3 })
+                Bluebird.map(action.payload.tables, table => api.table(state.auth.sessionToken, table), { concurrency: 3 }),
+                Bluebird.map(action.payload.data, table => api.table(state.auth.sessionToken, table), { concurrency: 1 }).map((struct: ITableResponse) => {
+                    const columns = struct.columns.map(l => l.name);
+
+                    const mapColumns = (data: { [key: string]: string }) => {
+                        return columns.map(col => data[col]);
+                    };
+
+                    const fetchPartial = (offset: number, limit: number, values: any[] = []): any =>
+                        api.list(state.auth.sessionToken, struct.name, offset, limit, columns.join(','))
+                            .then(result => {
+                                // API returns null if requested offset is empty so we'll need to
+                                // handle this, otherwise list.length will fail
+                                if (!result.list) {
+                                    return _.flatten(values);
+                                }
+                                else if (limit > result.list.length) {
+                                    values.push(result.list.map(mapColumns));
+                                    return _.flatten(values);
+                                }
+                                else {
+                                    values.push(result.list.map(mapColumns));
+                                    return fetchPartial(offset + limit, limit, values);
+                                }
+                            });
+
+                    return fetchPartial(0, 15)
+                        .then((data: any) => ({
+                            Table: struct.name,
+                            Columns: columns,
+                            Data: data
+                        }));
+                })
 
             ]).spread((
                 pages: { value: { id: string, name: string, conditions: string, menu: string, value: string } }[],
@@ -312,6 +345,7 @@ export const exportDataEpic: Epic<Action, IRootState> =
                 languages: { value: { id: string, name: string, conditions: string, res: string } }[],
                 contracts: { name: string, value: { id: string, conditions: string, value: string } }[],
                 tables: ITableResponse[],
+                data: IListResponse[]
             ) => ({
                 // There are more fields so we'll need to pick only those we really need
                 // Property names must be PascalCase as required by simvolio
@@ -359,7 +393,8 @@ export const exportDataEpic: Epic<Action, IRootState> =
                         update: table.update,
                         new_column: table.new_column
                     })
-                }))
+                })),
+                data
             }));
 
             return Observable.fromPromise(promise)

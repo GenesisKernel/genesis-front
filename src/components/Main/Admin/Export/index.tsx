@@ -21,11 +21,12 @@ import { sendAttachment } from 'lib/fs';
 
 import Checkbox from 'components/Checkbox';
 import ExportTable from './ExportTable';
+import ExportTableData from './ExportTableData';
 import DocumentTitle from 'components/DocumentTitle';
 import TabView from 'components/TabView';
 
 export interface IExportProps {
-    exportPayload: object;
+    exportPayload: any;
     exportData: (params: {
         pages: string[];
         blocks: string[];
@@ -34,6 +35,7 @@ export interface IExportProps {
         languages: string[];
         contracts: { id: string, name: string }[];
         tables: string[];
+        data: string[];
     }) => void;
     pages: { id: string, name: string }[];
     menus: { id: string, name: string }[];
@@ -52,6 +54,7 @@ interface IExportState {
     languages: { id: string, name: string }[];
     contracts: { id: string, name: string }[];
     tables: { name: string }[];
+    data: { name: string }[];
     compress: boolean;
 }
 
@@ -66,6 +69,7 @@ class Export extends React.Component<IExportProps & InjectedIntlProps, IExportSt
             languages: [],
             contracts: [],
             tables: [],
+            data: [],
             compress: false
         };
     }
@@ -118,6 +122,12 @@ class Export extends React.Component<IExportProps & InjectedIntlProps, IExportSt
         });
     }
 
+    onSelectData(data: { name: string }[]) {
+        this.setState({
+            data
+        });
+    }
+
     onConfirm() {
         this.props.exportData({
             pages: this.state.pages.map(page => page.id),
@@ -126,7 +136,8 @@ class Export extends React.Component<IExportProps & InjectedIntlProps, IExportSt
             parameters: this.state.parameters.map(param => param.name),
             languages: this.state.languages.map(lang => lang.id),
             contracts: this.state.contracts.map(contract => ({ id: contract.id, name: contract.name })),
-            tables: this.state.tables.map(table => table.name)
+            tables: this.state.tables.map(table => table.name),
+            data: this.state.data.map(data => data.name)
         });
     }
 
@@ -143,7 +154,8 @@ class Export extends React.Component<IExportProps & InjectedIntlProps, IExportSt
             && 0 === this.state.parameters.length
             && 0 === this.state.languages.length
             && 0 === this.state.contracts.length
-            && 0 === this.state.tables.length;
+            && 0 === this.state.tables.length
+            && 0 === this.state.data.length;
     }
 
     renderItem(title: string, items: string[], badge: number) {
@@ -258,10 +270,11 @@ class Export extends React.Component<IExportProps & InjectedIntlProps, IExportSt
                                     />
                                 </div>
                                 <div>
-                                    <ExportTable
+                                    <ExportTableData
                                         dataKey="name"
                                         payload={this.props.tables || []}
                                         onSelect={this.onSelectTables.bind(this)}
+                                        onDataSelect={this.onSelectData.bind(this)}
                                     />
                                 </div>
                             </TabView>
@@ -305,8 +318,13 @@ class Export extends React.Component<IExportProps & InjectedIntlProps, IExportSt
                                     )}
                                     {this.renderItem(this.props.intl.formatMessage(
                                         { id: 'admin.tables', defaultMessage: 'Tables' }),
-                                        this.state.contracts.map(l => l.name),
-                                        this.state.contracts.length
+                                        this.state.tables.map(l => l.name),
+                                        this.state.tables.length
+                                    )}
+                                    {this.renderItem(this.props.intl.formatMessage(
+                                        { id: 'admin.tables.data', defaultMessage: 'Table data' }),
+                                        this.state.data.map(l => l.name),
+                                        this.state.data.length
                                     )}
                                 </div>
 

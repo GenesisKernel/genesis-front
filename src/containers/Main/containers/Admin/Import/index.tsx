@@ -34,6 +34,11 @@ interface IImportContainerState {
         languages: { Name: string }[];
         contracts: { Name: string }[];
         tables: { Name: string }[];
+        data: {
+            Table: string;
+            Columns: string[];
+            Data: any[][];
+        }[];
     };
 }
 
@@ -43,8 +48,12 @@ interface IImportContainerDispatch {
 }
 
 const ImportContainer: React.SFC<IImportContainerProps & IImportContainerState & IImportContainerDispatch> = (props) => {
-    const pruneFactory = (name: string, key: string) => {
-        props.importDataPrune({ name, key });
+    const pruneFactory = (name: string, key: string, index?: number) => {
+        props.importDataPrune({
+            name,
+            key,
+            index
+        });
     };
 
     return (
@@ -58,6 +67,7 @@ const ImportContainer: React.SFC<IImportContainerProps & IImportContainerState &
             onPruneLanguage={pruneFactory.bind(null, 'languages')}
             onPruneContract={pruneFactory.bind(null, 'contracts')}
             onPruneTable={pruneFactory.bind(null, 'tables')}
+            onPruneData={pruneFactory.bind(null, 'data')}
         />
     );
 };
