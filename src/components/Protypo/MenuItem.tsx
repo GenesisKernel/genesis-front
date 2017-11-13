@@ -40,26 +40,31 @@ export const StyledLinkButton = styled.div`
 
     > .link-active-decorator {
         opacity: 0;
-        background: #1fafe1;
+        background: #8400ff;
         float: left;
-        width: 3px;
-        height: 45px;
+        width: 4px;
+        height: 50px;
         transition: opacity .2s ease-in-out;
     }
 
     > a {
         display: block;
-        height: 45px;
-        line-height: 45px;
-        padding: 0 14px;
-        color: #6c6c6c;
+        height: 50px;
+        line-height: 50px;
+        padding: 0 20px;
+        color: #000;
+        font-size: 14px;
+        font-weight: 200;
         text-decoration: none;
+
+        &:hover {
+            background: #f1eaf7;
+        }
     }
 
     .link-body {
         display: block;
         margin: 0 5px;
-        border-bottom: solid 1px #e5e5e5;
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;

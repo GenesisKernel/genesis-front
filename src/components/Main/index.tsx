@@ -15,81 +15,49 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import * as classnames from 'classnames';
 import ReduxToastr from 'react-redux-toastr';
-import { setCollapsed } from 'modules/engine/actions';
-import { menuPop, menuPush } from 'modules/content/actions';
 import { OrderedMap } from 'immutable';
 import styled from 'styled-components';
+import sidebarStyle from './Sidebar/style';
 
-import { IProtypoElement } from 'components/Protypo/Protypo';
-import Sidebar, { style as sidebarStyle } from 'components/Main/Sidebar';
-import Header from 'components/Main/Header';
+import Navigation from 'containers/Main/Navigation';
+import Sidebar from 'containers/Main/Sidebar';
 
 const StyledWrapper = styled.div`
-    background: #f5f7fa;
+    background-color: #f6f8fa;
 `;
 
 const StyledContent = styled.section`
-    margin-left: ${props => props.style.marginLeft || 0}px;
-    transition: margin-left ${props => props.style.transition};
+    margin-top: 0 !important;
+    margin-left: ${sidebarStyle.fullSize}px !important;
 `;
 
 export interface IMainProps {
     session: string;
-    isCollapsed: boolean;
     pending: boolean;
     stylesheet: string;
-    menus: { name: string, content: IProtypoElement[] }[];
     pendingTransactions: OrderedMap<string, { uuid: string, block: string, error: string, contract: string }>;
     transactionsCount: number;
-    menuPop: typeof menuPop;
-    menuPush: typeof menuPush;
-    setCollapsed: typeof setCollapsed;
 }
 
-export default class Main extends React.Component<IMainProps> {
-    onSidebarToggle(e: React.MouseEvent<HTMLLinkElement>) {
-        e.preventDefault();
-        this.props.setCollapsed(!this.props.isCollapsed);
-        return false;
-    }
+const Main: React.SFC<IMainProps> = props => (
+    <StyledWrapper className="wrapper component-main">
+        <style type="text/css">
+            {props.stylesheet}
+        </style>
+        <Sidebar />
+        <Navigation />
+        <StyledContent>
+            <ReduxToastr
+                timeOut={3000}
+                newestOnTop
+                position="top-center"
+                transitionIn="fadeIn"
+                transitionOut="fadeOut"
+            />
+            {props.children}
+        </StyledContent>
+    </StyledWrapper>
+);
 
-    render() {
-        const classes = classnames({
-            'wrapper': true,
-            'component-main': true,
-            'aside-collapsed': this.props.isCollapsed
-        });
-        return (
-            <StyledWrapper className={classes}>
-                <style type="text/css">
-                    {this.props.stylesheet}
-                </style>
-                <Sidebar
-                    menus={this.props.menus}
-                    collapsed={this.props.isCollapsed}
-                    menuPop={this.props.menuPop.bind(this)}
-                    menuPush={this.props.menuPush.bind(this)}
-                />
-                <StyledContent style={{ marginLeft: this.props.isCollapsed ? 0 : sidebarStyle.sidebarWidth, transition: sidebarStyle.collapseTransition }}>
-                    <Header
-                        toggleCollapsed={this.onSidebarToggle.bind(this)}
-                        leftOffset={this.props.isCollapsed ? 0 : sidebarStyle.sidebarWidth}
-                        collapseTransition={sidebarStyle.collapseTransition}
-                        pendingTransactions={this.props.pendingTransactions}
-                        transactionsCount={this.props.transactionsCount}
-                    />
-                    <ReduxToastr
-                        timeOut={3000}
-                        newestOnTop
-                        position="top-center"
-                        transitionIn="fadeIn"
-                        transitionOut="fadeOut"
-                    />
-                    {this.props.children}
-                </StyledContent>
-            </StyledWrapper>
-        );
-    }
-}
+export default Main;

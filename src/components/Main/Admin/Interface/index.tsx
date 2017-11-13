@@ -31,33 +31,25 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
     <DocumentTitle title="admin.interface" defaultTitle="Interface">
         <div className="content-wrapper">
             <div className="content-heading">
-                <div>
-                    <div className="pull-right">
-                        <Link to="/admin/interface/create-page" className="ml">
-                            <button className="btn btn-default ml">
-                                <em className="fa fa-plus-circle fa-fw mr-sm" />
-                                <span>
-                                    <FormattedMessage id="admin.interface.page.create" defaultMessage="Create page" />
-                                </span>
-                            </button>
-                        </Link>
-                        <Link to="/admin/interface/create-block" className="ml">
-                            <button className="btn btn-default">
-                                <em className="fa fa-plus-circle fa-fw mr-sm" />
-                                <span>
-                                    <FormattedMessage id="admin.interface.block.create" defaultMessage="Create block" />
-                                </span>
-                            </button>
-                        </Link>
-                        <Link to="/admin/interface/create-menu" className="ml">
-                            <button className="btn btn-default">
-                                <em className="fa fa-plus-circle fa-fw mr-sm" />
-                                <span>
-                                    <FormattedMessage id="admin.interface.menu.create" defaultMessage="Create menu" />
-                                </span>
-                            </button>
-                        </Link>
-                    </div>
+                <div className="pull-right">
+                    <Link to="/admin/interface/create-page" className="ml btn-tool">
+                        <em className="icon icon-plus" />
+                        <span>
+                            <FormattedMessage id="admin.interface.page.create" defaultMessage="Create page" />
+                        </span>
+                    </Link>
+                    <Link to="/admin/interface/create-block" className="ml btn-tool">
+                        <em className="icon icon-plus" />
+                        <span>
+                            <FormattedMessage id="admin.interface.block.create" defaultMessage="Create block" />
+                        </span>
+                    </Link>
+                    <Link to="/admin/interface/create-menu" className="ml btn-tool">
+                        <em className="icon icon-plus" />
+                        <span>
+                            <FormattedMessage id="admin.interface.menu.create" defaultMessage="Create menu" />
+                        </span>
+                    </Link>
                 </div>
                 <FormattedMessage id="admin.interface" defaultMessage="Interface" />
             </div>
