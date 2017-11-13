@@ -52,7 +52,6 @@ interface IConstructorEditorProps {
 }
 
 const ConstructorDiv = styled.div`
-    margin: -20px;
     min-height: 300px;
     position: relative;
     height: 100%;
@@ -75,7 +74,7 @@ const ConstructorDiv = styled.div`
     
     .center-panel {
         margin: 0 286px 0 286px;
-        min-height: 400px;
+        min-height: 100%;
     }
 
 `;
@@ -115,7 +114,7 @@ const PanelDiv = styled.div`
 
 const DivGrid = styled.div`
     margin: 0 20px;
-    min-height: 600px;
+    min-height: 1000px;
     border-left: 1px solid #b1b1b1;
     border-right: 1px solid #b1b1b1;
     background-repeat: repeat;
@@ -179,271 +178,292 @@ class CollapsedListItem extends React.Component<ICollapsedListItemProps, ICollap
     }
 }
 
-const ConstructorEditor: React.SFC<IConstructorEditorProps> = (props) => (
-    <ConstructorDiv>
-        <div className="left-panel">
-            <ConstructorPanel title="Objects">
-                <ul className="b-category-list">
-                    <CollapsedListItem text="Structure" icon={imgGroup11}>
-                        <ul className="b-category-sublist">
-                            <li>Panel</li>
-                            <li>Block</li>
+interface ICollapsedListItemProps {
+    text: string;
+    icon?: string;
+}
+
+interface ICollapsedListItemState {
+    collapsed: boolean;
+}
+
+// const ConstructorEditor: React.SFC<IConstructorEditorProps> = (props) => (
+class ConstructorEditor extends React.Component<IConstructorEditorProps> {
+    render() {
+        return (
+            <ConstructorDiv>
+                <div className="left-panel">
+                    <ConstructorPanel title="Objects">
+                        <ul className="b-category-list">
+                            <CollapsedListItem text="Structure" icon={imgGroup11}>
+                                <ul className="b-category-sublist">
+                                    <li>Panel</li>
+                                    <li>Block</li>
+                                </ul>
+                            </CollapsedListItem>
+                            <CollapsedListItem text="Text" icon={imgGroup12}>
+                                <ul className="b-category-sublist">
+                                    <li>Heading</li>
+                                    <li>Paragraph</li>
+                                    <li>Span</li>
+                                    <li>Strong</li>
+                                    <li>Tag</li>
+                                    <li>Emphasize</li>
+                                </ul>
+                            </CollapsedListItem>
+                            <CollapsedListItem text="Lists" icon={imgGroup37}>
+                                <ul className="b-category-sublist">
+                                    <li>Ordered</li>
+                                    <li>Unordered</li>
+                                </ul>
+                            </CollapsedListItem>
+                            <CollapsedListItem text="Containers" icon={imgGroup36}>
+                                <ul className="b-category-sublist">
+                                    <li>Wrapper</li>
+                                    <li>Block</li>
+                                </ul>
+                            </CollapsedListItem>
+                            <CollapsedListItem text="Forms" icon={imgGroup34}>
+                                <ul className="b-category-sublist">
+                                    <li>Form</li>
+                                    <li>Input</li>
+                                    <li>Button</li>
+                                </ul>
+                            </CollapsedListItem>
+                            <CollapsedListItem text="Image" icon={imgGroup35}>
+                                <ul className="b-category-sublist">
+                                    <li>Picture</li>
+                                    <li>Animation</li>
+                                </ul>
+                            </CollapsedListItem>
+                            <CollapsedListItem text="Navigation" icon={imgStroke75}>
+                                <ul className="b-category-sublist">
+                                    <li>Breadcrumps</li>
+                                    <li>Link</li>
+                                    <li>Back</li>
+                                </ul>
+                            </CollapsedListItem>
+                            <CollapsedListItem text="Tables" icon={imgGroup13}>
+                                <ul className="b-category-sublist">
+                                    <li>Table</li>
+                                    <li>Row</li>
+                                    <li>Column</li>
+                                </ul>
+                            </CollapsedListItem>
+                            <li/>
                         </ul>
-                    </CollapsedListItem>
-                    <CollapsedListItem text="Text" icon={imgGroup12}>
-                        <ul className="b-category-sublist">
-                            <li>Heading</li>
-                            <li>Paragraph</li>
-                            <li>Span</li>
-                            <li>Strong</li>
-                            <li>Tag</li>
-                            <li>Emphasize</li>
+                    </ConstructorPanel>
+                    <ConstructorPanel title="Structure">
+                        <ul className="b-tree">
+                            <li>
+                                <i className="fa fa-caret-down"/>
+                                HTML
+                            </li>
+                            <li>
+                                <span className="b-tree-indent"/>
+                                <i className="fa fa-caret-right"/>
+                                Header
+                            </li>
+                            <li>
+                                <span className="b-tree-indent"/>
+                                <i className="fa fa-caret-down"/>
+                                Body
+                            </li>
+                            <li>
+                                <span className="b-tree-indent"/>
+                                <span className="b-tree-indent"/>
+                                <i className="fa fa-caret-down"/>
+                                Header
+                            </li>
+                            <li className="selected">
+                                <i className="fa fa-close b-tree-delete"/>
+                                <span className="b-tree-indent"/>
+                                <span className="b-tree-indent"/>
+                                <span className="b-tree-indent"/>
+                                <i className="fa fa-caret-down"/>
+                                Paragraph
+                            </li>
+                            <li>
+                                <span className="b-tree-indent"/>
+                                <span className="b-tree-indent"/>
+                                <span className="b-tree-indent"/>
+                                <i/>
+                                Strong
+                            </li>
                         </ul>
-                    </CollapsedListItem>
-                    <CollapsedListItem text="Lists" icon={imgGroup37}>
-                        <ul className="b-category-sublist">
-                            <li>Ordered</li>
-                            <li>Unordered</li>
-                        </ul>
-                    </CollapsedListItem>
-                    <CollapsedListItem text="Containers" icon={imgGroup36}>
-                        <ul className="b-category-sublist">
-                            <li>Wrapper</li>
-                            <li>Block</li>
-                        </ul>
-                    </CollapsedListItem>
-                    <CollapsedListItem text="Forms" icon={imgGroup34}>
-                        <ul className="b-category-sublist">
-                            <li>Form</li>
-                            <li>Input</li>
-                            <li>Button</li>
-                        </ul>
-                    </CollapsedListItem>
-                    <CollapsedListItem text="Image" icon={imgGroup35}>
-                        <ul className="b-category-sublist">
-                            <li>Picture</li>
-                            <li>Animation</li>
-                        </ul>
-                    </CollapsedListItem>
-                    <CollapsedListItem text="Navigation" icon={imgStroke75}>
-                        <ul className="b-category-sublist">
-                            <li>Breadcrumps</li>
-                            <li>Link</li>
-                            <li>Back</li>
-                        </ul>
-                    </CollapsedListItem>
-                    <CollapsedListItem text="Tables" icon={imgGroup13}>
-                        <ul className="b-category-sublist">
-                            <li>Table</li>
-                            <li>Row</li>
-                            <li>Column</li>
-                        </ul>
-                    </CollapsedListItem>
-                    <li/>
-                </ul>
-            </ConstructorPanel>
-            <ConstructorPanel title="Structure">
-                <ul className="b-tree">
-                    <li>
-                        <i className="fa fa-caret-down"/>
-                        HTML
-                    </li>
-                    <li>
-                        <span className="b-tree-indent"/>
-                        <i className="fa fa-caret-right"/>
-                        Header
-                    </li>
-                    <li>
-                        <span className="b-tree-indent"/>
-                        <i className="fa fa-caret-down"/>
-                        Body
-                    </li>
-                    <li>
-                        <span className="b-tree-indent"/>
-                        <span className="b-tree-indent"/>
-                        <i className="fa fa-caret-down"/>
-                        Header
-                    </li>
-                    <li className="selected">
-                        <i className="fa fa-close b-tree-delete"/>
-                        <span className="b-tree-indent"/>
-                        <span className="b-tree-indent"/>
-                        <span className="b-tree-indent"/>
-                        <i className="fa fa-caret-down"/>
-                        Paragraph
-                    </li>
-                    <li>
-                        <span className="b-tree-indent"/>
-                        <span className="b-tree-indent"/>
-                        <span className="b-tree-indent"/>
-                        <i/>
-                        Strong
-                    </li>
-                </ul>
-            </ConstructorPanel>
-        </div>
-        <div className="center-panel">
-            <div className="b-instrument-panel b-panel-light">
-                <div className="b-instrument-panel__inner pull-left">
-                    <div className="b-icon pull-left">
-                        <img src={imgUndo} />
-                    </div>
-                    <div className="b-icon pull-left">
-                        <img src={imgRedo} />
-                    </div>
+                    </ConstructorPanel>
                 </div>
-                <div className="b-instrument-panel__inner b-instrument-panel__inner_dark pull-left">
-                    <div className="b-page-title">
-                        {props.page ?
-                            (
-                                props.page.name
-                            ) : (
-                            'New page'
-                        )
-                        }
-                        &nbsp;&nbsp;<i className="fa fa-close"/>
+                <div className="center-panel">
+                    <div className="b-instrument-panel b-panel-light">
+                        <div className="b-instrument-panel__inner pull-left">
+                            <div className="b-icon pull-left">
+                                <img src={imgUndo}/>
+                            </div>
+                            <div className="b-icon pull-left">
+                                <img src={imgRedo}/>
+                            </div>
+                        </div>
+                        {/*<div className="b-instrument-panel__inner b-instrument-panel__inner_dark pull-left">
+                            <div className="b-page-title">
+                                {this.props.page ?
+                                    (
+                                        this.props.page.name
+                                    ) : (
+                                    'New page'
+                                )
+                                }
+                                &nbsp;&nbsp;<i className="fa fa-close"/>
+                            </div>
+                        </div>*/}
+                        <div className="b-instrument-panel__inner pull-right">
+                            <div className="b-icon-group pull-left">
+                                <div className="b-icon pull-left">
+                                    <img src={imgViewMobile}/>
+                                </div>
+                                <div className="b-icon pull-left">
+                                    <img src={imgViewTablet}/>
+                                </div>
+                                <div className="b-icon pull-left">
+                                    <img src={imgViewLaptop}/>
+                                </div>
+                                <div className="b-icon pull-left">
+                                    <img src={imgViewDesktop}/>
+                                </div>
+                            </div>
+                            <div className="b-icon-group pull-left">
+                                <div className="b-switch">
+                                    <span>GRID</span>
+                                    <img src={imgSwitchOn}/>
+                                </div>
+
+                                <div className="b-switch">
+                                    <span>SNAP</span>
+                                    <img src={imgSwitchOn}/>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
-                </div>
-                <div className="b-instrument-panel__inner pull-right">
-                    <div className="b-icon-group pull-left">
-                        <div className="b-icon pull-left">
-                            <img src={imgViewMobile} />
-                        </div>
-                        <div className="b-icon pull-left">
-                            <img src={imgViewTablet} />
-                        </div>
-                        <div className="b-icon pull-left">
-                            <img src={imgViewLaptop} />
-                        </div>
-                        <div className="b-icon pull-left">
-                            <img src={imgViewDesktop} />
-                        </div>
-                    </div>
-                    <div className="b-icon-group pull-left">
-                        <div className="b-switch">
-                            <span>GRID</span>
-                            <img src={imgSwitchOn} />
-                        </div>
-
-                        <div className="b-switch">
-                            <span>SNAP</span>
-                            <img src={imgSwitchOn} />
-                        </div>
+                    <div className="b-instrument-panel">
+                        <div className="b-instrument-panel__inner pull-left"/>
                     </div>
 
+                    <DivGrid>
+                        {/*{props.template}*/}
+                        {/*{JSON.stringify(props.treeCode)}*/}
+                        <Protypo
+                            payload={this.props.treeCode}
+                        />
+                    </DivGrid>
+
                 </div>
-            </div>
-            <div className="b-instrument-panel">
-                <div className="b-instrument-panel__inner pull-right"/>
-            </div>
+                <div className="right-panel">
+                    <ConstructorPanel title="Properties">
 
-            <DivGrid>
-                {/*{props.template}*/}
-                {/*{JSON.stringify(props.treeCode)}*/}
-                <Protypo
-                    payload={props.treeCode}
-                />
-            </DivGrid>
-
-        </div>
-        <div className="right-panel">
-            <ConstructorPanel title="Properties">
-
-                <div className="content-wrapper b-panel-light">
-                    <form className="form-horizontal">
-                        <div className="form-group">
-                            <label className="col-xs-3 control-label g-no-padding"><small>ID</small></label>
-                            <Col xs={9}>
-                                <input type="text" className="form-control input-sm" placeholder="Element ID"/>
-                            </Col>
+                        <div className="content-wrapper b-panel-light">
+                            <form className="form-horizontal">
+                                <div className="form-group">
+                                    <label className="col-xs-3 control-label g-no-padding">
+                                        <small>ID</small>
+                                    </label>
+                                    <Col xs={9}>
+                                        <input type="text" className="form-control input-sm" placeholder="Element ID"/>
+                                    </Col>
+                                </div>
+                                <div className="form-group">
+                                    <label className="col-xs-3 control-label g-no-padding">
+                                        <small>CSS CLASS</small>
+                                    </label>
+                                    <Col xs={9}>
+                                        <input
+                                            type="text"
+                                            className="form-control input-sm"
+                                            placeholder="Element Classes"
+                                        />
+                                    </Col>
+                                </div>
+                            </form>
                         </div>
-                        <div className="form-group">
-                            <label className="col-xs-3 control-label g-no-padding"><small>CSS CLASS</small></label>
-                            <Col xs={9}>
-                                <input type="text" className="form-control input-sm" placeholder="Element Classes"/>
-                            </Col>
+                        <div className="content-wrapper"/>
+                        <div className="content-wrapper b-panel-light">
+                            <Row className="g-padding-bottom">
+                                <Col xs={3} className="text-uppercase">
+                                    position
+                                </Col>
+                                <Col xs={9}>
+                                    <div className="b-position-bullet b-position-bullet_selected"/>
+                                    <div className="b-position-bullet b-position-bullet_selected"/>
+                                    <div className="b-position-bullet b-position-bullet_selected"/>
+                                    <div className="b-position-bullet b-position-bullet_selected"/>
+                                    <div className="b-position-bullet b-position-bullet_selected"/>
+                                    <div className="b-position-bullet b-position-bullet_selected"/>
+                                    <div className="b-position-bullet"/>
+                                    <div className="b-position-bullet"/>
+                                    <div className="b-position-bullet"/>
+                                    <div className="b-position-bullet"/>
+                                    <div className="b-position-bullet"/>
+                                    <div className="b-position-bullet"/>
+                                </Col>
+                            </Row>
+                            <Row className="g-padding-bottom">
+                                <Col xs={4} className="text-center">
+                                    <div className="text-uppercase">
+                                        alignment
+                                    </div>
+                                    <div className="b-bullet b-bullet_selected">
+                                        <img src={imgAlignLeft}/>
+                                    </div>
+                                    <div className="b-bullet">
+                                        <img src={imgAlignCenter}/>
+                                    </div>
+                                    <div className="b-bullet">
+                                        <img src={imgAlignRight}/>
+                                    </div>
+                                </Col>
+                                <Col xs={4} className="text-center">
+                                    <div className="text-uppercase">
+                                        transform
+                                    </div>
+                                    <div className="b-bullet b-bullet_selected">
+                                        <img src={imgUppercase}/>
+                                    </div>
+                                    <div className="b-bullet">
+                                        <img src={imgLowercase}/>
+                                    </div>
+                                </Col>
+                                <Col xs={4} className="text-center">
+                                    <div className="text-center text-uppercase">
+                                        no wrap
+                                    </div>
+                                    <div className="b-switch">
+                                        <img src={imgSwitchOff}/>
+                                    </div>
+                                </Col>
+                            </Row>
+                            <Row className="g-padding-bottom">
+                                <Col xs={12}>
+                                    <div className="text-uppercase">
+                                        color
+                                    </div>
+                                </Col>
+                                <Col xs={12}>
+                                    <div className="b-bullet-color b-bullet-color_blue"/>
+                                    <div className="b-bullet-color b-bullet-color_green b-bullet-color_selected"/>
+                                    <div className="b-bullet-color b-bullet-color_red"/>
+                                    <div className="b-bullet-color b-bullet-color_yellow"/>
+                                    <div className="b-bullet-color b-bullet-color_magenta"/>
+                                    <div className="b-bullet-color b-bullet-color_dark-blue"/>
+                                    <div className="b-bullet-color b-bullet-color_light-grey"/>
+                                    <div className="b-bullet-color b-bullet-color_black"/>
+                                    <div className="b-bullet-color b-bullet-color_grey"/>
+                                </Col>
+                            </Row>
                         </div>
-                    </form>
+                    </ConstructorPanel>
                 </div>
-                <div className="content-wrapper"/>
-                <div className="content-wrapper b-panel-light">
-                    <Row className="g-padding-bottom">
-                        <Col xs={3} className="text-uppercase">
-                            position
-                        </Col>
-                        <Col xs={9}>
-                            <div className="b-position-bullet b-position-bullet_selected"/>
-                            <div className="b-position-bullet b-position-bullet_selected"/>
-                            <div className="b-position-bullet b-position-bullet_selected"/>
-                            <div className="b-position-bullet b-position-bullet_selected"/>
-                            <div className="b-position-bullet b-position-bullet_selected"/>
-                            <div className="b-position-bullet b-position-bullet_selected"/>
-                            <div className="b-position-bullet"/>
-                            <div className="b-position-bullet"/>
-                            <div className="b-position-bullet"/>
-                            <div className="b-position-bullet"/>
-                            <div className="b-position-bullet"/>
-                            <div className="b-position-bullet"/>
-                        </Col>
-                    </Row>
-                    <Row className="g-padding-bottom">
-                        <Col xs={4} className="text-center">
-                            <div className="text-uppercase">
-                                alignment
-                            </div>
-                            <div className="b-bullet b-bullet_selected">
-                                <img src={imgAlignLeft} />
-                            </div>
-                            <div className="b-bullet">
-                                <img src={imgAlignCenter} />
-                            </div>
-                            <div className="b-bullet">
-                                <img src={imgAlignRight} />
-                            </div>
-                        </Col>
-                        <Col xs={4} className="text-center">
-                            <div className="text-uppercase">
-                                transform
-                            </div>
-                            <div className="b-bullet b-bullet_selected">
-                                <img src={imgUppercase} />
-                            </div>
-                            <div className="b-bullet">
-                                <img src={imgLowercase} />
-                            </div>
-                        </Col>
-                        <Col xs={4} className="text-center">
-                            <div className="text-center text-uppercase">
-                                no wrap
-                            </div>
-                            <div className="b-switch">
-                                <img src={imgSwitchOff} />
-                            </div>
-                        </Col>
-                    </Row>
-                    <Row className="g-padding-bottom">
-                        <Col xs={12}>
-                            <div className="text-uppercase">
-                                color
-                            </div>
-                        </Col>
-                        <Col xs={12}>
-                            <div className="b-bullet-color b-bullet-color_blue"/>
-                            <div className="b-bullet-color b-bullet-color_green b-bullet-color_selected"/>
-                            <div className="b-bullet-color b-bullet-color_red"/>
-                            <div className="b-bullet-color b-bullet-color_yellow"/>
-                            <div className="b-bullet-color b-bullet-color_magenta"/>
-                            <div className="b-bullet-color b-bullet-color_dark-blue"/>
-                            <div className="b-bullet-color b-bullet-color_light-grey"/>
-                            <div className="b-bullet-color b-bullet-color_black"/>
-                            <div className="b-bullet-color b-bullet-color_grey"/>
-                        </Col>
-                    </Row>
-                </div>
-            </ConstructorPanel>
-        </div>
-    </ConstructorDiv>
-
-);
+            </ConstructorDiv>
+        );
+    }
+}
 
 export default ConstructorEditor;

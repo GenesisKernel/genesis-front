@@ -71,45 +71,47 @@ class MainContainer extends React.Component<IMainProps & { ecosystemInit: typeof
 
     render() {
         return (
-            <Main {...this.props}>
-                <Switch>
-                    <Route exact path="/" component={DefaultPage} />
+            <Switch>
+                <Route exact path="/admin/interface/page/:pageID-:pageName/constructor" component={Constructor} />
+                <Route exact path="/admin/interface/create-page/constructor" component={Constructor} />
+                <Main {...this.props}>
+                    <Switch>
+                        <Route exact path="/" component={DefaultPage} />
 
-                    <Route exact path="/admin/tables" component={Tables} />
-                    <Route exact path="/admin/tables/create" component={TablesCreate} />
-                    <Route exact path="/admin/tables/:tableName/edit" component={TablesEdit} />
-                    <Route exact path="/admin/tables/:tableName/edit/column/:columnName" component={TablesEditColumn} />
-                    <Route exact path="/admin/tables/:tableName/edit/add-column" component={TablesAddColumn} />
-                    <Route exact path="/admin/tables/:tableName" component={TablesView} />
-                    <Route exact path="/admin/interface" component={Interface} />
-                    <Route exact path="/admin/interface/create-page" component={CreatePage} />
-                    <Route exact path="/admin/interface/create-page/constructor" component={Constructor} />
-                    <Route exact path="/admin/interface/page/:pageID-:pageName" component={EditPage} />
-                    <Route exact path="/admin/interface/page/:pageID-:pageName/constructor" component={Constructor} />
-                    <Route exact path="/admin/interface/menu/:menuID-:menuName" component={EditMenu} />
-                    <Route exact path="/admin/interface/block/:blockID-:blockName" component={EditBlock} />
-                    <Route exact path="/admin/interface/create-menu" component={CreateMenu} />
-                    <Route exact path="/admin/interface/create-block" component={CreateBlock} />
-                    <Route exact path="/admin/contracts" component={Contracts} />
-                    <Route exact path="/admin/contracts/create" component={CreateContract} />
-                    <Route exact path="/admin/contracts/:contractID-:contractName" component={EditContract} />
-                    <Route exact path="/admin/languages" component={Languages} />
-                    <Route exact path="/admin/languages/create" component={CreateLanguage} />
-                    <Route exact path="/admin/languages/:translationID-:translationName" component={EditLanguage} />
-                    <Route exact path="/admin/parameters" component={Parameters} />
-                    <Route exact path="/admin/parameters/create" component={ParametersCreate} />
-                    <Route exact path="/admin/parameters/:parameterName" component={ParametersEdit} />
-                    <Route exact path="/admin/import" component={Import} />
-                    <Route exact path="/admin/export" component={Export} />
+                        <Route exact path="/admin/tables" component={Tables} />
+                        <Route exact path="/admin/tables/create" component={TablesCreate} />
+                        <Route exact path="/admin/tables/:tableName/edit" component={TablesEdit} />
+                        <Route exact path="/admin/tables/:tableName/edit/column/:columnName" component={TablesEditColumn} />
+                        <Route exact path="/admin/tables/:tableName/edit/add-column" component={TablesAddColumn} />
+                        <Route exact path="/admin/tables/:tableName" component={TablesView} />
+                        <Route exact path="/admin/interface" component={Interface} />
+                        <Route exact path="/admin/interface/create-page" component={CreatePage} />
+                        <Route exact path="/admin/interface/page/:pageID-:pageName" component={EditPage} />
+                        <Route exact path="/admin/interface/menu/:menuID-:menuName" component={EditMenu} />
+                        <Route exact path="/admin/interface/block/:blockID-:blockName" component={EditBlock} />
+                        <Route exact path="/admin/interface/create-menu" component={CreateMenu} />
+                        <Route exact path="/admin/interface/create-block" component={CreateBlock} />
+                        <Route exact path="/admin/contracts" component={Contracts} />
+                        <Route exact path="/admin/contracts/create" component={CreateContract} />
+                        <Route exact path="/admin/contracts/:contractID-:contractName" component={EditContract} />
+                        <Route exact path="/admin/languages" component={Languages} />
+                        <Route exact path="/admin/languages/create" component={CreateLanguage} />
+                        <Route exact path="/admin/languages/:translationID-:translationName" component={EditLanguage} />
+                        <Route exact path="/admin/parameters" component={Parameters} />
+                        <Route exact path="/admin/parameters/create" component={ParametersCreate} />
+                        <Route exact path="/admin/parameters/:parameterName" component={ParametersEdit} />
+                        <Route exact path="/admin/import" component={Import} />
+                        <Route exact path="/admin/export" component={Export} />
 
-                    <Route exact path="/page/:pageName" component={Page} />
+                        <Route exact path="/page/:pageName" component={Page} />
 
-                    <Route exact path="/debug" component={Debug} />
-                    <Route exact path="/debug/ws" component={DebugWs} />
-                    <Route exact path="/backup" component={Backup} />
-                    <Route path="*" component={NotFound} />
-                </Switch>
-            </Main>
+                        <Route exact path="/debug" component={Debug} />
+                        <Route exact path="/debug/ws" component={DebugWs} />
+                        <Route exact path="/backup" component={Backup} />
+                        <Route path="*" component={NotFound} />
+                    </Switch>
+                </Main>
+            </Switch>
         );
     }
 }
