@@ -124,7 +124,7 @@ class ExportTableData extends React.Component<IExportTableDataProps, IExportTabl
                     </tr>
                 </thead>
                 <tbody>
-                    {this.props.payload.map(row => (
+                    {this.props.payload.filter(row => this.isSelectable(row[this.props.dataKey])).map(row => (
                         <StyledTableRow key={row[this.props.dataKey]}>
                             {_.map(row, (value, key) => (
                                 <td key={key}>{value}</td>
@@ -133,7 +133,7 @@ class ExportTableData extends React.Component<IExportTableDataProps, IExportTabl
                                 <Checkbox checked={this.isSelected(row[this.props.dataKey])} onChange={this.onToggleSelect.bind(this, row[this.props.dataKey])} />
                             </td>
                             <td className="text-center">
-                                <Checkbox disabled={this.isSelectable(row[this.props.dataKey])} checked={this.isSelectable(row[this.props.dataKey]) ? this.isDataSelected(row[this.props.dataKey]) : false} onChange={this.isSelectable(row[this.props.dataKey]) ? this.onToggleSelectData.bind(this, row[this.props.dataKey]) : null} />
+                                <Checkbox checked={this.isDataSelected(row[this.props.dataKey])} onChange={this.onToggleSelectData.bind(this, row[this.props.dataKey])} />
                             </td>
                         </StyledTableRow>
                     ))}
