@@ -66,7 +66,7 @@ const UserMenu: React.SFC<IUserMenuProps> = (props) => props.account ? (
                             </span>
                         )}
                     </Button>
-                    {_.map(props.account.ecosystems, ((value, key) => (
+                    {_.map(props.account.ecosystems, ((key, value) => (
                         <Button key={key} className={key} bsStyle="primary" block disabled={key === props.ecosystem} onClick={() => props.onSwitchEcosystem(key)}>
                             <span>{value || key}</span>
                             {key === props.ecosystem && (

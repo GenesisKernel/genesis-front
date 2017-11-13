@@ -18,7 +18,11 @@ import * as React from 'react';
 import imgLogo from 'images/logo.svg';
 import styled from 'styled-components';
 
+import imgBack from 'images/back.png';
+
 const StyledSplash = styled.div`
+    background: url(${imgBack}) no-repeat;
+    background-attachment: fixed;
     position: fixed;
     top: 0;
     left: 0;
