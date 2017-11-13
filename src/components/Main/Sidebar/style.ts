@@ -15,5 +15,6 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 export default {
-    collapsedSize: 46
+    collapsedSize: 46,
+    fullSize: 330
 };
