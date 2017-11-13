@@ -37,9 +37,9 @@ export const initialState: State = {
     isLoading: true,
     isConnected: null,
     isConnecting: false,
-    isCollapsed: false,
     isCreatingVDE: false,
-    createVDEResult: null
+    createVDEResult: null,
+    isCollapsed: true
 };
 
 export default (state: State = initialState, action: Action): State => {
