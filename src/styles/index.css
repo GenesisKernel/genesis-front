@@ -132,35 +132,6 @@ body {
     bottom: 0;
 }
 
-.btn-tool {
-    background: none;
-    border: 0;
-    padding: 0 8px;
-    height: 15px;
-    line-height: initial;
-    display: inline-block;
-    font-size: 15px;
-    text-decoration: none !important;
-}
-
-.btn-tool>.icon {
-    position: relative;
-    top: 2px;
-    font-size: 16px;
-    margin-right: 6px;
-}
-
-.content-wrapper>h3,
-.content-wrapper>.content-heading {
-    padding-top: 0;
-    padding-bottom: 0;
-    line-height: 45px;
-    height: 50px;
-    font-size: 20px;
-    color: #6887af;
-}
-
-
 /* Hide HTML5 input[type="number"] up/down arrows */
 
 input[type="number"]::-webkit-outer-spin-button,
