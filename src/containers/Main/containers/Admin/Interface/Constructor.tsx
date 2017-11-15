@@ -20,7 +20,6 @@ import { IRootState } from 'modules';
 import { getPage } from 'modules/admin/actions';
 
 import Constructor, { IConstructorProps } from 'components/Main/Admin/Interface/Constructor';
-import ConstructorTabs from 'components/ConstructorTabs';
 
 class ConstructorContainer extends React.Component<IConstructorProps & { getPage: typeof getPage.started, match?: { params: { pageID: string } } }> {
     componentWillMount() {
@@ -28,22 +27,8 @@ class ConstructorContainer extends React.Component<IConstructorProps & { getPage
     }
 
     render() {
-        let tabs = [];
-
-        let pageName = this.props.page ? this.props.page.name : 'New page';
-
-        tabs.push(pageName);
-        tabs.push('page 2');
-        tabs.push('page 3');
-
         return (
-            <ConstructorTabs
-                tabs={tabs}
-            >
-                <Constructor {...this.props} />
-                <div>content 2</div>
-                <div>content 3</div>
-            </ConstructorTabs>
+            <Constructor {...this.props} />
         );
     }
 }
