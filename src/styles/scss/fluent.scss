@@ -78,6 +78,21 @@ h3 + .breadcrumb, .content-heading + .breadcrumb {
     border-top: 0;
 }
 
+.breadcrumb > li + li:before {
+    content: "\e606";
+    font-family: 'simple-line-icons';
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    font-size: 10px;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding: 0 5px;
+    color: #c1c2c3;
+}
+
 .form-control {
     border-radius: 0;
 }
