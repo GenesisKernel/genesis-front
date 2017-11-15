@@ -33,13 +33,11 @@ const Tables: React.SFC<ITablesProps> = (props) => (
             <div className="content-heading">
                 <div>
                     <div className="pull-right">
-                        <Link to="/admin/tables/create" className="ml">
-                            <button className="btn btn-default">
-                                <em className="fa fa-plus-circle fa-fw mr-sm" />
-                                <span>
-                                    <FormattedMessage id="admin.tables.create" defaultMessage="Create" />
-                                </span>
-                            </button>
+                        <Link to="/admin/tables/create" className="ml btn-tool">
+                            <em className="icon icon-plus" />
+                            <span>
+                                <FormattedMessage id="admin.tables.create" defaultMessage="Create" />
+                            </span>
                         </Link>
                     </div>
                 </div>

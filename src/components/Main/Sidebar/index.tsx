@@ -25,7 +25,6 @@ const StyledSidebar = styled.div`
     background: url(${backImg}) -650px no-repeat;
     position: fixed;
     z-index: 10000;
-    width: ${sidebarStyle.fullSize}px;
     height: 1px;
     min-height: 100%;
     font-size: 0;
@@ -45,11 +44,12 @@ const StyledBottomButtons = styled.div`
 
 export interface ISidebarProps {
     collapsed: boolean;
+    navigationWidth: number;
     setCollapsed: (collapsed: boolean) => void;
 }
 
 const Sidebar: React.SFC<ISidebarProps> = (props) => (
-    <StyledSidebar className={props.collapsed ? 'collapsed' : ''}>
+    <StyledSidebar className={props.collapsed ? 'collapsed' : ''} style={{ width: props.collapsed ? sidebarStyle.collapsedSize : props.navigationWidth }}>
         <SideButton icon="menu" collapsed={props.collapsed} onClick={props.setCollapsed.bind(null, !props.collapsed)} />
         <SideButton icon="user" collapsed={props.collapsed}>Accounts</SideButton>
         <SideButton icon="bubble" collapsed={props.collapsed}>Notifications</SideButton>

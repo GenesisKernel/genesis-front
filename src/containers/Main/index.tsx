@@ -96,6 +96,8 @@ const MainContainer: React.SFC<IMainProps> = props => (
 const mapStateToProps = (state: IRootState) => ({
     pending: state.content.pending,
     stylesheet: state.content.stylesheet,
+    navigationWidth: state.content.navigationWidth,
+    navigationVisible: state.content.navigationVisible,
     transactionsCount: state.tx.transactions.count(),
     pendingTransactions: state.tx.transactions.takeLast(5)
 });

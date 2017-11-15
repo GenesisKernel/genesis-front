@@ -32,13 +32,11 @@ const Contracts: React.SFC<IContractsProps> = (props) => (
             <div className="content-heading">
                 <div>
                     <div className="pull-right">
-                        <Link to="/admin/contracts/create" className="ml">
-                            <button className="btn btn-default ml">
-                                <em className="fa fa-plus-circle fa-fw mr-sm" />
-                                <span>
-                                    <FormattedMessage id="admin.contracts.create" defaultMessage="Create contract" />
-                                </span>
-                            </button>
+                        <Link to="/admin/contracts/create" className="ml btn-tool">
+                            <em className="icon icon-plus" />
+                            <span>
+                                <FormattedMessage id="admin.contracts.create" defaultMessage="Create contract" />
+                            </span>
                         </Link>
                     </div>
                 </div>
