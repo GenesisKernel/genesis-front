@@ -44,7 +44,6 @@ class PageContainer extends React.Component<IPageContainerProps> {
     renderPage(props: IPageContainerProps) {
         if (!props.pending && (!props.page || props.page.name !== props.match.params.pageName)) {
             props.renderPage({ name: props.match.params.pageName, params: props.location.state && props.location.state.params });
-            console.log('Render::', props.match.params.pageName);
         }
     }
 
