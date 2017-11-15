@@ -20,43 +20,12 @@ import { Observable } from 'rxjs';
 import { combineEpics, Epic } from 'redux-observable';
 import swal, { SweetAlertType } from 'sweetalert2';
 import { IRootState } from 'modules';
-//import { navigate } from 'modules/engine/actions';
 import * as actions from './actions';
-
-/*export const renderPageEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(actions.renderPage.started)
-        .flatMap(action => {
-            const state = store.getState();
-            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, action.payload.name, action.payload.params))
-                .flatMap(payload => Observable.concat([
-                    actions.renderPage.done({
-                        params: action.payload,
-                        result: {
-                            menu: {
-                                name: payload.menu,
-                                content: JSON.parse(payload.menutree)
-                            },
-                            page: {
-                                name: action.payload.name,
-                                content: JSON.parse(payload.tree)
-                            }
-                        }
-                    }),
-                    navigate(`/page/${action.payload.name}`)
-                ]))
-                .catch((e: IAPIError) =>
-                    Observable.of(actions.renderPage.failed({
-                        params: action.payload,
-                        error: e.error
-                    }))
-                );
-        });*/
 
 export const renderPageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.renderPage.started)
         .flatMap(action => {
             const state = store.getState();
-            console.log('RENDER::', action.payload.name, action.payload.params);
             return Observable.fromPromise(api.contentPage(state.auth.sessionToken, action.payload.name, action.payload.params))
                 .map(payload =>
                     actions.renderPage.done({

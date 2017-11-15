@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { renderPage } from 'modules/content/actions';
+import { navigatePage } from 'modules/engine/actions';
 
 import { IProtypoElement } from 'components/Protypo/Protypo';
 import Page from 'components/Main/Page';
@@ -26,12 +26,12 @@ interface IDefaultPageContainerProps {
     session: string;
     pending: boolean;
     page: { name: string, content: IProtypoElement[] };
-    renderPage: typeof renderPage.started;
+    navigatePage: typeof navigatePage.started;
 }
 
 class DefaultPageContainer extends React.Component<IDefaultPageContainerProps> {
     componentWillMount() {
-        this.props.renderPage({
+        this.props.navigatePage({
             name: 'default_page',
             params: null
         });
@@ -52,7 +52,7 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    renderPage: renderPage.started
+    navigatePage: navigatePage.started
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DefaultPageContainer);

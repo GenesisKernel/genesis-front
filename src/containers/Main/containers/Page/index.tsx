@@ -34,9 +34,8 @@ interface IPageContainerProps {
 
 class PageContainer extends React.Component<IPageContainerProps> {
     componentWillReceiveProps(props: IPageContainerProps) {
-        if (!this.props.pending && (!this.props.page || this.props.match.params.pageName !== props.match.params.pageName)) {
-            props.renderPage({ name: props.match.params.pageName, params: props.location.state.params });
-            console.log('Redirection::', props.match.params.pageName, props.location.state);
+        if (!props.pending && (!props.page || props.page.name !== props.match.params.pageName)) {
+            props.renderPage({ name: props.match.params.pageName, params: props.location.state && props.location.state.params });
         }
     }
 
