@@ -67,13 +67,14 @@
     padding-bottom: 0;
     line-height: 45px;
     font-size: 20px;
-    height: 51px;
+    height: 46px;
     border: 0;
     color: #ffffff;
     background: #624280;
 }
 
 h3 + .breadcrumb, .content-heading + .breadcrumb {
+    margin: -20px -25px 20px -20px;
     border-top: 0;
 }
 
