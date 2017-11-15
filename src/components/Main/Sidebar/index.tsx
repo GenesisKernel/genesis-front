@@ -25,7 +25,6 @@ const StyledSidebar = styled.div`
     background: url(${backImg}) -650px no-repeat;
     position: fixed;
     z-index: 10000;
-    width: ${sidebarStyle.fullSize}px;
     height: 1px;
     min-height: 100%;
     font-size: 0;
