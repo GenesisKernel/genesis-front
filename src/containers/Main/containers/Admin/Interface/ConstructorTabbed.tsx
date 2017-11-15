@@ -22,77 +22,66 @@ import { getPage } from 'modules/admin/actions';
 // import Constructor, { IConstructorProps } from 'components/Main/Admin/Interface/Constructor';
 import Constructor from 'containers/Main/containers/Admin/Interface/Constructor';
 import ConstructorTabs from 'components/ConstructorTabs';
-
-import storage from 'lib/storage';
+import { loadTabList, removeTabList } from 'modules/admin/actions';
 
 export interface IConstructorTabbedProps {
     pageID?: string;
     pageName?: string;
     page?: any;
     tabs: any;
+    tabList: string[];
     // template: string;
     treeCode?: any;
     session: string;
+    loadTabList: typeof loadTabList;
+    removeTabList: typeof removeTabList;
 }
 
 class ConstructorTabbed extends React.Component<IConstructorTabbedProps & { getPage: typeof getPage.started, match?: { params: { pageID: string, pageName: string } } }> {
     componentWillMount() {
-        //let pageIds = [1, 2, 3];
-        //pageIds.map(item => {
-        //    alert(item);
-        //});
-
-        // this.props.getPage({ id: this.props.match.params.pageID });
-        //alert(JSON.stringify(this.props.match.params));
-
-        //alert(this.props.match.params.pageName);
-
-        this.loadTabs();
-    }
-
-    loadTabs() {
-        let constructorTabs:any = storage.settings.load("constructorTabs");
-        if(!constructorTabs) {
-            constructorTabs = [];
-        }
-        else {
-            constructorTabs = JSON.parse(constructorTabs);
-        }
-        if(constructorTabs.indexOf(this.props.match.params.pageID) === -1) {
-            constructorTabs = constructorTabs.concat(this.props.match.params.pageID);
-        }
-        storage.settings.save("constructorTabs", JSON.stringify(constructorTabs));
-
-
+        this.props.loadTabList({ add_id: this.props.match.params.pageID });
     }
 
     onTabClose(index: number) {
-        alert('close ' + index);
+        // alert('close ' + index);
+        this.props.removeTabList({ index: index });
+    }
+
+    renderTabsContent() {
+        let tabs: JSX.Element[] = [];
+        if (this.props.tabList.length) {
+            for (let tabId of this.props.tabList) {
+                tabs.push(
+                    <Constructor pageID={tabId} key={tabId}/>
+                );
+            }
+        }
+        return tabs;
     }
 
     render() {
-        let tabs = [];
+        let tabTitles = [];
 
-        //let pageName = this.props.page ? this.props.page.name : 'New page';
-        let pageID = this.props.match.params.pageID;
-        let pageName = this.props.match.params.pageName;
-
-        tabs.push(pageName + ' (ID ' + pageID + ')');
-        tabs.push('page 2');
-        tabs.push('page 3');
-
-        //alert(JSON.stringify(this.props));
-
+        if (this.props.tabList.length) {
+            for (let tabId of this.props.tabList) {
+                if (this.props.tabs && this.props.tabs[tabId]) {
+                    tabTitles.push(
+                        this.props.tabs[tabId].data.name
+                    );
+                }
+                else {
+                    tabTitles.push('ID ' + tabId);
+                }
+            }
+        }
 
         return (
             <ConstructorTabs
-                tabs={tabs}
-                onTabClose={this.onTabClose}
+                tabs={tabTitles}
+                onTabClose={this.onTabClose.bind(this)}
             >
-                <Constructor pageID={pageID}/>
-                {/*<Constructor {...this.props} />*/}
-                <Constructor pageID={'2'}/>
-                <Constructor pageID={'3'}/>
+                {/*<Constructor pageID={pageID}/>*/}
+                {this.renderTabsContent()}
             </ConstructorTabs>
         );
     }
@@ -100,12 +89,15 @@ class ConstructorTabbed extends React.Component<IConstructorTabbedProps & { getP
 
 const mapStateToProps = (state: IRootState) => ({
     // page: state.admin.page,
+    tabList: (state.admin.constructor && state.admin.constructor.tabList) || [],
     tabs: (state.admin.constructor && state.admin.constructor.tabs) || null,
     session: state.auth.sessionToken
 });
 
 const mapDispatchToProps = {
-    getPage: getPage.started
+    getPage: getPage.started,
+    loadTabList,
+    removeTabList
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConstructorTabbed);

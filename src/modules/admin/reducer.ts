@@ -18,6 +18,7 @@ import * as actions from './actions';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse } from 'lib/api';
+import storage from 'lib/storage';
 
 export type State = {
     readonly pending: boolean;
@@ -28,7 +29,7 @@ export type State = {
     readonly table: ITableResponse;
     readonly tableData: IListResponse;
     readonly page: { id: string, [key: string]: any };
-    readonly constructor: { tabs: any };
+    readonly constructor: { tabs: any, tabList: string[] };
     readonly interfaces: IInterfacesResponse;
     readonly contract: { id: string, name: string, conditions: string, address: string, value: string };
     readonly contracts: IContract[];
@@ -63,7 +64,8 @@ export const initialState: State = {
     tableData: null,
     page: null,
     constructor: {
-        tabs: null
+        tabs: null,
+        tabList: null
     },
     interfaces: null,
     contract: null,
@@ -113,6 +115,7 @@ export default (state: State = initialState, action: Action): State => {
             page: action.payload.result.page,
             menus: action.payload.result.menus,
             constructor: {
+                ...state.constructor,
                 tabs: {
                     ...state.constructor.tabs,
                     [action.payload.result.page.id]: {
@@ -470,6 +473,85 @@ export default (state: State = initialState, action: Action): State => {
                 [action.payload.name]: payload
             }
         };
+    }
+
+    if (isType(action, actions.loadTabList)) {
+        let tabList: any = storage.settings.load('constructorTabList');
+        if (!tabList) {
+            tabList = [];
+        }
+        else {
+            try {
+                tabList = JSON.parse(tabList);
+            }
+            catch (e) {
+                tabList = [];
+            }
+        }
+
+        if ('string' === typeof action.payload.add_id) {
+            if (tabList.indexOf(action.payload.add_id) === -1) {
+                tabList = tabList.concat(action.payload.add_id);
+                storage.settings.save('constructorTabList', JSON.stringify(tabList));
+            }
+        }
+
+        return {
+            ...state,
+            constructor: {
+                ...state.constructor,
+                tabList: tabList
+            }
+        };
+    }
+
+    if (isType(action, actions.addTabList)) {
+        let tabList: any = state.constructor.tabList;
+        if (!tabList) {
+            tabList = [];
+        }
+
+        if ('string' === typeof action.payload.id) {
+            if (tabList.indexOf(action.payload.id) === -1) {
+                tabList = tabList.concat(action.payload.id);
+                storage.settings.save('constructorTabList', JSON.stringify(tabList));
+            }
+        }
+
+        return {
+            ...state,
+            constructor: {
+                ...state.constructor,
+                tabList: tabList
+            }
+        };
+    }
+
+    if (isType(action, actions.removeTabList)) {
+        let tabList: any = state.constructor.tabList;
+        if (!tabList) {
+            tabList = [];
+        }
+
+        if ('number' === typeof action.payload.index) {
+            let index = action.payload.index;
+            if (index >= 0 && index < tabList.length) {
+                tabList = [
+                    ...tabList.slice(0, index),
+                    ...tabList.slice(index + 1)
+                ];
+                storage.settings.save('constructorTabList', JSON.stringify(tabList));
+            }
+        }
+
+        return {
+            ...state,
+            constructor: {
+                ...state.constructor,
+                tabList: tabList
+            }
+        };
+
     }
 
     return state;

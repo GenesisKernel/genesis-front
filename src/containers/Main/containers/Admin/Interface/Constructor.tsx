@@ -34,7 +34,6 @@ class ConstructorContainer extends React.Component<IConstructorContainerProps & 
     }
 
     render() {
-
         let page = this.props.tabs && this.props.tabs[this.props.pageID] && this.props.tabs[this.props.pageID].data || null;
 
         return (
