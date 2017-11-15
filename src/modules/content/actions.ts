@@ -19,10 +19,15 @@ import { IProtypoElement } from 'components/Protypo/Protypo';
 
 const actionCreator = actionCreatorFactory('content');
 
-export const alertShow = actionCreator<{ id: string, type: string, title: string, text: string, confirmButton?: string, cancelButton?: string }>('ALERT_SHOW');
-export const alertClose = actionCreator<{ id: string, success: string, error: string }>('ALERT_CLOSE');
+// Navigation
+export const setResizing = actionCreator<boolean>('SET_RESIZING');
+export const navigationResize = actionCreator<number>('NAVIGATION_RESIZE');
+export const navigationToggle = actionCreator('NAVIGATION_TOGGLE');
 export const menuPop = actionCreator('MENU_POP');
 export const menuPush = actionCreator<{ name: string, content: IProtypoElement[] }>('MENU_PUSH');
+
+export const alertShow = actionCreator<{ id: string, type: string, title: string, text: string, confirmButton?: string, cancelButton?: string }>('ALERT_SHOW');
+export const alertClose = actionCreator<{ id: string, success: string, error: string }>('ALERT_CLOSE');
 export const ecosystemInit = actionCreator.async<undefined, { defaultMenu: { name: string, content: IProtypoElement[] }, stylesheet: string }, string>('ECOSYSTEM_INIT');
 export const navigatePage = actionCreator.async<{ name: string, params: { [key: string]: any } }, undefined, undefined>('NAVIGATE_PAGE');
 export const renderPage = actionCreator.async<{ name: string, params?: { [key: string]: any } }, { menu: { name: string, content: IProtypoElement[] }, page: { name: string, content: IProtypoElement[], error?: string } }, string>('RENDER_PAGE');

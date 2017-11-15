@@ -27,6 +27,7 @@ interface ISidebarContainerProps {
 
 interface ISidebarContainerState {
     collapsed: boolean;
+    navigationWidth: number;
 }
 
 interface ISidebarContainerDispatch {
@@ -38,7 +39,8 @@ const SidebarContainer: React.SFC<ISidebarContainerProps & ISidebarContainerStat
 );
 
 const mapStateToProps = (state: IRootState) => ({
-    collapsed: state.engine.isCollapsed
+    collapsed: state.engine.isCollapsed,
+    navigationWidth: state.content.navigationWidth
 });
 
 const mapDispatchToProps = {

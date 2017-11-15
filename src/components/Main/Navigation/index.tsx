@@ -16,61 +16,21 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
-import imgLogo from 'images/logoInverse.svg';
+import imgLogo from 'images/logo.svg';
 import { Link } from 'react-router-dom';
 import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
-import sidebarStyle from './Sidebar/style';
+import sidebarStyle from '../Sidebar/style';
 
 import Protypo from 'containers/Widgets/Protypo';
+import ResizeHandle from 'containers/Main/Navigation/ResizeHandle';
 import { IProtypoElement } from 'components/Protypo/Protypo';
-
-export const style = {
-    contentWidth: sidebarStyle.fullSize - sidebarStyle.collapsedSize,
-    collapseTransition: '0.3s ease-in-out !important'
-};
-
-const StyledNavigation = styled.aside`
-    position: relative;
-    width: ${style.contentWidth}px !important;
-    margin-left: ${sidebarStyle.collapsedSize}px;
-    background: #fefefe !important;
-    padding-right: 2px;
-    
-    .aside-inner {
-        width: ${style.contentWidth}px !important;
-    }
-
-    .resize-handle {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: -3px;
-        text-align: center;
-        width: 10px;
-        
-        > div {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            right: 0;
-            margin: 0 3px;
-            width: 2px;
-            background: #e5e4e5;
-        }
-
-        &:hover > div {
-            width: 6px;
-            margin: 0 1px;
-        }
-    }
-`;
 
 const StyledBackButton = styled.button`
     position: relative;
     display: block;
-    width: ${style.contentWidth}px;
-    height: 45px;
-    line-height: 45px;
+    width: 100%; // Check
+    height: 42px;
+    line-height: 41px;
     padding: 0 14px;
     color: #999;
     font-size: 16px;
@@ -78,10 +38,10 @@ const StyledBackButton = styled.button`
     text-decoration: none;
     outline: none;
     border: none;
-    border-bottom: solid 1px #e5e5e5;
     text-align: left;
     background: transparent;
-
+    border-bottom: solid 1px #e5e5e5;
+    
     &:hover .back-button {
         color: #6ebcff;
     }
@@ -90,10 +50,10 @@ const StyledBackButton = styled.button`
         color: #0089ff;
         font-size: 14px;
         float: right;
-        line-height: 45px;
+        line-height: 40px;
 
         em {
-            font-size: 12px;
+            font-size: 10px;
             margin-right: 5px;
         }
 
@@ -104,14 +64,16 @@ const StyledBackButton = styled.button`
 `;
 
 const StyledLogo = styled.div`
-    background: #f5f5f5;
-    width: ${style.contentWidth}px;
+    background: #624380;
+    width: 100%; // Check
     text-align: center;
-    display: block;
+    height: 46px;
+    line-height: 45px;
 
-    > img {
-        max-height: 100%;
-        max-width: 100%;
+    img {
+        max-height: 60%;
+        max-width: 60%;
+        vertical-align: middle;
     }
 `;
 
@@ -147,14 +109,10 @@ const StyledDevButton = styled.div`
     }
 `;
 
-const ResizeHandle: React.SFC<{}> = (props) => (
-    <div className="resize-handle" onMouseMove={e => console.log(e)}>
-        <div />
-    </div>
-);
-
 export interface INavigationProps {
     preloading: boolean;
+    visible: boolean;
+    width: number;
     menus: {
         name: string;
         content: IProtypoElement[];
@@ -239,22 +197,22 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
     render() {
         const menu = this.props.menus.length && this.props.menus[this.props.menus.length - 1];
         return (
-            <StyledNavigation className="aside">
+            <aside className="aside" style={{ marginLeft: sidebarStyle.collapsedSize, width: this.props.visible ? this.props.width - sidebarStyle.collapsedSize : 0 }}>
                 <nav>
                     <StyledLogo>
                         <Link to="/">
                             <img src={imgLogo} />
                         </Link>
-                        <StyledBackButton onClick={() => this.props.menuPop()} disabled={1 >= this.props.menus.length}>
-                            {this.props.menus.length > 1 && (
-                                <span className="back-button">
-                                    <em className="icon-arrow-left" />
-                                    <span>Back</span>
-                                </span>
-                            )}
-                            <div className="backbutton-label">{menu && menu.name}</div>
-                        </StyledBackButton>
                     </StyledLogo>
+                    <StyledBackButton onClick={() => this.props.menuPop()} disabled={1 >= this.props.menus.length}>
+                        {this.props.menus.length > 1 && (
+                            <span className="back-button">
+                                <em className="icon-arrow-left" />
+                                <span>Back</span>
+                            </span>
+                        )}
+                        <div className="backbutton-label">{menu && menu.name}</div>
+                    </StyledBackButton>
                     <StyledMenuContent>
                         <Protypo
                             payload={menu && menu.content}
@@ -268,7 +226,7 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
                     </StyledDevButton>
                 </nav>
                 <ResizeHandle />
-            </StyledNavigation>
+            </aside>
         );
     }
 }

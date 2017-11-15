@@ -17,42 +17,38 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { IProtypoElement } from 'components/Protypo/Protypo';
-import { menuPop, menuPush, ecosystemInit } from 'modules/content/actions';
+import { setResizing, navigationResize, navigationToggle } from 'modules/content/actions';
 
-import Navigation from 'components/Main/Navigation';
+import ResizeHandle from 'components/Main/Navigation/ResizeHandle';
 
-interface INavigationContainerProps {
+interface IResizeHandleContainerProps {
 
 }
 
-interface INavigationContainerState {
-    preloading: boolean;
-    menus: {
-        name: string;
-        content: IProtypoElement[];
-    }[];
+interface IResizeHandleContainerState {
+    width: number;
+    resizing: boolean;
 }
 
-interface INavigationContainerDispatch {
-    menuPop: typeof menuPop;
-    menuPush: typeof menuPush;
-    ecosystemInit: typeof ecosystemInit.started;
+interface IResizeHandleContainerDispatch {
+    setResizing: typeof setResizing;
+    navigationResize: typeof navigationResize;
+    navigationToggle: typeof navigationToggle;
 }
 
-const NavigationContainer: React.SFC<INavigationContainerProps & INavigationContainerState & INavigationContainerDispatch> = (props) => (
-    <Navigation {...props} />
+const ResizeHandleContainer: React.SFC<IResizeHandleContainerProps & IResizeHandleContainerState & IResizeHandleContainerDispatch> = (props) => (
+    <ResizeHandle {...props} />
 );
 
 const mapStateToProps = (state: IRootState) => ({
-    preloading: state.content.preloading,
-    menus: state.content.menus
+    width: state.content.navigationWidth,
+    resizing: state.content.navigationResizing
 });
 
 const mapDispatchToProps = {
-    menuPop,
-    menuPush,
-    ecosystemInit: ecosystemInit.started
+    setResizing,
+    navigationResize,
+    navigationToggle
 };
 
-export default connect<INavigationContainerState, INavigationContainerDispatch, INavigationContainerProps>(mapStateToProps, mapDispatchToProps)(NavigationContainer);
+export default connect<IResizeHandleContainerState, IResizeHandleContainerDispatch, IResizeHandleContainerProps>(mapStateToProps, mapDispatchToProps)(ResizeHandleContainer);

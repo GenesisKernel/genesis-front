@@ -25,7 +25,6 @@ const StyledButton = styled.button`
     margin: 0;
     font-size: 17px;
     outline: none;
-    max-width: ${sidebarStyle.fullSize}px;
     width: 100%;
     height: ${sidebarStyle.collapsedSize}px;
     line-height: ${sidebarStyle.collapsedSize}px;
@@ -85,7 +84,7 @@ export interface ISideButtonProps {
 
 const SideButton: React.SFC<ISideButtonProps> = (props) => (
     <div>
-        <StyledButton className={props.collapsed ? 'collapsed' : null} onClick={props.onClick}>
+        <StyledButton className={props.collapsed ? 'collapsed' : null} onClick={props.onClick} style={{ maxWidth: props.collapsed ? sidebarStyle.collapsedSize : '100%' }}>
             <div>
                 <em className={`icon-${props.icon}`} />
                 <div className="label">{props.children}</div>

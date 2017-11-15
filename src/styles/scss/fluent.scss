@@ -1,3 +1,13 @@
+.layout-fixed .wrapper > .aside {
+    background: #fefefe !important;
+    padding-right: 1px;
+    transition: none;
+    
+    > nav {
+        overflow: hidden;
+    }
+}
+
 .panel {
     border-radius: 0;
     box-shadow: none;
@@ -37,6 +47,11 @@
     display: inline-block;
     font-size: 15px;
     text-decoration: none !important;
+    color: #fff;
+
+    &:hover {
+        color: #79bfff;
+    }
 }
 
 .btn-tool>.icon {
@@ -51,9 +66,15 @@
     padding-top: 0;
     padding-bottom: 0;
     line-height: 45px;
-    height: 50px;
     font-size: 20px;
-    color: #6887af;
+    height: 51px;
+    border: 0;
+    color: #ffffff;
+    background: #624280;
+}
+
+h3 + .breadcrumb, .content-heading + .breadcrumb {
+    border-top: 0;
 }
 
 .form-control {
