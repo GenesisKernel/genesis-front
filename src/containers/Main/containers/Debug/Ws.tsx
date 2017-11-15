@@ -25,7 +25,9 @@ const BackupContainer: React.SFC<IWsProps> = (props) => (
 );
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken
+    socketToken: state.auth.socketToken,
+    userID: state.auth.account.id,
+    timestamp: state.auth.timestamp
 });
 
 const mapDispatchToProps = {

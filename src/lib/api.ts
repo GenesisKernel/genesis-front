@@ -67,6 +67,8 @@ export interface IGetUidResponse extends IResponse {
 export interface ILoginResponse extends IResponse {
     token: string;
     refresh: string;
+    notify_key: string;
+    timestamp: string;
     key_id: string;
     ecosystem_id: string;
     address: string;

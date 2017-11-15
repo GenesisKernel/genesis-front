@@ -15,11 +15,14 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import * as SockJS from 'sockjs-client';
 import * as Centrifuge from 'centrifuge';
 import { OrderedSet, OrderedMap } from 'immutable';
 
 export interface IWsProps {
-    session: string;
+    socketToken: string;
+    userID: string;
+    timestamp: string;
 }
 
 interface IWsState {
@@ -39,8 +42,8 @@ class Ws extends React.Component<IWsProps, IWsState> {
             messages: OrderedSet(),
             subscriptions: OrderedMap(),
             channel: '',
-            user: '',
-            token: ''
+            user: props.userID,
+            token: props.socketToken
         };
     }
 
@@ -77,24 +80,34 @@ class Ws extends React.Component<IWsProps, IWsState> {
 
     onConnect() {
         const centrifuge = new Centrifuge({
-            url: 'https://centrifugo.apla.io:8000',
+            //url: 'https://centrifugo.apla.io:8000/connection',
+            url: 'http://127.0.0.1:8000/connection',
             user: this.state.user,
-            timestamp: Math.round(Date.now() / 1000).toString(),
-            token: this.state.token
+            timestamp: this.props.timestamp,
+            token: this.state.token,
+
+            //user: '-1219938594668552577',
+            //timestamp: '1510669367',
+            //token: '6a7bb28fc1a7f6b10be545b6c7abe78df2c9b4e12fd0d49b922af4c1546465f2',
+
+            sockJS: SockJS
         });
 
         centrifuge.on('connect', (context: any) => {
             this.setState({
                 centrifuge
             });
+            console.log('CONNECTED');
             this.onReceive('SYSTEM', 'Connected');
         });
 
         centrifuge.on('disconnect', (context: any) => {
+            console.log('DISCONNECTED');
             this.onReceive('SYSTEM', 'Disconnected or unable to authorize');
         });
 
         centrifuge.on('error', (error: any) => {
+            console.log('ERROR', error);
             this.onReceive('ERROR', error);
         });
 

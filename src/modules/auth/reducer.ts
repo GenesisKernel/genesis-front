@@ -27,7 +27,9 @@ export type State = {
     readonly wallet: string;
     readonly sessionToken: string;
     readonly refreshToken: string;
+    readonly socketToken: string;
     readonly sessionExpiry: Date;
+    readonly timestamp: string;
     readonly createdAccount: {
         id: string;
         address: string;
@@ -47,6 +49,8 @@ export const initialState: State = {
     wallet: null,
     sessionToken: null,
     refreshToken: null,
+    socketToken: null,
+    timestamp: null,
     sessionExpiry: null,
     createdAccount: null,
     account: null,
@@ -62,7 +66,9 @@ export default (state: State = initialState, action: Action): State => {
             isLoggingIn: true,
             account: null,
             sessionToken: null,
-            refreshToken: null
+            refreshToken: null,
+            socketToken: null,
+            timestamp: null
         };
     }
     else if (isType(action, actions.login.done)) {
@@ -75,7 +81,9 @@ export default (state: State = initialState, action: Action): State => {
             sessionToken: action.payload.result.token,
             refreshToken: action.payload.result.refresh,
             privateKey: action.payload.result.privateKey,
-            sessionExpiry: action.payload.result.expiry
+            sessionExpiry: action.payload.result.expiry,
+            socketToken: action.payload.result.notify_key,
+            timestamp: action.payload.result.timestamp
         };
     }
     else if (isType(action, actions.login.failed)) {
