@@ -28,6 +28,7 @@ export type State = {
     readonly table: ITableResponse;
     readonly tableData: IListResponse;
     readonly page: { id: string, [key: string]: any };
+    readonly constructor: { tabs: any };
     readonly interfaces: IInterfacesResponse;
     readonly contract: { id: string, name: string, conditions: string, address: string, value: string };
     readonly contracts: IContract[];
@@ -61,6 +62,9 @@ export const initialState: State = {
     table: null,
     tableData: null,
     page: null,
+    constructor: {
+        tabs: null
+    },
     interfaces: null,
     contract: null,
     contracts: null,
@@ -107,7 +111,16 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             pending: false,
             page: action.payload.result.page,
-            menus: action.payload.result.menus
+            menus: action.payload.result.menus,
+            constructor: {
+                tabs: {
+                    ...state.constructor.tabs,
+                    [action.payload.result.page.id]: {
+                        type: 'page',
+                        data: action.payload.result.page
+                    }
+                }
+            }
         };
     }
     else if (isType(action, actions.getPage.failed)) {

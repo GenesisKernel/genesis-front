@@ -23,8 +23,10 @@ import DocumentTitle from 'components/DocumentTitle';
 import ConstructorEditor from './ConstructorEditor';
 
 export interface IConstructorProps {
+    pageID?: string;
     page: { id: string, name: string, value: string };
     // template: string;
+    tabs?: any;
     treeCode?: any;
     session: string;
 }

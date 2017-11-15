@@ -349,7 +349,6 @@ class ConstructorEditor extends React.Component<IConstructorEditorProps> {
                     </div>
 
                     <DivGrid>
-                        {/*{props.template}*/}
                         {/*{JSON.stringify(props.treeCode)}*/}
                         <Protypo
                             payload={this.props.treeCode}
