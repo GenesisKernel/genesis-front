@@ -89,7 +89,7 @@ const Select: React.SFC<ISelectProps> = (props, context: ISelectContext) => {
             className={[props.class, props.className].join(' ')}
             name={props.name}
             validators={compiledValidators}
-            defaultValue={props.value}
+            defaultValue={props.value || (options && options.length && options[0].value)}
         >
             {options.map((l, index) => (
                 <option key={index} value={l.value}>
