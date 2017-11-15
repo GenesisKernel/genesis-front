@@ -28,6 +28,7 @@ interface IResizeHandleContainerProps {
 interface IResizeHandleContainerState {
     width: number;
     resizing: boolean;
+    disabled: boolean;
 }
 
 interface IResizeHandleContainerDispatch {
@@ -42,7 +43,8 @@ const ResizeHandleContainer: React.SFC<IResizeHandleContainerProps & IResizeHand
 
 const mapStateToProps = (state: IRootState) => ({
     width: state.content.navigationWidth,
-    resizing: state.content.navigationResizing
+    resizing: state.content.navigationResizing,
+    disabled: !state.engine.isCollapsed
 });
 
 const mapDispatchToProps = {
