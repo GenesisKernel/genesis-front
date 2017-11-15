@@ -18,7 +18,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { navigate } from 'modules/engine/actions';
-import { renderPage, menuPush } from 'modules/content/actions';
+import { menuPush } from 'modules/content/actions';
+import { navigatePage } from 'modules/engine/actions';
 
 import Protypo from 'components/Protypo';
 import { IProtypoElement } from 'components/Protypo/Protypo';
@@ -33,7 +34,7 @@ interface IProtypoContainerState {
 }
 
 interface IProtypoContainerDispatch {
-    navigatePage: typeof renderPage.started;
+    navigatePage: typeof navigatePage.started;
     navigate: typeof navigate;
     menuPush: typeof menuPush;
 }
@@ -47,7 +48,7 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    navigatePage: renderPage.started,
+    navigatePage: navigatePage.started,
     navigate,
     menuPush
 };

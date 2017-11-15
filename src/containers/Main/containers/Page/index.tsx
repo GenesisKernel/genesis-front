@@ -26,13 +26,17 @@ interface IPageContainerProps {
     pending: boolean;
     page: { name: string, content: IProtypoElement[] };
     match?: { params: { pageName: string } };
+    location?: {
+        state: { params?: { [key: string]: any } };
+    };
     renderPage: typeof renderPage.started;
 }
 
 class PageContainer extends React.Component<IPageContainerProps> {
-    componentDidMount() {
-        if (!this.props.pending && !this.props.page) {
-            this.props.renderPage({ name: this.props.match.params.pageName });
+    componentWillReceiveProps(props: IPageContainerProps) {
+        if (!this.props.pending && (!this.props.page || this.props.match.params.pageName !== props.match.params.pageName)) {
+            props.renderPage({ name: props.match.params.pageName, params: props.location.state.params });
+            console.log('Redirection::', props.match.params.pageName, props.location.state);
         }
     }
 

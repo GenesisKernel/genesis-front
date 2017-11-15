@@ -19,6 +19,7 @@ import { Button, Col } from 'react-bootstrap';
 import api from 'lib/api';
 import { contractExec } from 'modules/tx/actions';
 import styled from 'styled-components';
+import { history } from 'store';
 
 import Editor from 'components/Editor';
 import DocumentTitle from 'components/DocumentTitle';
@@ -97,6 +98,10 @@ export default class extends React.Component<IDebugProps, IDebugState> {
         });
     }
 
+    onPush() {
+        history.push('/page/first', { hello: 1488 });
+    }
+
     render() {
         return (
             <DocumentTitle title="Debug page">
@@ -130,6 +135,7 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                     </Validation.components.ValidatedForm>
                     <hr />
                     <Button bsStyle="primary" className="btn-block" onClick={this.onSubmit.bind(this)}>Request template</Button>
+                    <Button bsStyle="primary" className="btn-block" onClick={this.onPush.bind(this)}>Push</Button>
                     <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT">Execute contract</TxButton>
                     <TxButton
                         className="btn btn-info btn-block"

@@ -20,6 +20,7 @@ import { IInstallParams } from 'lib/api';
 
 const actionCreator = actionCreatorFactory('engine');
 export const navigate = (url: string) => push(url);
+export const navigatePage = actionCreator.async<{ name: string, params: { [key: string]: any } }, undefined, undefined>('NAVIGATE_PAGE');
 export const checkOnline = actionCreator.async<undefined, boolean, string>('CHECK_ONLINE');
 export const install = actionCreator.async<IInstallParams, { uid: string, session: string }, string>('INSTALL');
 export const setLoading = actionCreator<boolean>('SET_LOADING');

@@ -24,7 +24,7 @@ import PageEditor from './PageEditor';
 export interface IEditPageProps {
     page: { id: string, name: string, menu: string, conditions: string, value: string };
     menus: { id: string, name: string, conditions: string, value: string }[];
-    renderPage: (params: { name: string, params?: any }) => void;
+    navigatePage: (params: { name: string, params?: any }) => void;
 }
 
 interface IEditPageState {
@@ -81,7 +81,7 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
 
     onPreview(e: React.MouseEvent<HTMLAnchorElement>) {
         e.preventDefault();
-        this.props.renderPage({ name: this.props.page.name });
+        this.props.navigatePage({ name: this.props.page.name });
         return false;
     }
 

@@ -32,7 +32,8 @@ interface IDefaultPageContainerProps {
 class DefaultPageContainer extends React.Component<IDefaultPageContainerProps> {
     componentWillMount() {
         this.props.renderPage({
-            name: 'default_page'
+            name: 'default_page',
+            params: null
         });
     }
 
