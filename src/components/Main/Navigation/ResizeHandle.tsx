@@ -16,10 +16,12 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
+import * as classNames from 'classnames';
 
 interface IResizeHandleProps {
     width: number;
     resizing: boolean;
+    disabled: boolean;
     setResizing: (resizing: boolean) => void;
     navigationResize: (width: number) => void;
     navigationToggle: () => void;
@@ -38,6 +40,10 @@ const StyledResizeHandle = styled.button`
     padding: 0;
     margin: 0;
     cursor: col-resize;
+
+    &.disabled {
+        cursor: default;
+    }
     
     > div {
         position: absolute;
@@ -78,34 +84,39 @@ class ResizeHandle extends React.Component<IResizeHandleProps> {
     }
 
     onMouseMove(e: MouseEvent) {
-        if (this.props.resizing && e.clientX !== this.props.width) {
+        if (!this.props.disabled && this.props.resizing && e.clientX !== this.props.width) {
             this.props.navigationResize(e.clientX);
             this._clickThresholdValue++;
         }
     }
 
     onMouseDown(e: React.MouseEvent<HTMLButtonElement>) {
-        if (!this.props.resizing) {
+        if (!this.props.disabled && !this.props.resizing && 0 === e.button) {
             this.props.setResizing(true);
             this._clickThresholdValue = 0;
         }
     }
 
     onMouseUp(e: MouseEvent) {
-        if (this.props.resizing) {
+        if (!this.props.disabled && this.props.resizing && 0 === e.button) {
             this.props.setResizing(false);
         }
     }
 
     onClick() {
-        if (this._clickThresholdValue < this._clickThreshold) {
+        if (!this.props.disabled && this._clickThresholdValue < this._clickThreshold) {
             this.props.navigationToggle();
         }
     }
 
     render() {
+        const classes = classNames({
+            disabled: this.props.disabled,
+            active: this.props.resizing
+        });
+
         return (
-            <StyledResizeHandle onClick={this.onClick.bind(this)} onMouseDown={e => this.onMouseDown(e)} className={this.props.resizing ? 'active' : null}>
+            <StyledResizeHandle onClick={this.onClick.bind(this)} onMouseDown={e => this.onMouseDown(e)} className={classes}>
                 <div>
                     <div />
                 </div>

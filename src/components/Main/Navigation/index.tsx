@@ -28,11 +28,11 @@ import { IProtypoElement } from 'components/Protypo/Protypo';
 const StyledBackButton = styled.button`
     position: relative;
     display: block;
-    width: 100%; // Check
+    width: 100%;
     height: 42px;
     line-height: 41px;
     padding: 0 14px;
-    color: #999;
+    color: #585858;
     font-size: 16px;
     font-weight: 200;
     text-decoration: none;
@@ -65,7 +65,7 @@ const StyledBackButton = styled.button`
 
 const StyledLogo = styled.div`
     background: #624380;
-    width: 100%; // Check
+    width: 100%;
     text-align: center;
     height: 46px;
     line-height: 45px;
