@@ -18,7 +18,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getPage } from 'modules/admin/actions';
-import { navigatePage } from 'modules/engine/actions';
+import { navigatePage } from 'modules/content/actions';
 
 import EditPage, { IEditPageProps } from 'components/Main/Admin/Interface/EditPage';
 

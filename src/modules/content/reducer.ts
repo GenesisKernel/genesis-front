@@ -38,6 +38,13 @@ export const initialState: State = {
 };
 
 export default (state: State = initialState, action: Action): State => {
+    if (isType(action, actions.navigatePage.started)) {
+        return {
+            ...state,
+            page: null
+        };
+    }
+
     if (isType(action, actions.renderPage.started)) {
         return {
             ...state,

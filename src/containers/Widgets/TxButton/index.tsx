@@ -20,8 +20,7 @@ import { Map } from 'immutable';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { contractExec } from 'modules/tx/actions';
-import { navigatePage } from 'modules/engine/actions';
-import { alertShow } from 'modules/content/actions';
+import { alertShow, navigatePage } from 'modules/content/actions';
 
 import TxButton, { ITxButtonConfirm } from 'components/TxButton';
 

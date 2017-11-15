@@ -33,9 +33,18 @@ interface IPageContainerProps {
 }
 
 class PageContainer extends React.Component<IPageContainerProps> {
+    componentDidMount() {
+        this.renderPage(this.props);
+    }
+
     componentWillReceiveProps(props: IPageContainerProps) {
+        this.renderPage(props);
+    }
+
+    renderPage(props: IPageContainerProps) {
         if (!props.pending && (!props.page || props.page.name !== props.match.params.pageName)) {
             props.renderPage({ name: props.match.params.pageName, params: props.location.state && props.location.state.params });
+            console.log('Render::', props.match.params.pageName);
         }
     }
 

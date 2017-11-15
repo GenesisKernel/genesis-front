@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { navigatePage } from 'modules/engine/actions';
+import { navigatePage } from 'modules/content/actions';
 
 import { IProtypoElement } from 'components/Protypo/Protypo';
 import Page from 'components/Main/Page';

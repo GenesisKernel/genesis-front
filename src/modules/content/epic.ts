@@ -21,6 +21,17 @@ import { combineEpics, Epic } from 'redux-observable';
 import swal, { SweetAlertType } from 'sweetalert2';
 import { IRootState } from 'modules';
 import * as actions from './actions';
+import { history } from 'store';
+
+export const navigatePageEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.navigatePage.started)
+        .map(action => {
+            history.push(`/page/${action.payload.name}`, { params: action.payload.params });
+            return actions.navigatePage.done({
+                params: action.payload,
+                result: null
+            });
+        });
 
 export const renderPageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.renderPage.started)
@@ -131,5 +142,6 @@ export default combineEpics(
     renderPageEpic,
     menuInitEpic,
     resetEpic,
-    alertEpic
+    alertEpic,
+    navigatePageEpic
 );

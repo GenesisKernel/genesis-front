@@ -16,12 +16,9 @@
 
 import api, { IAPIError } from 'lib/api';
 import { Action } from 'redux';
-import { Epic } from 'redux-observable';
 import { Observable } from 'rxjs';
 import { combineEpics } from 'redux-observable';
-import { IRootState } from 'modules';
 import * as actions from './actions';
-import { history } from 'store';
 
 export const checkOnlineEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.checkOnline.started.match)
@@ -61,14 +58,4 @@ export const installEpic = (actions$: Observable<Action>) =>
             }).delay(600);
         });
 
-export const navigatePageEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(actions.navigatePage.started)
-        .map(action => {
-            history.push(`/page/${action.payload.name}`, { params: action.payload.params });
-            return actions.navigatePage.done({
-                params: action.payload,
-                result: null
-            });
-        });
-
-export default combineEpics(checkOnlineEpic, installEpic, navigatePageEpic);
+export default combineEpics(checkOnlineEpic, installEpic);
