@@ -133,6 +133,8 @@ const mapStateToProps = (state: IRootState) => ({
     pending: state.content.pending,
     isEcosystemOwner: state.auth.isEcosystemOwner,
     stylesheet: state.content.stylesheet,
+    navigationWidth: state.content.navigationWidth,
+    navigationVisible: state.content.navigationVisible,
     transactionsCount: state.tx.transactions.count(),
     pendingTransactions: state.tx.transactions.takeLast(5)
 });

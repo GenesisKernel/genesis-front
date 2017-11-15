@@ -29,7 +29,7 @@ const StyledWrapper = styled.div`
 
 const StyledContent = styled.section`
     margin-top: 0 !important;
-    margin-left: ${sidebarStyle.fullSize}px !important;
+    transition: none !important;
 `;
 
 export interface IMainProps {
@@ -37,6 +37,8 @@ export interface IMainProps {
     isEcosystemOwner: boolean;
     pending: boolean;
     stylesheet: string;
+    navigationWidth: number;
+    navigationVisible: boolean;
     pendingTransactions: OrderedMap<string, { uuid: string, block: string, error: string, contract: string }>;
     transactionsCount: number;
 }
@@ -48,7 +50,7 @@ const Main: React.SFC<IMainProps> = props => (
         </style>
         <Sidebar />
         <Navigation />
-        <StyledContent>
+        <StyledContent style={{ marginLeft: props.navigationVisible ? props.navigationWidth : sidebarStyle.collapsedSize }}>
             <ReduxToastr
                 timeOut={3000}
                 newestOnTop

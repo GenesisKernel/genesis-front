@@ -23,6 +23,9 @@ export type State = {
     readonly pending: boolean;
     readonly preloading: boolean;
     readonly stylesheet: string;
+    readonly navigationWidth: number;
+    readonly navigationResizing: boolean;
+    readonly navigationVisible: boolean;
     readonly menus: { name: string, vde: boolean, content: IProtypoElement[] }[];
     readonly page: { name: string, content: IProtypoElement[], error?: string };
     readonly notifications: IProtypoElement[];
@@ -34,6 +37,9 @@ export const initialState: State = {
     pending: false,
     preloading: false,
     stylesheet: null,
+    navigationWidth: 350,
+    navigationResizing: false,
+    navigationVisible: true,
     menus: [],
     page: null,
     notifications: null,
@@ -42,6 +48,41 @@ export const initialState: State = {
 };
 
 export default (state: State = initialState, action: Action): State => {
+    if (isType(action, actions.setResizing)) {
+        return {
+            ...state,
+            navigationResizing: action.payload
+        };
+    }
+
+    if (isType(action, actions.navigationResize)) {
+        // Hardcoded min/max values
+        if (action.payload < 200) {
+            return {
+                ...state,
+                navigationWidth: 200
+            };
+        }
+        else if (action.payload > 800) {
+            return {
+                ...state,
+                navigationWidth: 800
+            };
+        }
+
+        return {
+            ...state,
+            navigationWidth: action.payload
+        };
+    }
+
+    if (isType(action, actions.navigationToggle)) {
+        return {
+            ...state,
+            navigationVisible: !state.navigationVisible
+        };
+    }
+
     if (isType(action, actions.navigatePage.started)) {
         return {
             ...state,
