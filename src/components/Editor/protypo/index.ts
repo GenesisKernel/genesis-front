@@ -49,6 +49,38 @@ const register = (editor: typeof monaco) => {
                 }
             ]
         },
+        AddToolButton: {
+            label: 'AddToolButton',
+            documentation: 'Add a tool button to the page header',
+            kind: monaco.languages.CompletionItemKind.Function,
+            insertText: 'AddToolButton(',
+            params: [
+                {
+                    label: 'Title',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Button title to show',
+                    insertText: 'Title:'
+                },
+                {
+                    label: 'Icon',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Optional icon to show near the button',
+                    insertText: 'Icon: '
+                },
+                {
+                    label: 'Page',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Page that will be loaded on click',
+                    insertText: 'Page: '
+                },
+                {
+                    label: 'PageParams',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Parameters which will be passed to the page upon redirection',
+                    insertText: 'Params: '
+                }
+            ]
+        },
         And: {
             label: 'And',
             documentation: 'Logical "And" operator. All parameters must be truthy',
@@ -478,6 +510,20 @@ const register = (editor: typeof monaco) => {
                     kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Variable name to set the value of',
                     insertText: 'Value: '
+                }
+            ]
+        },
+        SetTitle: {
+            label: 'SetTitle',
+            documentation: 'Set text shown in the page header',
+            kind: monaco.languages.CompletionItemKind.Function,
+            insertText: 'SetTitle(',
+            params: [
+                {
+                    label: 'Title',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Text to show in the header',
+                    insertText: 'Title: '
                 }
             ]
         },
