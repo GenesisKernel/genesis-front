@@ -20,6 +20,7 @@ import { Button, Col, Panel, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
 import DocumentTitle from 'components/DocumentTitle';
+import Heading from 'components/Heading';
 
 export interface ILanguagesProps {
     resources: {
@@ -32,69 +33,69 @@ export interface ILanguagesProps {
 
 const Languages: React.SFC<ILanguagesProps> = (props) => (
     <DocumentTitle title="admin.languages" defaultTitle="Language resources">
-        <div className="content-wrapper">
-            <div className="content-heading">
-                <div>
-                    <div className="pull-right">
-                        <Link to="/admin/languages/create" className="ml">
-                            <button className="btn btn-default ml">
-                                <em className="fa fa-plus-circle fa-fw mr-sm" />
-                                <span>
-                                    <FormattedMessage id="admin.languages.create" defaultMessage="Create localization" />
-                                </span>
-                            </button>
-                        </Link>
-                    </div>
-                </div>
+        <div>
+            <Heading>
                 <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
+                <div className="pull-right">
+                    <Link to="/admin/languages/create" className="ml">
+                        <button className="btn btn-default ml">
+                            <em className="fa fa-plus-circle fa-fw mr-sm" />
+                            <span>
+                                <FormattedMessage id="admin.languages.create" defaultMessage="Create localization" />
+                            </span>
+                        </button>
+                    </Link>
+                </div>
+            </Heading>
+            <div className="content-wrapper">
+                <ol className="breadcrumb">
+                    <li>
+                        <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
+                    </li>
+                </ol>
+                <Row>
+                    <Col md={12}>
+                        <Panel bsStyle="default">
+                            <table className="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th className="text-center">
+                                            <FormattedMessage id="admin.languages.name" defaultMessage="Name" />
+                                        </th>
+                                        <th className="text-center">
+                                            <FormattedMessage id="admin.languages.resources" defaultMessage="Resources" />
+                                        </th>
+                                        <th className="text-center">
+                                            <FormattedMessage id="admin.languages.edit" defaultMessage="Edit" />
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {props.resources && props.resources.length && (
+                                        props.resources.sort((a, b) => a.name > b.name ? 1 : 0).map(res => (
+                                            <tr key={res.id}>
+                                                <td>{res.id}</td>
+                                                <td>{res.name}</td>
+                                                <td>{res.res}</td>
+                                                <td style={{ width: 1 }}>
+                                                    <Link to={`/admin/languages/${res.id}-${res.name}`}>
+                                                        <Button bsStyle="default" className="btn-labeled btn-icon">
+                                                            <span className="btn-label">
+                                                                <em className="fa fa-edit" />
+                                                            </span>
+                                                        </Button>
+                                                    </Link>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
+                        </Panel>
+                    </Col>
+                </Row>
             </div>
-            <ol className="breadcrumb">
-                <li>
-                    <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
-                </li>
-            </ol>
-            <Row>
-                <Col md={12}>
-                    <Panel bsStyle="default">
-                        <table className="table table-striped table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th className="text-center">
-                                        <FormattedMessage id="admin.languages.name" defaultMessage="Name" />
-                                    </th>
-                                    <th className="text-center">
-                                        <FormattedMessage id="admin.languages.resources" defaultMessage="Resources" />
-                                    </th>
-                                    <th className="text-center">
-                                        <FormattedMessage id="admin.languages.edit" defaultMessage="Edit" />
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {props.resources && props.resources.length && (
-                                    props.resources.sort((a, b) => a.name > b.name ? 1 : 0).map(res => (
-                                        <tr key={res.id}>
-                                            <td>{res.id}</td>
-                                            <td>{res.name}</td>
-                                            <td>{res.res}</td>
-                                            <td style={{ width: 1 }}>
-                                                <Link to={`/admin/languages/${res.id}-${res.name}`}>
-                                                    <Button bsStyle="default" className="btn-labeled btn-icon">
-                                                        <span className="btn-label">
-                                                            <em className="fa fa-edit" />
-                                                        </span>
-                                                    </Button>
-                                                </Link>
-                                            </td>
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
-                    </Panel>
-                </Col>
-            </Row>
         </div>
     </DocumentTitle>
 );

@@ -19,6 +19,7 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 
 import DocumentTitle from 'components/DocumentTitle';
+import Heading from 'components/Heading';
 import LocaleEditor from './LocaleEditor';
 
 export interface IEditProps {
@@ -123,29 +124,31 @@ class Edit extends React.Component<IEditProps, IEditState> {
     render() {
         return (
             <DocumentTitle title={this.props.translation && this.props.translation.name}>
-                <div className="content-wrapper">
-                    <div className="content-heading">
+                <div>
+                    <Heading>
                         <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
+                    </Heading>
+                    <div className="content-wrapper">
+                        <ol className="breadcrumb">
+                            <li>
+                                <Link to="/admin/languages">
+                                    <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
+                                </Link>
+                            </li>
+                            <li>
+                                {this.props.translation && this.props.translation.name}
+                            </li>
+                        </ol>
+                        <LocaleEditor
+                            contractName="@1EditLang"
+                            translation={this.props.translation && this.props.translation.name}
+                            translations={this.state.translations}
+                            onNewLocale={this.onNewLocale.bind(this)}
+                            onTranslationUpdate={this.onTranslationUpdate.bind(this)}
+                            resolveTranslationValue={this.resolveTranslationValue.bind(this)}
+                            mapContractParams={this.mapContractParams.bind(this)}
+                        />
                     </div>
-                    <ol className="breadcrumb">
-                        <li>
-                            <Link to="/admin/languages">
-                                <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
-                            </Link>
-                        </li>
-                        <li>
-                            {this.props.translation && this.props.translation.name}
-                        </li>
-                    </ol>
-                    <LocaleEditor
-                        contractName="@1EditLang"
-                        translation={this.props.translation && this.props.translation.name}
-                        translations={this.state.translations}
-                        onNewLocale={this.onNewLocale.bind(this)}
-                        onTranslationUpdate={this.onTranslationUpdate.bind(this)}
-                        resolveTranslationValue={this.resolveTranslationValue.bind(this)}
-                        mapContractParams={this.mapContractParams.bind(this)}
-                    />
                 </div>
             </DocumentTitle>
         );

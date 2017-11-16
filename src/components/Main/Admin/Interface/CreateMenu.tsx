@@ -19,6 +19,7 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 
 import DocumentTitle from 'components/DocumentTitle';
+import Heading from 'components/Heading';
 import MenuEditor from './MenuEditor';
 
 export interface ICreateMenuProps {
@@ -66,30 +67,32 @@ class CreateMenu extends React.Component<ICreateMenuProps, ICreateMenuState> {
     render() {
         return (
             <DocumentTitle title="admin.interface.menu.create" defaultTitle="Create menu">
-                <div className="content-wrapper">
-                    <div className="content-heading">
+                <div>
+                    <Heading>
                         <FormattedMessage id="admin.interface" defaultMessage="Interface" />
-                    </div>
-                    <ol className="breadcrumb">
-                        <li>
-                            <Link to="/admin/interface">
-                                <FormattedMessage id="admin.interface" defaultMessage="Interface" />
-                            </Link>
-                        </li>
-                        <li>
-                            <FormattedMessage id="admin.interface.menu.create" defaultMessage="Create menu" />
-                        </li>
-                    </ol>
-                    <MenuEditor
-                        contractName="@1NewMenu"
-                        mapContractParams={this.mapContractParams.bind(this)}
+                    </Heading>
+                    <div className="content-wrapper">
+                        <ol className="breadcrumb">
+                            <li>
+                                <Link to="/admin/interface">
+                                    <FormattedMessage id="admin.interface" defaultMessage="Interface" />
+                                </Link>
+                            </li>
+                            <li>
+                                <FormattedMessage id="admin.interface.menu.create" defaultMessage="Create menu" />
+                            </li>
+                        </ol>
+                        <MenuEditor
+                            contractName="@1NewMenu"
+                            mapContractParams={this.mapContractParams.bind(this)}
 
-                        template={this.state.template}
-                        conditions={this.state.conditions}
-                        onSourceEdit={this.onSourceEdit.bind(this)}
-                        onConditionsEdit={this.onConditionsEdit.bind(this)}
-                        onExec={this.onExec.bind(this)}
-                    />
+                            template={this.state.template}
+                            conditions={this.state.conditions}
+                            onSourceEdit={this.onSourceEdit.bind(this)}
+                            onConditionsEdit={this.onConditionsEdit.bind(this)}
+                            onExec={this.onExec.bind(this)}
+                        />
+                    </div>
                 </div>
             </DocumentTitle>
         );

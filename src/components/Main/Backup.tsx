@@ -24,6 +24,7 @@ import { alertShow } from 'modules/content/actions';
 import * as CopyToClipboard from 'react-copy-to-clipboard';
 
 import DocumentTitle from 'components/DocumentTitle';
+import Heading from 'components/Heading';
 import Validation from 'components/Validation';
 
 export interface IBackupProps extends InjectedIntlProps {
@@ -168,13 +169,15 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
     render() {
         return (
             <DocumentTitle title="general.account.backup" defaultTitle="Backup account">
-                <div className="content-wrapper">
-                    <div className="content-heading">
+                <div>
+                    <Heading>
                         <FormattedMessage id="general.backup" defaultMessage="Backup" />
+                    </Heading>
+                    <div className="content-wrapper">
+                        <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit.bind(this)}>
+                            {this.state.privateKey ? this.renderSecond() : this.renderFirst()}
+                        </Validation.components.ValidatedForm>
                     </div>
-                    <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit.bind(this)}>
-                        {this.state.privateKey ? this.renderSecond() : this.renderFirst()}
-                    </Validation.components.ValidatedForm>
                 </div>
             </DocumentTitle>
         );

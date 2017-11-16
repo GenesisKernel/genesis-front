@@ -17,7 +17,7 @@
 import * as React from 'react';
 import * as propTypes from 'prop-types';
 
-import Protypo from './';
+import Protypo from '../';
 import StyledComponent from './StyledComponent';
 
 export interface ITableProps {

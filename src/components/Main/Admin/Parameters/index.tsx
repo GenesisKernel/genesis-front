@@ -21,6 +21,7 @@ import { Link } from 'react-router-dom';
 import { IParameterResponse } from 'lib/api';
 
 import DocumentTitle from 'components/DocumentTitle';
+import Heading from 'components/Heading';
 
 export interface IParametersProps {
     parameters: IParameterResponse[];
@@ -28,83 +29,83 @@ export interface IParametersProps {
 
 const Parameters: React.SFC<IParametersProps> = (props) => (
     <DocumentTitle title="admin.parameters" defaultTitle="Ecosystem parameters">
-        <div className="content-wrapper">
-            <div className="content-heading">
-                <div>
-                    <div className="pull-right">
-                        <Link to="/admin/parameters/stylesheet" className="ml">
-                            <button className="btn btn-default">
-                                <em className="fa fa-paint-brush fa-fw mr-sm" />
-                                <span>
-                                    <FormattedMessage id="admin.parameters.stylesheet" defaultMessage="Manage stylesheet" />
-                                </span>
-                            </button>
-                        </Link>
-                        <Link to="/admin/parameters/create" className="ml">
-                            <button className="btn btn-default">
-                                <em className="fa fa-plus-circle fa-fw mr-sm" />
-                                <span>
-                                    <FormattedMessage id="admin.parameters.create" defaultMessage="Create" />
-                                </span>
-                            </button>
-                        </Link>
-                    </div>
-                </div>
+        <div>
+            <Heading>
                 <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
-            </div>
-            <ol className="breadcrumb">
-                <li>
-                    <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
-                </li>
-            </ol>
-            <Panel bsStyle="default">
-                <div className="table-responsive">
-                    {props.parameters && (
-                        <table className="table table-striped table-bordered table-hover ui-responsive ui-table ui-table-reflow">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <FormattedMessage id="admin.parameters.name" defaultMessage="Name" />
-                                    </th>
-                                    <th>
-                                        <FormattedMessage id="admin.parameters.value" defaultMessage="Value" />
-                                    </th>
-                                    <th>
-                                        <FormattedMessage id="admin.parameters.conditions" defaultMessage="Change condittions" />
-                                    </th>
-                                    <th style={{ width: 1 }}>
-                                        <FormattedMessage id="admin.parameters.action" defaultMessage="Action" />
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {props.parameters.sort((a, b) => a.name > b.name ? 0 : 1).map(param => (
-                                    <tr key={param.name}>
-                                        <td>
-                                            {param.name}
-                                        </td>
-                                        <td>
-                                            {param.value}
-                                        </td>
-                                        <td>
-                                            {param.conditions}
-                                        </td>
-                                        <td>
-                                            <Link to={`/admin/parameters/${param.name}`}>
-                                                <Button bsStyle="default" className="btn-labeled btn-icon">
-                                                    <span className="btn-label">
-                                                        <em className="fa fa-edit" />
-                                                    </span>
-                                                </Button>
-                                            </Link>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                <div className="pull-right">
+                    <Link to="/admin/parameters/stylesheet" className="ml">
+                        <button className="btn btn-default">
+                            <em className="fa fa-paint-brush fa-fw mr-sm" />
+                            <span>
+                                <FormattedMessage id="admin.parameters.stylesheet" defaultMessage="Manage stylesheet" />
+                            </span>
+                        </button>
+                    </Link>
+                    <Link to="/admin/parameters/create" className="ml">
+                        <button className="btn btn-default">
+                            <em className="fa fa-plus-circle fa-fw mr-sm" />
+                            <span>
+                                <FormattedMessage id="admin.parameters.create" defaultMessage="Create" />
+                            </span>
+                        </button>
+                    </Link>
                 </div>
-            </Panel>
+            </Heading>
+            <div className="content-wrapper">
+                <ol className="breadcrumb">
+                    <li>
+                        <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
+                    </li>
+                </ol>
+                <Panel bsStyle="default">
+                    <div className="table-responsive">
+                        {props.parameters && (
+                            <table className="table table-striped table-bordered table-hover ui-responsive ui-table ui-table-reflow">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <FormattedMessage id="admin.parameters.name" defaultMessage="Name" />
+                                        </th>
+                                        <th>
+                                            <FormattedMessage id="admin.parameters.value" defaultMessage="Value" />
+                                        </th>
+                                        <th>
+                                            <FormattedMessage id="admin.parameters.conditions" defaultMessage="Change condittions" />
+                                        </th>
+                                        <th style={{ width: 1 }}>
+                                            <FormattedMessage id="admin.parameters.action" defaultMessage="Action" />
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {props.parameters.sort((a, b) => a.name > b.name ? 0 : 1).map(param => (
+                                        <tr key={param.name}>
+                                            <td>
+                                                {param.name}
+                                            </td>
+                                            <td>
+                                                {param.value}
+                                            </td>
+                                            <td>
+                                                {param.conditions}
+                                            </td>
+                                            <td>
+                                                <Link to={`/admin/parameters/${param.name}`}>
+                                                    <Button bsStyle="default" className="btn-labeled btn-icon">
+                                                        <span className="btn-label">
+                                                            <em className="fa fa-edit" />
+                                                        </span>
+                                                    </Button>
+                                                </Link>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+                    </div>
+                </Panel>
+            </div>
         </div>
     </DocumentTitle>
 );

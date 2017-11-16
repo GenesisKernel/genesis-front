@@ -21,6 +21,7 @@ import { contractExec } from 'modules/tx/actions';
 import styled from 'styled-components';
 import { history } from 'store';
 
+import Heading from 'components/Heading';
 import Editor from 'components/Editor';
 import DocumentTitle from 'components/DocumentTitle';
 import Validation from 'components/Validation';
@@ -105,88 +106,90 @@ export default class extends React.Component<IDebugProps, IDebugState> {
     render() {
         return (
             <DocumentTitle title="Debug page">
-                <div className="content-wrapper">
-                    <div className="content-heading">Debug page</div>
-                    <Col md={6}>
-                        <Editor
-                            language="protypo"
-                            value={this.state.code}
-                            height={500}
-                            onChange={this.onChange.bind(this)}
-                        />
-                        <textarea onChange={this.setStyle.bind(this)} />
-                    </Col>
-                    <Col md={6}>
-                        {this.state.result && (
-                            <Protypo
-                                payload={this.state.result}
+                <div>
+                    <Heading>Debug page</Heading>
+                    <div className="content-wrapper">
+                        <Col md={6}>
+                            <Editor
+                                language="protypo"
+                                value={this.state.code}
+                                height={500}
+                                onChange={this.onChange.bind(this)}
                             />
-                        )}
-                        <div>
-                            {this.state.style && (
-                                React.createElement(this.state.style, {}, <div>This is content</div>)
+                            <textarea onChange={this.setStyle.bind(this)} />
+                        </Col>
+                        <Col md={6}>
+                            {this.state.result && (
+                                <Protypo
+                                    payload={this.state.result}
+                                />
                             )}
+                            <div>
+                                {this.state.style && (
+                                    React.createElement(this.state.style, {}, <div>This is content</div>)
+                                )}
+                            </div>
+                        </Col>
+                        <hr />
+                        <Validation.components.ValidatedForm onSubmitSuccess={r => console.log('Submit::', r)}>
+                            <Validation.components.ValidatedImage name="myImg" width={100} />
+                            <Validation.components.ValidatedSubmit>Submit</Validation.components.ValidatedSubmit>
+                        </Validation.components.ValidatedForm>
+                        <hr />
+                        <Button bsStyle="primary" className="btn-block" onClick={this.onSubmit.bind(this)}>Request template</Button>
+                        <Button bsStyle="primary" className="btn-block" onClick={this.onPush.bind(this)}>Push</Button>
+                        <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT">Execute contract</TxButton>
+                        <TxButton
+                            className="btn btn-info btn-block"
+                            contractName="TEST_CONTRACT"
+                            confirm={{ icon: 'info', title: 'CONFIRM_TITLE', text: 'CONFIRM_TEXT', confirmButton: 'CONFIRM_BUTTON', cancelButton: 'CANCEL_BUTTON' }}
+                            page="page_default"
+                        >
+                            Confirm button
+                        </TxButton>
+                        <TxButton
+                            className="btn btn-info btn-block"
+                            page="page_default"
+                        >
+                            Confirm button
+                        </TxButton>
+                        <TxButton className="btn btn-danger btn-block" contractName="NewEcosystem">CreateEcosystem</TxButton>
+                        <div className="row">
+                            <div className="col-md-4">
+                                <TxButton className="btn btn-danger btn-block" contractName="MainCondition">Contract 1</TxButton>
+                            </div>
+                            <div className="col-md-4">
+                                <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
+                            </div>
+                            <div className="col-md-4">
+                                <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
+                            </div>
                         </div>
-                    </Col>
-                    <hr />
-                    <Validation.components.ValidatedForm onSubmitSuccess={r => console.log('Submit::', r)}>
-                        <Validation.components.ValidatedImage name="myImg" width={100} />
-                        <Validation.components.ValidatedSubmit>Submit</Validation.components.ValidatedSubmit>
-                    </Validation.components.ValidatedForm>
-                    <hr />
-                    <Button bsStyle="primary" className="btn-block" onClick={this.onSubmit.bind(this)}>Request template</Button>
-                    <Button bsStyle="primary" className="btn-block" onClick={this.onPush.bind(this)}>Push</Button>
-                    <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT">Execute contract</TxButton>
-                    <TxButton
-                        className="btn btn-info btn-block"
-                        contractName="TEST_CONTRACT"
-                        confirm={{ icon: 'info', title: 'CONFIRM_TITLE', text: 'CONFIRM_TEXT', confirmButton: 'CONFIRM_BUTTON', cancelButton: 'CANCEL_BUTTON' }}
-                        page="page_default"
-                    >
-                        Confirm button
-                    </TxButton>
-                    <TxButton
-                        className="btn btn-info btn-block"
-                        page="page_default"
-                    >
-                        Confirm button
-                    </TxButton>
-                    <TxButton className="btn btn-danger btn-block" contractName="NewEcosystem">CreateEcosystem</TxButton>
-                    <div className="row">
-                        <div className="col-md-4">
-                            <TxButton className="btn btn-danger btn-block" contractName="MainCondition">Contract 1</TxButton>
+                        <div className="row">
+                            <div className="col-md-4">
+                                <TxButton className="btn btn-danger btn-block" contractName="MainCondition">Contract 1</TxButton>
+                            </div>
+                            <div className="col-md-4">
+                                <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
+                            </div>
+                            <div className="col-md-4">
+                                <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
+                            </div>
                         </div>
-                        <div className="col-md-4">
-                            <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
-                        </div>
-                        <div className="col-md-4">
-                            <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-4">
-                            <TxButton className="btn btn-danger btn-block" contractName="MainCondition">Contract 1</TxButton>
-                        </div>
-                        <div className="col-md-4">
-                            <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
-                        </div>
-                        <div className="col-md-4">
-                            <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-4">
-                            <TxButton className="btn btn-danger btn-block" contractName="MainCondition">Contract 1</TxButton>
-                        </div>
-                        <div className="col-md-4">
-                            <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
-                        </div>
-                        <div className="col-md-4">
-                            <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
+                        <div className="row">
+                            <div className="col-md-4">
+                                <TxButton className="btn btn-danger btn-block" contractName="MainCondition">Contract 1</TxButton>
+                            </div>
+                            <div className="col-md-4">
+                                <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT2">Contract 2</TxButton>
+                            </div>
+                            <div className="col-md-4">
+                                <TxButton className="btn btn-danger btn-block" contractName="TEST_CONTRACT">Contract 3</TxButton>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </DocumentTitle >
+            </DocumentTitle>
         );
     }
 }

@@ -15,10 +15,12 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { resolveHandler } from 'components/Protypo';
+import { resolveHandler, resolveFunction } from 'components/Protypo';
 import * as propTypes from 'prop-types';
 
+import Heading from 'components/Heading';
 import { IValidationResult } from 'components/Validation/ValidatedForm';
+import ToolButton, { IToolButtonProps } from 'components/Protypo/components/ToolButton';
 
 export interface IProtypoProps {
     wrapper?: JSX.Element;
@@ -51,6 +53,8 @@ export default class Protypo extends React.Component<IProtypoProps> {
     private _menuPushBind: Function;
     private _navigatePageBind: Function;
     private _navigateBind: Function;
+    private _title: string;
+    private _toolButtons: IToolButtonProps[];
     private _sources: { [key: string]: { columns: string[], types: string[], data: string[][] } };
     private _errors: { name: string, description: string }[];
 
@@ -72,6 +76,14 @@ export default class Protypo extends React.Component<IProtypoProps> {
 
     getCurrentPage() {
         return this.props.page;
+    }
+
+    setTitle(title: string) {
+        this._title = title;
+    }
+
+    addToolButton(props: IToolButtonProps) {
+        this._toolButtons.push(props);
     }
 
     registerSource(name: string, payload: { columns: string[], types: string[], data: string[][] }) {
@@ -108,6 +120,7 @@ export default class Protypo extends React.Component<IProtypoProps> {
 
             default:
                 const Handler = resolveHandler(element.tag);
+                const func = resolveFunction(element.tag);
                 if (Handler) {
                     const key = optionalKey || (this._lastID++).toString();
                     return (
@@ -115,6 +128,10 @@ export default class Protypo extends React.Component<IProtypoProps> {
                             {this.renderElements(element.children)}
                         </Handler>
                     );
+                }
+                else if (func) {
+                    func(this, { ...element.attr });
+                    return null;
                 }
                 else {
                     this._errors.push({
@@ -136,9 +153,28 @@ export default class Protypo extends React.Component<IProtypoProps> {
         ));
     }
 
+    renderHeading() {
+        if (this._title || this._toolButtons.length) {
+            return (
+                <Heading key="func_heading">
+                    <span>{this._title}</span>
+                    <div className="pull-right">
+                        {this._toolButtons.map((props, index) => (
+                            <ToolButton {...props} key={index} />
+                        ))}
+                    </div>
+                </Heading>
+            );
+        }
+        else {
+            return null;
+        }
+    }
+
     render() {
         this._lastID = 0;
         this._sources = {};
+        this._toolButtons = [];
         this._errors = [];
         const body = this.renderElements(this.props.payload);
 
@@ -154,6 +190,7 @@ export default class Protypo extends React.Component<IProtypoProps> {
                     ))}
                 </div>
             ) : null,
+            this.renderHeading(),
             ...body
         ]);
     }

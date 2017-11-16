@@ -14,33 +14,16 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import * as React from 'react';
-import * as propTypes from 'prop-types';
+import styled from 'styled-components';
 
-import Protypo from './';
+const StyledHeading = styled.div`
+    font-size: 24px;
+    line-height: 1.1;
+    color: #929292;
+    font-weight: normal;
+    background-color: #fafbfc;
+    border-bottom: 1px solid #cfdbe2;
+    padding: 20px;
+`;
 
-export interface IDataProps {
-    source: string;
-    columns: string[];
-    types: string[];
-    data: string[][];
-}
-
-interface IDataContext {
-    protypo: Protypo;
-}
-
-const Data: React.SFC<IDataProps> = (props, context: IDataContext) => {
-    context.protypo.registerSource(props.source, {
-        columns: props.columns,
-        types: props.types,
-        data: props.data
-    });
-    return null;
-};
-
-Data.contextTypes = {
-    protypo: propTypes.object.isRequired
-};
-
-export default Data;
+export default StyledHeading;

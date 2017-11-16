@@ -18,7 +18,7 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import * as propTypes from 'prop-types';
 
-import Protypo from './Protypo';
+import Protypo from '../Protypo';
 import StyledComponent from './StyledComponent';
 import Validation from 'components/Validation';
 import { IValidator } from 'components/Validation/Validators';

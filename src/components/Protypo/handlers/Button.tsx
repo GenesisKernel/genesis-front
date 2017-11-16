@@ -18,7 +18,7 @@ import * as React from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import * as propTypes from 'prop-types';
 
-import Protypo, { IParamsSpec } from './Protypo';
+import Protypo, { IParamsSpec } from '../Protypo';
 import ValidatedForm from 'components/Validation/ValidatedForm';
 import TxButton from 'containers/Widgets/TxButton';
 

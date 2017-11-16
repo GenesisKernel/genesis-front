@@ -20,6 +20,7 @@ import { Link } from 'react-router-dom';
 import { IParameterResponse } from 'lib/api';
 
 import DocumentTitle from 'components/DocumentTitle';
+import Heading from 'components/Heading';
 import ParameterEditor from './ParameterEditor';
 
 export interface IEditProps {
@@ -73,31 +74,33 @@ class Edit extends React.Component<IEditProps, IEditState> {
     render() {
         return (
             <DocumentTitle title={this.props.parameter && this.props.parameter.name}>
-                <div className="content-wrapper">
-                    <div className="content-heading">
+                <div>
+                    <Heading>
                         <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
-                    </div>
-                    <ol className="breadcrumb">
-                        <li>
-                            <Link to="/admin/parameters">
-                                <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
-                            </Link>
-                        </li>
-                        {this.props.parameter && (
+                    </Heading>
+                    <div className="content-wrapper">
+                        <ol className="breadcrumb">
                             <li>
-                                {this.props.parameter.name}
+                                <Link to="/admin/parameters">
+                                    <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
+                                </Link>
                             </li>
-                        )}
-                    </ol>
-                    <ParameterEditor
-                        name={this.props.parameter && this.props.parameter.name}
-                        value={this.state.value}
-                        conditions={this.state.conditions}
-                        contractName="@1EditParameter"
-                        mapContractParams={this.mapContractParams.bind(this)}
-                        onValueEdit={this.onValueEdit.bind(this)}
-                        onConditionsEdit={this.onConditionsEdit.bind(this)}
-                    />
+                            {this.props.parameter && (
+                                <li>
+                                    {this.props.parameter.name}
+                                </li>
+                            )}
+                        </ol>
+                        <ParameterEditor
+                            name={this.props.parameter && this.props.parameter.name}
+                            value={this.state.value}
+                            conditions={this.state.conditions}
+                            contractName="@1EditParameter"
+                            mapContractParams={this.mapContractParams.bind(this)}
+                            onValueEdit={this.onValueEdit.bind(this)}
+                            onConditionsEdit={this.onConditionsEdit.bind(this)}
+                        />
+                    </div>
                 </div>
             </DocumentTitle>
         );

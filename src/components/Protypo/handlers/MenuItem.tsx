@@ -19,7 +19,7 @@ import * as classnames from 'classnames';
 import styled from 'styled-components';
 import * as propTypes from 'prop-types';
 
-import Protypo, { IParamsSpec } from './Protypo';
+import Protypo, { IParamsSpec } from '../Protypo';
 
 export interface IMenuItemProps {
     'title'?: string;

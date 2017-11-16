@@ -14,26 +14,29 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import Protypo from 'components/Protypo/Protypo';
-import Button from 'components/Protypo/Button';
-import Data from 'components/Protypo/Data';
-import DBFind from 'components/Protypo/DBFind';
-import Div from 'components/Protypo/Div';
-import Em from 'components/Protypo/Em';
-import Form from 'components/Protypo/Form';
-import Image from 'components/Protypo/Image';
-import ImageInput from 'components/Protypo/ImageInput';
-import Input from 'components/Protypo/Input';
-import InputErr from 'components/Protypo/InputErr';
-import Label from 'components/Protypo/Label';
-import LinkPage from 'components/Protypo/LinkPage';
-import MenuItem from 'components/Protypo/MenuItem';
-import MenuGroup from 'components/Protypo/MenuGroup';
-import P from 'components/Protypo/P';
-import Select from 'components/Protypo/Select';
-import Span from 'components/Protypo/Span';
-import Strong from 'components/Protypo/Strong';
-import Table from 'components/Protypo/Table';
+import Protypo from './Protypo';
+import Button from './handlers/Button';
+import Data from './handlers/Data';
+import DBFind from './handlers/DBFind';
+import Div from './handlers/Div';
+import Em from './handlers/Em';
+import Form from './handlers/Form';
+import Image from './handlers/Image';
+import ImageInput from './handlers/ImageInput';
+import Input from './handlers/Input';
+import InputErr from './handlers/InputErr';
+import Label from './handlers/Label';
+import LinkPage from './handlers/LinkPage';
+import MenuItem from './handlers/MenuItem';
+import MenuGroup from './handlers/MenuGroup';
+import P from './handlers/P';
+import Select from './handlers/Select';
+import Span from './handlers/Span';
+import Strong from './handlers/Strong';
+import Table from './handlers/Table';
+
+import setTitle from './functions/setTitle';
+import addToolButton from './functions/addToolButton';
 
 const handlers = {
     'button': Button,
@@ -57,8 +60,17 @@ const handlers = {
     'table': Table
 };
 
+const functions = {
+    'settitle': setTitle,
+    'addtoolbutton': addToolButton
+};
+
 export const resolveHandler = (name: string) => {
     return handlers[name];
+};
+
+export const resolveFunction = (name: string) => {
+    return functions[name];
 };
 
 export default Protypo;

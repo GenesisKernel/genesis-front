@@ -17,7 +17,7 @@
 import * as React from 'react';
 import * as propTypes from 'prop-types';
 
-import Protypo, { IParamsSpec } from './Protypo';
+import Protypo, { IParamsSpec } from '../Protypo';
 import StyledComponent from './StyledComponent';
 
 export interface ILinkPageProps {

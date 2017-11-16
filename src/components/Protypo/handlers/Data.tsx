@@ -15,30 +15,32 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { IProtypoElement } from './Protypo';
-import { StyledLinkButton } from './MenuItem';
 import * as propTypes from 'prop-types';
 
-export interface IMenuGroupProps {
-    'title'?: string;
-    'icon'?: string;
-    'params'?: { [key: string]: any };
-    'childrenTree'?: IProtypoElement[];
+import Protypo from '../';
+
+export interface IDataProps {
+    source: string;
+    columns: string[];
+    types: string[];
+    data: string[][];
 }
 
-const MenuGroup: React.SFC<IMenuGroupProps> = (props, context) => (
-    <StyledLinkButton>
-        <a href="#" onClick={() => context.menuPush({ name: props.title, content: props.childrenTree })}>
-            <div className="link-body">
-                {props.icon && (<em className={`icon ${props.icon}`} />)}
-                <span>{props.title}</span>
-            </div>
-        </a>
-    </StyledLinkButton>
-);
+interface IDataContext {
+    protypo: Protypo;
+}
 
-MenuGroup.contextTypes = {
-    menuPush: propTypes.func.isRequired
+const Data: React.SFC<IDataProps> = (props, context: IDataContext) => {
+    context.protypo.registerSource(props.source, {
+        columns: props.columns,
+        types: props.types,
+        data: props.data
+    });
+    return null;
 };
 
-export default MenuGroup;
+Data.contextTypes = {
+    protypo: propTypes.object.isRequired
+};
+
+export default Data;

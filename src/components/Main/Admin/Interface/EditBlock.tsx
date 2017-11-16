@@ -19,6 +19,7 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 
 import DocumentTitle from 'components/DocumentTitle';
+import Heading from 'components/Heading';
 import BlockEditor from './BlockEditor';
 
 export interface IEditBlockProps {
@@ -69,33 +70,35 @@ class EditBlock extends React.Component<IEditBlockProps, IEditBlockState> {
     render() {
         return (
             <DocumentTitle title={this.props.block && this.props.block.name}>
-                <div className="content-wrapper">
-                    <div className="content-heading">
+                <div>
+                    <Heading>
                         <FormattedMessage id="admin.interface" defaultMessage="Interface" />
-                    </div>
-                    <ol className="breadcrumb">
-                        <li>
-                            <Link to="/admin/interface">
-                                <FormattedMessage id="admin.interface" defaultMessage="Interface" />
-                            </Link>
-                        </li>
-                        <li>
-                            <FormattedMessage id="admin.interface.blocks" defaultMessage="Blocks" />
-                        </li>
-                        <li>
-                            {this.props.block && this.props.block.name}
-                        </li>
-                    </ol>
-                    <BlockEditor
-                        contractName="@1EditBlock"
-                        mapContractParams={this.mapContractParams.bind(this)}
+                    </Heading>
+                    <div className="content-wrapper">
+                        <ol className="breadcrumb">
+                            <li>
+                                <Link to="/admin/interface">
+                                    <FormattedMessage id="admin.interface" defaultMessage="Interface" />
+                                </Link>
+                            </li>
+                            <li>
+                                <FormattedMessage id="admin.interface.blocks" defaultMessage="Blocks" />
+                            </li>
+                            <li>
+                                {this.props.block && this.props.block.name}
+                            </li>
+                        </ol>
+                        <BlockEditor
+                            contractName="@1EditBlock"
+                            mapContractParams={this.mapContractParams.bind(this)}
 
-                        template={this.state.template}
-                        conditions={this.state.conditions}
-                        block={this.props.block}
-                        onSourceEdit={this.onSourceEdit.bind(this)}
-                        onConditionsEdit={this.onConditionsEdit.bind(this)}
-                    />
+                            template={this.state.template}
+                            conditions={this.state.conditions}
+                            block={this.props.block}
+                            onSourceEdit={this.onSourceEdit.bind(this)}
+                            onConditionsEdit={this.onConditionsEdit.bind(this)}
+                        />
+                    </div>
                 </div>
             </DocumentTitle>
         );

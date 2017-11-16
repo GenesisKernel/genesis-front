@@ -19,6 +19,7 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import api from 'lib/api';
 
+import Heading from 'components/Heading';
 import DocumentTitle from 'components/DocumentTitle';
 import ConstructorEditor from './ConstructorEditor';
 
@@ -69,44 +70,44 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
     render() {
         return (
             <DocumentTitle title={this.props.page && this.props.page.name}>
-                <div className="content-wrapper">
-                    <div className="content-heading">
-                        <div>
-                            <div className="pull-right">
-                                <Link to={`/page/${this.props.page && this.props.page.name}`} className="ml">
-                                    <button className="btn btn-default ml">
-                                        <em className="fa fa-external-link fa-fw mr-sm" />
-                                        <span>
-                                            <FormattedMessage id="admin.interface.page.show" defaultMessage="Show page" />
-                                        </span>
-                                    </button>
-                                </Link>
-                            </div>
-                        </div>
+                <div>
+                    <Heading>
                         <FormattedMessage id="admin.interface" defaultMessage="Interface" />
-                    </div>
-                    <ol className="breadcrumb">
-                        <li>
-                            <Link to="/admin/interface">
-                                <FormattedMessage id="admin.interface" defaultMessage="Interface" />
+                        <div className="pull-right">
+                            <Link to={`/page/${this.props.page && this.props.page.name}`} className="ml">
+                                <button className="btn btn-default ml">
+                                    <em className="fa fa-external-link fa-fw mr-sm" />
+                                    <span>
+                                        <FormattedMessage id="admin.interface.page.show" defaultMessage="Show page" />
+                                    </span>
+                                </button>
                             </Link>
+                        </div>
+                    </Heading>
+                    <div className="content-wrapper">
+                        <ol className="breadcrumb">
+                            <li>
+                                <Link to="/admin/interface">
+                                    <FormattedMessage id="admin.interface" defaultMessage="Interface" />
+                                </Link>
+                            </li>
+                            <li>
+                                <FormattedMessage id="admin.interface.pages" defaultMessage="Pages" />
+                            </li>
+                            <li>
+                                Constructor
                         </li>
-                        <li>
-                            <FormattedMessage id="admin.interface.pages" defaultMessage="Pages" />
-                        </li>
-                        <li>
-                            Constructor
-                        </li>
-                        <li>
-                            {this.props.page && this.props.page.name}
-                        </li>
-                    </ol>
-                    <ConstructorEditor
-                        session={this.props.session}
-                        page={this.props.page}
-                        template={this.state.template}
-                        treeCode={this.state.treeCode}
-                    />
+                            <li>
+                                {this.props.page && this.props.page.name}
+                            </li>
+                        </ol>
+                        <ConstructorEditor
+                            session={this.props.session}
+                            page={this.props.page}
+                            template={this.state.template}
+                            treeCode={this.state.treeCode}
+                        />
+                    </div>
                 </div>
             </DocumentTitle>
         );

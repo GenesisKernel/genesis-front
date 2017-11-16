@@ -20,6 +20,7 @@ import { Button, Col, Panel, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
 import DocumentTitle from 'components/DocumentTitle';
+import Heading from 'components/Heading';
 
 export interface IInterfaceProps {
     pages: { id: string, name: string }[];
@@ -29,148 +30,148 @@ export interface IInterfaceProps {
 
 const Interface: React.SFC<IInterfaceProps> = (props) => (
     <DocumentTitle title="admin.interface" defaultTitle="Interface">
-        <div className="content-wrapper">
-            <div className="content-heading">
-                <div>
-                    <div className="pull-right">
-                        <Link to="/admin/interface/create-page" className="ml">
-                            <button className="btn btn-default ml">
-                                <em className="fa fa-plus-circle fa-fw mr-sm" />
-                                <span>
-                                    <FormattedMessage id="admin.interface.page.create" defaultMessage="Create page" />
-                                </span>
-                            </button>
-                        </Link>
-                        <Link to="/admin/interface/create-block" className="ml">
-                            <button className="btn btn-default">
-                                <em className="fa fa-plus-circle fa-fw mr-sm" />
-                                <span>
-                                    <FormattedMessage id="admin.interface.block.create" defaultMessage="Create block" />
-                                </span>
-                            </button>
-                        </Link>
-                        <Link to="/admin/interface/create-menu" className="ml">
-                            <button className="btn btn-default">
-                                <em className="fa fa-plus-circle fa-fw mr-sm" />
-                                <span>
-                                    <FormattedMessage id="admin.interface.menu.create" defaultMessage="Create menu" />
-                                </span>
-                            </button>
-                        </Link>
-                    </div>
-                </div>
+        <div>
+            <Heading>
                 <FormattedMessage id="admin.interface" defaultMessage="Interface" />
+                <div className="pull-right">
+                    <Link to="/admin/interface/create-page" className="ml">
+                        <button className="btn btn-default ml">
+                            <em className="fa fa-plus-circle fa-fw mr-sm" />
+                            <span>
+                                <FormattedMessage id="admin.interface.page.create" defaultMessage="Create page" />
+                            </span>
+                        </button>
+                    </Link>
+                    <Link to="/admin/interface/create-block" className="ml">
+                        <button className="btn btn-default">
+                            <em className="fa fa-plus-circle fa-fw mr-sm" />
+                            <span>
+                                <FormattedMessage id="admin.interface.block.create" defaultMessage="Create block" />
+                            </span>
+                        </button>
+                    </Link>
+                    <Link to="/admin/interface/create-menu" className="ml">
+                        <button className="btn btn-default">
+                            <em className="fa fa-plus-circle fa-fw mr-sm" />
+                            <span>
+                                <FormattedMessage id="admin.interface.menu.create" defaultMessage="Create menu" />
+                            </span>
+                        </button>
+                    </Link>
+                </div>
+            </Heading>
+            <div className="content-wrapper">
+                <ol className="breadcrumb">
+                    <li>
+                        <FormattedMessage id="admin.interface" defaultMessage="Interface" />
+                    </li>
+                </ol>
+                <Row>
+                    <Col md={8}>
+                        <Panel
+                            header={<FormattedMessage id="admin.interface.pages" defaultMessage="Pages" />}
+                            bsStyle="primary"
+                        >
+                            {props.pages.length ?
+                                (
+                                    <table className="table table-striped table-bordered table-hover">
+                                        <tbody>
+                                            {props.pages.map(page => (
+                                                <tr key={page.id}>
+                                                    <td>{page.name}</td>
+                                                    <td style={{ width: 1 }}>
+                                                        <Link to={`/admin/interface/page/${page.id}-${page.name}`}>
+                                                            <Button bsStyle="default" className="btn-labeled btn-icon">
+                                                                <span className="btn-label">
+                                                                    <em className="fa fa-edit" />
+                                                                </span>
+                                                            </Button>
+                                                        </Link>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                )
+                                :
+                                (
+                                    <span className="text-muted">
+                                        <FormattedMessage id="admin.interface.nothingfound" defaultMessage="Nothing found" />
+                                    </span>
+                                )
+                            }
+                        </Panel>
+                    </Col>
+                    <Col md={4}>
+                        <Panel
+                            header={<FormattedMessage id="admin.interface.menu" defaultMessage="Menu" />}
+                            bsStyle="primary"
+                        >
+                            {props.menus.length ?
+                                (
+                                    <table className="table table-striped table-bordered table-hover">
+                                        <tbody>
+                                            {props.menus.map(menu => (
+                                                <tr key={menu.id}>
+                                                    <td>{menu.name}</td>
+                                                    <td style={{ width: 1 }}>
+                                                        <Link to={`/admin/interface/menu/${menu.id}-${menu.name}`}>
+                                                            <Button bsStyle="default" className="btn-labeled btn-icon">
+                                                                <span className="btn-label">
+                                                                    <em className="fa fa-edit" />
+                                                                </span>
+                                                            </Button>
+                                                        </Link>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                )
+                                :
+                                (
+                                    <span className="text-muted">
+                                        <FormattedMessage id="admin.interface.nothingfound" defaultMessage="Nothing found" />
+                                    </span>
+                                )
+                            }
+                        </Panel>
+                        <Panel
+                            header={<FormattedMessage id="admin.interface.blocks" defaultMessage="Blocks" />}
+                            bsStyle="primary"
+                        >
+                            {props.blocks.length ?
+                                (
+                                    <table className="table table-striped table-bordered table-hover">
+                                        <tbody>
+                                            {props.blocks.map(block => (
+                                                <tr key={block.id}>
+                                                    <td>{block.name}</td>
+                                                    <td style={{ width: 1 }}>
+                                                        <Link to={`/admin/interface/block/${block.id}-${block.name}`}>
+                                                            <Button bsStyle="default" className="btn-labeled btn-icon">
+                                                                <span className="btn-label">
+                                                                    <em className="fa fa-edit" />
+                                                                </span>
+                                                            </Button>
+                                                        </Link>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                )
+                                :
+                                (
+                                    <span className="text-muted">
+                                        <FormattedMessage id="admin.interface.nothingfound" defaultMessage="Nothing found" />
+                                    </span>
+                                )
+                            }
+                        </Panel>
+                    </Col>
+                </Row>
             </div>
-            <ol className="breadcrumb">
-                <li>
-                    <FormattedMessage id="admin.interface" defaultMessage="Interface" />
-                </li>
-            </ol>
-            <Row>
-                <Col md={8}>
-                    <Panel
-                        header={<FormattedMessage id="admin.interface.pages" defaultMessage="Pages" />}
-                        bsStyle="primary"
-                    >
-                        {props.pages.length ?
-                            (
-                                <table className="table table-striped table-bordered table-hover">
-                                    <tbody>
-                                        {props.pages.map(page => (
-                                            <tr key={page.id}>
-                                                <td>{page.name}</td>
-                                                <td style={{ width: 1 }}>
-                                                    <Link to={`/admin/interface/page/${page.id}-${page.name}`}>
-                                                        <Button bsStyle="default" className="btn-labeled btn-icon">
-                                                            <span className="btn-label">
-                                                                <em className="fa fa-edit" />
-                                                            </span>
-                                                        </Button>
-                                                    </Link>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            )
-                            :
-                            (
-                                <span className="text-muted">
-                                    <FormattedMessage id="admin.interface.nothingfound" defaultMessage="Nothing found" />
-                                </span>
-                            )
-                        }
-                    </Panel>
-                </Col>
-                <Col md={4}>
-                    <Panel
-                        header={<FormattedMessage id="admin.interface.menu" defaultMessage="Menu" />}
-                        bsStyle="primary"
-                    >
-                        {props.menus.length ?
-                            (
-                                <table className="table table-striped table-bordered table-hover">
-                                    <tbody>
-                                        {props.menus.map(menu => (
-                                            <tr key={menu.id}>
-                                                <td>{menu.name}</td>
-                                                <td style={{ width: 1 }}>
-                                                    <Link to={`/admin/interface/menu/${menu.id}-${menu.name}`}>
-                                                        <Button bsStyle="default" className="btn-labeled btn-icon">
-                                                            <span className="btn-label">
-                                                                <em className="fa fa-edit" />
-                                                            </span>
-                                                        </Button>
-                                                    </Link>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            )
-                            :
-                            (
-                                <span className="text-muted">
-                                    <FormattedMessage id="admin.interface.nothingfound" defaultMessage="Nothing found" />
-                                </span>
-                            )
-                        }
-                    </Panel>
-                    <Panel
-                        header={<FormattedMessage id="admin.interface.blocks" defaultMessage="Blocks" />}
-                        bsStyle="primary"
-                    >
-                        {props.blocks.length ?
-                            (
-                                <table className="table table-striped table-bordered table-hover">
-                                    <tbody>
-                                        {props.blocks.map(block => (
-                                            <tr key={block.id}>
-                                                <td>{block.name}</td>
-                                                <td style={{ width: 1 }}>
-                                                    <Link to={`/admin/interface/block/${block.id}-${block.name}`}>
-                                                        <Button bsStyle="default" className="btn-labeled btn-icon">
-                                                            <span className="btn-label">
-                                                                <em className="fa fa-edit" />
-                                                            </span>
-                                                        </Button>
-                                                    </Link>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            )
-                            :
-                            (
-                                <span className="text-muted">
-                                    <FormattedMessage id="admin.interface.nothingfound" defaultMessage="Nothing found" />
-                                </span>
-                            )
-                        }
-                    </Panel>
-                </Col>
-            </Row>
         </div>
     </DocumentTitle>
 );

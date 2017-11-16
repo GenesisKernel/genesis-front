@@ -21,6 +21,7 @@ import { Link } from 'react-router-dom';
 import { ITableResponse, IListResponse } from 'lib/api';
 
 import DocumentTitle from 'components/DocumentTitle';
+import Heading from 'components/Heading';
 import Money from 'components/Money';
 
 export interface IViewProps {
@@ -51,64 +52,66 @@ const DataPresenter: React.SFC<{ type: string, data: any }> = (props) => {
 
 const View: React.SFC<IViewProps> = (props) => (
     <DocumentTitle title={props.tableName}>
-        <div className="content-wrapper">
-            <div className="content-heading">
+        <div>
+            <Heading>
                 <FormattedMessage id="admin.tables" defaultMessage="Tables" />
-            </div>
-            <ol className="breadcrumb">
-                <li>
-                    <Link to="/admin/tables">
-                        <FormattedMessage id="admin.tables" defaultMessage="Tables" />
-                    </Link>
-                </li>
-                <li>
-                    {props.tableName}
-                </li>
-            </ol>
-            <Panel bsStyle="default">
-                <div className="table-responsive">
-                    {(props.table && props.tableData) && (
-                        <table className="table table-striped table-bordered table-hover ui-responsive ui-table ui-table-reflow">
-                            <thead>
-                                <tr>
-                                    <th>id</th>
-                                    {props.table.columns.map(col => (
-                                        <th key={col.name}>{col.name}</th>
-                                    ))}
-                                    <th style={{ width: 1 }}>
-                                        <FormattedMessage id="admin.tables.changes" defaultMessage="Changes" />
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {props.table && props.tableData.list && props.tableData.list.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10)).map((row) => (
-                                    <tr key={row.id}>
-                                        <td>{row.id}</td>
+            </Heading>
+            <div className="content-wrapper">
+                <ol className="breadcrumb">
+                    <li>
+                        <Link to="/admin/tables">
+                            <FormattedMessage id="admin.tables" defaultMessage="Tables" />
+                        </Link>
+                    </li>
+                    <li>
+                        {props.tableName}
+                    </li>
+                </ol>
+                <Panel bsStyle="default">
+                    <div className="table-responsive">
+                        {(props.table && props.tableData) && (
+                            <table className="table table-striped table-bordered table-hover ui-responsive ui-table ui-table-reflow">
+                                <thead>
+                                    <tr>
+                                        <th>id</th>
                                         {props.table.columns.map(col => (
-                                            <td key={col.name}>
-                                                <DataPresenter type={col.type} data={row[col.name]} />
-                                            </td>
+                                            <th key={col.name}>{col.name}</th>
                                         ))}
-                                        <td>
-                                            {'0' === row.rb_id ?
-                                                (
-                                                    <span className="text-muted">
-                                                        <FormattedMessage id="admin.tables.unchanged" defaultMessage="Unchanged" />
-                                                    </span>
-                                                ) : (
-                                                    <Button bsStyle="primary">
-                                                        <FormattedMessage id="admin.tables.history" defaultMessage="History" />
-                                                    </Button>
-                                                )
-                                            }
-                                        </td>
+                                        <th style={{ width: 1 }}>
+                                            <FormattedMessage id="admin.tables.changes" defaultMessage="Changes" />
+                                        </th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
-                </div>
-            </Panel>
+                                </thead>
+                                <tbody>
+                                    {props.table && props.tableData.list && props.tableData.list.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10)).map((row) => (
+                                        <tr key={row.id}>
+                                            <td>{row.id}</td>
+                                            {props.table.columns.map(col => (
+                                                <td key={col.name}>
+                                                    <DataPresenter type={col.type} data={row[col.name]} />
+                                                </td>
+                                            ))}
+                                            <td>
+                                                {'0' === row.rb_id ?
+                                                    (
+                                                        <span className="text-muted">
+                                                            <FormattedMessage id="admin.tables.unchanged" defaultMessage="Unchanged" />
+                                                        </span>
+                                                    ) : (
+                                                        <Button bsStyle="primary">
+                                                            <FormattedMessage id="admin.tables.history" defaultMessage="History" />
+                                                        </Button>
+                                                    )
+                                                }
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+                    </div>
+                </Panel>
+            </div>
         </div>
     </DocumentTitle>
 );

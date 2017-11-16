@@ -14,34 +14,18 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import * as React from 'react';
-import * as propTypes from 'prop-types';
+import Protypo from '../';
+import { IParamsSpec } from 'components/Protypo/Protypo';
 
-import Protypo from './';
-
-export interface IDBFindProps {
-    columns: string[];
-    types: string[];
-    data: string[][];
-    name: string;
-    source: string;
+export interface IAddToolButtonProps {
+    title?: string;
+    icon?: string;
+    page?: string;
+    pageparams?: IParamsSpec;
 }
 
-interface IDBFindContext {
-    protypo: Protypo;
-}
-
-const DBFind: React.SFC<IDBFindProps> = (props, context: IDBFindContext) => {
-    context.protypo.registerSource(props.source, {
-        columns: props.columns,
-        types: props.types,
-        data: props.data
-    });
-    return null;
+const addToolButton = (context: Protypo, props: IAddToolButtonProps) => {
+    context.addToolButton(props);
 };
 
-DBFind.contextTypes = {
-    protypo: propTypes.object.isRequired
-};
-
-export default DBFind;
+export default addToolButton;
