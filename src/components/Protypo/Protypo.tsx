@@ -175,6 +175,7 @@ export default class Protypo extends React.Component<IProtypoProps> {
         this._lastID = 0;
         this._sources = {};
         this._toolButtons = [];
+        this._title = null;
         this._errors = [];
         const body = this.renderElements(this.props.payload);
 
