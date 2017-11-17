@@ -20,7 +20,7 @@ import { Button, Col, Panel, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
 import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'components/Heading';
+import Heading from 'containers/Widgets/Heading';
 
 export interface IInterfaceProps {
     vde?: boolean;
@@ -35,29 +35,23 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
             <Heading>
                 <FormattedMessage id="admin.interface" defaultMessage="Interface" />
                 <div className="pull-right">
-                    <Link to={props.vde ? '/vde/interface/create-page' : '/admin/interface/create-page'} className="ml">
-                        <button className="btn btn-default ml">
-                            <em className="fa fa-plus-circle fa-fw mr-sm" />
-                            <span>
-                                <FormattedMessage id="admin.interface.page.create" defaultMessage="Create page" />
-                            </span>
-                        </button>
+                    <Link to={props.vde ? '/vde/interface/create-page' : '/admin/interface/create-page'} className="ml btn-tool">
+                        <em className="icon icon-plus" />
+                        <span>
+                            <FormattedMessage id="admin.interface.page.create" defaultMessage="Create page" />
+                        </span>
                     </Link>
-                    <Link to={props.vde ? '/vde/interface/create-block' : '/admin/interface/create-block'} className="ml">
-                        <button className="btn btn-default">
-                            <em className="fa fa-plus-circle fa-fw mr-sm" />
-                            <span>
-                                <FormattedMessage id="admin.interface.block.create" defaultMessage="Create block" />
-                            </span>
-                        </button>
+                    <Link to={props.vde ? '/vde/interface/create-block' : '/admin/interface/create-block'} className="ml btn-tool">
+                        <em className="icon icon-plus" />
+                        <span>
+                            <FormattedMessage id="admin.interface.block.create" defaultMessage="Create block" />
+                        </span>
                     </Link>
-                    <Link to={props.vde ? '/vde/interface/create-menu' : '/admin/interface/create-menu'} className="ml">
-                        <button className="btn btn-default">
-                            <em className="fa fa-plus-circle fa-fw mr-sm" />
-                            <span>
-                                <FormattedMessage id="admin.interface.menu.create" defaultMessage="Create menu" />
-                            </span>
-                        </button>
+                    <Link to={props.vde ? '/vde/interface/create-menu' : '/admin/interface/create-menu'} className="ml btn-tool">
+                        <em className="icon icon-plus" />
+                        <span>
+                            <FormattedMessage id="admin.interface.menu.create" defaultMessage="Create menu" />
+                        </span>
                     </Link>
                 </div>
             </Heading>

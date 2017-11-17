@@ -21,7 +21,7 @@ import { FormattedMessage } from 'react-intl';
 import { IContract } from 'lib/api';
 
 import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'components/Heading';
+import Heading from 'containers/Widgets/Heading';
 
 export interface IContractsProps {
     vde?: boolean;
@@ -35,12 +35,10 @@ const Contracts: React.SFC<IContractsProps> = (props) => (
                 <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
                 <div className="pull-right">
                     <Link to={props.vde ? '/vde/contracts/create' : '/admin/contracts/create'} className="ml">
-                        <button className="btn btn-default ml">
-                            <em className="fa fa-plus-circle fa-fw mr-sm" />
-                            <span>
-                                <FormattedMessage id="admin.contracts.create" defaultMessage="Create contract" />
-                            </span>
-                        </button>
+                        <em className="icon icon-plus" />
+                        <span>
+                            <FormattedMessage id="admin.contracts.create" defaultMessage="Create contract" />
+                        </span>
                     </Link>
                 </div>
             </Heading>
