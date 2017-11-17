@@ -69,7 +69,7 @@ const TabItem = styled.div`
 `;
 
 export interface IConstructorTabsProps {
-    tabs: string[];
+    tabs: { id: string, type: string, name?: string, visible?: boolean }[];
     children: JSX.Element[];
     onTabClose?: any;
     className?: string;
@@ -93,9 +93,29 @@ export default class ConstructorTabs extends React.Component<IConstructorTabsPro
         });
     }
 
-    onTabClose(tabIndex: number) {
-        if (this.props.onTabClose) {
-            this.props.onTabClose(tabIndex);
+    onTabClose(id: string, type: string) {
+        // if closed tab was active, set first tab active
+
+        if (this.props.tabs) {
+            let closedTabItemIndex = this.props.tabs.findIndex((tabItem: any) => tabItem.id === id);
+            if (closedTabItemIndex === this.state.tabIndex) {
+                let switchToTabIndex = this.props.tabs.findIndex((tabItem: any, index: number) =>
+                    tabItem.visible !== false && index !== closedTabItemIndex
+                );
+                if (switchToTabIndex !== -1) {
+                    this.setState({
+                        tabIndex: switchToTabIndex
+                    });
+                }
+            }
+        }
+
+        let openedTabs = this.props.tabs.filter((tabItem: any, index: number) =>
+            tabItem.visible !== false
+        ).length;
+
+        if (this.props.onTabClose && openedTabs > 1) {
+            this.props.onTabClose(id, type);
         }
     }
 
@@ -104,9 +124,9 @@ export default class ConstructorTabs extends React.Component<IConstructorTabsPro
             <TabsContainer>
                 <TabItems>
                     {this.props.tabs.map((tab, index) => (
-                        <TabItem key={index} className={`${index === this.state.tabIndex ? 'active' : ''}`}>
-                            <span onClick={this.onTabSwitch.bind(this, index)}>{tab}</span>
-                            <a href="javascript:void(0)" onClick={this.onTabClose.bind(this, index)}>&times;</a>
+                        <TabItem key={index} className={`${index === this.state.tabIndex ? 'active' : ''} ${tab.visible === false ? 'hidden' : ''}`}>
+                            <span onClick={this.onTabSwitch.bind(this, index)}>{tab.name}</span>
+                            <a href="javascript:void(0)" onClick={this.onTabClose.bind(this, tab.id, tab.type)}>&times;</a>
                         </TabItem>
                     ))}
                 </TabItems>

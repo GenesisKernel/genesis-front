@@ -29,7 +29,7 @@ export type State = {
     readonly table: ITableResponse;
     readonly tableData: IListResponse;
     readonly page: { id: string, [key: string]: any };
-    readonly constructor: { tabs: any, tabList: string[] };
+    readonly constructor: { tabs: any, tabList: { id: string, type: string, name?: string, visible?: boolean }[] };
     readonly interfaces: IInterfacesResponse;
     readonly contract: { id: string, name: string, conditions: string, address: string, value: string };
     readonly contracts: IContract[];
@@ -489,10 +489,26 @@ export default (state: State = initialState, action: Action): State => {
             }
         }
 
-        if ('string' === typeof action.payload.add_id) {
-            if (tabList.indexOf(action.payload.add_id) === -1) {
-                tabList = tabList.concat(action.payload.add_id);
-                storage.settings.save('constructorTabList', JSON.stringify(tabList));
+        // remove visible attr
+        for (let item of tabList) {
+            if (typeof item.visible === 'boolean') {
+                delete item.visible;
+            }
+        }
+
+        if ('string' === typeof action.payload.addID) {
+            if (!tabList.find((item: any) => item.id === action.payload.addID && item.type === action.payload.addType)) {
+                let settingsTabList = tabList.concat({
+                    id: action.payload.addID,
+                    type: action.payload.addType
+                });
+                storage.settings.save('constructorTabList', JSON.stringify(settingsTabList));
+
+                tabList = tabList.concat({
+                    id: action.payload.addID,
+                    type: action.payload.addType,
+                    visible: true
+                });
             }
         }
 
@@ -512,9 +528,18 @@ export default (state: State = initialState, action: Action): State => {
         }
 
         if ('string' === typeof action.payload.id) {
-            if (tabList.indexOf(action.payload.id) === -1) {
-                tabList = tabList.concat(action.payload.id);
-                storage.settings.save('constructorTabList', JSON.stringify(tabList));
+            if (tabList.findIndex((item: any) => item.id === action.payload.id && item.type === action.payload.type) === -1) {
+                let settingsTabList = tabList.concat({
+                    id: action.payload.id,
+                    type: action.payload.type
+                });
+                storage.settings.save('constructorTabList', JSON.stringify(settingsTabList));
+
+                tabList = tabList.concat({
+                    id: action.payload.id,
+                    type: action.payload.type,
+                    visible: true
+                });
             }
         }
 
@@ -528,19 +553,32 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.removeTabList)) {
-        let tabList: any = state.constructor.tabList;
-        if (!tabList) {
-            tabList = [];
-        }
+        let tabList: any = state.constructor.tabList || [];
 
-        if ('number' === typeof action.payload.index) {
-            let index = action.payload.index;
+        if ('string' === typeof action.payload.id && 'string' === typeof action.payload.type) {
+            let index = tabList.findIndex((item: any) => item.id === action.payload.id && item.type === action.payload.type);
             if (index >= 0 && index < tabList.length) {
-                tabList = [
+
+                // store only visible tabs
+                let tabListStorage = [
                     ...tabList.slice(0, index),
                     ...tabList.slice(index + 1)
                 ];
-                storage.settings.save('constructorTabList', JSON.stringify(tabList));
+
+                // remove visible attr
+                let tabListStorageCleared = [];
+                for (let item of tabListStorage) {
+                    if(item.visible !== false) {
+                        tabListStorageCleared.push({
+                                id: item.id,
+                                type: item.type
+                        });
+                    }
+                }
+                storage.settings.save('constructorTabList', JSON.stringify(tabListStorageCleared));
+
+                // mark tab is invisible to prevent reload pages
+                tabList[index].visible = false;
             }
         }
 

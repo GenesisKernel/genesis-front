@@ -29,7 +29,7 @@ export interface IConstructorTabbedProps {
     pageName?: string;
     page?: any;
     tabs: any;
-    tabList: string[];
+    tabList: { id: string, type: string, name?: string, visible?: boolean }[];
     // template: string;
     treeCode?: any;
     session: string;
@@ -39,20 +39,21 @@ export interface IConstructorTabbedProps {
 
 class ConstructorTabbed extends React.Component<IConstructorTabbedProps & { getPage: typeof getPage.started, match?: { params: { pageID: string, pageName: string } } }> {
     componentWillMount() {
-        this.props.loadTabList({ add_id: this.props.match.params.pageID });
+        this.props.loadTabList({ addID: this.props.match.params.pageID, addType: 'page' });
     }
 
-    onTabClose(index: number) {
+    onTabClose(id: string, type: string) {
         // alert('close ' + index);
-        this.props.removeTabList({ index: index });
+        this.props.removeTabList({ id: id, type: type });
     }
 
     renderTabsContent() {
         let tabs: JSX.Element[] = [];
         if (this.props.tabList.length) {
-            for (let tabId of this.props.tabList) {
+            for (let tabListItem of this.props.tabList) {
+                // todo switch components depending on tabListItem.type: page, contract, etc
                 tabs.push(
-                    <Constructor pageID={tabId} key={tabId}/>
+                    <Constructor pageID={tabListItem.id} key={tabListItem.id}/>
                 );
             }
         }
@@ -63,15 +64,23 @@ class ConstructorTabbed extends React.Component<IConstructorTabbedProps & { getP
         let tabTitles = [];
 
         if (this.props.tabList.length) {
-            for (let tabId of this.props.tabList) {
-                if (this.props.tabs && this.props.tabs[tabId]) {
-                    tabTitles.push(
-                        this.props.tabs[tabId].data.name
-                    );
+            for (let tabListItem of this.props.tabList) {
+                if (this.props.tabs && this.props.tabs[tabListItem.id]) {
+                    tabTitles.push({
+                        id: tabListItem.id,
+                        type: tabListItem.type,
+                        name: this.props.tabs[tabListItem.id].data.name,
+                        visible: tabListItem.visible
+                    });
                 }
-                else {
-                    tabTitles.push('ID ' + tabId);
-                }
+                // else {
+                //      tabTitles.push({
+                //          id: tabListItem.id,
+                //          type: tabListItem.type,
+                //          name: 'ID ' + tabListItem.id,
+                //          visible: tabListItem.visible
+                //      });
+                // }
             }
         }
 
