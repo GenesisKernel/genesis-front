@@ -175,10 +175,12 @@ export default class Protypo extends React.Component<IProtypoProps> {
         this._lastID = 0;
         this._sources = {};
         this._toolButtons = [];
+        this._title = null;
         this._errors = [];
-        const body = this.renderElements(this.props.payload);
 
-        return React.cloneElement(this.props.wrapper || <div />, null, [
+        const body = this.renderElements(this.props.payload);
+        const head = this.renderHeading();
+        const children = [
             this._errors.length ? (
                 <div key="errors">
                     {this._errors.map((error, errorIndex) => (
@@ -190,9 +192,16 @@ export default class Protypo extends React.Component<IProtypoProps> {
                     ))}
                 </div>
             ) : null,
-            this.renderHeading(),
+            head,
             ...body
-        ]);
+        ];
+        const wrapper = React.cloneElement(this.props.wrapper || <div />, {
+            className:
+                (this.props.wrapper ? this.props.wrapper.props.className : '') +
+                (head ? '' : ' no-head')
+        }, children);
+
+        return wrapper;
     }
 }
 

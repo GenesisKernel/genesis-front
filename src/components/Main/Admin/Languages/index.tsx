@@ -20,7 +20,7 @@ import { Button, Col, Panel, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
 import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'components/Heading';
+import Heading from 'containers/Widgets/Heading';
 
 export interface ILanguagesProps {
     resources: {
@@ -37,13 +37,11 @@ const Languages: React.SFC<ILanguagesProps> = (props) => (
             <Heading>
                 <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
                 <div className="pull-right">
-                    <Link to="/admin/languages/create" className="ml">
-                        <button className="btn btn-default ml">
-                            <em className="fa fa-plus-circle fa-fw mr-sm" />
-                            <span>
-                                <FormattedMessage id="admin.languages.create" defaultMessage="Create localization" />
-                            </span>
-                        </button>
+                    <Link to="/admin/languages/create" className="ml btn-tool">
+                        <em className="icon icon-plus" />
+                        <span>
+                            <FormattedMessage id="admin.languages.create" defaultMessage="Create localization" />
+                        </span>
                     </Link>
                 </div>
             </Heading>

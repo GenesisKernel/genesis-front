@@ -19,7 +19,7 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 
 import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'components/Heading';
+import Heading from 'containers/Widgets/Heading';
 import PageEditor from './PageEditor';
 
 export interface IEditPageProps {
@@ -93,13 +93,11 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
                     <Heading>
                         <FormattedMessage id="admin.interface" defaultMessage="Interface" />
                         <div className="pull-right">
-                            <a href={`/page/${this.props.page && this.props.page.name}`} className="ml" onClick={this.onPreview.bind(this)}>
-                                <button className="btn btn-default ml">
-                                    <em className="fa fa-external-link fa-fw mr-sm" />
-                                    <span>
-                                        <FormattedMessage id="admin.interface.page.show" defaultMessage="Show page" />
-                                    </span>
-                                </button>
+                            <a href={`/page/${this.props.page && this.props.page.name}`} className="ml btn-tool" onClick={this.onPreview.bind(this)}>
+                                <em className="icon icon-eye" />
+                                <span>
+                                    <FormattedMessage id="admin.interface.page.preview" defaultMessage="Preview page" />
+                                </span>
                             </a>
                         </div>
                     </Heading>

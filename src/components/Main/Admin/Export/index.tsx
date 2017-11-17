@@ -19,7 +19,7 @@ import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { Button, Row, Col } from 'react-bootstrap';
 import { sendAttachment } from 'lib/fs';
 
-import Heading from 'components/Heading';
+import Heading from 'containers/Widgets/Heading';
 import Checkbox from 'components/Checkbox';
 import ExportTable from './ExportTable';
 import ExportTableData from './ExportTableData';

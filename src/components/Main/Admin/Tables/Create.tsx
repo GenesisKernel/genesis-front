@@ -20,7 +20,7 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 
 import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'components/Heading';
+import Heading from 'containers/Widgets/Heading';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Checkbox from 'components/Checkbox';
 import Validation from 'components/Validation';

@@ -21,7 +21,7 @@ import { Link } from 'react-router-dom';
 import { IParameterResponse } from 'lib/api';
 
 import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'components/Heading';
+import Heading from 'containers/Widgets/Heading';
 
 export interface IParametersProps {
     parameters: IParameterResponse[];
@@ -33,21 +33,17 @@ const Parameters: React.SFC<IParametersProps> = (props) => (
             <Heading>
                 <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
                 <div className="pull-right">
-                    <Link to="/admin/parameters/stylesheet" className="ml">
-                        <button className="btn btn-default">
-                            <em className="fa fa-paint-brush fa-fw mr-sm" />
-                            <span>
-                                <FormattedMessage id="admin.parameters.stylesheet" defaultMessage="Manage stylesheet" />
-                            </span>
-                        </button>
+                    <Link to="/admin/parameters/stylesheet" className="ml btn-tool">
+                        <em className="icon icon-picture" />
+                        <span>
+                            <FormattedMessage id="admin.parameters.stylesheet" defaultMessage="Manage stylesheet" />
+                        </span>
                     </Link>
-                    <Link to="/admin/parameters/create" className="ml">
-                        <button className="btn btn-default">
-                            <em className="fa fa-plus-circle fa-fw mr-sm" />
-                            <span>
-                                <FormattedMessage id="admin.parameters.create" defaultMessage="Create" />
-                            </span>
-                        </button>
+                    <Link to="/admin/parameters/create" className="ml btn-tool">
+                        <em className="icon icon-plus" />
+                        <span>
+                            <FormattedMessage id="admin.parameters.create" defaultMessage="Create" />
+                        </span>
                     </Link>
                 </div>
             </Heading>

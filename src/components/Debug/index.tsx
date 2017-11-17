@@ -21,7 +21,7 @@ import { contractExec } from 'modules/tx/actions';
 import styled from 'styled-components';
 import { history } from 'store';
 
-import Heading from 'components/Heading';
+import Heading from 'containers/Widgets/Heading';
 import Editor from 'components/Editor';
 import DocumentTitle from 'components/DocumentTitle';
 import Validation from 'components/Validation';

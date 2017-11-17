@@ -21,7 +21,7 @@ import { Link } from 'react-router-dom';
 import { ITableResponse, IListResponse } from 'lib/api';
 
 import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'components/Heading';
+import Heading from 'containers/Widgets/Heading';
 import Money from 'components/Money';
 
 export interface IViewProps {

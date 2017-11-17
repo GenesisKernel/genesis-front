@@ -20,7 +20,7 @@ import { Link } from 'react-router-dom';
 import { IParameterResponse } from 'lib/api';
 
 import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'components/Heading';
+import Heading from 'containers/Widgets/Heading';
 import ParameterEditor from './ParameterEditor';
 
 export interface IEditProps {

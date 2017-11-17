@@ -22,7 +22,7 @@ import { Link } from 'react-router-dom';
 import { ITablesResponse } from 'lib/api';
 
 import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'components/Heading';
+import Heading from 'containers/Widgets/Heading';
 
 export interface ITablesProps {
     tables: ITablesResponse;
@@ -34,13 +34,11 @@ const Tables: React.SFC<ITablesProps> = (props) => (
             <Heading>
                 <FormattedMessage id="admin.tables" defaultMessage="Tables" />
                 <div className="pull-right">
-                    <Link to="/admin/tables/create" className="ml">
-                        <button className="btn btn-default">
-                            <em className="fa fa-plus-circle fa-fw mr-sm" />
-                            <span>
-                                <FormattedMessage id="admin.tables.create" defaultMessage="Create" />
-                            </span>
-                        </button>
+                    <Link to="/admin/tables/create" className="ml btn-tool">
+                        <em className="icon icon-plus" />
+                        <span>
+                            <FormattedMessage id="admin.tables.create" defaultMessage="Create" />
+                        </span>
                     </Link>
                 </div>
             </Heading>

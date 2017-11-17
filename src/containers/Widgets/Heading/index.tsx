@@ -15,35 +15,29 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import styled from 'styled-components';
+import { IRootState } from 'modules';
+import { connect } from 'react-redux';
 
-const StyledHeading = styled.div`
-    position: fixed;
-    right: 0;
-    left: 0;
-    top: 0;
-    z-index: 1000;
-    font-size: 20px;
-    line-height: 45px;
-    height: 46px;
-    color: #ffffff;
-    font-weight: normal;
-    background: #624280;
-    border-bottom: 1px solid #cfdbe2;
-    padding: 0 20px;
-    border: 0;
-`;
+import Heading from 'components/Heading';
 
-export interface IHeadingProps {
-    left?: number;
-    right?: number;
-    top?: number;
+interface IHeadingContainerState {
+    left: number;
 }
 
-const Heading: React.SFC<IHeadingProps> = props => (
-    <StyledHeading style={{ left: props.left, right: props.right, top: props.top }}>
-        {props.children}
-    </StyledHeading >
+interface IHeadingContainerDispatch {
+
+}
+
+const HeadingContainer: React.SFC<IHeadingContainerState & IHeadingContainerDispatch> = (props) => (
+    <Heading {...props} />
 );
 
-export default Heading;
+const mapStateToProps = (state: IRootState) => ({
+    left: state.content.navigationWidth
+});
+
+const mapDispatchToProps = {
+
+};
+
+export default connect<IHeadingContainerState, IHeadingContainerDispatch, {}>(mapStateToProps, mapDispatchToProps)(HeadingContainer);

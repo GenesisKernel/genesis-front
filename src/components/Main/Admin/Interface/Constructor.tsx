@@ -19,7 +19,7 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import api from 'lib/api';
 
-import Heading from 'components/Heading';
+import Heading from 'containers/Widgets/Heading';
 import DocumentTitle from 'components/DocumentTitle';
 import ConstructorEditor from './ConstructorEditor';
 
@@ -74,13 +74,11 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                     <Heading>
                         <FormattedMessage id="admin.interface" defaultMessage="Interface" />
                         <div className="pull-right">
-                            <Link to={`/page/${this.props.page && this.props.page.name}`} className="ml">
-                                <button className="btn btn-default ml">
-                                    <em className="fa fa-external-link fa-fw mr-sm" />
-                                    <span>
-                                        <FormattedMessage id="admin.interface.page.show" defaultMessage="Show page" />
-                                    </span>
-                                </button>
+                            <Link to={`/page/${this.props.page && this.props.page.name}`} className="ml btn-tool">
+                                <em className="icon icon-eye" />
+                                <span>
+                                    <FormattedMessage id="admin.interface.page.show" defaultMessage="Show page" />
+                                </span>
                             </Link>
                         </div>
                     </Heading>
