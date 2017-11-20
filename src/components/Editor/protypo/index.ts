@@ -182,6 +182,20 @@ const register = (editor: typeof monaco) => {
                 staticParamTypes.Class
             ]
         },
+        ForList: {
+            label: 'ForList',
+            documentation: 'List-iteration function. Body will be rendered once per element of the source',
+            kind: monaco.languages.CompletionItemKind.Method,
+            insertText: 'ForList(',
+            params: [
+                {
+                    label: 'Source',
+                    documentation: 'Source identificator to fetch the results',
+                    insertText: 'Source: '
+                },
+                staticParamTypes.Body
+            ]
+        },
         Form: {
             label: 'Form',
             documentation: 'Contract form container. All input elements must be placed within a form',
