@@ -20,6 +20,7 @@ import Data from './handlers/Data';
 import DBFind from './handlers/DBFind';
 import Div from './handlers/Div';
 import Em from './handlers/Em';
+import ForList from './handlers/ForList';
 import Form from './handlers/Form';
 import Image from './handlers/Image';
 import ImageInput from './handlers/ImageInput';
@@ -44,6 +45,7 @@ const handlers = {
     'dbfind': DBFind,
     'div': Div,
     'em': Em,
+    'forlist': ForList,
     'form': Form,
     'image': Image,
     'imageinput': ImageInput,
