@@ -31,3 +31,6 @@ export const reset = actionCreator.async<undefined, { menu: { name: string, cont
 // Image editor modal window
 export const imageEditorOpen = actionCreator<{ data: string, width?: number, aspectRatio?: number }>('IMAGE_EDITOR_OPEN');
 export const imageEditorClose = actionCreator<string>('IMAGE_EDITOR_CLOSE');
+
+// Notifications
+export const fetchNotifications = actionCreator.async<undefined, IProtypoElement[], undefined>('FETCH_NOTIFICATIONS');

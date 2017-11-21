@@ -138,10 +138,30 @@ export const resetEpic: Epic<Action, IRootState> =
                 );
         });
 
+export const fetchNotificationsEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.fetchNotifications.started)
+        .flatMap(action => {
+            const state = store.getState();
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, 'notifications', {}))
+                .map(payload =>
+                    actions.fetchNotifications.done({
+                        params: action.payload,
+                        result: JSON.parse(payload.tree)
+                    })
+                )
+                .catch((e: IAPIError) =>
+                    Observable.of(actions.fetchNotifications.failed({
+                        params: action.payload,
+                        error: null
+                    }))
+                );
+        });
+
 export default combineEpics(
     renderPageEpic,
     menuInitEpic,
     resetEpic,
     alertEpic,
-    navigatePageEpic
+    navigatePageEpic,
+    fetchNotificationsEpic
 );

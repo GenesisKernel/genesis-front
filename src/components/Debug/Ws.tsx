@@ -80,8 +80,8 @@ class Ws extends React.Component<IWsProps, IWsState> {
 
     onConnect() {
         const centrifuge = new Centrifuge({
-            //url: 'https://centrifugo.apla.io:8000/connection',
-            url: 'http://127.0.0.1:8000/connection',
+            //url: 'wss://centrifugo.apla.io:8000',
+            url: 'ws://127.0.0.1:8000',
             user: this.state.user,
             timestamp: this.props.timestamp,
             token: this.state.token,
@@ -97,7 +97,11 @@ class Ws extends React.Component<IWsProps, IWsState> {
             this.setState({
                 centrifuge
             });
-            console.log('CONNECTED');
+
+            centrifuge.subscribe('client#' + this.state.user, (message: any) => {
+                this.onReceive('PRIVATE', message);
+            });
+
             this.onReceive('SYSTEM', 'Connected');
         });
 

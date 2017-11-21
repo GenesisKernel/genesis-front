@@ -22,6 +22,7 @@ import { OrderedMap } from 'immutable';
 import styled from 'styled-components';
 
 import UserMenu from 'containers/Widgets/UserMenu';
+import Notifications from 'containers/Widgets/Notifications';
 
 const StyledNavbar = styled.ul`
     > li {
@@ -218,53 +219,9 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
                                         <span className="label label-danger">11</span>
                                     </span>
                                 </a>
-                                <ul className="dropdown-menu" aria-labelledby="basic-nav-dropdown">
-                                    <ul className="list-group">
-                                        <a href="javascript:void(0)" className="list-group-item">
-                                            <div className="media-box">
-                                                <div className="pull-left">
-                                                    <em className="fa fa-twitter fa-2x text-info" />
-                                                </div>
-                                                <div className="media-box-body clearfix">
-                                                    <p className="m0">New followers</p>
-                                                    <p className="m0 text-muted">
-                                                        <small>1 new follower</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a href="javascript:void(0)" className="list-group-item">
-                                            <div className="media-box">
-                                                <div className="pull-left">
-                                                    <em className="fa fa-envelope fa-2x text-warning" />
-                                                </div>
-                                                <div className="media-box-body clearfix">
-                                                    <p className="m0">New e-mails</p>
-                                                    <p className="m0 text-muted">
-                                                        <small>You have 10 new emails</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a href="javascript:void(0)" className="list-group-item">
-                                            <div className="media-box">
-                                                <div className="pull-left">
-                                                    <em className="fa fa-tasks fa-2x text-success" />
-                                                </div>
-                                                <div className="media-box-body clearfix">
-                                                    <p className="m0">Pending Tasks</p>
-                                                    <p className="m0 text-muted">
-                                                        <small>11 pending task</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a href="javascript:void(0)" className="list-group-item">
-                                            <small>More notifications</small>
-                                            <span className="label label-danger pull-right">14</span>
-                                        </a>
-                                    </ul>
-                                </ul>
+                                <div className="dropdown-menu">
+                                    <Notifications />
+                                </div>
                             </li>
                             <UserMenu
                                 collapsed={!this.isDropdownVisible('user')}

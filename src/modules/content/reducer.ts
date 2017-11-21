@@ -24,6 +24,7 @@ export type State = {
     readonly stylesheet: string;
     readonly menus: { name: string, content: IProtypoElement[] }[];
     readonly page: { name: string, content: IProtypoElement[], error?: string };
+    readonly notifications: IProtypoElement[];
     readonly alert: { id: string, success: string, error: string };
     readonly imageEditor: { data: string, aspectRatio: number, minWidth: number, result: string };
 };
@@ -33,6 +34,7 @@ export const initialState: State = {
     stylesheet: null,
     menus: [],
     page: null,
+    notifications: null,
     alert: null,
     imageEditor: { data: null, aspectRatio: null, minWidth: null, result: null }
 };
@@ -194,6 +196,13 @@ export default (state: State = initialState, action: Action): State => {
                 minWidth: null,
                 result: action.payload
             }
+        };
+    }
+
+    if (isType(action, actions.fetchNotifications.done)) {
+        return {
+            ...state,
+            notifications: action.payload.result
         };
     }
 
