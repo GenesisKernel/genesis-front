@@ -66,31 +66,56 @@ const TabItem = styled.div`
     &.active {        
         opacity: 1;
     }
+    
+    &.page {
+        background-color: #5c3d62;
+    }
+    
+    &.contract {
+        background-color: #3d624e;
+    }
 `;
 
 export interface IConstructorTabsProps {
     tabs: { id: string, type: string, name?: string, visible?: boolean }[];
     children: JSX.Element[];
+    openedTab: { id: string, type: string };
     onTabClose?: any;
     className?: string;
 }
 
 interface IConstructorTabsState {
     tabIndex: number;
+    loaded: boolean;
 }
 
 export default class ConstructorTabs extends React.Component<IConstructorTabsProps, IConstructorTabsState> {
     constructor(props: IConstructorTabsProps) {
         super(props);
         this.state = {
-            tabIndex: 0
+            tabIndex: 0,
+            loaded: false
         };
     }
 
     onTabSwitch(tabIndex: number) {
         this.setState({
-            tabIndex
+            tabIndex,
+            loaded: true
         });
+    }
+
+    componentWillReceiveProps(props: IConstructorTabsProps) {
+        // open selected tab
+        if (props.tabs && !this.state.loaded) {
+            let tabIndex = props.tabs.findIndex((item: any) => item.id === props.openedTab.id && item.type === props.openedTab.type);
+            if (tabIndex >= 0 && this.state.tabIndex < tabIndex) {
+                this.setState({
+                    tabIndex,
+                    loaded: false
+                });
+            }
+        }
     }
 
     onTabClose(id: string, type: string) {
@@ -104,7 +129,8 @@ export default class ConstructorTabs extends React.Component<IConstructorTabsPro
                 );
                 if (switchToTabIndex !== -1) {
                     this.setState({
-                        tabIndex: switchToTabIndex
+                        tabIndex: switchToTabIndex,
+                        loaded: true
                     });
                 }
             }
@@ -124,7 +150,7 @@ export default class ConstructorTabs extends React.Component<IConstructorTabsPro
             <TabsContainer>
                 <TabItems>
                     {this.props.tabs.map((tab, index) => (
-                        <TabItem key={index} className={`${index === this.state.tabIndex ? 'active' : ''} ${tab.visible === false ? 'hidden' : ''}`}>
+                        <TabItem key={index} className={`${index === this.state.tabIndex ? 'active' : ''} ${tab.visible === false ? 'hidden' : ''} ${tab.type}`}>
                             <span onClick={this.onTabSwitch.bind(this, index)}>{tab.name}</span>
                             <a href="javascript:void(0)" onClick={this.onTabClose.bind(this, tab.id, tab.type)}>&times;</a>
                         </TabItem>

@@ -20,6 +20,7 @@ import { FormattedMessage } from 'react-intl';
 import Editor from 'components/Editor';
 
 import TxButton from 'containers/Widgets/TxButton';
+import { Link } from 'react-router-dom';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 
@@ -119,6 +120,13 @@ const ContractEditor: React.SFC<IContractEditorProps> = (props) => (
                                 <em className="fa fa-code fa-fw mr-sm" />
                                 <FormattedMessage id="admin.contract.format" defaultMessage="Format code" />
                             </Button>
+                            <Link to={`constructor`}>
+                                <Button bsStyle="default" className="btn-labeled btn-icon">
+                                                        <span className="btn-label">
+                                                            <em className="fa fa-files-o" />
+                                                        </span>
+                                </Button>
+                            </Link>
 
                             <Validation.components.ValidatedSubmit bsStyle="primary" className="pull-right">
                                 <FormattedMessage id="admin.save" defaultMessage="Save" />

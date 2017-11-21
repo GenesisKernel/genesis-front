@@ -17,16 +17,19 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { getPage } from 'modules/admin/actions';
+import { getPage, getContract } from 'modules/admin/actions';
 
 // import Constructor, { IConstructorProps } from 'components/Main/Admin/Interface/Constructor';
-import Constructor from 'containers/Main/containers/Admin/Interface/Constructor';
+import InterfaceConstructor from 'containers/Main/containers/Admin/Interface/Constructor';
+import ContractConstructor from 'containers/Main/containers/Admin/Contracts/Constructor';
 import ConstructorTabs from 'components/ConstructorTabs';
 import { loadTabList, removeTabList } from 'modules/admin/actions';
 
 export interface IConstructorTabbedProps {
     pageID?: string;
     pageName?: string;
+    contractID?: string;
+    contractName?: string;
     page?: any;
     tabs: any;
     tabList: { id: string, type: string, name?: string, visible?: boolean }[];
@@ -37,9 +40,22 @@ export interface IConstructorTabbedProps {
     removeTabList: typeof removeTabList;
 }
 
-class ConstructorTabbed extends React.Component<IConstructorTabbedProps & { getPage: typeof getPage.started, match?: { params: { pageID: string, pageName: string } } }> {
+class ConstructorTabbed extends React.Component<IConstructorTabbedProps & {
+    getPage: typeof getPage.started,
+    getContract: typeof getContract.started,
+    match?: {
+        params: {
+            pageID?: string, pageName?: string,
+            contractID?: string, contractName?: string
+        }
+    } }> {
     componentWillMount() {
-        this.props.loadTabList({ addID: this.props.match.params.pageID, addType: 'page' });
+        if (this.props.match.params.pageID) {
+            this.props.loadTabList({addID: this.props.match.params.pageID, addName: this.props.match.params.pageName, addType: 'page'});
+        }
+        if (this.props.match.params.contractID) {
+            this.props.loadTabList({addID: this.props.match.params.contractID, addName: this.props.match.params.contractName, addType: 'contract'});
+        }
     }
 
     onTabClose(id: string, type: string) {
@@ -52,9 +68,16 @@ class ConstructorTabbed extends React.Component<IConstructorTabbedProps & { getP
         if (this.props.tabList.length) {
             for (let tabListItem of this.props.tabList) {
                 // todo switch components depending on tabListItem.type: page, contract, etc
-                tabs.push(
-                    <Constructor pageID={tabListItem.id} key={tabListItem.id}/>
-                );
+                if (tabListItem.type === 'page') {
+                    tabs.push(
+                        <InterfaceConstructor pageID={tabListItem.id} key={tabListItem.type + tabListItem.id}/>
+                    );
+                }
+                if (tabListItem.type === 'contract') {
+                    tabs.push(
+                        <ContractConstructor contractID={tabListItem.id} key={tabListItem.type + tabListItem.id} {...this.props}/>
+                    );
+                }
             }
         }
         return tabs;
@@ -64,12 +87,13 @@ class ConstructorTabbed extends React.Component<IConstructorTabbedProps & { getP
         let tabTitles = [];
 
         if (this.props.tabList.length) {
+            // alert(JSON.stringify(this.props.tabs));
             for (let tabListItem of this.props.tabList) {
-                if (this.props.tabs && this.props.tabs[tabListItem.id]) {
+                if (this.props.tabs && this.props.tabs[tabListItem.type + tabListItem.id]) {
                     tabTitles.push({
                         id: tabListItem.id,
                         type: tabListItem.type,
-                        name: this.props.tabs[tabListItem.id].data.name,
+                        name: this.props.tabs[tabListItem.type + tabListItem.id].data.name || tabListItem.name || 'no name',
                         visible: tabListItem.visible
                     });
                 }
@@ -84,9 +108,20 @@ class ConstructorTabbed extends React.Component<IConstructorTabbedProps & { getP
             }
         }
 
+        let openedTab = { id: '', type: '' };
+        if (this.props.match.params.pageID) {
+            openedTab.id = this.props.match.params.pageID;
+            openedTab.type = 'page';
+        }
+        if (this.props.match.params.contractID) {
+            openedTab.id = this.props.match.params.contractID;
+            openedTab.type = 'contract';
+        }
+
         return (
             <ConstructorTabs
                 tabs={tabTitles}
+                openedTab={openedTab}
                 onTabClose={this.onTabClose.bind(this)}
             >
                 {/*<Constructor pageID={pageID}/>*/}
@@ -105,6 +140,7 @@ const mapStateToProps = (state: IRootState) => ({
 
 const mapDispatchToProps = {
     getPage: getPage.started,
+    getContract: getContract.started,
     loadTabList,
     removeTabList
 };

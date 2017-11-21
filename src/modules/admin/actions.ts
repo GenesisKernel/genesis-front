@@ -53,6 +53,6 @@ export const importData = actionCreator.async<File, any, undefined>('IMPORT_DATA
 export const importDataPrune = actionCreator<{ name: string, key: string, index?: number }>('IMPORT_DATA_PRUNE');
 
 // Constructor
-export const loadTabList = actionCreator<{ addID?: string, addType?: string}>('LOAD_TAB_LIST');
+export const loadTabList = actionCreator<{ addID?: string, addName?: string, addType?: string}>('LOAD_TAB_LIST');
 export const addTabList = actionCreator<{ id: string, type: string }>('ADD_TAB_LIST');
 export const removeTabList = actionCreator<{ id: string, type: string}>('REMOVE_TAB_LIST');

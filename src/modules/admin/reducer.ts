@@ -118,7 +118,7 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.constructor,
                 tabs: {
                     ...state.constructor.tabs,
-                    [action.payload.result.page.id]: {
+                    ['page' + action.payload.result.page.id]: {
                         type: 'page',
                         data: action.payload.result.page
                     }
@@ -259,7 +259,17 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            contract: action.payload.result
+            contract: action.payload.result,
+            constructor: {
+                ...state.constructor,
+                tabs: {
+                    ...state.constructor.tabs,
+                    ['contract' + action.payload.result.id]: {
+                        type: 'contract',
+                        data: action.payload.result
+                    }
+                }
+            }
         };
     }
     else if (isType(action, actions.getContract.failed)) {
@@ -497,19 +507,30 @@ export default (state: State = initialState, action: Action): State => {
         }
 
         if ('string' === typeof action.payload.addID) {
-            if (!tabList.find((item: any) => item.id === action.payload.addID && item.type === action.payload.addType)) {
-                let settingsTabList = tabList.concat({
-                    id: action.payload.addID,
-                    type: action.payload.addType
-                });
-                storage.settings.save('constructorTabList', JSON.stringify(settingsTabList));
-
-                tabList = tabList.concat({
-                    id: action.payload.addID,
-                    type: action.payload.addType,
-                    visible: true
-                });
+            let index = tabList.findIndex((item: any) => item.id === action.payload.addID && item.type === action.payload.addType);
+            // delete existing tab and add to the end. update name
+            if (index >= 0 && index < tabList.length) {
+                tabList = [
+                    ...tabList.slice(0, index),
+                    ...tabList.slice(index + 1)
+                ];
             }
+            // if (tabList.find((item: any) => item.id === action.payload.addID && item.type === action.payload.addType))
+
+            let settingsTabList = tabList.concat({
+                id: action.payload.addID,
+                name: action.payload.addName,
+                type: action.payload.addType
+            });
+            storage.settings.save('constructorTabList', JSON.stringify(settingsTabList));
+
+            tabList = tabList.concat({
+                id: action.payload.addID,
+                name: action.payload.addName,
+                type: action.payload.addType,
+                visible: true
+            });
+
         }
 
         return {
@@ -568,10 +589,11 @@ export default (state: State = initialState, action: Action): State => {
                 // remove visible attr
                 let tabListStorageCleared = [];
                 for (let item of tabListStorage) {
-                    if(item.visible !== false) {
+                    if (item.visible !== false) {
                         tabListStorageCleared.push({
-                                id: item.id,
-                                type: item.type
+                            id: item.id,
+                            name: item.name,
+                            type: item.type
                         });
                     }
                 }

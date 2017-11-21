@@ -75,6 +75,7 @@ class MainContainer extends React.Component<IMainProps & { ecosystemInit: typeof
             <Switch>
                 <Route exact path="/admin/interface/page/:pageID-:pageName/constructor" component={ConstructorTabbed} />
                 <Route exact path="/admin/interface/create-page/constructor" component={ConstructorTabbed} />
+                <Route exact path="/admin/contracts/:contractID-:contractName/constructor" component={ConstructorTabbed} />
                 <Main {...this.props}>
                     <Switch>
                         <Route exact path="/" component={DefaultPage} />

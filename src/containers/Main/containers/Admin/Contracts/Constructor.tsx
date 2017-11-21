@@ -17,39 +17,47 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { getPage } from 'modules/admin/actions';
+import { getContract } from 'modules/admin/actions';
 
-import Constructor from 'components/Main/Admin/Interface/Constructor';
+import ConstructorEdit from 'components/Main/Admin/Contracts/ConstructorEdit';
 
-export interface IConstructorContainerProps {
-    pageID?: string;
-    page: { id: string, name: string, value: string };
+export interface IEditProps {
+    contractID?: string;
+    contractName?: string;
     tabs: any;
-    session: string;
+    contract: {
+        id: string;
+        active: string;
+        name: string;
+        conditions: string;
+        address: string;
+        value: string;
+    };
+    getContract: typeof getContract.started;
 }
 
-class ConstructorContainer extends React.Component<IConstructorContainerProps & { getPage?: typeof getPage.started } > {
+class EditContainer extends React.Component<IEditProps> {
     componentWillMount() {
-        this.props.getPage({ id: this.props.pageID });
+        this.props.getContract({
+            id: this.props.contractID
+        });
     }
 
     render() {
-        let page = this.props.tabs && this.props.tabs['page' + this.props.pageID] && this.props.tabs['page' + this.props.pageID].data || null;
-
+        let contract = this.props.tabs && this.props.tabs['contract' + this.props.contractID] && this.props.tabs['contract' + this.props.contractID].data || null;
         return (
-            <Constructor {...this.props} page={page} />
+            <ConstructorEdit {...this.props} contract={contract} />
         );
     }
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    page: state.admin.page,
+    contract: state.admin.contract,
     tabs: state.admin.constructor && state.admin.constructor.tabs || null,
-    session: state.auth.sessionToken
 });
 
 const mapDispatchToProps = {
-    getPage: getPage.started
+    getContract: getContract.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ConstructorContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(EditContainer);
