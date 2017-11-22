@@ -47,6 +47,7 @@ import ParametersCreate from 'containers/Main/containers/Admin/Parameters/Create
 import ParametersEdit from 'containers/Main/containers/Admin/Parameters/Edit';
 import Import from 'containers/Main/containers/Admin/Import';
 import Export from 'containers/Main/containers/Admin/Export';
+import Tabs from 'containers/Main/containers/Admin/Tabs';
 import DefaultPage from 'containers/Main/containers/DefaultPage';
 import Page from 'containers/Main/containers/Page';
 import Debug from 'containers/Main/containers/Debug';
@@ -101,6 +102,8 @@ class MainContainer extends React.Component<IMainProps & { ecosystemInit: typeof
                     <Route exact path="/admin/parameters/:parameterName" component={ParametersEdit} />
                     <Route exact path="/admin/import" component={Import} />
                     <Route exact path="/admin/export" component={Export} />
+                    <Route exact path="/admin/tabs" component={Tabs} />
+                    <Route exact path="/admin/tabs/:type-:id-:name/" component={Tabs} />
 
                     <Route exact path="/page/:pageName" component={Page} />
 

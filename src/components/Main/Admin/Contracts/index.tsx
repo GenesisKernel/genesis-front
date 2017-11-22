@@ -86,6 +86,13 @@ const Contracts: React.SFC<IContractsProps> = (props) => (
                                                             </span>
                                                         </Button>
                                                     </Link>
+                                                    <Link to={`/admin/tabs/contract-${contract.id}-${contract.name}`}>
+                                                        <Button bsStyle="default" className="btn-labeled btn-icon">
+                                                        <span className="btn-label">
+                                                            <em className="fa fa-files-o" />
+                                                        </span>
+                                                        </Button>
+                                                    </Link>
                                                 </td>
                                             </tr>
                                         ))

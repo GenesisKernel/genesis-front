@@ -18,6 +18,7 @@ import * as actions from './actions';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse } from 'lib/api';
+import storage from 'lib/storage';
 
 export type State = {
     readonly pending: boolean;
@@ -31,6 +32,7 @@ export type State = {
     readonly interfaces: IInterfacesResponse;
     readonly contract: { id: string, name: string, conditions: string, address: string, value: string };
     readonly contracts: IContract[];
+    readonly tabs: { data: any, list: { id: string, type: string, name?: string, visible?: boolean }[] };
     readonly language: { id: string, res: any, name: string, conditions: string };
     readonly languages: { id: string, res: any, name: string, conditions: string }[];
     readonly parameter: IParameterResponse;
@@ -64,6 +66,7 @@ export const initialState: State = {
     interfaces: null,
     contract: null,
     contracts: null,
+    tabs: { data: {}, list: [] },
     language: null,
     languages: null,
     parameter: null,
@@ -457,6 +460,103 @@ export default (state: State = initialState, action: Action): State => {
                 [action.payload.name]: payload
             }
         };
+    }
+
+    if (isType(action, actions.loadTabList)) {
+        let tabList: any = storage.settings.load('tabList');
+        if (!tabList) {
+            tabList = [];
+        }
+        else {
+            try {
+                tabList = JSON.parse(tabList);
+            }
+            catch (e) {
+                tabList = [];
+            }
+        }
+
+        // remove visible attr
+        for (let item of tabList) {
+            if (typeof item.visible === 'boolean') {
+                delete item.visible;
+            }
+        }
+
+        if ('string' === typeof action.payload.addID) {
+            let index = tabList.findIndex((item: any) => item.id === action.payload.addID && item.type === action.payload.addType);
+            // delete existing tab and add to the end. update name
+            if (index >= 0 && index < tabList.length) {
+                tabList = [
+                    ...tabList.slice(0, index),
+                    ...tabList.slice(index + 1)
+                ];
+            }
+            // if (tabList.find((item: any) => item.id === action.payload.addID && item.type === action.payload.addType))
+            let settingsTabList = tabList.concat({
+                id: action.payload.addID,
+                name: action.payload.addName,
+                type: action.payload.addType
+            });
+            storage.settings.save('tabList', JSON.stringify(settingsTabList));
+
+            tabList = tabList.concat({
+                id: action.payload.addID,
+                name: action.payload.addName,
+                type: action.payload.addType,
+                visible: true
+            });
+
+        }
+
+        return {
+            ...state,
+            tabs: {
+                ...state.tabs,
+                list: tabList
+            }
+        };
+    }
+
+    if (isType(action, actions.removeTabList)) {
+        let tabList: any = state.tabs.list || [];
+
+        if ('string' === typeof action.payload.id && 'string' === typeof action.payload.type) {
+            let index = tabList.findIndex((item: any) => item.id === action.payload.id && item.type === action.payload.type);
+            if (index >= 0 && index < tabList.length) {
+
+                // store only visible tabs
+                let tabListStorage = [
+                    ...tabList.slice(0, index),
+                    ...tabList.slice(index + 1)
+                ];
+
+                // remove visible attr
+                let tabListStorageCleared = [];
+                for (let item of tabListStorage) {
+                    if (item.visible !== false) {
+                        tabListStorageCleared.push({
+                            id: item.id,
+                            name: item.name,
+                            type: item.type
+                        });
+                    }
+                }
+                storage.settings.save('tabList', JSON.stringify(tabListStorageCleared));
+
+                // mark tab is invisible to prevent reload pages
+                tabList[index].visible = false;
+            }
+        }
+
+        return {
+            ...state,
+            tabs: {
+                ...state.tabs,
+                list: tabList
+            }
+        };
+
     }
 
     return state;

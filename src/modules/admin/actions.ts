@@ -51,3 +51,7 @@ export const getLanguages = actionCreator.async<{ offset?: number, limit?: numbe
 export const exportData = actionCreator.async<{ pages: string[], blocks: string[], menus: string[], parameters: string[], languages: string[], contracts: { id: string, name: string }[], tables: string[], data: string[] }, object, string>('EXPORT_DATA');
 export const importData = actionCreator.async<File, any, undefined>('IMPORT_DATA');
 export const importDataPrune = actionCreator<{ name: string, key: string, index?: number }>('IMPORT_DATA_PRUNE');
+
+// Tabs
+export const loadTabList = actionCreator<{ addID?: string, addName?: string, addType?: string}>('LOAD_TAB_LIST');
+export const removeTabList = actionCreator<{ id: string, type: string}>('REMOVE_TAB_LIST');
