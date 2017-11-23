@@ -110,7 +110,17 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             pending: false,
             page: action.payload.result.page,
-            menus: action.payload.result.menus
+            menus: action.payload.result.menus,
+            tabs: {
+                ...state.tabs,
+                data: {
+                    ...state.tabs.data,
+                    ['interfacePage' + action.payload.result.page.id]: {
+                        type: 'interfacePage',
+                        data: action.payload.result.page
+                    }
+                }
+            }
         };
     }
     else if (isType(action, actions.getPage.failed)) {
@@ -246,7 +256,17 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            contract: action.payload.result
+            contract: action.payload.result,
+            tabs: {
+                ...state.tabs,
+                data: {
+                    ...state.tabs.data,
+                    ['contract' + action.payload.result.id]: {
+                        type: 'contract',
+                        data: action.payload.result
+                    }
+                }
+            }
         };
     }
     else if (isType(action, actions.getContract.failed)) {

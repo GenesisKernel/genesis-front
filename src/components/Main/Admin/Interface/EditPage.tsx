@@ -26,6 +26,7 @@ export interface IEditPageProps {
     page: { id: string, name: string, menu: string, conditions: string, value: string };
     menus: { id: string, name: string, conditions: string, value: string }[];
     navigatePage: (params: { name: string, params?: any }) => void;
+    tabView?: boolean;
 }
 
 interface IEditPageState {
@@ -87,6 +88,22 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
     }
 
     render() {
+        if(this.props.tabView) {
+            return (
+                <PageEditor
+                    contractName="@1EditPage"
+                    mapContractParams={this.mapContractParams.bind(this)}
+                    template={this.state.template}
+                    conditions={this.state.conditions}
+                    page={this.props.page}
+                    menu={this.state.menu}
+                    menus={this.props.menus || []}
+                    onConditionsEdit={this.onConditionsEdit.bind(this)}
+                    onSourceEdit={this.onSourceEdit.bind(this)}
+                    onMenuSelect={this.onMenuSelect.bind(this)}
+                />
+            );
+        }
         return (
             <DocumentTitle title={this.props.page && this.props.page.name}>
                 <div>

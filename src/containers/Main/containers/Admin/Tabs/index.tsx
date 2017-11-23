@@ -19,7 +19,8 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import Tabs from 'components/Tabs';
 import { loadTabList, removeTabList } from 'modules/admin/actions';
-// import ContractTabbed from 'containers/Main/containers/Admin/Contracts/EditTabbed.tsx';
+import ContractEditTabbed from 'containers/Main/containers/Admin/Contracts/EditTabbed';
+import InterfacePageEditTabbed from 'containers/Main/containers/Admin/Interface/EditPageTabbed';
 
 interface ITabsContainerProps {
     tabData: any;
@@ -52,19 +53,16 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
             for (let tabListItem of this.props.tabList) {
                 // switch components depending on tabListItem.type: page, contract, etc
                 if (tabListItem.type === 'interfacePage') {
-                    // tabs.push(
-                    //    <InterfaceConstructor pageID={tabListItem.id} key={tabListItem.type + tabListItem.id}/>
-                    //);
-                    tabsContent.push(<div>interfacePage</div>);
+                    tabsContent.push(
+                       <InterfacePageEditTabbed pageID={tabListItem.id} key={tabListItem.type + tabListItem.id}/>
+                    );
                 }
                 if (tabListItem.type === 'contract') {
-                    // tabs.push(
-                    //     <ContractTabbed contractID={tabListItem.id} key={tabListItem.type + tabListItem.id} {...this.props}/>
-                    // );
-                    tabsContent.push(<div>contract!</div>);
+                    tabsContent.push(
+                        <ContractEditTabbed contractID={tabListItem.id} key={tabListItem.type + tabListItem.id}/>
+                    );
                 }
             }
-
         }
         return tabsContent;
     }
@@ -74,22 +72,30 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
 
         if (this.props.tabList.length) {
             for (let tabListItem of this.props.tabList) {
-                if (this.props.tabData && this.props.tabData[tabListItem.type + tabListItem.id]) {
-                    tabTitles.push({
-                        id: tabListItem.id,
-                        type: tabListItem.type,
-                        name: this.props.tabData[tabListItem.type + tabListItem.id].data.name || tabListItem.name || 'no name',
-                        visible: tabListItem.visible
-                    });
-                }
-                else {
-                     tabTitles.push({
-                         id: tabListItem.id,
-                         type: tabListItem.type,
-                         name: tabListItem.type + ' ID ' + tabListItem.id,
-                         visible: tabListItem.visible
-                     });
-                }
+                tabTitles.push({
+                            id: tabListItem.id,
+                            type: tabListItem.type,
+                            name: tabListItem.name || 'no name',
+                            visible: tabListItem.visible
+                        });
+                // if (this.props.tabData && this.props.tabData[tabListItem.type + tabListItem.id]) {
+                //     tabTitles.push({
+                //         id: tabListItem.id,
+                //         type: tabListItem.type,
+                //         name: (this.props.tabData[tabListItem.type + tabListItem.id] && this.props.tabData[tabListItem.type + tabListItem.id].data && this.props.tabData[tabListItem.type + tabListItem.id].data.name)
+                //             || tabListItem.name
+                //             || 'no name',
+                //         visible: tabListItem.visible
+                //     });
+                // }
+                // else {
+                //      tabTitles.push({
+                //          id: tabListItem.id,
+                //          type: tabListItem.type,
+                //          name: tabListItem.type + ' ID ' + tabListItem.id,
+                //          visible: tabListItem.visible
+                //      });
+                // }
             }
         }
 
