@@ -57,34 +57,38 @@ class TxButton extends React.Component<ITxButtonProps & InjectedIntlProps> {
                 }
             }
             else if (props.contractStatus.error) {
-                const error: { type: string, error: string } = JSON.parse(props.contractStatus.error);
-                switch (error.type) {
-                    case 'warning':
-                        this.props.alert(
-                            'warning',
-                            this.props.intl.formatMessage({ id: 'tx.warning', defaultMessage: 'Warning' }),
-                            error.error,
-                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
-                        ); break;
+                try {
+                    const error: { type: string, error: string } = JSON.parse(props.contractStatus.error);
+                    switch (error.type) {
+                        case 'warning':
+                            this.props.alert(
+                                'warning',
+                                this.props.intl.formatMessage({ id: 'tx.warning', defaultMessage: 'Warning' }),
+                                error.error,
+                                this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
+                            ); break;
 
-                    case 'error':
-                        this.props.alert(
-                            'error',
-                            this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error' }),
-                            error.error,
-                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
-                        ); break;
+                        case 'error':
+                            this.props.alert(
+                                'error',
+                                this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error' }),
+                                error.error,
+                                this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
+                            ); break;
 
-                    case 'info':
-                        this.props.alert(
-                            'info',
-                            this.props.intl.formatMessage({ id: 'tx.info', defaultMessage: 'Information' }),
-                            error.error,
-                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
-                        ); break;
-                    default: break;
+                        case 'info':
+                            this.props.alert(
+                                'info',
+                                this.props.intl.formatMessage({ id: 'tx.info', defaultMessage: 'Information' }),
+                                error.error,
+                                this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
+                            ); break;
+                        default: break;
+                    }
                 }
-
+                catch (e) {
+                    /* Suppress parse errors */
+                }
                 toastr.error(
                     props.contractName,
                     this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error executing transaction' })

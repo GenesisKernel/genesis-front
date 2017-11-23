@@ -69,32 +69,37 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
                 );
             }
             else if (transaction.error) {
-                const error: { type: string, error: string } = JSON.parse(transaction.error);
-                switch (error.type) {
-                    case 'warning':
-                        this.alert(
-                            'warning',
-                            this.props.intl.formatMessage({ id: 'tx.warning', defaultMessage: 'Warning' }),
-                            error.error,
-                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
-                        ); break;
+                try {
+                    const error: { type: string, error: string } = JSON.parse(transaction.error);
+                    switch (error.type) {
+                        case 'warning':
+                            this.alert(
+                                'warning',
+                                this.props.intl.formatMessage({ id: 'tx.warning', defaultMessage: 'Warning' }),
+                                error.error,
+                                this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
+                            ); break;
 
-                    case 'error':
-                        this.alert(
-                            'error',
-                            this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error' }),
-                            error.error,
-                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
-                        ); break;
+                        case 'error':
+                            this.alert(
+                                'error',
+                                this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error' }),
+                                error.error,
+                                this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
+                            ); break;
 
-                    case 'info':
-                        this.alert(
-                            'info',
-                            this.props.intl.formatMessage({ id: 'tx.info', defaultMessage: 'Information' }),
-                            error.error,
-                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
-                        ); break;
-                    default: break;
+                        case 'info':
+                            this.alert(
+                                'info',
+                                this.props.intl.formatMessage({ id: 'tx.info', defaultMessage: 'Information' }),
+                                error.error,
+                                this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
+                            ); break;
+                        default: break;
+                    }
+                }
+                catch (e) {
+                    /* Suppress parse errors */
                 }
                 toastr.error(
                     props.contractName,
