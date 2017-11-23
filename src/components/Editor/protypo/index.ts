@@ -19,7 +19,13 @@
 import * as _ from 'lodash';
 import syntax from './monarch';
 
+const langName = 'protypo';
+
 const register = (editor: typeof monaco) => {
+    if (monaco.languages.getLanguages().find(l => langName === l.id)) {
+        return;
+    }
+
     const staticParamTypes = {
         Body: {
             label: 'Body',
@@ -585,7 +591,7 @@ const register = (editor: typeof monaco) => {
     const functionProposals = () =>
         _.map(functionDefs, (value) => value);
 
-    editor.languages.registerCompletionItemProvider('protypo', {
+    editor.languages.registerCompletionItemProvider(langName, {
         provideCompletionItems: (model, position) => {
             const textUntilPosition = model.getValueInRange({ startLineNumber: 1, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column });
 
@@ -599,17 +605,17 @@ const register = (editor: typeof monaco) => {
         }
     });
 
-    /*editor.languages.registerSignatureHelpProvider('protypo', {
+    /*editor.languages.registerSignatureHelpProvider(langName, {
         provideSignatureHelp: (model, position) => {
 
         }
     });*/
 
     monaco.languages.register({
-        id: 'protypo'
+        id: langName
     });
 
-    editor.languages.setMonarchTokensProvider('protypo', syntax(
+    editor.languages.setMonarchTokensProvider(langName, syntax(
         _.map(functionDefs, (value, key) => value.kind === monaco.languages.CompletionItemKind.Method ? key : null).filter(l => l),
         _.map(functionDefs, (value, key) => value.kind === monaco.languages.CompletionItemKind.Function ? key : null).filter(l => l)
     ));
