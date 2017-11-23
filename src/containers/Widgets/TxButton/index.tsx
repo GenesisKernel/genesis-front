@@ -142,6 +142,16 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
         }
     }
 
+    onAlert(type: string, title: string, text: string, buttonText: string) {
+        this.props.alertShow({
+            id: this._uuid,
+            type,
+            title,
+            text,
+            cancelButton: buttonText
+        });
+    }
+
     render() {
         const transaction = this.props.transactions.get(this._uuid);
         const pending = transaction && !transaction.block && !transaction.error;
@@ -150,6 +160,7 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
             <TxButton
                 {...this.props}
                 pending={pending}
+                alert={this.onAlert.bind(this)}
                 disabled={this.props.disabled}
                 className={this.props.className}
                 contractName={this.props.contractName}
@@ -158,6 +169,7 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
                 execContract={this.onExecContract.bind(this)}
                 onExec={this.props.onExec}
                 navigate={this.onNavigate.bind(this)}
+
             >
                 {this.props.children}
             </TxButton>

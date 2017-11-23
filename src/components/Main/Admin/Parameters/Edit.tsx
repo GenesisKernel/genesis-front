@@ -53,11 +53,6 @@ class Edit extends React.Component<IEditProps, IEditState> {
     }
 
     mapContractParams(values: { [key: string]: any }) {
-        console.log({
-            Id: this.props.parameter.id,
-            Value: this.state.value,
-            Conditions: this.state.conditions
-        }, this.props.parameter);
         return {
             Id: this.props.parameter.id,
             Value: this.state.value,

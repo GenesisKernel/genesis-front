@@ -21,6 +21,7 @@ import { toastr } from 'react-redux-toastr';
 import { Map } from 'immutable';
 import { IRootState } from 'modules';
 import { contractExec } from 'modules/tx/actions';
+import { alertShow } from 'modules/content/actions';
 import * as uuid from 'uuid';
 
 import Validation from 'components/Validation';
@@ -38,6 +39,7 @@ interface IValidatedContractFormStateProps {
 
 interface IValidatedContractFormDispatchProps {
     contractExec: typeof contractExec.started;
+    alertShow: typeof alertShow;
 }
 
 class ValidatedContractForm extends React.Component<IValidatedContractFormProps & IValidatedContractFormStateProps & IValidatedContractFormDispatchProps & InjectedIntlProps> {
@@ -67,6 +69,33 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
                 );
             }
             else if (transaction.error) {
+                const error: { type: string, error: string } = JSON.parse(transaction.error);
+                switch (error.type) {
+                    case 'warning':
+                        this.alert(
+                            'warning',
+                            this.props.intl.formatMessage({ id: 'tx.warning', defaultMessage: 'Warning' }),
+                            error.error,
+                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
+                        ); break;
+
+                    case 'error':
+                        this.alert(
+                            'error',
+                            this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error' }),
+                            error.error,
+                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
+                        ); break;
+
+                    case 'info':
+                        this.alert(
+                            'info',
+                            this.props.intl.formatMessage({ id: 'tx.info', defaultMessage: 'Information' }),
+                            error.error,
+                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
+                        ); break;
+                    default: break;
+                }
                 toastr.error(
                     props.contractName,
                     this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error executing transaction' })
@@ -77,6 +106,16 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
                 this.props.onExec(transaction.block, transaction.error);
             }
         }
+    }
+
+    alert(type: string, title: string, text: string, buttonText: string) {
+        this.props.alertShow({
+            id: this._uuid,
+            type,
+            title,
+            text,
+            cancelButton: buttonText
+        });
     }
 
     onSubmit(values: { [key: string]: any }) {
