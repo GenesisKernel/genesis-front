@@ -204,5 +204,5 @@ export default class Protypo extends React.Component<IProtypoProps> {
     navigatePage: propTypes.func.isRequired,
     navigate: propTypes.func.isRequired,
     menuPush: propTypes.func.isRequired,
-    vde: propTypes.bool.isRequired
+    vde: propTypes.bool
 };
