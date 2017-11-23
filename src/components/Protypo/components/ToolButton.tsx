@@ -28,12 +28,17 @@ export interface IToolButtonProps {
 
 interface IToolButtonContext {
     protypo: Protypo;
-    navigatePage: (params: { name: string, params: any }) => void;
+    vde?: boolean;
+    navigatePage: (params: { name: string, params: any, vde?: boolean }) => void;
 }
 
 const ToolButton: React.SFC<IToolButtonProps> = (props, context: IToolButtonContext) => {
     const onClick = () => {
-        context.navigatePage({ name: props.page, params: context.protypo.resolveParams(props.pageparams) });
+        context.navigatePage({
+            name: props.page,
+            params: context.protypo.resolveParams(props.pageparams),
+            vde: context.vde
+        });
     };
 
     return (
@@ -47,7 +52,8 @@ const ToolButton: React.SFC<IToolButtonProps> = (props, context: IToolButtonCont
 ToolButton.contextTypes = {
     form: propTypes.object,
     protypo: propTypes.object.isRequired,
-    navigatePage: propTypes.func.isRequired
+    navigatePage: propTypes.func.isRequired,
+    vde: propTypes.bool
 };
 
 export default ToolButton;

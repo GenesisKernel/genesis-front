@@ -17,4 +17,4 @@
 import actionCreatorFactory from 'typescript-fsa';
 
 const actionCreator = actionCreatorFactory('tx');
-export const contractExec = actionCreator.async<{ uuid: string, name: string, params: { [key: string]: any } }, string, string>('CONTRACT_EXEC');
+export const contractExec = actionCreator.async<{ vde?: boolean, uuid: string, name: string, params: { [key: string]: any } }, string, string>('CONTRACT_EXEC');

@@ -23,6 +23,7 @@ import Heading from 'components/Heading';
 import LocaleEditor from './LocaleEditor';
 
 export interface IEditProps {
+    vde?: boolean;
     translation: {
         name: string;
         res: string;
@@ -131,7 +132,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <Link to="/admin/languages">
+                                <Link to={this.props.vde ? '/vde/languages' : '/admin/languages'}>
                                     <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
                                 </Link>
                             </li>
@@ -140,6 +141,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
                             </li>
                         </ol>
                         <LocaleEditor
+                            vde={this.props.vde}
                             contractName="@1EditLang"
                             translation={this.props.translation && this.props.translation.name}
                             translations={this.state.translations}

@@ -17,45 +17,50 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { getTableStruct } from 'modules/admin/actions';
-import { ITableResponse } from 'lib/api';
+import { createVDE } from 'modules/engine/actions';
+import { alertShow } from 'modules/content/actions';
 
-import EditTable from 'components/Main/Admin/Tables/EditTable';
+import VDE from 'components/Main/Admin/VDE';
 
-export interface IEditTableContainerProps {
-    vde?: boolean;
-    match: { params: { tableName: string } };
+export interface IVDEContainerProps {
 }
 
-interface IEditTableContainerState {
-    table: ITableResponse;
+interface IVDEContainerState {
+    pending: boolean;
+    result: boolean;
 }
 
-interface IEditTableContainerDispatch {
-    getTableStruct: typeof getTableStruct.started;
+interface IVDEContainerDispatch {
+    createVDE: () => void;
+    alertShow: typeof alertShow;
 }
 
-class EditTableContainer extends React.Component<IEditTableContainerProps & IEditTableContainerState & IEditTableContainerDispatch> {
-    componentWillMount() {
-        this.props.getTableStruct({
-            name: this.props.match.params.tableName,
-            vde: this.props.vde
+class VDEContainer extends React.Component<IVDEContainerProps & IVDEContainerState & IVDEContainerDispatch> {
+    alert(type: string, title: string, text: string, buttonText: string) {
+        this.props.alertShow({
+            id: 'VDE',
+            type,
+            title,
+            text,
+            cancelButton: buttonText
         });
     }
 
     render() {
         return (
-            <EditTable {...this.props} />
+            <VDE {...this.props} alert={this.alert.bind(this)} />
         );
     }
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    table: state.admin.table
+    pending: state.engine.isCreatingVDE,
+    result: state.engine.createVDEResult
 });
 
 const mapDispatchToProps = {
-    getTableStruct: getTableStruct.started
+    alertShow,
+    createVDE: () => createVDE.started(null)
 };
 
-export default connect<IEditTableContainerState, IEditTableContainerDispatch, IEditTableContainerProps>(mapStateToProps, mapDispatchToProps)(EditTableContainer);
+export default connect<IVDEContainerState, IVDEContainerDispatch, IVDEContainerProps>(mapStateToProps, mapDispatchToProps)(VDEContainer);

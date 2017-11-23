@@ -38,6 +38,7 @@ const StyledContent = styled.section`
 export interface IMainProps {
     session: string;
     isCollapsed: boolean;
+    isEcosystemOwner: boolean;
     pending: boolean;
     stylesheet: string;
     menus: { name: string, content: IProtypoElement[] }[];
@@ -67,6 +68,7 @@ export default class Main extends React.Component<IMainProps> {
                     {this.props.stylesheet}
                 </style>
                 <Sidebar
+                    isEcosystemOwner={this.props.isEcosystemOwner}
                     menus={this.props.menus}
                     collapsed={this.props.isCollapsed}
                     menuPop={this.props.menuPop.bind(this)}

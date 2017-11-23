@@ -23,18 +23,31 @@ import { IContract } from 'lib/api';
 import Contracts from 'components/Main/Admin/Contracts';
 
 interface IContractsContainerProps {
+    vde?: boolean;
+}
+
+interface IContractsContainerState {
     contracts: IContract[];
+}
+
+interface IContractsContainerDispatch {
     getContracts: typeof getContracts.started;
 }
 
-class ContractsContainer extends React.Component<IContractsContainerProps> {
+class ContractsContainer extends React.Component<IContractsContainerProps & IContractsContainerState & IContractsContainerDispatch> {
     componentWillMount() {
-        this.props.getContracts({});
+        this.props.getContracts({ vde: this.props.vde });
+    }
+
+    componentWillReceiveProps(props: IContractsContainerProps) {
+        if (this.props.vde !== props.vde) {
+            this.props.getContracts({ vde: props.vde });
+        }
     }
 
     render() {
         return (
-            <Contracts contracts={this.props.contracts} />
+            <Contracts contracts={this.props.contracts} vde={this.props.vde} />
         );
     }
 }
@@ -47,4 +60,4 @@ const mapDispatchToProps = {
     getContracts: getContracts.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContractsContainer);
+export default connect<IContractsContainerState, IContractsContainerDispatch, IContractsContainerProps>(mapStateToProps, mapDispatchToProps)(ContractsContainer);

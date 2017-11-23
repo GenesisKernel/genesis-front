@@ -19,12 +19,26 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getContract } from 'modules/admin/actions';
 
-import Edit, { IEditProps } from 'components/Main/Admin/Contracts/Edit';
+import Edit from 'components/Main/Admin/Contracts/Edit';
 
-class EditContainer extends React.Component<IEditProps & { match: { params: { contractID: string } } }> {
+export interface IEditContainerProps {
+    vde?: boolean;
+    match: { params: { contractID: string } };
+}
+
+interface IEditContainerState {
+    contract: { id: string, active: string, name: string, conditions: string, address: string, value: string };
+}
+
+interface IEditContainerDispatch {
+    getContract: typeof getContract.started;
+}
+
+class EditContainer extends React.Component<IEditContainerProps & IEditContainerState & IEditContainerDispatch> {
     componentWillMount() {
         this.props.getContract({
-            id: this.props.match.params.contractID
+            id: this.props.match.params.contractID,
+            vde: this.props.vde
         });
     }
 
@@ -43,4 +57,4 @@ const mapDispatchToProps = {
     getContract: getContract.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditContainer);
+export default connect<IEditContainerState, IEditContainerDispatch, IEditContainerProps>(mapStateToProps, mapDispatchToProps)(EditContainer);

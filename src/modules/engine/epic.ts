@@ -17,7 +17,8 @@
 import api, { IAPIError } from 'lib/api';
 import { Action } from 'redux';
 import { Observable } from 'rxjs';
-import { combineEpics } from 'redux-observable';
+import { combineEpics, Epic } from 'redux-observable';
+import { IRootState } from 'modules';
 import * as actions from './actions';
 
 export const checkOnlineEpic = (actions$: Observable<Action>) =>
@@ -58,4 +59,23 @@ export const installEpic = (actions$: Observable<Action>) =>
             }).delay(600);
         });
 
-export default combineEpics(checkOnlineEpic, installEpic);
+export const createVDEEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.createVDE.started)
+        .flatMap(action => {
+            const state = store.getState();
+            return Observable.fromPromise(api.createVDE(state.auth.sessionToken))
+                .map(payload =>
+                    actions.createVDE.done({
+                        params: action.payload,
+                        result: payload.result
+                    })
+                )
+                .catch(error =>
+                    Observable.of(actions.createVDE.failed({
+                        params: action.payload,
+                        error: false
+                    }))
+                );
+        });
+
+export default combineEpics(checkOnlineEpic, installEpic, createVDEEpic);

@@ -21,24 +21,36 @@ import { getLanguages } from 'modules/admin/actions';
 
 import Languages from 'components/Main/Admin/Languages';
 
-interface ILanguagesContainerProps {
-    resources: {
-        id: string;
-        res: any;
-        name: string;
-        conditions: string;
-    }[];
+export interface ILanguagesContainerProps {
+    vde?: boolean;
+}
+
+interface ILanguagesContainerState {
+    resources: { id: string, res: any, name: string, conditions: string }[];
+}
+
+interface ILanguagesContainerDispatch {
     getLanguages: typeof getLanguages.started;
 }
 
-class LanguagesContainer extends React.Component<ILanguagesContainerProps> {
+class LanguagesContainer extends React.Component<ILanguagesContainerProps & ILanguagesContainerState & ILanguagesContainerDispatch> {
     componentWillMount() {
-        this.props.getLanguages({});
+        this.props.getLanguages({
+            vde: this.props.vde
+        });
+    }
+
+    componentWillReceiveProps(props: ILanguagesContainerProps & ILanguagesContainerDispatch) {
+        if (this.props.vde !== props.vde) {
+            props.getLanguages({
+                vde: props.vde
+            });
+        }
     }
 
     render() {
         return (
-            <Languages resources={this.props.resources} />
+            <Languages resources={this.props.resources} vde={this.props.vde} />
         );
     }
 }
@@ -51,4 +63,4 @@ const mapDispatchToProps = {
     getLanguages: getLanguages.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(LanguagesContainer);
+export default connect<ILanguagesContainerState, ILanguagesContainerDispatch, ILanguagesContainerProps>(mapStateToProps, mapDispatchToProps)(LanguagesContainer);

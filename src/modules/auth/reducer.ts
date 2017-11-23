@@ -24,6 +24,8 @@ export type State = {
     readonly isAuthenticated: boolean;
     readonly isLoggingIn: boolean;
     readonly isCreatingAccount: boolean;
+    readonly isNodeOwner: boolean;
+    readonly isEcosystemOwner: boolean;
     readonly wallet: string;
     readonly sessionToken: string;
     readonly refreshToken: string;
@@ -46,6 +48,8 @@ export const initialState: State = {
     isAuthenticated: false,
     isLoggingIn: false,
     isCreatingAccount: false,
+    isNodeOwner: false,
+    isEcosystemOwner: false,
     wallet: null,
     sessionToken: null,
     refreshToken: null,
@@ -64,6 +68,8 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             isAuthenticated: false,
             isLoggingIn: true,
+            isNodeOwner: false,
+            isEcosystemOwner: false,
             account: null,
             sessionToken: null,
             refreshToken: null,
@@ -76,6 +82,8 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             isAuthenticated: true,
             isLoggingIn: false,
+            isNodeOwner: action.payload.result.isnode,
+            isEcosystemOwner: action.payload.result.isowner,
             account: action.payload.result.account,
             ecosystem: action.payload.result.ecosystem_id,
             sessionToken: action.payload.result.token,
@@ -98,6 +106,8 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             isAuthenticated: false,
             isLoggingIn: false,
+            isNodeOwner: false,
+            isEcosystemOwner: false,
             account: null,
             sessionToken: null,
             refreshToken: null

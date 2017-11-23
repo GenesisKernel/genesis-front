@@ -23,6 +23,7 @@ import DocumentTitle from 'components/DocumentTitle';
 import Heading from 'components/Heading';
 
 export interface IInterfaceProps {
+    vde?: boolean;
     pages: { id: string, name: string }[];
     menus: { id: string, name: string }[];
     blocks: { id: string, name: string }[];
@@ -34,7 +35,7 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
             <Heading>
                 <FormattedMessage id="admin.interface" defaultMessage="Interface" />
                 <div className="pull-right">
-                    <Link to="/admin/interface/create-page" className="ml">
+                    <Link to={props.vde ? '/vde/interface/create-page' : '/admin/interface/create-page'} className="ml">
                         <button className="btn btn-default ml">
                             <em className="fa fa-plus-circle fa-fw mr-sm" />
                             <span>
@@ -42,7 +43,7 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                             </span>
                         </button>
                     </Link>
-                    <Link to="/admin/interface/create-block" className="ml">
+                    <Link to={props.vde ? '/vde/interface/create-block' : '/admin/interface/create-block'} className="ml">
                         <button className="btn btn-default">
                             <em className="fa fa-plus-circle fa-fw mr-sm" />
                             <span>
@@ -50,7 +51,7 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                             </span>
                         </button>
                     </Link>
-                    <Link to="/admin/interface/create-menu" className="ml">
+                    <Link to={props.vde ? '/vde/interface/create-menu' : '/admin/interface/create-menu'} className="ml">
                         <button className="btn btn-default">
                             <em className="fa fa-plus-circle fa-fw mr-sm" />
                             <span>
@@ -80,7 +81,7 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                                 <tr key={page.id}>
                                                     <td>{page.name}</td>
                                                     <td style={{ width: 1 }}>
-                                                        <Link to={`/admin/interface/page/${page.id}-${page.name}`}>
+                                                        <Link to={`/${props.vde ? 'vde' : 'admin'}/interface/page/${page.id}-${page.name}`}>
                                                             <Button bsStyle="default" className="btn-labeled btn-icon">
                                                                 <span className="btn-label">
                                                                     <em className="fa fa-edit" />
@@ -115,7 +116,7 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                                 <tr key={menu.id}>
                                                     <td>{menu.name}</td>
                                                     <td style={{ width: 1 }}>
-                                                        <Link to={`/admin/interface/menu/${menu.id}-${menu.name}`}>
+                                                        <Link to={`/${props.vde ? 'vde' : 'admin'}/interface/menu/${menu.id}-${menu.name}`}>
                                                             <Button bsStyle="default" className="btn-labeled btn-icon">
                                                                 <span className="btn-label">
                                                                     <em className="fa fa-edit" />
@@ -148,7 +149,7 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                                 <tr key={block.id}>
                                                     <td>{block.name}</td>
                                                     <td style={{ width: 1 }}>
-                                                        <Link to={`/admin/interface/block/${block.id}-${block.name}`}>
+                                                        <Link to={`/${props.vde ? 'vde' : 'admin'}/interface/block/${block.id}-${block.name}`}>
                                                             <Button bsStyle="default" className="btn-labeled btn-icon">
                                                                 <span className="btn-label">
                                                                     <em className="fa fa-edit" />

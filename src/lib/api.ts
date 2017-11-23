@@ -73,6 +73,8 @@ export interface ILoginResponse extends IResponse {
     ecosystem_id: string;
     address: string;
     expiry: Date;
+    isnode: boolean;
+    isowner: boolean;
 }
 
 export interface ISignTestResponse extends IResponse {
@@ -175,9 +177,14 @@ export interface ITxStatusResponse extends IResponse {
 }
 
 export interface IParameterResponse extends IResponse {
+    id: string;
     name: string;
     value: string;
     conditions: string;
+}
+
+export interface ICreateVDEResponse extends IResponse {
+    result: boolean;
 }
 
 export interface IDBValue {
@@ -258,39 +265,47 @@ const api = {
     })) as Promise<ILoginResponse>,
 
     // Level 2
-    row: (session: string, table: string, id: string, columns?: string) => securedRequest(`row/${table}/${id}?columns=${columns || ''}`, session, null, { method: 'GET' }) as Promise<IRowResponse>,
+    row: (session: string, table: string, id: string, columns?: string, vde = false) => securedRequest(`row/${table}/${id}?columns=${columns || ''}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<IRowResponse>,
     contentMenu: (session: string, name: string) => securedRequest(`content/menu/${name}`, session, null) as Promise<IContentResponse>,
-    contentPage: (session: string, name: string, params: { [key: string]: any }) => securedRequest(`content/page/${name}`, session, params) as Promise<IContentResponse>,
+    contentPage: (session: string, name: string, params: { [key: string]: any }, vde = false) => securedRequest(`content/page/${name}`, session, { ...params, vde }) as Promise<IContentResponse>,
     contentTest: (session: string, template: string) => securedRequest('content', session, { template }) as Promise<IContentResponse>,
-    table: (session: string, name: string) => securedRequest(`table/${name}`, session, null, { method: 'GET' }) as Promise<ITableResponse>,
-    tables: (session: string, offset?: number, limit?: number) => securedRequest(`tables?offset=${offset || 0}&limit=${limit || 1000}`, session, null, { method: 'GET' }) as Promise<ITablesResponse>,
-    list: (session: string, name: string, offset?: number, limit?: number, columns?: string) => securedRequest(`list/${name}?offset=${offset || 0}&limit=${limit || 1000}&columns=${columns || ''}`, session, null, { method: 'GET' }) as Promise<IListResponse>,
-    page: (session: string, id: string) => Promise.all([
-        api.row(session, 'pages', id),
-        api.list(session, 'menu', 0, 0),
+    table: (session: string, name: string, vde?: boolean) => securedRequest(`table/${name}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITableResponse>,
+    tables: (session: string, offset?: number, limit?: number, vde = false) => securedRequest(`tables?offset=${offset || 0}&limit=${limit || 1000}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITablesResponse>,
+    list: (session: string, name: string, offset?: number, limit?: number, columns?: string, vde = false) => securedRequest(`list/${name}?offset=${offset || 0}&limit=${limit || 1000}&columns=${columns || ''}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<IListResponse>,
+    page: (session: string, id: string, vde = false) => Promise.all([
+        api.row(session, 'pages', id, undefined, vde),
+        api.list(session, 'menu', 0, 0, undefined, vde),
     ]).then(results => ({
         page: results[0].value,
         menus: results[1].list
     })) as Promise<IPageResponse>,
-    pages: (session: string) => Promise.all([
-        api.list(session, 'pages', 0, 0, 'name'),
-        api.list(session, 'menu', 0, 0, 'name'),
-        api.list(session, 'blocks', 0, 0, 'name'),
+    pages: (session: string, vde = false) => Promise.all([
+        api.list(session, 'pages', 0, 0, 'name', vde),
+        api.list(session, 'menu', 0, 0, 'name', vde),
+        api.list(session, 'blocks', 0, 0, 'name', vde),
     ]).then(results => ({
         pages: results[0].list,
         menus: results[1].list,
         blocks: results[2].list,
     })) as Promise<IInterfacesResponse>,
     contract: (session: string, name: string) => securedRequest(`contract/${name}`, session, null, { method: 'GET' }) as Promise<IContractResponse>,
-    contracts: (session: string, offset?: number, limit?: number) => securedRequest(`contracts?offset=${offset || 0}&limit=${limit || 1000}`, session, null, { method: 'GET' }) as Promise<IContractsResponse>,
-    parameter: (session: string, name: string) => securedRequest(`ecosystemparam/${name}`, session, null, { method: 'GET' }) as Promise<IParameterResponse>,
-    parameters: (session: string, params: string[]) => securedRequest(`ecosystemparams?names=${(params || []).join(',')}`, session, null, { method: 'GET' }).then(r => r.list) as Promise<IParameterResponse[]>,
+    contracts: (session: string, vde = false, offset?: number, limit?: number) => securedRequest(`contracts?offset=${offset || 0}&limit=${limit || 1000}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<IContractsResponse>,
+    parameter: (session: string, name: string, vde = false) => securedRequest(`ecosystemparam/${name}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<IParameterResponse>,
+    parameters: (session: string, params: string[], vde = false) => securedRequest(`ecosystemparams?names=${(params || []).join(',')}&vde=${vde}`, session, null, { method: 'GET' }).then(r => r.list) as Promise<IParameterResponse[]>,
+    createVDE: (session: string) => securedRequest('vde/create', session, null) as Promise<ICreateVDEResponse>,
 
-    txPrepare: (session: string, name: string, params: { [key: string]: any }) => securedRequest(`prepare/${name}`, session, params) as Promise<ITxPrepareResponse>,
-    txExec: (session: string, name: string, params: { [key: string]: any }) => securedRequest(`contract/${name}`, session, params).then((result: ITxExecResponse) => {
+    txPrepare: (session: string, name: string, params: { [key: string]: any }, vde = false) => securedRequest(`prepare/${name}`, session, { ...params, vde }) as Promise<ITxPrepareResponse>,
+    txExec: (session: string, name: string, params: { [key: string]: any }, vde = false) => securedRequest(`contract/${name}`, session, { ...params, vde }).then((result: ITxExecResponse) => {
+        if (vde) {
+            return {
+                blockid: vde && 'VDE',
+                errmsg: !vde && 'ERROR',
+            };
+        }
+
         return new Promise((resolve, reject) => {
             const resolver = () => {
-                api.txStatus(session, result.hash).then(status => {
+                api.txStatus(session, result.hash, vde).then(status => {
                     if (status.errmsg) {
                         reject(status);
                     }
@@ -307,7 +322,7 @@ const api = {
             resolver();
         });
     }) as Promise<ITxStatusResponse>,
-    txStatus: (session: string, hash: string) => securedRequest(`txstatus/${hash}`, session, null, { method: 'GET' }) as Promise<ITxStatusResponse>
+    txStatus: (session: string, hash: string, vde = false) => securedRequest(`txstatus/${hash}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITxStatusResponse>
 };
 
 export default api;

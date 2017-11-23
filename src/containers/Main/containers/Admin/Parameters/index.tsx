@@ -18,17 +18,40 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getParameters } from 'modules/admin/actions';
+import { IParameterResponse } from 'lib/api';
 
-import Parameters, { IParametersProps } from 'components/Main/Admin/Parameters';
+import Parameters from 'components/Main/Admin/Parameters';
 
-class ParametersContainer extends React.Component<IParametersProps & { getParameters: typeof getParameters.started }> {
+export interface IParametersContainerProps {
+    vde?: boolean;
+}
+
+interface IParametersContainerState {
+    parameters: IParameterResponse[];
+}
+
+interface IParametersContainerDispatch {
+    getParameters: typeof getParameters.started;
+}
+
+class ParametersContainer extends React.Component<IParametersContainerProps & IParametersContainerState & IParametersContainerDispatch> {
     componentDidMount() {
-        this.props.getParameters({});
+        this.props.getParameters({
+            vde: this.props.vde
+        });
+    }
+
+    componentWillReceiveProps(props: IParametersContainerProps & IParametersContainerDispatch) {
+        if (this.props.vde !== props.vde) {
+            props.getParameters({
+                vde: props.vde
+            });
+        }
     }
 
     render() {
         return (
-            <Parameters parameters={this.props.parameters} />
+            <Parameters parameters={this.props.parameters} vde={this.props.vde} />
         );
     }
 }
@@ -41,4 +64,4 @@ const mapDispatchToProps = {
     getParameters: getParameters.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ParametersContainer);
+export default connect<IParametersContainerState, IParametersContainerDispatch, IParametersContainerProps>(mapStateToProps, mapDispatchToProps)(ParametersContainer);

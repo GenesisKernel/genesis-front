@@ -24,6 +24,7 @@ import Heading from 'components/Heading';
 import ContractEditor from './ContractEditor';
 
 interface ICreateProps {
+    vde?: boolean;
     navigate: (url: string) => void;
 }
 
@@ -68,7 +69,9 @@ class Create extends React.Component<ICreateProps, ICreateState> {
 
     onExec(block: string, error: string) {
         if (block) {
-            this.props.navigate('/admin/contracts');
+            this.props.vde ?
+                this.props.navigate('/vde/contracts') :
+                this.props.navigate('/admin/contracts');
         }
     }
 
@@ -90,7 +93,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
 
     render() {
         return (
-            <DocumentTitle title="admin.contracts.create" defaultTitle="Create contract">
+            <DocumentTitle title="admin.contracts.create" defaultTitle="Create contract" >
                 <div>
                     <Heading>
                         <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
@@ -98,7 +101,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <Link to="/admin/contracts">
+                                <Link to={this.props.vde ? '/vde/contracts' : '/admin/contracts'}>
                                     <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
                                 </Link>
                             </li>
@@ -110,6 +113,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                             contractName="@1NewContract"
                             mapContractParams={this.mapContractParams.bind(this)}
 
+                            vde={this.props.vde}
                             code={this.state.code}
                             wallet={this.state.wallet}
                             conditions={this.state.conditions}

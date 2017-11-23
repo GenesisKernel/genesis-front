@@ -26,6 +26,7 @@ import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 
 export interface IEditColumnProps {
+    vde?: boolean;
     table: ITableResponse;
     column: { name: string, type: string, index: boolean, permissions: string };
 }
@@ -80,20 +81,20 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <Link to="/admin/tables">
+                                <Link to={this.props.vde ? '/vde/tables' : '/admin/tables'}>
                                     <FormattedMessage id="admin.tables" defaultMessage="Tables" />
                                 </Link>
                             </li>
                             {this.props.table && (
                                 <li>
-                                    <Link to={`/admin/tables/${this.props.table.name}`}>
+                                    <Link to={`/${this.props.vde ? 'vde' : 'admin'}/tables/${this.props.table.name}`}>
                                         {this.props.table.name}
                                     </Link>
                                 </li>
                             )}
                             {this.props.table && (
                                 <li>
-                                    <Link to={`/admin/tables/${this.props.table.name}/edit`}>
+                                    <Link to={`/${this.props.vde ? 'vde' : 'admin'}/tables/${this.props.table.name}/edit`}>
                                         <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
                                     </Link>
                                 </li>
@@ -102,7 +103,7 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
                                 <FormattedMessage id="admin.tables.column.edit" defaultMessage="Edit column" />
                             </li>
                         </ol>
-                        <ValidatedContractForm contractName="@1EditColumn" mapContractParams={this.mapContractParams.bind(this)}>
+                        <ValidatedContractForm vde={this.props.vde} contractName="@1EditColumn" mapContractParams={this.mapContractParams.bind(this)}>
                             <div className="panel panel-default">
                                 <div className="panel-body">
                                     <div className="form-group">

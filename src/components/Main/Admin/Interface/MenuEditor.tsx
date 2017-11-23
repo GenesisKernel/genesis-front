@@ -23,6 +23,7 @@ import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 
 interface IMenuEditorProps {
+    vde?: boolean;
     contractName: string;
     template: string;
     conditions: string;
@@ -36,7 +37,7 @@ interface IMenuEditorProps {
 const MenuEditor: React.SFC<IMenuEditorProps> = (props) => (
     <Row>
         <Col md={12}>
-            <ValidatedContractForm contractName={props.contractName} mapContractParams={props.mapContractParams} onExec={props.onExec && props.onExec}>
+            <ValidatedContractForm vde={props.vde} contractName={props.contractName} mapContractParams={props.mapContractParams} onExec={props.onExec && props.onExec}>
                 <div className="panel panel-primary">
                     <div className="panel-heading">
                         <FormattedMessage id="admin.interface.menu" defaultMessage="Menu" />

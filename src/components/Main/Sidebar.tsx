@@ -105,6 +105,7 @@ const StyledDevButton = styled.div`
         font-weight: bold;
         color: #888;
         font-size: 14px;
+        margin-top: 10px;
 
         > .icon {
             vertical-align: middle;
@@ -120,6 +121,7 @@ const StyledDevButton = styled.div`
 
 export interface ISidebarProps {
     collapsed: boolean;
+    isEcosystemOwner: boolean;
     intl?: InjectedIntl;
     menus: {
         name: string;
@@ -134,8 +136,8 @@ const Sidebar: React.SFC<ISidebarProps> = (props) => {
 
     // TODO: This function is a stub. In future, admin menu will be reworked to show through the API call
     const onAdminTools = () => {
-        props.menuPush({
-            name: 'adminTools',
+        const menuStack = {
+            name: 'admin_tools',
             content: [
                 {
                     tag: 'menuitem',
@@ -194,6 +196,68 @@ const Sidebar: React.SFC<ISidebarProps> = (props) => {
                     }
                 }
             ]
+        };
+
+        if (props.isEcosystemOwner) {
+            menuStack.content.push({
+                tag: 'menuitem',
+                attr: {
+                    icon: 'icon-lock',
+                    _systemPageHook: '/admin/vde',
+                    title: props.intl.formatMessage({ id: 'admin.vde.short', defaultMessage: 'Dedicated Ecosystem' })
+                }
+            });
+        }
+
+        props.menuPush(menuStack);
+    };
+
+    // TODO: This function is a stub. In future, admin menu will be reworked to show through the API call
+    const onVDETools = () => {
+        props.menuPush({
+            name: 'vde_tools',
+            content: [
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-screen-desktop',
+                        _systemPageHook: '/vde/interface',
+                        title: props.intl.formatMessage({ id: 'admin.interface', defaultMessage: 'Interface' })
+                    }
+                },
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-docs',
+                        _systemPageHook: '/vde/tables',
+                        title: props.intl.formatMessage({ id: 'admin.tables', defaultMessage: 'Tables' })
+                    }
+                },
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-briefcase',
+                        _systemPageHook: '/vde/contracts',
+                        title: props.intl.formatMessage({ id: 'admin.contracts', defaultMessage: 'Smart contracts' })
+                    }
+                },
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-settings',
+                        _systemPageHook: '/vde/parameters',
+                        title: props.intl.formatMessage({ id: 'admin.parameters', defaultMessage: 'Ecosystem parameters' })
+                    }
+                },
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-globe',
+                        _systemPageHook: '/vde/languages',
+                        title: props.intl.formatMessage({ id: 'admin.languages', defaultMessage: 'Language resources' })
+                    }
+                }
+            ]
         });
     };
 
@@ -213,6 +277,10 @@ const Sidebar: React.SFC<ISidebarProps> = (props) => {
                     />
                 </StyledMenuContent>
                 <StyledDevButton>
+                    <button id="mainAdminTools" onClick={onVDETools}>
+                        <em className="icon fa fa-wrench" />
+                        <FormattedMessage id="admin.vde.tools" defaultMessage="VDE tools" />
+                    </button>
                     <button id="mainAdminTools" onClick={onAdminTools}>
                         <em className="icon fa fa-cog" />
                         <FormattedMessage id="admin.tools" defaultMessage="Admin tools" />

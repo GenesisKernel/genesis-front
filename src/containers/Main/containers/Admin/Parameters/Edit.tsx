@@ -18,17 +18,34 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getParameter } from 'modules/admin/actions';
+import { IParameterResponse } from 'lib/api';
 
-import Edit, { IEditProps } from 'components/Main/Admin/Parameters/Edit';
+import Edit from 'components/Main/Admin/Parameters/Edit';
 
-class EditContainer extends React.Component<IEditProps & { getParameter: typeof getParameter.started, match: { params: { parameterName: string } } }> {
+export interface IEditContainerProps {
+    vde?: boolean;
+    match: { params: { parameterName: string } };
+}
+
+interface IEditContainerState {
+    parameter: IParameterResponse;
+}
+
+interface IEditContainerDispatch {
+    getParameter: typeof getParameter.started;
+}
+
+class EditContainer extends React.Component<IEditContainerProps & IEditContainerState & IEditContainerDispatch> {
     componentDidMount() {
-        this.props.getParameter({ name: this.props.match.params.parameterName });
+        this.props.getParameter({
+            name: this.props.match.params.parameterName,
+            vde: this.props.vde
+        });
     }
 
     render() {
         return (
-            <Edit parameter={this.props.parameter} />
+            <Edit parameter={this.props.parameter} vde={this.props.vde} />
         );
     }
 }
@@ -41,4 +58,4 @@ const mapDispatchToProps = {
     getParameter: getParameter.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditContainer);
+export default connect<IEditContainerState, IEditContainerDispatch, IEditContainerProps>(mapStateToProps, mapDispatchToProps)(EditContainer);

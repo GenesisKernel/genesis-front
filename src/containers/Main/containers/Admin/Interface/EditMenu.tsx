@@ -19,11 +19,27 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getMenu } from 'modules/admin/actions';
 
-import EditMenu, { IEditMenuProps } from 'components/Main/Admin/Interface/EditMenu';
+import EditMenu from 'components/Main/Admin/Interface/EditMenu';
 
-class EditMenuContainer extends React.Component<IEditMenuProps & { getMenu: typeof getMenu.started, match?: { params: { menuID: string } } }> {
+export interface IEditMenuContainerProps {
+    vde?: boolean;
+    match?: { params: { menuID: string } };
+}
+
+interface IEditMenuContainerState {
+    menu: { id: string, name: string, value: string, conditions: string };
+}
+
+interface IEditMenuContainerDispatch {
+    getMenu: typeof getMenu.started;
+}
+
+class EditMenuContainer extends React.Component<IEditMenuContainerProps & IEditMenuContainerState & IEditMenuContainerDispatch> {
     componentWillMount() {
-        this.props.getMenu({ id: this.props.match.params.menuID });
+        this.props.getMenu({
+            id: this.props.match.params.menuID,
+            vde: this.props.vde
+        });
     }
 
     render() {
@@ -41,4 +57,4 @@ const mapDispatchToProps = {
     getMenu: getMenu.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditMenuContainer);
+export default connect<IEditMenuContainerState, IEditMenuContainerDispatch, IEditMenuContainerProps>(mapStateToProps, mapDispatchToProps)(EditMenuContainer);

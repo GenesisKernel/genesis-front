@@ -28,7 +28,7 @@ export const contractExecEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.contractExec.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.txPrepare(state.auth.sessionToken, action.payload.name, action.payload.params)
+            return Observable.fromPromise(api.txPrepare(state.auth.sessionToken, action.payload.name, action.payload.params, action.payload.vde)
                 .then(response => {
                     const signature = keyring.sign(response.forsign, state.auth.privateKey);
                     return api.txExec(state.auth.sessionToken, action.payload.name, {
@@ -36,7 +36,7 @@ export const contractExecEpic: Epic<Action, IRootState> =
                         pubkey: state.auth.account.publicKey,
                         signature,
                         time: response.time
-                    });
+                    }, action.payload.vde);
                 }))
                 .flatMap(payload => {
                     // We must listen to this transaction or we will never catch

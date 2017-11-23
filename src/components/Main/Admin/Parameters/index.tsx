@@ -24,6 +24,7 @@ import DocumentTitle from 'components/DocumentTitle';
 import Heading from 'components/Heading';
 
 export interface IParametersProps {
+    vde?: boolean;
     parameters: IParameterResponse[];
 }
 
@@ -33,7 +34,7 @@ const Parameters: React.SFC<IParametersProps> = (props) => (
             <Heading>
                 <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
                 <div className="pull-right">
-                    <Link to="/admin/parameters/stylesheet" className="ml">
+                    <Link to={props.vde ? '/vde/parameters/stylesheet' : '/admin/parameters/stylesheet'} className="ml">
                         <button className="btn btn-default">
                             <em className="fa fa-paint-brush fa-fw mr-sm" />
                             <span>
@@ -41,7 +42,7 @@ const Parameters: React.SFC<IParametersProps> = (props) => (
                             </span>
                         </button>
                     </Link>
-                    <Link to="/admin/parameters/create" className="ml">
+                    <Link to={props.vde ? '/vde/parameters/create' : '/admin/paramters/create'} className="ml">
                         <button className="btn btn-default">
                             <em className="fa fa-plus-circle fa-fw mr-sm" />
                             <span>
@@ -63,6 +64,7 @@ const Parameters: React.SFC<IParametersProps> = (props) => (
                             <table className="table table-striped table-bordered table-hover ui-responsive ui-table ui-table-reflow">
                                 <thead>
                                     <tr>
+                                        <th style={{ width: 1 }}>ID</th>
                                         <th>
                                             <FormattedMessage id="admin.parameters.name" defaultMessage="Name" />
                                         </th>
@@ -79,7 +81,10 @@ const Parameters: React.SFC<IParametersProps> = (props) => (
                                 </thead>
                                 <tbody>
                                     {props.parameters.sort((a, b) => a.name > b.name ? 0 : 1).map(param => (
-                                        <tr key={param.name}>
+                                        <tr key={param.id}>
+                                            <td>
+                                                {param.id}
+                                            </td>
                                             <td>
                                                 {param.name}
                                             </td>
@@ -90,7 +95,7 @@ const Parameters: React.SFC<IParametersProps> = (props) => (
                                                 {param.conditions}
                                             </td>
                                             <td>
-                                                <Link to={`/admin/parameters/${param.name}`}>
+                                                <Link to={`/${props.vde ? 'vde' : 'admin'}/parameters/${param.name}`}>
                                                     <Button bsStyle="default" className="btn-labeled btn-icon">
                                                         <span className="btn-label">
                                                             <em className="fa fa-edit" />

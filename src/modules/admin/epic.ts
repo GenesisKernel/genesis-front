@@ -30,8 +30,8 @@ export const getTableEpic: Epic<Action, IRootState> =
         .flatMap(action => {
             const state = store.getState();
             return Observable.fromPromise(Promise.all([
-                api.table(state.auth.sessionToken, action.payload.table),
-                api.list(state.auth.sessionToken, action.payload.table)
+                api.table(state.auth.sessionToken, action.payload.table, action.payload.vde),
+                api.list(state.auth.sessionToken, action.payload.table, undefined, undefined, undefined, action.payload.vde)
             ]))
                 .map(payload => actions.getTable.done({
                     params: action.payload,
@@ -52,7 +52,7 @@ export const getTableStructEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getTableStruct.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.table(state.auth.sessionToken, action.payload.name))
+            return Observable.fromPromise(api.table(state.auth.sessionToken, action.payload.name, action.payload.vde))
                 .map(payload =>
                     actions.getTableStruct.done({
                         params: action.payload,
@@ -71,7 +71,7 @@ export const getMenusEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getMenus.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.list(state.auth.sessionToken, 'menu'))
+            return Observable.fromPromise(api.list(state.auth.sessionToken, 'menu', undefined, undefined, undefined, action.payload.vde))
                 .map(payload =>
                     actions.getMenus.done({
                         params: action.payload,
@@ -95,7 +95,7 @@ export const getTablesEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getTables.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.tables(state.auth.sessionToken, action.payload.offset, action.payload.limit))
+            return Observable.fromPromise(api.tables(state.auth.sessionToken, action.payload.offset, action.payload.limit, action.payload.vde))
                 .map(payload =>
                     actions.getTables.done({
                         params: action.payload,
@@ -114,7 +114,7 @@ export const getInterfaceEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getInterface.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.pages(state.auth.sessionToken))
+            return Observable.fromPromise(api.pages(state.auth.sessionToken, action.payload.vde))
                 .map(payload =>
                     actions.getInterface.done({
                         params: action.payload,
@@ -133,7 +133,7 @@ export const getPageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getPage.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.page(state.auth.sessionToken, action.payload.id))
+            return Observable.fromPromise(api.page(state.auth.sessionToken, action.payload.id, action.payload.vde))
                 .map(payload =>
                     actions.getPage.done({
                         params: action.payload,
@@ -152,7 +152,7 @@ export const getMenuEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getMenu.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.row(state.auth.sessionToken, 'menu', action.payload.id))
+            return Observable.fromPromise(api.row(state.auth.sessionToken, 'menu', action.payload.id, undefined, action.payload.vde))
                 .map(payload =>
                     actions.getMenu.done({
                         params: action.payload,
@@ -171,7 +171,7 @@ export const getContractEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getContract.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.row(state.auth.sessionToken, 'contracts', action.payload.id))
+            return Observable.fromPromise(api.row(state.auth.sessionToken, 'contracts', action.payload.id, undefined, action.payload.vde))
                 .map(payload => actions.getContract.done({
                     params: action.payload,
                     result: {
@@ -179,7 +179,7 @@ export const getContractEpic: Epic<Action, IRootState> =
                         active: payload.value.active,
                         name: payload.value.name,
                         conditions: payload.value.conditions,
-                        address: keyring.walletIdToAddr(payload.value.wallet_id),
+                        address: payload.value.wallet_id && keyring.walletIdToAddr(payload.value.wallet_id),
                         value: payload.value.value
                     }
                 }))
@@ -194,7 +194,7 @@ export const getContractsEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getContracts.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.contracts(state.auth.sessionToken, action.payload.offset, action.payload.limit))
+            return Observable.fromPromise(api.contracts(state.auth.sessionToken, action.payload.vde, action.payload.offset, action.payload.limit))
                 .map(payload => actions.getContracts.done({
                     params: action.payload,
                     result: payload
@@ -211,7 +211,7 @@ export const getBlockEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getBlock.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.row(state.auth.sessionToken, 'blocks', action.payload.id))
+            return Observable.fromPromise(api.row(state.auth.sessionToken, 'blocks', action.payload.id, undefined, action.payload.vde))
                 .map(payload => actions.getBlock.done({
                     params: action.payload,
                     result: payload.value as any
@@ -228,7 +228,7 @@ export const getLanguagesEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getLanguages.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.list(state.auth.sessionToken, 'languages', action.payload.offset, action.payload.limit))
+            return Observable.fromPromise(api.list(state.auth.sessionToken, 'languages', action.payload.offset, action.payload.limit, undefined, action.payload.vde))
                 .map(payload => actions.getLanguages.done({
                     params: action.payload,
                     result: payload.list as any
@@ -262,7 +262,7 @@ export const getParametersEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getParameters.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.parameters(state.auth.sessionToken, action.payload.params))
+            return Observable.fromPromise(api.parameters(state.auth.sessionToken, action.payload.params, action.payload.vde))
                 .map(payload => actions.getParameters.done({
                     params: action.payload,
                     result: payload
@@ -279,7 +279,7 @@ export const getParameterEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getParameter.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.parameter(state.auth.sessionToken, action.payload.name))
+            return Observable.fromPromise(api.parameter(state.auth.sessionToken, action.payload.name, action.payload.vde))
                 .map(payload => actions.getParameter.done({
                     params: action.payload,
                     result: payload

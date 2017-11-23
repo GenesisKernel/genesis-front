@@ -27,9 +27,9 @@ export type State = {
     readonly tables: ITablesResponse;
     readonly table: ITableResponse;
     readonly tableData: IListResponse;
-    readonly page: { id: string, [key: string]: any };
+    readonly page: { id: string, name: string, menu: string, conditions: string, value: string };
     readonly interfaces: IInterfacesResponse;
-    readonly contract: { id: string, name: string, conditions: string, address: string, value: string };
+    readonly contract: { id: string, active: string, name: string, conditions: string, address: string, value: string };
     readonly contracts: IContract[];
     readonly language: { id: string, res: any, name: string, conditions: string };
     readonly languages: { id: string, res: any, name: string, conditions: string }[];
@@ -106,7 +106,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            page: action.payload.result.page,
+            page: action.payload.result.page as { id: string, name: string, menu: string, conditions: string, value: string },
             menus: action.payload.result.menus
         };
     }

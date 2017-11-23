@@ -19,7 +19,11 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { navigate } from 'modules/engine/actions';
 
-import CreateMenu, { ICreateMenuProps } from 'components/Main/Admin/Interface/CreateMenu';
+import CreateMenu from 'components/Main/Admin/Interface/CreateMenu';
+
+export interface ICreateMenuContainerProps {
+    vde?: boolean;
+}
 
 interface ICreateMenuContainerState {
 
@@ -29,7 +33,7 @@ interface ICreateMenuContainerDispatch {
     navigate: typeof navigate;
 }
 
-const CreateMenuContainer: React.SFC<ICreateMenuContainerState & ICreateMenuContainerDispatch> = (props) => (
+const CreateMenuContainer: React.SFC<ICreateMenuContainerProps & ICreateMenuContainerState & ICreateMenuContainerDispatch> = (props) => (
     <CreateMenu {...props} />
 );
 
@@ -41,4 +45,4 @@ const mapDispatchToProps = {
     navigate: navigate
 };
 
-export default connect<ICreateMenuContainerState, ICreateMenuContainerDispatch, ICreateMenuProps>(mapStateToProps, mapDispatchToProps)(CreateMenuContainer);
+export default connect<ICreateMenuContainerState, ICreateMenuContainerDispatch, ICreateMenuContainerProps>(mapStateToProps, mapDispatchToProps)(CreateMenuContainer);

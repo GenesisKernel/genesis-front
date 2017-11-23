@@ -26,7 +26,7 @@ import { history } from 'store';
 export const navigatePageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.navigatePage.started)
         .map(action => {
-            history.push(`/page/${action.payload.name}`, { params: action.payload.params });
+            history.push(`/${action.payload.vde ? 'vde/page' : 'page'}/${action.payload.name}`, { params: action.payload.params });
             return actions.navigatePage.done({
                 params: action.payload,
                 result: null
@@ -37,7 +37,7 @@ export const renderPageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.renderPage.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, action.payload.name, action.payload.params))
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, action.payload.name, action.payload.params, action.payload.vde))
                 .map(payload =>
                     actions.renderPage.done({
                         params: action.payload,

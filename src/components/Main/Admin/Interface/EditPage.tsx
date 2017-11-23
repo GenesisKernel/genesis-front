@@ -23,9 +23,10 @@ import Heading from 'components/Heading';
 import PageEditor from './PageEditor';
 
 export interface IEditPageProps {
+    vde?: boolean;
     page: { id: string, name: string, menu: string, conditions: string, value: string };
     menus: { id: string, name: string, conditions: string, value: string }[];
-    navigatePage: (params: { name: string, params?: any }) => void;
+    navigatePage: (params: { name: string, params?: any, vde?: boolean }) => void;
 }
 
 interface IEditPageState {
@@ -82,7 +83,10 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
 
     onPreview(e: React.MouseEvent<HTMLAnchorElement>) {
         e.preventDefault();
-        this.props.navigatePage({ name: this.props.page.name });
+        this.props.navigatePage({
+            name: this.props.page.name,
+            vde: this.props.vde
+        });
         return false;
     }
 
@@ -93,7 +97,7 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
                     <Heading>
                         <FormattedMessage id="admin.interface" defaultMessage="Interface" />
                         <div className="pull-right">
-                            <a href={`/page/${this.props.page && this.props.page.name}`} className="ml" onClick={this.onPreview.bind(this)}>
+                            <a href={`/${this.props.vde ? 'vde/page' : 'page'}/${this.props.page && this.props.page.name}`} className="ml" onClick={this.onPreview.bind(this)}>
                                 <button className="btn btn-default ml">
                                     <em className="fa fa-external-link fa-fw mr-sm" />
                                     <span>
@@ -106,7 +110,7 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <Link to="/admin/interface">
+                                <Link to={this.props.vde ? '/vde/interface' : '/admin/interface'}>
                                     <FormattedMessage id="admin.interface" defaultMessage="Interface" />
                                 </Link>
                             </li>
@@ -118,6 +122,7 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
                             </li>
                         </ol>
                         <PageEditor
+                            vde={this.props.vde}
                             contractName="@1EditPage"
                             mapContractParams={this.mapContractParams.bind(this)}
                             template={this.state.template}

@@ -22,19 +22,37 @@ import { IInterfacesResponse } from 'lib/api';
 
 import Interface from 'components/Main/Admin/Interface';
 
-interface IInterfaceContainerProps {
+export interface IInterfaceContainerProps {
+    vde?: boolean;
+}
+
+interface IInterfaceContainerState {
     pages: IInterfacesResponse;
+}
+
+interface IInterfaceContainerDispatch {
     getInterface: typeof getInterface.started;
 }
 
-class InterfaceContainer extends React.Component<IInterfaceContainerProps> {
+class InterfaceContainer extends React.Component<IInterfaceContainerProps & IInterfaceContainerState & IInterfaceContainerDispatch> {
     componentWillMount() {
-        this.props.getInterface(null);
+        this.props.getInterface({
+            vde: this.props.vde
+        });
+    }
+
+    componentWillReceiveProps(props: IInterfaceContainerProps & IInterfaceContainerDispatch) {
+        if (this.props.vde !== props.vde) {
+            props.getInterface({
+                vde: props.vde
+            });
+        }
     }
 
     render() {
         return (
             <Interface
+                vde={this.props.vde}
                 pages={this.props.pages && this.props.pages.pages || []}
                 menus={this.props.pages && this.props.pages.menus || []}
                 blocks={this.props.pages && this.props.pages.blocks || []}
@@ -51,4 +69,4 @@ const mapDispatchToProps = {
     getInterface: getInterface.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(InterfaceContainer);
+export default connect<IInterfaceContainerState, IInterfaceContainerDispatch, IInterfaceContainerProps>(mapStateToProps, mapDispatchToProps)(InterfaceContainer);

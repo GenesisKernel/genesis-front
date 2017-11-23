@@ -19,11 +19,29 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getPage } from 'modules/admin/actions';
 
-import Constructor, { IConstructorProps } from 'components/Main/Admin/Interface/Constructor';
+import Constructor from 'components/Main/Admin/Interface/Constructor';
 
-class ConstructorContainer extends React.Component<IConstructorProps & { getPage: typeof getPage.started, match?: { params: { pageID: string } } }> {
+export interface IConstructorContainerProps {
+    match?: { params: { pageID: string } };
+    vde?: boolean;
+}
+
+interface IConstructorContainerState {
+    // TODO: Remove session from being used outside of epic/reducer
+    session: string;
+    page: { id: string, name: string, value: string };
+}
+
+interface IConstructorContainerDispatch {
+    getPage: typeof getPage.started;
+}
+
+class ConstructorContainer extends React.Component<IConstructorContainerProps & IConstructorContainerState & IConstructorContainerDispatch> {
     componentWillMount() {
-        this.props.getPage({ id: this.props.match.params.pageID });
+        this.props.getPage({
+            id: this.props.match.params.pageID,
+            vde: this.props.vde
+        });
     }
 
     render() {
@@ -42,4 +60,4 @@ const mapDispatchToProps = {
     getPage: getPage.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ConstructorContainer);
+export default connect<IConstructorContainerState, IConstructorContainerDispatch, IConstructorContainerProps>(mapStateToProps, mapDispatchToProps)(ConstructorContainer);

@@ -21,6 +21,7 @@ import { IProtypoElement } from 'components/Protypo/Protypo';
 import DocumentTitle from 'components/DocumentTitle';
 
 export interface IPageProps {
+    vde?: boolean;
     name: string;
     payload: IProtypoElement[];
 }

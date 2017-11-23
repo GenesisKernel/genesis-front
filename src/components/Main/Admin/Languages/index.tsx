@@ -23,6 +23,7 @@ import DocumentTitle from 'components/DocumentTitle';
 import Heading from 'components/Heading';
 
 export interface ILanguagesProps {
+    vde?: boolean;
     resources: {
         id: string;
         res: any;
@@ -37,7 +38,7 @@ const Languages: React.SFC<ILanguagesProps> = (props) => (
             <Heading>
                 <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
                 <div className="pull-right">
-                    <Link to="/admin/languages/create" className="ml">
+                    <Link to={props.vde ? '/vde/languages/create' : '/admin/languages/create'} className="ml">
                         <button className="btn btn-default ml">
                             <em className="fa fa-plus-circle fa-fw mr-sm" />
                             <span>
@@ -79,7 +80,7 @@ const Languages: React.SFC<ILanguagesProps> = (props) => (
                                                 <td>{res.name}</td>
                                                 <td>{res.res}</td>
                                                 <td style={{ width: 1 }}>
-                                                    <Link to={`/admin/languages/${res.id}-${res.name}`}>
+                                                    <Link to={`/${props.vde ? 'vde' : 'admin'}/languages/${res.id}-${res.name}`}>
                                                         <Button bsStyle="default" className="btn-labeled btn-icon">
                                                             <span className="btn-label">
                                                                 <em className="fa fa-edit" />

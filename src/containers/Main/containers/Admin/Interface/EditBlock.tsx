@@ -19,11 +19,27 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getBlock } from 'modules/admin/actions';
 
-import EditBlock, { IEditBlockProps } from 'components/Main/Admin/Interface/EditBlock';
+import EditBlock from 'components/Main/Admin/Interface/EditBlock';
 
-class EditBlockContainer extends React.Component<IEditBlockProps & { getBlock: typeof getBlock.started, match?: { params: { blockID: string } } }> {
+export interface IEditBlockContainerProps {
+    vde?: boolean;
+    match?: { params: { blockID: string } };
+}
+
+interface IEditBlockContainerState {
+    block: { id: string, name: string, value: string, conditions: string };
+}
+
+interface IEditBlockContainerDispatch {
+    getBlock: typeof getBlock.started;
+}
+
+class EditBlockContainer extends React.Component<IEditBlockContainerProps & IEditBlockContainerState & IEditBlockContainerDispatch> {
     componentWillMount() {
-        this.props.getBlock({ id: this.props.match.params.blockID });
+        this.props.getBlock({
+            id: this.props.match.params.blockID,
+            vde: this.props.vde
+        });
     }
 
     render() {
@@ -41,4 +57,4 @@ const mapDispatchToProps = {
     getBlock: getBlock.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditBlockContainer);
+export default connect<IEditBlockContainerState, IEditBlockContainerDispatch, IEditBlockContainerProps>(mapStateToProps, mapDispatchToProps)(EditBlockContainer);

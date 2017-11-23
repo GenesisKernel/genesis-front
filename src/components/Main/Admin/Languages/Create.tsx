@@ -23,6 +23,7 @@ import Heading from 'components/Heading';
 import LocaleEditor from './LocaleEditor';
 
 export interface ICreateProps {
+    vde?: boolean;
     navigate: (url: string) => void;
 }
 
@@ -57,7 +58,9 @@ class Create extends React.Component<ICreateProps, ICreateState> {
 
     onExec(block: string, error: string) {
         if (block) {
-            this.props.navigate('/admin/languages');
+            this.props.vde ?
+                this.props.navigate('/vde/languages') :
+                this.props.navigate('/admin/languages');
         }
     }
 
@@ -126,7 +129,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <Link to="/admin/languages">
+                                <Link to={this.props.vde ? '/vde/languages' : '/admin/languages'}>
                                     <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
                                 </Link>
                             </li>
@@ -135,6 +138,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                             </li>
                         </ol>
                         <LocaleEditor
+                            vde={this.props.vde}
                             contractName="@1NewLang"
                             translations={this.state.translations}
                             onNewLocale={this.onNewLocale.bind(this)}

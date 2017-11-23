@@ -20,11 +20,29 @@ import { IRootState } from 'modules';
 import { getPage } from 'modules/admin/actions';
 import { navigatePage } from 'modules/content/actions';
 
-import EditPage, { IEditPageProps } from 'components/Main/Admin/Interface/EditPage';
+import EditPage from 'components/Main/Admin/Interface/EditPage';
 
-class EditPageContainer extends React.Component<IEditPageProps & { getPage: typeof getPage.started, match?: { params: { pageID: string } } }> {
+export interface IEditPageContainerProps {
+    vde?: boolean;
+    match?: { params: { pageID: string } };
+}
+
+interface IEditPageContainerState {
+    page: { id: string, name: string, menu: string, conditions: string, value: string };
+    menus: { id: string, name: string, value: string, conditions: string }[];
+}
+
+interface IEditPageContainerDispatch {
+    getPage: typeof getPage.started;
+    navigatePage: typeof navigatePage.started;
+}
+
+class EditPageContainer extends React.Component<IEditPageContainerProps & IEditPageContainerState & IEditPageContainerDispatch> {
     componentWillMount() {
-        this.props.getPage({ id: this.props.match.params.pageID });
+        this.props.getPage({
+            id: this.props.match.params.pageID,
+            vde: this.props.vde
+        });
     }
 
     render() {
@@ -44,4 +62,4 @@ const mapDispatchToProps = {
     navigatePage: navigatePage.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditPageContainer);
+export default connect<IEditPageContainerState, IEditPageContainerDispatch, IEditPageContainerProps>(mapStateToProps, mapDispatchToProps)(EditPageContainer);

@@ -27,6 +27,7 @@ import DocumentTitle from 'components/DocumentTitle';
 import Validation from 'components/Validation';
 
 export interface IEditTableProps {
+    vde?: boolean;
     table: ITableResponse;
 }
 
@@ -62,13 +63,13 @@ class EditTable extends React.Component<IEditTableProps> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <Link to="/admin/tables">
+                                <Link to={this.props.vde ? '/vde/tables' : '/admin/tables'}>
                                     <FormattedMessage id="admin.tables" defaultMessage="Tables" />
                                 </Link>
                             </li>
                             {this.props.table && (
                                 <li>
-                                    <Link to={`/admin/tables/${this.props.table.name}`}>
+                                    <Link to={`/${this.props.vde ? 'vde' : 'admin'}/tables/${this.props.table.name}`}>
                                         {this.props.table.name}
                                     </Link>
                                 </li>
@@ -85,7 +86,7 @@ class EditTable extends React.Component<IEditTableProps> {
                                         <div className="clearfix">
                                             <div className="pull-left">
                                                 {this.props.table && (
-                                                    <Link to={`/admin/tables/${this.props.table.name}/edit/add-column`}>
+                                                    <Link to={`/${this.props.vde ? 'vde' : 'admin'}/tables/${this.props.table.name}/edit/add-column`}>
                                                         <Button bsStyle="primary">
                                                             <FormattedMessage id="admin.tables.column.add" defaultMessage="Add column" />
                                                         </Button>
@@ -127,7 +128,7 @@ class EditTable extends React.Component<IEditTableProps> {
                                                         <td>{col.perm}</td>
                                                         <td>
                                                             {this.props.table && (
-                                                                <Link to={`/admin/tables/${this.props.table.name}/edit/column/${col.name}`}>
+                                                                <Link to={`/${this.props.vde ? 'vde' : 'admin'}/tables/${this.props.table.name}/edit/column/${col.name}`}>
                                                                     <Button bsStyle="primary">
                                                                         <FormattedMessage id="admin.tables.column.edit" defaultMessage="Edit" />
                                                                     </Button>
@@ -143,7 +144,7 @@ class EditTable extends React.Component<IEditTableProps> {
                             </Col>
                         </Row>
                         {this.props.table && (
-                            <ValidatedContractForm contractName="EditTable" mapContractParams={this.mapContractParams.bind(this)}>
+                            <ValidatedContractForm vde={this.props.vde} contractName="EditTable" mapContractParams={this.mapContractParams.bind(this)}>
                                 <Row>
                                     <Col md={6}>
                                         <Panel
@@ -173,7 +174,6 @@ class EditTable extends React.Component<IEditTableProps> {
                                     <Col md={6}>
                                         <Panel
                                             header={<FormattedMessage id="admin.tables.permissions.conditions" defaultMessage="Conditions for changing permissions" />}
-                                        /* footer={<div className="text-right"><Button type="submit" bsStyle="primary"><FormattedMessage id="admin.tables.save" defaultMessage="Save" /></Button></div>} */
                                         >
                                             {this.props.table && (
                                                 <Validation.components.ValidatedFormGroup for="conditions">

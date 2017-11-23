@@ -20,7 +20,11 @@ import { IRootState } from 'modules';
 import { getMenus } from 'modules/admin/actions';
 import { navigate } from 'modules/engine/actions';
 
-import CreatePage, { ICreatePageProps } from 'components/Main/Admin/Interface/CreatePage';
+import CreatePage from 'components/Main/Admin/Interface/CreatePage';
+
+export interface ICreatePageContainerProps {
+    vde?: boolean;
+}
 
 interface ICreatePageContainerState {
     menus: {
@@ -36,9 +40,11 @@ interface ICreatePageContainerDispatch {
     navigate: typeof navigate;
 }
 
-class CreatePageContainer extends React.Component<ICreatePageContainerState & ICreatePageContainerDispatch> {
+class CreatePageContainer extends React.Component<ICreatePageContainerProps & ICreatePageContainerState & ICreatePageContainerDispatch> {
     componentWillMount() {
-        this.props.getMenus(null);
+        this.props.getMenus({
+            vde: this.props.vde
+        });
     }
 
     render() {
@@ -57,4 +63,4 @@ const mapDispatchToProps = {
     navigate: navigate
 };
 
-export default connect<ICreatePageContainerState, ICreatePageContainerDispatch, ICreatePageProps>(mapStateToProps, mapDispatchToProps)(CreatePageContainer);
+export default connect<ICreatePageContainerState, ICreatePageContainerDispatch, ICreatePageContainerProps>(mapStateToProps, mapDispatchToProps)(CreatePageContainer);

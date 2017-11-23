@@ -22,19 +22,29 @@ import { ITablesResponse } from 'lib/api';
 
 import Tables from 'components/Main/Admin/Tables';
 
-interface ITablesContainerProps {
+export interface ITablesContainerProps {
+    vde?: boolean;
+    match?: { params: { tableName: string } };
+}
+
+interface ITablesContainerState {
     tables: ITablesResponse;
+}
+
+interface ITablesContainerDispatch {
     getTables: typeof getTables.started;
 }
 
-class TablesContainer extends React.Component<ITablesContainerProps & { match?: { params: { tableName: string } } }> {
+class TablesContainer extends React.Component<ITablesContainerProps & ITablesContainerState & ITablesContainerDispatch> {
     componentWillMount() {
-        this.props.getTables({});
+        this.props.getTables({
+            vde: this.props.vde
+        });
     }
 
     render() {
         return (
-            <Tables tables={this.props.tables} />
+            <Tables tables={this.props.tables} vde={this.props.vde} />
         );
     }
 }
@@ -47,4 +57,4 @@ const mapDispatchToProps = {
     getTables: getTables.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TablesContainer);
+export default connect<ITablesContainerState, ITablesContainerDispatch, ITablesContainerProps>(mapStateToProps, mapDispatchToProps)(TablesContainer);

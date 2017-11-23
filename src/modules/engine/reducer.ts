@@ -26,6 +26,8 @@ export type State = {
     readonly isConnected: boolean;
     readonly isConnecting: boolean;
     readonly isCollapsed: boolean;
+    readonly isCreatingVDE: boolean;
+    readonly createVDEResult: boolean;
 };
 
 export const initialState: State = {
@@ -35,7 +37,9 @@ export const initialState: State = {
     isLoading: true,
     isConnected: null,
     isConnecting: false,
-    isCollapsed: false
+    isCollapsed: false,
+    isCreatingVDE: false,
+    createVDEResult: null
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -126,6 +130,27 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             isCollapsed: action.payload
+        };
+    }
+
+    if (isType(action, actions.createVDE.started)) {
+        return {
+            ...state,
+            isCreatingVDE: true
+        };
+    }
+    else if (isType(action, actions.createVDE.done)) {
+        return {
+            ...state,
+            isCreatingVDE: false,
+            createVDEResult: action.payload.result
+        };
+    }
+    else if (isType(action, actions.createVDE.failed)) {
+        return {
+            ...state,
+            isCreatingVDE: false,
+            createVDEResult: action.payload.error
         };
     }
 

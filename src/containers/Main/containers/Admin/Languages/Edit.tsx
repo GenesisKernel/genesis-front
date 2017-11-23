@@ -19,9 +19,22 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getLanguage } from 'modules/admin/actions';
 
-import Edit, { IEditProps } from 'components/Main/Admin/Languages/Edit';
+import Edit from 'components/Main/Admin/Languages/Edit';
 
-class EditContainer extends React.Component<IEditProps & { translation: any, getLanguage: typeof getLanguage.started, match: { params: { translationID: string } } }> {
+export interface IEditContainerProps {
+    vde?: boolean;
+    match: { params: { translationID: string } };
+}
+
+interface IEditContainerState {
+    translation: { id: string, res: any, name: string, conditions: string };
+}
+
+interface IEditContainerDispatch {
+    getLanguage: typeof getLanguage.started;
+}
+
+class EditContainer extends React.Component<IEditContainerProps & IEditContainerState & IEditContainerDispatch> {
     componentWillMount() {
         this.props.getLanguage({
             id: this.props.match.params.translationID
@@ -43,4 +56,4 @@ const mapDispatchToProps = {
     getLanguage: getLanguage.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditContainer);
+export default connect<IEditContainerState, IEditContainerDispatch, IEditContainerProps>(mapStateToProps, mapDispatchToProps)(EditContainer);

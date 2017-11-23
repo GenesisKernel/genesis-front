@@ -24,6 +24,7 @@ import Heading from 'components/Heading';
 import ParameterEditor from './ParameterEditor';
 
 export interface IEditProps {
+    vde?: boolean;
     parameter: IParameterResponse;
 }
 
@@ -52,8 +53,13 @@ class Edit extends React.Component<IEditProps, IEditState> {
     }
 
     mapContractParams(values: { [key: string]: any }) {
+        console.log({
+            Id: this.props.parameter.id,
+            Value: this.state.value,
+            Conditions: this.state.conditions
+        }, this.props.parameter);
         return {
-            Name: this.props.parameter.name,
+            Id: this.props.parameter.id,
             Value: this.state.value,
             Conditions: this.state.conditions
         };
@@ -81,7 +87,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <Link to="/admin/parameters">
+                                <Link to={this.props.vde ? '/vde/parameters' : '/admin/parameters'}>
                                     <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
                                 </Link>
                             </li>
@@ -92,6 +98,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
                             )}
                         </ol>
                         <ParameterEditor
+                            vde={this.props.vde}
                             name={this.props.parameter && this.props.parameter.name}
                             value={this.state.value}
                             conditions={this.state.conditions}

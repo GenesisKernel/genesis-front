@@ -23,6 +23,7 @@ import Heading from 'components/Heading';
 import BlockEditor from './BlockEditor';
 
 export interface IEditBlockProps {
+    vde?: boolean;
     block: { id: string, name: string, conditions: string, value: string };
 }
 
@@ -77,7 +78,7 @@ class EditBlock extends React.Component<IEditBlockProps, IEditBlockState> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <Link to="/admin/interface">
+                                <Link to={this.props.vde ? '/vde/interface' : '/admin/interface'}>
                                     <FormattedMessage id="admin.interface" defaultMessage="Interface" />
                                 </Link>
                             </li>
@@ -92,6 +93,7 @@ class EditBlock extends React.Component<IEditBlockProps, IEditBlockState> {
                             contractName="@1EditBlock"
                             mapContractParams={this.mapContractParams.bind(this)}
 
+                            vde={this.props.vde}
                             template={this.state.template}
                             conditions={this.state.conditions}
                             block={this.props.block}

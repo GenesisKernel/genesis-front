@@ -24,6 +24,7 @@ import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 
 interface IPageEditorProps {
+    vde?: boolean;
     contractName: string;
     template: string;
     conditions: string;
@@ -40,7 +41,7 @@ interface IPageEditorProps {
 const PageEditor: React.SFC<IPageEditorProps> = (props) => (
     <Row>
         <Col md={8}>
-            <ValidatedContractForm contractName={props.contractName} mapContractParams={props.mapContractParams} onExec={props.onExec && props.onExec}>
+            <ValidatedContractForm vde={props.vde} contractName={props.contractName} mapContractParams={props.mapContractParams} onExec={props.onExec && props.onExec}>
                 <div className="panel panel-primary">
                     <div className="panel-heading">
                         <FormattedMessage id="admin.interface.page" defaultMessage="Page" />
@@ -97,12 +98,12 @@ const PageEditor: React.SFC<IPageEditorProps> = (props) => (
                         <div className="text-right">
                             {props.page ?
                                 (
-                                    <Link to={`/admin/interface/page/${props.page.id}-${props.page.name}/constructor`} className="btn btn-primary pull-left">
+                                    <Link to={`/${props.vde ? 'vde' : 'admin'}/interface/page/${props.page.id}-${props.page.name}/constructor`} className="btn btn-primary pull-left">
                                         Open in Constructor
                                     </Link>
                                 ) : (
-                                <Link to={'/admin/interface/create-page/constructor'} className="btn btn-primary pull-left">
-                                    Open in Constructor
+                                    <Link to={`/${props.vde ? 'vde' : 'admin'}/interface/create-page/constructor`} className="btn btn-primary pull-left">
+                                        Open in Constructor
                                 </Link>
                                 )
                             }
@@ -120,7 +121,7 @@ const PageEditor: React.SFC<IPageEditorProps> = (props) => (
                 bsStyle="primary"
                 header={<FormattedMessage id="admin.interface.menu" defaultMessage="Menu" />}
                 footer={props.menu && (
-                    <Link to={`/admin/interface/menu/${props.menu.id}-${props.menu.name}`}>
+                    <Link to={`/${props.vde ? 'vde' : 'admin'}/interface/menu/${props.menu.id}-${props.menu.name}`}>
                         <Button bsStyle="primary">
                             <FormattedMessage id="admin.edit" defaultMessage="Edit" />
                         </Button>

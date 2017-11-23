@@ -25,6 +25,7 @@ import DocumentTitle from 'components/DocumentTitle';
 import Heading from 'components/Heading';
 
 export interface ITablesProps {
+    vde?: boolean;
     tables: ITablesResponse;
 }
 
@@ -34,7 +35,7 @@ const Tables: React.SFC<ITablesProps> = (props) => (
             <Heading>
                 <FormattedMessage id="admin.tables" defaultMessage="Tables" />
                 <div className="pull-right">
-                    <Link to="/admin/tables/create" className="ml">
+                    <Link to={props.vde ? '/vde/tables/create' : '/admin/tables/create'} className="ml">
                         <button className="btn btn-default">
                             <em className="fa fa-plus-circle fa-fw mr-sm" />
                             <span>
@@ -85,7 +86,7 @@ const Tables: React.SFC<ITablesProps> = (props) => (
                                                         <FormattedMessage id="admin.tables.show" defaultMessage="Show" />
                                                     </Button>
                                                 ) : (
-                                                    <Link to={`/admin/tables/${table.name}`}>
+                                                    <Link to={`/${props.vde ? 'vde' : 'admin'}/tables/${table.name}`}>
                                                         <Button bsStyle="primary">
                                                             <FormattedMessage id="admin.tables.show" defaultMessage="Show" />
                                                         </Button>
@@ -94,7 +95,7 @@ const Tables: React.SFC<ITablesProps> = (props) => (
                                             }
                                         </td>
                                         <td style={{ width: 1 }}>
-                                            <Link to={`/admin/tables/${table.name}/edit`}>
+                                            <Link to={`/${props.vde ? 'vde' : 'admin'}/tables/${table.name}/edit`}>
                                                 <Button bsStyle="primary" type="button">
                                                     <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
                                                 </Button>

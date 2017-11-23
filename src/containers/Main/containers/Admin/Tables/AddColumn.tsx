@@ -20,8 +20,21 @@ import { IRootState } from 'modules';
 
 import AddColumn from 'components/Main/Admin/Tables/AddColumn';
 
-const AddColumnContainer: React.SFC<{ match: { params: { tableName: string } } }> = (props) => (
-    <AddColumn table={props.match.params.tableName} />
+export interface IAddColumnContainerProps {
+    vde?: boolean;
+    match: { params: { tableName: string } };
+}
+
+interface IAddColumnContainerState {
+
+}
+
+interface IAddColumnContainerDispatch {
+
+}
+
+const AddColumnContainer: React.SFC<IAddColumnContainerProps & IAddColumnContainerState & IAddColumnContainerDispatch> = (props) => (
+    <AddColumn vde={props.vde} table={props.match.params.tableName} />
 );
 
 const mapStateToProps = (state: IRootState) => ({
@@ -32,4 +45,4 @@ const mapDispatchToProps = {
 
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddColumnContainer);
+export default connect<IAddColumnContainerState, IAddColumnContainerDispatch, IAddColumnContainerProps>(mapStateToProps, mapDispatchToProps)(AddColumnContainer);

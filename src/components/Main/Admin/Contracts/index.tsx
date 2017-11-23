@@ -24,6 +24,7 @@ import DocumentTitle from 'components/DocumentTitle';
 import Heading from 'components/Heading';
 
 export interface IContractsProps {
+    vde?: boolean;
     contracts: IContract[];
 }
 
@@ -33,7 +34,7 @@ const Contracts: React.SFC<IContractsProps> = (props) => (
             <Heading>
                 <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
                 <div className="pull-right">
-                    <Link to="/admin/contracts/create" className="ml">
+                    <Link to={props.vde ? '/vde/contracts/create' : '/admin/contracts/create'} className="ml">
                         <button className="btn btn-default ml">
                             <em className="fa fa-plus-circle fa-fw mr-sm" />
                             <span>
@@ -55,16 +56,20 @@ const Contracts: React.SFC<IContractsProps> = (props) => (
                             <table className="table table-striped table-bordered table-hover">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <th style={{ width: 1 }}>ID</th>
                                         <th className="text-center">
                                             <FormattedMessage id="admin.contracts.name" defaultMessage="Name" />
                                         </th>
-                                        <th className="text-center">
-                                            <FormattedMessage id="admin.contracts.wallet" defaultMessage="Wallet" />
-                                        </th>
-                                        <th className="text-center">
-                                            <FormattedMessage id="admin.contracts.active" defaultMessage="Active" />
-                                        </th>
+                                        {!props.vde && (
+                                            <th className="text-center">
+                                                <FormattedMessage id="admin.contracts.wallet" defaultMessage="Wallet" />
+                                            </th>
+                                        )}
+                                        {!props.vde && (
+                                            <th className="text-center">
+                                                <FormattedMessage id="admin.contracts.active" defaultMessage="Active" />
+                                            </th>
+                                        )}
                                         <th className="text-center">
                                             <FormattedMessage id="admin.contracts.edit" defaultMessage="Edit" />
                                         </th>
@@ -76,10 +81,14 @@ const Contracts: React.SFC<IContractsProps> = (props) => (
                                             <tr key={contract.id}>
                                                 <td>{contract.id}</td>
                                                 <td>{contract.name}</td>
-                                                <td>{contract.address}</td>
-                                                <td className="text-center">{contract.active}</td>
+                                                {!props.vde && (
+                                                    <td>{contract.address}</td>
+                                                )}
+                                                {!props.vde && (
+                                                    <td className="text-center">{contract.active}</td>
+                                                )}
                                                 <td style={{ width: 1 }}>
-                                                    <Link to={`/admin/contracts/${contract.id}-${contract.name}`}>
+                                                    <Link to={`/${props.vde ? 'vde' : 'admin'}/contracts/${contract.id}-${contract.name}`}>
                                                         <Button bsStyle="default" className="btn-labeled btn-icon">
                                                             <span className="btn-label">
                                                                 <em className="fa fa-edit" />

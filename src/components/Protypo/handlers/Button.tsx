@@ -40,6 +40,7 @@ export interface IButtonProps {
 interface IButtonContext {
     form: ValidatedForm;
     protypo: Protypo;
+    vde?: boolean;
 }
 
 const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IButtonContext) => {
@@ -86,6 +87,7 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
 
     return (
         <TxButton
+            vde={context.vde}
             className={props.class}
             contractName={props.contract}
             contractParams={getParams}
@@ -106,7 +108,8 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
 
 Button.contextTypes = {
     form: propTypes.object,
-    protypo: propTypes.object.isRequired
+    protypo: propTypes.object.isRequired,
+    vde: propTypes.bool
 };
 
 export default injectIntl(Button);

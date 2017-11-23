@@ -23,6 +23,7 @@ import Heading from 'components/Heading';
 import MenuEditor from './MenuEditor';
 
 export interface ICreateMenuProps {
+    vde?: boolean;
     navigate: (url: string) => void;
 }
 
@@ -50,7 +51,9 @@ class CreateMenu extends React.Component<ICreateMenuProps, ICreateMenuState> {
 
     onExec(block: string, error: string) {
         if (block) {
-            this.props.navigate('/admin/interface');
+            this.props.vde ?
+                this.props.navigate('/vde/interface') :
+                this.props.navigate('/admin/interface');
         }
     }
 
@@ -74,7 +77,7 @@ class CreateMenu extends React.Component<ICreateMenuProps, ICreateMenuState> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <Link to="/admin/interface">
+                                <Link to={this.props.vde ? '/vde/interface' : '/admin/interface'}>
                                     <FormattedMessage id="admin.interface" defaultMessage="Interface" />
                                 </Link>
                             </li>
@@ -86,6 +89,7 @@ class CreateMenu extends React.Component<ICreateMenuProps, ICreateMenuState> {
                             contractName="@1NewMenu"
                             mapContractParams={this.mapContractParams.bind(this)}
 
+                            vde={this.props.vde}
                             template={this.state.template}
                             conditions={this.state.conditions}
                             onSourceEdit={this.onSourceEdit.bind(this)}

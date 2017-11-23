@@ -21,11 +21,15 @@ import { navigate } from 'modules/engine/actions';
 
 import Create from 'components/Main/Admin/Contracts/Create';
 
+export interface ICreateContainerProps {
+    vde?: boolean;
+}
+
 interface ICreateContainerDispatch {
     navigate: typeof navigate;
 }
 
-const CreateContainer: React.SFC<ICreateContainerDispatch> = (props) => (
+const CreateContainer: React.SFC<ICreateContainerProps & ICreateContainerDispatch> = (props) => (
     <Create {...props} />
 );
 

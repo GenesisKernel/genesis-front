@@ -19,7 +19,11 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { navigate } from 'modules/engine/actions';
 
-import Create, { ICreateProps } from 'components/Main/Admin/Parameters/Create';
+import Create from 'components/Main/Admin/Parameters/Create';
+
+export interface ICreateContainerProps {
+    vde?: boolean;
+}
 
 interface ICreateContainerState {
 
@@ -29,7 +33,7 @@ interface ICreateContainerDispatch {
     navigate: typeof navigate;
 }
 
-const CreateContainer: React.SFC<ICreateContainerState & ICreateContainerDispatch> = (props) => (
+const CreateContainer: React.SFC<ICreateContainerProps & ICreateContainerState & ICreateContainerDispatch> = (props) => (
     <Create {...props} />
 );
 
@@ -41,4 +45,4 @@ const mapDispatchToProps = {
     navigate: navigate
 };
 
-export default connect<ICreateContainerState, ICreateContainerDispatch, ICreateProps>(mapStateToProps, mapDispatchToProps)(CreateContainer);
+export default connect<ICreateContainerState, ICreateContainerDispatch, ICreateContainerProps>(mapStateToProps, mapDispatchToProps)(CreateContainer);

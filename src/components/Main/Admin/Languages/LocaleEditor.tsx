@@ -22,6 +22,7 @@ import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 
 export interface ILocaleEditorProps {
+    vde?: boolean;
     contractName: string;
     translation?: string;
     translations: {
@@ -37,7 +38,7 @@ export interface ILocaleEditorProps {
 }
 
 const LocaleEditor: React.SFC<ILocaleEditorProps> = (props) => (
-    <ValidatedContractForm contractName={props.contractName} mapContractParams={props.mapContractParams} onExec={props.onExec}>
+    <ValidatedContractForm vde={props.vde} contractName={props.contractName} mapContractParams={props.mapContractParams} onExec={props.onExec}>
         <div className="panel panel-default">
             <div className="panel-body">
                 <Validation.components.ValidatedFormGroup for="name">

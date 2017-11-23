@@ -25,6 +25,7 @@ import Heading from 'components/Heading';
 import Money from 'components/Money';
 
 export interface IViewProps {
+    vde?: boolean;
     tableName: string;
     table: ITableResponse;
     tableData: IListResponse;
@@ -59,7 +60,7 @@ const View: React.SFC<IViewProps> = (props) => (
             <div className="content-wrapper">
                 <ol className="breadcrumb">
                     <li>
-                        <Link to="/admin/tables">
+                        <Link to={props.vde ? '/vde/tables' : '/admin/tables'}>
                             <FormattedMessage id="admin.tables" defaultMessage="Tables" />
                         </Link>
                     </li>

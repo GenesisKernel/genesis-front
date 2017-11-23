@@ -23,6 +23,7 @@ import Heading from 'components/Heading';
 import ParameterEditor from './ParameterEditor';
 
 export interface ICreateProps {
+    vde?: boolean;
     navigate: (url: string) => void;
 }
 
@@ -50,7 +51,9 @@ class Create extends React.Component<ICreateProps, ICreateState> {
 
     onExec(block: string, error: string) {
         if (block) {
-            this.props.navigate('/admin/parameters');
+            this.props.vde ?
+                this.props.navigate('/vde/parameters') :
+                this.props.navigate('/admin/parameters');
         }
     }
 
@@ -76,7 +79,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <Link to="/admin/parameters">
+                                <Link to={this.props.vde ? '/vde/parameters' : '/admin/parameters'}>
                                     <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
                                 </Link>
                             </li>
@@ -85,6 +88,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                             </li>
                         </ol>
                         <ParameterEditor
+                            vde={this.props.vde}
                             value={this.state.value}
                             conditions={this.state.conditions}
                             contractName="@1NewParameter"

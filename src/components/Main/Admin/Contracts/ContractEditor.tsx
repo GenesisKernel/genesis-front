@@ -24,6 +24,7 @@ import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 
 interface IContractEditorProps {
+    vde?: boolean;
     contractName: string;
     code: string;
     wallet: string;
@@ -47,7 +48,7 @@ interface IContractEditorProps {
 const ContractEditor: React.SFC<IContractEditorProps> = (props) => (
     <Row>
         <Col md={12}>
-            <ValidatedContractForm contractName={props.contractName} mapContractParams={props.mapContractParams} onExec={props.onExec && props.onExec}>
+            <ValidatedContractForm vde={props.vde} contractName={props.contractName} mapContractParams={props.mapContractParams} onExec={props.onExec && props.onExec}>
                 <div className="panel panel-default">
                     <div className="panel-body">
                         <Validation.components.ValidatedFormGroup for="content">
@@ -68,7 +69,7 @@ const ContractEditor: React.SFC<IContractEditorProps> = (props) => (
                                 />
                             </div>
                         </Validation.components.ValidatedFormGroup>
-                        {props.contract && (
+                        {props.contract && !props.vde && (
                             <Validation.components.ValidatedFormGroup for="active">
                                 <label htmlFor="active">
                                     <FormattedMessage id="admin.contracts.active" defaultMessage="Active" />
@@ -94,18 +95,20 @@ const ContractEditor: React.SFC<IContractEditorProps> = (props) => (
                                 </p>
                             </Validation.components.ValidatedFormGroup>
                         )}
-                        <Validation.components.ValidatedFormGroup for="address">
-                            <label htmlFor="address">
-                                <FormattedMessage id="admin.contracts.wallet" defaultMessage="Wallet" />
-                            </label>
-                            {props.contract ?
-                                (
-                                    <Validation.components.ValidatedControl key="walletEdit" name="wallet" value={props.wallet} readOnly />
-                                ) : (
-                                    <Validation.components.ValidatedControl key="walletCreate" name="wallet" onChange={props.onWalletEdit} value={props.wallet} />
-                                )
-                            }
-                        </Validation.components.ValidatedFormGroup>
+                        {!props.vde && (
+                            <Validation.components.ValidatedFormGroup for="address">
+                                <label htmlFor="address">
+                                    <FormattedMessage id="admin.contracts.wallet" defaultMessage="Wallet" />
+                                </label>
+                                {props.contract ?
+                                    (
+                                        <Validation.components.ValidatedControl key="walletEdit" name="wallet" value={props.wallet} readOnly />
+                                    ) : (
+                                        <Validation.components.ValidatedControl key="walletCreate" name="wallet" onChange={props.onWalletEdit} value={props.wallet} />
+                                    )
+                                }
+                            </Validation.components.ValidatedFormGroup>
+                        )}
                         <Validation.components.ValidatedFormGroup for="conditions" className="mb0">
                             <label htmlFor="conditions">
                                 <FormattedMessage id="admin.conditions.change" defaultMessage="Change conditions" />

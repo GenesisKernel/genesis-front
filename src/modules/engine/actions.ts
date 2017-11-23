@@ -24,3 +24,4 @@ export const checkOnline = actionCreator.async<undefined, boolean, string>('CHEC
 export const install = actionCreator.async<IInstallParams, { uid: string, session: string }, string>('INSTALL');
 export const setLoading = actionCreator<boolean>('SET_LOADING');
 export const setCollapsed = actionCreator<boolean>('SET_COLLAPSED');
+export const createVDE = actionCreator.async<undefined, boolean, boolean>('CREATE_VDE');

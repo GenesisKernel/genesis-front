@@ -23,6 +23,7 @@ import Heading from 'components/Heading';
 import MenuEditor from './MenuEditor';
 
 export interface IEditMenuProps {
+    vde?: boolean;
     menu: { id: string, name: string, conditions: string, value: string };
 }
 
@@ -77,7 +78,7 @@ class EditMenu extends React.Component<IEditMenuProps, IEditMenuState> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <Link to="/admin/interface">
+                                <Link to={this.props.vde ? '/vde/interface' : '/admin/interface'}>
                                     <FormattedMessage id="admin.interface" defaultMessage="Interface" />
                                 </Link>
                             </li>
@@ -89,6 +90,7 @@ class EditMenu extends React.Component<IEditMenuProps, IEditMenuState> {
                             </li>
                         </ol>
                         <MenuEditor
+                            vde={this.props.vde}
                             contractName="@1EditMenu"
                             mapContractParams={this.mapContractParams.bind(this)}
                             template={this.state.template}

@@ -22,27 +22,36 @@ import { ITableResponse, IListResponse } from 'lib/api';
 
 import View from 'components/Main/Admin/Tables/View';
 
-interface IViewContainerProps {
-    session: string;
-    table: ITableResponse;
+export interface IViewContainerProps {
+    vde?: boolean;
+    match?: { params: { tableName: string } };
+}
+
+interface IViewContainerState {
     tableData: IListResponse;
+    table: ITableResponse;
+}
+
+interface IViewContainerDispatch {
     getTable: typeof getTable.started;
 }
 
-class ViewContainer extends React.Component<IViewContainerProps & { match?: { params: { tableName: string } } }> {
+class ViewContainer extends React.Component<IViewContainerProps & IViewContainerState & IViewContainerDispatch> {
     componentWillMount() {
-        this.props.getTable({ table: this.props.match.params.tableName });
+        this.props.getTable({
+            table: this.props.match.params.tableName,
+            vde: this.props.vde
+        });
     }
 
     render() {
         return (
-            <View tableName={this.props.match.params.tableName} table={this.props.table} tableData={this.props.tableData} />
+            <View vde={this.props.vde} tableName={this.props.match.params.tableName} table={this.props.table} tableData={this.props.tableData} />
         );
     }
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken,
     table: state.admin.table,
     tableData: state.admin.tableData
 });
@@ -51,4 +60,4 @@ const mapDispatchToProps = {
     getTable: getTable.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewContainer);
+export default connect<IViewContainerState, IViewContainerDispatch, IViewContainerProps>(mapStateToProps, mapDispatchToProps)(ViewContainer);

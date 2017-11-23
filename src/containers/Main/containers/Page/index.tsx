@@ -22,34 +22,46 @@ import { renderPage } from 'modules/content/actions';
 import { IProtypoElement } from 'components/Protypo/Protypo';
 import Page from 'components/Main/Page';
 
-interface IPageContainerProps {
-    pending: boolean;
-    page: { name: string, content: IProtypoElement[] };
+export interface IPageContainerProps {
+    vde?: boolean;
     match?: { params: { pageName: string } };
     location?: {
         state: { params?: { [key: string]: any } };
     };
+}
+
+interface IPageContainerState {
+    page: { name: string, content: IProtypoElement[], error?: string };
+    pending: boolean;
+}
+
+interface IPageContainerDispatch {
     renderPage: typeof renderPage.started;
 }
 
-class PageContainer extends React.Component<IPageContainerProps> {
+class PageContainer extends React.Component<IPageContainerProps & IPageContainerState & IPageContainerDispatch> {
     componentDidMount() {
         this.renderPage(this.props);
     }
 
-    componentWillReceiveProps(props: IPageContainerProps) {
+    componentWillReceiveProps(props: IPageContainerProps & IPageContainerState & IPageContainerDispatch) {
         this.renderPage(props);
     }
 
-    renderPage(props: IPageContainerProps) {
+    renderPage(props: IPageContainerProps & IPageContainerState & IPageContainerDispatch) {
         if (!props.pending && (!props.page || props.page.name !== props.match.params.pageName)) {
-            props.renderPage({ name: props.match.params.pageName, params: props.location.state && props.location.state.params });
+            props.renderPage({
+                name: props.match.params.pageName,
+                params: props.location.state && props.location.state.params,
+                vde: this.props.vde
+            });
         }
     }
 
     render() {
         return (
             <Page
+                vde={this.props.vde}
                 name={this.props.page && this.props.page.name}
                 payload={this.props.page && this.props.page.content}
             />
@@ -66,4 +78,4 @@ const mapDispatchToProps = {
     renderPage: renderPage.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PageContainer);
+export default connect<IPageContainerState, IPageContainerDispatch, IPageContainerProps>(mapStateToProps, mapDispatchToProps)(PageContainer);

@@ -74,6 +74,7 @@ export const columnTypes = [
 ];
 
 export interface ICreateProps {
+    vde?: boolean;
     navigate: (url: string) => void;
 }
 
@@ -114,7 +115,9 @@ class Create extends React.Component<ICreateProps, ICreateState> {
 
     onExec(block: string, error: string) {
         if (block) {
-            this.props.navigate('/admin/tables');
+            this.props.vde ?
+                this.props.navigate('/vde/tables') :
+                this.props.navigate('/admin/tables');
         }
     }
 
@@ -188,7 +191,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <Link to="/admin/tables">
+                                <Link to={this.props.vde ? '/vde/tables' : '/admin/tables'}>
                                     <FormattedMessage id="admin.tables" defaultMessage="Tables" />
                                 </Link>
                             </li>
@@ -196,7 +199,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                                 <FormattedMessage id="admin.create" defaultMessage="Create" />
                             </li>
                         </ol>
-                        <ValidatedContractForm contractName="@1NewTable" mapContractParams={this.mapContractParams.bind(this)} onExec={this.onExec.bind(this)}>
+                        <ValidatedContractForm vde={this.props.vde} contractName="@1NewTable" mapContractParams={this.mapContractParams.bind(this)} onExec={this.onExec.bind(this)}>
                             <div className="panel panel-default">
                                 <div className="panel-body">
                                     <Validation.components.ValidatedFormGroup for="name">

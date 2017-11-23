@@ -47,6 +47,7 @@ import ParametersCreate from 'containers/Main/containers/Admin/Parameters/Create
 import ParametersEdit from 'containers/Main/containers/Admin/Parameters/Edit';
 import Import from 'containers/Main/containers/Admin/Import';
 import Export from 'containers/Main/containers/Admin/Export';
+import VDE from 'containers/Main/containers/Admin/VDE';
 import DefaultPage from 'containers/Main/containers/DefaultPage';
 import Page from 'containers/Main/containers/Page';
 import Debug from 'containers/Main/containers/Debug';
@@ -101,6 +102,33 @@ class MainContainer extends React.Component<IMainProps & { ecosystemInit: typeof
                     <Route exact path="/admin/parameters/:parameterName" component={ParametersEdit} />
                     <Route exact path="/admin/import" component={Import} />
                     <Route exact path="/admin/export" component={Export} />
+                    <Route exact path="/admin/vde" component={VDE} />
+
+                    <Route exact path="/vde/tables" render={props => <Tables {...props} vde />} />
+                    <Route exact path="/vde/tables/create" render={props => <TablesCreate {...props} vde />} />
+                    <Route exact path="/vde/tables/:tableName/edit" render={props => <TablesEdit {...props} vde />} />
+                    <Route exact path="/vde/tables/:tableName/edit/column/:columnName" render={props => <TablesEditColumn {...props} vde />} />
+                    <Route exact path="/vde/tables/:tableName/edit/add-column" render={props => <TablesAddColumn {...props} vde />} />
+                    <Route exact path="/vde/tables/:tableName" render={props => <TablesView {...props} vde />} />
+                    <Route exact path="/vde/interface" render={props => <Interface {...props} vde />} />
+                    <Route exact path="/vde/interface/create-page" render={props => <CreatePage {...props} vde />} />
+                    <Route exact path="/vde/interface/create-page/constructor" render={props => <Constructor {...props} vde />} />
+                    <Route exact path="/vde/interface/page/:pageID-:pageName" render={props => <EditPage {...props} vde />} />
+                    <Route exact path="/vde/interface/page/:pageID-:pageName/constructor" render={props => <Constructor {...props} vde />} />
+                    <Route exact path="/vde/interface/menu/:menuID-:menuName" render={props => <EditMenu {...props} vde />} />
+                    <Route exact path="/vde/interface/block/:blockID-:blockName" render={props => <EditBlock {...props} vde />} />
+                    <Route exact path="/vde/interface/create-menu" render={props => <CreateMenu {...props} vde />} />
+                    <Route exact path="/vde/interface/create-block" render={props => <CreateBlock {...props} vde />} />
+                    <Route exact path="/vde/contracts" render={props => <Contracts {...props} vde />} />
+                    <Route exact path="/vde/contracts/create" render={props => <CreateContract {...props} vde />} />
+                    <Route exact path="/vde/contracts/:contractID-:contractName" render={props => <EditContract {...props} vde />} />
+                    <Route exact path="/vde/languages" render={props => <Languages {...props} vde />} />
+                    <Route exact path="/vde/languages/create" render={props => <CreateLanguage {...props} vde />} />
+                    <Route exact path="/vde/languages/:translationID-:translationName" render={props => <EditLanguage {...props} vde />} />
+                    <Route exact path="/vde/parameters" render={props => <Parameters {...props} vde />} />
+                    <Route exact path="/vde/parameters/create" render={props => <ParametersCreate {...props} vde />} />
+                    <Route exact path="/vde/parameters/:parameterName" render={props => <ParametersEdit {...props} vde />} />
+                    <Route exact path="/vde/page/:pageName" render={props => <Page {...props} vde />} />
 
                     <Route exact path="/page/:pageName" component={Page} />
 
@@ -118,6 +146,7 @@ const mapStateToProps = (state: IRootState) => ({
     session: state.auth.sessionToken,
     menus: state.content.menus,
     pending: state.content.pending,
+    isEcosystemOwner: state.auth.isEcosystemOwner,
     stylesheet: state.content.stylesheet,
     isCollapsed: state.engine.isCollapsed,
     transactionsCount: state.tx.transactions.count(),

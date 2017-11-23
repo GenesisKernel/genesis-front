@@ -26,6 +26,7 @@ import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 
 export interface IAddColumnProps {
+    vde?: boolean;
     table: string;
 }
 
@@ -79,17 +80,17 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
                     <div className="content-wrapper" >
                         <ol className="breadcrumb">
                             <li>
-                                <Link to="/admin/tables">
+                                <Link to={this.props.vde ? '/vde/tables' : '/admin/tables'}>
                                     <FormattedMessage id="admin.tables" defaultMessage="Tables" />
                                 </Link>
                             </li>
                             <li>
-                                <Link to={`/admin/tables/${this.props.table}`}>
+                                <Link to={`/${this.props.vde ? 'vde' : 'admin'}/tables/${this.props.table}`}>
                                     {this.props.table}
                                 </Link>
                             </li>
                             <li>
-                                <Link to={`/admin/tables/${this.props.table}/edit`}>
+                                <Link to={`/${this.props.vde ? 'vde' : 'admin'}/tables/${this.props.table}/edit`}>
                                     <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
                                 </Link>
                             </li>
@@ -97,7 +98,7 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
                                 <FormattedMessage id="admin.tables.column.add" defaultMessage="Add column" />
                             </li>
                         </ol>
-                        <ValidatedContractForm contractName="@1NewColumn" mapContractParams={this.mapContractParams.bind(this)}>
+                        <ValidatedContractForm vde={this.props.vde} contractName="@1NewColumn" mapContractParams={this.mapContractParams.bind(this)}>
                             <div className="panel panel-default">
                                 <div className="panel-body">
                                     <Validation.components.ValidatedFormGroup for="name">

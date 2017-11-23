@@ -20,32 +20,32 @@ import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IP
 const actionCreator = actionCreatorFactory('admin');
 
 // Contracts
-export const getContract = actionCreator.async<{ id: string }, { id: string, active: string, name: string, conditions: string, address: string, value: string }, string>('GET_CONTRACT');
-export const getContracts = actionCreator.async<{ offset?: number, limit?: number }, IContractsResponse, string>('GET_CONTRACTS');
+export const getContract = actionCreator.async<{ id: string, vde?: boolean }, { id: string, active: string, name: string, conditions: string, address: string, value: string }, string>('GET_CONTRACT');
+export const getContracts = actionCreator.async<{ vde?: boolean, offset?: number, limit?: number }, IContractsResponse, string>('GET_CONTRACTS');
 
 // Tables
-export const getTable = actionCreator.async<{ table: string }, { table: ITableResponse, data: IListResponse }, string>('GET_TABLE');
-export const getTableStruct = actionCreator.async<{ name: string }, ITableResponse, string>('GET_TABLE_STRUCT');
-export const getTables = actionCreator.async<{ offset?: number, limit?: number }, ITablesResponse, string>('GET_TABLES');
+export const getTable = actionCreator.async<{ table: string, vde?: boolean }, { table: ITableResponse, data: IListResponse }, string>('GET_TABLE');
+export const getTableStruct = actionCreator.async<{ name: string, vde?: boolean }, ITableResponse, string>('GET_TABLE_STRUCT');
+export const getTables = actionCreator.async<{ offset?: number, limit?: number, vde?: boolean }, ITablesResponse, string>('GET_TABLES');
 
 // Pages
-export const getPage = actionCreator.async<{ id: string }, IPageResponse, string>('GET_PAGE');
-export const getInterface = actionCreator.async<undefined, IInterfacesResponse, string>('GET_INTERFACE');
+export const getPage = actionCreator.async<{ id: string, vde?: boolean }, IPageResponse, string>('GET_PAGE');
+export const getInterface = actionCreator.async<{ vde?: boolean }, IInterfacesResponse, string>('GET_INTERFACE');
 
 // Menus
-export const getMenu = actionCreator.async<{ id: string }, { id: string, name: string, value: string, conditions: string }, string>('GET_MENU');
-export const getMenus = actionCreator.async<undefined, { id: string, name: string, conditions: string, value: string }[], string>('GET_MENUS');
+export const getMenu = actionCreator.async<{ id: string, vde?: boolean }, { id: string, name: string, value: string, conditions: string }, string>('GET_MENU');
+export const getMenus = actionCreator.async<{ vde?: boolean }, { id: string, name: string, conditions: string, value: string }[], string>('GET_MENUS');
 
 // Blocks
-export const getBlock = actionCreator.async<{ id: string }, { id: string, name: string, value: string, conditions: string }, string>('GET_BLOCK');
+export const getBlock = actionCreator.async<{ id: string, vde?: boolean; }, { id: string, name: string, value: string, conditions: string }, string>('GET_BLOCK');
 
 // Parameters
-export const getParameter = actionCreator.async<{ name: string }, IParameterResponse, string>('GET_PARAMETER');
-export const getParameters = actionCreator.async<{ params?: string[] }, IParameterResponse[], string>('GET_PARAMETERS');
+export const getParameter = actionCreator.async<{ name: string, vde?: boolean }, IParameterResponse, string>('GET_PARAMETER');
+export const getParameters = actionCreator.async<{ params?: string[], vde?: boolean }, IParameterResponse[], string>('GET_PARAMETERS');
 
 // Languages
 export const getLanguage = actionCreator.async<{ id: string }, { id: string, res: any, name: string, conditions: string }, string>('GET_LANGUAGE');
-export const getLanguages = actionCreator.async<{ offset?: number, limit?: number }, { id: string, res: any, name: string, conditions: string }[], string>('GET_LANGUAGES');
+export const getLanguages = actionCreator.async<{ vde?: boolean, offset?: number, limit?: number }, { id: string, res: any, name: string, conditions: string }[], string>('GET_LANGUAGES');
 
 // Import/export
 export const exportData = actionCreator.async<{ pages: string[], blocks: string[], menus: string[], parameters: string[], languages: string[], contracts: { id: string, name: string }[], tables: string[], data: string[] }, object, string>('EXPORT_DATA');

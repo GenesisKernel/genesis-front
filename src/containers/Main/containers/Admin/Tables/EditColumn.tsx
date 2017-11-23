@@ -18,13 +18,28 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getTableStruct } from 'modules/admin/actions';
+import { ITableResponse } from 'lib/api';
 
-import EditColumn, { IEditColumnProps } from 'components/Main/Admin/Tables/EditColumn';
+import EditColumn from 'components/Main/Admin/Tables/EditColumn';
 
-class EditColumnContainer extends React.Component<IEditColumnProps & { getTableStruct: typeof getTableStruct.started, match: { params: { tableName: string, columnName: string } } }> {
+export interface IEditColumnContainerProps {
+    vde?: boolean;
+    match: { params: { tableName: string, columnName: string } };
+}
+
+interface IEditColumnContainerState {
+    table: ITableResponse;
+}
+
+interface IEditColumnContainerDispatch {
+    getTableStruct: typeof getTableStruct.started;
+}
+
+class EditColumnContainer extends React.Component<IEditColumnContainerProps & IEditColumnContainerState & IEditColumnContainerDispatch> {
     componentWillMount() {
         this.props.getTableStruct({
-            name: this.props.match.params.tableName
+            name: this.props.match.params.tableName,
+            vde: this.props.vde
         });
     }
 
@@ -52,4 +67,4 @@ const mapDispatchToProps = {
     getTableStruct: getTableStruct.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditColumnContainer);
+export default connect<IEditColumnContainerState, IEditColumnContainerDispatch, IEditColumnContainerProps>(mapStateToProps, mapDispatchToProps)(EditColumnContainer);

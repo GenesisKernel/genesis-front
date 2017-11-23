@@ -25,6 +25,7 @@ import Heading from 'components/Heading';
 import ContractEditor from './ContractEditor';
 
 export interface IEditProps {
+    vde?: boolean;
     contract: {
         id: string;
         active: string;
@@ -77,7 +78,10 @@ class Edit extends React.Component<IEditProps, IEditState> {
 
     onContractActivation(block: string, error: string) {
         if (block) {
-            this.props.getContract({ id: this.props.contract.id });
+            this.props.getContract({
+                id: this.props.contract.id,
+                vde: this.props.vde
+            });
         }
     }
 
@@ -107,7 +111,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <Link to="/admin/contracts">
+                                <Link to={this.props.vde ? '/vde/contracts' : '/admin/contracts'}>
                                     <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
                                 </Link>
                             </li>
@@ -119,6 +123,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
                             contractName="@1EditContract"
                             mapContractParams={this.mapContractParams.bind(this)}
 
+                            vde={this.props.vde}
                             code={this.state.code}
                             wallet={this.state.wallet}
                             conditions={this.state.conditions}
