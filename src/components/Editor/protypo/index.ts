@@ -478,6 +478,41 @@ const register = (editor: typeof monaco) => {
                 staticParamTypes.Class
             ]
         },
+        RadioGroup: {
+            label: 'RadioGroup',
+            documentation: 'List of options represented with radio buttons',
+            kind: monaco.languages.CompletionItemKind.Method,
+            insertText: 'RadioGroup(',
+            params: [
+                {
+                    label: 'Name',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Unique input name to bind the value to',
+                    insertText: 'Name: '
+                },
+                {
+                    label: 'Source',
+                    documentation: 'Source identificator to fetch the results',
+                    insertText: 'Source: '
+                },
+                {
+                    label: 'NameColumn',
+                    documentation: 'Name of the column that will be shown near the button',
+                    insertText: 'NameColumn: '
+                },
+                {
+                    label: 'ValueColumn',
+                    documentation: 'Value that will be passed to the form',
+                    insertText: 'ValueColumn: '
+                },
+                {
+                    label: 'Value',
+                    documentation: 'Default value that will be selected',
+                    insertText: 'Value: '
+                },
+                staticParamTypes.Class
+            ]
+        },
         Select: {
             label: 'Select',
             documentation: 'Element with dropdown menu used to select one value from multiple choices',

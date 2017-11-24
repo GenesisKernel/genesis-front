@@ -31,6 +31,7 @@ import LinkPage from './handlers/LinkPage';
 import MenuItem from './handlers/MenuItem';
 import MenuGroup from './handlers/MenuGroup';
 import P from './handlers/P';
+import RadioGroup from './handlers/RadioGroup';
 import Select from './handlers/Select';
 import Span from './handlers/Span';
 import Strong from './handlers/Strong';
@@ -56,6 +57,7 @@ const handlers = {
     'menuitem': MenuItem,
     'menugroup': MenuGroup,
     'p': P,
+    'radiogroup': RadioGroup,
     'select': Select,
     'span': Span,
     'strong': Strong,
