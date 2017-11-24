@@ -21,9 +21,11 @@ import { Link } from 'react-router-dom';
 import DocumentTitle from 'components/DocumentTitle';
 import Heading from 'components/Heading';
 import MenuEditor from './MenuEditor';
+import MenuOnlyEditor from './MenuOnlyEditor';
 
 export interface IEditMenuProps {
     vde?: boolean;
+    tabView?: boolean;
     menu: { id: string, name: string, conditions: string, value: string };
 }
 
@@ -69,6 +71,21 @@ class EditMenu extends React.Component<IEditMenuProps, IEditMenuState> {
     }
 
     render() {
+        if (this.props.tabView) {
+            return (
+                <MenuOnlyEditor
+                    vde={this.props.vde}
+                    contractName="@1EditMenu"
+                    mapContractParams={this.mapContractParams.bind(this)}
+                    template={this.state.template}
+                    conditions={this.state.conditions}
+                    menu={this.props.menu}
+                    onSourceEdit={this.onSourceEdit.bind(this)}
+                    onConditionsEdit={this.onConditionsEdit.bind(this)}
+                />
+            );
+        }
+
         return (
             <DocumentTitle title={this.props.menu && this.props.menu.name}>
                 <div>

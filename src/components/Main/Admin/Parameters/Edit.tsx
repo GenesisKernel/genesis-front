@@ -25,6 +25,7 @@ import ParameterEditor from './ParameterEditor';
 
 export interface IEditProps {
     vde?: boolean;
+    tabView?: boolean;
     parameter: IParameterResponse;
 }
 
@@ -73,6 +74,21 @@ class Edit extends React.Component<IEditProps, IEditState> {
     }
 
     render() {
+        if (this.props.tabView) {
+            return (
+                <ParameterEditor
+                    vde={this.props.vde}
+                    name={this.props.parameter && this.props.parameter.name}
+                    value={this.state.value}
+                    conditions={this.state.conditions}
+                    contractName="@1EditParameter"
+                    mapContractParams={this.mapContractParams.bind(this)}
+                    onValueEdit={this.onValueEdit.bind(this)}
+                    onConditionsEdit={this.onConditionsEdit.bind(this)}
+                />
+            );
+        }
+
         return (
             <DocumentTitle title={this.props.parameter && this.props.parameter.name}>
                 <div>

@@ -102,6 +102,13 @@ const Parameters: React.SFC<IParametersProps> = (props) => (
                                                         </span>
                                                     </Button>
                                                 </Link>
+                                                <Link to={`/${props.vde ? 'vde' : 'admin'}/tabs/parameter-${param.name}`}>
+                                                    <Button bsStyle="default" className="btn-labeled btn-icon">
+                                                        <span className="btn-label">
+                                                            <em className="fa fa-files-o" />
+                                                        </span>
+                                                    </Button>
+                                                </Link>
                                             </td>
                                         </tr>
                                     ))}
