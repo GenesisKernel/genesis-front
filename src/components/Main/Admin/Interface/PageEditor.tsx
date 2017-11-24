@@ -159,7 +159,7 @@ const PageEditor: React.SFC<IPageEditorProps> = (props) => (
                                     <FormattedMessage id="admin.conditions.change" defaultMessage="Change conditions" />
                                 </label>
                                 <p className="form-control-static">{props.menu.conditions}</p>
-                            </FormGroup>?
+                            </FormGroup>
                         </div>
                     ) : (
                         <FormattedMessage id="admin.interface.nothingfound" defaultMessage="Nothing found" />
