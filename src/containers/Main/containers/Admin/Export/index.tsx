@@ -47,7 +47,7 @@ interface IExportContainerDispatch {
 class ExportContainer extends React.Component<IExportContainerProps & IExportContainerState & IExportContainerDispatch> {
     componentDidMount() {
         // TODO: Move to a separate action
-        this.props.getInterface(null);
+        this.props.getInterface({});
         this.props.getParameters({});
         this.props.getLanguages({});
         this.props.getContracts({});
