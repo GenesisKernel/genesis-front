@@ -22,6 +22,7 @@ import ValidationMessage from './ValidationMessage';
 import ValidatedTextarea from './ValidatedTextarea';
 import ValidatedForm from './ValidatedForm';
 import ValidatedFormGroup from './ValidatedFormGroup';
+import ValidatedRadioGroup from './ValidatedRadioGroup';
 import ValidatedSubmit from './ValidatedSubmit';
 import * as validators from './Validators';
 
@@ -34,6 +35,7 @@ export default {
         ValidatedTextarea,
         ValidatedForm,
         ValidatedFormGroup,
+        ValidatedRadioGroup,
         ValidatedSubmit,
         ValidationMessage
     },

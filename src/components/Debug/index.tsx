@@ -133,6 +133,15 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                         <hr />
                         <Validation.components.ValidatedForm onSubmitSuccess={r => console.log('Submit::', r)}>
                             <Validation.components.ValidatedImage name="myImg" width={100} />
+                            <Validation.components.ValidatedRadioGroup
+                                name="selector"
+                                values={[
+                                    { title: 'First', value: 'v_first' },
+                                    { title: 'Second', value: 'v_second' },
+                                    { title: 'Third', value: 'v_third' },
+                                    { title: 'Foruth', value: 'v_fourth', disabled: true }
+                                ]}
+                            />
                             <Validation.components.ValidatedSubmit>Submit</Validation.components.ValidatedSubmit>
                         </Validation.components.ValidatedForm>
                         <hr />
