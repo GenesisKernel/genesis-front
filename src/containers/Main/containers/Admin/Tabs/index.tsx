@@ -18,7 +18,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import Tabs from 'components/Tabs';
-import { loadTabList, removeTabList } from 'modules/admin/actions';
+import { getTabList, removeTabList } from 'modules/admin/actions';
 import styled from 'styled-components';
 import ContractEditTabbed from 'containers/Main/containers/Admin/Contracts/EditTabbed';
 import ParameterEditTabbed from 'containers/Main/containers/Admin/Parameters/EditTabbed';
@@ -36,8 +36,8 @@ const Title = styled.div`
 interface ITabsContainerProps {
     tabData: any;
     tabList: { id: string, type: string, name?: string, visible?: boolean }[];
-    loadTabList: typeof loadTabList;
-    removeTabList: typeof removeTabList;
+    getTabList: typeof getTabList.started;
+    removeTabList: typeof removeTabList.started;
 }
 
 class TabsContainer extends React.Component<ITabsContainerProps & { match: { params: { type: string, id: string, name: string } } }> {
@@ -50,7 +50,8 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
                 addType: this.props.match.params.type
             };
         }
-        this.props.loadTabList(addTab);
+        // this.props.loadTabList(addTab);
+        this.props.getTabList(addTab);
     }
 
     onTabClose(id: string, type: string) {
@@ -65,51 +66,51 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
                 // switch components depending on tabListItem.type: page, contract, etc
                 if (tabListItem.type === 'interfacePage') {
                     tabsContent.push(
-                        <div>
+                        <div key={tabListItem.type + tabListItem.id}>
                             <Title>Interface Page</Title>
-                            <InterfacePageEditTabbed pageID={tabListItem.id} key={tabListItem.type + tabListItem.id}/>
+                            <InterfacePageEditTabbed pageID={tabListItem.id}/>
                         </div>
                     );
                 }
                 else
                 if (tabListItem.type === 'interfaceBlock') {
                     tabsContent.push(
-                        <div>
+                        <div key={tabListItem.type + tabListItem.id}>
                             <Title>Interface Block</Title>
-                            <InterfaceBlockEditTabbed blockID={tabListItem.id} key={tabListItem.type + tabListItem.id}/>
+                            <InterfaceBlockEditTabbed blockID={tabListItem.id}/>
                         </div>
                     );
                 }
                 else
                 if (tabListItem.type === 'interfaceMenu') {
                     tabsContent.push(
-                        <div>
+                        <div key={tabListItem.type + tabListItem.id}>
                             <Title>Interface Menu</Title>
-                            <InterfaceMenuEditTabbed menuID={tabListItem.id} key={tabListItem.type + tabListItem.id}/>
+                            <InterfaceMenuEditTabbed menuID={tabListItem.id}/>
                         </div>
                     );
                 }
                 else
                 if (tabListItem.type === 'contract') {
                     tabsContent.push(
-                        <div>
+                        <div key={tabListItem.type + tabListItem.id}>
                             <Title>Smart Contract</Title>
-                            <ContractEditTabbed contractID={tabListItem.id} key={tabListItem.type + tabListItem.id}/>
+                            <ContractEditTabbed contractID={tabListItem.id}/>
                         </div>
                     );
                 }
                 else
                 if (tabListItem.type === 'parameter') {
                     tabsContent.push(
-                        <div>
+                        <div key={tabListItem.type + tabListItem.id}>
                             <Title>Ecosystem Parameter</Title>
-                            <ParameterEditTabbed parameterName={tabListItem.id} key={tabListItem.type + tabListItem.id}/>
+                            <ParameterEditTabbed parameterName={tabListItem.id}/>
                         </div>
                     );
                 }
                 else {
                     tabsContent.push(
-                        <div/>
+                        <div key={tabListItem.type + tabListItem.id}/>
                     );
                 }
             }
@@ -156,8 +157,8 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    loadTabList,
-    removeTabList
+    getTabList: getTabList.started,
+    removeTabList: removeTabList.started
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TabsContainer);
