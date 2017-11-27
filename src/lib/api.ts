@@ -183,6 +183,16 @@ export interface IParameterResponse extends IResponse {
     conditions: string;
 }
 
+export interface ITabListResponse {
+    tabList: {
+        id: string;
+        type: string;
+        name?: string;
+        visible?: boolean;
+    } [];
+
+}
+
 export interface ICreateVDEResponse extends IResponse {
     result: boolean;
 }

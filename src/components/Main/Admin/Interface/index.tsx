@@ -88,6 +88,13 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                                                 </span>
                                                             </Button>
                                                         </Link>
+                                                        <Link to={`/${props.vde ? 'vde' : 'admin'}/tabs/interfacePage-${page.id}-${page.name}`}>
+                                                            <Button bsStyle="default" className="btn-labeled btn-icon">
+                                                                <span className="btn-label">
+                                                                    <em className="fa fa-files-o" />
+                                                                </span>
+                                                            </Button>
+                                                        </Link>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -123,6 +130,13 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                                                 </span>
                                                             </Button>
                                                         </Link>
+                                                        <Link to={`/${props.vde ? 'vde' : 'admin'}/tabs/interfaceMenu-${menu.id}-${menu.name}`}>
+                                                            <Button bsStyle="default" className="btn-labeled btn-icon">
+                                                                <span className="btn-label">
+                                                                    <em className="fa fa-files-o" />
+                                                                </span>
+                                                            </Button>
+                                                        </Link>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -153,6 +167,13 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                                             <Button bsStyle="default" className="btn-labeled btn-icon">
                                                                 <span className="btn-label">
                                                                     <em className="fa fa-edit" />
+                                                                </span>
+                                                            </Button>
+                                                        </Link>
+                                                        <Link to={`/${props.vde ? 'vde' : 'admin'}/tabs/interfaceBlock-${block.id}-${block.name}`}>
+                                                            <Button bsStyle="default" className="btn-labeled btn-icon">
+                                                                <span className="btn-label">
+                                                                    <em className="fa fa-files-o" />
                                                                 </span>
                                                             </Button>
                                                         </Link>

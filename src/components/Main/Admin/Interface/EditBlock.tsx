@@ -21,9 +21,11 @@ import { Link } from 'react-router-dom';
 import DocumentTitle from 'components/DocumentTitle';
 import Heading from 'components/Heading';
 import BlockEditor from './BlockEditor';
+import BlockOnlyEditor from './BlockOnlyEditor';
 
 export interface IEditBlockProps {
     vde?: boolean;
+    tabView?: boolean;
     block: { id: string, name: string, conditions: string, value: string };
 }
 
@@ -69,6 +71,21 @@ class EditBlock extends React.Component<IEditBlockProps, IEditBlockState> {
     }
 
     render() {
+        if (this.props.tabView) {
+            return (
+                <BlockOnlyEditor
+                    contractName="@1EditBlock"
+                    mapContractParams={this.mapContractParams.bind(this)}
+                    vde={this.props.vde}
+                    template={this.state.template}
+                    conditions={this.state.conditions}
+                    block={this.props.block}
+                    onSourceEdit={this.onSourceEdit.bind(this)}
+                    onConditionsEdit={this.onConditionsEdit.bind(this)}
+                />
+            );
+        }
+
         return (
             <DocumentTitle title={this.props.block && this.props.block.name}>
                 <div>

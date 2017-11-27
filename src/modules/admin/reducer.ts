@@ -31,6 +31,7 @@ export type State = {
     readonly interfaces: IInterfacesResponse;
     readonly contract: { id: string, active: string, name: string, conditions: string, address: string, value: string };
     readonly contracts: IContract[];
+    readonly tabs: { data: any, list: { id: string, type: string, name?: string, visible?: boolean }[] };
     readonly language: { id: string, res: any, name: string, conditions: string };
     readonly languages: { id: string, res: any, name: string, conditions: string }[];
     readonly parameter: IParameterResponse;
@@ -64,6 +65,7 @@ export const initialState: State = {
     interfaces: null,
     contract: null,
     contracts: null,
+    tabs: { data: {}, list: [] },
     language: null,
     languages: null,
     parameter: null,
@@ -107,7 +109,17 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             pending: false,
             page: action.payload.result.page as { id: string, name: string, menu: string, conditions: string, value: string },
-            menus: action.payload.result.menus
+            menus: action.payload.result.menus,
+            tabs: {
+                ...state.tabs,
+                data: {
+                    ...state.tabs.data,
+                    ['interfacePage' + action.payload.result.page.id]: {
+                        type: 'interfacePage',
+                            data: action.payload.result.page
+                    }
+                }
+            }
         };
     }
     else if (isType(action, actions.getPage.failed)) {
@@ -130,7 +142,17 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            menu: action.payload.result
+            menu: action.payload.result,
+            tabs: {
+                ...state.tabs,
+                data: {
+                    ...state.tabs.data,
+                    ['interfaceMenu' + action.payload.result.id]: {
+                        type: 'interfaceMenu',
+                        data: action.payload.result
+                    }
+                }
+            }
         };
     }
     else if (isType(action, actions.getMenu.failed)) {
@@ -243,7 +265,17 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            contract: action.payload.result
+            contract: action.payload.result,
+            tabs: {
+                ...state.tabs,
+                data: {
+                    ...state.tabs.data,
+                    ['contract' + action.payload.result.id]: {
+                        type: 'contract',
+                            data: action.payload.result
+                    }
+                }
+            }
         };
     }
     else if (isType(action, actions.getContract.failed)) {
@@ -287,7 +319,17 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            block: action.payload.result
+            block: action.payload.result,
+            tabs: {
+                ...state.tabs,
+                data: {
+                    ...state.tabs.data,
+                    ['interfaceBlock' + action.payload.result.id]: {
+                        type: 'interfaceBlock',
+                        data: action.payload.result
+                    }
+                }
+            }
         };
     }
     else if (isType(action, actions.getBlock.failed)) {
@@ -375,7 +417,17 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            parameter: action.payload.result
+            parameter: action.payload.result,
+            tabs: {
+                ...state.tabs,
+                data: {
+                    ...state.tabs.data,
+                    ['parameter' + action.payload.result.name]: {
+                        type: 'parameter',
+                        data: action.payload.result
+                    }
+                }
+            }
         };
     }
     else if (isType(action, actions.getParameter.failed)) {
@@ -457,6 +509,29 @@ export default (state: State = initialState, action: Action): State => {
                 [action.payload.name]: payload
             }
         };
+    }
+
+    if (isType(action, actions.getTabList.done)) {
+        let tabList = action.payload.result.tabList;
+        return {
+            ...state,
+            tabs: {
+                ...state.tabs,
+                list: tabList
+            }
+        };
+    }
+
+    if (isType(action, actions.removeTabList.done)) {
+        let tabList = action.payload.result.tabList;
+        return {
+            ...state,
+            tabs: {
+                ...state.tabs,
+                list: tabList
+            }
+        };
+
     }
 
     return state;

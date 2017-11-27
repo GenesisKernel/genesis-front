@@ -121,11 +121,20 @@ const PageEditor: React.SFC<IPageEditorProps> = (props) => (
                 bsStyle="primary"
                 header={<FormattedMessage id="admin.interface.menu" defaultMessage="Menu" />}
                 footer={props.menu && (
-                    <Link to={`/${props.vde ? 'vde' : 'admin'}/interface/menu/${props.menu.id}-${props.menu.name}`}>
-                        <Button bsStyle="primary">
-                            <FormattedMessage id="admin.edit" defaultMessage="Edit" />
-                        </Button>
-                    </Link>
+                    <span>
+                        <Link to={`/${props.vde ? 'vde' : 'admin'}/interface/menu/${props.menu.id}-${props.menu.name}`}>
+                            <Button bsStyle="primary">
+                                <FormattedMessage id="admin.edit" defaultMessage="Edit" />
+                            </Button>
+                        </Link>
+                        <Link to={`/${props.vde ? 'vde' : 'admin'}/tabs/interfaceMenu-${props.menu.id}-${props.menu.name}`}>
+                            <Button bsStyle="default" className="btn-labeled btn-icon">
+                                <span className="btn-label">
+                                    <em className="fa fa-files-o" />
+                                </span>
+                            </Button>
+                        </Link>
+                    </span>
                 )}
             >
                 {props.menu ?
