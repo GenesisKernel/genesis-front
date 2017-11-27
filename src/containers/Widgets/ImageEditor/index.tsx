@@ -29,6 +29,7 @@ interface IImageEditorContainerProps {
 }
 
 interface IImageEditorState {
+    active: boolean;
     result: string;
 }
 
@@ -41,6 +42,7 @@ const ImageEditorContainer: React.SFC<IImageEditorContainerProps & IImageEditorS
 );
 
 const mapStateToProps = (state: IRootState) => ({
+    active: !!state.content.imageEditor.data,
     result: state.content.imageEditor.result
 });
 

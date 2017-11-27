@@ -16,7 +16,8 @@
 
 import * as React from 'react';
 
-interface IImageEditorProps {
+export interface IImageEditorProps {
+    active: boolean;
     data: string;
     result: string;
     aspectRatio?: number;
@@ -25,10 +26,20 @@ interface IImageEditorProps {
     openEditor: (params: { data: string, width?: number, aspectRatio?: number }) => void;
 }
 
-class ImageEditor extends React.Component<IImageEditorProps> {
+interface IImateEditorState {
+    active: boolean;
+}
+
+class ImageEditor extends React.Component<IImageEditorProps, IImateEditorState> {
     constructor(props: IImageEditorProps) {
         super(props);
-        this.onPropsUpdate(props);
+        this.state = {
+            active: false
+        };
+    }
+
+    componentDidMount() {
+        this.onPropsUpdate(this.props);
     }
 
     componentWillReceiveProps(props: IImageEditorProps) {
@@ -36,12 +47,23 @@ class ImageEditor extends React.Component<IImageEditorProps> {
     }
 
     onPropsUpdate(props: IImageEditorProps) {
-        if (this.props.data !== props.data) {
-            props.openEditor({ data: props.data, width: props.width, aspectRatio: props.aspectRatio });
+        if (!this.state.active && this.props.data !== props.data) {
+            props.openEditor({
+                data: props.data,
+                width: props.width,
+                aspectRatio: props.aspectRatio
+            });
+
+            this.setState({
+                active: true
+            });
         }
 
-        if (props.result) {
+        if (this.state.active && !props.active) {
             props.onResult(props.result);
+            this.setState({
+                active: false
+            });
         }
     }
 
