@@ -15,51 +15,59 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { IRootState } from 'modules';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
-import api from 'lib/api';
+// import api from 'lib/api';
 
 import Heading from 'components/Heading';
 import DocumentTitle from 'components/DocumentTitle';
 import ConstructorEditor from './ConstructorEditor';
+import { getPageTreeCode } from 'modules/admin/actions';
 
 export interface IConstructorProps {
     page: { id: string, name: string, value: string };
     // template: string;
-    treeCode?: any;
+    pageTreeCode?: any;
     session: string;
 }
 
-interface IConstructorState {
-    treeCode?: any;
-    template?: string;
+interface IConstructorDispatch {
+    getPageTreeCode: typeof getPageTreeCode.started;
 }
 
-class Constructor extends React.Component<IConstructorProps, IConstructorState> {
-    constructor(props: IConstructorProps) {
-        super(props);
-        this.state = {
-            template: props.page ? props.page.value : ''
-        };
-    }
+interface IConstructorState {
+    // treeCode?: any;
+    // template?: string;
+}
 
+class Constructor extends React.Component<IConstructorProps & IConstructorState & IConstructorDispatch> {
     componentWillReceiveProps(props: IConstructorProps) {
-        if (props.page && this.props.page !== props.page) {
-            this.setState({
-                template: props.page.value
-            });
-            api.contentTest(this.props.session, props.page.value).then(r => {
-                this.setState({
-                    treeCode: JSON.parse(r.tree)
+
+        if (props.page && this.props.page !== props.page && props.page.value !== null) {
+            let code = props.page.value;
+            if (code) {
+                this.props.getPageTreeCode({
+                    code: code
                 });
-            });
+            }
+            // this.setState({
+            //     template: props.page.value
+            // });
+            // alert(props.page.value);
+            // api.contentTest(this.props.session, props.page.value).then(r => {
+            //     this.setState({
+            //         treeCode: JSON.parse(r.tree)
+            //     });
+            // });
         }
     }
 
     mapContractParams(values: { [key: string]: any }) {
         return {
             Id: this.props.page.id,
-            Value: this.state.template
+            // Value: this.state.template
         };
     }
 
@@ -104,8 +112,7 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                         <ConstructorEditor
                             session={this.props.session}
                             page={this.props.page}
-                            template={this.state.template}
-                            treeCode={this.state.treeCode}
+                            pageTreeCode={this.props.pageTreeCode}
                         />
                     </div>
                 </div>
@@ -114,4 +121,12 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
     }
 }
 
-export default Constructor;
+const mapStateToProps = (state: IRootState) => ({
+    pageTreeCode: state.admin.pageTreeCode,
+});
+
+const mapDispatchToProps = {
+    getPageTreeCode: getPageTreeCode.started
+};
+
+export default connect<IConstructorState, IConstructorDispatch, IConstructorProps>(mapStateToProps, mapDispatchToProps)(Constructor);

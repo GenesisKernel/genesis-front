@@ -28,6 +28,7 @@ export type State = {
     readonly table: ITableResponse;
     readonly tableData: IListResponse;
     readonly page: { id: string, name: string, menu: string, conditions: string, value: string };
+    readonly pageTreeCode: any;
     readonly interfaces: IInterfacesResponse;
     readonly contract: { id: string, active: string, name: string, conditions: string, address: string, value: string };
     readonly contracts: IContract[];
@@ -62,6 +63,7 @@ export const initialState: State = {
     table: null,
     tableData: null,
     page: null,
+    pageTreeCode: null,
     interfaces: null,
     contract: null,
     contracts: null,
@@ -128,6 +130,28 @@ export default (state: State = initialState, action: Action): State => {
             pending: false,
             page: null,
             menus: null
+        };
+    }
+
+    if (isType(action, actions.getPageTreeCode.started)) {
+        return {
+            ...state,
+            pending: true,
+            pageTreeCode: null
+        };
+    }
+    else if (isType(action, actions.getPageTreeCode.done)) {
+        return {
+            ...state,
+            pending: false,
+            pageTreeCode: action.payload.result.pageTreeCode
+        };
+    }
+    else if (isType(action, actions.getPageTreeCode.failed)) {
+        return {
+            ...state,
+            pending: false,
+            pageTreeCode: null
         };
     }
 

@@ -31,6 +31,7 @@ export const getTables = actionCreator.async<{ offset?: number, limit?: number, 
 // Pages
 export const getPage = actionCreator.async<{ id: string, vde?: boolean }, IPageResponse, string>('GET_PAGE');
 export const getInterface = actionCreator.async<{ vde?: boolean }, IInterfacesResponse, string>('GET_INTERFACE');
+export const getPageTreeCode = actionCreator.async<{ code: string, vde?: boolean }, { pageTreeCode: any }, string>('GET_PAGE_TREE_CODE');
 
 // Menus
 export const getMenu = actionCreator.async<{ id: string, vde?: boolean }, { id: string, name: string, value: string, conditions: string }, string>('GET_MENU');
@@ -55,6 +56,3 @@ export const importDataPrune = actionCreator<{ name: string, key: string, index?
 // Tabs
 export const getTabList = actionCreator.async<{ addID?: string, addName?: string, addType?: string}, ITabListResponse, string>('GET_TAB_LIST');
 export const removeTabList = actionCreator.async<{ id: string, type: string}, any, string>('REMOVE_TAB_LIST');
-
-// export const loadTabList = actionCreator<{ addID?: string, addName?: string, addType?: string}>('LOAD_TAB_LIST');
-// export const removeTabList = actionCreator<{ id: string, type: string}>('REMOVE_TAB_LIST');

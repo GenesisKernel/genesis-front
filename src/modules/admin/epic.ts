@@ -391,6 +391,29 @@ export const removeTabListEpic: Epic<Action, IRootState> =
 
         });
 
+export const getPageTreeCodeEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.getPageTreeCode.started)
+        .flatMap(action => {
+            const state = store.getState();
+
+            return Observable.fromPromise(api.contentTest(state.auth.sessionToken, action.payload.code))
+                .map(payload => {
+                    return actions.getPageTreeCode.done({
+                            params: action.payload,
+                            result: {
+                                pageTreeCode: JSON.parse(payload.tree)
+                            }
+                        });
+                    }
+                )
+                .catch((e: IAPIError) =>
+                    Observable.of(actions.getPageTreeCode.failed({
+                        params: action.payload,
+                        error: e.error
+                    }))
+                );
+        });
+
 export const exportDataEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.exportData.started)
         .flatMap(action => {
@@ -548,6 +571,7 @@ export default combineEpics(
     getTableStructEpic,
     getInterfaceEpic,
     getPageEpic,
+    getPageTreeCodeEpic,
     getMenuEpic,
     getMenusEpic,
     getLanguagesEpic,

@@ -46,8 +46,7 @@ import imgGrid from 'images/constructor/grid.png';
 
 interface IConstructorEditorProps {
     session: string;
-    template: string;
-    treeCode: any;
+    pageTreeCode: any;
     page?: { id: string, name: string, value: string };
 }
 
@@ -338,10 +337,8 @@ const ConstructorEditor: React.SFC<IConstructorEditorProps> = (props) => (
             </div>
 
             <DivGrid>
-                {/*{props.template}*/}
-                {/*{JSON.stringify(props.treeCode)}*/}
                 <Protypo
-                    payload={props.treeCode}
+                    payload={props.pageTreeCode}
                 />
             </DivGrid>
 
