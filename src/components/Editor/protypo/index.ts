@@ -333,6 +333,12 @@ const register = (editor: typeof monaco) => {
                     kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Default input value',
                     insertText: 'Value: '
+                },
+                {
+                    label: 'Disabled',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Sets input state to read-only. Any non-empty value will be treated as true',
+                    insertText: 'Disabled: '
                 }
             ]
         },
