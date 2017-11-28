@@ -44,6 +44,7 @@ export const renderPageEpic: Epic<Action, IRootState> =
                         result: {
                             menu: {
                                 name: payload.menu,
+                                vde: action.payload.vde,
                                 content: JSON.parse(payload.menutree)
                             },
                             page: {
@@ -78,6 +79,7 @@ export const menuInitEpic: Epic<Action, IRootState> =
                         stylesheet: payload[1].value || null,
                         defaultMenu: {
                             name: 'default_menu',
+                            vde: false,
                             content: JSON.parse(payload[0].tree)
                         }
                     }
@@ -122,6 +124,7 @@ export const resetEpic: Epic<Action, IRootState> =
                     result: {
                         menu: {
                             name: payload.menu,
+                            vde: false,
                             content: JSON.parse(payload.menutree)
                         },
                         page: {

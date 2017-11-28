@@ -22,7 +22,7 @@ import { IProtypoElement } from 'components/Protypo/Protypo';
 export type State = {
     readonly pending: boolean;
     readonly stylesheet: string;
-    readonly menus: { name: string, content: IProtypoElement[] }[];
+    readonly menus: { name: string, vde: boolean, content: IProtypoElement[] }[];
     readonly page: { name: string, content: IProtypoElement[], error?: string };
     readonly notifications: IProtypoElement[];
     readonly alert: { id: string, success: string, error: string };
