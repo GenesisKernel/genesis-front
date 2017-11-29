@@ -339,6 +339,7 @@ const ConstructorEditor: React.SFC<IConstructorEditorProps> = (props) => (
             <DivGrid>
                 <Protypo
                     payload={props.pageTreeCode}
+                    editable={true}
                 />
             </DivGrid>
 

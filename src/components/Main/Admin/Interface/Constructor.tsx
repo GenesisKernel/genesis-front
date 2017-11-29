@@ -64,17 +64,6 @@ class Constructor extends React.Component<IConstructorProps & IConstructorState 
         }
     }
 
-    mapContractParams(values: { [key: string]: any }) {
-        return {
-            Id: this.props.page.id,
-            // Value: this.state.template
-        };
-    }
-
-    onSourceEdit(template: string) {
-        this.setState({ template });
-    }
-
     render() {
         return (
             <DocumentTitle title={this.props.page && this.props.page.name}>

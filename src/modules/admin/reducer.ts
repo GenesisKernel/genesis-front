@@ -141,10 +141,11 @@ export default (state: State = initialState, action: Action): State => {
         };
     }
     else if (isType(action, actions.getPageTreeCode.done)) {
+        let pageTreeCode = action.payload.result.pageTreeCode;
         return {
             ...state,
             pending: false,
-            pageTreeCode: action.payload.result.pageTreeCode
+            pageTreeCode: pageTreeCode
         };
     }
     else if (isType(action, actions.getPageTreeCode.failed)) {

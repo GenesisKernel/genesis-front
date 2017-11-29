@@ -548,3 +548,11 @@ input[type="number"] {
     vertical-align: middle;
 }
 
+.editable {
+
+}
+
+p.editable {
+    border: 1px dashed #7799FF;
+}
+

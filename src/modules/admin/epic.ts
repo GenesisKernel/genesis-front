@@ -396,12 +396,34 @@ export const getPageTreeCodeEpic: Epic<Action, IRootState> =
         .flatMap(action => {
             const state = store.getState();
 
+            function generateId() {
+                return 'tag_' + (10000000 + Math.floor(Math.random() * 89999999));
+            }
+
+            function setIds(children: any[]) {
+                for (let tag of children) {
+                    if (!tag) {
+                        continue;
+                    }
+                    if (!tag.id) {
+                        tag.id = generateId();
+                    }
+                    if (tag.children) {
+                        setIds(tag.children);
+                    }
+                }
+
+            }
+
             return Observable.fromPromise(api.contentTest(state.auth.sessionToken, action.payload.code))
                 .map(payload => {
+                    let pageTreeCode = JSON.parse(payload.tree);
+                    setIds(pageTreeCode);
+
                     return actions.getPageTreeCode.done({
                             params: action.payload,
                             result: {
-                                pageTreeCode: JSON.parse(payload.tree)
+                                pageTreeCode: pageTreeCode
                             }
                         });
                     }
