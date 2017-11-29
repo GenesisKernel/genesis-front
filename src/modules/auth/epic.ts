@@ -28,30 +28,37 @@ import storage from 'lib/storage';
 
 export const loginEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.login.started.match)
-        .switchMap(action => {
+        .flatMap(action => {
             const promise = api.getUid().then(uid => {
                 const signature = keyring.sign(uid.uid, action.payload.privateKey);
                 return api.login(uid.token, action.payload.publicKey, signature);
             });
 
-            return Observable.from(promise).map(payload => {
-                const account = storage.accounts.load(payload.key_id);
-                return actions.login.done({
-                    params: action.payload,
-                    result: {
-                        ...payload,
-                        // TODO: Not remembering the key is not implemented yet
-                        // privateKey: action.payload.remember ? action.payload.privateKey : null,
-                        privateKey: action.payload.privateKey,
-                        account
-                    }
+            return Observable.from(promise)
+                .flatMap(payload => {
+                    const account = storage.accounts.load(payload.key_id);
+
+                    return Observable.concat([
+                        actions.login.done({
+                            params: action.payload,
+                            result: {
+                                ...payload,
+                                // TODO: Not remembering the key is not implemented yet
+                                // privateKey: action.payload.remember ? action.payload.privateKey : null,
+                                privateKey: action.payload.privateKey,
+                                account
+                            }
+                        }),
+                        actions.watchSession({
+                            timeout: payload.expiry
+                        })
+                    ]);
+                }).catch((e: IAPIError) => {
+                    return Observable.of(actions.login.failed({
+                        params: null,
+                        error: e.error
+                    }));
                 });
-            }).catch((e: IAPIError) => {
-                return Observable.of(actions.login.failed({
-                    params: null,
-                    error: e.error
-                }));
-            });
         });
 
 export const logoutEpic: Epic<Action, IRootState> =
@@ -86,7 +93,7 @@ export const switchEcosystemEpic: Epic<Action, IRootState> =
                     result: {
                         token: payload.token,
                         refresh: payload.refresh,
-                        expiry: payload.expiry
+                        sessionDuration: payload.expiry
                     }
                 })),
                 Observable.of(reset.started(null))
@@ -141,18 +148,26 @@ export const createAccountEpic = (actions$: Observable<Action>) =>
         });
 
 export const refreshSessionEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofType(actions.refreshSession.started)
-        .switchMap(action => {
-            const state = store.getState();
-            return Observable.fromPromise(api.refresh(state.auth.refreshToken))
-                .map(payload => actions.refreshSession.done({
-                    params: null,
-                    result: payload
-                }))
-                .catch((e: IAPIError) => Observable.of(actions.refreshSession.failed({
-                    params: null,
-                    error: e.error
-                })));
+    (action$, store) => action$.ofAction(actions.watchSession)
+        .mergeMap(action => {
+            const timeout = (action.payload.timeout * 1000) - 60000;
+
+            return Observable.timer(timeout, timeout)
+                .flatMap(() => {
+                    const state = store.getState();
+                    return Observable.fromPromise(api.refresh(state.auth.sessionToken, state.auth.refreshToken, state.auth.sessionDuration))
+                        .map(payload =>
+                            actions.refreshSession({
+                                token: payload.token,
+                                refresh: payload.refresh,
+                                sessionDuration: payload.expiry
+                            })
+                        )
+                        .catch((e: IAPIError) =>
+                            Observable.of(actions.logout.started({}))
+                        );
+                })
+                .takeUntil(action$.ofAction(actions.logout.done));
         });
 
 export default combineEpics(

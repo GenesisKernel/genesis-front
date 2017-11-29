@@ -30,7 +30,7 @@ export type State = {
     readonly sessionToken: string;
     readonly refreshToken: string;
     readonly socketToken: string;
-    readonly sessionExpiry: Date;
+    readonly sessionDuration: number;
     readonly timestamp: string;
     readonly createdAccount: {
         id: string;
@@ -55,7 +55,7 @@ export const initialState: State = {
     refreshToken: null,
     socketToken: null,
     timestamp: null,
-    sessionExpiry: null,
+    sessionDuration: null,
     createdAccount: null,
     account: null,
     privateKey: null,
@@ -89,7 +89,7 @@ export default (state: State = initialState, action: Action): State => {
             sessionToken: action.payload.result.token,
             refreshToken: action.payload.result.refresh,
             privateKey: action.payload.result.privateKey,
-            sessionExpiry: action.payload.result.expiry,
+            sessionDuration: action.payload.result.expiry,
             socketToken: action.payload.result.notify_key,
             timestamp: action.payload.result.timestamp
         };
@@ -131,7 +131,7 @@ export default (state: State = initialState, action: Action): State => {
             ecosystem: action.payload.params,
             sessionToken: action.payload.result.token,
             refreshToken: action.payload.result.refresh,
-            sessionExpiry: action.payload.result.expiry
+            sessionDuration: action.payload.result.sessionDuration
         };
     }
     else if (isType(action, actions.switchEcosystem.failed)) {
@@ -192,6 +192,15 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             createdAccount: null
+        };
+    }
+
+    if (isType(action, actions.refreshSession)) {
+        return {
+            ...state,
+            sessionToken: action.payload.token,
+            refreshToken: action.payload.refresh,
+            sessionDuration: action.payload.sessionDuration
         };
     }
 

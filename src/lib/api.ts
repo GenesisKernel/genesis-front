@@ -53,6 +53,7 @@ export interface IInstallParams {
 export interface IRefreshResponse {
     token: string;
     refresh: string;
+    expiry: number;
 }
 
 export interface IInstallResponse {
@@ -72,7 +73,7 @@ export interface ILoginResponse extends IResponse {
     key_id: string;
     ecosystem_id: string;
     address: string;
-    expiry: Date;
+    expiry: number;
     isnode: boolean;
     isowner: boolean;
 }
@@ -189,7 +190,7 @@ export interface ITabListResponse {
         type: string;
         name?: string;
         visible?: boolean;
-    } [];
+    }[];
 
 }
 
@@ -255,7 +256,6 @@ const securedRequest = async (endpoint: string, session: string, body: { [key: s
 const api = {
     // Level 0
     install: (params: IInstallParams) => request('install', params) as Promise<IInstallResponse>,
-    refresh: (token: string) => request('refresh', { token }) as Promise<IRefreshResponse>,
 
     // Level 1
     getUid: () => request('getuid', null, { method: 'GET', body: null }) as Promise<IGetUidResponse>,
@@ -268,11 +268,15 @@ const api = {
         pubkey: publicKey.slice(2),
         signature,
         ecosystem,
-        expire: expirySeconds
+        expiry: expirySeconds
     }).then((result: ILoginResponse) => ({
         ...result,
-        expiry: new Date(Date.now() + expirySeconds * 1000)
+        expiry: expirySeconds
     })) as Promise<ILoginResponse>,
+    refresh: (session: string, token: string, expirySeconds: number = 36000) => securedRequest('refresh', session, { token }).then((result: IRefreshResponse) => ({
+        ...result,
+        expiry: expirySeconds
+    })) as Promise<IRefreshResponse>,
 
     // Level 2
     row: (session: string, table: string, id: string, columns?: string, vde = false) => securedRequest(`row/${table}/${id}?columns=${columns || ''}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<IRowResponse>,
