@@ -29,7 +29,7 @@ export const renderPage = actionCreator.async<{ name: string, params?: { [key: s
 export const reset = actionCreator.async<undefined, { menu: { name: string, vde: boolean, content: IProtypoElement[] }, page: { name: string, content: IProtypoElement[], error?: string } }, string>('RESET');
 
 // Image editor modal window
-export const imageEditorOpen = actionCreator<{ data: string, width?: number, aspectRatio?: number }>('IMAGE_EDITOR_OPEN');
+export const imageEditorOpen = actionCreator<{ mime: string, data: string, width?: number, aspectRatio?: number }>('IMAGE_EDITOR_OPEN');
 export const imageEditorClose = actionCreator<string>('IMAGE_EDITOR_CLOSE');
 
 // Notifications

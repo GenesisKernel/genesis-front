@@ -286,6 +286,12 @@ const register = (editor: typeof monaco) => {
                     documentation: 'Aspect ratio of the resulting image (WIDTH / HEIGHT)',
                     insertText: 'Ratio: '
                 },
+                {
+                    label: 'Format',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'What format to use when generating the result',
+                    insertText: 'Format: '
+                },
                 staticParamTypes.Class
             ]
         },

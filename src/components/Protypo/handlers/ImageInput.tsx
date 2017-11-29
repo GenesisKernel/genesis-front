@@ -19,6 +19,7 @@ import * as React from 'react';
 import Validation from 'components/Validation';
 
 export interface IInputProps {
+    'format'?: string;
     'name'?: string;
     'width'?: string;
     'ratio'?: string;
@@ -49,6 +50,7 @@ const ImageInput: React.SFC<IInputProps> = (props) => {
 
     return (
         <Validation.components.ValidatedImage
+            format={props.format as any}
             name={props.name}
             aspectRatio={ratio}
             width={width}
