@@ -285,7 +285,7 @@ const api = {
     contentTest: (session: string, template: string) => securedRequest('content', session, { template }) as Promise<IContentResponse>,
     table: (session: string, name: string, vde?: boolean) => securedRequest(`table/${name}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITableResponse>,
     tables: (session: string, offset?: number, limit?: number, vde = false) => securedRequest(`tables?offset=${offset || 0}&limit=${limit || 1000}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITablesResponse>,
-    list: (session: string, name: string, offset?: number, limit?: number, columns?: string, vde = false) => securedRequest(`list/${name}?offset=${offset || 0}&limit=${limit || 1000}&columns=${columns || ''}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<IListResponse>,
+    list: (session: string, name: string, offset?: number, limit?: number, columns?: string[], vde = false) => securedRequest(`list/${name}?offset=${offset || 0}&limit=${limit || 1000}&columns=${columns ? columns.join(',') : ''}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<IListResponse>,
     page: (session: string, id: string, vde = false) => Promise.all([
         api.row(session, 'pages', id, undefined, vde),
         api.list(session, 'menu', 0, 0, undefined, vde),
@@ -294,9 +294,9 @@ const api = {
         menus: results[1].list
     })) as Promise<IPageResponse>,
     pages: (session: string, vde = false) => Promise.all([
-        api.list(session, 'pages', 0, 0, 'name', vde),
-        api.list(session, 'menu', 0, 0, 'name', vde),
-        api.list(session, 'blocks', 0, 0, 'name', vde),
+        api.list(session, 'pages', 0, 0, ['name'], vde),
+        api.list(session, 'menu', 0, 0, ['name'], vde),
+        api.list(session, 'blocks', 0, 0, ['name'], vde),
     ]).then(results => ({
         pages: results[0].list,
         menus: results[1].list,
