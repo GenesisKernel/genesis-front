@@ -28,6 +28,7 @@ export interface IProtypoContainerProps {
     editable?: boolean;
     wrapper?: JSX.Element;
     payload: IProtypoElement[];
+    changePage?: any;
 }
 
 interface IProtypoContainerState {

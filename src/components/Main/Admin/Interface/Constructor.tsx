@@ -24,7 +24,7 @@ import { Link } from 'react-router-dom';
 import Heading from 'components/Heading';
 import DocumentTitle from 'components/DocumentTitle';
 import ConstructorEditor from './ConstructorEditor';
-import { getPageTreeCode } from 'modules/admin/actions';
+import { getPageTreeCode, changePage } from 'modules/admin/actions';
 
 export interface IConstructorProps {
     page: { id: string, name: string, value: string };
@@ -35,6 +35,7 @@ export interface IConstructorProps {
 
 interface IConstructorDispatch {
     getPageTreeCode: typeof getPageTreeCode.started;
+    changePage: typeof changePage;
 }
 
 interface IConstructorState {
@@ -102,6 +103,7 @@ class Constructor extends React.Component<IConstructorProps & IConstructorState 
                             session={this.props.session}
                             page={this.props.page}
                             pageTreeCode={this.props.pageTreeCode}
+                            changePage={this.props.changePage}
                         />
                     </div>
                 </div>
@@ -115,7 +117,8 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    getPageTreeCode: getPageTreeCode.started
+    getPageTreeCode: getPageTreeCode.started,
+    changePage: changePage
 };
 
 export default connect<IConstructorState, IConstructorDispatch, IConstructorProps>(mapStateToProps, mapDispatchToProps)(Constructor);

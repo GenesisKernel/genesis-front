@@ -23,13 +23,14 @@ export interface IPProps {
     'class'?: string;
     'children': any;
     'editable'?: boolean;
+    'changePage'?: any;
+    'tag_id'?: string;
 }
 
 interface IPState {
     focused: boolean;
     _onPaste_StripFormatting_IEPaste: boolean;
 }
-
 
 class P extends React.Component<IPProps, IPState> {
 
@@ -41,48 +42,45 @@ class P extends React.Component<IPProps, IPState> {
         };
     }
 
-    componentWillMount() {
-        //alert(window);
-
-    }
-
-    onPaste(e:any) {
-        //alert(this.props.children);
-        //alert("a");
+    onPaste(e: any) {
         this.OnPaste_StripFormatting(this, e);
     }
 
-    onFocus(e:any) {
+    onFocus(e: any) {
         this.setState(Object.assign(this.state, {
             focused: true
         }));
     }
 
-    onBlur(e:any) {
+    onBlur(e: any) {
         this.setState(Object.assign(this.state, {
             focused: false
         }));
 
-        //alert(e.target.textContent);
-        alert(e.target.innerHTML);
+        // alert(e.target.textContent);
+        // alert(e.target.innerHTML);
+        // alert(e.target.innerText);
+        this.props.changePage({ text: e.target.textContent, tag_id: this.props.tag_id });
+
     }
 
-    onChange(e:any) {
+    onChange(e: any) {
         // alert('onChange');
     }
 
-    OnPaste_StripFormatting(elem:any, e:any) {
+    OnPaste_StripFormatting(elem: any, e: any) {
+        let text: string;
         if (e.originalEvent && e.originalEvent.clipboardData && e.originalEvent.clipboardData.getData) {
             e.preventDefault();
-            var text = e.originalEvent.clipboardData.getData('text/plain');
+            text = e.originalEvent.clipboardData.getData('text/plain');
             window.document.execCommand('insertText', false, text);
         }
         else if (e.clipboardData && e.clipboardData.getData) {
             e.preventDefault();
-            var text = e.clipboardData.getData('text/plain');
+            text = e.clipboardData.getData('text/plain');
             window.document.execCommand('insertText', false, text);
         }
-        else if (window["clipboardData"] && window["clipboardData"].getData) {
+        else if (window['clipboardData'] && window['clipboardData'].getData) {
             // Stop stack overflow
             if (!this.state._onPaste_StripFormatting_IEPaste) {
                 this.setState(Object.assign(this.state, {
@@ -95,23 +93,29 @@ class P extends React.Component<IPProps, IPState> {
                 _onPaste_StripFormatting_IEPaste: false,
             }));
         }
-    };
+    }
 
     render() {
-        if(this.props.editable) {
+        if (this.props.editable) {
             return (
-                <p className={[this.props.class, this.props.className, this.state.focused ? 'editable' : ''].join(' ')}
-                   contentEditable={true}
-                   onPaste={this.onPaste.bind(this)}
-                   onBlur={this.onBlur.bind(this)}
-                   onFocus={this.onFocus.bind(this)}
-                   onChange={this.onChange.bind(this)}
-                >{this.props.children}</p>
+                <p
+                    className={[this.props.class, this.props.className, this.state.focused ? 'editable' : ''].join(' ')}
+                    contentEditable={true}
+                    onPaste={this.onPaste.bind(this)}
+                    onBlur={this.onBlur.bind(this)}
+                    onFocus={this.onFocus.bind(this)}
+                    onChange={this.onChange.bind(this)}
+                >
+                    {this.props.children}
+                </p>
             );
         }
         return (
-            <p className={[this.props.class, this.props.className].join(' ')}
-            >{this.props.children}</p>
+            <p
+                className={[this.props.class, this.props.className].join(' ')}
+            >
+                {this.props.children}
+            </p>
         );
 
     }

@@ -48,6 +48,7 @@ interface IConstructorEditorProps {
     session: string;
     pageTreeCode: any;
     page?: { id: string, name: string, value: string };
+    changePage?: any;
 }
 
 const ConstructorDiv = styled.div`
@@ -340,6 +341,7 @@ const ConstructorEditor: React.SFC<IConstructorEditorProps> = (props) => (
                 <Protypo
                     payload={props.pageTreeCode}
                     editable={true}
+                    changePage={props.changePage}
                 />
             </DivGrid>
 

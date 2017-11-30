@@ -32,11 +32,12 @@ export interface IProtypoProps {
     menuPush: (params: { name: string, content: IProtypoElement[] }) => void;
     navigatePage: (params: { name: string, params: any, vde?: boolean }) => void;
     navigate: (url: string) => void;
+    changePage?: any;
 }
 
 export interface IProtypoElement {
     tag: string;
-    tag_id?: string;
+    id?: string;
     text?: string;
     attr?: { [key: string]: string };
     children?: IProtypoElement[];
@@ -140,7 +141,7 @@ export default class Protypo extends React.Component<IProtypoProps> {
                     // }
 
                     return (
-                        <Handler {...element.attr} key={key} id={key} childrenTree={element.children} editable={this.props.editable}>
+                        <Handler {...element.attr} key={key} id={key} tag_id={element.id} childrenTree={element.children} editable={this.props.editable} changePage={this.props.changePage}>
                             {this.renderElements(element.children)}
                         </Handler>
                     );

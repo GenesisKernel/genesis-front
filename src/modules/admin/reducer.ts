@@ -18,6 +18,7 @@ import * as actions from './actions';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse } from 'lib/api';
+import findTagById from 'lib/constructor';
 
 export type State = {
     readonly pending: boolean;
@@ -153,6 +154,25 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             pending: false,
             pageTreeCode: null
+        };
+    }
+
+    if (isType(action, actions.changePage)) {
+        let pageTreeCode = state.pageTreeCode.concat();
+
+        let tag = findTagById(pageTreeCode, action.payload.tag_id);
+        if(tag) {
+            if(tag.children && tag.children.length) {
+                if (tag.children[0].text) {
+                    tag.children[0].text = action.payload.text + " edited";
+                }
+            }
+        }
+
+        return {
+            ...state,
+            pending: false,
+            pageTreeCode: pageTreeCode
         };
     }
 
