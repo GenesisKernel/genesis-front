@@ -19,7 +19,7 @@ import { ILoginResponse } from 'lib/api';
 import { IStoredKey } from 'lib/storage';
 
 const actionCreator = actionCreatorFactory('auth');
-export const login = actionCreator.async<{ privateKey: string, remember: boolean }, ILoginResponse & { account: IStoredKey, privateKey: string, publicKey: string }, string>('LOGIN');
+export const login = actionCreator.async<{ privateKey: string, ecosystem: string, remember: boolean }, ILoginResponse & { account: IStoredKey, privateKey: string, publicKey: string }, string>('LOGIN');
 export const logout = actionCreator.async('LOGOUT');
 export const switchEcosystem = actionCreator.async<string, { token: string, refresh: string, sessionDuration: number }, string>('SWITCH_ECOSYSTEM');
 export const createEcosystem = actionCreator<{ name: string, id: string }>('CREATE_ECOSYSTEM');
@@ -29,3 +29,4 @@ export const importAccount = actionCreator.async<{ backup: string, password: str
 export const createAccount = actionCreator.async<{ seed: string, password: string }, IStoredKey, undefined>('CREATE_ACCOUNT');
 export const watchSession = actionCreator<{ timeout: number }>('WATCH_SESSION');
 export const refreshSession = actionCreator<{ token: string, refresh: string, sessionDuration: number }>('REFRESH_SESSION');
+export const updateMetadata = actionCreator.async<{ ecosystem: string, name: string, type: string, avatar: string }, { ecosystem: string, name: string, type: string, avatar: string }, undefined>('UPDATE_METADATA');

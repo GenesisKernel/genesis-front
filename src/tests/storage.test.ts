@@ -48,16 +48,19 @@ test('Storage saveAll/loadAll data equality', () => {
         {
             id: 'test_id1',
             encKey: 'test_encKey1',
+            address: '0000-0000-00000-0000',
             ecosystems: {}
         },
         {
             id: 'test_id2',
             encKey: 'test_encKey2',
+            address: '0000-0000-00000-0000',
             ecosystems: {}
         },
         {
             id: 'test_id3',
             encKey: 'test_encKey3',
+            address: '0000-0000-00000-0000',
             ecosystems: {}
         },
     ];
@@ -72,16 +75,19 @@ test('Storage saveAll/load data equality', () => {
         {
             id: 'test_id1',
             encKey: 'test_encKey1',
+            address: '0000-0000-00000-0000',
             ecosystems: {}
         },
         {
             id: 'test_id2',
             encKey: 'test_encKey2',
+            address: '0000-0000-00000-0000',
             ecosystems: {}
         },
         {
             id: 'test_id3',
             encKey: 'test_encKey3',
+            address: '0000-0000-00000-0000',
             ecosystems: {}
         },
     ];
@@ -96,16 +102,19 @@ test('Storage save/loadAll data equality', () => {
         {
             id: 'test_id1',
             encKey: 'test_encKey1',
+            address: '0000-0000-00000-0000',
             ecosystems: {}
         },
         {
             id: 'test_id2',
             encKey: 'test_encKey2',
+            address: '0000-0000-00000-0000',
             ecosystems: {}
         },
         {
             id: 'test_id3',
             encKey: 'test_encKey3',
+            address: '0000-0000-00000-0000',
             ecosystems: {}
         },
     ];
@@ -123,16 +132,19 @@ test('Storage save/load data equality', () => {
         {
             id: 'test_id1',
             encKey: 'test_encKey1',
+            address: '0000-0000-00000-0000',
             ecosystems: {}
         },
         {
             id: 'test_id2',
             encKey: 'test_encKey2',
+            address: '0000-0000-00000-0000',
             ecosystems: {}
         },
         {
             id: 'test_id3',
             encKey: 'test_encKey3',
+            address: '0000-0000-00000-0000',
             ecosystems: {}
         },
     ];

@@ -33,7 +33,7 @@ export const loginEpic = (actions$: Observable<Action>) =>
 
             const promise = api.getUid().then(uid => {
                 const signature = keyring.sign(uid.uid, action.payload.privateKey);
-                return api.login(uid.token, publicKey, signature);
+                return api.login(uid.token, publicKey, signature, undefined, action.payload.ecosystem);
             });
 
             return Observable.from(promise)
@@ -68,7 +68,7 @@ export const logoutEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.logout.started)
         .flatMap(action => {
             localStorage.removeItem('privateKey');
-            localStorage.removeItem('publicKey');
+            localStorage.removeItem('lastEcosystem');
             return Observable.concat([
                 engineActions.navigate('/'),
                 actions.logout.done({
@@ -152,8 +152,18 @@ export const importAccountEpic: Epic<Action, IRootState> =
                     const account = {
                         encKey: keyring.encryptAES(backup.privateKey, action.payload.password),
                         id: payload.key_id,
-                        ecosystems: backup.ecosystems
+                        address: payload.address,
+                        ecosystems: {
+                            '1': {
+                                name: 'APL-WALLET'
+                            }
+                        }
                     };
+                    for (let itr in backup.ecosystems) {
+                        if (backup.ecosystems.hasOwnProperty(itr)) {
+                            account.ecosystems[itr] = {};
+                        }
+                    }
                     storage.accounts.save(account);
 
                     return actions.importAccount.done({
@@ -177,7 +187,12 @@ export const createAccountEpic: Epic<Action, IRootState> =
                     const account = {
                         encKey: keyring.encryptAES(keys.private, action.payload.password),
                         id: payload.key_id,
-                        ecosystems: {}
+                        address: payload.address,
+                        ecosystems: {
+                            1: {
+                                name: 'APL-WALLET'
+                            }
+                        }
                     };
                     storage.accounts.save(account);
 
@@ -211,6 +226,33 @@ export const refreshSessionEpic: Epic<Action, IRootState> =
                 .takeUntil(action$.ofAction(actions.logout.done));
         });
 
+export const updateMetadataEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.updateMetadata.started)
+        .flatMap(action => {
+            if (!action.payload) {
+                return Observable.of(actions.updateMetadata.failed({
+                    params: action.payload,
+                    error: null
+                }));
+            }
+            const state = store.getState();
+            storage.accounts.save({
+                ...state.auth.account,
+                ecosystems: {
+                    ...state.auth.account.ecosystems,
+                    [action.payload.ecosystem]: {
+                        name: action.payload.name,
+                        type: action.payload.type,
+                        avatar: action.payload.avatar
+                    }
+                }
+            });
+            return Observable.of(actions.updateMetadata.done({
+                params: action.payload,
+                result: action.payload
+            }));
+        });
+
 export default combineEpics(
     loginEpic,
     logoutEpic,
@@ -218,5 +260,6 @@ export default combineEpics(
     importSeedEpic,
     importAccountEpic,
     createAccountEpic,
-    refreshSessionEpic
+    refreshSessionEpic,
+    updateMetadataEpic
 );

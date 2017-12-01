@@ -57,7 +57,13 @@ export interface IImportProps extends InjectedIntlProps {
     importedAccount: {
         id: string;
         encKey: string;
-        ecosystems?: { [id: string]: string };
+        ecosystems?: {
+            [id: string]: {
+                name?: string;
+                avatar?: string;
+                type?: string;
+            }
+        };
     };
     navigate: typeof navigate;
     alertShow: typeof alertShow;

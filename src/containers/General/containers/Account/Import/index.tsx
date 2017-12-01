@@ -33,7 +33,13 @@ interface IImportContainerState {
     importedAccount: {
         id: string;
         encKey: string;
-        ecosystems?: { [id: string]: string };
+        ecosystems?: {
+            [id: string]: {
+                name?: string;
+                avatar?: string;
+                type?: string;
+            }
+        };
     };
 }
 

@@ -36,12 +36,24 @@ export type State = {
     readonly createdAccount: {
         id: string;
         encKey: string;
-        ecosystems?: { [id: string]: string };
+        ecosystems?: {
+            [id: string]: {
+                name?: string;
+                type?: string;
+                avatar?: string;
+            }
+        };
     };
     readonly importedAccount: {
         id: string;
         encKey: string;
-        ecosystems?: { [id: string]: string };
+        ecosystems?: {
+            [id: string]: {
+                name?: string;
+                type?: string;
+                avatar?: string;
+            }
+        };
     };
     readonly account: IStoredKey;
     readonly privateKey: string;
@@ -159,7 +171,9 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.account,
                 ecosystems: {
                     ...state.account.ecosystems,
-                    [action.payload.id]: action.payload.name
+                    [action.payload.id]: {
+                        name: action.payload.name
+                    }
                 }
             }
         };
@@ -237,6 +251,23 @@ export default (state: State = initialState, action: Action): State => {
             sessionToken: action.payload.token,
             refreshToken: action.payload.refresh,
             sessionDuration: action.payload.sessionDuration
+        };
+    }
+
+    if (isType(action, actions.updateMetadata.done)) {
+        return {
+            ...state,
+            account: {
+                ...state.account,
+                ecosystems: {
+                    ...state.account.ecosystems,
+                    [action.payload.result.ecosystem]: {
+                        name: action.payload.result.name,
+                        type: action.payload.result.type,
+                        avatar: action.payload.result.avatar,
+                    }
+                }
+            }
         };
     }
 

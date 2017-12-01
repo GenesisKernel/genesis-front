@@ -83,9 +83,15 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
     }
 
     generatePayload() {
+        const ecosystems = {};
+        for (let itr in this.props.account.ecosystems) {
+            if (this.props.account.ecosystems.hasOwnProperty(itr)) {
+                ecosystems[itr] = {};
+            }
+        }
         return keyring.backup({
             privateKey: this.state.privateKey,
-            ecosystems: this.props.account.ecosystems
+            ecosystems
         });
     }
 

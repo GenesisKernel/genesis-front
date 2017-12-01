@@ -15,10 +15,8 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import * as _ from 'lodash';
-import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import storage, { IStoredKey } from 'lib/storage';
+import { IStoredKey } from 'lib/storage';
 
 export interface IUserMenuProps {
     collapsed: boolean;
@@ -49,24 +47,24 @@ const UserMenu: React.SFC<IUserMenuProps> = (props) => props.account ? (
                         <div className="media-box-body clearfix">
                             <p className="m0">{props.account.id}</p>
                             <p className="m0 text-muted">
-                                <small>{storage.resolveEcosystemName(props.account, props.ecosystem)}</small>
+                                <small>{props.account.ecosystems[props.ecosystem].name || props.ecosystem}</small>
                             </p>
                         </div>
                     </div>
                 </div>
-                <div className="list-group-item">
+                {/*<div className="list-group-item">
                     <div className="mt0 h5 text-bold">
                         <FormattedMessage id="ecosystem.ecosystems" defaultMessage="Ecosystems" />
                     </div>
                     <Button bsStyle="primary" block disabled={'1' === props.ecosystem} onClick={() => props.onSwitchEcosystem('1')}>
-                        <span>{storage.resolveEcosystemName(props.account, '1')}</span>
+                        <span>APL-WALLET</span>
                         {'1' === props.ecosystem && (
                             <span>
                                 <FormattedMessage id="ecosystem.current" defaultMessage="(current)" />
                             </span>
                         )}
                     </Button>
-                    {_.map(props.account.ecosystems, ((value, key) => (
+                    {/*_.map(props.account.ecosystems, ((value, key) => (
                         <Button key={key} className={key} bsStyle="primary" block disabled={key === props.ecosystem} onClick={() => props.onSwitchEcosystem(key)}>
                             <span>{value || key}</span>
                             {key === props.ecosystem && (
@@ -75,8 +73,8 @@ const UserMenu: React.SFC<IUserMenuProps> = (props) => props.account ? (
                                 </span>
                             )}
                         </Button>
-                    )))}
-                </div>
+                    )))
+                </div>*/}
                 <a href="javascript:void(0)" className="list-group-item" onClick={props.onLogout}>
                     <em className="pull-left icon-logout mr" style={{ lineHeight: '20px' }} />
                     <small>

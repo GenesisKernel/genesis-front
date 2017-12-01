@@ -42,7 +42,13 @@ export interface ICreateProps {
     createdAccount: {
         id: string;
         encKey: string;
-        ecosystems?: { [id: string]: string };
+        ecosystems?: {
+            [id: string]: {
+                name?: string;
+                avatar?: string;
+                type?: string;
+            }
+        };
     };
     navigate: typeof navigate;
     alertShow: typeof alertShow;
