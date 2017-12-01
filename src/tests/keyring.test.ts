@@ -102,3 +102,9 @@ test('Wallet address to id', () => {
     expect(walletID).toEqual('-6258391547979339691');
     expect(addrConverted).toEqual(addr);
 });
+
+test('Private to public key generation', () => {
+    const privateKey = keyring.decryptAES(MOCK_ENCRYPTED_KEY, MOCK_PASSWORD);
+    const publicKey = keyring.genereatePublicKey(privateKey);
+    expect(publicKey).toEqual(MOCK_PUBLIC_KEY);
+});

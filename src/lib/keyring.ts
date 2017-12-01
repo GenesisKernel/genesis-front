@@ -235,6 +235,19 @@ const keyring = {
         };
     },
 
+    genereatePublicKey(privateKey: string) {
+        const curveParams = KJUR.crypto.ECParameterDB.getByName(curveName);
+        const curveG = curveParams.G;
+        const charLen = curveParams.keylen / 4;
+        const privateBig = new KJUR.BigInteger(privateKey, 16);
+        const publicBig = curveG.multiply(privateBig);
+        const valueX = publicBig.getX().toBigInteger();
+        const valueY = publicBig.getY().toBigInteger();
+        const xHex = ('0000000000' + valueX.toString(16)).slice(-charLen);
+        const yHex = ('0000000000' + valueY.toString(16)).slice(-charLen);
+        return '04' + xHex + yHex;
+    },
+
     encryptAES: (data: string, password: string) => {
         return CryptoJS.AES.encrypt(data, password).toString();
     },
