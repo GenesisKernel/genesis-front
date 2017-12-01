@@ -60,6 +60,14 @@ class TxButton extends React.Component<ITxButtonProps & InjectedIntlProps> {
                 try {
                     const error: { type: string, error: string } = JSON.parse(props.contractStatus.error);
                     switch (error.type) {
+                        case 'panic':
+                            this.props.alert(
+                                'error',
+                                this.props.intl.formatMessage({ id: 'tx.panic', defaultMessage: 'Runtime error' }),
+                                error.error,
+                                this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
+                            ); break;
+
                         case 'warning':
                             this.props.alert(
                                 'warning',
