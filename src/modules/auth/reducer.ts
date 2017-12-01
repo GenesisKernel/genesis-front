@@ -24,6 +24,7 @@ export type State = {
     readonly isAuthenticated: boolean;
     readonly isLoggingIn: boolean;
     readonly isCreatingAccount: boolean;
+    readonly isImportingAccount: boolean
     readonly isNodeOwner: boolean;
     readonly isEcosystemOwner: boolean;
     readonly wallet: string;
@@ -34,9 +35,13 @@ export type State = {
     readonly timestamp: string;
     readonly createdAccount: {
         id: string;
-        address: string;
-        privateKey: string;
-        publicKey: string;
+        encKey: string;
+        ecosystems?: { [id: string]: string };
+    };
+    readonly importedAccount: {
+        id: string;
+        encKey: string;
+        ecosystems?: { [id: string]: string };
     };
     readonly account: IStoredKey;
     readonly privateKey: string;
@@ -48,6 +53,7 @@ export const initialState: State = {
     isAuthenticated: false,
     isLoggingIn: false,
     isCreatingAccount: false,
+    isImportingAccount: false,
     isNodeOwner: false,
     isEcosystemOwner: false,
     wallet: null,
@@ -57,6 +63,7 @@ export const initialState: State = {
     timestamp: null,
     sessionDuration: null,
     createdAccount: null,
+    importedAccount: null,
     account: null,
     privateKey: null,
     ecosystem: null
@@ -172,11 +179,47 @@ export default (state: State = initialState, action: Action): State => {
         };
     }
 
-    if (isType(action, actions.createAccount.done)) {
+    if (isType(action, actions.importAccount.started)) {
+        return {
+            ...state,
+            isImportingAccount: true,
+            importedAccount: null
+        };
+    }
+    else if (isType(action, actions.importAccount.done)) {
+        return {
+            ...state,
+            isImportingAccount: false,
+            importedAccount: action.payload.result
+        };
+    }
+    else if (isType(action, actions.importAccount.failed)) {
+        return {
+            ...state,
+            isImportingAccount: false,
+            importedAccount: null
+        };
+    }
+
+    if (isType(action, actions.createAccount.started)) {
+        return {
+            ...state,
+            isCreatingAccount: true,
+            createdAccount: null
+        };
+    }
+    else if (isType(action, actions.createAccount.done)) {
         return {
             ...state,
             isCreatingAccount: false,
             createdAccount: action.payload.result
+        };
+    }
+    else if (isType(action, actions.createAccount.failed)) {
+        return {
+            ...state,
+            isCreatingAccount: false,
+            createdAccount: action.payload.error
         };
     }
 
@@ -184,13 +227,6 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             isCreatingAccount: false,
-            createdAccount: null
-        };
-    }
-
-    if (isType(action, actions.clearCreatedAccount)) {
-        return {
-            ...state,
             createdAccount: null
         };
     }

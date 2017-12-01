@@ -29,9 +29,11 @@ import storage from 'lib/storage';
 export const loginEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.login.started.match)
         .flatMap(action => {
+            const publicKey = keyring.genereatePublicKey(action.payload.privateKey);
+
             const promise = api.getUid().then(uid => {
                 const signature = keyring.sign(uid.uid, action.payload.privateKey);
-                return api.login(uid.token, action.payload.publicKey, signature);
+                return api.login(uid.token, publicKey, signature);
             });
 
             return Observable.from(promise)
@@ -46,6 +48,7 @@ export const loginEpic = (actions$: Observable<Action>) =>
                                 // TODO: Not remembering the key is not implemented yet
                                 // privateKey: action.payload.remember ? action.payload.privateKey : null,
                                 privateKey: action.payload.privateKey,
+                                publicKey,
                                 account
                             }
                         }),
@@ -81,13 +84,15 @@ export const switchEcosystemEpic: Epic<Action, IRootState> =
             const state = store.getState();
             const promise = api.getUid().then(uid => {
                 const signature = keyring.sign(uid.uid, state.auth.privateKey);
-                return api.login(uid.token, state.auth.account.publicKey, signature, null, action.payload);
+                const publicKey = keyring.genereatePublicKey(state.auth.privateKey);
+                return api.login(uid.token, publicKey, signature, null, action.payload);
             });
 
             return Observable.fromPromise(promise);
         })
         .flatMap(payload =>
             Observable.concat(
+                Observable.of(reset.started(null)),
                 Observable.of(actions.switchEcosystem.done({
                     params: payload.ecosystem_id,
                     result: {
@@ -96,7 +101,7 @@ export const switchEcosystemEpic: Epic<Action, IRootState> =
                         sessionDuration: payload.expiry
                     }
                 })),
-                Observable.of(reset.started(null))
+                Observable.of(engineActions.navigate('/'))
             )
         )
         .catch((e: IAPIError) => {
@@ -122,29 +127,65 @@ export const importSeedEpic = (actions$: Observable<Action>) =>
             });
         });
 
-export const createAccountEpic = (actions$: Observable<Action>) =>
-    actions$.filter(actions.createAccount.started.match)
+export const importAccountEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.importAccount.started)
         .switchMap(action => {
+            const backup = keyring.restore(action.payload.backup);
+            if (!backup || backup.privateKey.length !== keyring.KEY_LENGTH) {
+                return Observable.of(actions.importAccount.failed({
+                    params: null,
+                    error: 'E_INVALID_KEY'
+
+                    // We need to delay the response to make reducer think
+                    // as this is an async call
+                })).delay(1);
+            }
+
+            const publicKey = keyring.genereatePublicKey(backup.privateKey);
             const promise = api.getUid().then(uid => {
-                const signature = keyring.sign(uid.uid, action.payload.privateKey);
-                return api.login(uid.token, action.payload.publicKey, signature);
+                const signature = keyring.sign(uid.uid, backup.privateKey);
+                return api.login(uid.token, publicKey, signature);
             });
 
-            return Observable.from(promise).map(payload => {
-                return actions.createAccount.done({
-                    params: null,
-                    result: {
+            return Observable.from(promise)
+                .map(payload => {
+                    const account = {
+                        encKey: keyring.encryptAES(backup.privateKey, action.payload.password),
                         id: payload.key_id,
-                        address: payload.address,
-                        ...action.payload
-                    }
+                        ecosystems: backup.ecosystems
+                    };
+                    storage.accounts.save(account);
+
+                    return actions.importAccount.done({
+                        params: action.payload,
+                        result: account
+                    });
                 });
-            }).catch(e => {
-                return Observable.of(actions.createAccount.failed({
-                    params: null,
-                    error: null
-                }));
+        });
+
+export const createAccountEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.createAccount.started)
+        .switchMap(action => {
+            const keys = keyring.generateKeyPair(action.payload.seed);
+            const promise = api.getUid().then(uid => {
+                const signature = keyring.sign(uid.uid, keys.private);
+                return api.login(uid.token, keys.public, signature);
             });
+
+            return Observable.from(promise)
+                .map(payload => {
+                    const account = {
+                        encKey: keyring.encryptAES(keys.private, action.payload.password),
+                        id: payload.key_id,
+                        ecosystems: {}
+                    };
+                    storage.accounts.save(account);
+
+                    return actions.createAccount.done({
+                        params: action.payload,
+                        result: account
+                    });
+                });
         });
 
 export const refreshSessionEpic: Epic<Action, IRootState> =
@@ -175,6 +216,7 @@ export default combineEpics(
     logoutEpic,
     switchEcosystemEpic,
     importSeedEpic,
+    importAccountEpic,
     createAccountEpic,
     refreshSessionEpic
 );

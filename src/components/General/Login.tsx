@@ -66,15 +66,12 @@ class Login extends React.Component<ILoginProps, ILoginState> {
         if (keyring.KEY_LENGTH === privateKey.length) {
             if (values.remember) {
                 storage.settings.save('privateKey', privateKey);
-                storage.settings.save('publicKey', this.state.account.publicKey);
             }
             else {
                 storage.settings.remove('privateKey');
-                storage.settings.remove('publicKey');
             }
             this.props.login({
                 privateKey,
-                publicKey: this.state.account.publicKey,
                 remember: values.remember
             });
             this.props.navigate('/');
@@ -109,7 +106,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                                 <ul>
                                     {this.state.accounts.map(l => (
                                         <li key={l.id}>
-                                            <Button bsStyle="link" onClick={this.onSelectAccount.bind(this, l)}>{l.address}</Button>
+                                            <Button bsStyle="link" onClick={this.onSelectAccount.bind(this, l)}>{l.id}</Button>
                                         </li>
                                     ))}
                                 </ul>
@@ -123,7 +120,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                                             </label>
                                         </Col>
                                         <Col md={9}>
-                                            <Validation.components.ValidatedControl name="address" type="text" readOnly value={this.state.account ? this.state.account.address : ''} validators={[Validation.validators.required]} />
+                                            <Validation.components.ValidatedControl name="address" type="text" readOnly value={this.state.account ? this.state.account.id : ''} validators={[Validation.validators.required]} />
                                         </Col>
                                     </Validation.components.ValidatedFormGroup>
                                 </fieldset>

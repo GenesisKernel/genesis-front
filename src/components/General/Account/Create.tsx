@@ -18,10 +18,9 @@ import * as React from 'react';
 import { Button, Col } from 'react-bootstrap';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { navigate } from 'modules/engine/actions';
-import { importSeed, createAccount, login, clearCreatedAccount } from 'modules/auth/actions';
+import { importSeed, createAccount, login } from 'modules/auth/actions';
 import { alertShow } from 'modules/content/actions';
 import styled from 'styled-components';
-import storage from 'lib/storage';
 import keyring from 'lib/keyring';
 import { sendAttachment } from 'lib/fs';
 
@@ -36,23 +35,20 @@ const StyledForm = styled.div`
     }
 `;
 
-export interface ICreateProps extends InjectedIntlProps {
+export interface ICreateProps {
     return: string;
     loadedSeed: string;
     isCreatingAccount: boolean;
     createdAccount: {
         id: string;
-        address: string;
-        privateKey: string;
-        publicKey: string;
-        password: string;
+        encKey: string;
+        ecosystems?: { [id: string]: string };
     };
     navigate: typeof navigate;
     alertShow: typeof alertShow;
     login: typeof login.started;
     importSeed: typeof importSeed.started;
     createAccount: typeof createAccount.started;
-    clearCreatedAccount: typeof clearCreatedAccount;
 }
 
 interface ICreateState {
@@ -62,10 +58,10 @@ interface ICreateState {
     isConfirming?: boolean;
 }
 
-class Create extends React.Component<ICreateProps, ICreateState> {
+class Create extends React.Component<ICreateProps & InjectedIntlProps, ICreateState> {
     private inputFile: HTMLInputElement;
 
-    constructor(props: ICreateProps) {
+    constructor(props: ICreateProps & InjectedIntlProps) {
         super(props);
         this.state = {
             seed: '',
@@ -89,36 +85,16 @@ class Create extends React.Component<ICreateProps, ICreateState> {
             }
         }
 
-        if (props.createdAccount) {
-            props.clearCreatedAccount();
-            const encKey = keyring.encryptAES(props.createdAccount.privateKey, props.createdAccount.password);
-
-            // TODO: Fix remeber password fn
-            storage.settings.save('privateKey', props.createdAccount.privateKey);
-            storage.settings.save('publicKey', props.createdAccount.publicKey);
-
-            storage.accounts.save({
-                encKey,
-                publicKey: props.createdAccount.publicKey,
-                id: props.createdAccount.id,
-                address: props.createdAccount.address
-            });
-
-            props.login({
-                privateKey: props.createdAccount.privateKey,
-                publicKey: props.createdAccount.publicKey,
-                remember: false
-            });
+        if (this.props.isCreatingAccount && !props.isCreatingAccount && props.createdAccount) {
+            this.onCreateSuccess();
             props.navigate('/');
         }
     }
 
     onSubmit(values: { [key: string]: any }) {
         if (this.state.isConfirming) {
-            const keyPair = keyring.generateKeyPair(values.seedConfirm);
             this.props.createAccount({
-                privateKey: keyPair.private,
-                publicKey: keyPair.public,
+                seed: values.seedConfirm,
                 password: values.passwordConfirm
             });
         }
@@ -130,6 +106,16 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                 seedConfirm: ''
             });
         }
+    }
+
+    onCreateSuccess() {
+        this.props.alertShow({
+            id: 'I_ACCOUNT_CREATED',
+            title: this.props.intl.formatMessage({ id: 'alert.info', defaultMessage: 'Information' }),
+            type: 'info',
+            text: this.props.intl.formatMessage({ id: 'auth.create.success', defaultMessage: 'Account has been successfully created' }),
+            cancelButton: this.props.intl.formatMessage({ id: 'alert.close', defaultMessage: 'Close' }),
+        });
     }
 
     onInvalidSeed() {

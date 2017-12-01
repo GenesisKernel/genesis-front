@@ -84,10 +84,7 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
 
     generatePayload() {
         return keyring.backup({
-            id: this.props.account.id,
             privateKey: this.state.privateKey,
-            publicKey: this.props.account.publicKey,
-            address: this.props.account.address,
             ecosystems: this.props.account.ecosystems
         });
     }
@@ -149,15 +146,9 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
                             </tr>
                             <tr>
                                 <td>
-                                    <FormattedMessage id="general.key.public" defaultMessage="Public key" />
-                                </td>
-                                <td>{this.formatKey(this.props.account.publicKey)}</td>
-                            </tr>
-                            <tr>
-                                <td>
                                     <FormattedMessage id="general.address" defaultMessage="Address" />
                                 </td>
-                                <td>{this.props.account.address}</td>
+                                <td>{this.props.account.id}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -174,9 +165,11 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
                         <FormattedMessage id="general.backup" defaultMessage="Backup" />
                     </Heading>
                     <div className="content-wrapper">
-                        <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit.bind(this)}>
-                            {this.state.privateKey ? this.renderSecond() : this.renderFirst()}
-                        </Validation.components.ValidatedForm>
+                        {this.props.account && (
+                            <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit.bind(this)}>
+                                {this.state.privateKey ? this.renderSecond() : this.renderFirst()}
+                            </Validation.components.ValidatedForm>
+                        )}
                     </div>
                 </div>
             </DocumentTitle>

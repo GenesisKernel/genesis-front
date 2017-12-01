@@ -79,12 +79,15 @@ test('Key backup scenario', () => {
         privateKey: '06076ac7d0bdaea988cfaee2af78b790805e41e38aa52c773cb37eb76adf91e0',
         publicKey: '04ea0cdb0f9b2a8d7fa7403fe302c3f4686e0e52ef3d5d473df3d2c477c53bf9d76efc67d93b2b1d7042df219edda66c6c04d51e089e026bbf69e40ecedf1dd556',
         address: '1698-0880-9153-8103-9719',
-        ecosystems: { '1': 'Test' }
+        ecosystems: { '1': 'Test', '2': 'Hello', '3': 'World' }
     };
 
     const backup = keyring.backup(key);
     const restored = keyring.restore(backup);
-    expect(restored).toEqual(key);
+    expect(restored).toEqual({
+        privateKey: '06076ac7d0bdaea988cfaee2af78b790805e41e38aa52c773cb37eb76adf91e0',
+        ecosystems: { '1': null, '2': null, '3': null }
+    });
 });
 
 test('Wallet id to address', () => {

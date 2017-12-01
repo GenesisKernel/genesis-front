@@ -19,11 +19,33 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { navigate } from 'modules/engine/actions';
 import { alertShow } from 'modules/content/actions';
-import { login, importSeed, createAccount, clearCreatedAccount } from 'modules/auth/actions';
+import { login, importSeed, createAccount } from 'modules/auth/actions';
 
-import Create, { ICreateProps } from 'components/General/Account/Create';
+import Create from 'components/General/Account/Create';
 
-const CreateContainer: React.SFC<ICreateProps> = (props: ICreateProps) => (
+export interface ICreateContainerProps {
+
+}
+
+interface ICreateContainerState {
+    isCreatingAccount: boolean;
+    createdAccount: {
+        id: string;
+        encKey: string;
+        ecosystems?: { [id: string]: string };
+    };
+    loadedSeed: string;
+}
+
+interface ICreateContainerDispatch {
+    navigate: typeof navigate;
+    alertShow: typeof alertShow;
+    login: typeof login.started;
+    importSeed: typeof importSeed.started;
+    createAccount: typeof createAccount.started;
+}
+
+const CreateContainer: React.SFC<ICreateContainerProps & ICreateContainerState & ICreateContainerDispatch> = (props) => (
     <Create {...props} return="/account" />
 );
 
@@ -38,8 +60,7 @@ const mapDispatchToProps = {
     alertShow,
     login: login.started,
     importSeed: importSeed.started,
-    createAccount: createAccount.started,
-    clearCreatedAccount: clearCreatedAccount
+    createAccount: createAccount.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateContainer);
+export default connect<ICreateContainerState, ICreateContainerDispatch, ICreateContainerProps>(mapStateToProps, mapDispatchToProps)(CreateContainer);

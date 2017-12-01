@@ -47,7 +47,7 @@ const UserMenu: React.SFC<IUserMenuProps> = (props) => props.account ? (
                             <em className="fa fa-credit-card fa-2x text-info" />
                         </div>
                         <div className="media-box-body clearfix">
-                            <p className="m0">{props.account.address}</p>
+                            <p className="m0">{props.account.id}</p>
                             <p className="m0 text-muted">
                                 <small>{storage.resolveEcosystemName(props.account, props.ecosystem)}</small>
                             </p>

@@ -19,13 +19,13 @@ import { ILoginResponse } from 'lib/api';
 import { IStoredKey } from 'lib/storage';
 
 const actionCreator = actionCreatorFactory('auth');
-export const login = actionCreator.async<{ privateKey: string, publicKey: string, remember: boolean }, ILoginResponse & { account: IStoredKey, privateKey: string }, string>('LOGIN');
+export const login = actionCreator.async<{ privateKey: string, remember: boolean }, ILoginResponse & { account: IStoredKey, privateKey: string, publicKey: string }, string>('LOGIN');
 export const logout = actionCreator.async('LOGOUT');
 export const switchEcosystem = actionCreator.async<string, { token: string, refresh: string, sessionDuration: number }, string>('SWITCH_ECOSYSTEM');
 export const createEcosystem = actionCreator<{ name: string, id: string }>('CREATE_ECOSYSTEM');
 export const setAction = actionCreator<string>('SET_ACTION');
 export const importSeed = actionCreator.async<Blob, string, undefined>('IMPORT_SEED');
-export const createAccount = actionCreator.async<{ privateKey: string, publicKey: string, password: string }, { id: string, address: string, privateKey: string, publicKey: string, password: string }, undefined>('CREATE_ACCOUNT');
-export const clearCreatedAccount = actionCreator('CLEAR_CREATED_ACCOUNT');
+export const importAccount = actionCreator.async<{ backup: string, password: string }, IStoredKey, string>('IMPORT_ACCOUNT');
+export const createAccount = actionCreator.async<{ seed: string, password: string }, IStoredKey, undefined>('CREATE_ACCOUNT');
 export const watchSession = actionCreator<{ timeout: number }>('WATCH_SESSION');
 export const refreshSession = actionCreator<{ token: string, refresh: string, sessionDuration: number }>('REFRESH_SESSION');

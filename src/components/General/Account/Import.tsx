@@ -36,9 +36,8 @@ import styled from 'styled-components';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import keyring from 'lib/keyring';
 import { navigate } from 'modules/engine/actions';
-import { importSeed, login } from 'modules/auth/actions';
+import { importSeed, importAccount, login } from 'modules/auth/actions';
 import { alertShow } from 'modules/content/actions';
-import storage from 'lib/storage';
 
 import DocumentTitle from 'components/DocumentTitle';
 import General from 'components/General';
@@ -52,12 +51,19 @@ const StyledForm = styled.div`
 `;
 
 export interface IImportProps extends InjectedIntlProps {
+    isImportingAccount: boolean;
     return: string;
     loadedSeed: string;
+    importedAccount: {
+        id: string;
+        encKey: string;
+        ecosystems?: { [id: string]: string };
+    };
     navigate: typeof navigate;
     alertShow: typeof alertShow;
     login: typeof login.started;
     importSeed: typeof importSeed.started;
+    importAccount: typeof importAccount.started;
 }
 
 interface IImportState {
@@ -80,6 +86,26 @@ class Import extends React.Component<IImportProps, IImportState> {
                 seed: props.loadedSeed
             });
         }
+
+        if (this.props.isImportingAccount && !props.isImportingAccount) {
+            if (props.importedAccount) {
+                this.onImportSuccess();
+            }
+            else {
+                this.onInvalidKey();
+            }
+        }
+    }
+
+    onImportSuccess() {
+        this.props.alertShow({
+            id: 'I_ACCOUNT_IMPORT_SUCCESS',
+            title: this.props.intl.formatMessage({ id: 'alert.info', defaultMessage: 'Information' }),
+            type: 'info',
+            text: this.props.intl.formatMessage({ id: 'auth.import.success', defaultMessage: 'Account has been imported successfully' }),
+            cancelButton: this.props.intl.formatMessage({ id: 'alert.close', defaultMessage: 'Close' }),
+        });
+        this.props.navigate('/');
     }
 
     onInvalidKey() {
@@ -115,30 +141,10 @@ class Import extends React.Component<IImportProps, IImportState> {
     }
 
     onSubmit(values: { [key: string]: any }) {
-        const backup = keyring.restore(values.seed);
-        if (backup) {
-            storage.accounts.save({
-                id: backup.id,
-                encKey: keyring.encryptAES(backup.privateKey, values.password),
-                publicKey: backup.publicKey,
-                address: backup.address,
-                ecosystems: backup.ecosystems
-            });
-
-            // TODO: Fix remeber password fn
-            storage.settings.save('privateKey', backup.privateKey);
-            storage.settings.save('publicKey', backup.publicKey);
-
-            this.props.login({
-                privateKey: backup.privateKey,
-                publicKey: backup.publicKey,
-                remember: false
-            });
-            this.props.navigate('/');
-        }
-        else {
-            this.onInvalidKey();
-        }
+        this.props.importAccount({
+            backup: values.seed,
+            password: values.password
+        });
     }
 
     render() {

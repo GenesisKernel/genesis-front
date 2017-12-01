@@ -17,11 +17,33 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { navigate } from 'modules/engine/actions';
-import { importSeed, login } from 'modules/auth/actions';
+import { importSeed, importAccount, login } from 'modules/auth/actions';
 import { alertShow } from 'modules/content/actions';
 import { IRootState } from 'modules';
 
 import Import, { IImportProps } from 'components/General/Account/Import';
+
+export interface IImportContainerProps {
+
+}
+
+interface IImportContainerState {
+    isImportingAccount: boolean;
+    loadedSeed: string;
+    importedAccount: {
+        id: string;
+        encKey: string;
+        ecosystems?: { [id: string]: string };
+    };
+}
+
+interface IImportContainerDispatch {
+    navigate: typeof navigate;
+    alertShow: typeof alertShow;
+    login: typeof login.started;
+    importSeed: typeof importSeed.started;
+    importAccount: typeof importAccount.started;
+}
 
 const ImportContainer: React.SFC<IImportProps> = (props) => {
     return (
@@ -30,14 +52,17 @@ const ImportContainer: React.SFC<IImportProps> = (props) => {
 };
 
 const mapStateToProps = (state: IRootState) => ({
-    loadedSeed: state.auth.loadedSeed
+    isImportingAccount: state.auth.isImportingAccount,
+    loadedSeed: state.auth.loadedSeed,
+    importedAccount: state.auth.importedAccount
 });
 
 const mapDispatchToProps = {
     navigate,
     importSeed: importSeed.started,
+    importAccount: importAccount.started,
     alertShow: alertShow,
     login: login.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ImportContainer);
+export default connect<IImportContainerState, IImportContainerDispatch, IImportContainerProps>(mapStateToProps, mapDispatchToProps)(ImportContainer);
