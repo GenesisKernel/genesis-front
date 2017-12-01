@@ -24,6 +24,7 @@ export interface IPProps {
     'children': any;
     'editable'?: boolean;
     'changePage'?: any;
+    'selectTag'?: any;
     'tag_id'?: string;
 }
 
@@ -50,6 +51,7 @@ class P extends React.Component<IPProps, IPState> {
         this.setState(Object.assign(this.state, {
             focused: true
         }));
+        this.props.selectTag({ tag_id: this.props.tag_id });
     }
 
     onBlur(e: any) {

@@ -161,11 +161,14 @@ export default (state: State = initialState, action: Action): State => {
         let pageTreeCode = state.pageTreeCode.concat();
 
         let tag = findTagById(pageTreeCode, action.payload.tag_id);
-        if(tag) {
-            if(tag.children && tag.children.length) {
-                if (tag.children[0].text) {
-                    tag.children[0].text = action.payload.text + " edited";
+        if (tag) {
+            // todo: parse contentEditable tags and create children array
+            if (tag.children && tag.children.length) {
+                let child = tag.children[0];
+                if (child.text) {
+                    child.text = action.payload.text + ' edited';
                 }
+                tag.children = [child];
             }
         }
 

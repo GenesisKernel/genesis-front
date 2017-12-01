@@ -33,6 +33,7 @@ export interface IProtypoProps {
     navigatePage: (params: { name: string, params: any, vde?: boolean }) => void;
     navigate: (url: string) => void;
     changePage?: any;
+    selectTag?: any;
 }
 
 export interface IProtypoElement {
@@ -141,7 +142,16 @@ export default class Protypo extends React.Component<IProtypoProps> {
                     // }
 
                     return (
-                        <Handler {...element.attr} key={key} id={key} tag_id={element.id} childrenTree={element.children} editable={this.props.editable} changePage={this.props.changePage}>
+                        <Handler
+                            {...element.attr}
+                            key={key}
+                            id={key}
+                            tag_id={element.id}
+                            childrenTree={element.children}
+                            editable={this.props.editable}
+                            changePage={this.props.changePage}
+                            selectTag={this.props.selectTag}
+                        >
                             {this.renderElements(element.children)}
                         </Handler>
                     );
