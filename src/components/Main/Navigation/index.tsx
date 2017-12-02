@@ -41,6 +41,7 @@ const StyledBackButton = styled.button`
     text-align: left;
     background: transparent;
     border-bottom: solid 1px #e5e5e5;
+    border-radius: 0;
     
     &:hover .back-button {
         color: #6ebcff;
@@ -64,6 +65,8 @@ const StyledBackButton = styled.button`
 `;
 
 const StyledLogo = styled.div`
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
     background: #624380;
     width: 100%;
     text-align: center;
@@ -215,6 +218,7 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
                     </StyledBackButton>
                     <StyledMenuContent>
                         <Protypo
+                            context="menu"
                             payload={menu && menu.content}
                         />
                     </StyledMenuContent>

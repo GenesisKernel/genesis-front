@@ -19,6 +19,7 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getContract } from 'modules/admin/actions';
 
+import DataPreloader from 'components/Animation/DataPreloader';
 import Edit, { IEditProps } from 'components/Main/Admin/Contracts/Edit';
 
 class EditContainer extends React.Component<IEditProps & { match: { params: { contractID: string } } }> {
@@ -30,7 +31,9 @@ class EditContainer extends React.Component<IEditProps & { match: { params: { co
 
     render() {
         return (
-            <Edit {...this.props} />
+            <DataPreloader data={[this.props.contract]}>
+                <Edit {...this.props} />
+            </DataPreloader>
         );
     }
 }

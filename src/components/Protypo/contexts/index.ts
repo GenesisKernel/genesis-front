@@ -14,21 +14,20 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import * as React from 'react';
-import Protypo from 'containers/Widgets/Protypo';
-import { IProtypoElement } from 'components/Protypo/Protypo';
-
-import DocumentTitle from 'components/DocumentTitle';
-
-export interface IPageProps {
-    name: string;
-    payload: IProtypoElement[];
+export interface IProtypoContext {
+    disabledFunctions: string[];
+    disabledHandlers: string[];
 }
 
-const Page: React.SFC<IPageProps> = (props) => (
-    <DocumentTitle title={props.name}>
-        <Protypo context="page" {...props} />
-    </DocumentTitle>
-);
+const contextDefinitions: { [key: string]: IProtypoContext } = {
+    menu: {
+        disabledFunctions: ['setTitle', 'addToolButton'],
+        disabledHandlers: []
+    },
+    page: {
+        disabledFunctions: [],
+        disabledHandlers: ['menuitem', 'menugroup']
+    }
+};
 
-export default Page;
+export default contextDefinitions;

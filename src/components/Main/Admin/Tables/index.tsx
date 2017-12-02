@@ -15,98 +15,92 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { Panel } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { ITablesResponse } from 'lib/api';
 
-import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'containers/Widgets/Heading';
+import Wrapper from 'components/Wrapper';
+import Table, { ICellRenderer } from 'components/Table';
 
 export interface ITablesProps {
     tables: ITablesResponse;
 }
 
-const Tables: React.SFC<ITablesProps> = (props) => (
-    <DocumentTitle title="admin.tables" defaultTitle="Tables">
-        <div>
-            <Heading>
-                <FormattedMessage id="admin.tables" defaultMessage="Tables" />
-                <div className="pull-right">
-                    <Link to="/admin/tables/create" className="ml btn-tool">
-                        <em className="icon icon-plus" />
-                        <span>
-                            <FormattedMessage id="admin.tables.create" defaultMessage="Create" />
-                        </span>
-                    </Link>
-                </div>
-            </Heading>
-            <div className="content-wrapper">
-                <ol className="breadcrumb">
-                    <li>
-                        <FormattedMessage id="admin.tables" defaultMessage="Tables" />
-                    </li>
-                </ol>
-                <Panel bsStyle="default">
-                    <div className="table-responsive">
-                        <table className="table table-striped table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <FormattedMessage id="admin.tables.name" defaultMessage="Name" />
-                                    </th>
-                                    <th className="text-center">
-                                        <FormattedMessage id="admin.tables.count" defaultMessage="Count" />
-                                    </th>
-                                    <th className="text-center">
-                                        <FormattedMessage id="admin.tables.show" defaultMessage="Show" />
-                                    </th>
-                                    <th className="text-center">
-                                        <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {props.tables && props.tables.list.map(table => (
-                                    <tr key={table.name}>
-                                        <td>
-                                            <strong>{table.name}</strong>
-                                        </td>
-                                        <td className="text-center" style={{ width: 1 }}>
-                                            <strong>{table.count}</strong>
-                                        </td>
-                                        <td style={{ width: 1 }}>
-                                            {'0' === table.count ?
-                                                (
-                                                    <Button bsStyle="primary" disabled>
-                                                        <FormattedMessage id="admin.tables.show" defaultMessage="Show" />
-                                                    </Button>
-                                                ) : (
-                                                    <Link to={`/admin/tables/${table.name}`}>
-                                                        <Button bsStyle="primary">
-                                                            <FormattedMessage id="admin.tables.show" defaultMessage="Show" />
-                                                        </Button>
-                                                    </Link>
-                                                )
-                                            }
-                                        </td>
-                                        <td style={{ width: 1 }}>
-                                            <Link to={`/admin/tables/${table.name}/edit`}>
-                                                <Button bsStyle="primary" type="button">
-                                                    <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
-                                                </Button>
-                                            </Link>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </Panel>
+const renderTable: ICellRenderer = (value, rowData) => {
+    switch (rowData.colIndex) {
+        case 0: return (
+            <div className="text-bold">
+                {value}
             </div>
-        </div>
-    </DocumentTitle>
+        );
+
+        case 2: return '0' === rowData.rowData[1] ?
+            (
+                <Button bsStyle="primary" disabled>
+                    <FormattedMessage id="admin.tables.show" defaultMessage="Show" />
+                </Button>
+            ) : (
+                <Link to={`/admin/tables/${rowData.rowData[0]}`}>
+                    <Button bsStyle="primary">
+                        <FormattedMessage id="admin.tables.show" defaultMessage="Show" />
+                    </Button>
+                </Link>
+            );
+
+        case 3: return (
+            <Link to={`/admin/tables/${rowData.rowData[0]}/edit`}>
+                <Button bsStyle="primary" type="button">
+                    <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
+                </Button>
+            </Link>
+        );
+
+        default: return value;
+    }
+};
+
+const Tables: React.SFC<ITablesProps & InjectedIntlProps> = (props) => (
+    <Wrapper
+        type="fullscreen"
+        title={{
+            title: 'admin.tables',
+            defaultTitle: 'Tables'
+        }}
+        heading={{
+            content: (
+                <FormattedMessage id="admin.tables" defaultMessage="Tables" />
+            ),
+            toolButtons: [
+                {
+                    url: '/admin/tables/create',
+                    icon: 'icon-plus',
+                    title: (
+                        <FormattedMessage id="admin.tables.create" defaultMessage="Create" />
+                    )
+                }
+            ]
+        }}
+        breadcrumbs={[
+            {
+                title: (
+                    <FormattedMessage id="admin.tables" defaultMessage="Tables" />
+                )
+            }
+        ]}
+    >
+        <Table
+            striped
+            renderCell={renderTable}
+            columns={[
+                { title: props.intl.formatMessage({ id: 'admin.tables.name', defaultMessage: 'Name' }), sortable: true },
+                { title: props.intl.formatMessage({ id: 'admin.tables.count', defaultMessage: 'Count' }), sortable: true, width: 1 },
+                { width: 1 },
+                { width: 1 }
+            ]}
+            data={props.tables.list.map(p => [p.name, p.count])}
+        />
+    </Wrapper>
 );
 
-export default Tables;
+export default injectIntl(Tables);

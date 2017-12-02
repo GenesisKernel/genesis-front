@@ -26,6 +26,7 @@ import * as uuid from 'uuid';
 import Validation from 'components/Validation';
 
 interface IValidatedContractFormProps {
+    className?: string;
     contractName: string;
     mapContractParams: (values: { [key: string]: any }) => { [key: string]: any };
     onExec?: (block: string, error: string) => void;
@@ -93,7 +94,7 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
         const pending = transaction && !transaction.block && !transaction.error;
 
         return (
-            <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit.bind(this)} pending={pending}>
+            <Validation.components.ValidatedForm className={this.props.className} onSubmitSuccess={this.onSubmit.bind(this)} pending={pending}>
                 {this.props.children}
             </Validation.components.ValidatedForm>
         );

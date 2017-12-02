@@ -1,3 +1,16 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+
+    > section {
+        margin-left: 350px;
+        margin-bottom: 0 !important;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+    }
+}
+
 .layout-fixed .wrapper > .aside {
     background: #fefefe !important;
     padding-right: 1px;
@@ -6,6 +19,15 @@
     > nav {
         overflow: hidden;
     }
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-stretch {
+    flex: 1;
 }
 
 .panel {
@@ -38,7 +60,21 @@
     &.btn-default:active { background: #e5e5e5; }
 }
 
+@keyframes btnShiftLeft {
+    0%, 50% {
+        transform: translate(20px, 0);
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
 .btn-tool {
+    -webkit-user-select: none;
+    -webkit-app-region: no-drag;
     background: none;
     border: 0;
     padding: 0 8px;
@@ -48,6 +84,8 @@
     font-size: 15px;
     text-decoration: none !important;
     color: #fff;
+    cursor: pointer;
+    animation: btnShiftLeft .8s;
 
     &:hover {
         color: #79bfff;
@@ -61,32 +99,33 @@
     margin-right: 6px;
 }
 
-.no-head .content-wrapper {
+.fullscreen {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.fullscreen-wrapper, .content-wrapper {
+    height: 100%;
     margin-top: 0 !important;
+    padding: 20px;
+    width: 100%;
+    flex: 1;
+    
+    > .breadcrumb {
+        margin: -20px -25px 20px -20px !important;
+        border-top: 0;
+    }
 }
 
-.content-wrapper {
-    margin-top: 46px;
-}
-
-.content-wrapper>h3,
-.content-wrapper>.content-heading {
-    padding-top: 0;
-    padding-bottom: 0;
-    line-height: 45px;
-    font-size: 20px;
-    height: 46px;
-    border: 0;
-    color: #ffffff;
-    background: #624280;
-}
-
-h3 + .breadcrumb, .content-heading + .breadcrumb {
-    margin: -20px -25px 20px -20px;
-    border-top: 0;
+.fullscreen-wrapper {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
 }
 
 .breadcrumb {
+    margin: 0 !important;
     border-top: 0 !important;
 }
 
@@ -107,4 +146,20 @@ h3 + .breadcrumb, .content-heading + .breadcrumb {
 
 .form-control {
     border-radius: 0;
+}
+
+.form-element {
+    border: 1px solid #dde6e9;
+}
+
+.switch-wrapper {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    
+    > div {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+    }
 }

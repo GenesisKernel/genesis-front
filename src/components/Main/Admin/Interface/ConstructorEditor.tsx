@@ -341,6 +341,7 @@ const ConstructorEditor: React.SFC<IConstructorEditorProps> = (props) => (
                 {/*{props.template}*/}
                 {/*{JSON.stringify(props.treeCode)}*/}
                 <Protypo
+                    context="page"
                     payload={props.treeCode}
                 />
             </DivGrid>

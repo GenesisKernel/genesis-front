@@ -19,6 +19,7 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getParameter } from 'modules/admin/actions';
 
+import DataPreloader from 'components/Animation/DataPreloader';
 import Edit, { IEditProps } from 'components/Main/Admin/Parameters/Edit';
 
 class EditContainer extends React.Component<IEditProps & { getParameter: typeof getParameter.started, match: { params: { parameterName: string } } }> {
@@ -28,7 +29,9 @@ class EditContainer extends React.Component<IEditProps & { getParameter: typeof 
 
     render() {
         return (
-            <Edit parameter={this.props.parameter} />
+            <DataPreloader data={[this.props.parameter]}>
+                <Edit parameter={this.props.parameter} />
+            </DataPreloader>
         );
     }
 }

@@ -20,6 +20,7 @@ import { IRootState } from 'modules';
 import { getContracts } from 'modules/admin/actions';
 import { IContract } from 'lib/api';
 
+import DataPreloader from 'components/Animation/DataPreloader';
 import Contracts from 'components/Main/Admin/Contracts';
 
 interface IContractsContainerProps {
@@ -34,7 +35,9 @@ class ContractsContainer extends React.Component<IContractsContainerProps> {
 
     render() {
         return (
-            <Contracts contracts={this.props.contracts} />
+            <DataPreloader data={[this.props.contracts]}>
+                <Contracts contracts={this.props.contracts} />
+            </DataPreloader>
         );
     }
 }

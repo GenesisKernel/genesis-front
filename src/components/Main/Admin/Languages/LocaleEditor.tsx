@@ -16,8 +16,9 @@
 
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 
+import Table, { ICellRenderer } from 'components/Table';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 
@@ -36,100 +37,104 @@ export interface ILocaleEditorProps {
     onExec?: (block: string, error: string) => void;
 }
 
-const LocaleEditor: React.SFC<ILocaleEditorProps> = (props) => (
-    <ValidatedContractForm contractName={props.contractName} mapContractParams={props.mapContractParams} onExec={props.onExec}>
-        <div className="panel panel-default">
-            <div className="panel-body">
-                <Validation.components.ValidatedFormGroup for="name">
-                    <label htmlFor="name">
-                        <FormattedMessage id="admin.languages.name" defaultMessage="Name" />
-                    </label>
-                    {props.translation ?
-                        (
-                            <Validation.components.ValidatedControl key="nameEdit" name="name" type="text" value={props.translation} readOnly />
-                        ) : (
-                            <Validation.components.ValidatedControl key="nameCreate" name="name" type="text" validators={[Validation.validators.required]} />
-                        )
-                    }
-                </Validation.components.ValidatedFormGroup>
-                <div className="form-group mb0">
-                    <div className="table-responsive">
-                        <table className="table table-striped table-bordered table-hover preline">
-                            <thead>
-                                <tr>
-                                    <th style={{ width: 100 }}>
-                                        <FormattedMessage id="admin.languages.locale" defaultMessage="Locale" />
-                                    </th>
-                                    <th>
-                                        <FormattedMessage id="admin.languages.value" defaultMessage="Value" />
-                                    </th>
-                                    {props.onDropLocale && (
-                                        <th style={{ width: 1 }}>
-                                            <FormattedMessage id="admin.languages.action" defaultMessage="Action" />
-                                        </th>
-                                    )}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {props.translations.map((col, index) => (
-                                    <tr key={index}>
-                                        <td>
-                                            <Validation.components.ValidatedFormGroup for={index + '_name'} className="m0">
-                                                <Validation.components.ValidatedControl
-                                                    type="text"
-                                                    name={index + '_name'}
-                                                    value={props.resolveTranslationValue(index, 'name')}
-                                                    validators={[Validation.validators.required]}
-                                                    onChange={(e: any) => props.onTranslationUpdate(index, 'name', e.target.value)}
-                                                />
-                                            </Validation.components.ValidatedFormGroup>
-                                        </td>
-                                        <td>
-                                            <Validation.components.ValidatedFormGroup for={index + '_value'} className="m0">
-                                                <Validation.components.ValidatedControl
-                                                    type="text"
-                                                    name={index + '_value'}
-                                                    value={props.resolveTranslationValue(index, 'value')}
-                                                    validators={[Validation.validators.required]}
-                                                    onChange={(e: any) => props.onTranslationUpdate(index, 'value', e.target.value)}
-                                                />
-                                            </Validation.components.ValidatedFormGroup>
-                                        </td>
-                                        {props.onDropLocale && (
-                                            <td>
-                                                <Button
-                                                    type="button"
-                                                    bsStyle="primary"
-                                                    onClick={() => props.onDropLocale(index)}
-                                                    disabled={1 >= props.translations.length}
-                                                >
-                                                    <span>(-)</span>
-                                                </Button>
-                                            </td>
-                                        )}
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div className="panel-footer">
-                <div className="clearfix">
-                    <div className="pull-left">
-                        <Button bsStyle="primary" onClick={props.onNewLocale}>
-                            <FormattedMessage id="admin.languages.add" defaultMessage="Add localization" />
-                        </Button>
-                    </div>
-                    <div className="pull-right">
-                        <Validation.components.ValidatedSubmit bsStyle="primary">
-                            <FormattedMessage id="admin.save" defaultMessage="Save" />
-                        </Validation.components.ValidatedSubmit>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </ValidatedContractForm>
-);
+const LocaleEditor: React.SFC<ILocaleEditorProps & InjectedIntlProps> = (props) => {
+    const renderParameter: ICellRenderer = (value, rowData) => {
+        const index = rowData.rowData[2] as number;
 
-export default LocaleEditor;
+        switch (rowData.colIndex) {
+            case 0: return (
+                <Validation.components.ValidatedFormGroup for={index + '_name'} className="m0">
+                    <Validation.components.ValidatedControl
+                        type="text"
+                        name={index + '_name'}
+                        value={value}
+                        validators={[Validation.validators.required]}
+                        onChange={(e: any) => props.onTranslationUpdate(index, 'name', e.target.value)}
+                    />
+                </Validation.components.ValidatedFormGroup>
+            );
+
+            case 1: return (
+                <Validation.components.ValidatedFormGroup for={index + '_value'} className="m0">
+                    <Validation.components.ValidatedControl
+                        type="text"
+                        name={index + '_value'}
+                        value={props.resolveTranslationValue(index, 'value')}
+                        validators={[Validation.validators.required]}
+                        onChange={(e: any) => props.onTranslationUpdate(index, 'value', e.target.value)}
+                    />
+                </Validation.components.ValidatedFormGroup>
+            );
+
+            case 2: return (
+                <Button
+                    bsStyle="default"
+                    className="btn-labeled btn-icon"
+                    onClick={() => props.onDropLocale(rowData.rowIndex)}
+                    disabled={1 >= props.translations.length}
+                >
+                    <span className="btn-label">
+                        <em className="icon-trash" />
+                    </span>
+                </Button>
+            );
+
+            default: return value;
+        }
+    };
+
+    /*
+        <Button
+            type="button"
+            bsStyle="primary"
+            onClick={() => props.onDropLocale(index)}
+            disabled={1 >= props.translations.length}
+        >
+            <span>(-)</span>
+        </Button>
+    */
+
+    return (
+        <ValidatedContractForm className="flex-col flex-stretch" contractName={props.contractName} mapContractParams={props.mapContractParams} onExec={props.onExec}>
+            <Validation.components.ValidatedFormGroup for="name">
+                <label htmlFor="name">
+                    <FormattedMessage id="admin.languages.name" defaultMessage="Name" />
+                </label>
+                {props.translation ?
+                    (
+                        <Validation.components.ValidatedControl key="nameEdit" name="name" type="text" value={props.translation} readOnly />
+                    ) : (
+                        <Validation.components.ValidatedControl key="nameCreate" name="name" type="text" validators={[Validation.validators.required]} />
+                    )
+                }
+            </Validation.components.ValidatedFormGroup>
+
+            <div className="form-group mb0 flex-col flex-stretch">
+                <div className="table-responsive form-element flex-stretch">
+                    <Table
+                        striped
+                        renderCell={renderParameter}
+                        columns={[
+                            { title: props.intl.formatMessage({ id: 'admin.languages.locale', defaultMessage: 'Locale' }), width: 100 },
+                            { title: props.intl.formatMessage({ id: 'admin.parameters.value', defaultMessage: 'Value' }) },
+                            { width: 1 }
+                        ]}
+                        data={props.translations.map((p, index) => [p.name, p.value, index])}
+                    />
+                </div>
+            </div>
+
+            <div>
+                <hr />
+                <Validation.components.ValidatedSubmit bsStyle="primary">
+                    <FormattedMessage id="admin.save" defaultMessage="Save" />
+                </Validation.components.ValidatedSubmit>
+                <Button bsStyle="link" onClick={props.onNewLocale}>
+                    <FormattedMessage id="admin.languages.add" defaultMessage="Add localization" />
+                </Button>
+            </div>
+        </ValidatedContractForm>
+    );
+};
+
+export default injectIntl(LocaleEditor);

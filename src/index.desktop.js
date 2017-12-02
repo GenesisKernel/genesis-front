@@ -14,21 +14,40 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import * as React from 'react';
-import Protypo from 'containers/Widgets/Protypo';
-import { IProtypoElement } from 'components/Protypo/Protypo';
 
-import DocumentTitle from 'components/DocumentTitle';
+const electron = require('electron');
 
-export interface IPageProps {
-    name: string;
-    payload: IProtypoElement[];
+const app = electron.app;
+const BrowserWindow = electron.BrowserWindow;
+
+// Keep a global reference of the window object, if you don't, the window will
+// be closed automatically when the JavaScript object is garbage collected.
+let mainWindow = null;
+
+function createWindow() {
+    mainWindow = new BrowserWindow({
+        width: 800,
+        height: 600,
+        frame: false
+    });
+
+    mainWindow.loadURL('http://localhost:3000');
+
+    mainWindow.on('closed', function () {
+        mainWindow = null;
+    });
 }
 
-const Page: React.SFC<IPageProps> = (props) => (
-    <DocumentTitle title={props.name}>
-        <Protypo context="page" {...props} />
-    </DocumentTitle>
-);
+app.on('ready', createWindow);
 
-export default Page;
+app.on('window-all-closed', () => {
+    if ('darwin' !== process.platform) {
+        app.quit();
+    }
+});
+
+app.on('activate', () => {
+    if (mainWindow === null) {
+        createWindow();
+    }
+});

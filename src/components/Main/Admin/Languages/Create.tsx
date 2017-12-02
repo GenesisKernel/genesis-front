@@ -16,10 +16,8 @@
 
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
 
-import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'containers/Widgets/Heading';
+import Wrapper from 'components/Wrapper';
 import LocaleEditor from './LocaleEditor';
 
 export interface ICreateProps {
@@ -118,35 +116,42 @@ class Create extends React.Component<ICreateProps, ICreateState> {
 
     render() {
         return (
-            <DocumentTitle title="admin.languages.create" defaultTitle="Create localization">
-                <div>
-                    <Heading>
+            <Wrapper
+                type="noscroll"
+                title={{
+                    title: 'admin.languages',
+                    defaultTitle: 'Language resources'
+                }}
+                heading={{
+                    content: (
                         <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
-                    </Heading>
-                    <div className="content-wrapper">
-                        <ol className="breadcrumb">
-                            <li>
-                                <Link to="/admin/languages">
-                                    <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
-                                </Link>
-                            </li>
-                            <li>
-                                <FormattedMessage id="admin.languages.create" defaultMessage="Create localization" />
-                            </li>
-                        </ol>
-                        <LocaleEditor
-                            contractName="@1NewLang"
-                            translations={this.state.translations}
-                            onNewLocale={this.onNewLocale.bind(this)}
-                            onDropLocale={this.onDropLocale.bind(this)}
-                            onTranslationUpdate={this.onTranslationUpdate.bind(this)}
-                            resolveTranslationValue={this.resolveTranslationValue.bind(this)}
-                            mapContractParams={this.mapContractParams.bind(this)}
-                            onExec={this.onExec.bind(this)}
-                        />
-                    </div>
-                </div>
-            </DocumentTitle>
+                    )
+                }}
+                breadcrumbs={[
+                    {
+                        url: '/admin/languages',
+                        title: (
+                            <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
+                        )
+                    },
+                    {
+                        title: (
+                            <FormattedMessage id="admin.languages.create" defaultMessage="Create localization" />
+                        )
+                    }
+                ]}
+            >
+                <LocaleEditor
+                    contractName="@1NewLang"
+                    translations={this.state.translations}
+                    onNewLocale={this.onNewLocale.bind(this)}
+                    onDropLocale={this.onDropLocale.bind(this)}
+                    onTranslationUpdate={this.onTranslationUpdate.bind(this)}
+                    resolveTranslationValue={this.resolveTranslationValue.bind(this)}
+                    mapContractParams={this.mapContractParams.bind(this)}
+                    onExec={this.onExec.bind(this)}
+                />
+            </Wrapper>
         );
     }
 }

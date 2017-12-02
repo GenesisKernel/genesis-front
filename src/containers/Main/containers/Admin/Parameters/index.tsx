@@ -19,6 +19,7 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getParameters } from 'modules/admin/actions';
 
+import DataPreloader from 'components/Animation/DataPreloader';
 import Parameters, { IParametersProps } from 'components/Main/Admin/Parameters';
 
 class ParametersContainer extends React.Component<IParametersProps & { getParameters: typeof getParameters.started }> {
@@ -28,7 +29,9 @@ class ParametersContainer extends React.Component<IParametersProps & { getParame
 
     render() {
         return (
-            <Parameters parameters={this.props.parameters} />
+            <DataPreloader data={[this.props.parameters]}>
+                <Parameters parameters={this.props.parameters} />
+            </DataPreloader>
         );
     }
 }

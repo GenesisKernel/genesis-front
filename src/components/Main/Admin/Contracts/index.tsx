@@ -16,86 +16,90 @@
 
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Col, Panel, Row } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { IContract } from 'lib/api';
 
-import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'containers/Widgets/Heading';
+import Wrapper from 'components/Wrapper';
+import Table, { ICellRenderer } from 'components/Table';
 
 export interface IContractsProps {
     contracts: IContract[];
 }
 
-const Contracts: React.SFC<IContractsProps> = (props) => (
-    <DocumentTitle title="admin.contracts" defaultTitle="Smart contracts">
-        <div>
-            <Heading>
-                <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
-                <div className="pull-right">
-                    <Link to="/admin/contracts/create" className="ml btn-tool">
-                        <em className="icon icon-plus" />
-                        <span>
-                            <FormattedMessage id="admin.contracts.create" defaultMessage="Create contract" />
-                        </span>
-                    </Link>
-                </div>
-            </Heading>
-            <div className="content-wrapper">
-                <ol className="breadcrumb">
-                    <li>
-                        <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
-                    </li>
-                </ol>
-                <Row>
-                    <Col md={12}>
-                        <Panel bsStyle="default">
-                            <table className="table table-striped table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th className="text-center">
-                                            <FormattedMessage id="admin.contracts.name" defaultMessage="Name" />
-                                        </th>
-                                        <th className="text-center">
-                                            <FormattedMessage id="admin.contracts.wallet" defaultMessage="Wallet" />
-                                        </th>
-                                        <th className="text-center">
-                                            <FormattedMessage id="admin.contracts.active" defaultMessage="Active" />
-                                        </th>
-                                        <th className="text-center">
-                                            <FormattedMessage id="admin.contracts.edit" defaultMessage="Edit" />
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {props.contracts && props.contracts.length && (
-                                        props.contracts.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10)).map(contract => (
-                                            <tr key={contract.id}>
-                                                <td>{contract.id}</td>
-                                                <td>{contract.name}</td>
-                                                <td>{contract.address}</td>
-                                                <td className="text-center">{contract.active}</td>
-                                                <td style={{ width: 1 }}>
-                                                    <Link to={`/admin/contracts/${contract.id}-${contract.name}`}>
-                                                        <Button bsStyle="default" className="btn-labeled btn-icon">
-                                                            <span className="btn-label">
-                                                                <em className="fa fa-edit" />
-                                                            </span>
-                                                        </Button>
-                                                    </Link>
-                                                </td>
-                                            </tr>
-                                        ))
-                                    )}
-                                </tbody>
-                            </table>
-                        </Panel>
-                    </Col>
-                </Row>
+const renderCell: ICellRenderer = (data, rowData) => {
+    switch (rowData.colIndex) {
+        case 0: return (
+            <div className="text-bold">
+                {data}
             </div>
-        </div>
-    </DocumentTitle>
+        );
+
+        case 3: return (
+            <div className="text-center">
+                {'1' === data ?
+                    (
+                        <em className="fa fa-check" />
+                    ) : (
+                        <span className="text-muted">-</span>
+                    )
+                }
+            </div>
+        );
+
+        case 4: return (
+            <Link to={`/admin/contracts/${rowData.rowData[0]}-${rowData.rowData[1]}`} className="btn btn-default btn-labeled btn-icon">
+                <span className="btn-label">
+                    <em className="icon-pencil" />
+                </span>
+            </Link>
+        );
+
+        default: return data;
+    }
+};
+
+const Contracts: React.SFC<IContractsProps & InjectedIntlProps> = (props) => (
+    <Wrapper
+        type="fullscreen"
+        title={{
+            title: 'admin.contracts',
+            defaultTitle: 'Smart contracts'
+        }}
+        heading={{
+            content: (
+                <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
+            ),
+            toolButtons: [
+                {
+                    url: '/admin/contracts/create',
+                    icon: 'icon-plus',
+                    title: (
+                        <FormattedMessage id="admin.contracts.create" defaultMessage="Create contract" />
+                    )
+                }
+            ]
+        }}
+        breadcrumbs={[
+            {
+                title: (
+                    <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
+                )
+            }
+        ]}
+    >
+        <Table
+            striped
+            renderCell={renderCell}
+            data={props.contracts.map(contract => [contract.id, contract.name, contract.address, contract.active])}
+            columns={[
+                { title: 'ID', sortable: true, width: 80 },
+                { title: props.intl.formatMessage({ id: 'admin.contracts.name', defaultMessage: 'Name' }), sortable: true },
+                { title: props.intl.formatMessage({ id: 'admin.contracts.wallet', defaultMessage: 'Wallet' }), sortable: true, width: 200 },
+                { title: props.intl.formatMessage({ id: 'admin.contracts.active', defaultMessage: 'Active' }), sortable: true, width: 1 },
+                { width: 1 }
+            ]}
+        />
+    </Wrapper>
 );
 
-export default Contracts;
+export default injectIntl(Contracts);

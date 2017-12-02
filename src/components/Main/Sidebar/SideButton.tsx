@@ -19,6 +19,8 @@ import styled from 'styled-components';
 import sidebarStyle from './style';
 
 const StyledButton = styled.button`
+    -webkit-user-select: none;
+    -webkit-app-region: no-drag;
     background-color: rgba(255,255,255,0);
     transition: background-color ease-in-out .15s, color ease-in-out .15s;
     padding: 0;
@@ -32,6 +34,7 @@ const StyledButton = styled.button`
     text-align: left;
     white-space: nowrap;
     border: 0;
+    border-radius: 0;
 
     em {
         border: solid 1px transparent;

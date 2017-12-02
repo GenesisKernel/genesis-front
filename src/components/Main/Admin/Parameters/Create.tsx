@@ -16,10 +16,8 @@
 
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
 
-import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'containers/Widgets/Heading';
+import Wrapper from 'components/Wrapper';
 import ParameterEditor from './ParameterEditor';
 
 export interface ICreateProps {
@@ -68,34 +66,41 @@ class Create extends React.Component<ICreateProps, ICreateState> {
 
     render() {
         return (
-            <DocumentTitle title="admin.parameters.create" defaultTitle="Create parameter">
-                <div>
-                    <Heading>
+            <Wrapper
+                type="noscroll"
+                title={{
+                    title: 'admin.parameters.create',
+                    defaultTitle: 'Create parameter'
+                }}
+                heading={{
+                    content: (
                         <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
-                    </Heading>
-                    <div className="content-wrapper">
-                        <ol className="breadcrumb">
-                            <li>
-                                <Link to="/admin/parameters">
-                                    <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
-                                </Link>
-                            </li>
-                            <li>
-                                <FormattedMessage id="admin.create" defaultMessage="Create" />
-                            </li>
-                        </ol>
-                        <ParameterEditor
-                            value={this.state.value}
-                            conditions={this.state.conditions}
-                            contractName="@1NewParameter"
-                            mapContractParams={this.mapContractParams.bind(this)}
-                            onExec={this.onExec.bind(this)}
-                            onValueEdit={this.onValueEdit.bind(this)}
-                            onConditionsEdit={this.onConditionsEdit.bind(this)}
-                        />
-                    </div>
-                </div>
-            </DocumentTitle>
+                    )
+                }}
+                breadcrumbs={[
+                    {
+                        url: '/admin/parameters',
+                        title: (
+                            <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
+                        )
+                    },
+                    {
+                        title: (
+                            <FormattedMessage id="admin.create" defaultMessage="Create" />
+                        )
+                    }
+                ]}
+            >
+                <ParameterEditor
+                    value={this.state.value}
+                    conditions={this.state.conditions}
+                    contractName="@1NewParameter"
+                    mapContractParams={this.mapContractParams.bind(this)}
+                    onExec={this.onExec.bind(this)}
+                    onValueEdit={this.onValueEdit.bind(this)}
+                    onConditionsEdit={this.onConditionsEdit.bind(this)}
+                />
+            </Wrapper>
         );
     }
 }

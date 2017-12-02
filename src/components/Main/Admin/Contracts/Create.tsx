@@ -17,13 +17,11 @@
 import * as React from 'react';
 import { FormControlProps } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
 
-import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'containers/Widgets/Heading';
+import Wrapper from 'components/Wrapper';
 import ContractEditor from './ContractEditor';
 
-interface ICreateProps {
+export interface ICreateProps {
     navigate: (url: string) => void;
 }
 
@@ -90,37 +88,44 @@ class Create extends React.Component<ICreateProps, ICreateState> {
 
     render() {
         return (
-            <DocumentTitle title="admin.contracts.create" defaultTitle="Create contract">
-                <div>
-                    <Heading>
+            <Wrapper
+                type="noscroll"
+                title={{
+                    title: 'admin.contracts.create',
+                    defaultTitle: 'Create contract'
+                }}
+                heading={{
+                    content: (
                         <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
-                    </Heading>
-                    <div className="content-wrapper">
-                        <ol className="breadcrumb">
-                            <li>
-                                <Link to="/admin/contracts">
-                                    <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
-                                </Link>
-                            </li>
-                            <li>
-                                <FormattedMessage id="admin.interface.contracts.create" defaultMessage="Create contract" />
-                            </li>
-                        </ol>
-                        <ContractEditor
-                            contractName="@1NewContract"
-                            mapContractParams={this.mapContractParams.bind(this)}
+                    )
+                }}
+                breadcrumbs={[
+                    {
+                        url: '/admin/contracts',
+                        title: (
+                            <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
+                        )
+                    },
+                    {
+                        title: (
+                            <FormattedMessage id="admin.interface.contracts.create" defaultMessage="Create" />
+                        )
+                    }
+                ]}
+            >
+                <ContractEditor
+                    contractName="@1NewContract"
+                    mapContractParams={this.mapContractParams.bind(this)}
 
-                            code={this.state.code}
-                            wallet={this.state.wallet}
-                            conditions={this.state.conditions}
-                            onSourceEdit={this.onSourceEdit.bind(this)}
-                            onWalletEdit={this.onWalletEdit.bind(this)}
-                            onConditionsEdit={this.onConditionsEdit.bind(this)}
-                            onExec={this.onExec.bind(this)}
-                        />
-                    </div>
-                </div>
-            </DocumentTitle>
+                    code={this.state.code}
+                    wallet={this.state.wallet}
+                    conditions={this.state.conditions}
+                    onSourceEdit={this.onSourceEdit.bind(this)}
+                    onWalletEdit={this.onWalletEdit.bind(this)}
+                    onConditionsEdit={this.onConditionsEdit.bind(this)}
+                    onExec={this.onExec.bind(this)}
+                />
+            </Wrapper>
         );
     }
 }

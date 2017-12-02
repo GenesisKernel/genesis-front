@@ -16,7 +16,7 @@
 
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { IRootState } from 'modules';
 
 import Main, { IMainProps } from 'components/Main';
@@ -51,10 +51,11 @@ import Debug from 'containers/Main/containers/Debug';
 import DebugWs from 'containers/Main/containers/Debug/Ws';
 import Backup from 'containers/Main/containers/Backup';
 import NotFound from 'containers/Main/containers/NotFound';
+import { AnimatedSwitch } from 'components/Animation';
 
 const MainContainer: React.SFC<IMainProps> = props => (
     <Main {...props}>
-        <Switch>
+        <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
             <Route exact path="/" component={DefaultPage} />
 
             <Route exact path="/admin/tables" component={Tables} />
@@ -89,7 +90,7 @@ const MainContainer: React.SFC<IMainProps> = props => (
             <Route exact path="/debug/ws" component={DebugWs} />
             <Route exact path="/backup" component={Backup} />
             <Route path="*" component={NotFound} />
-        </Switch>
+        </AnimatedSwitch>
     </Main>
 );
 

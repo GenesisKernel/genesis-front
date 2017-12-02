@@ -19,6 +19,7 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getLanguage } from 'modules/admin/actions';
 
+import DataPreloader from 'components/Animation/DataPreloader';
 import Edit, { IEditProps } from 'components/Main/Admin/Languages/Edit';
 
 class EditContainer extends React.Component<IEditProps & { translation: any, getLanguage: typeof getLanguage.started, match: { params: { translationID: string } } }> {
@@ -30,7 +31,9 @@ class EditContainer extends React.Component<IEditProps & { translation: any, get
 
     render() {
         return (
-            <Edit {...this.props} />
+            <DataPreloader data={[this.props.translation]}>
+                <Edit translation={this.props.translation} />
+            </DataPreloader>
         );
     }
 }
