@@ -17,6 +17,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { IStoredKey } from 'lib/storage';
+import imgAvatar from 'images/avatar.svg';
 
 export interface IUserMenuProps {
     collapsed: boolean;
@@ -42,12 +43,15 @@ const UserMenu: React.SFC<IUserMenuProps> = (props) => props.account ? (
                             <FormattedMessage id="auth.account.current" defaultMessage="Current account" />
                         </div>
                         <div className="pull-left">
-                            <em className="fa fa-credit-card fa-2x text-info" />
+                            <img src={props.account.ecosystems[props.ecosystem].avatar || imgAvatar} style={{ maxWidth: 36, maxHeight: 36 }}/>
                         </div>
                         <div className="media-box-body clearfix">
-                            <p className="m0">{props.account.id}</p>
+                            <p className="m0">
+                                <b>{props.account.ecosystems[props.ecosystem].name || props.ecosystem}</b>
+                                <span>({props.account.ecosystems[props.ecosystem].type || props.account.id})</span>
+                            </p>
                             <p className="m0 text-muted">
-                                <small>{props.account.ecosystems[props.ecosystem].name || props.ecosystem}</small>
+                                <small>{props.account.address}</small>
                             </p>
                         </div>
                     </div>
