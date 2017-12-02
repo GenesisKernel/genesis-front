@@ -20,7 +20,8 @@ import { IRootState } from 'modules';
 import { getParameter } from 'modules/admin/actions';
 import { IParameterResponse } from 'lib/api';
 
-import Edit from 'components/Main/Admin/Parameters/Edit';
+import DataPreloader from 'components/Animation/DataPreloader';
+import Edit, { IEditProps } from 'components/Main/Admin/Parameters/Edit';
 
 export interface IEditContainerProps {
     vde?: boolean;
@@ -45,7 +46,9 @@ class EditContainer extends React.Component<IEditContainerProps & IEditContainer
 
     render() {
         return (
-            <Edit parameter={this.props.parameter} vde={this.props.vde} />
+            <DataPreloader data={[this.props.parameter]}>
+                <Edit parameter={this.props.parameter} vde={this.props.vde} />
+            </DataPreloader>
         );
     }
 }

@@ -34,59 +34,56 @@ export interface IParameterEditorProps {
 }
 
 const ParameterEditor: React.SFC<IParameterEditorProps> = (props) => (
-    <ValidatedContractForm vde={props.vde} contractName={props.contractName} mapContractParams={props.mapContractParams} onExec={props.onExec}>
-        <div className="panel panel-default">
-            <div className="panel-body">
-                <Validation.components.ValidatedFormGroup for="name">
-                    <label htmlFor="name">
-                        <FormattedMessage id="admin.parameters.name" defaultMessage="Name" />
-                    </label>
-                    {props.name ?
-                        (
-                            <Validation.components.ValidatedControl key="nameEdit" type="text" name="name" readOnly value={props.name} />
-                        ) : (
-                            <Validation.components.ValidatedControl key="nameCreate" type="text" name="name" validators={[Validation.validators.required]} />
-                        )
-                    }
-                </Validation.components.ValidatedFormGroup>
-                <Validation.components.ValidatedFormGroup for="value">
-                    <label htmlFor="value">
-                        <FormattedMessage id="admin.parameters.value" defaultMessage="Value" />
-                    </label>
-                    {'stylesheet' === props.name ?
-                        (
-                            <div className="form-control" style={{ height: 'auto', padding: 0 }}>
-                                <Editor
-                                    height={400}
-                                    language="css"
-                                    value={props.value}
-                                    onChange={value => props.onValueEdit(value)}
-                                    options={{
-                                        automaticLayout: true,
-                                        contextmenu: false,
-                                        scrollBeyondLastLine: false
-                                    }}
-                                />
-                            </div>
-                        ) : (
-                            <Validation.components.ValidatedTextarea name="value" onChange={e => props.onValueEdit(e.target.value)} value={props.value || ''} validators={[Validation.validators.required]} />
-                        )
-                    }
-                </Validation.components.ValidatedFormGroup>
-                <Validation.components.ValidatedFormGroup for="conditions" className="mb0">
-                    <label htmlFor="conditions">
-                        <FormattedMessage id="admin.conditions.change" defaultMessage="Change conditions" />
-                    </label>
-                    <Validation.components.ValidatedTextarea name="conditions" onChange={e => props.onConditionsEdit(e.target.value)} value={props.conditions || ''} validators={[Validation.validators.required]} />
-                </Validation.components.ValidatedFormGroup>
-            </div>
-            <div className="panel-footer">
-                <div className="clearfix">
-                    <Validation.components.ValidatedSubmit bsStyle="primary" className="pull-right">
-                        <FormattedMessage id="admin.save" defaultMessage="Save" />
-                    </Validation.components.ValidatedSubmit>
-                </div>
-            </div>
+    <ValidatedContractForm className="flex-col flex-stretch" vde={props.vde} contractName={props.contractName} mapContractParams={props.mapContractParams} onExec={props.onExec}>
+        <Validation.components.ValidatedFormGroup for="name">
+            <label htmlFor="name">
+                <FormattedMessage id="admin.parameters.name" defaultMessage="Name" />
+            </label>
+            {props.name ?
+                (
+                    <Validation.components.ValidatedControl key="nameEdit" type="text" name="name" readOnly value={props.name} />
+                ) : (
+                    <Validation.components.ValidatedControl key="nameCreate" type="text" name="name" validators={[Validation.validators.required]} />
+                )
+            }
+        </Validation.components.ValidatedFormGroup>
+
+        <Validation.components.ValidatedFormGroup for="value" className="flex-col flex-stretch">
+            <label htmlFor="value">
+                <FormattedMessage id="admin.parameters.value" defaultMessage="Value" />
+            </label>
+            {'stylesheet' === props.name ?
+                (
+                    <div className="form-control flex-col flex-stretch p0">
+                        <Editor
+                            language="css"
+                            value={props.value}
+                            onChange={value => props.onValueEdit(value)}
+                            options={{
+                                automaticLayout: true,
+                                contextmenu: false,
+                                scrollBeyondLastLine: false
+                            }}
+                        />
+                    </div>
+                ) : (
+                    <Validation.components.ValidatedTextarea className="flex-stretch" name="value" onChange={e => props.onValueEdit(e.target.value)} value={props.value || ''} validators={[Validation.validators.required]} />
+                )
+            }
+        </Validation.components.ValidatedFormGroup>
+
+        <Validation.components.ValidatedFormGroup for="conditions" className="mb0">
+            <label htmlFor="conditions">
+                <FormattedMessage id="admin.conditions.change" defaultMessage="Change conditions" />
+            </label>
+            <Validation.components.ValidatedControl type="text" name="conditions" onChange={e => props.onConditionsEdit((e.target as HTMLInputElement).value)} value={props.conditions || ''} validators={[Validation.validators.required]} />
+        </Validation.components.ValidatedFormGroup>
+
+        <div>
+            <hr />
+            <Validation.components.ValidatedSubmit bsStyle="primary">
+                <FormattedMessage id="admin.save" defaultMessage="Save" />
+            </Validation.components.ValidatedSubmit>
         </div>
     </ValidatedContractForm>
 );

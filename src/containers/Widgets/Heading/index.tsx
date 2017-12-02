@@ -18,26 +18,35 @@ import * as React from 'react';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
 
+import sidebarStyle from 'components/Main/Sidebar/style';
 import Heading from 'components/Heading';
 
+export interface IHeadingContainerProps {
+    className?: string;
+}
+
 interface IHeadingContainerState {
-    left: number;
+    navigationVisible: boolean;
+    navigationWidth: number;
 }
 
 interface IHeadingContainerDispatch {
 
 }
 
-const HeadingContainer: React.SFC<IHeadingContainerState & IHeadingContainerDispatch> = (props) => (
-    <Heading {...props} />
+const HeadingContainer: React.SFC<IHeadingContainerProps & IHeadingContainerState & IHeadingContainerDispatch> = (props) => (
+    <Heading className={props.className} left={props.navigationVisible ? props.navigationWidth : sidebarStyle.collapsedSize}>
+        {props.children}
+    </Heading>
 );
 
 const mapStateToProps = (state: IRootState) => ({
-    left: state.content.navigationWidth
+    navigationVisible: state.content.navigationVisible,
+    navigationWidth: state.content.navigationWidth
 });
 
 const mapDispatchToProps = {
 
 };
 
-export default connect<IHeadingContainerState, IHeadingContainerDispatch, {}>(mapStateToProps, mapDispatchToProps)(HeadingContainer);
+export default connect<IHeadingContainerState, IHeadingContainerDispatch, IHeadingContainerProps>(mapStateToProps, mapDispatchToProps)(HeadingContainer);

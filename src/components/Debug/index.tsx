@@ -121,6 +121,7 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                         <Col md={6}>
                             {this.state.result && (
                                 <Protypo
+                                    context="page"
                                     payload={this.state.result}
                                 />
                             )}

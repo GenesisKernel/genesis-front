@@ -18,6 +18,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 const StyledHeading = styled.div`
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
     position: fixed;
     right: 0;
     left: 0;
@@ -32,16 +34,22 @@ const StyledHeading = styled.div`
     border-bottom: 1px solid #cfdbe2;
     padding: 0 20px;
     border: 0;
+
+    &.proxy {
+        z-index: 0;
+        font-size: 0;
+    }
 `;
 
 export interface IHeadingProps {
+    className?: string;
     left?: number;
     right?: number;
     top?: number;
 }
 
 const Heading: React.SFC<IHeadingProps> = props => (
-    <StyledHeading style={{ left: props.left, right: props.right, top: props.top }}>
+    <StyledHeading className={props.className} style={{ left: props.left, right: props.right, top: props.top }}>
         {props.children}
     </StyledHeading >
 );

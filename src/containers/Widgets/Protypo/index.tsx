@@ -26,6 +26,7 @@ import { IProtypoElement } from 'components/Protypo/Protypo';
 export interface IProtypoContainerProps {
     vde?: boolean;
     wrapper?: JSX.Element;
+    context: string;
     payload: IProtypoElement[];
 }
 

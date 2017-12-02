@@ -17,14 +17,16 @@
 import * as React from 'react';
 import { resolveHandler, resolveFunction } from 'components/Protypo';
 import * as propTypes from 'prop-types';
+import contextDefinitions from './contexts';
 
-import Heading from 'components/Heading';
+import Heading from 'containers/Widgets/Heading';
 import { IValidationResult } from 'components/Validation/ValidatedForm';
 import ToolButton, { IToolButtonProps } from 'components/Protypo/components/ToolButton';
 
 export interface IProtypoProps {
     vde?: boolean;
     wrapper?: JSX.Element;
+    context: string;
     page: string;
     payload: IProtypoElement[];
     menuPush: (params: { name: string, content: IProtypoElement[] }) => void;
@@ -124,16 +126,26 @@ export default class Protypo extends React.Component<IProtypoProps> {
                 const Handler = resolveHandler(element.tag);
                 const func = resolveFunction(element.tag);
                 if (Handler) {
-                    const key = optionalKey || (this._lastID++).toString();
-                    return (
-                        <Handler {...element.attr} key={key} id={key} childrenTree={element.children}>
-                            {this.renderElements(element.children)}
-                        </Handler>
-                    );
+                    if (-1 !== contextDefinitions[this.props.context].disabledHandlers.indexOf(element.tag)) {
+                        return null;
+                    }
+                    else {
+                        const key = optionalKey || (this._lastID++).toString();
+                        return (
+                            <Handler {...element.attr} key={key} id={key} childrenTree={element.children}>
+                                {this.renderElements(element.children)}
+                            </Handler>
+                        );
+                    }
                 }
                 else if (func) {
-                    func(this, { ...element.attr });
-                    return null;
+                    if (-1 !== contextDefinitions[this.props.context].disabledFunctions.indexOf(element.tag)) {
+                        return null;
+                    }
+                    else {
+                        func(this, { ...element.attr });
+                        return null;
+                    }
                 }
                 else {
                     this._errors.push({
@@ -156,21 +168,16 @@ export default class Protypo extends React.Component<IProtypoProps> {
     }
 
     renderHeading() {
-        if (this._title || this._toolButtons.length) {
-            return (
-                <Heading key="func_heading">
-                    <span>{this._title}</span>
-                    <div className="pull-right">
-                        {this._toolButtons.map((props, index) => (
-                            <ToolButton {...props} key={index} />
-                        ))}
-                    </div>
-                </Heading>
-            );
-        }
-        else {
-            return null;
-        }
+        return this.props.context === 'page' ? (
+            <Heading key="func_heading">
+                <span>{this._title}</span>
+                <div className="pull-right">
+                    {this._toolButtons.map((props, index) => (
+                        <ToolButton {...props} key={index} />
+                    ))}
+                </div>
+            </Heading>
+        ) : null;
     }
 
     render() {
@@ -197,13 +204,17 @@ export default class Protypo extends React.Component<IProtypoProps> {
             head,
             ...body
         ];
-        const wrapper = React.cloneElement(this.props.wrapper || <div />, {
-            className:
-                (this.props.wrapper ? this.props.wrapper.props.className : '') +
-                (head ? '' : ' no-head')
-        }, children);
 
-        return wrapper;
+        if (this.props.wrapper) {
+            return React.cloneElement(this.props.wrapper, this.props.wrapper.props, children);
+        }
+        else {
+            return (
+                <div className="fullscreen">
+                    {children}
+                </div>
+            );
+        }
     }
 }
 

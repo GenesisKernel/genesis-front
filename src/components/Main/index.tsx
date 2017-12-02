@@ -22,13 +22,14 @@ import sidebarStyle from './Sidebar/style';
 
 import Navigation from 'containers/Main/Navigation';
 import Sidebar from 'containers/Main/Sidebar';
+import Heading from 'containers/Widgets/Heading';
 
 const StyledWrapper = styled.div`
     background-color: #f6f8fa;
 `;
 
 const StyledContent = styled.section`
-    margin-top: 0 !important;
+    margin-top: 46px !important;
     transition: none !important;
 `;
 
@@ -58,6 +59,7 @@ const Main: React.SFC<IMainProps> = props => (
                 transitionIn="fadeIn"
                 transitionOut="fadeOut"
             />
+            <Heading className="proxy" />
             {props.children}
         </StyledContent>
     </StyledWrapper>

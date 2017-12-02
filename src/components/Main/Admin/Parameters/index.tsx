@@ -15,107 +15,95 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { Button, Panel } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl';
+import { Button } from 'react-bootstrap';
+import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { IParameterResponse } from 'lib/api';
 
-import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'containers/Widgets/Heading';
+import Wrapper from 'components/Wrapper';
+import Table, { ICellRenderer } from 'components/Table';
 
 export interface IParametersProps {
     vde?: boolean;
     parameters: IParameterResponse[];
 }
 
-const Parameters: React.SFC<IParametersProps> = (props) => (
-    <DocumentTitle title="admin.parameters" defaultTitle="Ecosystem parameters">
-        <div>
-            <Heading>
-                <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
-                <div className="pull-right">
-                    <Link to={props.vde ? '/vde/parameters/stylesheet' : '/admin/parameters/stylesheet'} className="ml btn-tool">
-                        <em className="icon icon-picture" />
-                        <span>
-                            <FormattedMessage id="admin.parameters.stylesheet" defaultMessage="Manage stylesheet" />
-                        </span>
-                    </Link>
-                    <Link to={props.vde ? '/vde/parameters/create' : '/admin/parameters/create'} className="ml btn-tool">
-                        <em className="icon icon-plus" />
-                        <span>
-                            <FormattedMessage id="admin.parameters.create" defaultMessage="Create" />
-                        </span>
-                    </Link>
-                </div>
-            </Heading>
-            <div className="content-wrapper">
-                <ol className="breadcrumb">
-                    <li>
-                        <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
-                    </li>
-                </ol>
-                <Panel bsStyle="default">
-                    <div className="table-responsive">
-                        {props.parameters && (
-                            <table className="table table-striped table-bordered table-hover ui-responsive ui-table ui-table-reflow">
-                                <thead>
-                                    <tr>
-                                        <th style={{ width: 1 }}>ID</th>
-                                        <th>
-                                            <FormattedMessage id="admin.parameters.name" defaultMessage="Name" />
-                                        </th>
-                                        <th>
-                                            <FormattedMessage id="admin.parameters.value" defaultMessage="Value" />
-                                        </th>
-                                        <th>
-                                            <FormattedMessage id="admin.parameters.conditions" defaultMessage="Change condittions" />
-                                        </th>
-                                        <th style={{ width: 1 }}>
-                                            <FormattedMessage id="admin.parameters.action" defaultMessage="Action" />
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {props.parameters.sort((a, b) => a.name > b.name ? 0 : 1).map(param => (
-                                        <tr key={param.id}>
-                                            <td>
-                                                {param.id}
-                                            </td>
-                                            <td>
-                                                {param.name}
-                                            </td>
-                                            <td>
-                                                {param.value}
-                                            </td>
-                                            <td>
-                                                {param.conditions}
-                                            </td>
-                                            <td>
-                                                <Link to={`/${props.vde ? 'vde' : 'admin'}/parameters/${param.name}`}>
-                                                    <Button bsStyle="default" className="btn-labeled btn-icon">
-                                                        <span className="btn-label">
-                                                            <em className="fa fa-edit" />
-                                                        </span>
-                                                    </Button>
-                                                </Link>
-                                                <Link to={`/${props.vde ? 'vde' : 'admin'}/tabs/parameter-${param.name}`}>
-                                                    <Button bsStyle="default" className="btn-labeled btn-icon">
-                                                        <span className="btn-label">
-                                                            <em className="fa fa-files-o" />
-                                                        </span>
-                                                    </Button>
-                                                </Link>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        )}
-                    </div>
-                </Panel>
+const renderParameter: ICellRenderer = (value, rowData) => {
+    switch (rowData.colIndex) {
+        case 0: return (
+            <div className="text-bold">
+                {value}
             </div>
-        </div>
-    </DocumentTitle>
+        );
+
+        case 1: return value ? value : (
+            <em className="text-muted">
+                <FormattedMessage id="admin.parameters.empty" defaultMessage="Empty parameter" />
+            </em>
+        );
+
+        case 3: return (
+            <Link to={`/${rowData.rowData[3] ? 'vde' : 'admin'}/parameters/${rowData.rowData[0]}`}>
+                <Button bsStyle="default" className="btn-labeled btn-icon">
+                    <span className="btn-label">
+                        <em className="icon-pencil" />
+                    </span>
+                </Button>
+            </Link>
+        );
+
+        default: return value;
+    }
+};
+
+const Parameters: React.SFC<IParametersProps & InjectedIntlProps> = (props) => (
+    <Wrapper
+        type="fullscreen"
+        title={{
+            title: 'admin.parameters',
+            defaultTitle: 'Ecosystem parameters'
+        }}
+        heading={{
+            content: (
+                <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
+            ),
+            toolButtons: [
+                {
+                    url: props.vde ? '/vde/parameters/stylesheet' : '/admin/parameters/stylesheet',
+                    icon: 'icon-picture',
+                    title: (
+                        <FormattedMessage id="admin.parameters.stylesheet" defaultMessage="Manage stylesheet" />
+                    )
+                },
+                {
+                    url: props.vde ? '/vde/parameters/create' : '/admin/parameters/create',
+                    icon: 'icon-picture',
+                    title: (
+                        <FormattedMessage id="admin.parameters.create" defaultMessage="Create" />
+                    )
+                }
+            ]
+        }}
+        breadcrumbs={[
+            {
+                title: (
+                    <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
+                )
+            }
+        ]}
+    >
+        <Table
+            striped
+            renderCell={renderParameter}
+            columns={[
+                { title: props.intl.formatMessage({ id: 'admin.parameters.name', defaultMessage: 'Name' }), sortable: true },
+                { title: props.intl.formatMessage({ id: 'admin.parameters.value', defaultMessage: 'Value' }), sortable: true, width: '100%' },
+                { title: props.intl.formatMessage({ id: 'admin.parameters.conditions', defaultMessage: 'Conditions' }), sortable: true, width: 1 },
+                { width: 1 }
+            ]}
+            data={props.parameters.map(p => [p.name, p.value, p.conditions, props.vde])}
+        />
+    </Wrapper>
 );
 
-export default Parameters;
+export default injectIntl(Parameters);

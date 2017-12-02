@@ -15,11 +15,10 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { Button, Col, Row, FormControlProps } from 'react-bootstrap';
+import { Button, Col, FormControlProps, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import Editor from 'components/Editor';
 
-import TxButton from 'containers/Widgets/TxButton';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 
@@ -39,99 +38,73 @@ interface IContractEditorProps {
     };
     onSourceEdit: (code: string) => void;
     onWalletEdit: React.FormEventHandler<React.Component<FormControlProps>>;
-    onConditionsEdit: React.ChangeEventHandler<HTMLTextAreaElement>;
-    onContractActivation?: (block: string, error: string) => void;
+    onConditionsEdit: React.ChangeEventHandler<React.Component<FormControlProps>>;
     onExec?: (block: string, error: string) => void;
     mapContractParams: (values: { [key: string]: any }) => { values: { [key: string]: any } };
 }
 
 const ContractEditor: React.SFC<IContractEditorProps> = (props) => (
-    <Row>
-        <Col md={12}>
-            <ValidatedContractForm vde={props.vde} contractName={props.contractName} mapContractParams={props.mapContractParams} onExec={props.onExec && props.onExec}>
-                <div className="panel panel-default">
-                    <div className="panel-body">
-                        <Validation.components.ValidatedFormGroup for="content">
-                            <label htmlFor="content">
-                                <FormattedMessage id="admin.contract.code" defaultMessage="Code" />
-                            </label>
-                            <div className="form-control" style={{ height: 'auto', padding: 0 }}>
-                                <Editor
-                                    height={400}
-                                    language="simvolio"
-                                    value={props.code}
-                                    onChange={props.onSourceEdit}
-                                    options={{
-                                        automaticLayout: true,
-                                        contextmenu: false,
-                                        scrollBeyondLastLine: false
-                                    }}
-                                />
-                            </div>
-                        </Validation.components.ValidatedFormGroup>
-                        {props.contract && !props.vde && (
-                            <Validation.components.ValidatedFormGroup for="active">
-                                <label htmlFor="active">
-                                    <FormattedMessage id="admin.contracts.active" defaultMessage="Active" />
-                                </label>
-                                <p className="form-control-static">
-                                    {'1' === props.contract.active ?
-                                        (
-                                            <FormattedMessage id="admin.contracts.active.true" defaultMessage="True" />
-                                        ) : (
-                                            <span className="clearfix">
-                                                <FormattedMessage id="admin.contracts.active.false" defaultMessage="False" />
-                                                <TxButton
-                                                    contractName="@1ActivateContract"
-                                                    contractParams={{ Id: props.contract.id }}
-                                                    className="btn btn-primary pull-right"
-                                                    onExec={props.onContractActivation}
-                                                >
-                                                    <FormattedMessage id="admin.contracts.activate" defaultMessage="Activate" />
-                                                </TxButton>
-                                            </span>
-                                        )
-                                    }
-                                </p>
-                            </Validation.components.ValidatedFormGroup>
-                        )}
-                        {!props.vde && (
-                            <Validation.components.ValidatedFormGroup for="address">
-                                <label htmlFor="address">
-                                    <FormattedMessage id="admin.contracts.wallet" defaultMessage="Wallet" />
-                                </label>
-                                {props.contract ?
-                                    (
-                                        <Validation.components.ValidatedControl key="walletEdit" name="wallet" value={props.wallet} readOnly />
-                                    ) : (
-                                        <Validation.components.ValidatedControl key="walletCreate" name="wallet" onChange={props.onWalletEdit} value={props.wallet} />
-                                    )
-                                }
-                            </Validation.components.ValidatedFormGroup>
-                        )}
-                        <Validation.components.ValidatedFormGroup for="conditions" className="mb0">
-                            <label htmlFor="conditions">
-                                <FormattedMessage id="admin.conditions.change" defaultMessage="Change conditions" />
-                            </label>
-                            <Validation.components.ValidatedTextarea name="conditions" onChange={props.onConditionsEdit} value={props.conditions} validators={[Validation.validators.required]} />
-                        </Validation.components.ValidatedFormGroup>
-                    </div>
-                    <div className="panel-footer">
-                        <div className="clearfix">
-                            <Button bsStyle="default" type="button" className="pull-left" disabled>
-                                <em className="fa fa-code fa-fw mr-sm" />
-                                <FormattedMessage id="admin.contract.format" defaultMessage="Format code" />
-                            </Button>
+    <ValidatedContractForm vde={props.vde} className="flex-col flex-stretch" contractName={props.contractName} mapContractParams={props.mapContractParams} onExec={props.onExec}>
+        <Validation.components.ValidatedFormGroup for="content" className="flex-col flex-stretch">
+            <div className="form-control p0 flex-col flex-stretch">
+                <Editor
+                    height={400}
+                    language="simvolio"
+                    value={props.code}
+                    onChange={props.onSourceEdit}
+                    options={{
+                        automaticLayout: true,
+                        contextmenu: false,
+                        scrollBeyondLastLine: false
+                    }}
+                />
+            </div>
+        </Validation.components.ValidatedFormGroup>
+        <Validation.components.ValidatedFormGroup for="address">
+            <label htmlFor="address">
+                <FormattedMessage id="admin.contracts.wallet" defaultMessage="Wallet" />
+            </label>
+            <Row className="p0">
+                <Col md={props.contract ? 10 : 12}>
+                    <Validation.components.ValidatedControl key="walletCreate" name="wallet" onChange={props.onWalletEdit} value={props.wallet} />
+                </Col>
+                {props.contract && (
+                    <Col md={2}>
+                        {'1' === props.contract.active ?
+                            (
+                                <Button bsStyle="primary" block>
+                                    <FormattedMessage id="admin.contracts.bind" defaultMessage="Bind" />
+                                </Button>
+                            ) : (
+                                <Button bsStyle="primary" block>
+                                    <FormattedMessage id="admin.contracts.unbind" defaultMessage="Unbind" />
+                                </Button>
+                            )
+                        }
+                    </Col>
+                )}
+            </Row>
+        </Validation.components.ValidatedFormGroup>
+        <Validation.components.ValidatedFormGroup for="conditions" className="mb0">
+            <label htmlFor="conditions">
+                <FormattedMessage id="admin.conditions.change" defaultMessage="Change conditions" />
+            </label>
+            <Validation.components.ValidatedControl type="text" name="conditions" onChange={props.onConditionsEdit} value={props.conditions} validators={[Validation.validators.required]} />
+        </Validation.components.ValidatedFormGroup>
 
-                            <Validation.components.ValidatedSubmit bsStyle="primary" className="pull-right">
-                                <FormattedMessage id="admin.save" defaultMessage="Save" />
-                            </Validation.components.ValidatedSubmit>
-                        </div>
-                    </div>
-                </div>
-            </ValidatedContractForm>
-        </Col>
-    </Row >
+        <div>
+            <hr />
+            <Validation.components.ValidatedSubmit bsStyle="primary">
+                <FormattedMessage id="admin.save" defaultMessage="Save" />
+            </Validation.components.ValidatedSubmit>
+
+            <Button bsStyle="link" type="button" disabled>
+                <em className="fa fa-code fa-fw mr-sm" />
+                <FormattedMessage id="admin.contract.format" defaultMessage="Format code" />
+            </Button>
+        </div>
+
+    </ValidatedContractForm>
 );
 
 export default ContractEditor;

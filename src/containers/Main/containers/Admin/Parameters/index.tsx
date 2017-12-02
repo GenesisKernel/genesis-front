@@ -20,7 +20,8 @@ import { IRootState } from 'modules';
 import { getParameters } from 'modules/admin/actions';
 import { IParameterResponse } from 'lib/api';
 
-import Parameters from 'components/Main/Admin/Parameters';
+import DataPreloader from 'components/Animation/DataPreloader';
+import Parameters, { IParametersProps } from 'components/Main/Admin/Parameters';
 
 export interface IParametersContainerProps {
     vde?: boolean;
@@ -51,7 +52,9 @@ class ParametersContainer extends React.Component<IParametersContainerProps & IP
 
     render() {
         return (
-            <Parameters parameters={this.props.parameters} vde={this.props.vde} />
+            <DataPreloader data={[this.props.parameters]}>
+                <Parameters parameters={this.props.parameters} vde={this.props.vde} />
+            </DataPreloader>
         );
     }
 }

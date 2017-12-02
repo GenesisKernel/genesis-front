@@ -16,10 +16,8 @@
 
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
 
-import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'containers/Widgets/Heading';
+import Wrapper from 'components/Wrapper';
 import LocaleEditor from './LocaleEditor';
 
 export interface IEditProps {
@@ -92,6 +90,19 @@ class Edit extends React.Component<IEditProps, IEditState> {
         });
     }
 
+    onDropLocale(index: number) {
+        if (1 >= this.state.translations.length) {
+            return;
+        }
+
+        this.setState({
+            translations: [
+                ...this.state.translations.slice(0, index),
+                ...this.state.translations.slice(index + 1)
+            ]
+        });
+    }
+
     onTranslationUpdate(index: number, property: string, value: any) {
         const translation = this.state.translations[index];
         if (translation) {
@@ -124,35 +135,41 @@ class Edit extends React.Component<IEditProps, IEditState> {
 
     render() {
         return (
-            <DocumentTitle title={this.props.translation && this.props.translation.name}>
-                <div>
-                    <Heading>
+            <Wrapper
+                type="noscroll"
+                title={{
+                    title: 'admin.languages',
+                    defaultTitle: 'Language resources'
+                }}
+                heading={{
+                    content: (
                         <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
-                    </Heading>
-                    <div className="content-wrapper">
-                        <ol className="breadcrumb">
-                            <li>
-                                <Link to={this.props.vde ? '/vde/languages' : '/admin/languages'}>
-                                    <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
-                                </Link>
-                            </li>
-                            <li>
-                                {this.props.translation && this.props.translation.name}
-                            </li>
-                        </ol>
-                        <LocaleEditor
-                            vde={this.props.vde}
-                            contractName="@1EditLang"
-                            translation={this.props.translation && this.props.translation.name}
-                            translations={this.state.translations}
-                            onNewLocale={this.onNewLocale.bind(this)}
-                            onTranslationUpdate={this.onTranslationUpdate.bind(this)}
-                            resolveTranslationValue={this.resolveTranslationValue.bind(this)}
-                            mapContractParams={this.mapContractParams.bind(this)}
-                        />
-                    </div>
-                </div>
-            </DocumentTitle>
+                    )
+                }}
+                breadcrumbs={[
+                    {
+                        url: this.props.vde ? '/vde/languages' : '/admin/languages',
+                        title: (
+                            <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
+                        )
+                    },
+                    {
+                        title: this.props.translation.name
+                    }
+                ]}
+            >
+                <LocaleEditor
+                    vde={this.props.vde}
+                    contractName="@1EditLang"
+                    translation={this.props.translation.name}
+                    translations={this.state.translations}
+                    onNewLocale={this.onNewLocale.bind(this)}
+                    onDropLocale={this.onDropLocale.bind(this)}
+                    onTranslationUpdate={this.onTranslationUpdate.bind(this)}
+                    resolveTranslationValue={this.resolveTranslationValue.bind(this)}
+                    mapContractParams={this.mapContractParams.bind(this)}
+                />
+            </Wrapper>
         );
     }
 }

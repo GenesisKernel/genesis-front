@@ -16,11 +16,11 @@
 
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Col, Panel, Row } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl';
+import { Button } from 'react-bootstrap';
+import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 
-import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'containers/Widgets/Heading';
+import Wrapper from 'components/Wrapper';
+import Table, { ICellRenderer } from 'components/Table';
 
 export interface ILanguagesProps {
     vde?: boolean;
@@ -32,71 +32,69 @@ export interface ILanguagesProps {
     }[];
 }
 
-const Languages: React.SFC<ILanguagesProps> = (props) => (
-    <DocumentTitle title="admin.languages" defaultTitle="Language resources">
-        <div>
-            <Heading>
-                <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
-                <div className="pull-right">
-                    <Link to={props.vde ? '/vde/languages/create' : '/admin/languages/create'} className="ml btn-tool">
-                        <em className="icon icon-plus" />
-                        <span>
-                            <FormattedMessage id="admin.languages.create" defaultMessage="Create localization" />
-                        </span>
-                    </Link>
-                </div>
-            </Heading>
-            <div className="content-wrapper">
-                <ol className="breadcrumb">
-                    <li>
-                        <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
-                    </li>
-                </ol>
-                <Row>
-                    <Col md={12}>
-                        <Panel bsStyle="default">
-                            <table className="table table-striped table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th className="text-center">
-                                            <FormattedMessage id="admin.languages.name" defaultMessage="Name" />
-                                        </th>
-                                        <th className="text-center">
-                                            <FormattedMessage id="admin.languages.resources" defaultMessage="Resources" />
-                                        </th>
-                                        <th className="text-center">
-                                            <FormattedMessage id="admin.languages.edit" defaultMessage="Edit" />
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {props.resources && props.resources.length && (
-                                        props.resources.sort((a, b) => a.name > b.name ? 1 : 0).map(res => (
-                                            <tr key={res.id}>
-                                                <td>{res.id}</td>
-                                                <td>{res.name}</td>
-                                                <td>{res.res}</td>
-                                                <td style={{ width: 1 }}>
-                                                    <Link to={`/${props.vde ? 'vde' : 'admin'}/languages/${res.id}-${res.name}`}>
-                                                        <Button bsStyle="default" className="btn-labeled btn-icon">
-                                                            <span className="btn-label">
-                                                                <em className="fa fa-edit" />
-                                                            </span>
-                                                        </Button>
-                                                    </Link>
-                                                </td>
-                                            </tr>
-                                        ))
-                                    )}
-                                </tbody>
-                            </table>
-                        </Panel>
-                    </Col>
-                </Row>
+const renderLocale: ICellRenderer = (value, rowData) => {
+    switch (rowData.colIndex) {
+        case 0: return (
+            <div className="text-bold">
+                {value}
             </div>
-        </div>
-    </DocumentTitle>
+        );
+
+        case 4: return (
+            <Link to={`/${rowData.rowData[4] ? 'vde' : 'admin'}/languages/${rowData.rowData[0]}-${rowData.rowData[1]}`}>
+                <Button bsStyle="default" className="btn-labeled btn-icon">
+                    <span className="btn-label">
+                        <em className="icon-pencil" />
+                    </span>
+                </Button>
+            </Link>
+        );
+
+        default: return value;
+    }
+};
+
+const Languages: React.SFC<ILanguagesProps & InjectedIntlProps> = (props) => (
+    <Wrapper
+        type="fullscreen"
+        title={{
+            title: 'admin.languages',
+            defaultTitle: 'Language resources'
+        }}
+        heading={{
+            content: (
+                <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
+            ),
+            toolButtons: [
+                {
+                    url: props.vde ? '/vde/languages/create' : '/admin/languages/create',
+                    icon: 'icon-plus',
+                    title: (
+                        <FormattedMessage id="admin.languages.create" defaultMessage="Create localization" />
+                    )
+                }
+            ]
+        }}
+        breadcrumbs={[
+            {
+                title: (
+                    <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
+                )
+            }
+        ]}
+    >
+        <Table
+            striped
+            renderCell={renderLocale}
+            columns={[
+                { title: 'ID', sortable: true },
+                { title: props.intl.formatMessage({ id: 'admin.languages.name', defaultMessage: 'Name' }), sortable: true },
+                { title: props.intl.formatMessage({ id: 'admin.languages.resources', defaultMessage: 'Resources' }), width: '100%' },
+                { width: 1 }
+            ]}
+            data={props.resources.map(p => [p.id, p.name, p.res, p.conditions, props.vde])}
+        />
+    </Wrapper>
 );
 
-export default Languages;
+export default injectIntl(Languages);

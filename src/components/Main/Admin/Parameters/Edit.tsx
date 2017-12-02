@@ -16,11 +16,9 @@
 
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
 import { IParameterResponse } from 'lib/api';
 
-import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'containers/Widgets/Heading';
+import Wrapper from 'components/Wrapper';
 import ParameterEditor from './ParameterEditor';
 
 export interface IEditProps {
@@ -90,37 +88,40 @@ class Edit extends React.Component<IEditProps, IEditState> {
         }
 
         return (
-            <DocumentTitle title={this.props.parameter && this.props.parameter.name}>
-                <div>
-                    <Heading>
+            <Wrapper
+                type="noscroll"
+                title={{
+                    title: 'admin.parameters',
+                    defaultTitle: 'Ecosystem parameters'
+                }}
+                heading={{
+                    content: (
                         <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
-                    </Heading>
-                    <div className="content-wrapper">
-                        <ol className="breadcrumb">
-                            <li>
-                                <Link to={this.props.vde ? '/vde/parameters' : '/admin/parameters'}>
-                                    <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
-                                </Link>
-                            </li>
-                            {this.props.parameter && (
-                                <li>
-                                    {this.props.parameter.name}
-                                </li>
-                            )}
-                        </ol>
-                        <ParameterEditor
-                            vde={this.props.vde}
-                            name={this.props.parameter && this.props.parameter.name}
-                            value={this.state.value}
-                            conditions={this.state.conditions}
-                            contractName="@1EditParameter"
-                            mapContractParams={this.mapContractParams.bind(this)}
-                            onValueEdit={this.onValueEdit.bind(this)}
-                            onConditionsEdit={this.onConditionsEdit.bind(this)}
-                        />
-                    </div>
-                </div>
-            </DocumentTitle>
+                    )
+                }}
+                breadcrumbs={[
+                    {
+                        url: this.props.vde ? '/vde/parameters' : '/admin/parameters',
+                        title: (
+                            <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
+                        )
+                    },
+                    {
+                        title: this.props.parameter.name
+                    }
+                ]}
+            >
+                <ParameterEditor
+                    vde={this.props.vde}
+                    name={this.props.parameter.name}
+                    value={this.state.value}
+                    conditions={this.state.conditions}
+                    contractName="@1EditParameter"
+                    mapContractParams={this.mapContractParams.bind(this)}
+                    onValueEdit={this.onValueEdit.bind(this)}
+                    onConditionsEdit={this.onConditionsEdit.bind(this)}
+                />
+            </Wrapper>
         );
     }
 }

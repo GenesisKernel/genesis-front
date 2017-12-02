@@ -17,12 +17,24 @@
 /// <reference types="monaco-editor" />
 
 import * as React from 'react';
+import styled from 'styled-components';
 import MonacoEditor from 'react-monaco-editor';
 import registerProtypo from './protypo';
+
+const StyledEditor = styled.div`
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    > .react-monaco-editor-container {
+        flex: 1;
+    }
+`;
 
 interface IEditorProps {
     language?: string;
     value?: string;
+    width?: number;
     height?: number;
     options?: monaco.editor.IEditorOptions;
     onChange?: (code: string) => void;
@@ -35,19 +47,20 @@ export default class Editor extends React.Component<IEditorProps> {
 
     render() {
         return (
-            <MonacoEditor
-                height={this.props.height}
-                language={this.props.language}
-                value={this.props.value}
-                onChange={this.props.onChange.bind(this)}
-                editorWillMount={this.editorWillMount.bind(this)}
-                options={{
-                    automaticLayout: true,
-                    contextmenu: false,
-                    scrollBeyondLastLine: false,
-                    ...this.props.options
-                }}
-            />
+            <StyledEditor>
+                <MonacoEditor
+                    language={this.props.language}
+                    value={this.props.value}
+                    onChange={this.props.onChange.bind(this)}
+                    editorWillMount={this.editorWillMount.bind(this)}
+                    options={{
+                        automaticLayout: true,
+                        contextmenu: false,
+                        scrollBeyondLastLine: false,
+                        ...this.props.options
+                    }}
+                />
+            </StyledEditor>
         );
     }
 }

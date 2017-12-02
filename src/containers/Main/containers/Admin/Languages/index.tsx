@@ -19,6 +19,7 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getLanguages } from 'modules/admin/actions';
 
+import DataPreloader from 'components/Animation/DataPreloader';
 import Languages from 'components/Main/Admin/Languages';
 
 export interface ILanguagesContainerProps {
@@ -50,7 +51,9 @@ class LanguagesContainer extends React.Component<ILanguagesContainerProps & ILan
 
     render() {
         return (
-            <Languages resources={this.props.resources} vde={this.props.vde} />
+            <DataPreloader data={[this.props.resources]}>
+                <Languages resources={this.props.resources} vde={this.props.vde} />
+            </DataPreloader>
         );
     }
 }

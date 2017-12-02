@@ -53,6 +53,7 @@ const StyledResizeHandle = styled.button`
         margin: 0 4px;
         width: 1px;
         background: #e5e4e5;
+        transition: all .16s;
 
         > div {
             background: #59347d;

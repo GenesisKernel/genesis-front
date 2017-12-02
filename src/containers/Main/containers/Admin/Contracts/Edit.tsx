@@ -19,7 +19,8 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getContract } from 'modules/admin/actions';
 
-import Edit from 'components/Main/Admin/Contracts/Edit';
+import DataPreloader from 'components/Animation/DataPreloader';
+import Edit, { IEditProps } from 'components/Main/Admin/Contracts/Edit';
 
 export interface IEditContainerProps {
     vde?: boolean;
@@ -44,7 +45,9 @@ class EditContainer extends React.Component<IEditContainerProps & IEditContainer
 
     render() {
         return (
-            <Edit {...this.props} />
+            <DataPreloader data={[this.props.contract]}>
+                <Edit {...this.props} vde={this.props.vde} />
+            </DataPreloader>
         );
     }
 }

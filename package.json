@@ -17,6 +17,7 @@
         "@types/react-dom": "^15.5.3",
         "@types/react-router-redux": "^5.0.6",
         "@types/uuid": "^3.4.2",
+        "animate.css": "^3.5.2",
         "bluebird": "^3.5.1",
         "centrifuge": "^1.4.6",
         "classnames": "^2.2.5",
@@ -62,6 +63,7 @@
         "uuid": "^3.1.0",
         "whatwg-fetch": "^2.0.3"
     },
+    "main": "src/index.desktop.js",
     "scripts": {
         "extract-locales": "node util/extractLocales.js",
         "build-css": "node-sass-chokidar --include-path ./src/styles/scss --include-path ./node_modules src/styles/scss/sass.scss -o src/styles/built",
@@ -69,6 +71,8 @@
         "start-js": "react-scripts-ts start",
         "start": "npm-run-all -p watch-css start-js",
         "build": "npm run build-css && react-scripts-ts build",
+        "electron": "electron .",
+        "start-desktop": "npm-run-all -p start electron",
         "test": "react-scripts-ts test --env=jsdom",
         "eject": "react-scripts-ts eject"
     },
@@ -95,6 +99,7 @@
         "@types/request-promise-native": "^1.0.9",
         "@types/rx": "^4.1.1",
         "@types/sockjs-client": "^1.0.32",
+        "electron": "^1.7.9",
         "npm-run-all": "^4.1.1",
         "typescript-react-intl": "^0.1.7"
     }

@@ -17,11 +17,9 @@
 import * as React from 'react';
 import { FormControlProps } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
 import { getContract } from 'modules/admin/actions';
 
-import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'containers/Widgets/Heading';
+import Wrapper from 'components/Wrapper';
 import ContractEditor from './ContractEditor';
 
 export interface IEditProps {
@@ -106,6 +104,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
         if (this.props.tabView) {
             return (
                 <ContractEditor
+                    vde={this.props.vde}
                     contractName="@1EditContract"
                     mapContractParams={this.mapContractParams.bind(this)}
 
@@ -122,39 +121,45 @@ class Edit extends React.Component<IEditProps, IEditState> {
         }
 
         return (
-            <DocumentTitle title="admin.contracts.edit" defaultTitle="Edit contract">
-                <div>
-                    <Heading>
+            <Wrapper
+                type="noscroll"
+                title={{
+                    title: 'admin.contracts.edit',
+                    defaultTitle: 'Edit contract'
+                }}
+                heading={{
+                    content: (
                         <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
-                    </Heading>
-                    <div className="content-wrapper">
-                        <ol className="breadcrumb">
-                            <li>
-                                <Link to={this.props.vde ? '/vde/contracts' : '/admin/contracts'}>
-                                    <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
-                                </Link>
-                            </li>
-                            <li>
-                                <FormattedMessage id="admin.edit" defaultMessage="Edit" />
-                            </li>
-                        </ol>
-                        <ContractEditor
-                            contractName="@1EditContract"
-                            mapContractParams={this.mapContractParams.bind(this)}
+                    )
+                }}
+                breadcrumbs={[
+                    {
+                        url: this.props.vde ? '/vde/contracts' : '/admin/contracts',
+                        title: (
+                            <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
+                        )
+                    },
+                    {
+                        title: (
+                            <FormattedMessage id="admin.edit" defaultMessage="Edit" />
+                        )
+                    }
+                ]}
+            >
+                <ContractEditor
+                    vde={this.props.vde}
+                    contractName="@1EditContract"
+                    mapContractParams={this.mapContractParams.bind(this)}
 
-                            vde={this.props.vde}
-                            code={this.state.code}
-                            wallet={this.state.wallet}
-                            conditions={this.state.conditions}
-                            contract={this.props.contract}
-                            onSourceEdit={this.onSourceEdit.bind(this)}
-                            onWalletEdit={this.onWalletEdit.bind(this)}
-                            onConditionsEdit={this.onConditionsEdit.bind(this)}
-                            onContractActivation={this.onContractActivation.bind(this)}
-                        />
-                    </div>
-                </div>
-            </DocumentTitle>
+                    code={this.state.code}
+                    wallet={this.state.wallet}
+                    conditions={this.state.conditions}
+                    contract={this.props.contract}
+                    onSourceEdit={this.onSourceEdit.bind(this)}
+                    onWalletEdit={this.onWalletEdit.bind(this)}
+                    onConditionsEdit={this.onConditionsEdit.bind(this)}
+                />
+            </Wrapper>
         );
     }
 }

@@ -20,6 +20,7 @@ import { IRootState } from 'modules';
 import { getTables } from 'modules/admin/actions';
 import { ITablesResponse } from 'lib/api';
 
+import DataPreloader from 'components/Animation/DataPreloader';
 import Tables from 'components/Main/Admin/Tables';
 
 export interface ITablesContainerProps {
@@ -44,7 +45,9 @@ class TablesContainer extends React.Component<ITablesContainerProps & ITablesCon
 
     render() {
         return (
-            <Tables tables={this.props.tables} vde={this.props.vde} />
+            <DataPreloader data={[this.props.tables]}>
+                <Tables tables={this.props.tables} vde={this.props.vde} />
+            </DataPreloader>
         );
     }
 }

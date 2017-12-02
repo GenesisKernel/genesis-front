@@ -19,7 +19,8 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getLanguage } from 'modules/admin/actions';
 
-import Edit from 'components/Main/Admin/Languages/Edit';
+import DataPreloader from 'components/Animation/DataPreloader';
+import Edit, { IEditProps } from 'components/Main/Admin/Languages/Edit';
 
 export interface IEditContainerProps {
     vde?: boolean;
@@ -43,7 +44,9 @@ class EditContainer extends React.Component<IEditContainerProps & IEditContainer
 
     render() {
         return (
-            <Edit {...this.props} />
+            <DataPreloader data={[this.props.translation]}>
+                <Edit translation={this.props.translation} vde={this.props.vde} />
+            </DataPreloader>
         );
     }
 }
