@@ -115,7 +115,6 @@ class Edit extends React.Component<IEditProps, IEditState> {
                     onSourceEdit={this.onSourceEdit.bind(this)}
                     onWalletEdit={this.onWalletEdit.bind(this)}
                     onConditionsEdit={this.onConditionsEdit.bind(this)}
-                    onContractActivation={this.onContractActivation.bind(this)}
                 />
             );
         }

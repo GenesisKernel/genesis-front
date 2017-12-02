@@ -87,7 +87,7 @@ const StyledBody = styled.tbody`
 `;
 
 export interface ICellRenderer {
-    (value: TCellData, rowData: IRowData): JSX.Element | TCellData;
+    (value: any, rowData: IRowData): JSX.Element | any;
 }
 
 export interface IColData {
@@ -99,15 +99,12 @@ export interface IColData {
 export interface IRowData {
     colIndex: number;
     rowIndex: number;
-    rowData: TCellData[];
+    rowData: any[];
 }
-
-export type TCellData =
-    string | number;
 
 export interface ITableProps {
     columns: IColData[];
-    data: TCellData[][];
+    data: any[][];
     renderCell?: ICellRenderer;
     className?: string;
     striped?: boolean;
@@ -158,8 +155,8 @@ class Table extends React.Component<ITableProps, ITableState> {
         }
         else {
             return this.props.data.sort((left, right) => {
-                let valueA: string | number = left[this.state.sorter.columnIndex].toString();
-                let valueB: string | number = right[this.state.sorter.columnIndex].toString();
+                let valueA: any = left[this.state.sorter.columnIndex].toString();
+                let valueB: any = right[this.state.sorter.columnIndex].toString();
 
                 if (valueA === valueB) {
                     return 0;

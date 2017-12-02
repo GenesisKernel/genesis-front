@@ -21,7 +21,7 @@ import { getParameters } from 'modules/admin/actions';
 import { IParameterResponse } from 'lib/api';
 
 import DataPreloader from 'components/Animation/DataPreloader';
-import Parameters, { IParametersProps } from 'components/Main/Admin/Parameters';
+import Parameters from 'components/Main/Admin/Parameters';
 
 export interface IParametersContainerProps {
     vde?: boolean;

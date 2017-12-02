@@ -20,7 +20,7 @@ import { IRootState } from 'modules';
 import { getLanguage } from 'modules/admin/actions';
 
 import DataPreloader from 'components/Animation/DataPreloader';
-import Edit, { IEditProps } from 'components/Main/Admin/Languages/Edit';
+import Edit from 'components/Main/Admin/Languages/Edit';
 
 export interface IEditContainerProps {
     vde?: boolean;

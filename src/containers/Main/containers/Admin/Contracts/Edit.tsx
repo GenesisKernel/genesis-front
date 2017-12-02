@@ -20,7 +20,7 @@ import { IRootState } from 'modules';
 import { getContract } from 'modules/admin/actions';
 
 import DataPreloader from 'components/Animation/DataPreloader';
-import Edit, { IEditProps } from 'components/Main/Admin/Contracts/Edit';
+import Edit from 'components/Main/Admin/Contracts/Edit';
 
 export interface IEditContainerProps {
     vde?: boolean;

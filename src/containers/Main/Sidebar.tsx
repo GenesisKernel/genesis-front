@@ -26,6 +26,7 @@ interface ISidebarContainerProps {
 }
 
 interface ISidebarContainerState {
+    isEcosystemOwner: boolean;
     collapsed: boolean;
     navigationWidth: number;
 }
@@ -40,6 +41,7 @@ const SidebarContainer: React.SFC<ISidebarContainerProps & ISidebarContainerStat
 
 const mapStateToProps = (state: IRootState) => ({
     collapsed: state.engine.isCollapsed,
+    isEcosystemOwner: state.auth.isNodeOwner,
     navigationWidth: state.content.navigationWidth
 });
 

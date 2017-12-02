@@ -21,7 +21,7 @@ import { getParameter } from 'modules/admin/actions';
 import { IParameterResponse } from 'lib/api';
 
 import DataPreloader from 'components/Animation/DataPreloader';
-import Edit, { IEditProps } from 'components/Main/Admin/Parameters/Edit';
+import Edit from 'components/Main/Admin/Parameters/Edit';
 
 export interface IEditContainerProps {
     vde?: boolean;
