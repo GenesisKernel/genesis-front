@@ -25,7 +25,7 @@ export interface IPProps {
     'editable'?: boolean;
     'changePage'?: any;
     'selectTag'?: any;
-    'tag_id'?: string;
+    'tagID'?: string;
 }
 
 interface IPState {
@@ -51,7 +51,7 @@ class P extends React.Component<IPProps, IPState> {
         this.setState(Object.assign(this.state, {
             focused: true
         }));
-        this.props.selectTag({ tag_id: this.props.tag_id });
+        this.props.selectTag({ tagID: this.props.tagID });
     }
 
     onBlur(e: any) {
@@ -62,8 +62,7 @@ class P extends React.Component<IPProps, IPState> {
         // alert(e.target.textContent);
         // alert(e.target.innerHTML);
         // alert(e.target.innerText);
-        this.props.changePage({ text: e.target.textContent, tag_id: this.props.tag_id });
-
+        this.props.changePage({ text: e.target.textContent, tagID: this.props.tagID });
     }
 
     onChange(e: any) {

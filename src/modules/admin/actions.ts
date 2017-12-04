@@ -16,6 +16,7 @@
 
 import actionCreatorFactory from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IPageResponse, IContractsResponse, IParameterResponse, ITabListResponse } from 'lib/api';
+import { IProtypoElement } from 'components/Protypo/Protypo';
 
 const actionCreator = actionCreatorFactory('admin');
 
@@ -35,8 +36,9 @@ export const getInterface = actionCreator.async<{ vde?: boolean }, IInterfacesRe
 // Constructor
 
 export const getPageTreeCode = actionCreator.async<{ code: string, vde?: boolean }, { pageTreeCode: any }, string>('GET_PAGE_TREE_CODE');
-export const changePage = actionCreator<{ text: string, tag_id: string }>('CHANGE_PAGE');
-export const selectTag = actionCreator<{ tag_id: string }>('SELECT_TAG');
+export const getPageTree = actionCreator.async<{ id: string, name: string, vde?: boolean }, { page: { name: string, tree: IProtypoElement[], error?: string } }, string>('GET_PAGE_TREE');
+export const changePage = actionCreator<{ text: string, tagID: string, pageID: string }>('CHANGE_PAGE');
+export const selectTag = actionCreator<{ tagID: string, pageID: string }>('SELECT_TAG');
 
 // Menus
 export const getMenu = actionCreator.async<{ id: string, vde?: boolean }, { id: string, name: string, value: string, conditions: string }, string>('GET_MENU');

@@ -92,14 +92,10 @@ const PageEditor: React.SFC<IPageEditorProps> = (props) => (
                 <div className="text-right">
                     {props.page ?
                         (
-                            <Link to={`/${props.vde ? 'vde' : 'admin'}/interface/page/${props.page.id}-${props.page.name}/constructor`} className="btn btn-primary pull-left">
+                            <Link to={`/${props.vde ? 'vde' : 'admin'}/tabs/interfaceConstructor-${props.page.id}-${props.page.name}`} className="btn btn-primary pull-left">
                                 Open in Constructor
                             </Link>
-                        ) : (
-                            <Link to={`/${props.vde ? 'vde' : 'admin'}/interface/create-page/constructor`} className="btn btn-primary pull-left">
-                                Open in Constructor
-                        </Link>
-                        )
+                        ) : ('')
                     }
 
                     <Validation.components.ValidatedSubmit bsStyle="primary">

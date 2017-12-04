@@ -1,19 +1,3 @@
-// Copyright 2017 The apla-front Authors
-// This file is part of the apla-front library.
-// 
-// The apla-front library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// The apla-front library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
-// 
-// You should have received a copy of the GNU Lesser General Public License
-// along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
-
 import * as React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import styled from 'styled-components';
@@ -41,19 +25,15 @@ import imgGroup37 from 'images/constructor/group-37.svg';
 import imgStroke75 from 'images/constructor/stroke-75.svg';
 import imgLowercase from 'images/constructor/tt-lower.svg';
 import imgUppercase from 'images/constructor/tt-upper.svg';
-
 import imgGrid from 'images/constructor/grid.png';
 
-interface IConstructorEditorProps {
-    session: string;
-    pageTreeCode: any;
-    page?: { id: string, name: string, value: string };
+interface IConstructorProps {
+    pageTree: any;
     changePage?: any;
     selectTag?: any;
 }
 
 const ConstructorDiv = styled.div`
-    margin: -20px;
     min-height: 300px;
     position: relative;
     height: 100%;
@@ -175,12 +155,12 @@ class CollapsedListItem extends React.Component<ICollapsedListItemProps, ICollap
     }
     toggleCollapsed() {
         this.setState({
-           collapsed: !this.state.collapsed
+            collapsed: !this.state.collapsed
         });
     }
 }
 
-const ConstructorEditor: React.SFC<IConstructorEditorProps> = (props) => (
+const Constructor: React.SFC<IConstructorProps> = (props) => (
     <ConstructorDiv>
         <div className="left-panel">
             <ConstructorPanel title="Objects">
@@ -293,18 +273,6 @@ const ConstructorEditor: React.SFC<IConstructorEditorProps> = (props) => (
                         <img src={imgRedo} />
                     </div>
                 </div>
-                <div className="b-instrument-panel__inner b-instrument-panel__inner_dark pull-left">
-                    <div className="b-page-title">
-                        {props.page ?
-                            (
-                                props.page.name
-                            ) : (
-                            'New page'
-                        )
-                        }
-                        &nbsp;&nbsp;<i className="fa fa-close"/>
-                    </div>
-                </div>
                 <div className="b-instrument-panel__inner pull-right">
                     <div className="b-icon-group pull-left">
                         <div className="b-icon pull-left">
@@ -334,13 +302,10 @@ const ConstructorEditor: React.SFC<IConstructorEditorProps> = (props) => (
 
                 </div>
             </div>
-            <div className="b-instrument-panel">
-                <div className="b-instrument-panel__inner pull-right"/>
-            </div>
 
             <DivGrid>
                 <Protypo
-                    payload={props.pageTreeCode}
+                    payload={props.pageTree}
                     editable={true}
                     changePage={props.changePage}
                     selectTag={props.selectTag}
@@ -448,4 +413,4 @@ const ConstructorEditor: React.SFC<IConstructorEditorProps> = (props) => (
 
 );
 
-export default ConstructorEditor;
+export default Constructor;

@@ -25,6 +25,7 @@ import ParameterEditTabbed from 'containers/Main/containers/Admin/Parameters/Edi
 import InterfacePageEditTabbed from 'containers/Main/containers/Admin/Interface/EditPageTabbed';
 import InterfaceBlockEditTabbed from 'containers/Main/containers/Admin/Interface/EditBlockTabbed';
 import InterfaceMenuEditTabbed from 'containers/Main/containers/Admin/Interface/EditMenuTabbed';
+import InterfaceConstructorTabbed from 'containers/Main/containers/Admin/Interface/ConstructorTabbed';
 
 const Title = styled.div`
     padding-left: 20px;
@@ -87,6 +88,15 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
                         <div key={tabListItem.type + tabListItem.id}>
                             <Title>Interface Menu</Title>
                             <InterfaceMenuEditTabbed menuID={tabListItem.id}/>
+                        </div>
+                    );
+                }
+                else
+                if (tabListItem.type === 'interfaceConstructor') {
+                    tabsContent.push(
+                        <div key={tabListItem.type + tabListItem.id}>
+                            <Title>Interface Constructor</Title>
+                            <InterfaceConstructorTabbed pageID={tabListItem.id} pageName={tabListItem.name}/>
                         </div>
                     );
                 }

@@ -146,7 +146,7 @@ export default class Protypo extends React.Component<IProtypoProps> {
                             {...element.attr}
                             key={key}
                             id={key}
-                            tag_id={element.id}
+                            tagID={element.id}
                             childrenTree={element.children}
                             editable={this.props.editable}
                             changePage={this.props.changePage}

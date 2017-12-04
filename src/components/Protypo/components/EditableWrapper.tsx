@@ -23,13 +23,13 @@ const Wrapper = styled.div`
 `;
 
 interface IEditableWrapperProps {
-    tag_id: string;
+    tagID: string;
 }
 
 class EditableWrapper extends React.Component<IEditableWrapperProps> {
     render() {
         return (
-            <Wrapper id={this.props.tag_id}>
+            <Wrapper id={this.props.tagID}>
                 {this.props.children}
             </Wrapper>
         );

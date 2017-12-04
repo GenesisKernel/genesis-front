@@ -119,7 +119,7 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.tabs.data,
                     ['interfacePage' + action.payload.result.page.id]: {
                         type: 'interfacePage',
-                            data: action.payload.result.page
+                        data: action.payload.result.page
                     }
                 }
             }
@@ -157,10 +157,53 @@ export default (state: State = initialState, action: Action): State => {
         };
     }
 
-    if (isType(action, actions.changePage)) {
-        let pageTreeCode = state.pageTreeCode.concat();
+    if (isType(action, actions.getPageTree.started)) {
+        return {
+            ...state,
+            pending: true,
+            tabs: {
+                ...state.tabs,
+                data: {
+                    ...state.tabs.data,
+                    ['interfaceConstructor' + action.payload.id]: null
+                }
+            }
+        };
+    }
+    else if (isType(action, actions.getPageTree.done)) {
+        return {
+            ...state,
+            pending: false,
+            tabs: {
+                ...state.tabs,
+                data: {
+                    ...state.tabs.data,
+                    ['interfaceConstructor' + action.payload.params.id]: {
+                        type: 'interfaceConstructor',
+                        data: action.payload.result.page.tree
+                    }
+                }
+            }
+        };
+    }
+    else if (isType(action, actions.getPageTree.failed)) {
+        return {
+            ...state,
+            pending: false,
+            tabs: {
+                ...state.tabs,
+                data: {
+                    ...state.tabs.data,
+                    ['interfaceConstructor' + action.payload.params.id]: null
+                }
+            }
+        };
+    }
 
-        let tag = findTagById(pageTreeCode, action.payload.tag_id);
+    if (isType(action, actions.changePage)) {
+        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data.concat() || null;
+
+        let tag = findTagById(pageTree, action.payload.tagID);
         if (tag) {
             // todo: parse contentEditable tags and create children array
             if (tag.children && tag.children.length) {
@@ -175,7 +218,16 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            pageTreeCode: pageTreeCode
+            tabs: {
+                ...state.tabs,
+                data: {
+                    ...state.tabs.data,
+                    ['interfaceConstructor' + action.payload.pageID]: {
+                        type: 'interfaceConstructor',
+                        data: pageTree
+                    }
+                }
+            }
         };
     }
 

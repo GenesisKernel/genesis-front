@@ -436,6 +436,54 @@ export const getPageTreeCodeEpic: Epic<Action, IRootState> =
                 );
         });
 
+export const getPageTreeEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.getPageTree.started)
+        .flatMap(action => {
+            const state = store.getState();
+
+            function generateId() {
+                return 'tag_' + (10000000 + Math.floor(Math.random() * 89999999));
+            }
+
+            function setIds(children: any[]) {
+                for (let tag of children) {
+                    if (!tag) {
+                        continue;
+                    }
+                    if (!tag.id) {
+                        tag.id = generateId();
+                    }
+                    if (tag.children) {
+                        setIds(tag.children);
+                    }
+                }
+
+            }
+
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, action.payload.name, {}))
+                .map(payload => {
+                    let pageTree = JSON.parse(payload.tree);
+                    setIds(pageTree);
+
+                    return actions.getPageTree.done({
+                            params: action.payload,
+                            result: {
+                                page: {
+                                    name: action.payload.name,
+                                    tree: pageTree
+                                }
+                            }
+                        });
+                    }
+                )
+                .catch((e: IAPIError) =>
+                    Observable.of(actions.getPageTree.failed({
+                        params: action.payload,
+                        error: e.error
+                    }))
+                );
+        });
+
 export const exportDataEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.exportData.started)
         .flatMap(action => {
@@ -593,6 +641,7 @@ export default combineEpics(
     getTableStructEpic,
     getInterfaceEpic,
     getPageEpic,
+    getPageTreeEpic,
     getPageTreeCodeEpic,
     getMenuEpic,
     getMenusEpic,
