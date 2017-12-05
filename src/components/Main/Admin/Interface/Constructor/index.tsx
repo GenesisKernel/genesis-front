@@ -1,8 +1,11 @@
 import * as React from 'react';
-import { Col, Row } from 'react-bootstrap';
+
 import styled from 'styled-components';
-import * as classnames from 'classnames';
+
 import Protypo from 'containers/Widgets/Protypo';
+import CollapsedListItem from './CollapsedListItem';
+import Panel from './Panel';
+import Properties from './Properties';
 
 import imgViewMobile from 'images/constructor/group-2.svg';
 import imgViewTablet from 'images/constructor/group.svg';
@@ -13,24 +16,20 @@ import imgRedo from 'images/constructor/group-6.svg';
 import imgGroup11 from 'images/constructor/group-11.svg';
 import imgGroup12 from 'images/constructor/group-12.svg';
 import imgGroup13 from 'images/constructor/group-13.svg';
-import imgAlignLeft from 'images/constructor/group-28.svg';
-import imgAlignCenter from 'images/constructor/group-27.svg';
-import imgAlignRight from 'images/constructor/group-26.svg';
-import imgSwitchOff from 'images/constructor/group-29.svg';
 import imgSwitchOn from 'images/constructor/group-18.svg';
 import imgGroup34 from 'images/constructor/group-34.svg';
 import imgGroup35 from 'images/constructor/group-35.svg';
 import imgGroup36 from 'images/constructor/group-36.svg';
 import imgGroup37 from 'images/constructor/group-37.svg';
 import imgStroke75 from 'images/constructor/stroke-75.svg';
-import imgLowercase from 'images/constructor/tt-lower.svg';
-import imgUppercase from 'images/constructor/tt-upper.svg';
 import imgGrid from 'images/constructor/grid.png';
 
 interface IConstructorProps {
     pageTree: any;
     changePage?: any;
     selectTag?: any;
+    selectedTag?: any;
+    save?: any;
 }
 
 const ConstructorDiv = styled.div`
@@ -61,39 +60,6 @@ const ConstructorDiv = styled.div`
 
 `;
 
-const PanelDiv = styled.div`
-
-    .b-panel__header {
-        position: relative;
-        height: 31px;
-        background-color: #3a4653;
-        padding-left: 20px;
-    }
-    
-    .b-panel__header__text {
-        line-height: 31px;
-        font-size: 14px;
-        font-family: "Avenir-Book", "Source Sans Pro", sans-serif;
-        text-transform: uppercase;
-        color: #707c91;
-    }
-    
-    .b-panel__header__toggle {
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        width: 16px;
-        height: 3px;
-        background-color: #dcdfe2;
-        cursor: pointer;
-    }
-    
-    .b-panel__body {
-        background-color: #465669;
-        min-height: 100px;
-    }   
-`;
-
 const DivGrid = styled.div`
     margin: 0 20px;
     min-height: 600px;
@@ -103,67 +69,10 @@ const DivGrid = styled.div`
     background-image: url(${imgGrid});
 `;
 
-interface IConstructorPanelProps {
-    title: string;
-}
-
-const ConstructorPanel: React.SFC<IConstructorPanelProps> = (props) => (
-    <PanelDiv>
-        <div className="b-panel__header">
-            <div className="b-panel__header__text">
-                {props.title}
-            </div>
-            <div className="b-panel__header__toggle"/>
-        </div>
-        <div className="b-panel__body">
-            {props.children}
-        </div>
-    </PanelDiv>
-);
-
-interface ICollapsedListItemProps {
-    text: string;
-    icon?: string;
-}
-
-interface ICollapsedListItemState {
-    collapsed: boolean;
-}
-
-class CollapsedListItem extends React.Component<ICollapsedListItemProps, ICollapsedListItemState> {
-
-    constructor(props: ICollapsedListItemProps) {
-        super(props);
-        this.state = {
-            collapsed: true
-        };
-    }
-    render() {
-        const classes = classnames({
-            collapsed: this.state.collapsed
-        });
-
-        return (
-            <li className={classes}>
-                <div onClick={this.toggleCollapsed.bind(this)}>
-                    <img src={this.props.icon} />
-                    {this.props.text}
-                </div>
-                {this.props.children}
-            </li>
-        );
-    }
-    toggleCollapsed() {
-        this.setState({
-            collapsed: !this.state.collapsed
-        });
-    }
-}
-
 const Constructor: React.SFC<IConstructorProps> = (props) => (
     <ConstructorDiv>
         <div className="left-panel">
-            <ConstructorPanel title="Objects">
+            <Panel title="Objects">
                 <ul className="b-category-list">
                     <CollapsedListItem text="Structure" icon={imgGroup11}>
                         <ul className="b-category-sublist">
@@ -222,8 +131,8 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                     </CollapsedListItem>
                     <li/>
                 </ul>
-            </ConstructorPanel>
-            <ConstructorPanel title="Structure">
+            </Panel>
+            <Panel title="Structure">
                 <ul className="b-tree">
                     <li>
                         <i className="fa fa-caret-down"/>
@@ -261,7 +170,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                         Strong
                     </li>
                 </ul>
-            </ConstructorPanel>
+            </Panel>
         </div>
         <div className="center-panel">
             <div className="b-instrument-panel b-panel-light">
@@ -309,105 +218,18 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                     editable={true}
                     changePage={props.changePage}
                     selectTag={props.selectTag}
+                    selectedTag={props.selectedTag}
                 />
             </DivGrid>
 
         </div>
         <div className="right-panel">
-            <ConstructorPanel title="Properties">
-
-                <div className="content-wrapper b-panel-light">
-                    <form className="form-horizontal">
-                        <div className="form-group">
-                            <label className="col-xs-3 control-label g-no-padding"><small>ID</small></label>
-                            <Col xs={9}>
-                                <input type="text" className="form-control input-sm" placeholder="Element ID"/>
-                            </Col>
-                        </div>
-                        <div className="form-group">
-                            <label className="col-xs-3 control-label g-no-padding"><small>CSS CLASS</small></label>
-                            <Col xs={9}>
-                                <input type="text" className="form-control input-sm" placeholder="Element Classes"/>
-                            </Col>
-                        </div>
-                    </form>
-                </div>
-                <div className="content-wrapper"/>
-                <div className="content-wrapper b-panel-light">
-                    <Row className="g-padding-bottom">
-                        <Col xs={3} className="text-uppercase">
-                            position
-                        </Col>
-                        <Col xs={9}>
-                            <div className="b-position-bullet b-position-bullet_selected"/>
-                            <div className="b-position-bullet b-position-bullet_selected"/>
-                            <div className="b-position-bullet b-position-bullet_selected"/>
-                            <div className="b-position-bullet b-position-bullet_selected"/>
-                            <div className="b-position-bullet b-position-bullet_selected"/>
-                            <div className="b-position-bullet b-position-bullet_selected"/>
-                            <div className="b-position-bullet"/>
-                            <div className="b-position-bullet"/>
-                            <div className="b-position-bullet"/>
-                            <div className="b-position-bullet"/>
-                            <div className="b-position-bullet"/>
-                            <div className="b-position-bullet"/>
-                        </Col>
-                    </Row>
-                    <Row className="g-padding-bottom">
-                        <Col xs={4} className="text-center">
-                            <div className="text-uppercase">
-                                alignment
-                            </div>
-                            <div className="b-bullet b-bullet_selected">
-                                <img src={imgAlignLeft} />
-                            </div>
-                            <div className="b-bullet">
-                                <img src={imgAlignCenter} />
-                            </div>
-                            <div className="b-bullet">
-                                <img src={imgAlignRight} />
-                            </div>
-                        </Col>
-                        <Col xs={4} className="text-center">
-                            <div className="text-uppercase">
-                                transform
-                            </div>
-                            <div className="b-bullet b-bullet_selected">
-                                <img src={imgUppercase} />
-                            </div>
-                            <div className="b-bullet">
-                                <img src={imgLowercase} />
-                            </div>
-                        </Col>
-                        <Col xs={4} className="text-center">
-                            <div className="text-center text-uppercase">
-                                no wrap
-                            </div>
-                            <div className="b-switch">
-                                <img src={imgSwitchOff} />
-                            </div>
-                        </Col>
-                    </Row>
-                    <Row className="g-padding-bottom">
-                        <Col xs={12}>
-                            <div className="text-uppercase">
-                                color
-                            </div>
-                        </Col>
-                        <Col xs={12}>
-                            <div className="b-bullet-color b-bullet-color_blue"/>
-                            <div className="b-bullet-color b-bullet-color_green b-bullet-color_selected"/>
-                            <div className="b-bullet-color b-bullet-color_red"/>
-                            <div className="b-bullet-color b-bullet-color_yellow"/>
-                            <div className="b-bullet-color b-bullet-color_magenta"/>
-                            <div className="b-bullet-color b-bullet-color_dark-blue"/>
-                            <div className="b-bullet-color b-bullet-color_light-grey"/>
-                            <div className="b-bullet-color b-bullet-color_black"/>
-                            <div className="b-bullet-color b-bullet-color_grey"/>
-                        </Col>
-                    </Row>
-                </div>
-            </ConstructorPanel>
+            <Properties
+                tag={props.selectedTag}
+                changePage={props.changePage}
+            />
+            <br/>
+            <div className="btn btn-primary" onClick={props.save}>Save</div>
         </div>
     </ConstructorDiv>
 

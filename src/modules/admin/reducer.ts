@@ -205,13 +205,21 @@ export default (state: State = initialState, action: Action): State => {
 
         let tag = findTagById(pageTree, action.payload.tagID);
         if (tag) {
-            // todo: parse contentEditable tags and create children array
-            if (tag.children && tag.children.length) {
-                let child = tag.children[0];
-                if (child.text) {
-                    child.text = action.payload.text + ' edited';
+            if (action.payload.text) {
+                // todo: parse contentEditable tags and create children array
+                if (tag.children && tag.children.length) {
+                    let child = tag.children[0];
+                    if (child.text) {
+                        child.text = action.payload.text + '';
+                    }
+                    tag.children = [child];
                 }
-                tag.children = [child];
+            }
+
+            if ('string' === typeof action.payload.class) {
+                tag.attr.class = action.payload.class;
+                // alert(JSON.stringify(tag));
+                // alert(JSON.stringify(pageTree));
             }
         }
 

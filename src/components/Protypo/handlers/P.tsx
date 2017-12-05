@@ -15,7 +15,7 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-
+import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
 
 export interface IPProps {
@@ -25,87 +25,33 @@ export interface IPProps {
     'editable'?: boolean;
     'changePage'?: any;
     'selectTag'?: any;
-    'tagID'?: string;
+    'selected'?: boolean;
+    'tag'?: any;
 }
 
-interface IPState {
-    focused: boolean;
-    _onPaste_StripFormatting_IEPaste: boolean;
-}
-
-class P extends React.Component<IPProps, IPState> {
-
-    constructor(props: IPProps) {
-        super(props);
-        this.state = {
-            focused: false,
-            _onPaste_StripFormatting_IEPaste: false
-        };
-    }
+class P extends React.Component<IPProps> {
 
     onPaste(e: any) {
-        this.OnPaste_StripFormatting(this, e);
+        OnPasteStripFormatting(this, e);
     }
 
     onFocus(e: any) {
-        this.setState(Object.assign(this.state, {
-            focused: true
-        }));
-        this.props.selectTag({ tagID: this.props.tagID });
+        this.props.selectTag({ tag: this.props.tag });
     }
 
     onBlur(e: any) {
-        this.setState(Object.assign(this.state, {
-            focused: false
-        }));
-
-        // alert(e.target.textContent);
-        // alert(e.target.innerHTML);
-        // alert(e.target.innerText);
-        this.props.changePage({ text: e.target.textContent, tagID: this.props.tagID });
-    }
-
-    onChange(e: any) {
-        // alert('onChange');
-    }
-
-    OnPaste_StripFormatting(elem: any, e: any) {
-        let text: string;
-        if (e.originalEvent && e.originalEvent.clipboardData && e.originalEvent.clipboardData.getData) {
-            e.preventDefault();
-            text = e.originalEvent.clipboardData.getData('text/plain');
-            window.document.execCommand('insertText', false, text);
-        }
-        else if (e.clipboardData && e.clipboardData.getData) {
-            e.preventDefault();
-            text = e.clipboardData.getData('text/plain');
-            window.document.execCommand('insertText', false, text);
-        }
-        else if (window['clipboardData'] && window['clipboardData'].getData) {
-            // Stop stack overflow
-            if (!this.state._onPaste_StripFormatting_IEPaste) {
-                this.setState(Object.assign(this.state, {
-                    _onPaste_StripFormatting_IEPaste: true,
-                }));
-                e.preventDefault();
-                window.document.execCommand('ms-pasteTextOnly', false);
-            }
-            this.setState(Object.assign(this.state, {
-                _onPaste_StripFormatting_IEPaste: false,
-            }));
-        }
+        this.props.changePage({ text: e.target.textContent, tagID: this.props.tag.id });
     }
 
     render() {
         if (this.props.editable) {
             return (
                 <p
-                    className={[this.props.class, this.props.className, this.state.focused ? 'editable' : ''].join(' ')}
+                    className={[this.props.class, this.props.className, this.props.selected ? 'editable' : ''].join(' ')}
                     contentEditable={true}
                     onPaste={this.onPaste.bind(this)}
                     onBlur={this.onBlur.bind(this)}
                     onFocus={this.onFocus.bind(this)}
-                    onChange={this.onChange.bind(this)}
                 >
                     {this.props.children}
                 </p>

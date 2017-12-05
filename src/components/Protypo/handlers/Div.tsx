@@ -15,16 +15,57 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-
+import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
 
 export interface IDivProps {
     'className'?: string;
     'class'?: string;
+    'children': any;
+    'editable'?: boolean;
+    'changePage'?: any;
+    'selectTag'?: any;
+    'selected'?: boolean;
+    'tag'?: any;
 }
 
-const Div: React.SFC<IDivProps> = (props) => (
-    <div className={[props.class, props.className].join(' ')}>{props.children}</div>
-);
+class Div extends React.Component<IDivProps> {
+
+    onPaste(e: any) {
+        OnPasteStripFormatting(this, e);
+    }
+
+    onFocus(e: any) {
+        this.props.selectTag({ tag: this.props.tag });
+    }
+
+    onBlur(e: any) {
+        this.props.changePage({ text: e.target.textContent, tagID: this.props.tag.id });
+    }
+
+    render() {
+        if (this.props.editable) {
+            return (
+                <div
+                    className={[this.props.class, this.props.className, this.props.selected ? 'editable' : ''].join(' ')}
+                    contentEditable={true}
+                    onPaste={this.onPaste.bind(this)}
+                    onBlur={this.onBlur.bind(this)}
+                    onFocus={this.onFocus.bind(this)}
+                >
+                    {this.props.children}
+                </div>
+            );
+        }
+        return (
+            <div
+                className={[this.props.class, this.props.className].join(' ')}
+            >
+                {this.props.children}
+            </div>
+        );
+
+    }
+}
 
 export default StyledComponent(Div);

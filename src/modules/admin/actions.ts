@@ -37,8 +37,8 @@ export const getInterface = actionCreator.async<{ vde?: boolean }, IInterfacesRe
 
 export const getPageTreeCode = actionCreator.async<{ code: string, vde?: boolean }, { pageTreeCode: any }, string>('GET_PAGE_TREE_CODE');
 export const getPageTree = actionCreator.async<{ id: string, name: string, vde?: boolean }, { page: { name: string, tree: IProtypoElement[], error?: string } }, string>('GET_PAGE_TREE');
-export const changePage = actionCreator<{ text: string, tagID: string, pageID: string }>('CHANGE_PAGE');
-export const selectTag = actionCreator<{ tagID: string, pageID: string }>('SELECT_TAG');
+export const changePage = actionCreator<{ text?: string, class?: string; tagID: string, pageID: string }>('CHANGE_PAGE');
+// export const selectTag = actionCreator<{ tagID: string, pageID: string }>('SELECT_TAG');
 
 // Menus
 export const getMenu = actionCreator.async<{ id: string, vde?: boolean }, { id: string, name: string, value: string, conditions: string }, string>('GET_MENU');

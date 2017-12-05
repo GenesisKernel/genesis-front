@@ -259,6 +259,12 @@ input[type="number"] {
     color: #FFF;
 }
 
+.b-panel-light input[readonly] {
+    background-color: #354454;
+    border-color: #4c6073;
+    color: #AAA;
+}
+
 .b-page-title {
     color: #FFF;
     padding: 0 20px;
@@ -549,10 +555,11 @@ input[type="number"] {
 }
 
 .editable {
-
-}
-
-p.editable {
     border: 1px dashed #7799FF;
 }
+
+/*p.editable {*/
+    /*border: 1px dashed #7799FF;*/
+/*}*/
+
 

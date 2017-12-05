@@ -30,6 +30,7 @@ export interface IProtypoContainerProps {
     payload: IProtypoElement[];
     changePage?: any;
     selectTag?: any;
+    selectedTag?: any;
 }
 
 interface IProtypoContainerState {

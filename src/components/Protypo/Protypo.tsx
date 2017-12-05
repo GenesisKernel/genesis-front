@@ -34,6 +34,7 @@ export interface IProtypoProps {
     navigate: (url: string) => void;
     changePage?: any;
     selectTag?: any;
+    selectedTag?: any;
 }
 
 export interface IProtypoElement {
@@ -130,6 +131,7 @@ export default class Protypo extends React.Component<IProtypoProps> {
                 const func = resolveFunction(element.tag);
                 if (Handler) {
                     const key = optionalKey || (this._lastID++).toString();
+                    const selected = this.props.selectedTag && this.props.selectedTag.id === element.id;
 
                     // if (this.props.editable && 0) {
                     //     return (
@@ -146,11 +148,12 @@ export default class Protypo extends React.Component<IProtypoProps> {
                             {...element.attr}
                             key={key}
                             id={key}
-                            tagID={element.id}
+                            tag={element}
                             childrenTree={element.children}
                             editable={this.props.editable}
                             changePage={this.props.changePage}
                             selectTag={this.props.selectTag}
+                            selected={selected}
                         >
                             {this.renderElements(element.children)}
                         </Handler>

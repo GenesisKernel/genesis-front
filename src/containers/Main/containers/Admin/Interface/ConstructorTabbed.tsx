@@ -17,10 +17,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { getPageTree, changePage, selectTag  } from 'modules/admin/actions';
+import { getPageTree, changePage  } from 'modules/admin/actions';
 import Constructor from 'components/Main/Admin/Interface/Constructor';
-
-// import Constructor from 'components/Main/Admin/Interface/Constructor';
+import { CodeGenerator } from 'lib/constructor';
 
 export interface IConstructorTabbedContainerProps {
     pageID: string;
@@ -36,16 +35,28 @@ interface IConstructorTabbedContainerState {
 interface IConstructorTabbedContainerDispatch {
     getPageTree: typeof getPageTree.started;
     changePage: typeof changePage;
-    selectTag: typeof selectTag;
+    // selectTag: typeof selectTag;
 }
 
-class ConstructorTabbedContainer extends React.Component<IConstructorTabbedContainerProps & IConstructorTabbedContainerState & IConstructorTabbedContainerDispatch> {
+interface IConstructorTabbedState {
+    selectedTag: any;
+}
+
+class ConstructorTabbedContainer extends React.Component<IConstructorTabbedContainerProps & IConstructorTabbedContainerState & IConstructorTabbedContainerDispatch, IConstructorTabbedState> {
+    constructor(props: IConstructorTabbedContainerProps & IConstructorTabbedContainerState & IConstructorTabbedContainerDispatch) {
+        super(props);
+        this.state = {
+            selectedTag: null
+        };
+    }
+
     componentWillMount() {
         this.props.getPageTree({
             id: this.props.pageID,
             name: this.props.pageName,
             vde: this.props.vde
         });
+
     }
 
     changePage(payload?: any) {
@@ -54,12 +65,18 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     }
 
     selectTag(payload?: any) {
-        payload.pageID = this.props.pageID;
-        this.props.selectTag(payload);
+        this.setState({
+            selectedTag: payload.tag
+        });
+    }
+
+    save() {
+        let pageTree = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID] && this.props.tabData['interfaceConstructor' + this.props.pageID].data || null;
+        let codeGenerator = new CodeGenerator(pageTree);
+        alert(codeGenerator.render());
     }
 
     render() {
-
         let pageTree = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID] && this.props.tabData['interfaceConstructor' + this.props.pageID].data || null;
 
         return (
@@ -67,6 +84,8 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
                 pageTree={pageTree}
                 changePage={this.changePage.bind(this)}
                 selectTag={this.selectTag.bind(this)}
+                save={this.save.bind(this)}
+                selectedTag={this.state.selectedTag}
             />
         );
     }
@@ -79,8 +98,7 @@ const mapStateToProps = (state: IRootState) => ({
 
 const mapDispatchToProps = {
     getPageTree: getPageTree.started,
-    changePage,
-    selectTag
+    changePage
 };
 
 export default connect<IConstructorTabbedContainerState, IConstructorTabbedContainerDispatch, IConstructorTabbedContainerProps>(mapStateToProps, mapDispatchToProps)(ConstructorTabbedContainer);
