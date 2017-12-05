@@ -24,19 +24,36 @@ export type State = {
     readonly isAuthenticated: boolean;
     readonly isLoggingIn: boolean;
     readonly isCreatingAccount: boolean;
+    readonly isImportingAccount: boolean
     readonly isNodeOwner: boolean;
     readonly isEcosystemOwner: boolean;
     readonly wallet: string;
     readonly sessionToken: string;
     readonly refreshToken: string;
     readonly socketToken: string;
-    readonly sessionExpiry: Date;
+    readonly sessionDuration: number;
     readonly timestamp: string;
     readonly createdAccount: {
         id: string;
-        address: string;
-        privateKey: string;
-        publicKey: string;
+        encKey: string;
+        ecosystems?: {
+            [id: string]: {
+                name?: string;
+                type?: string;
+                avatar?: string;
+            }
+        };
+    };
+    readonly importedAccount: {
+        id: string;
+        encKey: string;
+        ecosystems?: {
+            [id: string]: {
+                name?: string;
+                type?: string;
+                avatar?: string;
+            }
+        };
     };
     readonly account: IStoredKey;
     readonly privateKey: string;
@@ -48,6 +65,7 @@ export const initialState: State = {
     isAuthenticated: false,
     isLoggingIn: false,
     isCreatingAccount: false,
+    isImportingAccount: false,
     isNodeOwner: false,
     isEcosystemOwner: false,
     wallet: null,
@@ -55,8 +73,9 @@ export const initialState: State = {
     refreshToken: null,
     socketToken: null,
     timestamp: null,
-    sessionExpiry: null,
+    sessionDuration: null,
     createdAccount: null,
+    importedAccount: null,
     account: null,
     privateKey: null,
     ecosystem: null
@@ -89,7 +108,7 @@ export default (state: State = initialState, action: Action): State => {
             sessionToken: action.payload.result.token,
             refreshToken: action.payload.result.refresh,
             privateKey: action.payload.result.privateKey,
-            sessionExpiry: action.payload.result.expiry,
+            sessionDuration: action.payload.result.expiry,
             socketToken: action.payload.result.notify_key,
             timestamp: action.payload.result.timestamp
         };
@@ -131,7 +150,7 @@ export default (state: State = initialState, action: Action): State => {
             ecosystem: action.payload.params,
             sessionToken: action.payload.result.token,
             refreshToken: action.payload.result.refresh,
-            sessionExpiry: action.payload.result.expiry
+            sessionDuration: action.payload.result.sessionDuration
         };
     }
     else if (isType(action, actions.switchEcosystem.failed)) {
@@ -152,7 +171,9 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.account,
                 ecosystems: {
                     ...state.account.ecosystems,
-                    [action.payload.id]: action.payload.name
+                    [action.payload.id]: {
+                        name: action.payload.name
+                    }
                 }
             }
         };
@@ -172,11 +193,47 @@ export default (state: State = initialState, action: Action): State => {
         };
     }
 
-    if (isType(action, actions.createAccount.done)) {
+    if (isType(action, actions.importAccount.started)) {
+        return {
+            ...state,
+            isImportingAccount: true,
+            importedAccount: null
+        };
+    }
+    else if (isType(action, actions.importAccount.done)) {
+        return {
+            ...state,
+            isImportingAccount: false,
+            importedAccount: action.payload.result
+        };
+    }
+    else if (isType(action, actions.importAccount.failed)) {
+        return {
+            ...state,
+            isImportingAccount: false,
+            importedAccount: null
+        };
+    }
+
+    if (isType(action, actions.createAccount.started)) {
+        return {
+            ...state,
+            isCreatingAccount: true,
+            createdAccount: null
+        };
+    }
+    else if (isType(action, actions.createAccount.done)) {
         return {
             ...state,
             isCreatingAccount: false,
             createdAccount: action.payload.result
+        };
+    }
+    else if (isType(action, actions.createAccount.failed)) {
+        return {
+            ...state,
+            isCreatingAccount: false,
+            createdAccount: action.payload.error
         };
     }
 
@@ -188,10 +245,29 @@ export default (state: State = initialState, action: Action): State => {
         };
     }
 
-    if (isType(action, actions.clearCreatedAccount)) {
+    if (isType(action, actions.refreshSession)) {
         return {
             ...state,
-            createdAccount: null
+            sessionToken: action.payload.token,
+            refreshToken: action.payload.refresh,
+            sessionDuration: action.payload.sessionDuration
+        };
+    }
+
+    if (isType(action, actions.updateMetadata.done)) {
+        return {
+            ...state,
+            account: {
+                ...state.account,
+                ecosystems: {
+                    ...state.account.ecosystems,
+                    [action.payload.result.ecosystem]: {
+                        name: action.payload.result.name,
+                        type: action.payload.result.type,
+                        avatar: action.payload.result.avatar,
+                    }
+                }
+            }
         };
     }
 

@@ -22,6 +22,7 @@ import { imageEditorClose } from 'modules/content/actions';
 import ImageEditorModal from 'components/Modal/ImageEditorModal';
 
 interface IModalDispatcherState {
+    imageEditorMIME: string;
     imageEditorData: string;
     imageEditorAspectRatio: number;
     imageEditorWidth: number;
@@ -38,6 +39,7 @@ class ModalDispatcherContainer extends React.Component<IModalDispatcherState & I
         return this.props.imageEditorData && (
             <div className="modal fade in" role="dialog" style={{ display: 'block' }}>
                 <ImageEditorModal
+                    mime={this.props.imageEditorMIME}
                     data={this.props.imageEditorData}
                     width={this.props.imageEditorWidth}
                     aspectRatio={this.props.imageEditorAspectRatio}
@@ -49,6 +51,7 @@ class ModalDispatcherContainer extends React.Component<IModalDispatcherState & I
 }
 
 const mapStateToProps = (state: IRootState) => ({
+    imageEditorMIME: state.content.imageEditor.mime,
     imageEditorData: state.content.imageEditor.data,
     imageEditorAspectRatio: state.content.imageEditor.aspectRatio,
     imageEditorWidth: state.content.imageEditor.minWidth

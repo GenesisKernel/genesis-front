@@ -286,6 +286,12 @@ const register = (editor: typeof monaco) => {
                     documentation: 'Aspect ratio of the resulting image (WIDTH / HEIGHT)',
                     insertText: 'Ratio: '
                 },
+                {
+                    label: 'Format',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'What format to use when generating the result',
+                    insertText: 'Format: '
+                },
                 staticParamTypes.Class
             ]
         },
@@ -333,6 +339,12 @@ const register = (editor: typeof monaco) => {
                     kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Default input value',
                     insertText: 'Value: '
+                },
+                {
+                    label: 'Disabled',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Sets input state to read-only. Any non-empty value will be treated as true',
+                    insertText: 'Disabled: '
                 }
             ]
         },

@@ -19,14 +19,28 @@ import { Button, Col, FormGroup } from 'react-bootstrap';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import storage, { IStoredKey } from 'lib/storage';
 import keyring from 'lib/keyring';
+import styled from 'styled-components';
 import { navigate } from 'modules/engine/actions';
 import { login } from 'modules/auth/actions';
 import { alertShow } from 'modules/content/actions';
+import imgAvatar from 'images/avatar.svg';
 
 import DocumentTitle from 'components/DocumentTitle';
 import General from 'components/General';
 import Welcome from 'components/General/Welcome';
 import Validation from 'components/Validation';
+
+const StyledAccountList = styled.ul`
+    list-style-type: none;
+    padding: 0;
+
+    > li {
+        .avatar {
+            max-width: 36px;
+            max-height: 36px;
+        }
+    }
+`;
 
 export interface ILoginProps extends InjectedIntlProps {
     navigate: typeof navigate;
@@ -38,6 +52,7 @@ interface ILoginState {
     remember: boolean;
     accounts: IStoredKey[];
     account: IStoredKey;
+    ecosystem: string;
 }
 
 class Login extends React.Component<ILoginProps, ILoginState> {
@@ -46,7 +61,8 @@ class Login extends React.Component<ILoginProps, ILoginState> {
         this.state = {
             remember: false,
             accounts: [],
-            account: null
+            account: null,
+            ecosystem: null
         };
     }
 
@@ -62,19 +78,23 @@ class Login extends React.Component<ILoginProps, ILoginState> {
     }
 
     onSubmit(values: { [key: string]: any }) {
+        if (!this.state.account || !this.state.account.encKey) {
+            return;
+        }
+
         const privateKey = keyring.decryptAES(this.state.account.encKey, values.password);
         if (keyring.KEY_LENGTH === privateKey.length) {
             if (values.remember) {
                 storage.settings.save('privateKey', privateKey);
-                storage.settings.save('publicKey', this.state.account.publicKey);
+                storage.settings.save('lastEcosystem', this.state.ecosystem);
             }
             else {
                 storage.settings.remove('privateKey');
-                storage.settings.remove('publicKey');
+                storage.settings.remove('lastEcosystem');
             }
             this.props.login({
                 privateKey,
-                publicKey: this.state.account.publicKey,
+                ecosystem: this.state.ecosystem,
                 remember: values.remember
             });
             this.props.navigate('/');
@@ -90,13 +110,43 @@ class Login extends React.Component<ILoginProps, ILoginState> {
         }
     }
 
-    onSelectAccount(account: IStoredKey) {
+    onSelectAccount(account: IStoredKey, ecosystem: string) {
         this.setState({
-            account
+            account,
+            ecosystem
         });
     }
 
     render() {
+        const accounts: {
+            id: string;
+            avatar: string;
+            type: string;
+            address: string;
+            ecosystem: {
+                id: string;
+                name: string;
+            },
+            ref: IStoredKey;
+        }[] = [];
+        this.state.accounts.forEach(account => {
+            for (let itr in account.ecosystems) {
+                if (account.ecosystems.hasOwnProperty(itr)) {
+                    accounts.push({
+                        id: account.id,
+                        avatar: account.ecosystems[itr].avatar,
+                        type: account.ecosystems[itr].type,
+                        address: account.address,
+                        ecosystem: {
+                            id: itr,
+                            name: account.ecosystems[itr].name
+                        },
+                        ref: account
+                    });
+                }
+            }
+        });
+
         return this.state.accounts.length ?
             (
                 <DocumentTitle title="auth.login" defaultTitle="Login">
@@ -106,27 +156,35 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                                 <FormattedMessage id="auth.login" defaultMessage="Login" />
                             </h2>
                             <div className="text-center">
-                                <ul>
-                                    {this.state.accounts.map(l => (
-                                        <li key={l.id}>
-                                            <Button bsStyle="link" onClick={this.onSelectAccount.bind(this, l)}>{l.address}</Button>
+                                <StyledAccountList>
+                                    {accounts.map(l => (
+                                        <li key={l.id + l.ecosystem.id}>
+                                            <Button block bsStyle="default" onClick={this.onSelectAccount.bind(this, l.ref, l.ecosystem.id)}>
+                                                <div className="media-box text-left">
+                                                    <div className="pull-left">
+                                                        <img src={l.avatar || imgAvatar} className="avatar" />
+                                                    </div>
+                                                    <div className="pull-right">
+                                                        {this.state.account && this.state.account.id === l.id && this.state.ecosystem === l.ecosystem.id && (
+                                                            <i className="fa fa-check fa-1x mt text-muted" />
+                                                        )}
+                                                    </div>
+                                                    <div className="media-box-body clearfix">
+                                                        <p className="m0">
+                                                            <b>{l.ecosystem.name || l.ecosystem.id}</b>
+                                                            <span className="ml">({l.type || l.id})</span>
+                                                        </p>
+                                                        <p className="m0">
+                                                            <small>{l.address}</small>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </Button>
                                         </li>
                                     ))}
-                                </ul>
+                                </StyledAccountList>
                             </div>
                             <div className="panel-body pb0">
-                                <fieldset>
-                                    <Validation.components.ValidatedFormGroup for="address">
-                                        <Col md={3}>
-                                            <label className="control-label">
-                                                <FormattedMessage id="general.address" defaultMessage="Address" />
-                                            </label>
-                                        </Col>
-                                        <Col md={9}>
-                                            <Validation.components.ValidatedControl name="address" type="text" readOnly value={this.state.account ? this.state.account.address : ''} validators={[Validation.validators.required]} />
-                                        </Col>
-                                    </Validation.components.ValidatedFormGroup>
-                                </fieldset>
                                 <fieldset>
                                     <Validation.components.ValidatedFormGroup for="password">
                                         <Col md={3}>

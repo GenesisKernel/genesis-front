@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
+// tslint:disable:no-string-literal
 import storage, { IStoredKey } from 'lib/storage';
 
 class LocalStorageMock {
@@ -38,7 +39,7 @@ class LocalStorageMock {
     removeItem(key: string) {
         delete this.store[key];
     }
-};
+}
 
 global['localStorage'] = new LocalStorageMock;
 
@@ -47,20 +48,20 @@ test('Storage saveAll/loadAll data equality', () => {
         {
             id: 'test_id1',
             encKey: 'test_encKey1',
-            publicKey: 'test_publicKey1',
-            address: 'test_address1'
+            address: '0000-0000-00000-0000',
+            ecosystems: {}
         },
         {
             id: 'test_id2',
             encKey: 'test_encKey2',
-            publicKey: 'test_publicKey2',
-            address: 'test_address2'
+            address: '0000-0000-00000-0000',
+            ecosystems: {}
         },
         {
             id: 'test_id3',
             encKey: 'test_encKey3',
-            publicKey: 'test_publicKey3',
-            address: 'test_address3'
+            address: '0000-0000-00000-0000',
+            ecosystems: {}
         },
     ];
     storage.accounts.saveAll(testData);
@@ -74,20 +75,20 @@ test('Storage saveAll/load data equality', () => {
         {
             id: 'test_id1',
             encKey: 'test_encKey1',
-            publicKey: 'test_publicKey1',
-            address: 'test_address1'
+            address: '0000-0000-00000-0000',
+            ecosystems: {}
         },
         {
             id: 'test_id2',
             encKey: 'test_encKey2',
-            publicKey: 'test_publicKey2',
-            address: 'test_address2'
+            address: '0000-0000-00000-0000',
+            ecosystems: {}
         },
         {
             id: 'test_id3',
             encKey: 'test_encKey3',
-            publicKey: 'test_publicKey3',
-            address: 'test_address3'
+            address: '0000-0000-00000-0000',
+            ecosystems: {}
         },
     ];
     storage.accounts.saveAll(testData);
@@ -101,20 +102,20 @@ test('Storage save/loadAll data equality', () => {
         {
             id: 'test_id1',
             encKey: 'test_encKey1',
-            publicKey: 'test_publicKey1',
-            address: 'test_address1'
+            address: '0000-0000-00000-0000',
+            ecosystems: {}
         },
         {
             id: 'test_id2',
             encKey: 'test_encKey2',
-            publicKey: 'test_publicKey2',
-            address: 'test_address2'
+            address: '0000-0000-00000-0000',
+            ecosystems: {}
         },
         {
             id: 'test_id3',
             encKey: 'test_encKey3',
-            publicKey: 'test_publicKey3',
-            address: 'test_address3'
+            address: '0000-0000-00000-0000',
+            ecosystems: {}
         },
     ];
 
@@ -131,20 +132,20 @@ test('Storage save/load data equality', () => {
         {
             id: 'test_id1',
             encKey: 'test_encKey1',
-            publicKey: 'test_publicKey1',
-            address: 'test_address1'
+            address: '0000-0000-00000-0000',
+            ecosystems: {}
         },
         {
             id: 'test_id2',
             encKey: 'test_encKey2',
-            publicKey: 'test_publicKey2',
-            address: 'test_address2'
+            address: '0000-0000-00000-0000',
+            ecosystems: {}
         },
         {
             id: 'test_id3',
             encKey: 'test_encKey3',
-            publicKey: 'test_publicKey3',
-            address: 'test_address3'
+            address: '0000-0000-00000-0000',
+            ecosystems: {}
         },
     ];
 

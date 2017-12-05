@@ -144,7 +144,7 @@ class EditTable extends React.Component<IEditTableProps> {
                             </Col>
                         </Row>
                         {this.props.table && (
-                            <ValidatedContractForm vde={this.props.vde} contractName="EditTable" mapContractParams={this.mapContractParams.bind(this)}>
+                            <ValidatedContractForm vde={this.props.vde} contractName="@1EditTable" mapContractParams={this.mapContractParams.bind(this)}>
                                 <Row>
                                     <Col md={6}>
                                         <Panel

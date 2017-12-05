@@ -21,6 +21,7 @@ import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 
 export interface IImageEditorModalProps {
+    mime: string;
     data: string;
     aspectRatio: number;
     width: number;
@@ -61,10 +62,10 @@ class ImageEditorModal extends React.Component<IImageEditorModalProps> {
             }
 
             ctx.drawImage(oc, 0, 0, current.width, current.height, 0, 0, output.width, output.height);
-            this.props.onSuccess(output.toDataURL());
+            this.props.onSuccess(output.toDataURL(this.props.mime));
         }
         else {
-            this.props.onSuccess(input.toDataURL());
+            this.props.onSuccess(input.toDataURL(this.props.mime));
         }
     }
 

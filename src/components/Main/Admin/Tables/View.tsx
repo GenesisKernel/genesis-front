@@ -24,32 +24,45 @@ import DocumentTitle from 'components/DocumentTitle';
 import Heading from 'components/Heading';
 import Money from 'components/Money';
 
+export interface IColumnDisplayRule {
+    disabled?: boolean;
+    render: (value: string) => JSX.Element;
+}
+
+export const columnDisplayRules: { [key: string]: IColumnDisplayRule } = {
+    money: {
+        render: data => (<Money value={data} />)
+    },
+    varchar: {
+        render: data => (<span>{data}</span>)
+    },
+    text: {
+        render: data => (<span>{data}</span>)
+    },
+    jsonb: {
+        render: data => (<span>{data}</span>)
+    },
+    double: {
+        render: data => (<span>{data}</span>)
+    },
+    character: {
+        render: data => (<span>{data}</span>)
+    },
+    number: {
+        render: data => (<span>{data}</span>)
+    },
+    bytea: {
+        disabled: true,
+        render: () => (<span className="text-muted">[BLOB]</span>)
+    }
+};
+
 export interface IViewProps {
     vde?: boolean;
     tableName: string;
     table: ITableResponse;
     tableData: IListResponse;
 }
-
-const DataPresenter: React.SFC<{ type: string, data: any }> = (props) => {
-    // http://egaas-ru.readthedocs.io/ru/latest/introduction/api2.html#table-name
-    // varchar,bytea,number,money,text,double,character.
-    switch (props.type) {
-        case 'money':
-            return (<Money value={props.data} />);
-
-        case 'varchar':
-        case 'text':
-        case 'jsonb':
-        case 'double':
-        case 'character':
-        case 'number':
-            return (<span>{props.data}</span>);
-
-        default:
-            return (<span className="text-muted">[BLOB]</span>);
-    }
-};
 
 const View: React.SFC<IViewProps> = (props) => (
     <DocumentTitle title={props.tableName}>
@@ -89,7 +102,7 @@ const View: React.SFC<IViewProps> = (props) => (
                                             <td>{row.id}</td>
                                             {props.table.columns.map(col => (
                                                 <td key={col.name}>
-                                                    <DataPresenter type={col.type} data={row[col.name]} />
+                                                    {columnDisplayRules[col.type] && columnDisplayRules[col.type].render(row[col.name])}
                                                 </td>
                                             ))}
                                             <td>

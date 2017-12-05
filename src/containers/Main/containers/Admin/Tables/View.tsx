@@ -20,7 +20,7 @@ import { IRootState } from 'modules';
 import { getTable } from 'modules/admin/actions';
 import { ITableResponse, IListResponse } from 'lib/api';
 
-import View from 'components/Main/Admin/Tables/View';
+import View, { columnDisplayRules } from 'components/Main/Admin/Tables/View';
 
 export interface IViewContainerProps {
     vde?: boolean;
@@ -37,9 +37,19 @@ interface IViewContainerDispatch {
 }
 
 class ViewContainer extends React.Component<IViewContainerProps & IViewContainerState & IViewContainerDispatch> {
-    componentWillMount() {
+    componentDidMount() {
+        const columnTypes = [];
+        for (let itr in columnDisplayRules) {
+            if (columnDisplayRules.hasOwnProperty(itr)) {
+                const columnDef = columnDisplayRules[itr];
+                if (!columnDef.disabled) {
+                    columnTypes.push(itr);
+                }
+            }
+        }
         this.props.getTable({
             table: this.props.match.params.tableName,
+            columnTypes,
             vde: this.props.vde
         });
     }

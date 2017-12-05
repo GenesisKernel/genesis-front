@@ -18,12 +18,13 @@ import * as React from 'react';
 
 export interface IImageEditorProps {
     active: boolean;
+    mime: string;
     data: string;
     result: string;
     aspectRatio?: number;
     width?: number;
     onResult: (data: string) => void;
-    openEditor: (params: { data: string, width?: number, aspectRatio?: number }) => void;
+    openEditor: (params: { mime: string, data: string, width?: number, aspectRatio?: number }) => void;
 }
 
 interface IImateEditorState {
@@ -49,6 +50,7 @@ class ImageEditor extends React.Component<IImageEditorProps, IImateEditorState> 
     onPropsUpdate(props: IImageEditorProps) {
         if (!this.state.active && this.props.data !== props.data) {
             props.openEditor({
+                mime: props.mime,
                 data: props.data,
                 width: props.width,
                 aspectRatio: props.aspectRatio

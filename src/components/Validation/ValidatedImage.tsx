@@ -24,6 +24,7 @@ import ImageEditor from 'containers/Widgets/ImageEditor';
 import ValidatedForm, { IValidatedControl } from './ValidatedForm';
 
 export interface IValidatedImageProps {
+    format: 'png' | 'jpg' | 'jpeg';
     name: string;
     value?: string;
     aspectRatio?: number;
@@ -99,10 +100,22 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
         this._value = data;
     }
 
+    resolveMIME() {
+        switch (this.props.format) {
+            case 'jpg':
+            case 'jpeg':
+                return 'image/jpeg';
+
+            default:
+                return 'image/png';
+        }
+    }
+
     render() {
         return (
             <div className="input-group">
                 <ImageEditor
+                    mime={this.resolveMIME()}
                     data={this.state.value}
                     aspectRatio={this.props.aspectRatio}
                     width={this.props.width}

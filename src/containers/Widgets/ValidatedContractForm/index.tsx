@@ -72,6 +72,14 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
                 try {
                     const error: { type: string, error: string } = JSON.parse(transaction.error);
                     switch (error.type) {
+                        case 'panic':
+                            this.alert(
+                                'error',
+                                this.props.intl.formatMessage({ id: 'tx.panic', defaultMessage: 'Runtime error' }),
+                                error.error,
+                                this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
+                            ); break;
+
                         case 'warning':
                             this.alert(
                                 'warning',
@@ -151,8 +159,9 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
+    alertShow,
     contractExec: contractExec.started
 };
 
 const LocalizedValidatedContractForm = injectIntl(ValidatedContractForm);
-export default connect<IValidatedContractFormStateProps, IValidatedContractFormDispatchProps, void>(mapStateToProps, mapDispatchToProps)(LocalizedValidatedContractForm);
+export default connect<IValidatedContractFormStateProps, IValidatedContractFormDispatchProps, IValidatedContractFormProps>(mapStateToProps, mapDispatchToProps)(LocalizedValidatedContractForm);

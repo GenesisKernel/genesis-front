@@ -30,17 +30,24 @@ export const getTableEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getTable.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(Promise.all([
-                api.table(state.auth.sessionToken, action.payload.table, action.payload.vde),
-                api.list(state.auth.sessionToken, action.payload.table, undefined, undefined, undefined, action.payload.vde)
-            ]))
-                .map(payload => actions.getTable.done({
-                    params: action.payload,
-                    result: {
-                        table: payload[0],
-                        data: payload[1]
-                    }
-                }))
+            return Observable.fromPromise(api.table(state.auth.sessionToken, action.payload.table, action.payload.vde))
+                .flatMap(tableStruct => {
+                    const columns: string[] = ['id'];
+                    tableStruct.columns.forEach(column => {
+                        if (-1 !== action.payload.columnTypes.indexOf(column.type)) {
+                            columns.push(column.name);
+                        }
+                    });
+
+                    return Observable.fromPromise(api.list(state.auth.sessionToken, action.payload.table, undefined, undefined, columns, action.payload.vde))
+                        .map(tableData => actions.getTable.done({
+                            params: action.payload,
+                            result: {
+                                table: tableStruct,
+                                data: tableData
+                            }
+                        }));
+                })
                 .catch((e: IAPIError) =>
                     Observable.of(actions.getTable.failed({
                         params: action.payload,
@@ -504,7 +511,7 @@ export const exportDataEpic: Epic<Action, IRootState> =
                     };
 
                     const fetchPartial = (offset: number, limit: number, values: any[] = []): any =>
-                        api.list(state.auth.sessionToken, struct.name, offset, limit, columns.join(','))
+                        api.list(state.auth.sessionToken, struct.name, offset, limit, columns)
                             .then(result => {
                                 // API returns null if requested offset is empty so we'll need to
                                 // handle this, otherwise list.length will fail

@@ -24,6 +24,7 @@ import { IValidator } from 'components/Validation/Validators';
 export interface IInputProps {
     'className'?: string;
     'class'?: string;
+    'disabled'?: string;
     'name'?: string;
     'placeholder'?: string;
     'type'?: string;
@@ -49,6 +50,7 @@ const Input: React.SFC<IInputProps> = (props) => {
             return (
                 <Validation.components.ValidatedTextarea
                     className={className}
+                    disabled={!!props.disabled}
                     name={props.name}
                     placeholder={props.placeholder}
                     defaultValue={props.value}
@@ -60,6 +62,7 @@ const Input: React.SFC<IInputProps> = (props) => {
             return (
                 <Validation.components.ValidatedControl
                     className={className}
+                    disabled={!!props.disabled}
                     name={props.name}
                     placeholder={props.placeholder}
                     type={props.type}

@@ -166,11 +166,8 @@ const WORD_LIST = ['abandon', 'ability', 'able', 'about', 'above', 'absent', 'ab
     'wrong', 'yard', 'year', 'yellow', 'you', 'young', 'youth', 'zebra', 'zero', 'zone', 'zoo'];
 
 export interface IKeyBackup {
-    id: string;
     privateKey: string;
-    publicKey: string;
-    address: string;
-    ecosystems: { [id: string]: string };
+    ecosystems: { [key: string]: string };
 }
 
 const randomEngine = Random();
@@ -235,6 +232,19 @@ const keyring = {
         };
     },
 
+    genereatePublicKey(privateKey: string) {
+        const curveParams = KJUR.crypto.ECParameterDB.getByName(curveName);
+        const curveG = curveParams.G;
+        const charLen = curveParams.keylen / 4;
+        const privateBig = new KJUR.BigInteger(privateKey, 16);
+        const publicBig = curveG.multiply(privateBig);
+        const valueX = publicBig.getX().toBigInteger();
+        const valueY = publicBig.getY().toBigInteger();
+        const xHex = ('0000000000' + valueX.toString(16)).slice(-charLen);
+        const yHex = ('0000000000' + valueY.toString(16)).slice(-charLen);
+        return '04' + xHex + yHex;
+    },
+
     encryptAES: (data: string, password: string) => {
         return CryptoJS.AES.encrypt(data, password).toString();
     },
@@ -271,40 +281,40 @@ const keyring = {
     },
 
     backup: (key: IKeyBackup) => {
-        return [
-            `ID: ${key.id}`,
-            // `Seed: e2cfd8ff56f96996a65261c78aceff2a12ceb748d5459e6120f4ba612d67633d`,
-            `Private Key: ${key.privateKey}`,
-            `Public Key: ${key.publicKey}`,
-            `Address: ${key.address}`,
-            `Ecosystems: ${JSON.stringify(key.ecosystems)}`
-        ].join('\n');
-    },
-
-    restore: (payload: string) => {
-        const tokens = payload.split('\n');
-        const backup: IKeyBackup = {
-            id: null,
-            privateKey: null,
-            publicKey: null,
-            address: null,
-            ecosystems: null
-        };
-
-        for (let i = 0; i < tokens.length; i++) {
-            const token = tokens[i];
-            const matches = token.match(/^([a-zA-Z ]*): *(.*)$/) || [];
-
-            switch (matches[1]) {
-                case 'ID': backup.id = matches[2]; break;
-                case 'Private Key': backup.privateKey = matches[2]; break;
-                case 'Public Key': backup.publicKey = matches[2]; break;
-                case 'Address': backup.address = matches[2]; break;
-                case 'Ecosystems': backup.ecosystems = JSON.parse(matches[2]); break;
-                default: return null;
+        const ecosystems: string[] = [];
+        for (let itr in key.ecosystems) {
+            if (key.ecosystems.hasOwnProperty(itr)) {
+                ecosystems.push(itr);
             }
         }
-        return backup;
+        return `${key.privateKey};${ecosystems.join(';')}`;
+    },
+
+    restore: (payload: string): IKeyBackup => {
+        const tokens = payload.split(';');
+        if (tokens.length) {
+            const privateKey = tokens[0].trim();
+            const ecosystems: { [key: string]: string } = {};
+
+            // Ecosystems are stored as string, but we still need to
+            // check if stored values are correct ones
+            for (let i = 1; i < tokens.length; i++) {
+                const ecosystemToken = parseInt(tokens[i], 10);
+
+                // Check if value is not NaN
+                if (ecosystemToken === ecosystemToken) {
+                    ecosystems[ecosystemToken.toString()] = null;
+                }
+            }
+
+            return {
+                privateKey,
+                ecosystems
+            };
+        }
+        else {
+            return null;
+        }
     },
 
     walletIdToAddr(id: string | number) {

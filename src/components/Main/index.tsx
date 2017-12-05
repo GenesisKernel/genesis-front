@@ -41,7 +41,7 @@ export interface IMainProps {
     isEcosystemOwner: boolean;
     pending: boolean;
     stylesheet: string;
-    menus: { name: string, content: IProtypoElement[] }[];
+    menus: { name: string, content: IProtypoElement[], vde: boolean }[];
     pendingTransactions: OrderedMap<string, { uuid: string, block: string, error: string, contract: string }>;
     transactionsCount: number;
     menuPop: typeof menuPop;

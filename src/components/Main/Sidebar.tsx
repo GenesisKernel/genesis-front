@@ -19,7 +19,6 @@ import styled from 'styled-components';
 import imgLogo from 'images/logoInverse.svg';
 import { Link } from 'react-router-dom';
 import { injectIntl, InjectedIntl, FormattedMessage } from 'react-intl';
-import { menuPop, menuPush } from 'modules/content/actions';
 
 import Protypo from 'containers/Widgets/Protypo';
 import { IProtypoElement } from 'components/Protypo/Protypo';
@@ -125,10 +124,11 @@ export interface ISidebarProps {
     intl?: InjectedIntl;
     menus: {
         name: string;
+        vde: boolean;
         content: IProtypoElement[];
     }[];
-    menuPop: typeof menuPop;
-    menuPush: typeof menuPush;
+    menuPop: () => void;
+    menuPush: (menu: { name: string, vde: boolean, content: IProtypoElement[] }) => void;
 }
 
 const Sidebar: React.SFC<ISidebarProps> = (props) => {
@@ -138,6 +138,7 @@ const Sidebar: React.SFC<ISidebarProps> = (props) => {
     const onAdminTools = () => {
         const menuStack = {
             name: 'admin_tools',
+            vde: false,
             content: [
                 {
                     tag: 'menuitem',
@@ -216,6 +217,7 @@ const Sidebar: React.SFC<ISidebarProps> = (props) => {
     const onVDETools = () => {
         props.menuPush({
             name: 'vde_tools',
+            vde: false,
             content: [
                 {
                     tag: 'menuitem',
@@ -272,9 +274,12 @@ const Sidebar: React.SFC<ISidebarProps> = (props) => {
                     <div className="backbutton-label">{menu && menu.name}</div>
                 </StyledBackButton>
                 <StyledMenuContent>
-                    <Protypo
-                        payload={menu && menu.content}
-                    />
+                    {menu && (
+                        <Protypo
+                            vde={menu.vde}
+                            payload={menu.content}
+                        />
+                    )}
                 </StyledMenuContent>
                 <StyledDevButton>
                     <button id="mainAdminTools" onClick={onVDETools}>

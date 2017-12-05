@@ -3,10 +3,16 @@ export interface IStoredData {
 }
 
 export interface IStoredKey extends IStoredData {
+    id: string;
     encKey: string;
-    publicKey: string;
     address: string;
-    ecosystems?: { [id: string]: string };
+    ecosystems?: {
+        [id: string]: {
+            name?: string;
+            avatar?: string;
+            type?: string;
+        }
+    };
 }
 
 export const serializeData = (data: any) => {
@@ -81,13 +87,5 @@ const settingsStorage = {
 
 export default {
     settings: settingsStorage,
-    accounts: new Storage<IStoredKey>('accounts'),
-    resolveEcosystemName: (account: IStoredKey, ecosystem: string) => {
-        if ('1' === ecosystem) {
-            return 'APL-Wallet';
-        }
-        else {
-            return account.ecosystems[ecosystem] || ecosystem;
-        }
-    }
+    accounts: new Storage<IStoredKey>('accounts')
 };

@@ -25,7 +25,7 @@ export const getContract = actionCreator.async<{ id: string, vde?: boolean }, { 
 export const getContracts = actionCreator.async<{ vde?: boolean, offset?: number, limit?: number }, IContractsResponse, string>('GET_CONTRACTS');
 
 // Tables
-export const getTable = actionCreator.async<{ table: string, vde?: boolean }, { table: ITableResponse, data: IListResponse }, string>('GET_TABLE');
+export const getTable = actionCreator.async<{ table: string, columnTypes?: string[], vde?: boolean }, { table: ITableResponse, data: IListResponse }, string>('GET_TABLE');
 export const getTableStruct = actionCreator.async<{ name: string, vde?: boolean }, ITableResponse, string>('GET_TABLE_STRUCT');
 export const getTables = actionCreator.async<{ offset?: number, limit?: number, vde?: boolean }, ITablesResponse, string>('GET_TABLES');
 

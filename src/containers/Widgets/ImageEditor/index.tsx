@@ -22,6 +22,7 @@ import { imageEditorOpen } from 'modules/content/actions';
 import ImageEditor from 'components/ImageEditor';
 
 interface IImageEditorContainerProps {
+    mime: string;
     data: string;
     aspectRatio?: number;
     width?: number;

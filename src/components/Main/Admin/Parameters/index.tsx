@@ -42,7 +42,7 @@ const Parameters: React.SFC<IParametersProps> = (props) => (
                             </span>
                         </button>
                     </Link>
-                    <Link to={props.vde ? '/vde/parameters/create' : '/admin/paramters/create'} className="ml">
+                    <Link to={props.vde ? '/vde/parameters/create' : '/admin/parameters/create'} className="ml">
                         <button className="btn btn-default">
                             <em className="fa fa-plus-circle fa-fw mr-sm" />
                             <span>

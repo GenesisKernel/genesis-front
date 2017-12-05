@@ -22,11 +22,11 @@ import { IProtypoElement } from 'components/Protypo/Protypo';
 export type State = {
     readonly pending: boolean;
     readonly stylesheet: string;
-    readonly menus: { name: string, content: IProtypoElement[] }[];
+    readonly menus: { name: string, vde: boolean, content: IProtypoElement[] }[];
     readonly page: { name: string, content: IProtypoElement[], error?: string };
     readonly notifications: IProtypoElement[];
     readonly alert: { id: string, success: string, error: string };
-    readonly imageEditor: { data: string, aspectRatio: number, minWidth: number, result: string };
+    readonly imageEditor: { mime: string, data: string, aspectRatio: number, minWidth: number, result: string };
 };
 
 export const initialState: State = {
@@ -36,7 +36,7 @@ export const initialState: State = {
     page: null,
     notifications: null,
     alert: null,
-    imageEditor: { data: null, aspectRatio: null, minWidth: null, result: null }
+    imageEditor: { mime: null, data: null, aspectRatio: null, minWidth: null, result: null }
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -180,6 +180,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             imageEditor: {
+                mime: action.payload.mime,
                 data: action.payload.data,
                 aspectRatio: action.payload.aspectRatio,
                 minWidth: action.payload.width,
@@ -191,6 +192,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             imageEditor: {
+                mime: null,
                 data: null,
                 aspectRatio: null,
                 minWidth: null,
