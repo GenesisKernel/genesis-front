@@ -16,6 +16,7 @@
 
 import actionCreatorFactory from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IPageResponse, IContractsResponse, IParameterResponse, ITabListResponse } from 'lib/api';
+import { IProtypoElement } from 'components/Protypo/Protypo';
 
 const actionCreator = actionCreatorFactory('admin');
 
@@ -31,6 +32,13 @@ export const getTables = actionCreator.async<{ offset?: number, limit?: number, 
 // Pages
 export const getPage = actionCreator.async<{ id: string, vde?: boolean }, IPageResponse, string>('GET_PAGE');
 export const getInterface = actionCreator.async<{ vde?: boolean }, IInterfacesResponse, string>('GET_INTERFACE');
+
+// Constructor
+
+export const getPageTreeCode = actionCreator.async<{ code: string, vde?: boolean }, { pageTreeCode: any }, string>('GET_PAGE_TREE_CODE');
+export const getPageTree = actionCreator.async<{ id: string, name: string, vde?: boolean }, { page: { name: string, tree: IProtypoElement[], error?: string } }, string>('GET_PAGE_TREE');
+export const changePage = actionCreator<{ text?: string, class?: string; tagID: string, pageID: string }>('CHANGE_PAGE');
+// export const selectTag = actionCreator<{ tagID: string, pageID: string }>('SELECT_TAG');
 
 // Menus
 export const getMenu = actionCreator.async<{ id: string, vde?: boolean }, { id: string, name: string, value: string, conditions: string }, string>('GET_MENU');
@@ -53,8 +61,5 @@ export const importData = actionCreator.async<File, any, undefined>('IMPORT_DATA
 export const importDataPrune = actionCreator<{ name: string, key: string, index?: number }>('IMPORT_DATA_PRUNE');
 
 // Tabs
-export const getTabList = actionCreator.async<{ addID?: string, addName?: string, addType?: string }, ITabListResponse, string>('GET_TAB_LIST');
-export const removeTabList = actionCreator.async<{ id: string, type: string }, any, string>('REMOVE_TAB_LIST');
-
-// export const loadTabList = actionCreator<{ addID?: string, addName?: string, addType?: string}>('LOAD_TAB_LIST');
-// export const removeTabList = actionCreator<{ id: string, type: string}>('REMOVE_TAB_LIST');
+export const getTabList = actionCreator.async<{ addID?: string, addName?: string, addType?: string}, ITabListResponse, string>('GET_TAB_LIST');
+export const removeTabList = actionCreator.async<{ id: string, type: string}, any, string>('REMOVE_TAB_LIST');

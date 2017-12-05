@@ -25,6 +25,7 @@ import ParameterEditTabbed from 'containers/Main/containers/Admin/Parameters/Edi
 import InterfacePageEditTabbed from 'containers/Main/containers/Admin/Interface/EditPageTabbed';
 import InterfaceBlockEditTabbed from 'containers/Main/containers/Admin/Interface/EditBlockTabbed';
 import InterfaceMenuEditTabbed from 'containers/Main/containers/Admin/Interface/EditMenuTabbed';
+import InterfaceConstructorTabbed from 'containers/Main/containers/Admin/Interface/ConstructorTabbed';
 
 const Title = styled.div`
     padding-left: 20px;
@@ -52,6 +53,22 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
         }
         // this.props.loadTabList(addTab);
         this.props.getTabList(addTab);
+    }
+
+    componentWillReceiveProps(props: ITabsContainerProps & { match: { params: { type: string, id: string, name: string } } }) {
+        // alert(JSON.stringify(props));
+        // alert('new' + JSON.stringify(this.props));
+        // TODO: bugfix reopen closed tab from same page
+        if (props.match.params.type && props.match.params.id) {
+            if (this.props.match.params.type !== props.match.params.type || this.props.match.params.id !== props.match.params.id || this.props.match.params.name !== props.match.params.name) {
+                let addTab = {
+                    addID: props.match.params.id,
+                    addName: props.match.params.name,
+                    addType: props.match.params.type
+                };
+                this.props.getTabList(addTab);
+            }
+        }
     }
 
     onTabClose(id: string, type: string) {
@@ -87,6 +104,15 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
                         <div key={tabListItem.type + tabListItem.id}>
                             <Title>Interface Menu</Title>
                             <InterfaceMenuEditTabbed menuID={tabListItem.id}/>
+                        </div>
+                    );
+                }
+                else
+                if (tabListItem.type === 'interfaceConstructor') {
+                    tabsContent.push(
+                        <div key={tabListItem.type + tabListItem.id}>
+                            <Title>Interface Constructor</Title>
+                            <InterfaceConstructorTabbed pageID={tabListItem.id} pageName={tabListItem.name}/>
                         </div>
                     );
                 }

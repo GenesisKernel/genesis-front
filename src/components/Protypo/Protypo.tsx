@@ -21,19 +21,25 @@ import * as propTypes from 'prop-types';
 import Heading from 'components/Heading';
 import { IValidationResult } from 'components/Validation/ValidatedForm';
 import ToolButton, { IToolButtonProps } from 'components/Protypo/components/ToolButton';
+// import EditableWrapper from 'components/Protypo/components/EditableWrapper';
 
 export interface IProtypoProps {
     vde?: boolean;
+    editable?: boolean;
     wrapper?: JSX.Element;
     page: string;
     payload: IProtypoElement[];
     menuPush: (params: { name: string, content: IProtypoElement[] }) => void;
     navigatePage: (params: { name: string, params: any, vde?: boolean }) => void;
     navigate: (url: string) => void;
+    changePage?: any;
+    selectTag?: any;
+    selectedTag?: any;
 }
 
 export interface IProtypoElement {
     tag: string;
+    id?: string;
     text?: string;
     attr?: { [key: string]: string };
     children?: IProtypoElement[];
@@ -125,8 +131,30 @@ export default class Protypo extends React.Component<IProtypoProps> {
                 const func = resolveFunction(element.tag);
                 if (Handler) {
                     const key = optionalKey || (this._lastID++).toString();
+                    const selected = this.props.selectedTag && this.props.selectedTag.id === element.id;
+
+                    // if (this.props.editable && 0) {
+                    //     return (
+                    //         <EditableWrapper key={key} tag_id={element.tag_id}>
+                    //             <Handler {...element.attr} id={key} childrenTree={element.children} contentEditable={false} editable={this.props.editable}>
+                    //                 {this.renderElements(element.children)}
+                    //             </Handler>
+                    //         </EditableWrapper>
+                    //     );
+                    // }
+
                     return (
-                        <Handler {...element.attr} key={key} id={key} childrenTree={element.children}>
+                        <Handler
+                            {...element.attr}
+                            key={key}
+                            id={key}
+                            tag={element}
+                            childrenTree={element.children}
+                            editable={this.props.editable}
+                            changePage={this.props.changePage}
+                            selectTag={this.props.selectTag}
+                            selected={selected}
+                        >
                             {this.renderElements(element.children)}
                         </Handler>
                     );

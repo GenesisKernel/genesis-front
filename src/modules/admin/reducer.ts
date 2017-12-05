@@ -18,6 +18,7 @@ import * as actions from './actions';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse } from 'lib/api';
+import findTagById from 'lib/constructor';
 
 export type State = {
     readonly pending: boolean;
@@ -28,6 +29,7 @@ export type State = {
     readonly table: ITableResponse;
     readonly tableData: IListResponse;
     readonly page: { id: string, name: string, menu: string, conditions: string, value: string };
+    readonly pageTreeCode: any;
     readonly interfaces: IInterfacesResponse;
     readonly contract: { id: string, active: string, name: string, conditions: string, address: string, value: string };
     readonly contracts: IContract[];
@@ -62,6 +64,7 @@ export const initialState: State = {
     table: null,
     tableData: null,
     page: null,
+    pageTreeCode: null,
     interfaces: null,
     contract: null,
     contracts: null,
@@ -116,7 +119,7 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.tabs.data,
                     ['interfacePage' + action.payload.result.page.id]: {
                         type: 'interfacePage',
-                            data: action.payload.result.page
+                        data: action.payload.result.page
                     }
                 }
             }
@@ -128,6 +131,111 @@ export default (state: State = initialState, action: Action): State => {
             pending: false,
             page: null,
             menus: null
+        };
+    }
+
+    if (isType(action, actions.getPageTreeCode.started)) {
+        return {
+            ...state,
+            pending: true,
+            pageTreeCode: null
+        };
+    }
+    else if (isType(action, actions.getPageTreeCode.done)) {
+        let pageTreeCode = action.payload.result.pageTreeCode;
+        return {
+            ...state,
+            pending: false,
+            pageTreeCode: pageTreeCode
+        };
+    }
+    else if (isType(action, actions.getPageTreeCode.failed)) {
+        return {
+            ...state,
+            pending: false,
+            pageTreeCode: null
+        };
+    }
+
+    if (isType(action, actions.getPageTree.started)) {
+        return {
+            ...state,
+            pending: true,
+            tabs: {
+                ...state.tabs,
+                data: {
+                    ...state.tabs.data,
+                    ['interfaceConstructor' + action.payload.id]: null
+                }
+            }
+        };
+    }
+    else if (isType(action, actions.getPageTree.done)) {
+        return {
+            ...state,
+            pending: false,
+            tabs: {
+                ...state.tabs,
+                data: {
+                    ...state.tabs.data,
+                    ['interfaceConstructor' + action.payload.params.id]: {
+                        type: 'interfaceConstructor',
+                        data: action.payload.result.page.tree
+                    }
+                }
+            }
+        };
+    }
+    else if (isType(action, actions.getPageTree.failed)) {
+        return {
+            ...state,
+            pending: false,
+            tabs: {
+                ...state.tabs,
+                data: {
+                    ...state.tabs.data,
+                    ['interfaceConstructor' + action.payload.params.id]: null
+                }
+            }
+        };
+    }
+
+    if (isType(action, actions.changePage)) {
+        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data.concat() || null;
+
+        let tag = findTagById(pageTree, action.payload.tagID);
+        if (tag) {
+            if (action.payload.text) {
+                // todo: parse contentEditable tags and create children array
+                if (tag.children && tag.children.length) {
+                    let child = tag.children[0];
+                    if (child.text) {
+                        child.text = action.payload.text + '';
+                    }
+                    tag.children = [child];
+                }
+            }
+
+            if ('string' === typeof action.payload.class) {
+                tag.attr.class = action.payload.class;
+                // alert(JSON.stringify(tag));
+                // alert(JSON.stringify(pageTree));
+            }
+        }
+
+        return {
+            ...state,
+            pending: false,
+            tabs: {
+                ...state.tabs,
+                data: {
+                    ...state.tabs.data,
+                    ['interfaceConstructor' + action.payload.pageID]: {
+                        type: 'interfaceConstructor',
+                        data: pageTree
+                    }
+                }
+            }
         };
     }
 
