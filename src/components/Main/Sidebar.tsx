@@ -258,6 +258,22 @@ const Sidebar: React.SFC<ISidebarProps> = (props) => {
                         _systemPageHook: '/vde/languages',
                         title: props.intl.formatMessage({ id: 'admin.languages', defaultMessage: 'Language resources' })
                     }
+                },
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-cloud-upload',
+                        _systemPageHook: '/vde/import',
+                        title: props.intl.formatMessage({ id: 'admin.import', defaultMessage: 'Import' })
+                    }
+                },
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-cloud-download',
+                        _systemPageHook: '/vde/export',
+                        title: props.intl.formatMessage({ id: 'admin.export', defaultMessage: 'Export' })
+                    }
                 }
             ]
         });

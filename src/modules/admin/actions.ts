@@ -56,10 +56,10 @@ export const getLanguage = actionCreator.async<{ id: string }, { id: string, res
 export const getLanguages = actionCreator.async<{ vde?: boolean, offset?: number, limit?: number }, { id: string, res: any, name: string, conditions: string }[], string>('GET_LANGUAGES');
 
 // Import/export
-export const exportData = actionCreator.async<{ pages: string[], blocks: string[], menus: string[], parameters: string[], languages: string[], contracts: { id: string, name: string }[], tables: string[], data: string[] }, object, string>('EXPORT_DATA');
+export const exportData = actionCreator.async<{ vde?: boolean, pages: string[], blocks: string[], menus: string[], parameters: string[], languages: string[], contracts: { id: string, name: string }[], tables: string[], data: string[] }, object, string>('EXPORT_DATA');
 export const importData = actionCreator.async<File, any, undefined>('IMPORT_DATA');
 export const importDataPrune = actionCreator<{ name: string, key: string, index?: number }>('IMPORT_DATA_PRUNE');
 
 // Tabs
-export const getTabList = actionCreator.async<{ addID?: string, addName?: string, addType?: string}, ITabListResponse, string>('GET_TAB_LIST');
-export const removeTabList = actionCreator.async<{ id: string, type: string}, any, string>('REMOVE_TAB_LIST');
+export const getTabList = actionCreator.async<{ addID?: string, addName?: string, addType?: string }, ITabListResponse, string>('GET_TAB_LIST');
+export const removeTabList = actionCreator.async<{ id: string, type: string }, any, string>('REMOVE_TAB_LIST');

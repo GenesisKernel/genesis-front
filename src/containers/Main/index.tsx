@@ -130,6 +130,8 @@ class MainContainer extends React.Component<IMainProps & { ecosystemInit: typeof
                     <Route exact path="/vde/parameters" render={props => <Parameters {...props} vde />} />
                     <Route exact path="/vde/parameters/create" render={props => <ParametersCreate {...props} vde />} />
                     <Route exact path="/vde/parameters/:parameterName" render={props => <ParametersEdit {...props} vde />} />
+                    <Route exact path="/vde/import" render={props => <Import vde />} />
+                    <Route exact path="/vde/export" render={props => <Export vde />} />
                     <Route exact path="/vde/page/:pageName" render={props => <Page {...props} vde />} />
 
                     <Route exact path="/page/:pageName" component={Page} />

@@ -22,7 +22,7 @@ import { importData, importDataPrune } from 'modules/admin/actions';
 import Import from 'components/Main/Admin/Import';
 
 export interface IImportContainerProps {
-
+    vde?: boolean;
 }
 
 interface IImportContainerState {
@@ -58,6 +58,7 @@ const ImportContainer: React.SFC<IImportContainerProps & IImportContainerState &
 
     return (
         <Import
+            vde={props.vde}
             payload={props.payload}
             importData={props.importData}
             onPrunePage={pruneFactory.bind(null, 'pages')}

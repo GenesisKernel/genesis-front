@@ -428,12 +428,12 @@ export const getPageTreeCodeEpic: Epic<Action, IRootState> =
                     setIds(pageTreeCode);
 
                     return actions.getPageTreeCode.done({
-                            params: action.payload,
-                            result: {
-                                pageTreeCode: pageTreeCode
-                            }
-                        });
-                    }
+                        params: action.payload,
+                        result: {
+                            pageTreeCode: pageTreeCode
+                        }
+                    });
+                }
                 )
                 .catch((e: IAPIError) =>
                     Observable.of(actions.getPageTreeCode.failed({
@@ -473,15 +473,15 @@ export const getPageTreeEpic: Epic<Action, IRootState> =
                     setIds(pageTree);
 
                     return actions.getPageTree.done({
-                            params: action.payload,
-                            result: {
-                                page: {
-                                    name: action.payload.name,
-                                    tree: pageTree
-                                }
+                        params: action.payload,
+                        result: {
+                            page: {
+                                name: action.payload.name,
+                                tree: pageTree
                             }
-                        });
-                    }
+                        }
+                    });
+                }
                 )
                 .catch((e: IAPIError) =>
                     Observable.of(actions.getPageTree.failed({
@@ -496,14 +496,14 @@ export const exportDataEpic: Epic<Action, IRootState> =
         .flatMap(action => {
             const state = store.getState();
             const promise = Bluebird.all([
-                Bluebird.map(action.payload.pages, page => api.row(state.auth.sessionToken, 'pages', page), { concurrency: 3 }),
-                Bluebird.map(action.payload.blocks, block => api.row(state.auth.sessionToken, 'blocks', block), { concurrency: 3 }),
-                Bluebird.map(action.payload.menus, menu => api.row(state.auth.sessionToken, 'menu', menu), { concurrency: 3 }),
-                action.payload.parameters.length ? api.parameters(state.auth.sessionToken, action.payload.parameters) : Promise.resolve([]),
-                Bluebird.map(action.payload.languages, language => api.row(state.auth.sessionToken, 'languages', language), { concurrency: 3 }),
-                Bluebird.map(action.payload.contracts, contract => api.row(state.auth.sessionToken, 'contracts', contract.id).then(data => ({ name: contract.name, ...data })), { concurrency: 3 }),
-                Bluebird.map(action.payload.tables, table => api.table(state.auth.sessionToken, table), { concurrency: 3 }),
-                Bluebird.map(action.payload.data, table => api.table(state.auth.sessionToken, table), { concurrency: 1 }).map((struct: ITableResponse) => {
+                Bluebird.map(action.payload.pages, page => api.row(state.auth.sessionToken, 'pages', page, undefined, action.payload.vde), { concurrency: 3 }),
+                Bluebird.map(action.payload.blocks, block => api.row(state.auth.sessionToken, 'blocks', block, undefined, action.payload.vde), { concurrency: 3 }),
+                Bluebird.map(action.payload.menus, menu => api.row(state.auth.sessionToken, 'menu', menu, undefined, action.payload.vde), { concurrency: 3 }),
+                action.payload.parameters.length ? api.parameters(state.auth.sessionToken, action.payload.parameters, action.payload.vde) : Promise.resolve([]),
+                Bluebird.map(action.payload.languages, language => api.row(state.auth.sessionToken, 'languages', language, undefined, action.payload.vde), { concurrency: 3 }),
+                Bluebird.map(action.payload.contracts, contract => api.row(state.auth.sessionToken, 'contracts', contract.id, undefined, action.payload.vde).then(data => ({ name: contract.name, ...data })), { concurrency: 3 }),
+                Bluebird.map(action.payload.tables, table => api.table(state.auth.sessionToken, table, action.payload.vde), { concurrency: 3 }),
+                Bluebird.map(action.payload.data, table => api.table(state.auth.sessionToken, table, action.payload.vde), { concurrency: 1 }).map((struct: ITableResponse) => {
                     const columns = struct.columns.map(l => l.name);
 
                     const mapColumns = (data: { [key: string]: string }) => {
@@ -511,7 +511,7 @@ export const exportDataEpic: Epic<Action, IRootState> =
                     };
 
                     const fetchPartial = (offset: number, limit: number, values: any[] = []): any =>
-                        api.list(state.auth.sessionToken, struct.name, offset, limit, columns)
+                        api.list(state.auth.sessionToken, struct.name, offset, limit, columns, action.payload.vde)
                             .then(result => {
                                 // API returns null if requested offset is empty so we'll need to
                                 // handle this, otherwise list.length will fail
