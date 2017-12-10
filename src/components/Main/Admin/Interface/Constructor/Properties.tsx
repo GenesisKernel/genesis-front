@@ -1,13 +1,9 @@
 import * as React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import Panel from './Panel';
-
-import imgAlignLeft from 'images/constructor/group-28.svg';
-import imgAlignCenter from 'images/constructor/group-27.svg';
-import imgAlignRight from 'images/constructor/group-26.svg';
-import imgSwitchOff from 'images/constructor/group-29.svg';
-import imgLowercase from 'images/constructor/tt-lower.svg';
-import imgUppercase from 'images/constructor/tt-upper.svg';
+import AlignRadioButtons from './AlignRadioButtons';
+import TransformRadioButtons from './TransformRadioButtons';
+import Switch from './Switch';
 
 interface IPropertiesProps {
     changePage?: any;
@@ -15,18 +11,9 @@ interface IPropertiesProps {
 }
 
 interface IPropertiesState {
-
 }
 
 export default class Properties extends React.Component<IPropertiesProps, IPropertiesState> {
-
-    // constructor(props: IPropertiesProps) {
-    //     super(props);
-    // }
-
-    // componentWillReceiveProps(props: IPropertiesProps) {
-    // }
-
     onClassesChange(e: React.ChangeEvent<HTMLInputElement>) {
         this.props.changePage({ class: e.target.value, tagID: this.props.tag.id });
     }
@@ -58,7 +45,7 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
                 </div>
                 <div className="content-wrapper"/>
                 <div className="content-wrapper b-panel-light">
-                    <Row className="g-padding-bottom">
+                    <Row className="g-padding-bottom hidden">
                         <Col xs={3} className="text-uppercase">
                             position
                         </Col>
@@ -82,34 +69,19 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
                             <div className="text-uppercase">
                                 alignment
                             </div>
-                            <div className="b-bullet b-bullet_selected">
-                                <img src={imgAlignLeft} />
-                            </div>
-                            <div className="b-bullet">
-                                <img src={imgAlignCenter} />
-                            </div>
-                            <div className="b-bullet">
-                                <img src={imgAlignRight} />
-                            </div>
+                            <AlignRadioButtons onSelect={(align: string) => {alert(align); }}/>
                         </Col>
                         <Col xs={4} className="text-center">
                             <div className="text-uppercase">
                                 transform
                             </div>
-                            <div className="b-bullet b-bullet_selected">
-                                <img src={imgUppercase} />
-                            </div>
-                            <div className="b-bullet">
-                                <img src={imgLowercase} />
-                            </div>
+                            <TransformRadioButtons onSelect={(transform: string) => {alert(transform); }}/>
                         </Col>
                         <Col xs={4} className="text-center">
                             <div className="text-center text-uppercase">
                                 no wrap
                             </div>
-                            <div className="b-switch">
-                                <img src={imgSwitchOff} />
-                            </div>
+                            <Switch onChange={(value: boolean) => {alert(value); }} />
                         </Col>
                     </Row>
                     <Row className="g-padding-bottom">
