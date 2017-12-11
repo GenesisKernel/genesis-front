@@ -1,9 +1,6 @@
 import * as React from 'react';
 // import { ReactElement } from 'react';
-import RadioButton from './RadioButton';
-
-import imgLowercase from 'images/constructor/tt-lower.svg';
-import imgUppercase from 'images/constructor/tt-upper.svg';
+import RadioButtonColor from './RadioButtonColor';
 
 interface IRadioButtonsProps {
     onSelect?: any;
@@ -12,7 +9,6 @@ interface IRadioButtonsProps {
 
 interface IRadioButtonsState {
     value: string;
-    initialValue?: string;
 }
 
 export default class RadioButtons extends React.Component<IRadioButtonsProps, IRadioButtonsState> {
@@ -35,12 +31,12 @@ export default class RadioButtons extends React.Component<IRadioButtonsProps, IR
     render() {
         return (
             <div>
-                <RadioButton value="uppercase" onClick={this.selectRadio.bind(this, 'uppercase')} selectedValue={this.state.value}>
-                    <img src={imgUppercase} title="UPPERCASE" />
-                </RadioButton>
-                <RadioButton value="lowercase" onClick={this.selectRadio.bind(this, 'lowercase')} selectedValue={this.state.value}>
-                    <img src={imgLowercase} title="lowercase" />
-                </RadioButton>
+                <RadioButtonColor value="muted" onClick={this.selectRadio.bind(this, 'muted')} selectedValue={this.state.value}/>
+                <RadioButtonColor value="primary" onClick={this.selectRadio.bind(this, 'primary')} selectedValue={this.state.value}/>
+                <RadioButtonColor value="success" onClick={this.selectRadio.bind(this, 'success')} selectedValue={this.state.value}/>
+                <RadioButtonColor value="info" onClick={this.selectRadio.bind(this, 'info')} selectedValue={this.state.value}/>
+                <RadioButtonColor value="warning" onClick={this.selectRadio.bind(this, 'warning')} selectedValue={this.state.value}/>
+                <RadioButtonColor value="danger" onClick={this.selectRadio.bind(this, 'danger')} selectedValue={this.state.value}/>
             </div>
         );
     }

@@ -3,7 +3,9 @@ import { Col, Row } from 'react-bootstrap';
 import Panel from './Panel';
 import AlignRadioButtons from './AlignRadioButtons';
 import TransformRadioButtons from './TransformRadioButtons';
+import ColorRadioButtons from './ColorRadioButtons';
 import Switch from './Switch';
+import { getInitialTagValue } from 'lib/constructor';
 
 interface IPropertiesProps {
     changePage?: any;
@@ -15,7 +17,33 @@ interface IPropertiesState {
 
 export default class Properties extends React.Component<IPropertiesProps, IPropertiesState> {
     onClassesChange(e: React.ChangeEvent<HTMLInputElement>) {
-        this.props.changePage({ class: e.target.value, tagID: this.props.tag.id });
+        if (this.props && this.props.tag) {
+            this.props.changePage({class: e.target.value, tagID: this.props.tag.id});
+        }
+    }
+
+    onAlignChange(align: string) {
+        if (this.props && this.props.tag) {
+            this.props.changePage({align: align, tagID: this.props.tag.id});
+        }
+    }
+
+    onTransformChange(transform: string) {
+        if (this.props && this.props.tag) {
+            this.props.changePage({transform: transform, tagID: this.props.tag.id});
+        }
+    }
+
+    onWrapChange(wrap: string) {
+        if (this.props && this.props.tag) {
+            this.props.changePage({wrap: wrap, tagID: this.props.tag.id});
+        }
+    }
+
+    onColorChange(color: string) {
+        if (this.props && this.props.tag) {
+            this.props.changePage({color: color, tagID: this.props.tag.id});
+        }
     }
 
     render() {
@@ -69,19 +97,19 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
                             <div className="text-uppercase">
                                 alignment
                             </div>
-                            <AlignRadioButtons onSelect={(align: string) => {alert(align); }}/>
+                            <AlignRadioButtons initialValue={(getInitialTagValue('align', this.props && this.props.tag))} onSelect={this.onAlignChange.bind(this)}/>
                         </Col>
                         <Col xs={4} className="text-center">
                             <div className="text-uppercase">
                                 transform
                             </div>
-                            <TransformRadioButtons onSelect={(transform: string) => {alert(transform); }}/>
+                            <TransformRadioButtons initialValue={(getInitialTagValue('transform', this.props && this.props.tag))} onSelect={this.onTransformChange.bind(this)}/>
                         </Col>
                         <Col xs={4} className="text-center">
                             <div className="text-center text-uppercase">
                                 no wrap
                             </div>
-                            <Switch onChange={(value: boolean) => {alert(value); }} />
+                            <Switch initialValue={(getInitialTagValue('wrap', this.props && this.props.tag))} onValue="nowrap" offValue="" onChange={this.onWrapChange.bind(this)} />
                         </Col>
                     </Row>
                     <Row className="g-padding-bottom">
@@ -91,15 +119,16 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
                             </div>
                         </Col>
                         <Col xs={12}>
-                            <div className="b-bullet-color b-bullet-color_blue"/>
-                            <div className="b-bullet-color b-bullet-color_green b-bullet-color_selected"/>
-                            <div className="b-bullet-color b-bullet-color_red"/>
-                            <div className="b-bullet-color b-bullet-color_yellow"/>
-                            <div className="b-bullet-color b-bullet-color_magenta"/>
-                            <div className="b-bullet-color b-bullet-color_dark-blue"/>
-                            <div className="b-bullet-color b-bullet-color_light-grey"/>
-                            <div className="b-bullet-color b-bullet-color_black"/>
-                            <div className="b-bullet-color b-bullet-color_grey"/>
+                            <ColorRadioButtons initialValue={(getInitialTagValue('color', this.props && this.props.tag))} onSelect={this.onColorChange.bind(this)}/>
+                            {/*<div className="b-bullet-color b-bullet-color_blue"/>*/}
+                            {/*<div className="b-bullet-color b-bullet-color_green b-bullet-color_selected"/>*/}
+                            {/*<div className="b-bullet-color b-bullet-color_red"/>*/}
+                            {/*<div className="b-bullet-color b-bullet-color_yellow"/>*/}
+                            {/*<div className="b-bullet-color b-bullet-color_magenta"/>*/}
+                            {/*<div className="b-bullet-color b-bullet-color_dark-blue"/>*/}
+                            {/*<div className="b-bullet-color b-bullet-color_light-grey"/>*/}
+                            {/*<div className="b-bullet-color b-bullet-color_black"/>*/}
+                            {/*<div className="b-bullet-color b-bullet-color_grey"/>*/}
                         </Col>
                     </Row>
                 </div>

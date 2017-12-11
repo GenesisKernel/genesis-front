@@ -15,13 +15,57 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import { OnPasteStripFormatting } from 'lib/constructor';
+import StyledComponent from './StyledComponent';
 
-export interface IStrongProps {
+export interface IPProps {
+    'className'?: string;
     'class'?: string;
+    'children': any;
+    'editable'?: boolean;
+    'changePage'?: any;
+    'selectTag'?: any;
+    'selected'?: boolean;
+    'tag'?: any;
 }
 
-const Strong: React.SFC<IStrongProps> = (props) => (
-    <strong className={props.class}>{props.children}</strong>
-);
+class Strong extends React.Component<IPProps> {
 
-export default Strong;
+    onPaste(e: any) {
+        OnPasteStripFormatting(this, e);
+    }
+
+    onFocus(e: any) {
+        this.props.selectTag({ tag: this.props.tag });
+    }
+
+    onBlur(e: any) {
+        this.props.changePage({ text: e.target.textContent, tagID: this.props.tag.id });
+    }
+
+    render() {
+        if (this.props.editable) {
+            return (
+                <strong
+                    className={[this.props.class, this.props.className, this.props.selected ? 'editable' : ''].join(' ')}
+                    contentEditable={true}
+                    onPaste={this.onPaste.bind(this)}
+                    onBlur={this.onBlur.bind(this)}
+                    onFocus={this.onFocus.bind(this)}
+                >
+                    {this.props.children}
+                </strong>
+            );
+        }
+        return (
+            <strong
+                className={[this.props.class, this.props.className].join(' ')}
+            >
+                {this.props.children}
+            </strong>
+        );
+
+    }
+}
+
+export default StyledComponent(Strong);

@@ -8,6 +8,7 @@ import imgAlignRight from 'images/constructor/group-26.svg';
 
 interface IRadioButtonsProps {
     onSelect?: any;
+    initialValue?: string;
 }
 
 interface IRadioButtonsState {
@@ -19,27 +20,35 @@ export default class RadioButtons extends React.Component<IRadioButtonsProps, IR
     constructor(props: IRadioButtonsProps) {
         super(props);
         this.state = {
-            value: null
+            value: props.initialValue || ''
         };
+    }
+
+    componentWillReceiveProps(props: IRadioButtonsProps) {
+        if (this.state.value !== props.initialValue) {
+            this.setState({
+                value: props.initialValue
+            });
+        }
     }
 
     render() {
         return (
             <div>
-                <RadioButton value="alignLeft" onClick={this.selectRadio.bind(this, 'alignLeft')} selectedValue={this.state.value}>
+                <RadioButton value="left" onClick={this.selectRadio.bind(this, 'left')} selectedValue={this.state.value}>
                     <img src={imgAlignLeft} title="align left"/>
                 </RadioButton>
-                <RadioButton value="alignCenter" onClick={this.selectRadio.bind(this, 'alignCenter')} selectedValue={this.state.value}>
+                <RadioButton value="center" onClick={this.selectRadio.bind(this, 'center')} selectedValue={this.state.value}>
                     <img src={imgAlignCenter} title="align center"/>
                 </RadioButton>
-                <RadioButton value="alignRight" onClick={this.selectRadio.bind(this, 'alignRight')} selectedValue={this.state.value}>
+                <RadioButton value="right" onClick={this.selectRadio.bind(this, 'right')} selectedValue={this.state.value}>
                     <img src={imgAlignRight} title="align right"/>
                 </RadioButton>
             </div>
         );
     }
     selectRadio(value: string) {
-        let newValue: string = (value === this.state.value ? null : value);
+        let newValue: string = (value === this.state.value ? '' : value);
         this.setState({
             value: newValue
         });

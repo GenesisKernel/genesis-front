@@ -2,7 +2,7 @@ import { IProtypoElement } from 'components/Protypo/Protypo';
 
 let findTagByIdResult = null;
 
-const findTagById = (el: any, id: string): any => {
+export const findTagById = (el: any, id: string): any => {
     findTagByIdResult = null;
     findNextTagById(el, id);
     return findTagByIdResult;
@@ -166,6 +166,75 @@ const tagHandlers = {
     'span': Span,
     'strong': Strong,
 //     'table': Table
+};
+
+export class Properties {
+    private propertiesClasses = {
+        'align': {
+            'left': 'text-left',
+            'center': 'text-center',
+            'right': 'text-right'
+        },
+        'transform': {
+            'lowercase': 'text-lowercase',
+            'uppercase': 'text-uppercase'
+        },
+        'wrap': {
+            'nowrap': 'text-nowrap'
+        },
+        'color': {
+            'muted': 'text-muted',
+            'primary': 'text-primary',
+            'success': 'text-success',
+            'info': 'text-info',
+            'warning': 'text-warning',
+            'danger': 'text-danger'
+        }
+    };
+
+    public getInitial(property: string, tag: any) {
+        // alert('getInitial ' + property + (tag && tag.attr && tag.attr.class));
+        if (tag && tag.attr && tag.attr.class) {
+            if (this.propertiesClasses[property]) {
+                for (let value in this.propertiesClasses[property]) {
+                    if (this.propertiesClasses[property].hasOwnProperty(value)) {
+                        if (tag.attr.class.indexOf(this.propertiesClasses[property][value]) >= 0) {
+                            return value;
+                        }
+                    }
+                }
+            }
+        }
+        return '';
+    }
+
+    public updateClassList(classes: string, property: string, value: string) {
+        classes = classes.concat();
+        switch (property) {
+            case 'align':
+            case 'transform':
+            case 'wrap':
+            case 'color':
+                for (let prop in this.propertiesClasses[property]) {
+                    if (this.propertiesClasses[property].hasOwnProperty(prop)) {
+                        classes = classes.replace(this.propertiesClasses[property][prop], '');
+                    }
+                }
+                if (this.propertiesClasses[property][value]) {
+                    classes += ' ' + this.propertiesClasses[property][value];
+                }
+                break;
+            default:
+                break;
+        }
+
+        return classes;
+    }
+}
+
+export const getInitialTagValue = (prop: string, tag: any): string => {
+    let properties = new Properties();
+    return properties.getInitial(prop, tag);
 };
 
 const resolveTagHandler = (name: string) => {

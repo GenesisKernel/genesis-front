@@ -206,12 +206,12 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                     <div className="b-icon-group pull-left">
                         <div className="b-switch">
                             <span>GRID</span>
-                            <Switch default={props.grid} onChange={props.toggleGrid} />
+                            <Switch initialValue={props.grid ? 'grid' : ''} onValue="grid" offValue="" onChange={props.toggleGrid} />
                         </div>
 
                         <div className="b-switch">
                             <span>SNAP</span>
-                            <Switch/>
+                            <Switch initialValue="snap" onValue="snap" offValue=""/>
                         </div>
                     </div>
 

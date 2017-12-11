@@ -5,11 +5,13 @@ import imgSwitchOff from 'images/constructor/group-29.svg';
 
 interface ISwitchProps {
     onChange?: any;
-    default?: boolean;
+    initialValue?: string;
+    onValue: string;
+    offValue: string;
 }
 
 interface ISwitchState {
-    value: boolean;
+    on: boolean;
 }
 
 const ImgSwitch = styled.img`
@@ -21,24 +23,36 @@ export default class Switch extends React.Component<ISwitchProps, ISwitchState> 
     constructor(props: ISwitchProps) {
         super(props);
         this.state = {
-            value: (this.props.default ? true : false)
+            on: this.getBoolean(props.initialValue)
         };
+    }
+
+    getBoolean(value: string): boolean {
+        return ((value === this.props.onValue) ? true : false);
+    }
+
+    componentWillReceiveProps(props: ISwitchProps) {
+        if (this.state.on !== this.getBoolean(props.initialValue)) {
+            this.setState({
+                on: this.getBoolean(props.initialValue)
+            });
+        }
     }
 
     render() {
         return (
             <div className="b-switch" onClick={this.change.bind(this)}>
-                <ImgSwitch src={this.state.value ? imgSwitchOn : imgSwitchOff} />
+                <ImgSwitch src={this.state.on ? imgSwitchOn : imgSwitchOff} />
             </div>
         );
     }
     change() {
-        let value: boolean = !this.state.value;
+        let on: boolean = !this.state.on;
         this.setState({
-            value
+            on
         });
         if (this.props.onChange) {
-            this.props.onChange(value);
+            this.props.onChange((on ? this.props.onValue : this.props.offValue));
         }
     }
 }

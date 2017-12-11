@@ -58,7 +58,6 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
             name: this.props.pageName,
             vde: this.props.vde
         });
-
     }
 
     changePage(payload?: any) {
