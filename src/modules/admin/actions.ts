@@ -16,7 +16,7 @@
 
 import actionCreatorFactory from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IPageResponse, IContractsResponse, IParameterResponse, ITabListResponse } from 'lib/api';
-import { IProtypoElement } from 'components/Protypo/Protypo';
+import { IProtypoElement } from 'lib/api';
 
 const actionCreator = actionCreatorFactory('admin');
 
