@@ -18,7 +18,7 @@ import * as actions from './actions';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse } from 'lib/api';
-import findTagById from 'lib/constructor';
+import { findTagById, Properties } from 'lib/constructor';
 
 export type State = {
     readonly pending: boolean;
@@ -220,6 +220,24 @@ export default (state: State = initialState, action: Action): State => {
                 tag.attr.class = action.payload.class;
                 // alert(JSON.stringify(tag));
                 // alert(JSON.stringify(pageTree));
+            }
+
+            let properties = new Properties();
+
+            if ('string' === typeof action.payload.align) {
+                tag.attr.class = properties.updateClassList(tag.attr.class, 'align', action.payload.align);
+            }
+
+            if ('string' === typeof action.payload.transform) {
+                tag.attr.class = properties.updateClassList(tag.attr.class, 'transform', action.payload.transform);
+            }
+
+            if ('string' === typeof action.payload.wrap) {
+                tag.attr.class = properties.updateClassList(tag.attr.class, 'wrap', action.payload.wrap);
+            }
+
+            if ('string' === typeof action.payload.color) {
+                tag.attr.class = properties.updateClassList(tag.attr.class, 'color', action.payload.color);
             }
         }
 

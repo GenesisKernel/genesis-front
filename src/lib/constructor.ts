@@ -1,8 +1,24 @@
+// Copyright 2017 The apla-front Authors
+// This file is part of the apla-front library.
+//
+// The apla-front library is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// The apla-front library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
+
 import { IProtypoElement } from 'components/Protypo/Protypo';
 
 let findTagByIdResult = null;
 
-const findTagById = (el: any, id: string): any => {
+export const findTagById = (el: any, id: string): any => {
     findTagByIdResult = null;
     findNextTagById(el, id);
     return findTagByIdResult;
@@ -166,6 +182,75 @@ const tagHandlers = {
     'span': Span,
     'strong': Strong,
 //     'table': Table
+};
+
+export class Properties {
+    private propertiesClasses = {
+        'align': {
+            'left': 'text-left',
+            'center': 'text-center',
+            'right': 'text-right'
+        },
+        'transform': {
+            'lowercase': 'text-lowercase',
+            'uppercase': 'text-uppercase'
+        },
+        'wrap': {
+            'nowrap': 'text-nowrap'
+        },
+        'color': {
+            'muted': 'text-muted',
+            'primary': 'text-primary',
+            'success': 'text-success',
+            'info': 'text-info',
+            'warning': 'text-warning',
+            'danger': 'text-danger'
+        }
+    };
+
+    public getInitial(property: string, tag: any) {
+        // alert('getInitial ' + property + (tag && tag.attr && tag.attr.class));
+        if (tag && tag.attr && tag.attr.class) {
+            if (this.propertiesClasses[property]) {
+                for (let value in this.propertiesClasses[property]) {
+                    if (this.propertiesClasses[property].hasOwnProperty(value)) {
+                        if (tag.attr.class.indexOf(this.propertiesClasses[property][value]) >= 0) {
+                            return value;
+                        }
+                    }
+                }
+            }
+        }
+        return '';
+    }
+
+    public updateClassList(classes: string, property: string, value: string) {
+        classes = classes.concat();
+        switch (property) {
+            case 'align':
+            case 'transform':
+            case 'wrap':
+            case 'color':
+                for (let prop in this.propertiesClasses[property]) {
+                    if (this.propertiesClasses[property].hasOwnProperty(prop)) {
+                        classes = classes.replace(this.propertiesClasses[property][prop], '');
+                    }
+                }
+                if (this.propertiesClasses[property][value]) {
+                    classes += ' ' + this.propertiesClasses[property][value];
+                }
+                break;
+            default:
+                break;
+        }
+
+        return classes;
+    }
+}
+
+export const getInitialTagValue = (prop: string, tag: any): string => {
+    let properties = new Properties();
+    return properties.getInitial(prop, tag);
 };
 
 const resolveTagHandler = (name: string) => {

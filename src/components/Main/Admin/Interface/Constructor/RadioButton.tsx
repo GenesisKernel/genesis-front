@@ -17,41 +17,33 @@
 import * as React from 'react';
 import * as classnames from 'classnames';
 
-interface ICollapsedListItemProps {
-    text: string;
-    icon?: string;
+interface IRadioButtonProps {
+    src?: any;
+    value: string;
+    selectedValue?: string;
+    onClick?: any;
+
 }
 
-interface ICollapsedListItemState {
-    collapsed: boolean;
+interface IRadioButtonState {
+
 }
 
-export default class CollapsedListItem extends React.Component<ICollapsedListItemProps, ICollapsedListItemState> {
+export default class RadioButton extends React.Component<IRadioButtonProps, IRadioButtonState> {
 
-    constructor(props: ICollapsedListItemProps) {
+    constructor(props: IRadioButtonProps) {
         super(props);
-        this.state = {
-            collapsed: true
-        };
     }
+
     render() {
         const classes = classnames({
-            collapsed: this.state.collapsed
+            'b-bullet': true,
+            'b-bullet_selected': this.props.value === this.props.selectedValue
         });
-
         return (
-            <li className={classes}>
-                <div onClick={this.toggleCollapsed.bind(this)}>
-                    <img src={this.props.icon} />
-                    {this.props.text}
-                </div>
+            <div className={classes} onClick={this.props.onClick.bind(this, this.props.value)}>
                 {this.props.children}
-            </li>
+            </div>
         );
-    }
-    toggleCollapsed() {
-        this.setState({
-            collapsed: !this.state.collapsed
-        });
     }
 }

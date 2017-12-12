@@ -1,11 +1,27 @@
-import * as React from 'react';
+// Copyright 2017 The apla-front Authors
+// This file is part of the apla-front library.
+//
+// The apla-front library is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// The apla-front library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
+import * as React from 'react';
 import styled from 'styled-components';
 
 import Protypo from 'containers/Widgets/Protypo';
 import CollapsedListItem from './CollapsedListItem';
 import Panel from './Panel';
 import Properties from './Properties';
+import Switch from './Switch';
 
 import imgViewMobile from 'images/constructor/group-2.svg';
 import imgViewTablet from 'images/constructor/group.svg';
@@ -16,7 +32,6 @@ import imgRedo from 'images/constructor/group-6.svg';
 import imgGroup11 from 'images/constructor/group-11.svg';
 import imgGroup12 from 'images/constructor/group-12.svg';
 import imgGroup13 from 'images/constructor/group-13.svg';
-import imgSwitchOn from 'images/constructor/group-18.svg';
 import imgGroup34 from 'images/constructor/group-34.svg';
 import imgGroup35 from 'images/constructor/group-35.svg';
 import imgGroup36 from 'images/constructor/group-36.svg';
@@ -30,6 +45,8 @@ interface IConstructorProps {
     selectTag?: any;
     selectedTag?: any;
     save?: any;
+    grid: boolean;
+    toggleGrid: any;
 }
 
 const ConstructorDiv = styled.div`
@@ -57,16 +74,20 @@ const ConstructorDiv = styled.div`
         margin: 0 286px 0 286px;
         min-height: 400px;
     }
+    
+    .b-constructor-layout {
+        margin: 0 20px;
+        min-height: 600px;
+        border-left: 1px solid #b1b1b1;
+        border-right: 1px solid #b1b1b1;
+        background-repeat: repeat;
+        
+    }
+    
+    .b-constructor-layout_grid {
+        background-image: url(${imgGrid});
+    }
 
-`;
-
-const DivGrid = styled.div`
-    margin: 0 20px;
-    min-height: 600px;
-    border-left: 1px solid #b1b1b1;
-    border-right: 1px solid #b1b1b1;
-    background-repeat: repeat;
-    background-image: url(${imgGrid});
 `;
 
 const Constructor: React.SFC<IConstructorProps> = (props) => (
@@ -200,19 +221,19 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                     <div className="b-icon-group pull-left">
                         <div className="b-switch">
                             <span>GRID</span>
-                            <img src={imgSwitchOn} />
+                            <Switch initialValue={props.grid ? 'grid' : ''} onValue="grid" offValue="" onChange={props.toggleGrid} />
                         </div>
 
                         <div className="b-switch">
                             <span>SNAP</span>
-                            <img src={imgSwitchOn} />
+                            <Switch initialValue="snap" onValue="snap" offValue=""/>
                         </div>
                     </div>
 
                 </div>
             </div>
 
-            <DivGrid>
+            <div className={props.grid ? 'b-constructor-layout b-constructor-layout_grid' : 'b-constructor-layout'}>
                 <Protypo
                     payload={props.pageTree}
                     editable={true}
@@ -220,7 +241,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                     selectTag={props.selectTag}
                     selectedTag={props.selectedTag}
                 />
-            </DivGrid>
+            </div>
 
         </div>
         <div className="right-panel">

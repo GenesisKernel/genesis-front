@@ -40,13 +40,15 @@ interface IConstructorTabbedContainerDispatch {
 
 interface IConstructorTabbedState {
     selectedTag: any;
+    grid: boolean;
 }
 
 class ConstructorTabbedContainer extends React.Component<IConstructorTabbedContainerProps & IConstructorTabbedContainerState & IConstructorTabbedContainerDispatch, IConstructorTabbedState> {
     constructor(props: IConstructorTabbedContainerProps & IConstructorTabbedContainerState & IConstructorTabbedContainerDispatch) {
         super(props);
         this.state = {
-            selectedTag: null
+            selectedTag: null,
+            grid: true
         };
     }
 
@@ -56,7 +58,6 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
             name: this.props.pageName,
             vde: this.props.vde
         });
-
     }
 
     changePage(payload?: any) {
@@ -67,6 +68,13 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     selectTag(payload?: any) {
         this.setState({
             selectedTag: payload.tag
+        });
+    }
+
+    toggleGrid() {
+        this.setState({
+            ...this.state,
+            grid: !this.state.grid
         });
     }
 
@@ -86,6 +94,8 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
                 selectTag={this.selectTag.bind(this)}
                 save={this.save.bind(this)}
                 selectedTag={this.state.selectedTag}
+                grid={this.state.grid}
+                toggleGrid={this.toggleGrid.bind(this)}
             />
         );
     }

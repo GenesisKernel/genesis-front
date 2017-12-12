@@ -1,13 +1,27 @@
+// Copyright 2017 The apla-front Authors
+// This file is part of the apla-front library.
+//
+// The apla-front library is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// The apla-front library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
+
 import * as React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import Panel from './Panel';
-
-import imgAlignLeft from 'images/constructor/group-28.svg';
-import imgAlignCenter from 'images/constructor/group-27.svg';
-import imgAlignRight from 'images/constructor/group-26.svg';
-import imgSwitchOff from 'images/constructor/group-29.svg';
-import imgLowercase from 'images/constructor/tt-lower.svg';
-import imgUppercase from 'images/constructor/tt-upper.svg';
+import AlignRadioButtons from './AlignRadioButtons';
+import TransformRadioButtons from './TransformRadioButtons';
+import ColorRadioButtons from './ColorRadioButtons';
+import Switch from './Switch';
+import { getInitialTagValue } from 'lib/constructor';
 
 interface IPropertiesProps {
     changePage?: any;
@@ -15,20 +29,37 @@ interface IPropertiesProps {
 }
 
 interface IPropertiesState {
-
 }
 
 export default class Properties extends React.Component<IPropertiesProps, IPropertiesState> {
-
-    // constructor(props: IPropertiesProps) {
-    //     super(props);
-    // }
-
-    // componentWillReceiveProps(props: IPropertiesProps) {
-    // }
-
     onClassesChange(e: React.ChangeEvent<HTMLInputElement>) {
-        this.props.changePage({ class: e.target.value, tagID: this.props.tag.id });
+        if (this.props && this.props.tag) {
+            this.props.changePage({class: e.target.value, tagID: this.props.tag.id});
+        }
+    }
+
+    onAlignChange(align: string) {
+        if (this.props && this.props.tag) {
+            this.props.changePage({align: align, tagID: this.props.tag.id});
+        }
+    }
+
+    onTransformChange(transform: string) {
+        if (this.props && this.props.tag) {
+            this.props.changePage({transform: transform, tagID: this.props.tag.id});
+        }
+    }
+
+    onWrapChange(wrap: string) {
+        if (this.props && this.props.tag) {
+            this.props.changePage({wrap: wrap, tagID: this.props.tag.id});
+        }
+    }
+
+    onColorChange(color: string) {
+        if (this.props && this.props.tag) {
+            this.props.changePage({color: color, tagID: this.props.tag.id});
+        }
     }
 
     render() {
@@ -58,7 +89,7 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
                 </div>
                 <div className="content-wrapper"/>
                 <div className="content-wrapper b-panel-light">
-                    <Row className="g-padding-bottom">
+                    <Row className="g-padding-bottom hidden">
                         <Col xs={3} className="text-uppercase">
                             position
                         </Col>
@@ -82,34 +113,19 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
                             <div className="text-uppercase">
                                 alignment
                             </div>
-                            <div className="b-bullet b-bullet_selected">
-                                <img src={imgAlignLeft} />
-                            </div>
-                            <div className="b-bullet">
-                                <img src={imgAlignCenter} />
-                            </div>
-                            <div className="b-bullet">
-                                <img src={imgAlignRight} />
-                            </div>
+                            <AlignRadioButtons initialValue={(getInitialTagValue('align', this.props && this.props.tag))} onSelect={this.onAlignChange.bind(this)}/>
                         </Col>
                         <Col xs={4} className="text-center">
                             <div className="text-uppercase">
                                 transform
                             </div>
-                            <div className="b-bullet b-bullet_selected">
-                                <img src={imgUppercase} />
-                            </div>
-                            <div className="b-bullet">
-                                <img src={imgLowercase} />
-                            </div>
+                            <TransformRadioButtons initialValue={(getInitialTagValue('transform', this.props && this.props.tag))} onSelect={this.onTransformChange.bind(this)}/>
                         </Col>
                         <Col xs={4} className="text-center">
                             <div className="text-center text-uppercase">
                                 no wrap
                             </div>
-                            <div className="b-switch">
-                                <img src={imgSwitchOff} />
-                            </div>
+                            <Switch initialValue={(getInitialTagValue('wrap', this.props && this.props.tag))} onValue="nowrap" offValue="" onChange={this.onWrapChange.bind(this)} />
                         </Col>
                     </Row>
                     <Row className="g-padding-bottom">
@@ -119,15 +135,16 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
                             </div>
                         </Col>
                         <Col xs={12}>
-                            <div className="b-bullet-color b-bullet-color_blue"/>
-                            <div className="b-bullet-color b-bullet-color_green b-bullet-color_selected"/>
-                            <div className="b-bullet-color b-bullet-color_red"/>
-                            <div className="b-bullet-color b-bullet-color_yellow"/>
-                            <div className="b-bullet-color b-bullet-color_magenta"/>
-                            <div className="b-bullet-color b-bullet-color_dark-blue"/>
-                            <div className="b-bullet-color b-bullet-color_light-grey"/>
-                            <div className="b-bullet-color b-bullet-color_black"/>
-                            <div className="b-bullet-color b-bullet-color_grey"/>
+                            <ColorRadioButtons initialValue={(getInitialTagValue('color', this.props && this.props.tag))} onSelect={this.onColorChange.bind(this)}/>
+                            {/*<div className="b-bullet-color b-bullet-color_blue"/>*/}
+                            {/*<div className="b-bullet-color b-bullet-color_green b-bullet-color_selected"/>*/}
+                            {/*<div className="b-bullet-color b-bullet-color_red"/>*/}
+                            {/*<div className="b-bullet-color b-bullet-color_yellow"/>*/}
+                            {/*<div className="b-bullet-color b-bullet-color_magenta"/>*/}
+                            {/*<div className="b-bullet-color b-bullet-color_dark-blue"/>*/}
+                            {/*<div className="b-bullet-color b-bullet-color_light-grey"/>*/}
+                            {/*<div className="b-bullet-color b-bullet-color_black"/>*/}
+                            {/*<div className="b-bullet-color b-bullet-color_grey"/>*/}
                         </Col>
                     </Row>
                 </div>
