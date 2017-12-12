@@ -20,6 +20,7 @@ import styled from 'styled-components';
 import Protypo from 'containers/Widgets/Protypo';
 import CollapsedListItem from './CollapsedListItem';
 import Panel from './Panel';
+import SourceElement from './SourceElement';
 import Properties from './Properties';
 import Switch from './Switch';
 
@@ -97,18 +98,18 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                 <ul className="b-category-list">
                     <CollapsedListItem text="Structure" icon={imgGroup11}>
                         <ul className="b-category-sublist">
-                            <li>Panel</li>
-                            <li>Block</li>
+                            <SourceElement text="Panel"/>
+                            <SourceElement text="Block"/>
                         </ul>
                     </CollapsedListItem>
                     <CollapsedListItem text="Text" icon={imgGroup12}>
                         <ul className="b-category-sublist">
-                            <li>Heading</li>
-                            <li>Paragraph</li>
-                            <li>Span</li>
-                            <li>Strong</li>
-                            <li>Tag</li>
-                            <li>Emphasize</li>
+                            <SourceElement text="Heading"/>
+                            <SourceElement text="Paragraph"/>
+                            <SourceElement text="Span"/>
+                            <SourceElement text="Strong"/>
+                            <SourceElement text="Tag"/>
+                            <SourceElement text="Emphasize"/>
                         </ul>
                     </CollapsedListItem>
                     <CollapsedListItem text="Lists" icon={imgGroup37}>

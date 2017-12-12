@@ -78,8 +78,11 @@ class Tag {
            params.push('Body: ' + body);
         }
         result += params.join(', ');
-        result += ') ';
-        return result;
+        result += ')';
+        if (this.element && this.element.attr && this.element.attr.style) {
+            result += '.Style(' + this.element.attr.style + ')';
+        }
+        return result + ' ';
     }
     renderChildren(): string {
         if (!this.element.children) {
@@ -225,7 +228,8 @@ export class Properties {
     }
 
     public updateClassList(classes: string, property: string, value: string) {
-        classes = classes.concat();
+        classes = classes ? classes.concat() : '';
+
         switch (property) {
             case 'align':
             case 'transform':
