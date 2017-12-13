@@ -18,6 +18,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import Protypo from 'containers/Widgets/Protypo';
+import Layout from './Layout';
 import CollapsedListItem from './CollapsedListItem';
 import Panel from './Panel';
 import SourceElement from './SourceElement';
@@ -88,6 +89,10 @@ const ConstructorDiv = styled.div`
     .b-constructor-layout_grid {
         background-image: url(${imgGrid});
     }
+    
+    .b-constructor-layout_can-drop {
+        background-color: rgba(150, 190, 255, 0.3);
+    }
 
 `;
 
@@ -98,18 +103,18 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                 <ul className="b-category-list">
                     <CollapsedListItem text="Structure" icon={imgGroup11}>
                         <ul className="b-category-sublist">
-                            <SourceElement text="Panel"/>
-                            <SourceElement text="Block"/>
+                            <SourceElement text="Panel" element="panel"/>
+                            <SourceElement text="Block" element="div"/>
                         </ul>
                     </CollapsedListItem>
                     <CollapsedListItem text="Text" icon={imgGroup12}>
                         <ul className="b-category-sublist">
-                            <SourceElement text="Heading"/>
-                            <SourceElement text="Paragraph"/>
-                            <SourceElement text="Span"/>
-                            <SourceElement text="Strong"/>
-                            <SourceElement text="Tag"/>
-                            <SourceElement text="Emphasize"/>
+                            <SourceElement text="Heading" element="h1"/>
+                            <SourceElement text="Paragraph" element="p"/>
+                            <SourceElement text="Span" element="span"/>
+                            <SourceElement text="Strong" element="strong"/>
+                            <SourceElement text="Tag" element="tag"/>
+                            <SourceElement text="Emphasize" element="em"/>
                         </ul>
                     </CollapsedListItem>
                     <CollapsedListItem text="Lists" icon={imgGroup37}>
@@ -234,7 +239,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                 </div>
             </div>
 
-            <div className={props.grid ? 'b-constructor-layout b-constructor-layout_grid' : 'b-constructor-layout'}>
+            <Layout grid={props.grid}>
                 <Protypo
                     payload={props.pageTree}
                     editable={true}
@@ -242,7 +247,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                     selectTag={props.selectTag}
                     selectedTag={props.selectedTag}
                 />
-            </div>
+            </Layout>
 
         </div>
         <div className="right-panel">

@@ -490,6 +490,10 @@ input[type="number"] {
     border: 1px dashed #7799FF;
 }
 
+.can-drop {
+    background-color: rgba(150, 190, 255, 0.3);
+}
+
 /*p.editable {*/
     /*border: 1px dashed #7799FF;*/
 /*}*/

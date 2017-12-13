@@ -21,7 +21,6 @@ import * as propTypes from 'prop-types';
 import Heading from 'components/Heading';
 import { IValidationResult } from 'components/Validation/ValidatedForm';
 import ToolButton, { IToolButtonProps } from 'components/Protypo/components/ToolButton';
-// import EditableWrapper from 'components/Protypo/components/EditableWrapper';
 
 export interface IProtypoProps {
     vde?: boolean;
@@ -55,7 +54,7 @@ export interface IParamSpec {
     params: string[];
 }
 
-export default class Protypo extends React.Component<IProtypoProps> {
+class Protypo extends React.Component<IProtypoProps> {
     private _lastID: number;
     private _menuPushBind: Function;
     private _navigatePageBind: Function;
@@ -234,3 +233,5 @@ export default class Protypo extends React.Component<IProtypoProps> {
     menuPush: propTypes.func.isRequired,
     vde: propTypes.bool
 };
+
+export default Protypo;

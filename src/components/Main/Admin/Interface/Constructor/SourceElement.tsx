@@ -15,15 +15,15 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
- import { DragSource } from 'react-dnd';
+import { DragSource } from 'react-dnd';
 
 const ItemTypes = {
-     KNIGHT: 'knight'
+    SOURCE: 'element'
 };
 
 const Source = {
     beginDrag(props: ISourceElementProps) {
-        return { id: 1 };
+        return { element: props.element };
     }
 };
 
@@ -36,6 +36,7 @@ function collect(connect: any, monitor: any) {
 
 interface ISourceElementProps {
     text: string;
+    element: string;
     connectDragSource?: any;
     isDragging?: boolean;
 }
@@ -59,4 +60,4 @@ class SourceElement extends React.Component<ISourceElementProps, ISourceElementS
 }
 
 // export default SourceElement;
-export default DragSource(ItemTypes.KNIGHT, Source, collect)(SourceElement);
+export default DragSource(ItemTypes.SOURCE, Source, collect)(SourceElement);
