@@ -21,13 +21,14 @@ import { routerMiddleware } from 'react-router-redux';
 import { createEpicMiddleware } from 'redux-observable';
 import { loadingBarMiddleware } from 'react-redux-loading-bar';
 import txMiddleware from 'modules/middleware/tx';
+import { History } from 'history';
 import createHistory from 'history/createBrowserHistory';
-import createHashHistory from 'history/createHashHistory';
+import createMemoryHistory from 'history/createMemoryHistory';
 import rootReducer, { rootEpic, IRootState } from './modules';
 import platform from 'lib/platform';
 
-export const history = platform.select({
-    desktop: createHashHistory,
+export const history = platform.select<() => History>({
+    desktop: createMemoryHistory,
     web: createHistory
 })();
 
