@@ -14,7 +14,35 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-// /!\ WARNING - DO NOT REMOVE THIS FILE /!\
-// This file can't be moved or deleted for compatibility reasons
-// doing so screws the build process when used in web environment
-import './app/index.tsx';
+import * as React from 'react';
+import styled from 'styled-components';
+
+const StyledHeading = styled.div`
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+    z-index: 1000;
+    font-size: 20px;
+    line-height: 45px;
+    height: 46px;
+    color: #000;
+    font-weight: normal;
+    padding: 0 20px;
+    border: 0;
+`;
+
+export interface IHeadingProps {
+    className?: string;
+    left?: number;
+    right?: number;
+    top?: number;
+}
+
+const Heading: React.SFC<IHeadingProps> = props => (
+    <StyledHeading className={props.className} style={{ left: props.left, right: props.right, top: props.top }}>
+        <div>
+            {props.children}
+        </div>
+    </StyledHeading >
+);
+
+export default Heading;

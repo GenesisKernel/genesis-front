@@ -14,7 +14,17 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-// /!\ WARNING - DO NOT REMOVE THIS FILE /!\
-// This file can't be moved or deleted for compatibility reasons
-// doing so screws the build process when used in web environment
-import './app/index.tsx';
+declare module 'react-dom';
+declare module 'centrifuge';
+declare module 'jsrsasign';
+declare module 'react-router-transition';
+
+declare module '*.svg' {
+    const content: string;
+    export default content;
+}
+
+declare module '*.png' {
+    const content: string;
+    export default content;
+}
