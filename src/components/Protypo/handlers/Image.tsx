@@ -15,7 +15,9 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import * as propTypes from 'prop-types';
 
+import Protypo from '../Protypo';
 import StyledComponent from './StyledComponent';
 
 export interface IImageProps {
@@ -25,8 +27,16 @@ export interface IImageProps {
     'alt'?: string;
 }
 
-const Image: React.SFC<IImageProps> = (props) => (
-    <img className={[props.class, props.className].join(' ')} src={props.src || ''} alt={props.alt} />
-);
+interface IImageContext {
+    protypo: Protypo;
+}
+
+const Image: React.SFC<IImageProps> = (props, context: IImageContext) => props.src ? (
+    <img className={[props.class, props.className].join(' ')} src={context.protypo.resolveData(props.src)} alt={props.alt} />
+) : null;
+
+Image.contextTypes = {
+    protypo: propTypes.object.isRequired
+};
 
 export default StyledComponent(Image);

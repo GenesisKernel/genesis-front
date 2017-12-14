@@ -17,6 +17,7 @@
 import * as React from 'react';
 import { resolveHandler, resolveFunction } from 'components/Protypo';
 import * as propTypes from 'prop-types';
+import api from 'lib/api';
 
 import Heading from 'components/Heading';
 import { IValidationResult } from 'components/Validation/ValidatedForm';
@@ -100,6 +101,10 @@ export default class Protypo extends React.Component<IProtypoProps> {
 
     resolveSource(name: string) {
         return this._sources[name];
+    }
+
+    resolveData(name: string) {
+        return api.resolveData(name);
     }
 
     resolveParams(values: IParamsSpec, formValues?: { [key: string]: IValidationResult }) {
