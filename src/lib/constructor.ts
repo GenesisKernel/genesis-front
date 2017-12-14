@@ -261,4 +261,15 @@ const resolveTagHandler = (name: string) => {
     return tagHandlers[name];
 };
 
+let hoverTimer: number = null;
+
+export function startHoverTimer() {
+    if (hoverTimer) {
+        return false;
+    }
+    hoverTimer = setTimeout(() => { hoverTimer = null }, 200);
+    return true;
+}
+
+
 export default findTagById;

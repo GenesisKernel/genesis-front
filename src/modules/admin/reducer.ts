@@ -241,6 +241,10 @@ export default (state: State = initialState, action: Action): State => {
             if ('string' === typeof action.payload.color) {
                 tag.attr.class = properties.updateClassList(tag.attr.class || '', 'color', action.payload.color);
             }
+
+            if ('string' === typeof action.payload.canDropPosition) {
+                tag.attr.canDropPosition = action.payload.canDropPosition;
+            }
         }
 
         return {

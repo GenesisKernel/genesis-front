@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { getPageTree, changePage  } from 'modules/admin/actions';
+import { getPageTree, changePage, setTagCanDropPosition } from 'modules/admin/actions';
 import Constructor from 'components/Main/Admin/Interface/Constructor';
 import { CodeGenerator } from 'lib/constructor';
 
@@ -38,6 +38,7 @@ interface IConstructorTabbedContainerState {
 interface IConstructorTabbedContainerDispatch {
     getPageTree: typeof getPageTree.started;
     changePage: typeof changePage;
+    setTagCanDropPosition: typeof setTagCanDropPosition;
     // selectTag: typeof selectTag;
 }
 
@@ -68,6 +69,11 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
         this.props.changePage(payload);
     }
 
+    setTagCanDropPosition(payload?: any) {
+        payload.pageID = this.props.pageID;
+        this.props.setTagCanDropPosition(payload);
+    }
+
     selectTag(payload?: any) {
         this.setState({
             selectedTag: payload.tag
@@ -94,6 +100,7 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
             <Constructor
                 pageTree={pageTree}
                 changePage={this.changePage.bind(this)}
+                setTagCanDropPosition={this.setTagCanDropPosition.bind(this)}
                 selectTag={this.selectTag.bind(this)}
                 save={this.save.bind(this)}
                 selectedTag={this.state.selectedTag}
@@ -111,7 +118,8 @@ const mapStateToProps = (state: IRootState) => ({
 
 const mapDispatchToProps = {
     getPageTree: getPageTree.started,
-    changePage
+    changePage,
+    setTagCanDropPosition
 };
 
 // export default connect<IConstructorTabbedContainerState, IConstructorTabbedContainerDispatch, IConstructorTabbedContainerProps>(mapStateToProps, mapDispatchToProps)(ConstructorTabbedContainer);

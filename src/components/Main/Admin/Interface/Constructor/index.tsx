@@ -44,6 +44,7 @@ import imgGrid from 'images/constructor/grid.png';
 interface IConstructorProps {
     pageTree: any;
     changePage?: any;
+    setTagCanDropPosition?: any;
     selectTag?: any;
     selectedTag?: any;
     save?: any;
@@ -244,6 +245,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                     payload={props.pageTree}
                     editable={true}
                     changePage={props.changePage}
+                    setTagCanDropPosition={props.setTagCanDropPosition}
                     selectTag={props.selectTag}
                     selectedTag={props.selectedTag}
                 />
