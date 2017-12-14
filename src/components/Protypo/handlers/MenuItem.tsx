@@ -26,6 +26,7 @@ export interface IMenuItemProps {
     'page'?: string;
     'icon'?: string;
     'params'?: IParamsSpec;
+    'vde'?: string;
 
     // TODO: Stub value
     '_systemPageHook'?: string;
@@ -100,18 +101,27 @@ const LinkButton: React.SFC<IMenuItemProps> = (props, context: ILinkButtonContex
             context.navigatePage({
                 name: props.page,
                 params: context.protypo.resolveParams(props.params),
-                vde: context.vde
+                vde:
+                    props.vde === 'true' ? true :
+                        props.vde === 'false' ? false :
+                            context.vde
             });
         }
         return false;
     };
+
+    const navigateUrl =
+        !props.page ? '' :
+            props.vde === 'true' ? `/vde/page/${props.page}` :
+                props.vde === 'false' ? `/page/${props.page}` :
+                    `/${context.vde ? 'vde/page' : 'page'}/${props.page}`;
 
     return (
         <StyledLinkButton className={classes}>
             <div className="link-active-decorator" />
             {props._systemPageHook || props.page ?
                 (
-                    <a href={props._systemPageHook ? props._systemPageHook : (props.page ? `/${context.vde ? 'vde/page' : 'page'}/${props.page}` : '')} onClick={onNavigate}>
+                    <a href={props._systemPageHook ? props._systemPageHook : navigateUrl} onClick={onNavigate}>
                         {linkBody}
                     </a>
                 ) : (

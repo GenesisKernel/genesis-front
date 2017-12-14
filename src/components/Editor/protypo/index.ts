@@ -471,6 +471,12 @@ const register = (editor: typeof monaco) => {
                     kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Optional icon to show near the button',
                     insertText: 'Icon: '
+                },
+                {
+                    label: 'Vde',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Sets link destination: "true" for VDE and "false" for blockchain',
+                    insertText: 'Vde: '
                 }
             ]
         },
