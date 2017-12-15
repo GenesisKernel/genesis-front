@@ -23,7 +23,11 @@ const ItemTypes = {
 
 const Source = {
     beginDrag(props: ISourceElementProps) {
-        return { element: props.element };
+        return {
+            new: true,
+            element: props.element,
+            text: props.text
+        };
     }
 };
 

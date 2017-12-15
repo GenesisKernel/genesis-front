@@ -24,7 +24,10 @@ const layoutTarget = {
             return;
         }
         const droppedItem = monitor.getItem();
-        alert('drop!' + JSON.stringify(droppedItem));
+
+        props.addTag({
+            tag: droppedItem
+        });
     }
 };
 
@@ -43,6 +46,7 @@ interface ILayoutProps {
     grid: boolean;
     connectDropTarget?: any;
     isOver?: boolean;
+    addTag?: any;
 }
 
 interface ILayoutState {

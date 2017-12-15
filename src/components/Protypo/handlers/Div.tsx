@@ -15,17 +15,15 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { OnPasteStripFormatting, startHoverTimer } from 'lib/constructor';
+import { OnPasteStripFormatting, startHoverTimer, getDropPosition } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
 import * as classnames from 'classnames';
 import { DropTarget, DragSource } from 'react-dnd';
-import { findDOMNode } from 'react-dom'
 
 const Source = {
     beginDrag(props: IDivProps, monitor: any, component: any) {
         return {
-            element: props.tag,
-            component: component
+            tag: props.tag
         };
     }
 };
@@ -40,7 +38,15 @@ const Target = {
 
         // monitor.getClientOffset().y - относительно окна
 
-        alert('drop!' + JSON.stringify(droppedItem.element) + ' to ' + props.tag.id + ", y: " + monitor.getClientOffset().y);
+        // alert('drop ' + ' tag ' + props.tag.id);
+
+        if (droppedItem.new) {
+            props.addTag({
+                tag: droppedItem,
+                destinationTagID: props.tag.id,
+                position: getDropPosition(monitor, component)
+            });
+        }
     },
     hover(props: IDivProps, monitor: any, component: any) {
         if (!monitor.isOver({ shallow: true })) {
@@ -49,32 +55,8 @@ const Target = {
         if (!startHoverTimer()) {
             return;
         }
-        const gap: number = 5;
 
-        // Determine rectangle on screen
-        const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
-
-        // Determine mouse position
-        const clientOffset = monitor.getClientOffset();
-
-        // Get pixels to the top
-        const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-        const hoverClientX = clientOffset.x - hoverBoundingRect.left;
-
-
-        if (hoverClientY < gap || hoverClientX < gap) {
-            // insert before
-            // alert('insert before');
-            props.changePage({ canDropPosition: 'before', tagID: props.tag.id });
-            return;
-        }
-
-        if (hoverClientY > hoverBoundingRect.height - gap || hoverClientX > hoverBoundingRect.width - gap) {
-            props.changePage({ canDropPosition: 'after', tagID: props.tag.id });
-            return;
-        }
-
-        props.changePage({ canDropPosition: 'inside', tagID: props.tag.id });
+        props.changePage({ canDropPosition: getDropPosition(monitor, component), tagID: props.tag.id });
     }
 };
 
@@ -86,21 +68,9 @@ function collectSource(connect: any, monitor: any) {
 }
 
 function collectTarget(connect?: any, monitor?: any) {
-    let x = 0;
-    let y = 0;
-
-    // const sourceItem = monitor.getItem();
-    //const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
-
-    // if(monitor && monitor.getClientOffset()) {
-    //     x = monitor.getClientOffset().x;
-    //     y = monitor.getClientOffset().y;
-    // }
     return {
         connectDropTarget: connect.dropTarget(),
-        isOver: monitor.isOver({ shallow: true }),
-        x,
-        y
+        isOver: monitor.isOver({ shallow: true })
     };
 }
 
@@ -115,6 +85,7 @@ export interface IDivProps {
     'editable'?: boolean;
     'changePage'?: any;
     'setTagCanDropPosition'?: any;
+    'addTag'?: any;
     'selectTag'?: any;
     'selected'?: boolean;
     'tag'?: any;
@@ -126,9 +97,6 @@ export interface IDivProps {
 
     connectDragSource?: any;
     isDragging?: boolean;
-
-    x?: number;
-    y?: number;
 }
 
 interface IDivState {

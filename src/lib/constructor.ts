@@ -15,28 +15,65 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { IProtypoElement } from 'components/Protypo/Protypo';
+import { findDOMNode } from 'react-dom';
 
-let findTagByIdResult = null;
+let findTagByIdResult: {
+    el: any;
+    parent: any,
+    parentPosition: number
+} = {
+    el: null,
+    parent: null,
+    parentPosition: 0
+};
 
 export const findTagById = (el: any, id: string): any => {
-    findTagByIdResult = null;
-    findNextTagById(el, id);
+    findTagByIdResult.el = null;
+    findNextTagById(el, id, null);
     return findTagByIdResult;
 };
 
-const findNextTagById = (el: any, id: string): any => {
+const findNextTagById = (el: any, id: string, parent: any): any => {
     if (el.id === id) {
-        findTagByIdResult = el;
+        findTagByIdResult.el = el;
+        return;
     }
     if (el instanceof Array) {
         for (var i = 0; i < el.length; i++) {
-            findNextTagById(el[i], id);
+            if (findTagByIdResult.el) {
+                break;
+            }
+            findTagByIdResult.parent = parent;
+            findTagByIdResult.parentPosition = i;
+            findNextTagById(el[i], id, parent);
         }
     }
+    if (findTagByIdResult.el) {
+        return;
+    }
     if (el.children) {
-        findNextTagById(el.children, id);
+        findNextTagById(el.children, id, el);
     }
 };
+
+export function generateId() {
+    return 'tag_' + (10000000 + Math.floor(Math.random() * 89999999));
+}
+
+export function setIds(children: any[]) {
+    for (let tag of children) {
+        if (!tag) {
+            continue;
+        }
+        if (!tag.id) {
+            tag.id = generateId();
+        }
+        if (tag.children) {
+            setIds(tag.children);
+        }
+    }
+
+}
 
 let onPasteStripFormattingIEPaste: boolean = false;
 
@@ -107,6 +144,17 @@ class Tag {
         }
 
         return '';
+    }
+    generateTreeJSON(text: string): any {
+        return {
+            tag: this.tagName.toLowerCase(),
+            id: generateId(),
+            children: [{
+                tag: 'text',
+                text: text,
+                id: generateId()
+            }]
+        };
     }
 }
 
@@ -257,19 +305,50 @@ export const getInitialTagValue = (prop: string, tag: any): string => {
     return properties.getInitial(prop, tag);
 };
 
-const resolveTagHandler = (name: string) => {
+export const resolveTagHandler = (name: string) => {
     return tagHandlers[name];
 };
 
-let hoverTimer: number = null;
+export function getDropPosition(monitor: any, component: any) {
+    // Determine rectangle on screen
+    const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
+
+    const maxGap: number = 15;
+    let gapX: number = hoverBoundingRect.width / 4;
+    let gapY: number = hoverBoundingRect.height / 4;
+    if (gapX > maxGap) {
+        gapX = maxGap;
+    }
+    if (gapY > maxGap) {
+        gapY = maxGap;
+    }
+
+    // Determine mouse position
+    const clientOffset = monitor.getClientOffset();
+
+    // Get pixels to the top
+    const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+    const hoverClientX = clientOffset.x - hoverBoundingRect.left;
+
+    if (hoverClientY < gapY || hoverClientX < gapX) {
+        return 'before';
+    }
+
+    if (hoverClientY > hoverBoundingRect.height - gapY || hoverClientX > hoverBoundingRect.width - gapX) {
+        return 'after';
+    }
+
+    return 'inside';
+}
+
+let hoverTimer: any = null;
 
 export function startHoverTimer() {
     if (hoverTimer) {
         return false;
     }
-    hoverTimer = setTimeout(() => { hoverTimer = null }, 200);
+    hoverTimer = setTimeout(() => { hoverTimer = null; }, 200);
     return true;
 }
-
 
 export default findTagById;

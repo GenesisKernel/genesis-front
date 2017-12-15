@@ -46,6 +46,7 @@ interface IConstructorProps {
     changePage?: any;
     setTagCanDropPosition?: any;
     selectTag?: any;
+    addTag?: any;
     selectedTag?: any;
     save?: any;
     grid: boolean;
@@ -240,13 +241,14 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                 </div>
             </div>
 
-            <Layout grid={props.grid}>
+            <Layout grid={props.grid} addTag={props.addTag}>
                 <Protypo
                     payload={props.pageTree}
                     editable={true}
                     changePage={props.changePage}
                     setTagCanDropPosition={props.setTagCanDropPosition}
                     selectTag={props.selectTag}
+                    addTag={props.addTag}
                     selectedTag={props.selectedTag}
                 />
             </Layout>

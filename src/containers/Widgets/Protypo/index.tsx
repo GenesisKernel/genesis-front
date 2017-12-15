@@ -30,6 +30,7 @@ export interface IProtypoContainerProps {
     payload: IProtypoElement[];
     changePage?: any;
     setTagCanDropPosition?: any;
+    addTag?: any;
     selectTag?: any;
     selectedTag?: any;
 }
