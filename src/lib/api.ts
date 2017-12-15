@@ -83,10 +83,18 @@ export interface ISignTestResponse extends IResponse {
     pubkey: string;
 }
 
+export interface IProtypoElement {
+    tag: string;
+    id?: string;
+    text?: string;
+    attr?: { [key: string]: string };
+    children?: IProtypoElement[];
+}
+
 export interface IContentResponse extends IResponse {
     menu: string;
-    tree: string;
-    menutree?: string;
+    tree: IProtypoElement[];
+    menutree?: IProtypoElement[];
 }
 
 export interface ITableResponse extends IResponse {

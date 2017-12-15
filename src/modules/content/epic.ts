@@ -46,11 +46,11 @@ export const renderPageEpic: Epic<Action, IRootState> =
                             menu: {
                                 name: payload.menu,
                                 vde: action.payload.vde,
-                                content: JSON.parse(payload.menutree)
+                                content: payload.menutree
                             },
                             page: {
                                 name: action.payload.name,
-                                content: JSON.parse(payload.tree)
+                                content: payload.tree
                             }
                         }
                     })
@@ -123,7 +123,7 @@ export const ecosystemInitEpic: Epic<Action, IRootState> =
                             defaultMenu: {
                                 name: 'default_menu',
                                 vde: false,
-                                content: JSON.parse(payload[0].tree)
+                                content: payload[0].tree
                             }
                         }
                     })
@@ -169,11 +169,11 @@ export const resetEpic: Epic<Action, IRootState> =
                         menu: {
                             name: payload.menu,
                             vde: false,
-                            content: JSON.parse(payload.menutree)
+                            content: payload.menutree
                         },
                         page: {
                             name: 'default_page',
-                            content: JSON.parse(payload.tree)
+                            content: payload.tree
                         }
                     }
                 }))
@@ -193,7 +193,7 @@ export const fetchNotificationsEpic: Epic<Action, IRootState> =
                 .map(payload =>
                     actions.fetchNotifications.done({
                         params: action.payload,
-                        result: JSON.parse(payload.tree)
+                        result: payload.tree
                     })
                 )
                 .catch((e: IAPIError) =>
