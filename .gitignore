@@ -14,7 +14,7 @@
 /releases
 
 # build artifacts
-/src/styles/built
+/src/app/styles/built
 
 # misc
 .DS_Store
