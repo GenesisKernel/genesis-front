@@ -48,7 +48,6 @@ const ContractEditor: React.SFC<IContractEditorProps> = (props) => (
         <Validation.components.ValidatedFormGroup for="content" className="flex-col flex-stretch">
             <div className="form-control p0 flex-col flex-stretch">
                 <Editor
-                    height={400}
                     language="simvolio"
                     value={props.code}
                     onChange={props.onSourceEdit}
