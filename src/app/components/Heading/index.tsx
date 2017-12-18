@@ -18,8 +18,6 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 const StyledHeading = styled.div`
-    -webkit-user-select: none;
-    -webkit-app-region: drag;
     z-index: 1000;
     font-size: 20px;
     line-height: 45px;
