@@ -33,6 +33,7 @@ export interface IProtypoProps {
     navigate: (url: string) => void;
     changePage?: any;
     addTag?: any;
+    moveTag?: any;
     setTagCanDropPosition?: any;
     selectTag?: any;
     selectedTag?: any;
@@ -155,6 +156,7 @@ class Protypo extends React.Component<IProtypoProps> {
                             changePage={this.props.changePage}
                             setTagCanDropPosition={this.props.setTagCanDropPosition}
                             addTag={this.props.addTag}
+                            moveTag={this.props.moveTag}
                             selectTag={this.props.selectTag}
                             selected={selected}
                         >

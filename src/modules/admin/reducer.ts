@@ -286,6 +286,24 @@ export default (state: State = initialState, action: Action): State => {
                     case 'inside':
                         tag.el.children.push(Tag.generateTreeJSON(action.payload.tag.text));
                         break;
+                    case 'before':
+                        // tag.el.children.push(Tag.generateTreeJSON(action.payload.tag.text));
+                        if (tag.parent && tag.parent.id && tag.parent.children) {
+                            tag.parent.children.splice(tag.parentPosition, 0, Tag.generateTreeJSON(action.payload.tag.text));
+                        }
+                        else {
+                            pageTree.splice(tag.parentPosition, 0, Tag.generateTreeJSON(action.payload.tag.text));
+                        }
+                        break;
+                    case 'after':
+                        if (tag.parent && tag.parent.id && tag.parent.children) {
+                            tag.parent.children.splice(tag.parentPosition + 1, 0, Tag.generateTreeJSON(action.payload.tag.text));
+                        }
+                        else {
+                            pageTree.splice(tag.parentPosition + 1, 0, Tag.generateTreeJSON(action.payload.tag.text));
+                        }
+                        // tag.el.children.push(Tag.generateTreeJSON(action.payload.tag.text));
+                        break;
                     default:
                         break;
                 }

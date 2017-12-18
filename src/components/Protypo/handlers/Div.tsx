@@ -47,6 +47,13 @@ const Target = {
                 position: getDropPosition(monitor, component)
             });
         }
+        else {
+            props.moveTag({
+                tag: droppedItem,
+                destinationTagID: props.tag.id,
+                position: getDropPosition(monitor, component)
+            });
+        }
     },
     hover(props: IDivProps, monitor: any, component: any) {
         if (!monitor.isOver({ shallow: true })) {
@@ -86,6 +93,7 @@ export interface IDivProps {
     'changePage'?: any;
     'setTagCanDropPosition'?: any;
     'addTag'?: any;
+    'moveTag'?: any;
     'selectTag'?: any;
     'selected'?: boolean;
     'tag'?: any;
