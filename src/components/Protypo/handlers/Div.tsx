@@ -49,7 +49,7 @@ const Target = {
         }
         else {
             props.moveTag({
-                tag: droppedItem,
+                tag: droppedItem.tag,
                 destinationTagID: props.tag.id,
                 position: getDropPosition(monitor, component)
             });
