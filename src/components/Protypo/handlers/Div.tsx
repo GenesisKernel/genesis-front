@@ -15,8 +15,68 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { OnPasteStripFormatting } from 'lib/constructor';
+import { OnPasteStripFormatting, startHoverTimer, getDropPosition } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
+import * as classnames from 'classnames';
+import { DropTarget, DragSource } from 'react-dnd';
+
+const Source = {
+    beginDrag(props: IDivProps, monitor: any, component: any) {
+        return {
+            tag: props.tag
+        };
+    }
+};
+
+const Target = {
+    drop(props: IDivProps, monitor: any, component: any) {
+        if (monitor.didDrop()) {
+            return;
+        }
+
+        const droppedItem = monitor.getItem();
+
+        // monitor.getClientOffset().y - относительно окна
+
+        // alert('drop ' + ' tag ' + props.tag.id);
+
+        if (droppedItem.new) {
+            props.addTag({
+                tag: droppedItem,
+                destinationTagID: props.tag.id,
+                position: getDropPosition(monitor, component)
+            });
+        }
+    },
+    hover(props: IDivProps, monitor: any, component: any) {
+        if (!monitor.isOver({ shallow: true })) {
+            return;
+        }
+        if (!startHoverTimer()) {
+            return;
+        }
+
+        props.changePage({ canDropPosition: getDropPosition(monitor, component), tagID: props.tag.id });
+    }
+};
+
+function collectSource(connect: any, monitor: any) {
+    return {
+        connectDragSource: connect.dragSource(),
+        isDragging: monitor.isDragging()
+    };
+}
+
+function collectTarget(connect?: any, monitor?: any) {
+    return {
+        connectDropTarget: connect.dropTarget(),
+        isOver: monitor.isOver({ shallow: true })
+    };
+}
+
+const ItemTypes = {
+    SOURCE: 'element'
+};
 
 export interface IDivProps {
     'className'?: string;
@@ -24,38 +84,78 @@ export interface IDivProps {
     'children': any;
     'editable'?: boolean;
     'changePage'?: any;
+    'setTagCanDropPosition'?: any;
+    'addTag'?: any;
     'selectTag'?: any;
     'selected'?: boolean;
     'tag'?: any;
+
+    'canDropPosition'?: string;
+
+    connectDropTarget?: any;
+    isOver?: boolean;
+
+    connectDragSource?: any;
+    isDragging?: boolean;
 }
 
-class Div extends React.Component<IDivProps> {
+interface IDivState {
+    contentEditable: boolean;
+}
+
+class Div extends React.Component<IDivProps, IDivState> {
+    constructor(props: IDivProps) {
+        super(props);
+        this.state = {
+            contentEditable: false
+        };
+    }
 
     onPaste(e: any) {
         OnPasteStripFormatting(this, e);
     }
 
-    onFocus(e: any) {
+    onClick(e: any) {
         this.props.selectTag({ tag: this.props.tag });
+        this.setState({
+            contentEditable: true
+        });
     }
 
     onBlur(e: any) {
         this.props.changePage({ text: e.target.textContent, tagID: this.props.tag.id });
+        this.setState({
+            contentEditable: false
+        });
     }
 
     render() {
         if (this.props.editable) {
-            return (
+            const { connectDropTarget, isOver } = this.props;
+            const { connectDragSource, isDragging } = this.props;
+
+            const classes = classnames({
+                [this.props.class]: true,
+                [this.props.className]: true,
+                'editable': this.props.selected,
+                'can-drop': isOver,
+                ['can-drop_' + this.props.canDropPosition]: true,
+                'is-dragging': isDragging
+            });
+
+            // <div style={{ position: 'absolute', width: '10px', height: '10px', left: 0, top: 0, ba }}></div>
+
+            return connectDragSource(connectDropTarget(
                 <div
-                    className={[this.props.class, this.props.className, this.props.selected ? 'editable' : ''].join(' ')}
-                    contentEditable={true}
+                    className={classes}
+                    contentEditable={this.state.contentEditable}
                     onPaste={this.onPaste.bind(this)}
                     onBlur={this.onBlur.bind(this)}
-                    onFocus={this.onFocus.bind(this)}
+                    onClick={this.onClick.bind(this)}
                 >
                     {this.props.children}
                 </div>
-            );
+            ));
         }
         return (
             <div
@@ -64,8 +164,12 @@ class Div extends React.Component<IDivProps> {
                 {this.props.children}
             </div>
         );
-
     }
 }
 
-export default StyledComponent(Div);
+export default
+DragSource(ItemTypes.SOURCE, Source, collectSource) (
+    DropTarget(ItemTypes.SOURCE, Target, collectTarget)(
+        StyledComponent(Div)
+    )
+);

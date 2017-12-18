@@ -17,9 +17,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { getPageTree, changePage  } from 'modules/admin/actions';
+import { getPageTree, changePage, setTagCanDropPosition, addTag } from 'modules/admin/actions';
 import Constructor from 'components/Main/Admin/Interface/Constructor';
 import { CodeGenerator } from 'lib/constructor';
+
+import HTML5Backend from 'react-dnd-html5-backend';
+import { DragDropContext } from 'react-dnd';
 
 export interface IConstructorTabbedContainerProps {
     pageID: string;
@@ -35,6 +38,8 @@ interface IConstructorTabbedContainerState {
 interface IConstructorTabbedContainerDispatch {
     getPageTree: typeof getPageTree.started;
     changePage: typeof changePage;
+    setTagCanDropPosition: typeof setTagCanDropPosition;
+    addTag: typeof addTag;
     // selectTag: typeof selectTag;
 }
 
@@ -65,6 +70,16 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
         this.props.changePage(payload);
     }
 
+    addTag(payload?: any) {
+        payload.pageID = this.props.pageID;
+        this.props.addTag(payload);
+    }
+
+    setTagCanDropPosition(payload?: any) {
+        payload.pageID = this.props.pageID;
+        this.props.setTagCanDropPosition(payload);
+    }
+
     selectTag(payload?: any) {
         this.setState({
             selectedTag: payload.tag
@@ -91,7 +106,9 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
             <Constructor
                 pageTree={pageTree}
                 changePage={this.changePage.bind(this)}
+                setTagCanDropPosition={this.setTagCanDropPosition.bind(this)}
                 selectTag={this.selectTag.bind(this)}
+                addTag={this.addTag.bind(this)}
                 save={this.save.bind(this)}
                 selectedTag={this.state.selectedTag}
                 grid={this.state.grid}
@@ -108,7 +125,13 @@ const mapStateToProps = (state: IRootState) => ({
 
 const mapDispatchToProps = {
     getPageTree: getPageTree.started,
-    changePage
+    changePage,
+    setTagCanDropPosition,
+    addTag
 };
 
-export default connect<IConstructorTabbedContainerState, IConstructorTabbedContainerDispatch, IConstructorTabbedContainerProps>(mapStateToProps, mapDispatchToProps)(ConstructorTabbedContainer);
+// export default connect<IConstructorTabbedContainerState, IConstructorTabbedContainerDispatch, IConstructorTabbedContainerProps>(mapStateToProps, mapDispatchToProps)(ConstructorTabbedContainer);
+
+export default DragDropContext(HTML5Backend)(
+    connect<IConstructorTabbedContainerState, IConstructorTabbedContainerDispatch, IConstructorTabbedContainerProps>(mapStateToProps, mapDispatchToProps)(ConstructorTabbedContainer)
+);

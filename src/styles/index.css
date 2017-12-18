@@ -490,6 +490,28 @@ input[type="number"] {
     border: 1px dashed #7799FF;
 }
 
+.can-drop {
+    background-color: rgba(150, 190, 255, 0.3);
+    /* transition: border 0.5s ease-in-out; */
+    padding: 10px;
+}
+
+.can-drop.can-drop_before {
+    border-top: 1px dashed blue;
+    border-left: 1px dashed blue;
+    background-color: rgba(150, 190, 255, 0.3);
+    /*transform: translateX(5px);*/
+    /*transform: translateY(5px);*/
+}
+
+.can-drop.can-drop_after {
+    border-bottom: 1px dashed blue;
+    border-right: 1px dashed blue;
+    background-color: rgba(150, 190, 255, 0.3);
+    /*transform: translateX(-5px);*/
+    /*transform: translateY(-5px);*/
+}
+
 /*p.editable {*/
     /*border: 1px dashed #7799FF;*/
 /*}*/

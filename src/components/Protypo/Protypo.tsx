@@ -21,7 +21,6 @@ import * as propTypes from 'prop-types';
 import Heading from 'components/Heading';
 import { IValidationResult } from 'components/Validation/ValidatedForm';
 import ToolButton, { IToolButtonProps } from 'components/Protypo/components/ToolButton';
-// import EditableWrapper from 'components/Protypo/components/EditableWrapper';
 
 export interface IProtypoProps {
     vde?: boolean;
@@ -33,6 +32,8 @@ export interface IProtypoProps {
     navigatePage: (params: { name: string, params: any, vde?: boolean }) => void;
     navigate: (url: string) => void;
     changePage?: any;
+    addTag?: any;
+    setTagCanDropPosition?: any;
     selectTag?: any;
     selectedTag?: any;
 }
@@ -55,7 +56,7 @@ export interface IParamSpec {
     params: string[];
 }
 
-export default class Protypo extends React.Component<IProtypoProps> {
+class Protypo extends React.Component<IProtypoProps> {
     private _lastID: number;
     private _menuPushBind: Function;
     private _navigatePageBind: Function;
@@ -152,6 +153,8 @@ export default class Protypo extends React.Component<IProtypoProps> {
                             childrenTree={element.children}
                             editable={this.props.editable}
                             changePage={this.props.changePage}
+                            setTagCanDropPosition={this.props.setTagCanDropPosition}
+                            addTag={this.props.addTag}
                             selectTag={this.props.selectTag}
                             selected={selected}
                         >
@@ -234,3 +237,5 @@ export default class Protypo extends React.Component<IProtypoProps> {
     menuPush: propTypes.func.isRequired,
     vde: propTypes.bool
 };
+
+export default Protypo;

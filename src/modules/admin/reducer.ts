@@ -18,7 +18,7 @@ import * as actions from './actions';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse } from 'lib/api';
-import { findTagById, Properties } from 'lib/constructor';
+import { findTagById, resolveTagHandler, Properties } from 'lib/constructor';
 
 export type State = {
     readonly pending: boolean;
@@ -203,7 +203,7 @@ export default (state: State = initialState, action: Action): State => {
     if (isType(action, actions.changePage)) {
         let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data.concat() || null;
 
-        let tag = findTagById(pageTree, action.payload.tagID);
+        let tag = findTagById(pageTree, action.payload.tagID).el;
         if (tag) {
             if (action.payload.text) {
                 // todo: parse contentEditable tags and create children array
@@ -216,29 +216,87 @@ export default (state: State = initialState, action: Action): State => {
                 }
             }
 
+            if (!tag.attr) {
+                tag.attr = {};
+            }
+
             if ('string' === typeof action.payload.class) {
-                tag.attr.class = action.payload.class;
-                // alert(JSON.stringify(tag));
-                // alert(JSON.stringify(pageTree));
+                tag.attr.class = action.payload.class || '';
             }
 
             let properties = new Properties();
 
             if ('string' === typeof action.payload.align) {
-                tag.attr.class = properties.updateClassList(tag.attr.class, 'align', action.payload.align);
+                tag.attr.class = properties.updateClassList(tag.attr.class || '', 'align', action.payload.align);
             }
 
             if ('string' === typeof action.payload.transform) {
-                tag.attr.class = properties.updateClassList(tag.attr.class, 'transform', action.payload.transform);
+                tag.attr.class = properties.updateClassList(tag.attr.class || '', 'transform', action.payload.transform);
             }
 
             if ('string' === typeof action.payload.wrap) {
-                tag.attr.class = properties.updateClassList(tag.attr.class, 'wrap', action.payload.wrap);
+                tag.attr.class = properties.updateClassList(tag.attr.class || '', 'wrap', action.payload.wrap);
             }
 
             if ('string' === typeof action.payload.color) {
-                tag.attr.class = properties.updateClassList(tag.attr.class, 'color', action.payload.color);
+                tag.attr.class = properties.updateClassList(tag.attr.class || '', 'color', action.payload.color);
             }
+
+            if ('string' === typeof action.payload.canDropPosition) {
+                tag.attr.canDropPosition = action.payload.canDropPosition;
+            }
+        }
+
+        return {
+            ...state,
+            pending: false,
+            tabs: {
+                ...state.tabs,
+                data: {
+                    ...state.tabs.data,
+                    ['interfaceConstructor' + action.payload.pageID]: {
+                        type: 'interfaceConstructor',
+                        data: pageTree
+                    }
+                }
+            }
+        };
+    }
+
+    if (isType(action, actions.addTag)) {
+        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data.concat() || null;
+
+        // destinationTagID
+        if (!pageTree) {
+            pageTree = [];
+        }
+
+        let Tag: any = null;
+
+        const Handler = resolveTagHandler(action.payload.tag.element);
+        if (Handler) {
+            Tag = new Handler();
+        }
+
+        if ('string' === typeof action.payload.destinationTagID &&
+            'string' === typeof action.payload.position) {
+            let tag = findTagById(pageTree, action.payload.destinationTagID);
+            if (tag.el) {
+                switch (action.payload.position) {
+                    case 'inside':
+                        tag.el.children.push(Tag.generateTreeJSON(action.payload.tag.text));
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+            // alert(tag.el.id + ' parent ' + (tag.parent && tag.parent.id || 'root') + " pos " + tag.parentPosition);
+        }
+        else {
+            pageTree = pageTree.concat(
+                Tag.generateTreeJSON(action.payload.tag.text)
+            );
         }
 
         return {

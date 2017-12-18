@@ -29,6 +29,8 @@ export interface IProtypoContainerProps {
     wrapper?: JSX.Element;
     payload: IProtypoElement[];
     changePage?: any;
+    setTagCanDropPosition?: any;
+    addTag?: any;
     selectTag?: any;
     selectedTag?: any;
 }

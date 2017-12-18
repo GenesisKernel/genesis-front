@@ -25,6 +25,7 @@ import { Observable } from 'rxjs';
 import { IRootState } from 'modules';
 import * as actions from './actions';
 import storage from 'lib/storage';
+import { setIds } from 'lib/constructor';
 
 export const getTableEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getTable.started)
@@ -403,25 +404,6 @@ export const getPageTreeCodeEpic: Epic<Action, IRootState> =
         .flatMap(action => {
             const state = store.getState();
 
-            function generateId() {
-                return 'tag_' + (10000000 + Math.floor(Math.random() * 89999999));
-            }
-
-            function setIds(children: any[]) {
-                for (let tag of children) {
-                    if (!tag) {
-                        continue;
-                    }
-                    if (!tag.id) {
-                        tag.id = generateId();
-                    }
-                    if (tag.children) {
-                        setIds(tag.children);
-                    }
-                }
-
-            }
-
             return Observable.fromPromise(api.contentTest(state.auth.sessionToken, action.payload.code))
                 .map(payload => {
                     let pageTreeCode = payload.tree;
@@ -447,25 +429,6 @@ export const getPageTreeEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getPageTree.started)
         .flatMap(action => {
             const state = store.getState();
-
-            function generateId() {
-                return 'tag_' + (10000000 + Math.floor(Math.random() * 89999999));
-            }
-
-            function setIds(children: any[]) {
-                for (let tag of children) {
-                    if (!tag) {
-                        continue;
-                    }
-                    if (!tag.id) {
-                        tag.id = generateId();
-                    }
-                    if (tag.children) {
-                        setIds(tag.children);
-                    }
-                }
-
-            }
 
             return Observable.fromPromise(api.contentPage(state.auth.sessionToken, action.payload.name, {}))
                 .map(payload => {
