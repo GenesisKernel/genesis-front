@@ -14,8 +14,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
+export type TPlatformType =
+    'desktop' | 'web' | 'win32' | 'linux' | 'darwin';
+
 const isElectron = navigator.userAgent.toLowerCase().indexOf(' electron/') > -1;
-const platform = isElectron ? 'desktop' : 'web';
+const platform: TPlatformType = isElectron ? 'desktop' : 'web';
 let os: NodeJS.Platform = null;
 
 if (isElectron) {
@@ -39,6 +42,12 @@ export default {
         }
         else {
             return platforms[platform];
+        }
+    },
+
+    on: (platformType: TPlatformType, callback: () => void) => {
+        if (platformType === platform) {
+            callback();
         }
     }
 };

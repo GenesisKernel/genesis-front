@@ -1,6 +1,5 @@
 .wrapper {
-    background: url(/img/back.png) no-repeat;
-    background-attachment: fixed;
+    background: #17437b;
     display: flex;
     flex-direction: column;
 
@@ -59,12 +58,16 @@ textarea.flex-stretch {
 
     > .panel-heading {
         border-radius: 0;
-        margin: -1px;
+        margin: -1px -1px 0;
     }
 
     &.panel-default > .panel-heading {
         margin: 0;
     }
+}
+
+.list-group, .list-group-item {
+    border-radius: 0 !important;
 }
 
 .btn {
@@ -101,10 +104,10 @@ textarea.flex-stretch {
     background: none;
     border: 0;
     padding: 0 8px;
-    height: 15px;
+    height: 14px;
     line-height: initial;
     display: inline-block;
-    font-size: 15px;
+    font-size: 14px;
     text-decoration: none !important;
     cursor: pointer;
     animation: btnShiftLeft .8s;

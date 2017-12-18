@@ -35,36 +35,47 @@ const StyledBackButton = styled.button`
     position: relative;
     display: block;
     width: 100%;
-    height: 42px;
-    line-height: 41px;
-    padding: 0 14px;
-    color: #585858;
-    font-size: 16px;
-    font-weight: 200;
+    height: 58px;
+    padding: 10px 25px;
+    color: #2886ff;
+    font-weight: 300;
     text-decoration: none;
     outline: none;
     border: none;
     text-align: left;
     background: transparent;
     
-    &:hover .back-button {
-        color: #6ebcff;
+    &.disabled {
+        &:hover {
+            color: #2886ff;
+        }
+
+        .icon {
+            width: 0;
+            opacity: 0;
+        }
     }
 
-    .back-button {
-        color: #0089ff;
-        font-size: 14px;
-        float: right;
-        line-height: 40px;
+    &:hover {
+        color: #7bb0f5;
+    }
 
-        em {
-            font-size: 10px;
-            margin-right: 5px;
-        }
+    .icon {
+        vertical-align: top;
+        display: inline-block;
+        width: 30px;
+        overflow: hidden;
+        opacity: 1;
+        transition: width ease-in-out .15s, opacity ease-in-out .15s;
+    }
 
-        span {
-            font-size: 16px;
-        }
+    em {
+        font-size: 15px;
+    }
+
+    span {
+        font-size: 21px;
+        font-weight: 300;
     }
 `;
 
@@ -83,7 +94,7 @@ const StyledDevButton = styled.div`
         outline: none;
         border: none;
         display: block;
-        margin: 0 auto;
+        margin: 10px auto;
         font-weight: bold;
         color: #888;
         font-size: 14px;
@@ -101,6 +112,7 @@ const StyledDevButton = styled.div`
 `;
 
 export interface INavigationProps {
+    isEcosystemOwner: boolean;
     preloading: boolean;
     visible: boolean;
     topOffset: number;
@@ -110,7 +122,7 @@ export interface INavigationProps {
         content: IProtypoElement[];
     }[];
     menuPop: () => void;
-    menuPush: (menu: { name: string, content: IProtypoElement[] }) => void;
+    menuPush: (menu: { name: string, vde?: boolean, content: IProtypoElement[] }) => void;
     ecosystemInit: (nullArg: null) => void;
 }
 
@@ -131,7 +143,7 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
 
     // TODO: This function is a stub. In future, admin menu will be reworked to show through the API call
     onDeveloperTools() {
-        this.props.menuPush({
+        const menuStack = {
             name: 'adminTools',
             content: [
                 {
@@ -177,8 +189,95 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
                 {
                     tag: 'menuitem',
                     attr: {
-                        icon: 'icon-share-alt',
+                        icon: 'icon-cloud-upload',
+                        _systemPageHook: '/admin/import',
+                        title: this.props.intl.formatMessage({ id: 'admin.import', defaultMessage: 'Import' })
+                    }
+                },
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-cloud-download',
                         _systemPageHook: '/admin/export',
+                        title: this.props.intl.formatMessage({ id: 'admin.export', defaultMessage: 'Export' })
+                    }
+                }
+            ]
+        };
+
+        if (!this.props.isEcosystemOwner) {
+            menuStack.content.push({
+                tag: 'menuitem',
+                attr: {
+                    icon: 'icon-lock',
+                    _systemPageHook: '/admin/vde',
+                    title: this.props.intl.formatMessage({ id: 'admin.vde.short', defaultMessage: 'Dedicated Ecosystem' })
+                }
+            });
+        }
+
+        this.props.menuPush(menuStack);
+    }
+
+    // TODO: This function is a stub. In future, admin menu will be reworked to show through the API call
+    onVDETools() {
+        this.props.menuPush({
+            name: 'vde_tools',
+            vde: false,
+            content: [
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-screen-desktop',
+                        _systemPageHook: '/vde/interface',
+                        title: this.props.intl.formatMessage({ id: 'admin.interface', defaultMessage: 'Interface' })
+                    }
+                },
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-docs',
+                        _systemPageHook: '/vde/tables',
+                        title: this.props.intl.formatMessage({ id: 'admin.tables', defaultMessage: 'Tables' })
+                    }
+                },
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-briefcase',
+                        _systemPageHook: '/vde/contracts',
+                        title: this.props.intl.formatMessage({ id: 'admin.contracts', defaultMessage: 'Smart contracts' })
+                    }
+                },
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-settings',
+                        _systemPageHook: '/vde/parameters',
+                        title: this.props.intl.formatMessage({ id: 'admin.parameters', defaultMessage: 'Ecosystem parameters' })
+                    }
+                },
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-globe',
+                        _systemPageHook: '/vde/languages',
+                        title: this.props.intl.formatMessage({ id: 'admin.languages', defaultMessage: 'Language resources' })
+                    }
+                },
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-cloud-upload',
+                        _systemPageHook: '/vde/import',
+                        title: this.props.intl.formatMessage({ id: 'admin.import', defaultMessage: 'Import' })
+                    }
+                },
+                {
+                    tag: 'menuitem',
+                    attr: {
+                        icon: 'icon-cloud-download',
+                        _systemPageHook: '/vde/export',
                         title: this.props.intl.formatMessage({ id: 'admin.export', defaultMessage: 'Export' })
                     }
                 }
@@ -191,14 +290,15 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
         return (
             <StyledNavigation style={{ width: this.props.visible ? this.props.width : 0, paddingTop: this.props.topOffset }}>
                 <nav>
-                    {this.props.menus.length > 1 && (
-                        <StyledBackButton onClick={() => this.props.menuPop()} disabled={1 >= this.props.menus.length}>
-                            <div>
+
+                    <StyledBackButton onClick={() => this.props.menuPop()} disabled={1 >= this.props.menus.length} className={this.props.menus.length > 1 ? '' : 'disabled'}>
+                        <div>
+                            <span className="icon">
                                 <em className="icon-arrow-left" />
-                                <span>Return to previous menu</span>
-                            </div>
-                        </StyledBackButton>
-                    )}
+                            </span>
+                            <span>{menu.name}</span>
+                        </div>
+                    </StyledBackButton>
                     <StyledMenuContent>
                         <Protypo
                             context="menu"
@@ -206,6 +306,10 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
                         />
                     </StyledMenuContent>
                     <StyledDevButton>
+                        <button id="mainVDETools" onClick={this.onVDETools.bind(this)}>
+                            <em className="icon fa fa-wrench" />
+                            <FormattedMessage id="admin.vde.tools" defaultMessage="VDE tools" />
+                        </button>
                         <button id="mainAdminTools" onClick={this.onDeveloperTools.bind(this)}>
                             <em className="icon fa fa-cog" />
                             <FormattedMessage id="admin.tools" defaultMessage="Admin tools" />

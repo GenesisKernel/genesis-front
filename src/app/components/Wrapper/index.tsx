@@ -16,6 +16,7 @@
 
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
 import DocumentTitle from 'components/DocumentTitle';
 import Heading from 'containers/Widgets/Heading';
@@ -24,7 +25,7 @@ type TMixedContent =
     JSX.Element | string;
 
 export interface IWrapperProps {
-    type: 'fullscreen' | 'noscroll';
+    type: 'default' | 'fullscreen' | 'noscroll';
     title: { title: string, defaultTitle: string };
     heading: {
         content: TMixedContent;
@@ -34,13 +35,27 @@ export interface IWrapperProps {
             title: TMixedContent;
         }[];
     };
-    breadcrumbs: IBreadcrumbProps[];
+    description?: React.ReactNode;
+    breadcrumbs?: IBreadcrumbProps[];
 }
 
 export interface IBreadcrumbProps {
     title: TMixedContent;
     url?: string;
 }
+
+const StyledDescription = styled.div`
+    padding: 10px 20px;
+    color: #84909e;
+    border-bottom: 1px solid #cfdbe2;
+`;
+
+const StyledBreadcrumbs = styled.ul`
+    padding: 10px 20px;
+    color: #84909e;
+    border-bottom: 1px solid #cfdbe2;
+    list-style: none;
+`;
 
 const Breadcrumb: React.SFC<IBreadcrumbProps> = props => (
     <li>
@@ -55,6 +70,7 @@ const Breadcrumb: React.SFC<IBreadcrumbProps> = props => (
 );
 
 const bodyClasses = {
+    default: 'content-wrapper',
     fullscreen: 'fullscreen',
     noscroll: 'fullscreen-wrapper'
 };
@@ -74,15 +90,21 @@ const Wrapper: React.SFC<IWrapperProps> = props => (
                 <div>{props.heading.content}</div>
             </Heading>
 
+            {props.description && (
+                <StyledDescription>
+                    {props.description}
+                </StyledDescription>
+            )}
+
             {props.breadcrumbs && (
-                <ol className="breadcrumb">
+                <StyledBreadcrumbs className="breadcrumb">
                     {props.breadcrumbs.map((breadcrumb, index) => (
                         <Breadcrumb key={index} {...breadcrumb} />
                     ))}
-                </ol>
+                </StyledBreadcrumbs>
             )}
 
-            <div className={bodyClasses[props.type]}>
+            <div className={bodyClasses[props.type || 'default']}>
                 {props.children}
             </div>
         </div>

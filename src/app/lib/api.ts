@@ -36,6 +36,13 @@ export interface IAPIError {
     error: string;
 }
 
+export interface IProtypoElement {
+    tag: string;
+    text?: string;
+    attr?: { [key: string]: string };
+    children?: IProtypoElement[];
+}
+
 export interface IInstallParams {
     type: string;
     log_level: string;
@@ -84,8 +91,8 @@ export interface ISignTestResponse extends IResponse {
 
 export interface IContentResponse extends IResponse {
     menu: string;
-    tree: string;
-    menutree?: string;
+    tree: IProtypoElement[];
+    menutree?: IProtypoElement[];
 }
 
 export interface ITableResponse extends IResponse {
@@ -201,6 +208,17 @@ export interface IDBValue {
     id: string;
 }
 
+// Woodleg to support old versions that were returning plain-string object
+const transformContent = (value: IContentResponse) => {
+    if ('string' === typeof value.menutree) {
+        value.menutree = JSON.parse(value.menutree);
+    }
+    if ('string' === typeof value.tree) {
+        value.tree = JSON.parse(value.tree);
+    }
+    return value;
+};
+
 const request = async (endpoint: string, body: { [key: string]: any }, options?: NeedleOptions) => {
     // TODO: Set request timeout
     const requestOptions = Object.assign({}, defaultOptions, { baseUrl: apiUrl, uri: endpoint, form: body }, options) as NeedleOptions;
@@ -269,9 +287,12 @@ const api = {
 
     // Level 2
     row: (session: string, table: string, id: string, columns?: string, vde = false) => securedRequest(`row/${table}/${id}?columns=${columns || ''}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<IRowResponse>,
-    contentMenu: (session: string, name: string) => securedRequest(`content/menu/${name}`, session, null) as Promise<IContentResponse>,
-    contentPage: (session: string, name: string, params: { [key: string]: any }, vde = false) => securedRequest(`content/page/${name}`, session, { ...params, vde }) as Promise<IContentResponse>,
-    contentTest: (session: string, template: string) => securedRequest('content', session, { template }) as Promise<IContentResponse>,
+    contentMenu: (session: string, name: string) => securedRequest(`content/menu/${name}`, session, null)
+        .then(transformContent),
+    contentPage: (session: string, name: string, params: { [key: string]: any }, vde = false) => securedRequest(`content/page/${name}`, session, { ...params, vde })
+        .then(transformContent),
+    contentTest: (session: string, template: string) => securedRequest('content', session, { template })
+        .then(transformContent),
     table: (session: string, name: string, vde?: boolean) => securedRequest(`table/${name}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITableResponse>,
     tables: (session: string, offset?: number, limit?: number, vde = false) => securedRequest(`tables?offset=${offset || 0}&limit=${limit || 1000}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITablesResponse>,
     list: (session: string, name: string, offset?: number, limit?: number, columns?: string[], vde = false) => securedRequest(`list/${name}?offset=${offset || 0}&limit=${limit || 1000}&columns=${columns ? columns.join(',') : ''}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<IListResponse>,

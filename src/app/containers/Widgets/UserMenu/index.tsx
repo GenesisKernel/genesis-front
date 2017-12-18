@@ -22,9 +22,8 @@ import { logout, switchEcosystem } from 'modules/auth/actions';
 
 import UserMenu from 'components/Main//UserMenu';
 
-interface IUserMenuContainerProps {
-    collapsed: boolean;
-    onToggleCollapsed: () => void;
+export interface IUserMenuContainerProps {
+
 }
 
 interface IUserMenuContainerState {
@@ -39,10 +38,8 @@ interface IUserMenuContainerDispatch {
 
 const UserMenuContainer: React.SFC<IUserMenuContainerProps & IUserMenuContainerState & IUserMenuContainerDispatch> = (props) => (
     <UserMenu
-        collapsed={props.collapsed}
         account={props.account}
         ecosystem={props.ecosystem}
-        onToggleCollapsed={props.onToggleCollapsed}
         onLogout={() => props.logout(null)}
         onSwitchEcosystem={ecosystem => props.switchEcosystem(ecosystem)}
     />

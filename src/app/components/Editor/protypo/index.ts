@@ -174,8 +174,8 @@ const register = (editor: typeof monaco) => {
             kind: monaco.languages.CompletionItemKind.Method,
             insertText: 'Div(',
             params: [
-                staticParamTypes.Body,
-                staticParamTypes.Class
+                staticParamTypes.Class,
+                staticParamTypes.Body
             ]
         },
         Em: {
@@ -232,13 +232,13 @@ const register = (editor: typeof monaco) => {
             kind: monaco.languages.CompletionItemKind.Function,
             insertText: 'If(',
             params: [
-                staticParamTypes.Body,
                 {
                     label: 'Condition',
                     kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Condition to met for this function to succeed',
                     insertText: 'Condition: '
-                }
+                },
+                staticParamTypes.Body
             ]
         },
         Image: {
@@ -653,8 +653,29 @@ const register = (editor: typeof monaco) => {
     });
 
     /*editor.languages.registerSignatureHelpProvider(langName, {
+        signatureHelpTriggerCharacters: ['(', ','],
         provideSignatureHelp: (model, position) => {
+            const textUntilPosition = model.getValueInRange({ startLineNumber: position.lineNumber, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column });
 
+            // Match function name. There must be an opening bracket to provide signature help
+            const funcMatch = textUntilPosition.match(/([a-z0-9]+)\((([a-z]+,?)*)$/i);
+            if (funcMatch && functionDefs[funcMatch[1]]) {
+                const functionDef = functionDefs[funcMatch[1]];
+                const paramNames = functionDef.params.map((l: any) => l.label);
+
+                return {
+                    signatures: [{
+                        label: `${functionDef.label}(${paramNames.join(',')})`,
+                        parameters: functionDef.params
+                    }],
+
+                    activeSignature: 0,
+                    activeParameter: 1
+                };
+            }
+            else {
+                return null;
+            }
         }
     });*/
 

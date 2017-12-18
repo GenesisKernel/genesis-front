@@ -39,7 +39,6 @@ export const loginEpic = (actions$: Observable<Action>) =>
             return Observable.from(promise)
                 .flatMap(payload => {
                     const account = storage.accounts.load(payload.key_id);
-
                     return Observable.concat([
                         actions.login.done({
                             params: action.payload,

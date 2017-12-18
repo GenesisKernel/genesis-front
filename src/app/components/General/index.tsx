@@ -40,6 +40,10 @@ const StyledAuth = styled.div`
             .panel {
                 overflow: hidden;
                 background: #fff;
+
+                > .panel-heading {
+                    background: #4c7dbd;
+                }
             }
         }
     }
@@ -56,52 +60,66 @@ export interface IGeneralProps {
     return?: string | (() => void);
 }
 
-const General: React.SFC<IGeneralProps> = (props) => (
-    <StyledAuth>
-        <div className="content">
-            <div className="auth-window desktop-flex-col desktop-flex-stretch">
-                <div className="panel panel-flat panel-dark desktop-flex-col desktop-flex-stretch">
-                    {!props.headless && (
-                        <div className="panel-heading text-center clearfix drag">
-                            {props.return && (
-                                <div style={{ position: 'absolute' }}>
-                                    {typeof props.return === 'function' ?
-                                        (
-                                            <a className="text-muted" href="#" onClick={props.return}>
-                                                <StyledBackButton className="fa fa-chevron-left" />
-                                            </a>
-                                        ) : (
-                                            <Link to={props.return.toString()} className="text-muted">
-                                                <StyledBackButton className="fa fa-chevron-left" />
-                                            </Link>
-                                        )
-                                    }
+class General extends React.Component<IGeneralProps> {
+    componentDidMount() {
+        platform.on('desktop', () => {
+            const { remote } = require('electron');
+            const window = remote.getCurrentWindow();
+            window.setResizable(false);
+            window.setSize(640, 524);
+            window.setMinimumSize(640, 524);
+        });
+    }
+
+    render() {
+        return (
+            <StyledAuth>
+                <div className="content">
+                    <div className="auth-window desktop-flex-col desktop-flex-stretch">
+                        <div className="panel panel-flat desktop-flex-col desktop-flex-stretch">
+                            {!this.props.headless && (
+                                <div className="panel-heading text-center clearfix drag">
+                                    {this.props.return && (
+                                        <div style={{ position: 'absolute' }}>
+                                            {typeof this.props.return === 'function' ?
+                                                (
+                                                    <a className="text-muted" href="#" onClick={this.props.return}>
+                                                        <StyledBackButton className="fa fa-chevron-left" />
+                                                    </a>
+                                                ) : (
+                                                    <Link to={this.props.return.toString()} className="text-muted">
+                                                        <StyledBackButton className="fa fa-chevron-left" />
+                                                    </Link>
+                                                )
+                                            }
+                                        </div>
+                                    )}
+                                    <Link to="/">
+                                        <img src={imgLogo} className="block-center" style={{ height: 25 }} />
+                                    </Link>
                                 </div>
                             )}
-                            <Link to="/">
-                                <img src={imgLogo} className="block-center" style={{ height: 25 }} />
-                            </Link>
+                            <div className={`panel-body desktop-flex-col desktop-flex-stretch ${this.props.className || ''}`}>
+                                {this.props.children}
+                            </div>
                         </div>
-                    )}
-                    <div className={`panel-body desktop-flex-col desktop-flex-stretch ${props.className || ''}`}>
-                        {props.children}
+                        {platform.select({
+                            web: (
+                                <div className="p-lg text-center text-white">
+                                    <div className="pull-left">
+                                        <div>Apla &copy; {new Date().getFullYear()} - <a href="http://apla.io">http://apla.io</a></div>
+                                    </div>
+                                    <div className="pull-right">
+                                        <a href="#">English(US)</a>
+                                    </div>
+                                </div>
+                            )
+                        })}
                     </div>
                 </div>
-                {platform.select({
-                    web: (
-                        <div className="p-lg text-center">
-                            <div className="pull-left">
-                                <div>Apla &copy; {new Date().getFullYear()} - <a href="http://apla.io">http://apla.io</a></div>
-                            </div>
-                            <div className="pull-right">
-                                <a href="#">English(US)</a>
-                            </div>
-                        </div>
-                    )
-                })}
-            </div>
-        </div>
-    </StyledAuth>
-);
+            </StyledAuth>
+        );
+    }
+}
 
 export default General;

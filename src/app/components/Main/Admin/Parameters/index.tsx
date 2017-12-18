@@ -84,13 +84,9 @@ const Parameters: React.SFC<IParametersProps & InjectedIntlProps> = (props) => (
                 }
             ]
         }}
-        breadcrumbs={[
-            {
-                title: (
-                    <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
-                )
-            }
-        ]}
+        description={
+            <FormattedMessage id="admin.languages.description" defaultMessage="This section is used to configure stored reusable parameters. They are used to control basic ecosystem behavior, but you can create your own ones and use them in the template engine or smart-contracts" />
+        }
     >
         <Table
             striped

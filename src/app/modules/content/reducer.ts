@@ -153,7 +153,7 @@ export default (state: State = initialState, action: Action): State => {
     }
     else if (isType(action, actions.ecosystemInit.done)) {
         // TODO: Move this logic to the Epic
-        const menuNeedsPush = !state.menus.length || state.menus.find(l => l.name === action.payload.result.defaultMenu.name);
+        const menuNeedsPush = !state.menus.length || !state.menus.find(l => l.name === action.payload.result.defaultMenu.name);
         if (menuNeedsPush) {
             return {
                 ...state,

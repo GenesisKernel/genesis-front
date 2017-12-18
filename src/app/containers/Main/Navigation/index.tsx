@@ -27,6 +27,7 @@ interface INavigationContainerProps {
 }
 
 interface INavigationContainerState {
+    isEcosystemOwner: boolean;
     preloading: boolean;
     visible: boolean;
     width: number;
@@ -47,6 +48,7 @@ const NavigationContainer: React.SFC<INavigationContainerProps & INavigationCont
 );
 
 const mapStateToProps = (state: IRootState) => ({
+    isEcosystemOwner: state.auth.isEcosystemOwner,
     preloading: state.content.preloading,
     visible: state.content.navigationVisible,
     width: state.content.navigationWidth,

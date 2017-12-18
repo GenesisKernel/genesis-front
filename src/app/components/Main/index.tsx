@@ -22,6 +22,7 @@ import sidebarStyle from './Sidebar/style';
 import platform from 'lib/platform';
 
 import Titlebar from './Titlebar';
+import UserMenu from 'containers/Widgets/UserMenu';
 import Navigation from 'containers/Main/Navigation';
 
 export const styles = {
@@ -69,9 +70,10 @@ const StyledMenu = styled.ul`
     padding: 0;
     margin: 0;
     height: ${styles.menuHeight}px;
-    padding-top: 6px;
+    position: relative;
 
     > li {
+        margin-top: 6px;
         height: 34px;
         line-height: 34px;
         display: inline-block;
@@ -80,7 +82,17 @@ const StyledMenu = styled.ul`
         -webkit-app-region: no-drag;
         user-select: none;
 
-        > button {
+        &.user-menu {
+            margin-top: 0;
+            height: ${styles.menuHeight}px;
+            line-height: normal;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        button {
             border-radius: 0;
             padding: 0 20px;
             margin: 0;
@@ -174,51 +186,64 @@ const ToolButton: React.SFC<{ icon: string }> = props => (
     </li>
 );
 
-const ToolSeparator: React.SFC = props => (
+/*const ToolSeparator: React.SFC = props => (
     <li className="separator">
         <div />
     </li>
-);
+);*/
 
-const Main: React.SFC<IMainProps> = props => (
-    <StyledWrapper className="wrapper component-main">
-        <style type="text/css">
-            {props.stylesheet}
-        </style>
-        <StyledControls>
-            <StyledTitlebar className="drag">
-                <Titlebar>Apla</Titlebar>
-            </StyledTitlebar>
-            <StyledMenu className="drag">
-                <MenuItem>
-                    <em className="icon-grid" />
-                </MenuItem>
-                <MenuItem active>Home</MenuItem>
-                <MenuItem>Developer</MenuItem>
-                <MenuItem>Notifications</MenuItem>
-                <MenuItem>Transactions</MenuItem>
-            </StyledMenu>
-            <StyledToolbar>
-                <ToolButton icon="icon-arrow-left" />
-                <ToolButton icon="icon-arrow-right" />
-                <ToolButton icon="icon-refresh" />
-                <ToolButton icon="icon-home" />
-                <ToolSeparator />
-                <ToolButton icon="icon-key">Data encryption</ToolButton>
-            </StyledToolbar>
-        </StyledControls>
-        <Navigation topOffset={styles.headerHeight + styles.menuHeight + styles.toolbarHeight} />
-        <StyledContent style={{ marginLeft: props.navigationVisible ? props.navigationWidth : sidebarStyle.collapsedSize }}>
-            <ReduxToastr
-                timeOut={3000}
-                newestOnTop
-                position="top-center"
-                transitionIn="fadeIn"
-                transitionOut="fadeOut"
-            />
-            {props.children}
-        </StyledContent>
-    </StyledWrapper>
-);
+class Main extends React.Component<IMainProps> {
+    componentWillMount() {
+        platform.on('desktop', () => {
+            const { remote } = require('electron');
+            const window = remote.getCurrentWindow();
+            window.setResizable(true);
+            window.setSize(800, 600);
+            window.setMinimumSize(800, 600);
+            window.center();
+        });
+    }
+
+    render() {
+        return (
+            <StyledWrapper className="wrapper component-main">
+                <style type="text/css">
+                    {this.props.stylesheet}
+                </style>
+                <StyledControls>
+                    <StyledTitlebar className="drag">
+                        <Titlebar>Apla</Titlebar>
+                    </StyledTitlebar>
+                    <StyledMenu className="drag">
+                        <MenuItem>
+                            <em className="icon-grid" />
+                        </MenuItem>
+                        <MenuItem active>Home</MenuItem>
+                        <li className="user-menu">
+                            <UserMenu />
+                        </li>
+                    </StyledMenu>
+                    <StyledToolbar>
+                        <ToolButton icon="icon-arrow-left" />
+                        <ToolButton icon="icon-arrow-right" />
+                        <ToolButton icon="icon-refresh" />
+                        <ToolButton icon="icon-home" />
+                    </StyledToolbar>
+                </StyledControls>
+                <Navigation topOffset={styles.headerHeight + styles.menuHeight + styles.toolbarHeight} />
+                <StyledContent style={{ marginLeft: this.props.navigationVisible ? this.props.navigationWidth : sidebarStyle.collapsedSize }}>
+                    <ReduxToastr
+                        timeOut={3000}
+                        newestOnTop
+                        position="top-center"
+                        transitionIn="fadeIn"
+                        transitionOut="fadeOut"
+                    />
+                    {this.props.children}
+                </StyledContent>
+            </StyledWrapper>
+        );
+    }
+}
 
 export default Main;

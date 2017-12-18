@@ -20,14 +20,17 @@ import * as React from 'react';
 import styled from 'styled-components';
 import MonacoEditor from 'react-monaco-editor';
 import registerProtypo from './protypo';
+import platform from 'lib/platform';
 
 const StyledEditor = styled.div`
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-
-    > .react-monaco-editor-container {
+    &.editor-flex {
+        display: flex;
+        flex-direction: column;
         flex: 1;
+
+        > .react-monaco-editor-container {
+            flex: 1;
+        }
     }
 `;
 
@@ -47,7 +50,7 @@ export default class Editor extends React.Component<IEditorProps> {
 
     render() {
         return (
-            <StyledEditor>
+            <StyledEditor className={this.props.height ? null : 'editor-flex'}>
                 <MonacoEditor
                     language={this.props.language}
                     value={this.props.value}
@@ -59,9 +62,16 @@ export default class Editor extends React.Component<IEditorProps> {
                         scrollBeyondLastLine: false,
                         ...this.props.options
                     }}
+                    height={this.props.height}
                     requireConfig={{
-                        url: './vs/loader.js',
-                        baseUrl: './',
+                        url: platform.select({
+                            desktop: './vs/loader.js',
+                            web: '/vs/loader.js'
+                        }),
+                        baseUrl: platform.select({
+                            desktop: './',
+                            web: '/'
+                        }),
                         paths: {
                             'vs': './vs/'
                         }

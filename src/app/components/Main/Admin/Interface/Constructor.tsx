@@ -50,7 +50,7 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
             });
             api.contentTest(this.props.session, props.page.value).then(r => {
                 this.setState({
-                    treeCode: JSON.parse(r.tree)
+                    treeCode: r.tree
                 });
             });
         }

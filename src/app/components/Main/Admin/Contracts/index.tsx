@@ -80,13 +80,9 @@ const Contracts: React.SFC<IContractsProps & InjectedIntlProps> = (props) => (
                 }
             ]
         }}
-        breadcrumbs={[
-            {
-                title: (
-                    <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
-                )
-            }
-        ]}
+        description={
+            <FormattedMessage id="admin.contracts.description" defaultMessage="This section is used to create or modify Smart-Contracts. They are used to create or modify data stored in database tables. Access rights for all operations are also managed by Smart-Contracts" />
+        }
     >
         <Table
             striped

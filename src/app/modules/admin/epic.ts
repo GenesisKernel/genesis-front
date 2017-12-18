@@ -239,7 +239,7 @@ export const getLanguagesEpic: Epic<Action, IRootState> =
             return Observable.fromPromise(api.list(state.auth.sessionToken, 'languages', action.payload.offset, action.payload.limit, undefined, action.payload.vde))
                 .map(payload => actions.getLanguages.done({
                     params: action.payload,
-                    result: payload.list as any
+                    result: (payload.list as any) || []
                 }))
                 .catch((e: IAPIError) =>
                     Observable.of(actions.getLanguages.failed({

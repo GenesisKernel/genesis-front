@@ -19,10 +19,9 @@ import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { Button, Row, Col } from 'react-bootstrap';
 import { sendAttachment } from 'lib/fs';
 
-import Heading from 'containers/Widgets/Heading';
+import Wrapper from 'components/Wrapper';
 import ImportTable from './ImportTable';
 import ImportTableData from './ImportTableData';
-import DocumentTitle from 'components/DocumentTitle';
 import TabView from 'components/TabView';
 import TxButton from 'containers/Widgets/TxButton';
 
@@ -212,106 +211,100 @@ class Import extends React.Component<IImportProps & InjectedIntlProps> {
         }
 
         return (
-            <DocumentTitle title="admin.import" defaultTitle="Import">
-                <div>
-                    <Heading>
+            <Wrapper
+                type="default"
+                title={{
+                    title: 'admin.import',
+                    defaultTitle: 'Import'
+                }}
+                heading={{
+                    content: (
                         <FormattedMessage id="admin.import" defaultMessage="Import" />
-                    </Heading>
-                    <div className="content-wrapper">
-                        <Row>
-                            <Col md={12}>
-                                <div className="well">
-                                    <h4>
-                                        <FormattedMessage id="admin.import.prepare" defaultMessage="Prepare import payload" />
-                                    </h4>
-                                    <p>
-                                        <FormattedMessage id="admin.export.prepare.description" defaultMessage="Select payload that you want to import. Import editor tool will be shown to allow you to view, edit and reorder provided data before doing actual import" />
-                                    </p>
-                                </div>
-                            </Col>
-                        </Row>
-                        <hr className="mt0" />
-                        <div className="form-control">
-                            <input type="file" onChange={this.onFileSelect.bind(this)} />
-                        </div>
-                        <hr className="mt0" />
-                        {this.props.payload ? (
-                            <Row>
-                                <Col md={8} lg={9}>
-                                    <TabView
-                                        className="p0"
-                                        tabs={tabs}
-                                    >
-                                        {this.renderTabsContent()}
-                                    </TabView>
-                                </Col>
-                                <Col md={4} lg={3}>
-                                    <div className="panel panel-primary">
-                                        <div className="panel-heading">
-                                            <FormattedMessage id="admin.export.selected" defaultMessage="Selected items" />
-                                        </div>
-
-                                        <div className="list-group">
-                                            {this.renderItem(this.props.intl.formatMessage(
-                                                { id: 'admin.interface.pages', defaultMessage: 'Pages' }),
-                                                this.props.payload.pages.map(l => l.Name),
-                                                this.props.payload.pages.length
-                                            )}
-                                            {this.renderItem(this.props.intl.formatMessage(
-                                                { id: 'admin.interface.blocks', defaultMessage: 'Blocks' }),
-                                                this.props.payload.blocks.map(l => l.Name),
-                                                this.props.payload.blocks.length
-                                            )}
-                                            {this.renderItem(this.props.intl.formatMessage(
-                                                { id: 'admin.interface.menu', defaultMessage: 'Menu' }),
-                                                this.props.payload.menus.map(l => l.Name),
-                                                this.props.payload.menus.length
-                                            )}
-                                            {this.renderItem(this.props.intl.formatMessage(
-                                                { id: 'admin.parameters.short', defaultMessage: 'Parameters' }),
-                                                this.props.payload.parameters.map(l => l.Name),
-                                                this.props.payload.parameters.length
-                                            )}
-                                            {this.renderItem(this.props.intl.formatMessage(
-                                                { id: 'admin.languages', defaultMessage: 'Language resources' }),
-                                                this.props.payload.languages.map(l => l.Name),
-                                                this.props.payload.languages.length
-                                            )}
-                                            {this.renderItem(this.props.intl.formatMessage(
-                                                { id: 'admin.contracts', defaultMessage: 'Smart contracts' }),
-                                                this.props.payload.contracts.map(l => l.Name),
-                                                this.props.payload.contracts.length
-                                            )}
-                                            {this.renderItem(this.props.intl.formatMessage(
-                                                { id: 'admin.tables', defaultMessage: 'Tables' }),
-                                                this.props.payload.tables.map(l => l.Name),
-                                                this.props.payload.tables.length
-                                            )}
-                                            {this.renderItem(this.props.intl.formatMessage(
-                                                { id: 'admin.tables.data', defaultMessage: 'Table data' }),
-                                                this.props.payload.data.map(l => l.Table),
-                                                this.props.payload.data.length
-                                            )}
-                                        </div>
-
-                                        <div className="panel-footer clearfix">
-                                            <Button onClick={this.onSave.bind(this)}>
-                                                <FormattedMessage id="admin.import.save" defaultMessage="Save changes" />
-                                            </Button>
-
-                                            <div className="pull-right">
-                                                <TxButton className="btn btn-primary" contractName="@1Import" contractParams={{ Data: JSON.stringify(this.props.payload) }} disabled={this.isPristine()}>
-                                                    <FormattedMessage id="admin.import.confirm" defaultMessage="Import" />
-                                                </TxButton>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Col>
-                            </Row>
-                        ) : null}
-                    </div>
+                    )
+                }}
+                description={
+                    <FormattedMessage id="admin.import.description" defaultMessage="Select payload that you want to import. Import editor tool will be shown to allow you to view, edit and reorder provided data before doing actual import" />
+                }
+            >
+                <div className="form-control">
+                    <input type="file" onChange={this.onFileSelect.bind(this)} />
                 </div>
-            </DocumentTitle>
+                <hr className="mt0" />
+                {this.props.payload ? (
+                    <Row>
+                        <Col md={8} lg={9}>
+                            <TabView
+                                className="p0"
+                                tabs={tabs}
+                            >
+                                {this.renderTabsContent()}
+                            </TabView>
+                        </Col>
+                        <Col md={4} lg={3}>
+                            <div className="panel panel-primary">
+                                <div className="panel-heading">
+                                    <FormattedMessage id="admin.export.selected" defaultMessage="Selected items" />
+                                </div>
+
+                                <div className="list-group">
+                                    {this.renderItem(this.props.intl.formatMessage(
+                                        { id: 'admin.interface.pages', defaultMessage: 'Pages' }),
+                                        this.props.payload.pages.map(l => l.Name),
+                                        this.props.payload.pages.length
+                                    )}
+                                    {this.renderItem(this.props.intl.formatMessage(
+                                        { id: 'admin.interface.blocks', defaultMessage: 'Blocks' }),
+                                        this.props.payload.blocks.map(l => l.Name),
+                                        this.props.payload.blocks.length
+                                    )}
+                                    {this.renderItem(this.props.intl.formatMessage(
+                                        { id: 'admin.interface.menu', defaultMessage: 'Menu' }),
+                                        this.props.payload.menus.map(l => l.Name),
+                                        this.props.payload.menus.length
+                                    )}
+                                    {this.renderItem(this.props.intl.formatMessage(
+                                        { id: 'admin.parameters.short', defaultMessage: 'Parameters' }),
+                                        this.props.payload.parameters.map(l => l.Name),
+                                        this.props.payload.parameters.length
+                                    )}
+                                    {this.renderItem(this.props.intl.formatMessage(
+                                        { id: 'admin.languages', defaultMessage: 'Language resources' }),
+                                        this.props.payload.languages.map(l => l.Name),
+                                        this.props.payload.languages.length
+                                    )}
+                                    {this.renderItem(this.props.intl.formatMessage(
+                                        { id: 'admin.contracts', defaultMessage: 'Smart contracts' }),
+                                        this.props.payload.contracts.map(l => l.Name),
+                                        this.props.payload.contracts.length
+                                    )}
+                                    {this.renderItem(this.props.intl.formatMessage(
+                                        { id: 'admin.tables', defaultMessage: 'Tables' }),
+                                        this.props.payload.tables.map(l => l.Name),
+                                        this.props.payload.tables.length
+                                    )}
+                                    {this.renderItem(this.props.intl.formatMessage(
+                                        { id: 'admin.tables.data', defaultMessage: 'Table data' }),
+                                        this.props.payload.data.map(l => l.Table),
+                                        this.props.payload.data.length
+                                    )}
+                                </div>
+
+                                <div className="panel-footer clearfix">
+                                    <Button onClick={this.onSave.bind(this)}>
+                                        <FormattedMessage id="admin.import.save" defaultMessage="Save changes" />
+                                    </Button>
+
+                                    <div className="pull-right">
+                                        <TxButton className="btn btn-primary" contractName="@1Import" contractParams={{ Data: JSON.stringify(this.props.payload) }} disabled={this.isPristine()}>
+                                            <FormattedMessage id="admin.import.confirm" defaultMessage="Import" />
+                                        </TxButton>
+                                    </div>
+                                </div>
+                            </div>
+                        </Col>
+                    </Row>
+                ) : null}
+            </Wrapper>
         );
     }
 }

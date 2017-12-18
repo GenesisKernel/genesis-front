@@ -75,13 +75,9 @@ const Languages: React.SFC<ILanguagesProps & InjectedIntlProps> = (props) => (
                 }
             ]
         }}
-        breadcrumbs={[
-            {
-                title: (
-                    <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
-                )
-            }
-        ]}
+        description={
+            <FormattedMessage id="admin.languages.description" defaultMessage="This section is used to configure string localizations. You can use it to translate your application to different languages" />
+        }
     >
         <Table
             striped

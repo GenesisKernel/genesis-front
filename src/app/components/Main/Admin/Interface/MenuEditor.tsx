@@ -61,7 +61,7 @@ const MenuEditor: React.SFC<IMenuEditorProps> = (props) => (
                             </label>
                             <div className="form-control" style={{ height: 'auto', padding: 0 }}>
                                 <Editor
-                                    height={400}
+                                    height={600}
                                     language="protypo"
                                     value={props.template}
                                     onChange={props.onSourceEdit}

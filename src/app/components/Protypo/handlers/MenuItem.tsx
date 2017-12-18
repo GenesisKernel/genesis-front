@@ -52,13 +52,13 @@ export const StyledLinkButton = styled.div`
         height: 50px;
         line-height: 50px;
         padding: 0 20px;
-        color: #000;
+        color: #0a1d33;
         font-size: 14px;
         font-weight: 200;
         text-decoration: none;
 
         &:hover {
-            background: #f1eaf7;
+            background: #ececec;
         }
     }
 
@@ -71,6 +71,10 @@ export const StyledLinkButton = styled.div`
 
         .icon {
             margin-right: 14px;
+            color: #3577cc;
+            font-size: 17px;
+            position: relative;
+            top: 3px;
         }
     }
 `;
