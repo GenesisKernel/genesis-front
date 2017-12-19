@@ -205,7 +205,7 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
             ]
         };
 
-        if (!this.props.isEcosystemOwner) {
+        if (this.props.isEcosystemOwner) {
             menuStack.content.push({
                 tag: 'menuitem',
                 attr: {
