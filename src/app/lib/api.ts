@@ -234,7 +234,7 @@ const request = async (endpoint: string, body: { [key: string]: any }, options?:
         json = response.body;
     }
     catch (e) {
-        json = e;
+        json = { error: e };
     }
 
     if (json.error) {

@@ -85,10 +85,10 @@ class Offline extends React.Component<IOfflineProps, IOfflineState> {
                         <em className="fa fa-cog fa-5x text-muted fa-spin text-purple" />
                         <em className="fa fa-cog fa-lg text-muted fa-spin text-success" />
                     </h1>
-                    <div className="text-bold text-lg mb-lg">
+                    <div className="text-white text-bold text-lg mb-lg">
                         <FormattedMessage id="general.service.offline" defaultMessage="Service offline" />
                     </div>
-                    <p className="lead">
+                    <p className="lead text-white">
                         {this.props.isConnecting && (
                             <FormattedMessage id="general.service.connecting" defaultMessage="Connecting..." />
                         )}
@@ -96,7 +96,7 @@ class Offline extends React.Component<IOfflineProps, IOfflineState> {
                             <FormattedMessage id="general.service.connecting.retry.in" defaultMessage="Retrying in {seconds} sec" values={{ seconds: this.state.seconds }} />
                         )}
                     </p>
-                    <div>
+                    <div className="text-white">
                         <Button bsStyle="link" onClick={this.props.isConnecting ? null : this.props.checkOnline.bind(this)}>
                             <FormattedMessage id="general.service.retry" defaultMessage="Retry now" />
                         </Button>
