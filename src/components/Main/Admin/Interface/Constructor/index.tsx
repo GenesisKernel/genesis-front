@@ -148,8 +148,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                     <CollapsedListItem text="Navigation" icon={imgStroke75}>
                         <ul className="b-category-sublist">
                             <li>Breadcrumps</li>
-                            <li>Link</li>
-                            <li>Back</li>
+                            <li>Link</li>                            
                         </ul>
                     </CollapsedListItem>
                     <CollapsedListItem text="Tables" icon={imgGroup13}>
