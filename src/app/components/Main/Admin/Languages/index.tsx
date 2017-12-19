@@ -40,7 +40,7 @@ const renderLocale: ICellRenderer = (value, rowData) => {
             </div>
         );
 
-        case 4: return (
+        case 3: return (
             <Link to={`/${rowData.rowData[4] ? 'vde' : 'admin'}/languages/${rowData.rowData[0]}-${rowData.rowData[1]}`}>
                 <Button bsStyle="default" className="btn-labeled btn-icon">
                     <span className="btn-label">
