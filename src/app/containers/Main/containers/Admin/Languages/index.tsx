@@ -1,0 +1,69 @@
+// Copyright 2017 The apla-front Authors
+// This file is part of the apla-front library.
+// 
+// The apla-front library is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// The apla-front library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
+
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { IRootState } from 'modules';
+import { getLanguages } from 'modules/admin/actions';
+
+import DataPreloader from 'components/Animation/DataPreloader';
+import Languages from 'components/Main/Admin/Languages';
+
+export interface ILanguagesContainerProps {
+    vde?: boolean;
+}
+
+interface ILanguagesContainerState {
+    resources: { id: string, res: any, name: string, conditions: string }[];
+}
+
+interface ILanguagesContainerDispatch {
+    getLanguages: typeof getLanguages.started;
+}
+
+class LanguagesContainer extends React.Component<ILanguagesContainerProps & ILanguagesContainerState & ILanguagesContainerDispatch> {
+    componentWillMount() {
+        this.props.getLanguages({
+            vde: this.props.vde
+        });
+    }
+
+    componentWillReceiveProps(props: ILanguagesContainerProps & ILanguagesContainerDispatch) {
+        if (this.props.vde !== props.vde) {
+            props.getLanguages({
+                vde: props.vde
+            });
+        }
+    }
+
+    render() {
+        return (
+            <DataPreloader data={[this.props.resources]}>
+                <Languages resources={this.props.resources} vde={this.props.vde} />
+            </DataPreloader>
+        );
+    }
+}
+
+const mapStateToProps = (state: IRootState) => ({
+    resources: state.admin.languages
+});
+
+const mapDispatchToProps = {
+    getLanguages: getLanguages.started
+};
+
+export default connect<ILanguagesContainerState, ILanguagesContainerDispatch, ILanguagesContainerProps>(mapStateToProps, mapDispatchToProps)(LanguagesContainer);
