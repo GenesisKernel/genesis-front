@@ -10,7 +10,6 @@
         "url": "https://github.com/AplaProject/apla-front.git"
     },
     "private": true,
-    "homepage": "./",
     "main": "./electron/index.js",
     "dependencies": {
         "animate.css": "^3.5.2",
@@ -69,7 +68,7 @@
         "eject": "react-scripts-ts eject",
         "start-desktop": "npm-run-all -p watch-css start-js-desktop",
         "start-js-desktop": "react-scripts-ts-electron start",
-        "build-desktop": "npm run build-css && react-scripts-ts-electron build",
+        "build-desktop": "npm run build-css && PUBLIC_URL=./ react-scripts-ts-electron build",
         "package": "electron-builder --config electron-builder.json --dir",
         "release": "electron-builder --config electron-builder.json"
     },
