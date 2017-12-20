@@ -175,11 +175,8 @@ class Div extends React.Component<IDivProps, IDivState> {
     }
 }
 
-// FIXME: This code completely screws the page rendering process
-export default
-DragSource(ItemTypes.SOURCE, Source, collectSource)(
+export default DragSource(ItemTypes.SOURCE, Source, collectSource)(
     DropTarget(ItemTypes.SOURCE, Target, collectTarget)(
         StyledComponent(Div)
     )
 );
-// export default StyledComponent(Div);
