@@ -17,55 +17,90 @@
 import * as React from 'react';
 import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
+import DnDComponent from './DnDComponent';
+import * as classnames from 'classnames';
 
-export interface IPProps {
+export interface ISpanProps {
     'className'?: string;
     'class'?: string;
     'children': any;
+
     'editable'?: boolean;
     'changePage'?: any;
+    'setTagCanDropPosition'?: any;
+    'addTag'?: any;
+    'moveTag'?: any;
     'selectTag'?: any;
     'selected'?: boolean;
     'tag'?: any;
+
+    'canDropPosition'?: string;
+
+    connectDropTarget?: any;
+    isOver?: boolean;
+
+    connectDragSource?: any;
+    isDragging?: boolean;
 }
 
-class Span extends React.Component<IPProps> {
+interface ISpanState {
+}
+
+class Span extends React.Component<ISpanProps, ISpanState> {
+
+    constructor(props: ISpanProps) {
+        super(props);
+    }
 
     onPaste(e: any) {
         OnPasteStripFormatting(this, e);
     }
 
-    onFocus(e: any) {
+    onClick(e: any) {
+        e.stopPropagation();
         this.props.selectTag({ tag: this.props.tag });
     }
 
     onBlur(e: any) {
-        this.props.changePage({ text: e.target.textContent, tagID: this.props.tag.id });
+        e.stopPropagation();
+        this.props.changePage({ text: e.target.innerHTML, tagID: this.props.tag.id });
     }
 
     render() {
         if (this.props.editable) {
-            return (
+            const { connectDropTarget, isOver } = this.props;
+            const { connectDragSource, isDragging } = this.props;
+
+            const classes = classnames({
+                [this.props.class]: true,
+                [this.props.className]: true,
+                'editable': this.props.selected,
+                'can-drop': isOver,
+                ['can-drop_' + this.props.canDropPosition]: true,
+                'is-dragging': isDragging
+            });
+
+            return connectDragSource(connectDropTarget(
                 <span
-                    className={[this.props.class, this.props.className, this.props.selected ? 'editable' : ''].join(' ')}
-                    contentEditable={true}
+                    className={classes}
+                    contentEditable={this.props.selected}
                     onPaste={this.onPaste.bind(this)}
                     onBlur={this.onBlur.bind(this)}
-                    onFocus={this.onFocus.bind(this)}
+                    onClick={this.onClick.bind(this)}
                 >
                     {this.props.children}
                 </span>
-            );
+            ));
         }
         return (
-            <span
+            <p
                 className={[this.props.class, this.props.className].join(' ')}
             >
                 {this.props.children}
-            </span>
+            </p>
         );
 
     }
 }
 
-export default StyledComponent(Span);
+export default DnDComponent(StyledComponent(Span));

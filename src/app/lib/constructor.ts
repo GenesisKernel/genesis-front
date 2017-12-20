@@ -186,6 +186,13 @@ class Strong extends Tag {
     }
 }
 
+class Em extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'Em';
+    }
+}
+
 export class CodeGenerator {
     private elements: IProtypoElement[];
     constructor(elements: IProtypoElement[]) {
@@ -216,7 +223,7 @@ const tagHandlers = {
 //     'data': Data,
 //     'dbfind': DBFind,
     'div': Div,
-//     'em': Em,
+    'em': Em,
 //     'forlist': ForList,
 //     'form': Form,
 //     'image': Image,
