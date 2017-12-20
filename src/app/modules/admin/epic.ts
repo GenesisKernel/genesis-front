@@ -254,11 +254,13 @@ export const getLanguageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getLanguage.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.row(state.auth.sessionToken, 'languages', action.payload.id))
-                .map(payload => actions.getLanguage.done({
-                    params: action.payload,
-                    result: payload.value as any
-                }))
+            return Observable.fromPromise(api.row(state.auth.sessionToken, 'languages', action.payload.id, undefined, action.payload.vde))
+                .map(payload => {
+                    return actions.getLanguage.done({
+                        params: action.payload,
+                        result: payload.value as any
+                    });
+                })
                 .catch((e: IAPIError) =>
                     Observable.of(actions.getLanguage.failed({
                         params: action.payload,

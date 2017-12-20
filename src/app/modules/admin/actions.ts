@@ -54,7 +54,7 @@ export const getParameter = actionCreator.async<{ name: string, vde?: boolean },
 export const getParameters = actionCreator.async<{ params?: string[], vde?: boolean }, IParameterResponse[], string>('GET_PARAMETERS');
 
 // Languages
-export const getLanguage = actionCreator.async<{ id: string }, { id: string, res: any, name: string, conditions: string }, string>('GET_LANGUAGE');
+export const getLanguage = actionCreator.async<{ id: string, vde?: boolean }, { id: string, res: any, name: string, conditions: string }, string>('GET_LANGUAGE');
 export const getLanguages = actionCreator.async<{ vde?: boolean, offset?: number, limit?: number }, { id: string, res: any, name: string, conditions: string }[], string>('GET_LANGUAGES');
 
 // Import/export
