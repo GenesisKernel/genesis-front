@@ -32,6 +32,9 @@ import ModalDispatcher from 'containers/Widgets/ModalDispatcher';
 import Main from 'containers/Main';
 import General from 'containers/General';
 
+import HTML5Backend from 'react-dnd-html5-backend';
+import { DragDropContext } from 'react-dnd';
+
 interface IAppProps {
     locale: string;
     isAuthenticated: boolean;
@@ -130,4 +133,7 @@ const mapDispatchToProps = {
     login: login.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps, null, { pure: false })(App);
+// export default connect(mapStateToProps, mapDispatchToProps, null, { pure: false })(App);
+export default DragDropContext(HTML5Backend)(
+    connect(mapStateToProps, mapDispatchToProps, null, { pure: false })(App)
+);
