@@ -18,7 +18,7 @@ import * as actions from './actions';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse } from 'lib/api';
-import {findTagById, resolveTagHandler, Properties, generateId} from 'lib/constructor';
+import { findTagById, resolveTagHandler, Properties, generateId } from 'lib/constructor';
 
 export type State = {
     readonly pending: boolean;
@@ -394,7 +394,6 @@ export default (state: State = initialState, action: Action): State => {
             pageTree.splice(sourceTag.parentPosition, 1);
         }
 
-
         return {
             ...state,
             pending: false,
@@ -552,7 +551,7 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.tabs.data,
                     ['contract' + action.payload.result.id]: {
                         type: 'contract',
-                            data: action.payload.result
+                        data: action.payload.result
                     }
                 }
             }
