@@ -19,7 +19,7 @@ import { resolveHandler, resolveFunction } from 'components/Protypo';
 import * as propTypes from 'prop-types';
 import contextDefinitions from './contexts';
 
-import Heading from 'containers/Widgets/Heading';
+import Heading from 'components/Heading';
 import { IValidationResult } from 'components/Validation/ValidatedForm';
 import ToolButton, { IToolButtonProps } from 'components/Protypo/components/ToolButton';
 

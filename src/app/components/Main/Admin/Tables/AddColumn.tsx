@@ -21,7 +21,7 @@ import { Link } from 'react-router-dom';
 import { columnTypes } from './Create';
 
 import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'containers/Widgets/Heading';
+import Heading from 'components/Heading';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 

@@ -20,7 +20,7 @@ import { Button, Col, Panel, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
 import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'containers/Widgets/Heading';
+import Heading from 'components/Heading';
 
 export interface IInterfaceProps {
     vde?: boolean;

@@ -30,13 +30,10 @@ const StyledHeading = styled.div`
 
 export interface IHeadingProps {
     className?: string;
-    left?: number;
-    right?: number;
-    top?: number;
 }
 
 const Heading: React.SFC<IHeadingProps> = props => (
-    <StyledHeading className={props.className} style={{ left: props.left, right: props.right, top: props.top }}>
+    <StyledHeading className={props.className}>
         <div>
             {props.children}
         </div>

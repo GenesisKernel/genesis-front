@@ -18,7 +18,6 @@ import * as React from 'react';
 import ReduxToastr from 'react-redux-toastr';
 import { OrderedMap } from 'immutable';
 import styled from 'styled-components';
-import sidebarStyle from './Sidebar/style';
 import platform from 'lib/platform';
 
 import Titlebar from './Titlebar';
@@ -231,7 +230,7 @@ class Main extends React.Component<IMainProps> {
                     </StyledToolbar>
                 </StyledControls>
                 <Navigation topOffset={styles.headerHeight + styles.menuHeight + styles.toolbarHeight} />
-                <StyledContent style={{ marginLeft: this.props.navigationVisible ? this.props.navigationWidth : sidebarStyle.collapsedSize }}>
+                <StyledContent style={{ marginLeft: this.props.navigationVisible ? this.props.navigationWidth : 0 }}>
                     <ReduxToastr
                         timeOut={3000}
                         newestOnTop

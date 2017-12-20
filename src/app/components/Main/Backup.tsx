@@ -24,7 +24,7 @@ import { alertShow } from 'modules/content/actions';
 import * as CopyToClipboard from 'react-copy-to-clipboard';
 
 import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'containers/Widgets/Heading';
+import Heading from 'components/Heading';
 import Validation from 'components/Validation';
 
 export interface IBackupProps extends InjectedIntlProps {

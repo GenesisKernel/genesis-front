@@ -19,7 +19,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'containers/Widgets/Heading';
+import Heading from 'components/Heading';
 
 type TMixedContent =
     JSX.Element | string;

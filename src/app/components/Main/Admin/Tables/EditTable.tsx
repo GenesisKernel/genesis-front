@@ -21,7 +21,7 @@ import { Link } from 'react-router-dom';
 import { ITableResponse } from 'lib/api';
 import { columnTypes } from './Create';
 
-import Heading from 'containers/Widgets/Heading';
+import Heading from 'components/Heading';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import DocumentTitle from 'components/DocumentTitle';
 import Validation from 'components/Validation';

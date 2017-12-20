@@ -19,7 +19,7 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 
 import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'containers/Widgets/Heading';
+import Heading from 'components/Heading';
 import MenuEditor from './MenuEditor';
 
 export interface ICreateMenuProps {
