@@ -47,6 +47,7 @@ interface IConstructorProps {
     setTagCanDropPosition?: any;
     selectTag?: any;
     addTag?: any;
+    moveTag?: any;
     selectedTag?: any;
     save?: any;
     grid: boolean;
@@ -105,13 +106,13 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                 <ul className="b-category-list">
                     <CollapsedListItem text="Structure" icon={imgGroup11}>
                         <ul className="b-category-sublist">
-                            <SourceElement text="Panel" element="panel"/>
+                            <SourceElement text="Panel" element="div"/>
                             <SourceElement text="Block" element="div"/>
                         </ul>
                     </CollapsedListItem>
                     <CollapsedListItem text="Text" icon={imgGroup12}>
                         <ul className="b-category-sublist">
-                            <SourceElement text="Heading" element="h1"/>
+                            <SourceElement text="Heading" element="p"/>
                             <SourceElement text="Paragraph" element="p"/>
                             <SourceElement text="Span" element="span"/>
                             <SourceElement text="Strong" element="strong"/>
@@ -147,8 +148,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                     <CollapsedListItem text="Navigation" icon={imgStroke75}>
                         <ul className="b-category-sublist">
                             <li>Breadcrumps</li>
-                            <li>Link</li>
-                            <li>Back</li>
+                            <li>Link</li>                            
                         </ul>
                     </CollapsedListItem>
                     <CollapsedListItem text="Tables" icon={imgGroup13}>
@@ -241,7 +241,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                 </div>
             </div>
 
-            <Layout grid={props.grid} addTag={props.addTag}>
+            <Layout grid={props.grid} addTag={props.addTag} moveTag={props.moveTag}>
                 <Protypo
                     payload={props.pageTree}
                     editable={true}
@@ -249,6 +249,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                     setTagCanDropPosition={props.setTagCanDropPosition}
                     selectTag={props.selectTag}
                     addTag={props.addTag}
+                    moveTag={props.moveTag}
                     selectedTag={props.selectedTag}
                 />
             </Layout>

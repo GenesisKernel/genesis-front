@@ -40,6 +40,7 @@ export const getPageTree = actionCreator.async<{ id: string, name: string, vde?:
 export const changePage = actionCreator<{ text?: string, class?: string; align?: string; transform?: string; wrap?: string, color?: string; canDropPosition?: string; tagID: string, pageID: string }>('CHANGE_PAGE');
 export const setTagCanDropPosition = actionCreator<{ tagID: string, pageID: string, position: string }>('SET_TAG_CAN_DROP_POSITION');
 export const addTag = actionCreator<{ tag: any, pageID: string, destinationTagID?: string, position?: string }>('ADD_TAG');
+export const moveTag = actionCreator<{ tag: any, pageID: string, destinationTagID?: string, position?: string }>('MOVE_TAG');
 
 // Menus
 export const getMenu = actionCreator.async<{ id: string, vde?: boolean }, { id: string, name: string, value: string, conditions: string }, string>('GET_MENU');
