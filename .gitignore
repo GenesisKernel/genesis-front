@@ -14,6 +14,7 @@
 
 # build artifacts
 /src/styles/built
+/src/app/styles/built/sass.css
 
 # misc
 .DS_Store
