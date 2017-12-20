@@ -118,6 +118,8 @@ const MainContainer: React.SFC<IMainProps> = props => (
             <Route exact path="/vde/parameters" render={routeProps => <Parameters {...routeProps} vde />} />
             <Route exact path="/vde/parameters/create" render={routeProps => <ParametersCreate {...routeProps} vde />} />
             <Route exact path="/vde/parameters/:parameterName" render={routeProps => <ParametersEdit {...routeProps} vde />} />
+            <Route exact path="/vde/import" render={routeProps => <Import {...routeProps} vde />} />
+            <Route exact path="/vde/export" render={routeProps => <Export {...routeProps} vde />} />
             <Route exact path="/vde/page/:pageName" render={routeProps => <Page {...routeProps} vde />} />
 
             <Route exact path="/page/:pageName" component={Page} />

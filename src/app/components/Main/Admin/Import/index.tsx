@@ -26,6 +26,7 @@ import TabView from 'components/TabView';
 import TxButton from 'containers/Widgets/TxButton';
 
 export interface IImportProps {
+    vde?: boolean;
     payload: {
         pages: { Name: string }[];
         blocks: { Name: string }[];
@@ -295,7 +296,7 @@ class Import extends React.Component<IImportProps & InjectedIntlProps> {
                                     </Button>
 
                                     <div className="pull-right">
-                                        <TxButton className="btn btn-primary" contractName="@1Import" contractParams={{ Data: JSON.stringify(this.props.payload) }} disabled={this.isPristine()}>
+                                        <TxButton className="btn btn-primary" vde={this.props.vde} contractName="@1Import" contractParams={{ Data: JSON.stringify(this.props.payload) }} disabled={this.isPristine()}>
                                             <FormattedMessage id="admin.import.confirm" defaultMessage="Import" />
                                         </TxButton>
                                     </div>
