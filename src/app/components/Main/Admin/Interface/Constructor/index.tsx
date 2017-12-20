@@ -106,18 +106,18 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                 <ul className="b-category-list">
                     <CollapsedListItem text="Structure" icon={imgGroup11}>
                         <ul className="b-category-sublist">
-                            <SourceElement text="Panel" element="div"/>
-                            <SourceElement text="Block" element="div"/>
+                            <SourceElement text="Panel" element="div" />
+                            <SourceElement text="Block" element="div" />
                         </ul>
                     </CollapsedListItem>
                     <CollapsedListItem text="Text" icon={imgGroup12}>
                         <ul className="b-category-sublist">
-                            <SourceElement text="Heading" element="p"/>
-                            <SourceElement text="Paragraph" element="p"/>
-                            <SourceElement text="Span" element="span"/>
-                            <SourceElement text="Strong" element="strong"/>
-                            <SourceElement text="Tag" element="tag"/>
-                            <SourceElement text="Emphasize" element="em"/>
+                            <SourceElement text="Heading" element="p" />
+                            <SourceElement text="Paragraph" element="p" />
+                            <SourceElement text="Span" element="span" />
+                            <SourceElement text="Strong" element="strong" />
+                            <SourceElement text="Tag" element="tag" />
+                            <SourceElement text="Emphasize" element="em" />
                         </ul>
                     </CollapsedListItem>
                     <CollapsedListItem text="Lists" icon={imgGroup37}>
@@ -148,7 +148,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                     <CollapsedListItem text="Navigation" icon={imgStroke75}>
                         <ul className="b-category-sublist">
                             <li>Breadcrumps</li>
-                            <li>Link</li>                            
+                            <li>Link</li>
                         </ul>
                     </CollapsedListItem>
                     <CollapsedListItem text="Tables" icon={imgGroup13}>
@@ -158,44 +158,44 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                             <li>Column</li>
                         </ul>
                     </CollapsedListItem>
-                    <li/>
+                    <li />
                 </ul>
             </Panel>
             <Panel title="Structure">
                 <ul className="b-tree">
                     <li>
-                        <i className="fa fa-caret-down"/>
+                        <i className="fa fa-caret-down" />
                         HTML
                     </li>
                     <li>
-                        <span className="b-tree-indent"/>
-                        <i className="fa fa-caret-right"/>
+                        <span className="b-tree-indent" />
+                        <i className="fa fa-caret-right" />
                         Header
                     </li>
                     <li>
-                        <span className="b-tree-indent"/>
-                        <i className="fa fa-caret-down"/>
+                        <span className="b-tree-indent" />
+                        <i className="fa fa-caret-down" />
                         Body
                     </li>
                     <li>
-                        <span className="b-tree-indent"/>
-                        <span className="b-tree-indent"/>
-                        <i className="fa fa-caret-down"/>
+                        <span className="b-tree-indent" />
+                        <span className="b-tree-indent" />
+                        <i className="fa fa-caret-down" />
                         Header
                     </li>
                     <li className="selected">
-                        <i className="fa fa-close b-tree-delete"/>
-                        <span className="b-tree-indent"/>
-                        <span className="b-tree-indent"/>
-                        <span className="b-tree-indent"/>
-                        <i className="fa fa-caret-down"/>
+                        <i className="fa fa-close b-tree-delete" />
+                        <span className="b-tree-indent" />
+                        <span className="b-tree-indent" />
+                        <span className="b-tree-indent" />
+                        <i className="fa fa-caret-down" />
                         Paragraph
                     </li>
                     <li>
-                        <span className="b-tree-indent"/>
-                        <span className="b-tree-indent"/>
-                        <span className="b-tree-indent"/>
-                        <i/>
+                        <span className="b-tree-indent" />
+                        <span className="b-tree-indent" />
+                        <span className="b-tree-indent" />
+                        <i />
                         Strong
                     </li>
                 </ul>
@@ -234,7 +234,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
 
                         <div className="b-switch">
                             <span>SNAP</span>
-                            <Switch initialValue="snap" onValue="snap" offValue=""/>
+                            <Switch initialValue="snap" onValue="snap" offValue="" />
                         </div>
                     </div>
 
@@ -243,6 +243,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
 
             <Layout grid={props.grid} addTag={props.addTag} moveTag={props.moveTag}>
                 <Protypo
+                    context="page"
                     payload={props.pageTree}
                     editable={true}
                     changePage={props.changePage}
@@ -260,7 +261,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                 tag={props.selectedTag}
                 changePage={props.changePage}
             />
-            <br/>
+            <br />
             <div className="btn btn-primary" onClick={props.save}>Save</div>
         </div>
     </ConstructorDiv>

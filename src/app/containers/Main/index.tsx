@@ -29,7 +29,6 @@ import TablesView from 'containers/Main/containers/Admin/Tables/View';
 import Interface from 'containers/Main/containers/Admin/Interface';
 import CreatePage from 'containers/Main/containers/Admin/Interface/CreatePage';
 import EditPage from 'containers/Main/containers/Admin/Interface/EditPage';
-import Constructor from 'containers/Main/containers/Admin/Interface/Constructor';
 import CreateMenu from 'containers/Main/containers/Admin/Interface/CreateMenu';
 import EditMenu from 'containers/Main/containers/Admin/Interface/EditMenu';
 import CreateBlock from 'containers/Main/containers/Admin/Interface/CreateBlock';
@@ -68,9 +67,7 @@ const MainContainer: React.SFC<IMainProps> = props => (
             <Route exact path="/admin/tables/:tableName" component={TablesView} />
             <Route exact path="/admin/interface" component={Interface} />
             <Route exact path="/admin/interface/create-page" component={CreatePage} />
-            <Route exact path="/admin/interface/create-page/constructor" component={Constructor} />
             <Route exact path="/admin/interface/page/:pageID-:pageName" component={EditPage} />
-            <Route exact path="/admin/interface/page/:pageID-:pageName/constructor" component={Constructor} />
             <Route exact path="/admin/interface/menu/:menuID-:menuName" component={EditMenu} />
             <Route exact path="/admin/interface/block/:blockID-:blockName" component={EditBlock} />
             <Route exact path="/admin/interface/create-menu" component={CreateMenu} />
@@ -102,9 +99,7 @@ const MainContainer: React.SFC<IMainProps> = props => (
             <Route exact path="/vde/tables/:tableName" render={routeProps => <TablesView {...routeProps} vde />} />
             <Route exact path="/vde/interface" render={routeProps => <Interface {...routeProps} vde />} />
             <Route exact path="/vde/interface/create-page" render={routeProps => <CreatePage {...routeProps} vde />} />
-            <Route exact path="/vde/interface/create-page/constructor" render={routeProps => <Constructor {...routeProps} vde />} />
             <Route exact path="/vde/interface/page/:pageID-:pageName" render={routeProps => <EditPage {...routeProps} vde />} />
-            <Route exact path="/vde/interface/page/:pageID-:pageName/constructor" render={routeProps => <Constructor {...routeProps} vde />} />
             <Route exact path="/vde/interface/menu/:menuID-:menuName" render={routeProps => <EditMenu {...routeProps} vde />} />
             <Route exact path="/vde/interface/block/:blockID-:blockName" render={routeProps => <EditBlock {...routeProps} vde />} />
             <Route exact path="/vde/interface/create-menu" render={routeProps => <CreateMenu {...routeProps} vde />} />
