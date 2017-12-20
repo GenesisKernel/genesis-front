@@ -15,10 +15,10 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { OnPasteStripFormatting, startHoverTimer, getDropPosition } from 'lib/constructor';
+import { OnPasteStripFormatting /*, startHoverTimer, getDropPosition*/ } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
 import * as classnames from 'classnames';
-import { DropTarget, DragSource } from 'react-dnd';
+/*import { DropTarget, DragSource } from 'react-dnd';
 
 const Source = {
     beginDrag(props: IDivProps, monitor: any, component: any) {
@@ -83,7 +83,7 @@ function collectTarget(connect?: any, monitor?: any) {
 
 const ItemTypes = {
     SOURCE: 'element'
-};
+};*/
 
 export interface IDivProps {
     'className'?: string;
@@ -175,9 +175,11 @@ class Div extends React.Component<IDivProps, IDivState> {
     }
 }
 
-export default
-DragSource(ItemTypes.SOURCE, Source, collectSource) (
+// FIXME: This code completely screws the page rendering process
+/*export default
+DragSource(ItemTypes.SOURCE, Source, collectSource)(
     DropTarget(ItemTypes.SOURCE, Target, collectTarget)(
         StyledComponent(Div)
     )
-);
+);*/
+export default StyledComponent(Div);
