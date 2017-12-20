@@ -17,7 +17,7 @@
 import * as actions from './actions';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
-import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse } from 'lib/api';
+import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse, IHistoryResponse } from 'lib/api';
 import { findTagById, resolveTagHandler, Properties, generateId } from 'lib/constructor';
 
 export type State = {
@@ -28,6 +28,7 @@ export type State = {
     readonly tables: ITablesResponse;
     readonly table: ITableResponse;
     readonly tableData: IListResponse;
+    readonly history: IHistoryResponse;
     readonly page: { id: string, name: string, menu: string, conditions: string, value: string };
     readonly pageTreeCode: any;
     readonly interfaces: IInterfacesResponse;
@@ -63,6 +64,7 @@ export const initialState: State = {
     tables: null,
     table: null,
     tableData: null,
+    history: null,
     page: null,
     pageTreeCode: null,
     interfaces: null,
@@ -461,6 +463,28 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             pending: false,
             tables: null
+        };
+    }
+
+    if (isType(action, actions.getHistory.started)) {
+        return {
+            ...state,
+            pending: true,
+            history: null
+        };
+    }
+    else if (isType(action, actions.getHistory.done)) {
+        return {
+            ...state,
+            pending: false,
+            history: action.payload.result
+        };
+    }
+    else if (isType(action, actions.getHistory.failed)) {
+        return {
+            ...state,
+            pending: false,
+            history: null
         };
     }
 
