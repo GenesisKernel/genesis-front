@@ -29,7 +29,7 @@ import storage from 'lib/storage';
 export const loginEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.login.started.match)
         .flatMap(action => {
-            const publicKey = keyring.genereatePublicKey(action.payload.privateKey);
+            const publicKey = keyring.generatePublicKey(action.payload.privateKey);
 
             const promise = api.getUid().then(uid => {
                 const signature = keyring.sign(uid.uid, action.payload.privateKey);
@@ -83,7 +83,7 @@ export const switchEcosystemEpic: Epic<Action, IRootState> =
             const state = store.getState();
             const promise = api.getUid().then(uid => {
                 const signature = keyring.sign(uid.uid, state.auth.privateKey);
-                const publicKey = keyring.genereatePublicKey(state.auth.privateKey);
+                const publicKey = keyring.generatePublicKey(state.auth.privateKey);
                 return api.login(uid.token, publicKey, signature, null, action.payload);
             });
 
@@ -140,7 +140,7 @@ export const importAccountEpic: Epic<Action, IRootState> =
                 })).delay(1);
             }
 
-            const publicKey = keyring.genereatePublicKey(backup.privateKey);
+            const publicKey = keyring.generatePublicKey(backup.privateKey);
             const promise = api.getUid().then(uid => {
                 const signature = keyring.sign(uid.uid, backup.privateKey);
                 return api.login(uid.token, publicKey, signature);

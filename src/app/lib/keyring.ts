@@ -232,7 +232,7 @@ const keyring = {
         };
     },
 
-    genereatePublicKey(privateKey: string) {
+    generatePublicKey(privateKey: string) {
         const curveParams = KJUR.crypto.ECParameterDB.getByName(curveName);
         const curveG = curveParams.G;
         const charLen = curveParams.keylen / 4;

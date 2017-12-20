@@ -31,7 +31,7 @@ export const contractExecEpic: Epic<Action, IRootState> =
             return Observable.fromPromise(api.txPrepare(state.auth.sessionToken, action.payload.name, action.payload.params, action.payload.vde)
                 .then(response => {
                     const signature = keyring.sign(response.forsign, state.auth.privateKey);
-                    const publicKey = keyring.genereatePublicKey(state.auth.privateKey);
+                    const publicKey = keyring.generatePublicKey(state.auth.privateKey);
                     return api.txExec(state.auth.sessionToken, action.payload.name, {
                         ...action.payload.params,
                         pubkey: publicKey,
