@@ -42,7 +42,7 @@ const renderTable: ICellRenderer = (value, rowData) => {
                     <FormattedMessage id="admin.tables.show" defaultMessage="Show" />
                 </Button>
             ) : (
-                <Link to={`/admin/tables/${rowData.rowData[0]}`}>
+                <Link to={`/${rowData.rowData[2] ? 'vde' : 'admin'}/tables/${rowData.rowData[0]}`}>
                     <Button bsStyle="primary">
                         <FormattedMessage id="admin.tables.show" defaultMessage="Show" />
                     </Button>
@@ -50,7 +50,7 @@ const renderTable: ICellRenderer = (value, rowData) => {
             );
 
         case 3: return (
-            <Link to={`/admin/tables/${rowData.rowData[0]}/edit`}>
+            <Link to={`/${rowData.rowData[2] ? 'vde' : 'admin'}/tables/${rowData.rowData[0]}/edit`}>
                 <Button bsStyle="primary" type="button">
                     <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
                 </Button>
@@ -99,7 +99,7 @@ const Tables: React.SFC<ITablesProps & InjectedIntlProps> = (props) => (
                 { width: 1 },
                 { width: 1 }
             ]}
-            data={props.tables.list.map(p => [p.name, p.count])}
+            data={props.tables.list.map(p => [p.name, p.count, props.vde])}
         />
     </Wrapper>
 );
