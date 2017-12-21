@@ -83,9 +83,9 @@ const Languages: React.SFC<ILanguagesProps & InjectedIntlProps> = (props) => (
             striped
             renderCell={renderLocale}
             columns={[
-                { title: 'ID', sortable: true },
-                { title: props.intl.formatMessage({ id: 'admin.languages.name', defaultMessage: 'Name' }), sortable: true },
-                { title: props.intl.formatMessage({ id: 'admin.languages.resources', defaultMessage: 'Resources' }), width: '100%' },
+                { title: 'ID', sortable: true, width: 80 },
+                { title: props.intl.formatMessage({ id: 'admin.languages.name', defaultMessage: 'Name' }), sortable: true, width: 200 },
+                { title: props.intl.formatMessage({ id: 'admin.languages.resources', defaultMessage: 'Resources' }) },
                 { width: 1 }
             ]}
             data={props.resources.map(p => [p.id, p.name, p.res, p.conditions, props.vde])}
