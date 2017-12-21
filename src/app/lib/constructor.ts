@@ -101,7 +101,7 @@ export function OnPasteStripFormatting(elem: any, e: any) {
 }
 
 class Tag {
-    private element: IProtypoElement;
+    protected element: IProtypoElement;
     protected tagName: string = 'Tag';
     constructor(element: IProtypoElement) {
         this.element = element;
@@ -116,8 +116,10 @@ class Tag {
         }
         result += params.join(', ');
         result += ')';
-        if (this.element && this.element.attr && this.element.attr.style) {
-            result += '.Style(' + this.element.attr.style + ')';
+        if (this.element && this.element.attr) {
+            if (this.element.attr.style) {
+                result += '.Style(' + this.element.attr.style + ')';
+            }
         }
         return result + ' ';
     }
@@ -155,6 +157,81 @@ class Tag {
                 id: generateId()
             }]
         };
+    }
+}
+
+class Button extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'Button';
+    }
+
+    getParamsStr(name: string, obj: Object) {
+        let paramsArr = [];
+        for (let param in obj) {
+            if (obj.hasOwnProperty(param)) {
+                paramsArr.push(param + '=' + (obj[param] && obj[param].text || ''));
+            }
+        }
+        return name + ': ' + '"' + paramsArr.join(',') + '"';
+    }
+
+    getParams(obj: Object) {
+        let paramsArr = [];
+        for (let param in obj) {
+            if (obj.hasOwnProperty(param)) {
+                paramsArr.push(param + ': ' + (obj[param] || ''));
+            }
+        }
+        return paramsArr.join(',');
+    }
+
+    renderCode(): string {
+        let result: string = this.tagName + '(';
+        let params = [];
+        params.push('Class: ' + (this.element && this.element.attr && this.element.attr.class || ''));
+        let body = this.renderChildren();
+        if (body.length > 0) {
+            params.push('Body: ' + body);
+        }
+        if (this.element && this.element.attr) {
+            params.push('Page: ' + (this.element.attr.page || ''));
+            params.push('Contract: ' + (this.element.attr.contract || ''));
+            if (this.element.attr.params) {
+                params.push(this.getParamsStr('Params', this.element.attr.params));
+            }
+            if (this.element.attr.pageparams) {
+
+                params.push(this.getParamsStr('PageParams', this.element.attr.pageparams));
+
+            }
+        }
+
+        result += params.join(', ');
+        result += ')';
+        if (this.element && this.element.attr) {
+            if (this.element.attr.style) {
+                result += '.Style(' + this.element.attr.style + ')';
+            }
+            if (this.element.attr.alert && typeof this.element.attr.alert === 'object') {
+                let alertParamsArr = [];
+                if (this.element.attr.alert.text) {
+                    alertParamsArr.push('Text: ' + this.element.attr.alert.text);
+                }
+                if (this.element.attr.alert.confirmbutton) {
+                    alertParamsArr.push('ConfirmButton: ' + this.element.attr.alert.confirmbutton);
+                }
+                if (this.element.attr.alert.cancelbutton) {
+                    alertParamsArr.push('CancelButton: ' + this.element.attr.alert.cancelbutton);
+                }
+                if (this.element.attr.alert.icon) {
+                    alertParamsArr.push('Icon: ' + this.element.attr.alert.icon);
+                }
+                result += '.Alert(' + alertParamsArr.join(', ') + ')';
+            }
+        }
+
+        return result + ' ';
     }
 }
 
@@ -219,7 +296,7 @@ export class CodeGenerator {
 }
 
 const tagHandlers = {
-//     'button': Button,
+    'button': Button,
 //     'data': Data,
 //     'dbfind': DBFind,
     'div': Div,
@@ -303,7 +380,7 @@ export class Properties {
                 break;
         }
 
-        return classes;
+        return classes.replace(/\s+/g, ' ').trim();
     }
 }
 

@@ -17,10 +17,13 @@
 import * as React from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import * as propTypes from 'prop-types';
+import * as classnames from 'classnames';
 
 import Protypo, { IParamsSpec } from '../Protypo';
 import ValidatedForm from 'components/Validation/ValidatedForm';
 import TxButton from 'containers/Widgets/TxButton';
+
+import DnDComponent from './DnDComponent';
 
 export interface IButtonProps {
     'class'?: string;
@@ -35,6 +38,23 @@ export interface IButtonProps {
     'pageparams'?: IParamsSpec;
     'params'?: IParamsSpec;
     'formID'?: number;
+
+    'editable'?: boolean;
+    'changePage'?: any;
+    'setTagCanDropPosition'?: any;
+    'addTag'?: any;
+    'moveTag'?: any;
+    'selectTag'?: any;
+    'selected'?: boolean;
+    'tag'?: any;
+
+    'canDropPosition'?: string;
+
+    connectDropTarget?: any;
+    isOver?: boolean;
+
+    connectDragSource?: any;
+    isDragging?: boolean;
 }
 
 interface IButtonContext {
@@ -85,6 +105,40 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
         }
     };
 
+    const onClick = (e: any) => {
+        e.stopPropagation();
+        props.selectTag({ tag: props.tag });
+    };
+
+    const onBlur = (e: any) => {
+        e.stopPropagation();
+        props.changePage({ text: e.target.innerHTML, tagID: props.tag.id });
+    };
+
+    if (props.editable) {
+        const { connectDropTarget, isOver } = props;
+        const { connectDragSource, isDragging } = props;
+
+        const classes = classnames({
+            [props.class]: true,
+            'editable': props.selected,
+            'can-drop': isOver,
+            ['can-drop_' + props.canDropPosition]: true,
+            'is-dragging': isDragging
+        });
+
+        return connectDragSource(connectDropTarget(
+            <button
+                className={classes}
+                contentEditable={props.selected}
+                onBlur={onBlur}
+                onClick={onClick}
+            >
+                {props.children}
+            </button>
+        ));
+    }
+
     return (
         <TxButton
             vde={context.vde}
@@ -112,4 +166,4 @@ Button.contextTypes = {
     vde: propTypes.bool
 };
 
-export default injectIntl(Button);
+export default DnDComponent(injectIntl(Button));

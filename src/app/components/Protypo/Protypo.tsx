@@ -45,7 +45,8 @@ export interface IProtypoElement {
     tag: string;
     id?: string;
     text?: string;
-    attr?: { [key: string]: string };
+    // attr?: { [key: string]: string };
+    attr?: { [key: string]: any };  // attr can be structured
     children?: IProtypoElement[];
 }
 

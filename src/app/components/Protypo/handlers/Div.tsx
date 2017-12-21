@@ -70,8 +70,8 @@ class Div extends React.Component<IDivProps, IDivState> {
             const { connectDragSource, isDragging } = this.props;
 
             const classes = classnames({
-                [this.props.class]: true,
-                [this.props.className]: true,
+                [this.props.class ? this.props.class : '']: true,
+                [this.props.className ? this.props.className : '']: true,
                 'editable': this.props.selected,
                 'can-drop': isOver,
                 ['can-drop_' + this.props.canDropPosition]: true,

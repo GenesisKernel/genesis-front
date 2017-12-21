@@ -136,7 +136,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                         <ul className="b-category-sublist">
                             <li>Form</li>
                             <li>Input</li>
-                            <li>Button</li>
+                            <SourceElement text="Button" element="button" />
                         </ul>
                     </CollapsedListItem>
                     <CollapsedListItem text="Image" icon={imgGroup35}>
