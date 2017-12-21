@@ -300,11 +300,13 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
                         </div>
                     </StyledBackButton>
                     <StyledMenuContent>
-                        <Protypo
-                            vde={menu && menu.vde}
-                            context="menu"
-                            payload={menu && menu.content}
-                        />
+                        {menu && (
+                            <Protypo
+                                vde={menu.vde}
+                                context="menu"
+                                payload={menu.content}
+                            />
+                        )}
                     </StyledMenuContent>
                     <StyledDevButton>
                         <button id="mainVDETools" onClick={this.onVDETools.bind(this)}>
