@@ -88,6 +88,13 @@ export default class extends React.Component<IDebugProps, IDebugState> {
         });
     }
 
+    onHistory() {
+        api.history(this.props.session, 'pages', '1')
+            .then(result => {
+                console.log(result);
+            });
+    }
+
     onChange(code: string) {
         this.setState({ code });
     }
@@ -163,6 +170,7 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                         >
                             Confirm button
                         </TxButton>
+                        <Button className="btn btn-info btn-block" onClick={this.onHistory.bind(this)}>History</Button>
                         <TxButton className="btn btn-danger btn-block" contractName="NewEcosystem">CreateEcosystem</TxButton>
                         <div className="row">
                             <div className="col-md-4">
