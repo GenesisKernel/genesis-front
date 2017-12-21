@@ -53,7 +53,7 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
             props.renderPage({
                 name: props.match.params.pageName,
                 params: props.location.state && props.location.state.params,
-                vde: this.props.vde
+                vde: props.vde
             });
         }
     }

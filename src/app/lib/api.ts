@@ -354,7 +354,11 @@ const api = {
             resolver();
         });
     }) as Promise<ITxStatusResponse>,
-    txStatus: (session: string, hash: string, vde = false) => securedRequest(`txstatus/${hash}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITxStatusResponse>
+    txStatus: (session: string, hash: string, vde = false) => securedRequest(`txstatus/${hash}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITxStatusResponse>,
+
+    // Utilities
+    resolveData: (name: string) =>
+        apiUrl + name
 };
 
 export default api;
