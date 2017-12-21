@@ -15,7 +15,7 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { Button, Panel } from 'react-bootstrap';
+import { Panel } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { ITableResponse, IListResponse } from 'lib/api';
@@ -91,9 +91,11 @@ const View: React.SFC<IViewProps> = (props) => (
                                         {props.table.columns.map(col => (
                                             <th key={col.name}>{col.name}</th>
                                         ))}
-                                        <th style={{ width: 1 }}>
-                                            <FormattedMessage id="admin.tables.changes" defaultMessage="Changes" />
-                                        </th>
+                                        {!props.vde && (
+                                            <th style={{ width: 1 }}>
+                                                <FormattedMessage id="admin.tables.changes" defaultMessage="Changes" />
+                                            </th>
+                                        )}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -105,19 +107,21 @@ const View: React.SFC<IViewProps> = (props) => (
                                                     {columnDisplayRules[col.type] && columnDisplayRules[col.type].render(row[col.name])}
                                                 </td>
                                             ))}
-                                            <td>
-                                                {'0' === row.rb_id ?
-                                                    (
-                                                        <span className="text-muted">
-                                                            <FormattedMessage id="admin.tables.unchanged" defaultMessage="Unchanged" />
-                                                        </span>
-                                                    ) : (
-                                                        <Button bsStyle="primary">
-                                                            <FormattedMessage id="admin.tables.history" defaultMessage="History" />
-                                                        </Button>
-                                                    )
-                                                }
-                                            </td>
+                                            {!props.vde && (
+                                                <td>
+                                                    {'0' === row.rb_id ?
+                                                        (
+                                                            <span className="text-muted">
+                                                                <FormattedMessage id="admin.tables.unchanged" defaultMessage="Unchanged" />
+                                                            </span>
+                                                        ) : (
+                                                            <Link className="btn btn-primary" to={`/admin/tables/${props.table.name}/${row.id}/history`}>
+                                                                <FormattedMessage id="admin.tables.history" defaultMessage="History" />
+                                                            </Link>
+                                                        )
+                                                    }
+                                                </td>
+                                            )}
                                         </tr>
                                     ))}
                                 </tbody>

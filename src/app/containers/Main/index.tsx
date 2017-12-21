@@ -26,6 +26,7 @@ import TablesEdit from 'containers/Main/containers/Admin/Tables/EditTable';
 import TablesAddColumn from 'containers/Main/containers/Admin/Tables/AddColumn';
 import TablesEditColumn from 'containers/Main/containers/Admin/Tables/EditColumn';
 import TablesView from 'containers/Main/containers/Admin/Tables/View';
+import TablesHistory from 'containers/Main/containers/Admin/Tables/History';
 import Interface from 'containers/Main/containers/Admin/Interface';
 import CreatePage from 'containers/Main/containers/Admin/Interface/CreatePage';
 import EditPage from 'containers/Main/containers/Admin/Interface/EditPage';
@@ -64,6 +65,7 @@ const MainContainer: React.SFC<IMainProps> = props => (
             <Route exact path="/admin/tables/:tableName/edit" component={TablesEdit} />
             <Route exact path="/admin/tables/:tableName/edit/column/:columnName" component={TablesEditColumn} />
             <Route exact path="/admin/tables/:tableName/edit/add-column" component={TablesAddColumn} />
+            <Route exact path="/admin/tables/:tableName/:id/history" render={routeProps => <TablesHistory table={routeProps.match.params.tableName} id={routeProps.match.params.id} />} />
             <Route exact path="/admin/tables/:tableName" component={TablesView} />
             <Route exact path="/admin/interface" component={Interface} />
             <Route exact path="/admin/interface/create-page" component={CreatePage} />

@@ -125,6 +125,12 @@ export interface ITablesResponse extends IResponse {
     }[];
 }
 
+export interface IHistoryResponse extends IResponse {
+    list: {
+        [key: string]: string;
+    }[];
+}
+
 export interface IListResponse extends IResponse {
     count: string;
     list: [IDBValue & {
@@ -303,6 +309,7 @@ const api = {
         .then(transformContent),
     table: (session: string, name: string, vde?: boolean) => securedRequest(`table/${name}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITableResponse>,
     tables: (session: string, offset?: number, limit?: number, vde = false) => securedRequest(`tables?offset=${offset || 0}&limit=${limit || 1000}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITablesResponse>,
+    history: (session: string, table: string, id: string) => securedRequest(`history/${table}/${id}`, session, null, { method: 'GET' }) as Promise<IHistoryResponse>,
     list: (session: string, name: string, offset?: number, limit?: number, columns?: string[], vde = false) => securedRequest(`list/${name}?offset=${offset || 0}&limit=${limit || 1000}&columns=${columns ? columns.join(',') : ''}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<IListResponse>,
     page: (session: string, id: string, vde = false) => Promise.all([
         api.row(session, 'pages', id, undefined, vde),
