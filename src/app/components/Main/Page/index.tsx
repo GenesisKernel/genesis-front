@@ -28,7 +28,7 @@ export interface IPageProps {
 
 const Page: React.SFC<IPageProps> = (props) => (
     <DocumentTitle title={props.name}>
-        <Protypo context="page" {...props} />
+        <Protypo context="page" {...props} vde={props.vde} />
     </DocumentTitle>
 );
 
