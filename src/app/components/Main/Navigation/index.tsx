@@ -120,6 +120,7 @@ export interface INavigationProps {
     menus: {
         name: string;
         content: IProtypoElement[];
+        vde?: boolean;
     }[];
     menuPop: () => void;
     menuPush: (menu: { name: string, vde?: boolean, content: IProtypoElement[] }) => void;
@@ -290,7 +291,6 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
         return (
             <StyledNavigation style={{ width: this.props.visible ? this.props.width : 0, paddingTop: this.props.topOffset }}>
                 <nav>
-
                     <StyledBackButton onClick={() => this.props.menuPop()} disabled={1 >= this.props.menus.length} className={this.props.menus.length > 1 ? '' : 'disabled'}>
                         <div>
                             <span className="icon">
@@ -301,6 +301,7 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
                     </StyledBackButton>
                     <StyledMenuContent>
                         <Protypo
+                            vde={menu && menu.vde}
                             context="menu"
                             payload={menu && menu.content}
                         />
