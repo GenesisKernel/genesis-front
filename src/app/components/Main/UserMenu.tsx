@@ -23,11 +23,19 @@ import { IStoredKey } from 'lib/storage';
 import imgAvatar from 'images/avatar.svg';
 import { FormattedMessage } from 'react-intl';
 
+import Dropdown from 'components/Animation/Dropdown';
+
 const StyledUserMenu = styled.div`
     -webkit-app-region: no-drag;
     line-height: 0;
 
-    button {
+    &.active {
+        > button {
+            background: rgba(0,0,0,0.15);
+        }
+    }
+
+    > button {
         background: 0;
         border: 0;
         outline: 0;
@@ -68,9 +76,11 @@ const StyledUserMenu = styled.div`
         }
     }
 
-    > .user-dropdown {
+    .user-dropdown {
         background: #fff;
         box-shadow: 0 0 25px rgba(0,0,0,.15);
+        border-left: solid 1px #add1ff;
+        border-bottom: solid 1px #add1ff;
 
         .dropdown-heading {
             border-top: solid 1px #ddd;
@@ -86,6 +96,7 @@ const StyledUserMenu = styled.div`
             list-style: none;
             padding: 0;
             margin: 0;
+            width: 225px;
 
             > li {
                 a {
@@ -171,7 +182,7 @@ class UserMenu extends React.Component<IUserMenuProps, IUserMenuState> {
 
     render() {
         return this.props.account ? (
-            <StyledUserMenu>
+            <StyledUserMenu className={this.state.collapsed ? null : 'active'}>
                 <button onClick={this.onCollapseToggle.bind(this)}>
                     <div className="user-info">
                         <div className="user-title">
@@ -185,7 +196,7 @@ class UserMenu extends React.Component<IUserMenuProps, IUserMenuState> {
                     </div>
                     <img className="user-avatar" src={this.props.account.ecosystems[this.props.ecosystem].avatar || imgAvatar} />
                 </button>
-                {!this.state.collapsed && (
+                <Dropdown visible={!this.state.collapsed}>
                     <div className="user-dropdown">
                         <ul className="dropdown-group">
                             <li>
@@ -226,7 +237,7 @@ class UserMenu extends React.Component<IUserMenuProps, IUserMenuState> {
                             )))}
                         </ul>
                     </div>
-                )}
+                </Dropdown>
             </StyledUserMenu>
         ) : null;
     }
