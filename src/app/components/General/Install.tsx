@@ -75,7 +75,9 @@ class InstallForm extends React.Component<IInstallProps, IInstallState> {
             db_user: values.dbUser,
             db_pass: values.dbPass,
             first_block_dir: values.blockDir,
-            generate_first_block: Number(this.state.generateFirst)
+            generate_first_block: Number(this.state.generateFirst),
+            centrifugo_url: values.pushHost,
+            centrifugo_secret: values.pushSecret
         });
     }
 
@@ -120,7 +122,7 @@ class InstallForm extends React.Component<IInstallProps, IInstallState> {
                                 <fieldset className="mb0 bb0">
                                     <FormGroup>
                                         <Col md={3} />
-                                        <Col md={9}>
+                                        <Col md={9} className="text-left">
                                             <Checkbox id="installGenerateFirstBlock" title={this.props.intl.formatMessage({ id: 'install.first_block_generate', defaultMessage: 'Generate first block' })} checked={this.state.generateFirst} onChange={this.onGenerateFirstChange.bind(this)} />
                                         </Col>
                                     </FormGroup>
@@ -141,6 +143,39 @@ class InstallForm extends React.Component<IInstallProps, IInstallState> {
                                     </Validation.components.ValidatedFormGroup>
                                 </fieldset>
                             )}
+                            <Well className="box-placeholder pb0">
+                                <legend>
+                                    <h4 className="clearfix mt0">
+                                        <span className="pull-left">
+                                            <FormattedMessage id="install.centrifugo_settings" defaultMessage="Centrifugo settings" />
+                                        </span>
+                                    </h4>
+                                </legend>
+                                <fieldset>
+                                    <Validation.components.ValidatedFormGroup for="installPushHost">
+                                        <Col md={3}>
+                                            <label className="control-label">
+                                                <FormattedMessage id="install.centrifugo.host" defaultMessage="Host" />
+                                            </label>
+                                        </Col>
+                                        <Col md={9}>
+                                            <Validation.components.ValidatedControl id="installPushHost" name="pushHost" type="text" />
+                                        </Col>
+                                    </Validation.components.ValidatedFormGroup>
+                                </fieldset>
+                                <fieldset>
+                                    <Validation.components.ValidatedFormGroup for="installPushSecret">
+                                        <Col md={3}>
+                                            <label className="control-label">
+                                                <FormattedMessage id="install.centrifugo.secret" defaultMessage="Secret key" />
+                                            </label>
+                                        </Col>
+                                        <Col md={9}>
+                                            <Validation.components.ValidatedControl id="installPushSecret" name="pushSecret" type="text" />
+                                        </Col>
+                                    </Validation.components.ValidatedFormGroup>
+                                </fieldset>
+                            </Well>
                             <Well className="box-placeholder pb0">
                                 <legend>
                                     <h4 className="clearfix mt0">

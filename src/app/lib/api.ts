@@ -54,6 +54,8 @@ export interface IInstallParams {
     db_pass: string;
     generate_first_block: number;
     first_block_dir?: string;
+    centrifugo_url?: string;
+    centrifugo_secret?: string;
 }
 
 export interface IRefreshResponse {
