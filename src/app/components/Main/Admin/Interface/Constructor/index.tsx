@@ -36,8 +36,8 @@ import imgGroup12 from 'images/constructor/group-12.svg';
 import imgGroup13 from 'images/constructor/group-13.svg';
 import imgGroup34 from 'images/constructor/group-34.svg';
 import imgGroup35 from 'images/constructor/group-35.svg';
-import imgGroup36 from 'images/constructor/group-36.svg';
-import imgGroup37 from 'images/constructor/group-37.svg';
+// import imgGroup36 from 'images/constructor/group-36.svg';
+// import imgGroup37 from 'images/constructor/group-37.svg';
 import imgStroke75 from 'images/constructor/stroke-75.svg';
 import imgGrid from 'images/constructor/grid.png';
 
@@ -112,37 +112,36 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                     </CollapsedListItem>
                     <CollapsedListItem text="Text" icon={imgGroup12}>
                         <ul className="b-category-sublist">
-                            <SourceElement text="Heading" element="p" />
                             <SourceElement text="Paragraph" element="p" />
                             <SourceElement text="Span" element="span" />
                             <SourceElement text="Strong" element="strong" />
-                            <SourceElement text="Tag" element="tag" />
                             <SourceElement text="Emphasize" element="em" />
                         </ul>
                     </CollapsedListItem>
+                    {/*
                     <CollapsedListItem text="Lists" icon={imgGroup37}>
                         <ul className="b-category-sublist">
                             <li>Ordered</li>
                             <li>Unordered</li>
                         </ul>
                     </CollapsedListItem>
-                    <CollapsedListItem text="Containers" icon={imgGroup36}>
+                    < CollapsedListItem text="Containers" icon={imgGroup36}>
                         <ul className="b-category-sublist">
                             <li>Wrapper</li>
                             <li>Block</li>
                         </ul>
                     </CollapsedListItem>
+                    */}
                     <CollapsedListItem text="Forms" icon={imgGroup34}>
                         <ul className="b-category-sublist">
-                            <li>Form</li>
-                            <li>Input</li>
+                            <SourceElement text="Form" element="form" />
                             <SourceElement text="Button" element="button" />
+                            <SourceElement text="Image input" element="imageinput" />
                         </ul>
                     </CollapsedListItem>
                     <CollapsedListItem text="Image" icon={imgGroup35}>
                         <ul className="b-category-sublist">
-                            <li>Picture</li>
-                            <li>Animation</li>
+                            <SourceElement text="Picture" element="image" />
                         </ul>
                     </CollapsedListItem>
                     <CollapsedListItem text="Navigation" icon={imgStroke75}>
@@ -153,9 +152,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                     </CollapsedListItem>
                     <CollapsedListItem text="Tables" icon={imgGroup13}>
                         <ul className="b-category-sublist">
-                            <li>Table</li>
-                            <li>Row</li>
-                            <li>Column</li>
+                            <SourceElement text="Table" element="table" />
                         </ul>
                     </CollapsedListItem>
                     <li />

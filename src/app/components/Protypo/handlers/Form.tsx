@@ -18,11 +18,30 @@ import * as React from 'react';
 import * as propTypes from 'prop-types';
 
 import StyledComponent from './StyledComponent';
+import DnDComponent from './DnDComponent';
+import * as classnames from 'classnames';
 import ValidatedForm from 'components/Validation/ValidatedForm';
 
 export interface IFormProps {
     'class'?: string;
     'className'?: string;
+
+    'editable'?: boolean;
+    'changePage'?: any;
+    'setTagCanDropPosition'?: any;
+    'addTag'?: any;
+    'moveTag'?: any;
+    'selectTag'?: any;
+    'selected'?: boolean;
+    'tag'?: any;
+
+    'canDropPosition'?: string;
+
+    connectDropTarget?: any;
+    isOver?: boolean;
+
+    connectDragSource?: any;
+    isDragging?: boolean;
 }
 
 interface IFormState {
@@ -51,7 +70,41 @@ class Form extends React.Component<IFormProps, IFormState> {
         }
     }
 
+    onClick(e: any) {
+        e.stopPropagation();
+        this.props.selectTag({ tag: this.props.tag });
+    }
+
+    onSubmit(e: any) {
+        e.stopPropagation();
+        e.preventDefault();
+    }
+
     render() {
+        if (this.props.editable) {
+            const { connectDropTarget, isOver } = this.props;
+            const { connectDragSource, isDragging } = this.props;
+
+            const classes = classnames({
+                [this.props.class]: true,
+                [this.props.className]: true,
+                'editable': this.props.selected,
+                'can-drop': isOver,
+                ['can-drop_' + this.props.canDropPosition]: true,
+                'is-dragging': isDragging
+            });
+
+            return connectDragSource(connectDropTarget(
+                <form
+                    className={classes}
+                    contentEditable={false}
+                    onClick={this.onClick.bind(this)}
+                    onSubmit={this.onSubmit.bind(this)}
+                >
+                    {this.props.children}
+                </form>
+            ));
+        }
         return (
             <ValidatedForm ref={this.bindForm.bind(this)} className={[this.props.class, this.props.className].join(' ')}>
                 {this.props.children}
@@ -64,4 +117,4 @@ class Form extends React.Component<IFormProps, IFormState> {
     form: propTypes.instanceOf(ValidatedForm)
 };
 
-export default StyledComponent(Form);
+export default DnDComponent(StyledComponent(Form));

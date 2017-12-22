@@ -103,6 +103,8 @@ export function OnPasteStripFormatting(elem: any, e: any) {
 class Tag {
     protected element: IProtypoElement;
     protected tagName: string = 'Tag';
+    protected canHaveChildren: boolean = true;
+
     constructor(element: IProtypoElement) {
         this.element = element;
     }
@@ -158,13 +160,6 @@ class Tag {
             }]
         };
     }
-}
-
-class Button extends Tag {
-    constructor(element: IProtypoElement) {
-        super(element);
-        this.tagName = 'Button';
-    }
 
     getParamsStr(name: string, obj: Object) {
         let paramsArr = [];
@@ -172,6 +167,14 @@ class Button extends Tag {
             if (obj.hasOwnProperty(param)) {
                 paramsArr.push(param + '=' + (obj[param] && obj[param].text || ''));
             }
+        }
+        return name + ': ' + '"' + paramsArr.join(',') + '"';
+    }
+
+    getParamsArrStr(name: string, obj: { Name: string, Title: string }[]) {
+        let paramsArr = [];
+        for (let param of obj) {
+            paramsArr.push(param.Name + '=' + param.Title);
         }
         return name + ': ' + '"' + paramsArr.join(',') + '"';
     }
@@ -184,6 +187,18 @@ class Button extends Tag {
             }
         }
         return paramsArr.join(',');
+    }
+
+    getCanHaveChildren() {
+        return this.canHaveChildren;
+    }
+}
+
+class Button extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'Button';
+        this.canHaveChildren = false;
     }
 
     renderCode(): string {
@@ -270,6 +285,148 @@ class Em extends Tag {
     }
 }
 
+class Form extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'Form';
+    }
+}
+
+class Table extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'Table';
+        this.canHaveChildren = false;
+    }
+
+    generateTreeJSON(text: string): any {
+        return {
+            tag: this.tagName.toLowerCase(),
+            id: generateId(),
+            attr: {
+                source: 'keysStr',
+                columns: [
+                    {
+                        Name: 'id',
+                        Title: 'KEY_ID'
+                    },
+                    {
+                        Name: 'amount',
+                        Title: 'MONEY'
+                    }
+                ]
+            }
+        };
+    }
+
+    renderCode(): string {
+        let result: string = this.tagName + '(';
+        let params = [];
+        if (this.element && this.element.attr) {
+            params.push('Source: ' + (this.element.attr.source || ''));
+            if (this.element.attr.columns) {
+                params.push(this.getParamsArrStr('Columns', this.element.attr.columns));
+            }
+        }
+
+        result += params.join(', ');
+        result += ')';
+        if (this.element && this.element.attr) {
+            if (this.element.attr.style) {
+                result += '.Style(' + this.element.attr.style + ')';
+            }
+        }
+
+        return result + ' ';
+    }
+}
+
+class Image extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'Image';
+        this.canHaveChildren = false;
+    }
+
+    generateTreeJSON(text: string): any {
+        return {
+            tag: this.tagName.toLowerCase(),
+            id: generateId(),
+            attr: {
+                alt: 'Image',
+                src: 'http://apla.readthedocs.io/en/latest/_images/logo.png'
+            }
+        };
+    }
+
+    renderCode(): string {
+        let result: string = this.tagName + '(';
+        let params = [];
+        params.push('Class: ' + (this.element && this.element.attr && this.element.attr.class || ''));
+        let body = this.renderChildren();
+        if (body.length > 0) {
+            params.push('Body: ' + body);
+        }
+        if (this.element && this.element.attr) {
+            params.push('Src: ' + (this.element.attr.src || ''));
+            params.push('Alt: ' + (this.element.attr.alt || ''));
+        }
+        result += params.join(', ');
+        result += ')';
+        if (this.element && this.element.attr) {
+            if (this.element.attr.style) {
+                result += '.Style(' + this.element.attr.style + ')';
+            }
+        }
+        return result + ' ';
+    }
+}
+
+class ImageInput extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'ImageInput';
+        this.canHaveChildren = false;
+    }
+
+    generateTreeJSON(text: string): any {
+        return {
+            tag: this.tagName.toLowerCase(),
+            id: generateId(),
+            attr: {
+                format: 'jpg',
+                name: 'sample image',
+                ratio: '2/1',
+                width: '100'
+            }
+        };
+    }
+
+    renderCode(): string {
+        let result: string = this.tagName + '(';
+        let params = [];
+        params.push('Class: ' + (this.element && this.element.attr && this.element.attr.class || ''));
+        let body = this.renderChildren();
+        if (body.length > 0) {
+            params.push('Body: ' + body);
+        }
+        if (this.element && this.element.attr) {
+            params.push('Format: ' + (this.element.attr.format || ''));
+            params.push('Name: ' + (this.element.attr.name || ''));
+            params.push('Ratio: ' + (this.element.attr.ratio || ''));
+            params.push('Width: ' + (this.element.attr.width || ''));
+        }
+        result += params.join(', ');
+        result += ')';
+        if (this.element && this.element.attr) {
+            if (this.element.attr.style) {
+                result += '.Style(' + this.element.attr.style + ')';
+            }
+        }
+        return result + ' ';
+    }
+}
+
 export class CodeGenerator {
     private elements: IProtypoElement[];
     constructor(elements: IProtypoElement[]) {
@@ -302,9 +459,9 @@ const tagHandlers = {
     'div': Div,
     'em': Em,
 //     'forlist': ForList,
-//     'form': Form,
-//     'image': Image,
-//     'imageinput': ImageInput,
+    'form': Form,
+    'image': Image,
+    'imageinput': ImageInput,
 //     'input': Input,
 //     'inputerr': InputErr,
 //     'label': Label,
@@ -316,7 +473,7 @@ const tagHandlers = {
 //     'select': Select,
     'span': Span,
     'strong': Strong,
-//     'table': Table
+    'table': Table
 };
 
 export class Properties {
@@ -393,8 +550,12 @@ export const resolveTagHandler = (name: string) => {
     return tagHandlers[name];
 };
 
-export function getDropPosition(monitor: any, component: any) {
+export function getDropPosition(monitor: any, component: any, tag: any) {
+
     // Determine rectangle on screen
+    if( !findDOMNode(component)) {
+        return 'after';
+    }
     const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
 
     const maxGap: number = 15;
@@ -414,6 +575,12 @@ export function getDropPosition(monitor: any, component: any) {
     const hoverClientY = clientOffset.y - hoverBoundingRect.top;
     const hoverClientX = clientOffset.x - hoverBoundingRect.left;
 
+    let tagObj: any = null;
+    const Handler = resolveTagHandler(tag.tag);
+    if (Handler) {
+        tagObj = new Handler();
+    }
+
     if (hoverClientY < gapY || hoverClientX < gapX) {
         return 'before';
     }
@@ -422,7 +589,10 @@ export function getDropPosition(monitor: any, component: any) {
         return 'after';
     }
 
-    return 'inside';
+    if (tagObj && tagObj.getCanHaveChildren()) {
+        return 'inside';
+    }
+    return 'after';
 }
 
 let hoverTimer: any = null;

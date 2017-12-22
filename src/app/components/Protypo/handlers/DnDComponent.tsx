@@ -38,14 +38,14 @@ const Target = {
             props.addTag({
                 tag: droppedItem,
                 destinationTagID: props.tag.id,
-                position: getDropPosition(monitor, component)
+                position: getDropPosition(monitor, component, props.tag)
             });
         }
         else {
             props.moveTag({
                 tag: droppedItem.tag,
                 destinationTagID: props.tag.id,
-                position: getDropPosition(monitor, component)
+                position: getDropPosition(monitor, component, props.tag)
             });
         }
     },
@@ -57,7 +57,7 @@ const Target = {
             return;
         }
 
-        props.changePage({ canDropPosition: getDropPosition(monitor, component), tagID: props.tag.id });
+        props.changePage({ canDropPosition: getDropPosition(monitor, component, props.tag), tagID: props.tag.id });
     }
 };
 

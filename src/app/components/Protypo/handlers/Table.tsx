@@ -16,15 +16,35 @@
 
 import * as React from 'react';
 import * as propTypes from 'prop-types';
+import * as classnames from 'classnames';
 
 import Protypo from '../';
 import StyledComponent from './StyledComponent';
+
+import DnDComponent from './DnDComponent';
 
 export interface ITableProps {
     id: string;
     className?: string;
     source?: string;
     columns?: { Name: string, Title: string }[];
+
+    'editable'?: boolean;
+    'changePage'?: any;
+    'setTagCanDropPosition'?: any;
+    'addTag'?: any;
+    'moveTag'?: any;
+    'selectTag'?: any;
+    'selected'?: boolean;
+    'tag'?: any;
+
+    'canDropPosition'?: string;
+
+    connectDropTarget?: any;
+    isOver?: boolean;
+
+    connectDragSource?: any;
+    isDragging?: boolean;
 }
 
 interface ITableContext {
@@ -32,6 +52,65 @@ interface ITableContext {
 }
 
 const Table: React.SFC<ITableProps> = (props, context: ITableContext) => {
+
+    if (props.editable) {
+        const onClick = (e: any) => {
+            e.stopPropagation();
+            props.selectTag({ tag: props.tag });
+        };
+
+        const { connectDropTarget, isOver } = props;
+        const { connectDragSource, isDragging } = props;
+
+        const classes = classnames({
+            'table': true,
+            [props.className]: true,
+            'editable': props.selected,
+            'can-drop': isOver,
+            ['can-drop_' + props.canDropPosition]: true,
+            'is-dragging': isDragging
+        });
+
+        return connectDragSource(connectDropTarget(
+            <table
+                className={classes}
+                onClick={onClick}
+            >
+                <thead>
+                <tr>
+                    <th>Column 1</th>
+                    <th>Column 2</th>
+                    <th>Column 3</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        Row 1
+                    </td>
+                    <td>
+                        Value
+                    </td>
+                    <td>
+                        Value
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Row 2
+                    </td>
+                    <td>
+                        Value
+                    </td>
+                    <td>
+                        Value
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        ));
+    }
+
     const source = context.protypo.resolveSource(props.source);
 
     if (!source) {
@@ -107,4 +186,4 @@ Table.contextTypes = {
     protypo: propTypes.object.isRequired
 };
 
-export default StyledComponent(Table);
+export default DnDComponent(StyledComponent(Table));

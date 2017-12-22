@@ -17,16 +17,64 @@
 import * as React from 'react';
 
 import StyledComponent from './StyledComponent';
+import * as classnames from 'classnames';
+import DnDComponent from './DnDComponent';
 
 export interface IImageProps {
     'className'?: string;
     'class'?: string;
     'src'?: string;
     'alt'?: string;
+
+    'editable'?: boolean;
+    'changePage'?: any;
+    'setTagCanDropPosition'?: any;
+    'addTag'?: any;
+    'moveTag'?: any;
+    'selectTag'?: any;
+    'selected'?: boolean;
+    'tag'?: any;
+
+    'canDropPosition'?: string;
+
+    connectDropTarget?: any;
+    isOver?: boolean;
+
+    connectDragSource?: any;
+    isDragging?: boolean;
 }
 
-const Image: React.SFC<IImageProps> = (props) => (
-    <img className={[props.class, props.className].join(' ')} src={props.src || ''} alt={props.alt} />
-);
+const Image: React.SFC<IImageProps> = (props) => {
+    const onClick = (e: any) => {
+        e.stopPropagation();
+        props.selectTag({ tag: props.tag });
+    };
 
-export default StyledComponent(Image);
+    if (props.editable) {
+        const { connectDropTarget, isOver } = props;
+        const { connectDragSource, isDragging } = props;
+
+        const classes = classnames({
+            [props.class]: true,
+            'editable': props.selected,
+            'can-drop': isOver,
+            ['can-drop_' + props.canDropPosition]: true,
+            'is-dragging': isDragging
+        });
+
+        return connectDragSource(connectDropTarget(
+            <img
+                className={classes}
+                onClick={onClick}
+                src={props.src || ''}
+                alt={props.alt}
+            />
+        ));
+    }
+
+    return (
+        <img className={[props.class, props.className].join(' ')} src={props.src || ''} alt={props.alt} />
+    );
+};
+
+export default DnDComponent(StyledComponent(Image));
