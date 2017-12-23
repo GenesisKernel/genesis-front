@@ -39,7 +39,7 @@ const animationDef = {
         opacity: 1,
     },
     exiting: {
-        transform: 'translateX(50px)',
+        transform: 'translateX(-50px)',
         opacity: 0,
     },
     exited: {
