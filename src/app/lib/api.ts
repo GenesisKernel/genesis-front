@@ -34,6 +34,7 @@ export interface IResponse extends IAPIError {
 
 export interface IAPIError {
     error: string;
+    msg: string;
 }
 
 export interface IProtypoElement {
@@ -196,7 +197,10 @@ export interface ITxExecResponse extends IResponse {
 export interface ITxStatusResponse extends IResponse {
     blockid: string;
     result: string;
-    errmsg: string;
+    errmsg?: {
+        type: string;
+        error: string;
+    };
 }
 
 export interface IParameterResponse extends IResponse {

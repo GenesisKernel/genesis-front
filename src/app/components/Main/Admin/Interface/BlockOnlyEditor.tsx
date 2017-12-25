@@ -29,7 +29,7 @@ interface IBlockEditorProps {
     block?: { id: string, name: string, conditions: string, value: string };
     onSourceEdit: (code: string) => void;
     onConditionsEdit: React.ChangeEventHandler<HTMLTextAreaElement>;
-    onExec?: (block: string, error: string) => void;
+    onExec?: (block: string, error?: { type: string, error: string }) => void;
     mapContractParams: (values: { [key: string]: any }) => { values: { [key: string]: any } };
 }
 
@@ -45,8 +45,8 @@ const BlockEditor: React.SFC<IBlockEditorProps> = (props) => (
                         (
                             <Validation.components.ValidatedControl key="nameEdit" name="name" readOnly value={props.block.name} />
                         ) : (
-                        <Validation.components.ValidatedControl key="nameCreate" name="name" validators={[Validation.validators.required]} />
-                    )
+                            <Validation.components.ValidatedControl key="nameCreate" name="name" validators={[Validation.validators.required]} />
+                        )
                     }
                 </Validation.components.ValidatedFormGroup>
                 <Validation.components.ValidatedFormGroup for="content">

@@ -22,7 +22,7 @@ import * as actions from './actions';
 import { createEcosystem } from 'modules/auth/actions';
 import keyring from 'lib/keyring';
 import storage from 'lib/storage';
-import api, { ITxStatusResponse } from 'lib/api';
+import api, { IAPIError, ITxStatusResponse } from 'lib/api';
 
 export const contractExecEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.contractExec.started)
@@ -73,9 +73,12 @@ export const contractExecEpic: Epic<Action, IRootState> =
                         result: payload.blockid
                     })));
                 })
-                .catch((error: ITxStatusResponse) => Observable.of(actions.contractExec.failed({
+                .catch((error: IAPIError & ITxStatusResponse) => Observable.of(actions.contractExec.failed({
                     params: action.payload,
-                    error: error.error || error.errmsg
+                    error: {
+                        type: error.errmsg ? error.errmsg.type : error.error,
+                        error: error.errmsg ? error.errmsg.error : error.msg
+                    }
                 })));
         });
 

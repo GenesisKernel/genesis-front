@@ -30,7 +30,7 @@ interface IMenuEditorProps {
     menu?: { id: string, name: string, conditions: string, value: string };
     onSourceEdit: (code: string) => void;
     onConditionsEdit: React.ChangeEventHandler<HTMLTextAreaElement>;
-    onExec?: (block: string, error: string) => void;
+    onExec?: (block: string, error?: { type: string, error: string }) => void;
     mapContractParams: (values: { [key: string]: any }) => { values: { [key: string]: any } };
 }
 

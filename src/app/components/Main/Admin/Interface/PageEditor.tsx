@@ -34,7 +34,7 @@ interface IPageEditorProps {
     onSourceEdit: (code: string) => void;
     onConditionsEdit: React.ChangeEventHandler<HTMLTextAreaElement>;
     onMenuSelect: React.ChangeEventHandler<HTMLSelectElement>;
-    onExec?: (block: string, error: string) => void;
+    onExec?: (block: string, error?: { type: string, error: string }) => void;
     mapContractParams: (values: { [key: string]: any }) => { values: { [key: string]: any } };
 }
 

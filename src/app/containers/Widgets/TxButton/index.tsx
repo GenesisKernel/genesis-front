@@ -34,11 +34,11 @@ interface ITxButtonContainerProps {
     pageParams?: { [key: string]: any };
     disabled?: boolean;
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-    onExec?: (block: string, error: string) => void;
+    onExec?: (block: string, error?: { type: string, error: string }) => void;
 }
 
 interface ITxButtonStateProps {
-    transactions: Map<string, { block: string, error: string }>;
+    transactions: Map<string, { block: string, error?: { type: string, error: string } }>;
     confirmation: { id: string, success: string, error: string };
 }
 

@@ -42,7 +42,7 @@ export interface IMainProps {
     stylesheet: string;
     navigationWidth: number;
     navigationVisible: boolean;
-    pendingTransactions: OrderedMap<string, { uuid: string, block: string, error: string, contract: string }>;
+    pendingTransactions: OrderedMap<string, { uuid: string, block: string, error?: { type: string, error: string }, contract: string }>;
     transactionsCount: number;
 }
 
