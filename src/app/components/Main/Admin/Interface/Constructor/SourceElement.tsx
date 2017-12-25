@@ -57,7 +57,7 @@ class SourceElement extends React.Component<ISourceElementProps, ISourceElementS
         const { connectDragSource, isDragging } = this.props;
         return connectDragSource(
             <li>
-                {this.props.text} {isDragging ? '>>' : ''}
+                {this.props.text} {isDragging ? '' : ''}
             </li>
         );
     }

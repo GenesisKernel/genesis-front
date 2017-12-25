@@ -40,7 +40,7 @@ class Strong extends React.Component<IPProps> {
     }
 
     onBlur(e: any) {
-        this.props.changePage({ text: e.target.textContent, tagID: this.props.tag.id });
+        this.props.changePage({ text: e.target.innerHTML, tagID: this.props.tag.id });
     }
 
     render() {

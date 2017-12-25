@@ -19,24 +19,72 @@ import * as propTypes from 'prop-types';
 
 import Protypo from '../Protypo';
 import StyledComponent from './StyledComponent';
+import * as classnames from 'classnames';
+import DnDComponent from './DnDComponent';
 
 export interface IImageProps {
     'className'?: string;
     'class'?: string;
     'src'?: string;
     'alt'?: string;
+
+    'editable'?: boolean;
+    'changePage'?: any;
+    'setTagCanDropPosition'?: any;
+    'addTag'?: any;
+    'moveTag'?: any;
+    'selectTag'?: any;
+    'selected'?: boolean;
+    'tag'?: any;
+
+    'canDropPosition'?: string;
+
+    connectDropTarget?: any;
+    isOver?: boolean;
+
+    connectDragSource?: any;
+    isDragging?: boolean;
 }
 
 interface IImageContext {
     protypo: Protypo;
 }
+    
+const Image: React.SFC<IImageProps> = (props, context: IImageContext) => {
+    const onClick = (e: any) => {
+        e.stopPropagation();
+        props.selectTag({ tag: props.tag });
+    };
 
-const Image: React.SFC<IImageProps> = (props, context: IImageContext) => props.src ? (
-    <img className={[props.class, props.className].join(' ')} src={context.protypo.resolveData(props.src)} alt={props.alt} />
-) : null;
+    if (props.editable) {
+        const { connectDropTarget, isOver } = props;
+        const { connectDragSource, isDragging } = props;
+
+        const classes = classnames({
+            [props.class]: true,
+            'editable': props.selected,
+            'can-drop': isOver,
+            ['can-drop_' + props.canDropPosition]: true,
+            'is-dragging': isDragging
+        });
+
+        return connectDragSource(connectDropTarget(
+            <img
+                className={classes}
+                onClick={onClick}
+                src={context.protypo.resolveData(props.src)}
+                alt={props.alt}
+            />
+        ));
+    }
+
+    return (
+        <img className={[props.class, props.className].join(' ')} src={context.protypo.resolveData(props.src)} alt={props.alt} />
+    );
+}
 
 Image.contextTypes = {
     protypo: propTypes.object.isRequired
 };
 
-export default StyledComponent(Image);
+export default DnDComponent(StyledComponent(Image));

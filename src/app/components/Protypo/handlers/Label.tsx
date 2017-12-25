@@ -15,17 +15,84 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-
+import * as classnames from 'classnames';
+import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
+import DnDComponent from './DnDComponent';
 
 export interface ILabelProps {
     'className'?: string;
     'class'?: string;
     'for'?: string;
+
+
+    'editable'?: boolean;
+    'changePage'?: any;
+    'setTagCanDropPosition'?: any;
+    'addTag'?: any;
+    'moveTag'?: any;
+    'selectTag'?: any;
+    'selected'?: boolean;
+    'tag'?: any;
+
+    'canDropPosition'?: string;
+
+    connectDropTarget?: any;
+    isOver?: boolean;
+
+    connectDragSource?: any;
+    isDragging?: boolean;
 }
 
-const Label: React.SFC<ILabelProps> = (props) => (
-    <label htmlFor={props.for} className={[props.class, props.className].join(' ')}>{props.children}</label>
-);
+class Label extends React.Component<ILabelProps> {
 
-export default StyledComponent(Label);
+    onPaste(e: any) {
+        OnPasteStripFormatting(this, e);
+    }
+
+    onClick(e: any) {
+        e.stopPropagation();
+        this.props.selectTag({ tag: this.props.tag });
+    }
+
+    onBlur(e: any) {
+        e.stopPropagation();
+        this.props.changePage({ text: e.target.innerHTML, tagID: this.props.tag.id });
+    }
+
+    render() {
+        if (this.props.editable) {
+            const { connectDropTarget, isOver } = this.props;
+            const { connectDragSource, isDragging } = this.props;
+
+            const classes = classnames({
+                [this.props.class ? this.props.class : '']: true,
+                [this.props.className ? this.props.className : '']: true,
+                'editable': this.props.selected,
+                'can-drop': isOver,
+                ['can-drop_' + this.props.canDropPosition]: true,
+                'is-dragging': isDragging
+            });
+
+            // <div style={{ position: 'absolute', width: '10px', height: '10px', left: 0, top: 0, ba }}></div>
+
+            return connectDragSource(connectDropTarget(
+                <label
+                    className={classes}
+                    contentEditable={this.props.selected}
+                    onPaste={this.onPaste.bind(this)}
+                    onBlur={this.onBlur.bind(this)}
+                    onClick={this.onClick.bind(this)}
+                >
+                    {this.props.children}
+                </label>
+            ));
+        }
+
+        return (
+            <label htmlFor={this.props.for} className={[this.props.class, this.props.className].join(' ')}>{this.props.children}</label>
+        );
+    }
+}
+
+export default DnDComponent(StyledComponent(Label));
