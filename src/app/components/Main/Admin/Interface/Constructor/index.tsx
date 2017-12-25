@@ -25,12 +25,12 @@ import SourceElement from './SourceElement';
 import Properties from './Properties';
 import Switch from './Switch';
 
-import imgViewMobile from 'images/constructor/group-2.svg';
-import imgViewTablet from 'images/constructor/group.svg';
-import imgViewLaptop from 'images/constructor/group-30.svg';
-import imgViewDesktop from 'images/constructor/group-3.svg';
-import imgUndo from 'images/constructor/group-7.svg';
-import imgRedo from 'images/constructor/group-6.svg';
+// import imgViewMobile from 'images/constructor/group-2.svg';
+// import imgViewTablet from 'images/constructor/group.svg';
+// import imgViewLaptop from 'images/constructor/group-30.svg';
+// import imgViewDesktop from 'images/constructor/group-3.svg';
+// import imgUndo from 'images/constructor/group-7.svg';
+// import imgRedo from 'images/constructor/group-6.svg';
 import imgGroup11 from 'images/constructor/group-11.svg';
 import imgGroup12 from 'images/constructor/group-12.svg';
 import imgGroup13 from 'images/constructor/group-13.svg';
@@ -38,7 +38,7 @@ import imgGroup34 from 'images/constructor/group-34.svg';
 import imgGroup35 from 'images/constructor/group-35.svg';
 // import imgGroup36 from 'images/constructor/group-36.svg';
 // import imgGroup37 from 'images/constructor/group-37.svg';
-import imgStroke75 from 'images/constructor/stroke-75.svg';
+// import imgStroke75 from 'images/constructor/stroke-75.svg';
 import imgGrid from 'images/constructor/grid.png';
 
 interface IConstructorProps {
@@ -135,6 +135,8 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                     <CollapsedListItem text="Forms" icon={imgGroup34}>
                         <ul className="b-category-sublist">
                             <SourceElement text="Form" element="form" />
+                            <SourceElement text="Input" element="input" />
+                            <SourceElement text="Label" element="label" />
                             <SourceElement text="Button" element="button" />
                             <SourceElement text="Image input" element="imageinput" />
                         </ul>
@@ -144,12 +146,12 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                             <SourceElement text="Picture" element="image" />
                         </ul>
                     </CollapsedListItem>
-                    <CollapsedListItem text="Navigation" icon={imgStroke75}>
+                    {/*<CollapsedListItem text="Navigation" icon={imgStroke75}>
                         <ul className="b-category-sublist">
                             <li>Breadcrumps</li>
                             <li>Link</li>
                         </ul>
-                    </CollapsedListItem>
+                    </CollapsedListItem>*/}
                     <CollapsedListItem text="Tables" icon={imgGroup13}>
                         <ul className="b-category-sublist">
                             <SourceElement text="Table" element="table" />
@@ -158,7 +160,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                     <li />
                 </ul>
             </Panel>
-            <Panel title="Structure">
+            {/*<Panel title="Structure">
                 <ul className="b-tree">
                     <li>
                         <i className="fa fa-caret-down" />
@@ -197,18 +199,22 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                     </li>
                 </ul>
             </Panel>
+            */}
         </div>
         <div className="center-panel">
             <div className="b-instrument-panel b-panel-light">
                 <div className="b-instrument-panel__inner pull-left">
+                    {/*
                     <div className="b-icon pull-left">
                         <img src={imgUndo} />
                     </div>
                     <div className="b-icon pull-left">
                         <img src={imgRedo} />
                     </div>
+                    */}
                 </div>
                 <div className="b-instrument-panel__inner pull-right">
+                    {/*
                     <div className="b-icon-group pull-left">
                         <div className="b-icon pull-left">
                             <img src={imgViewMobile} />
@@ -223,16 +229,19 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                             <img src={imgViewDesktop} />
                         </div>
                     </div>
+                    */}
                     <div className="b-icon-group pull-left">
                         <div className="b-switch">
                             <span>GRID</span>
                             <Switch initialValue={props.grid ? 'grid' : ''} onValue="grid" offValue="" onChange={props.toggleGrid} />
                         </div>
-
-                        <div className="b-switch">
-                            <span>SNAP</span>
-                            <Switch initialValue="snap" onValue="snap" offValue="" />
-                        </div>
+                        {/*
+                         <div className="b-switch">
+                         <span>SNAP</span>
+                         <Switch initialValue="snap" onValue="snap" offValue="" />
+                         </div>
+                         */
+                        }
                     </div>
 
                 </div>

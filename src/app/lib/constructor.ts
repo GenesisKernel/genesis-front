@@ -105,13 +105,22 @@ class Tag {
     protected tagName: string = 'Tag';
     protected canHaveChildren: boolean = true;
 
+    protected attr: any = {
+        'class': 'Class'
+    };
+
     constructor(element: IProtypoElement) {
         this.element = element;
     }
     renderCode(): string {
         let result: string = this.tagName + '(';
         let params = [];
-        params.push('Class: ' + (this.element && this.element.attr && this.element.attr.class || ''));
+        for (let attr in this.attr) {
+            if (this.attr.hasOwnProperty(attr)) {
+                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
+            }
+        }
+
         let body = this.renderChildren();
         if (body.length > 0) {
            params.push('Body: ' + body);
@@ -179,6 +188,23 @@ class Tag {
         return name + ': ' + '"' + paramsArr.join(',') + '"';
     }
 
+    getValidationParams(obj: Object) {
+        const params = {
+           'minlength': 'minLength',
+           'maxlength': 'maxLength'
+        };
+        let paramsArr = [];
+        for (let param in obj) {
+            if (obj.hasOwnProperty(param)) {
+                paramsArr.push((params[param] || param) + ': ' + obj[param]);
+            }
+        }
+        if (paramsArr.length) {
+            return '.Validate(' + paramsArr.join(',') + ')';
+        }
+        return '';
+    }
+
     getParams(obj: Object) {
         let paramsArr = [];
         for (let param in obj) {
@@ -198,20 +224,27 @@ class Button extends Tag {
     constructor(element: IProtypoElement) {
         super(element);
         this.tagName = 'Button';
-        this.canHaveChildren = false;
+        this.canHaveChildren = true;
+        this.attr = {
+            'class': 'Class',
+            'page': 'Page',
+            'contract': 'Contract'
+        };
     }
 
     renderCode(): string {
         let result: string = this.tagName + '(';
         let params = [];
-        params.push('Class: ' + (this.element && this.element.attr && this.element.attr.class || ''));
+        for (let attr in this.attr) {
+            if (this.attr.hasOwnProperty(attr)) {
+                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
+            }
+        }
         let body = this.renderChildren();
         if (body.length > 0) {
             params.push('Body: ' + body);
         }
         if (this.element && this.element.attr) {
-            params.push('Page: ' + (this.element.attr.page || ''));
-            params.push('Contract: ' + (this.element.attr.contract || ''));
             if (this.element.attr.params) {
                 params.push(this.getParamsStr('Params', this.element.attr.params));
             }
@@ -292,11 +325,21 @@ class Form extends Tag {
     }
 }
 
+class Label extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'Label';
+    }
+}
+
 class Table extends Tag {
     constructor(element: IProtypoElement) {
         super(element);
         this.tagName = 'Table';
         this.canHaveChildren = false;
+        this.attr = {
+            'source': 'Source'
+        };
     }
 
     generateTreeJSON(text: string): any {
@@ -322,8 +365,14 @@ class Table extends Tag {
     renderCode(): string {
         let result: string = this.tagName + '(';
         let params = [];
+
+        for (let attr in this.attr) {
+            if (this.attr.hasOwnProperty(attr)) {
+                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
+            }
+        }
+
         if (this.element && this.element.attr) {
-            params.push('Source: ' + (this.element.attr.source || ''));
             if (this.element.attr.columns) {
                 params.push(this.getParamsArrStr('Columns', this.element.attr.columns));
             }
@@ -346,6 +395,11 @@ class Image extends Tag {
         super(element);
         this.tagName = 'Image';
         this.canHaveChildren = false;
+        this.attr = {
+            'source': 'Source',
+            'src': 'Src',
+            'alt': 'Alt'
+        };
     }
 
     generateTreeJSON(text: string): any {
@@ -362,14 +416,14 @@ class Image extends Tag {
     renderCode(): string {
         let result: string = this.tagName + '(';
         let params = [];
-        params.push('Class: ' + (this.element && this.element.attr && this.element.attr.class || ''));
+        for (let attr in this.attr) {
+            if (this.attr.hasOwnProperty(attr)) {
+                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
+            }
+        }
         let body = this.renderChildren();
         if (body.length > 0) {
             params.push('Body: ' + body);
-        }
-        if (this.element && this.element.attr) {
-            params.push('Src: ' + (this.element.attr.src || ''));
-            params.push('Alt: ' + (this.element.attr.alt || ''));
         }
         result += params.join(', ');
         result += ')';
@@ -387,6 +441,13 @@ class ImageInput extends Tag {
         super(element);
         this.tagName = 'ImageInput';
         this.canHaveChildren = false;
+        this.attr = {
+            'class': 'Class',
+            'format': 'Format',
+            'name': 'Name',
+            'ratio': 'Ratio',
+            'width': 'Width'
+        };
     }
 
     generateTreeJSON(text: string): any {
@@ -405,19 +466,72 @@ class ImageInput extends Tag {
     renderCode(): string {
         let result: string = this.tagName + '(';
         let params = [];
-        params.push('Class: ' + (this.element && this.element.attr && this.element.attr.class || ''));
+        for (let attr in this.attr) {
+            if (this.attr.hasOwnProperty(attr)) {
+                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
+            }
+        }
         let body = this.renderChildren();
         if (body.length > 0) {
             params.push('Body: ' + body);
         }
-        if (this.element && this.element.attr) {
-            params.push('Format: ' + (this.element.attr.format || ''));
-            params.push('Name: ' + (this.element.attr.name || ''));
-            params.push('Ratio: ' + (this.element.attr.ratio || ''));
-            params.push('Width: ' + (this.element.attr.width || ''));
-        }
+
         result += params.join(', ');
         result += ')';
+        if (this.element && this.element.attr) {
+            if (this.element.attr.style) {
+                result += '.Style(' + this.element.attr.style + ')';
+            }
+        }
+        return result + ' ';
+    }
+}
+
+class Input extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'Input';
+        this.canHaveChildren = false;
+        this.attr = {
+            'class': 'Class',
+            'name': 'Name',
+            'placeholder': 'Placeholder',
+            'type': 'Type',
+            'value': 'Value'
+        };
+    }
+
+    generateTreeJSON(text: string): any {
+        return {
+            tag: this.tagName.toLowerCase(),
+            id: generateId(),
+            attr: {
+                name: 'sample image',
+
+            }
+        };
+    }
+
+    renderCode(): string {
+        let result: string = this.tagName + '(';
+        let params = [];
+        let body = this.renderChildren();
+        if (body.length > 0) {
+            params.push('Body: ' + body);
+        }
+        for (let attr in this.attr) {
+            if (this.attr.hasOwnProperty(attr)) {
+                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
+            }
+        }
+
+        result += params.join(', ');
+        result += ')';
+
+        if (this.element && this.element.attr && this.element.attr.validate) {
+            result += this.getValidationParams(this.element.attr.validate);
+        }
+
         if (this.element && this.element.attr) {
             if (this.element.attr.style) {
                 result += '.Style(' + this.element.attr.style + ')';
@@ -462,9 +576,9 @@ const tagHandlers = {
     'form': Form,
     'image': Image,
     'imageinput': ImageInput,
-//     'input': Input,
+    'input': Input,
 //     'inputerr': InputErr,
-//     'label': Label,
+    'label': Label,
 //     'linkpage': LinkPage,
 //     'menuitem': MenuItem,
 //     'menugroup': MenuGroup,
@@ -553,7 +667,7 @@ export const resolveTagHandler = (name: string) => {
 export function getDropPosition(monitor: any, component: any, tag: any) {
 
     // Determine rectangle on screen
-    if( !findDOMNode(component)) {
+    if (!findDOMNode(component)) {
         return 'after';
     }
     const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();

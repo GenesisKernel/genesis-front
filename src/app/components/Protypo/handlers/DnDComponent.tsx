@@ -34,6 +34,10 @@ const Target = {
 
         const droppedItem = monitor.getItem();
 
+        if (droppedItem.tag && droppedItem.tag.id && props.tag.id === droppedItem.tag.id) {
+            return;
+        }
+
         if (droppedItem.new) {
             props.addTag({
                 tag: droppedItem,
@@ -54,6 +58,12 @@ const Target = {
             return;
         }
         if (!startHoverTimer()) {
+            return;
+        }
+
+        const droppedItem = monitor.getItem();
+
+        if (droppedItem.tag && droppedItem.tag.id && props.tag.id === droppedItem.tag.id) {
             return;
         }
 
