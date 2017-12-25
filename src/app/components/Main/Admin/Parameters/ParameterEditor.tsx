@@ -28,7 +28,7 @@ export interface IParameterEditorProps {
     conditions: string;
     contractName: string;
     mapContractParams: (values: { [key: string]: any }) => { [key: string]: any };
-    onExec?: (block: string, error: string) => void;
+    onExec?: (block: string, error?: { type: string, error: string }) => void;
     onValueEdit: (value: string) => void;
     onConditionsEdit: (value: string) => void;
 }

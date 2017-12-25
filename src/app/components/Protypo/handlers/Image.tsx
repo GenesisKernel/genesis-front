@@ -15,7 +15,9 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import * as propTypes from 'prop-types';
 
+import Protypo from '../Protypo';
 import StyledComponent from './StyledComponent';
 import * as classnames from 'classnames';
 import DnDComponent from './DnDComponent';
@@ -44,7 +46,11 @@ export interface IImageProps {
     isDragging?: boolean;
 }
 
-const Image: React.SFC<IImageProps> = (props) => {
+interface IImageContext {
+    protypo: Protypo;
+}
+    
+const Image: React.SFC<IImageProps> = (props, context: IImageContext) => {
     const onClick = (e: any) => {
         e.stopPropagation();
         props.selectTag({ tag: props.tag });
@@ -66,15 +72,19 @@ const Image: React.SFC<IImageProps> = (props) => {
             <img
                 className={classes}
                 onClick={onClick}
-                src={props.src || ''}
+                src={context.protypo.resolveData(props.src)}
                 alt={props.alt}
             />
         ));
     }
 
     return (
-        <img className={[props.class, props.className].join(' ')} src={props.src || ''} alt={props.alt} />
+        <img className={[props.class, props.className].join(' ')} src={context.protypo.resolveData(props.src)} alt={props.alt} />
     );
+}
+
+Image.contextTypes = {
+    protypo: propTypes.object.isRequired
 };
 
 export default DnDComponent(StyledComponent(Image));

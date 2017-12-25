@@ -17,6 +17,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
+import StackGroup from 'components/Animation/StackGroup';
 
 import Protypo from 'containers/Widgets/Protypo';
 import ResizeHandle from 'containers/Main/Navigation/ResizeHandle';
@@ -49,11 +50,6 @@ const StyledBackButton = styled.button`
         &:hover {
             color: #2886ff;
         }
-
-        .icon {
-            width: 0;
-            opacity: 0;
-        }
     }
 
     &:hover {
@@ -64,9 +60,6 @@ const StyledBackButton = styled.button`
         vertical-align: top;
         display: inline-block;
         width: 30px;
-        overflow: hidden;
-        opacity: 1;
-        transition: width ease-in-out .15s, opacity ease-in-out .15s;
     }
 
     em {
@@ -79,8 +72,22 @@ const StyledBackButton = styled.button`
     }
 `;
 
+const StyledMenu = styled.div`
+    overflow: hidden;
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    right: 0;
+    top: 80px;
+`;
+
 const StyledMenuContent = styled.div`
-    padding-bottom: 50px;
+    background: #fff;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
 `;
 
 const StyledDevButton = styled.div`
@@ -120,6 +127,7 @@ export interface INavigationProps {
     menus: {
         name: string;
         content: IProtypoElement[];
+        vde?: boolean;
     }[];
     menuPop: () => void;
     menuPush: (menu: { name: string, vde?: boolean, content: IProtypoElement[] }) => void;
@@ -286,25 +294,32 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
     }
 
     render() {
-        const menu = this.props.menus.length && this.props.menus[this.props.menus.length - 1];
         return (
-            <StyledNavigation style={{ width: this.props.visible ? this.props.width : 0, paddingTop: this.props.topOffset }}>
+            <StyledNavigation style={{ width: this.props.visible ? this.props.width : 0 }}>
                 <nav>
-
-                    <StyledBackButton onClick={() => this.props.menuPop()} disabled={1 >= this.props.menus.length} className={this.props.menus.length > 1 ? '' : 'disabled'}>
-                        <div>
-                            <span className="icon">
-                                <em className="icon-arrow-left" />
-                            </span>
-                            <span>{menu.name}</span>
-                        </div>
-                    </StyledBackButton>
-                    <StyledMenuContent>
-                        <Protypo
-                            context="menu"
-                            payload={menu && menu.content}
+                    <StyledMenu style={{ top: this.props.topOffset }}>
+                        <StackGroup
+                            items={this.props.menus.map((menu, index) => (
+                                <StyledMenuContent>
+                                    <StyledBackButton onClick={() => this.props.menuPop()} disabled={1 >= this.props.menus.length} className={index === 0 ? 'disabled' : ''}>
+                                        <div>
+                                            {index > 0 && (
+                                                <span className="icon">
+                                                    <em className="icon-arrow-left" />
+                                                </span>
+                                            )}
+                                            <span>{menu.name}</span>
+                                        </div>
+                                    </StyledBackButton>
+                                    <Protypo
+                                        vde={menu.vde}
+                                        context="menu"
+                                        payload={menu.content}
+                                    />
+                                </StyledMenuContent>
+                            ))}
                         />
-                    </StyledMenuContent>
+                    </StyledMenu>
                     <StyledDevButton>
                         <button id="mainVDETools" onClick={this.onVDETools.bind(this)}>
                             <em className="icon fa fa-wrench" />

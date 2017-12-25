@@ -23,8 +23,7 @@ import { IProtypoElement } from 'components/Protypo/Protypo';
 import Page from 'components/Main/Page';
 
 export interface IPageContainerProps {
-    vde?: boolean;
-    match?: { params: { pageName: string } };
+    match?: { params: { [key: string]: string, pageName: string } };
     location?: {
         state: { params?: { [key: string]: any } };
     };
@@ -49,19 +48,22 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
     }
 
     renderPage(props: IPageContainerProps & IPageContainerState & IPageContainerDispatch) {
+        const isVDE = props.match.params && props.match.params['0'] === 'vde';
         if (!props.pending && (!props.page || props.page.name !== props.match.params.pageName)) {
             props.renderPage({
                 name: props.match.params.pageName,
                 params: props.location.state && props.location.state.params,
-                vde: this.props.vde
+                vde: isVDE
             });
         }
     }
 
     render() {
+        const isVDE = this.props.match.params && this.props.match.params['0'] === 'vde';
+
         return (
             <Page
-                vde={this.props.vde}
+                vde={isVDE}
                 name={this.props.page && this.props.page.name}
                 payload={this.props.page && this.props.page.content}
             />

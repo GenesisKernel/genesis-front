@@ -10,7 +10,6 @@
         "url": "https://github.com/AplaProject/apla-front.git"
     },
     "private": true,
-    "homepage": "./",
     "main": "./electron/index.js",
     "dependencies": {
         "animate.css": "^3.5.2",
@@ -47,6 +46,7 @@
         "react-router-redux": "^5.0.0-alpha.8",
         "react-router-transition": "^1.1.0",
         "react-test-renderer": "^15.6.2",
+        "react-transition-group": "^2.2.1",
         "redux": "^3.7.2",
         "redux-observable": "^0.16.0",
         "rxjs": "^5.4.3",
@@ -69,7 +69,7 @@
         "eject": "react-scripts-ts eject",
         "start-desktop": "npm-run-all -p watch-css start-js-desktop",
         "start-js-desktop": "react-scripts-ts-electron start",
-        "build-desktop": "npm run build-css && react-scripts-ts-electron build",
+        "build-desktop": "npm run build-css && PUBLIC_URL=./ react-scripts-ts-electron build",
         "package": "electron-builder --config electron-builder.json --dir",
         "release": "electron-builder --config electron-builder.json"
     },
@@ -98,6 +98,7 @@
         "@types/react-router-dom": "^4.0.7",
         "@types/react-router-redux": "^5.0.10",
         "@types/react-test-renderer": "^15.5.4",
+        "@types/react-transition-group": "^2.0.6",
         "@types/rx": "^4.1.1",
         "@types/sockjs-client": "^1.0.32",
         "@types/uuid": "^3.4.3",

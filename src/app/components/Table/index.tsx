@@ -79,6 +79,7 @@ const StyledHead = styled.thead`
 
 const StyledBody = styled.tbody`
     > tr > td {
+        word-break: break-all;
         padding: 8px 20px !important;
         font-weight: 400;
         font-size: 13px;

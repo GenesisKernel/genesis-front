@@ -34,6 +34,7 @@ export interface IResponse extends IAPIError {
 
 export interface IAPIError {
     error: string;
+    msg: string;
 }
 
 export interface IProtypoElement {
@@ -54,6 +55,8 @@ export interface IInstallParams {
     db_pass: string;
     generate_first_block: number;
     first_block_dir?: string;
+    centrifugo_url?: string;
+    centrifugo_secret?: string;
 }
 
 export interface IRefreshResponse {
@@ -125,6 +128,12 @@ export interface ITablesResponse extends IResponse {
     }[];
 }
 
+export interface IHistoryResponse extends IResponse {
+    list: {
+        [key: string]: string;
+    }[];
+}
+
 export interface IListResponse extends IResponse {
     count: string;
     list: [IDBValue & {
@@ -188,7 +197,10 @@ export interface ITxExecResponse extends IResponse {
 export interface ITxStatusResponse extends IResponse {
     blockid: string;
     result: string;
-    errmsg: string;
+    errmsg?: {
+        type: string;
+        error: string;
+    };
 }
 
 export interface IParameterResponse extends IResponse {
@@ -303,6 +315,7 @@ const api = {
         .then(transformContent),
     table: (session: string, name: string, vde?: boolean) => securedRequest(`table/${name}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITableResponse>,
     tables: (session: string, offset?: number, limit?: number, vde = false) => securedRequest(`tables?offset=${offset || 0}&limit=${limit || 1000}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITablesResponse>,
+    history: (session: string, table: string, id: string) => securedRequest(`history/${table}/${id}`, session, null, { method: 'GET' }) as Promise<IHistoryResponse>,
     list: (session: string, name: string, offset?: number, limit?: number, columns?: string[], vde = false) => securedRequest(`list/${name}?offset=${offset || 0}&limit=${limit || 1000}&columns=${columns ? columns.join(',') : ''}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<IListResponse>,
     page: (session: string, id: string, vde = false) => Promise.all([
         api.row(session, 'pages', id, undefined, vde),
@@ -354,7 +367,11 @@ const api = {
             resolver();
         });
     }) as Promise<ITxStatusResponse>,
-    txStatus: (session: string, hash: string, vde = false) => securedRequest(`txstatus/${hash}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITxStatusResponse>
+    txStatus: (session: string, hash: string, vde = false) => securedRequest(`txstatus/${hash}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITxStatusResponse>,
+
+    // Utilities
+    resolveData: (name: string) =>
+        apiUrl + name
 };
 
 export default api;

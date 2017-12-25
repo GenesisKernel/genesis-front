@@ -15,7 +15,7 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IPageResponse, IContractsResponse, IParameterResponse, ITabListResponse } from 'lib/api';
+import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IPageResponse, IContractsResponse, IParameterResponse, ITabListResponse, IHistoryResponse } from 'lib/api';
 import { IProtypoElement } from 'lib/api';
 
 const actionCreator = actionCreatorFactory('admin');
@@ -28,6 +28,7 @@ export const getContracts = actionCreator.async<{ vde?: boolean, offset?: number
 export const getTable = actionCreator.async<{ table: string, columnTypes?: string[], vde?: boolean }, { table: ITableResponse, data: IListResponse }, string>('GET_TABLE');
 export const getTableStruct = actionCreator.async<{ name: string, vde?: boolean }, ITableResponse, string>('GET_TABLE_STRUCT');
 export const getTables = actionCreator.async<{ offset?: number, limit?: number, vde?: boolean }, ITablesResponse, string>('GET_TABLES');
+export const getHistory = actionCreator.async<{ id: string, table: string }, IHistoryResponse, string>('GET_HISTORY');
 
 // Pages
 export const getPage = actionCreator.async<{ id: string, vde?: boolean }, IPageResponse, string>('GET_PAGE');
@@ -54,7 +55,7 @@ export const getParameter = actionCreator.async<{ name: string, vde?: boolean },
 export const getParameters = actionCreator.async<{ params?: string[], vde?: boolean }, IParameterResponse[], string>('GET_PARAMETERS');
 
 // Languages
-export const getLanguage = actionCreator.async<{ id: string }, { id: string, res: any, name: string, conditions: string }, string>('GET_LANGUAGE');
+export const getLanguage = actionCreator.async<{ id: string, vde?: boolean }, { id: string, res: any, name: string, conditions: string }, string>('GET_LANGUAGE');
 export const getLanguages = actionCreator.async<{ vde?: boolean, offset?: number, limit?: number }, { id: string, res: any, name: string, conditions: string }[], string>('GET_LANGUAGES');
 
 // Import/export

@@ -39,7 +39,7 @@ interface IContractEditorProps {
     onSourceEdit: (code: string) => void;
     onWalletEdit: React.FormEventHandler<React.Component<FormControlProps>>;
     onConditionsEdit: React.ChangeEventHandler<React.Component<FormControlProps>>;
-    onExec?: (block: string, error: string) => void;
+    onExec?: (block: string, error?: { type: string, error: string }) => void;
     mapContractParams: (values: { [key: string]: any }) => { values: { [key: string]: any } };
 }
 

@@ -73,7 +73,7 @@ export default class Editor extends React.Component<IEditorProps> {
                             web: '/'
                         }),
                         paths: {
-                            'vs': './vs/'
+                            'vs': './vs'
                         }
                     }}
                 />

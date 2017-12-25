@@ -33,7 +33,7 @@ export const getTableEpic: Epic<Action, IRootState> =
             const state = store.getState();
             return Observable.fromPromise(api.table(state.auth.sessionToken, action.payload.table, action.payload.vde))
                 .flatMap(tableStruct => {
-                    const columns: string[] = ['id'];
+                    const columns: string[] = action.payload.vde ? ['id'] : ['id', 'rb_id'];
                     tableStruct.columns.forEach(column => {
                         if (-1 !== action.payload.columnTypes.indexOf(column.type)) {
                             columns.push(column.name);
@@ -113,6 +113,25 @@ export const getTablesEpic: Epic<Action, IRootState> =
                 )
                 .catch((e: IAPIError) =>
                     Observable.of(actions.getTables.failed({
+                        params: action.payload,
+                        error: e.error
+                    }))
+                );
+        });
+
+export const getHistoryEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.getHistory.started)
+        .flatMap(action => {
+            const state = store.getState();
+            return Observable.fromPromise(api.history(state.auth.sessionToken, action.payload.table, action.payload.id))
+                .map(payload =>
+                    actions.getHistory.done({
+                        params: action.payload,
+                        result: payload
+                    })
+                )
+                .catch((e: IAPIError) =>
+                    Observable.of(actions.getHistory.failed({
                         params: action.payload,
                         error: e.error
                     }))
@@ -254,11 +273,13 @@ export const getLanguageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getLanguage.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.row(state.auth.sessionToken, 'languages', action.payload.id))
-                .map(payload => actions.getLanguage.done({
-                    params: action.payload,
-                    result: payload.value as any
-                }))
+            return Observable.fromPromise(api.row(state.auth.sessionToken, 'languages', action.payload.id, undefined, action.payload.vde))
+                .map(payload => {
+                    return actions.getLanguage.done({
+                        params: action.payload,
+                        result: payload.value as any
+                    });
+                })
                 .catch((e: IAPIError) =>
                     Observable.of(actions.getLanguage.failed({
                         params: action.payload,
@@ -608,6 +629,7 @@ export default combineEpics(
     getContractsEpic,
     getTableEpic,
     getTablesEpic,
+    getHistoryEpic,
     getTableStructEpic,
     getInterfaceEpic,
     getPageEpic,

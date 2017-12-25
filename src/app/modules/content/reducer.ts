@@ -98,15 +98,23 @@ export default (state: State = initialState, action: Action): State => {
         };
     }
     else if (isType(action, actions.renderPage.done)) {
-        const menuNeedsPush = !state.menus.length || state.menus[state.menus.length - 1].name !== action.payload.result.menu.name;
-        return {
-            ...state,
-            pending: false,
-            menus: menuNeedsPush ?
-                [...state.menus, action.payload.result.menu] :
-                [...state.menus],
-            page: action.payload.result.page
-        };
+        const menuIndex = state.menus.findIndex(l => l.name === action.payload.result.menu.name && Boolean(l.vde) === Boolean(action.payload.result.menu.vde));
+        if (-1 === menuIndex) {
+            return {
+                ...state,
+                pending: false,
+                menus: [...state.menus, action.payload.result.menu],
+                page: action.payload.result.page
+            };
+        }
+        else {
+            return {
+                ...state,
+                pending: false,
+                menus: state.menus.slice(0, menuIndex + 1),
+                page: action.payload.result.page
+            };
+        }
     }
     else if (isType(action, actions.renderPage.failed)) {
         return {
@@ -133,15 +141,18 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.menuPush)) {
-        const menuNeedsPush = !state.menus.length || state.menus[state.menus.length - 1].name !== action.payload.name;
-        if (menuNeedsPush) {
+        const menuIndex = state.menus.findIndex(l => l.name === action.payload.name && Boolean(l.vde) === Boolean(action.payload.vde));
+        if (-1 === menuIndex) {
             return {
                 ...state,
                 menus: [...state.menus, action.payload]
             };
         }
         else {
-            return state;
+            return {
+                ...state,
+                menus: state.menus.slice(0, menuIndex + 1)
+            };
         }
     }
 
@@ -152,7 +163,6 @@ export default (state: State = initialState, action: Action): State => {
         };
     }
     else if (isType(action, actions.ecosystemInit.done)) {
-        // TODO: Move this logic to the Epic
         const menuNeedsPush = !state.menus.length || !state.menus.find(l => l.name === action.payload.result.defaultMenu.name);
         if (menuNeedsPush) {
             return {

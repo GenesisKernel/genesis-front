@@ -23,8 +23,7 @@ import { IStoredKey } from 'lib/storage';
 import { alertShow } from 'modules/content/actions';
 import * as CopyToClipboard from 'react-copy-to-clipboard';
 
-import DocumentTitle from 'components/DocumentTitle';
-import Heading from 'components/Heading';
+import Wrapper from 'components/Wrapper';
 import Validation from 'components/Validation';
 
 export interface IBackupProps extends InjectedIntlProps {
@@ -35,22 +34,26 @@ export interface IBackupProps extends InjectedIntlProps {
 
 interface IBackupState {
     privateKey: string;
+    publicKey: string;
 }
 
 class Backup extends React.Component<IBackupProps, IBackupState> {
     constructor(props: any) {
         super(props);
         this.state = {
-            privateKey: this.props.privateKey
+            privateKey: props.privateKey,
+            publicKey: props.privateKey ? keyring.generatePublicKey(props.privateKey) : null
         };
     }
 
     onSubmit(values: { [key: string]: string }) {
         const privateKey = keyring.decryptAES(this.props.account.encKey, values.password);
+        const publicKey = keyring.generatePublicKey(privateKey);
 
         if (privateKey) {
             this.setState({
-                privateKey
+                privateKey,
+                publicKey
             });
         }
         else {
@@ -151,6 +154,12 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
                                 <td>{this.formatKey(this.state.privateKey)}</td>
                             </tr>
                             <tr>
+                                <td style={{ minWidth: 100 }}>
+                                    <FormattedMessage id="general.key.public" defaultMessage="Public key" />
+                                </td>
+                                <td>{this.formatKey(this.state.publicKey)}</td>
+                            </tr>
+                            <tr>
                                 <td>
                                     <FormattedMessage id="general.address" defaultMessage="Address" />
                                 </td>
@@ -165,20 +174,27 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
 
     render() {
         return (
-            <DocumentTitle title="general.account.backup" defaultTitle="Backup account">
-                <div>
-                    <Heading>
-                        <FormattedMessage id="general.backup" defaultMessage="Backup" />
-                    </Heading>
-                    <div className="content-wrapper">
-                        {this.props.account && (
-                            <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit.bind(this)}>
-                                {this.state.privateKey ? this.renderSecond() : this.renderFirst()}
-                            </Validation.components.ValidatedForm>
-                        )}
-                    </div>
-                </div>
-            </DocumentTitle>
+            <Wrapper
+                type="default"
+                title={{
+                    title: 'general.account.backup',
+                    defaultTitle: 'Backup account'
+                }}
+                heading={{
+                    content: (
+                        <FormattedMessage id="general.account.backup" defaultMessage="Backup account" />
+                    )
+                }}
+                description={
+                    <FormattedMessage id="general.account.backup" defaultMessage="This section is used to backup your account data. You will not be able to restore access to your account if you forget your password or lose the private key" />
+                }
+            >
+                {this.props.account && (
+                    <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit.bind(this)}>
+                        {this.state.privateKey ? this.renderSecond() : this.renderFirst()}
+                    </Validation.components.ValidatedForm>
+                )}
+            </Wrapper>
         );
     }
 }

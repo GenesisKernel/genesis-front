@@ -19,7 +19,7 @@ import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import * as actions from './actions';
 
 export type State = {
-    readonly transactions: OrderedMap<string, { uuid: string, contract: string, block: string, error: string }>;
+    readonly transactions: OrderedMap<string, { uuid: string, contract: string, block: string, error?: { type: string, error: string } }>;
 };
 
 export const initialState: State = {

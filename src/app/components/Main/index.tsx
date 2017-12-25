@@ -16,10 +16,10 @@
 
 import * as React from 'react';
 import ReduxToastr from 'react-redux-toastr';
+import LoadingBar from 'react-redux-loading-bar';
 import { OrderedMap } from 'immutable';
 import styled from 'styled-components';
 import platform from 'lib/platform';
-
 import Titlebar from './Titlebar';
 import UserMenu from 'containers/Widgets/UserMenu';
 import Navigation from 'containers/Main/Navigation';
@@ -42,7 +42,7 @@ export interface IMainProps {
     stylesheet: string;
     navigationWidth: number;
     navigationVisible: boolean;
-    pendingTransactions: OrderedMap<string, { uuid: string, block: string, error: string, contract: string }>;
+    pendingTransactions: OrderedMap<string, { uuid: string, block: string, error?: { type: string, error: string }, contract: string }>;
     transactionsCount: number;
 }
 
@@ -120,6 +120,13 @@ const StyledMenu = styled.ul`
 const StyledContent = styled.section`
     margin-top: ${styles.headerHeight + styles.menuHeight + styles.toolbarHeight}px !important;
     transition: none !important;
+`;
+
+const StyledLoadingBar = styled(LoadingBar) `
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
 `;
 
 const MenuItem: React.SFC<{ active?: boolean }> = props => (
@@ -228,6 +235,14 @@ class Main extends React.Component<IMainProps> {
                         <ToolButton icon="icon-refresh" />
                         <ToolButton icon="icon-home" />
                     </StyledToolbar>
+                    <StyledLoadingBar
+                        showFastActions
+                        style={{
+                            backgroundColor: '#c6d2da',
+                            width: 'auto',
+                            height: 2
+                        }}
+                    />
                 </StyledControls>
                 <Navigation topOffset={styles.headerHeight + styles.menuHeight + styles.toolbarHeight} />
                 <StyledContent style={{ marginLeft: this.props.navigationVisible ? this.props.navigationWidth : 0 }}>

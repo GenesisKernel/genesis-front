@@ -105,8 +105,9 @@ class ResizeHandle extends React.Component<IResizeHandleProps> {
     }
 
     onClick() {
+        // TODO: Temporarily disabled
         if (!this.props.disabled && this._clickThresholdValue < this._clickThreshold) {
-            this.props.navigationToggle();
+            // this.props.navigationToggle();
         }
     }
 
