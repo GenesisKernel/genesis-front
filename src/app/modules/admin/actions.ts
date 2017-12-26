@@ -42,6 +42,7 @@ export const changePage = actionCreator<{ text?: string, class?: string; align?:
 export const setTagCanDropPosition = actionCreator<{ tagID: string, pageID: string, position: string }>('SET_TAG_CAN_DROP_POSITION');
 export const addTag = actionCreator<{ tag: any, pageID: string, destinationTagID?: string, position?: string }>('ADD_TAG');
 export const moveTag = actionCreator<{ tag: any, pageID: string, destinationTagID?: string, position?: string }>('MOVE_TAG');
+export const saveConstructorHistory = actionCreator<{ pageID: string }>('SAVE_CONSTRUCTOR_HISTORY');
 
 // Menus
 export const getMenu = actionCreator.async<{ id: string, vde?: boolean }, { id: string, name: string, value: string, conditions: string }, string>('GET_MENU');

@@ -29,8 +29,8 @@ import Switch from './Switch';
 // import imgViewTablet from 'images/constructor/group.svg';
 // import imgViewLaptop from 'images/constructor/group-30.svg';
 // import imgViewDesktop from 'images/constructor/group-3.svg';
-// import imgUndo from 'images/constructor/group-7.svg';
-// import imgRedo from 'images/constructor/group-6.svg';
+import imgUndo from 'images/constructor/group-7.svg';
+import imgRedo from 'images/constructor/group-6.svg';
 import imgGroup11 from 'images/constructor/group-11.svg';
 import imgGroup12 from 'images/constructor/group-12.svg';
 import imgGroup13 from 'images/constructor/group-13.svg';
@@ -52,6 +52,8 @@ interface IConstructorProps {
     save?: any;
     grid: boolean;
     toggleGrid: any;
+    undo?: any;
+    redo?: any;
 }
 
 const ConstructorDiv = styled.div`
@@ -204,14 +206,12 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
         <div className="center-panel">
             <div className="b-instrument-panel b-panel-light">
                 <div className="b-instrument-panel__inner pull-left">
-                    {/*
                     <div className="b-icon pull-left">
-                        <img src={imgUndo} />
+                        <img src={imgUndo} onClick={props.undo} />
                     </div>
                     <div className="b-icon pull-left">
-                        <img src={imgRedo} />
+                        <img src={imgRedo} onClick={props.redo} />
                     </div>
-                    */}
                 </div>
                 <div className="b-instrument-panel__inner pull-right">
                     {/*

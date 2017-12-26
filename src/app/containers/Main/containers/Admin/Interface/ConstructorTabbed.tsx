@@ -98,6 +98,14 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
         });
     }
 
+    undo() {
+        alert('undo');
+    }
+
+    redo() {
+        alert('redo');
+    }
+
     save() {
         let pageTree = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID] && this.props.tabData['interfaceConstructor' + this.props.pageID].data || null;
         let codeGenerator = new CodeGenerator(pageTree);
@@ -119,6 +127,8 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
                 selectedTag={this.state.selectedTag}
                 grid={this.state.grid}
                 toggleGrid={this.toggleGrid.bind(this)}
+                undo={this.undo.bind(this)}
+                redo={this.redo.bind(this)}
             />
         );
     }

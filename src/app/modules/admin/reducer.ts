@@ -34,7 +34,7 @@ export type State = {
     readonly interfaces: IInterfacesResponse;
     readonly contract: { id: string, active: string, name: string, conditions: string, address: string, value: string };
     readonly contracts: IContract[];
-    readonly tabs: { data: any, list: { id: string, type: string, name?: string, visible?: boolean }[] };
+    readonly tabs: { data: any, history: any, list: { id: string, type: string, name?: string, visible?: boolean }[] };
     readonly language: { id: string, res: any, name: string, conditions: string };
     readonly languages: { id: string, res: any, name: string, conditions: string }[];
     readonly parameter: IParameterResponse;
@@ -70,7 +70,7 @@ export const initialState: State = {
     interfaces: null,
     contract: null,
     contracts: null,
-    tabs: { data: {}, list: [] },
+    tabs: { data: {}, history: {}, list: [] },
     language: null,
     languages: null,
     parameter: null,
@@ -256,8 +256,37 @@ export default (state: State = initialState, action: Action): State => {
                 tag.attr.class = properties.updateClassList(tag.attr.class || '', 'color', action.payload.color);
             }
 
-            if ('string' === typeof action.payload.canDropPosition) {
-                tag.attr.canDropPosition = action.payload.canDropPosition;
+            // if ('string' === typeof action.payload.canDropPosition) {
+            //    tag.attr.canDropPosition = action.payload.canDropPosition;
+            //}
+        }
+
+        return {
+            ...state,
+            pending: false,
+            tabs: {
+                ...state.tabs,
+                data: {
+                    ...state.tabs.data,
+                    ['interfaceConstructor' + action.payload.pageID]: {
+                        type: 'interfaceConstructor',
+                        data: pageTree
+                    }
+                }
+            }
+        };
+    }
+
+    if (isType(action, actions.setTagCanDropPosition)) {
+        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data.concat() || null;
+
+        let tag = findTagById(pageTree, action.payload.tagID).el;
+        if (tag) {
+            if (!tag.attr) {
+                tag.attr = {};
+            }
+            if ('string' === typeof action.payload.position) {
+                tag.attr.canDropPosition = action.payload.position;
             }
         }
 
@@ -419,6 +448,23 @@ export default (state: State = initialState, action: Action): State => {
                         type: 'interfaceConstructor',
                         data: pageTree
                     }
+                }
+            }
+        };
+    }
+
+    if (isType(action, actions.saveConstructorHistory)) {
+        //alert('save history ' + action.payload.pageID);
+        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data.concat() || null;
+        let history = state.tabs.history['page' + action.payload.pageID] || [];
+        history = history.concat([pageTree]);
+        return {
+            ...state,
+            tabs: {
+                ...state.tabs,
+                history: {
+                    ...state.history,
+                    ['page' + action.payload.pageID]: history
                 }
             }
         };

@@ -475,6 +475,40 @@ export const getPageTreeEpic: Epic<Action, IRootState> =
                 );
         });
 
+export const saveConstructorHistory1Epic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.changePage)
+        .flatMap(action => {
+            // const state = store.getState();
+            return Observable.of(
+                actions.saveConstructorHistory({
+                    pageID: action.payload.pageID
+                })
+            );
+        });
+
+export const saveConstructorHistory2Epic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.addTag)
+        .flatMap(action => {
+            // const state = store.getState();
+            return Observable.of(
+                actions.saveConstructorHistory({
+                    pageID: action.payload.pageID
+                })
+            );
+        });
+
+export const saveConstructorHistory3Epic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.moveTag)
+        .flatMap(action => {
+            // const state = store.getState();
+            return Observable.of(
+                actions.saveConstructorHistory({
+                    pageID: action.payload.pageID
+                })
+            );
+        });
+
+
 export const exportDataEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.exportData.started)
         .flatMap(action => {
@@ -635,6 +669,9 @@ export default combineEpics(
     getPageEpic,
     getPageTreeEpic,
     getPageTreeCodeEpic,
+    saveConstructorHistory1Epic,
+    saveConstructorHistory2Epic,
+    saveConstructorHistory3Epic,
     getMenuEpic,
     getMenusEpic,
     getLanguagesEpic,
