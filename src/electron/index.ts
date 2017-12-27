@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Menu, MenuItemConstructorOptions } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 
@@ -35,6 +35,30 @@ function createWindow() {
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
+
+    if (process.platform === 'darwin') {
+        const template: MenuItemConstructorOptions[] = [{
+            label: 'Apla',
+            submenu: [
+                { label: 'Quit', accelerator: 'Command+Q', click: function () { app.quit(); } }
+            ]
+        }, {
+            label: 'Edit',
+            submenu: [
+                { label: 'Undo', accelerator: 'CmdOrCtrl+Z', role: 'undo' },
+                { label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', role: 'redo' },
+                { type: 'separator' },
+                { label: 'Cut', accelerator: 'CmdOrCtrl+X', role: 'cut' },
+                { label: 'Copy', accelerator: 'CmdOrCtrl+C', role: 'copy' },
+                { label: 'Paste', accelerator: 'CmdOrCtrl+V', role: 'paste' },
+                { label: 'Select All', accelerator: 'CmdOrCtrl+A', role: 'selectall' }
+            ]
+        }];
+
+        const menu = Menu.buildFromTemplate(template);
+        Menu.setApplicationMenu(menu);
+        mainWindow.setMenu(menu);
+    }
 }
 
 app.on('ready', createWindow);
@@ -51,26 +75,3 @@ app.on('activate', () => {
         createWindow();
     }
 });
-
-const menu = require('menu');
-
-var template = [{
-    label: 'Apla',
-    submenu: [
-        { label: 'Quit', accelerator: 'Command+Q', click: function () { app.quit(); } }
-    ]
-}, {
-    label: 'Edit',
-    submenu: [
-        { label: 'Undo', accelerator: 'CmdOrCtrl+Z', selector: 'undo:' },
-        { label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', selector: 'redo:' },
-        { type: 'separator' },
-        { label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
-        { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
-        { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
-        { label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:' }
-    ]
-}
-];
-
-menu.setApplicationMenu(menu.buildFromTemplate(template));
