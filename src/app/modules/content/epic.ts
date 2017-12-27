@@ -63,6 +63,37 @@ export const renderPageEpic: Epic<Action, IRootState> =
                 );
         });
 
+export const reloadPageEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.reloadPage.started)
+        .flatMap(action => {
+            const state = store.getState();
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, state.content.page.name, state.content.page, state.content.page.vde))
+                .map(payload =>
+                    actions.reloadPage.done({
+                        params: action.payload,
+                        result: {
+                            vde: state.content.page.vde,
+                            params: state.content.page.params,
+                            menu: {
+                                name: payload.menu,
+                                vde: state.content.page.vde,
+                                content: payload.menutree
+                            },
+                            page: {
+                                name: state.content.page.name,
+                                content: payload.tree
+                            }
+                        }
+                    })
+                )
+                .catch((e: IAPIError) =>
+                    Observable.of(actions.reloadPage.failed({
+                        params: action.payload,
+                        error: e.error
+                    }))
+                );
+        });
+
 export const ecosystemInitEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.ecosystemInit.started)
         .flatMap(action => {
@@ -206,6 +237,7 @@ export const fetchNotificationsEpic: Epic<Action, IRootState> =
 
 export default combineEpics(
     renderPageEpic,
+    reloadPageEpic,
     ecosystemInitEpic,
     resetEpic,
     alertEpic,

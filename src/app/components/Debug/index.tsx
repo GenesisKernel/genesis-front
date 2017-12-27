@@ -107,7 +107,7 @@ export default class extends React.Component<IDebugProps, IDebugState> {
     }
 
     onPush() {
-        history.push('/page/first', { hello: 1488 });
+        history.push('/page/first', { hello: 1337 });
     }
 
     render() {

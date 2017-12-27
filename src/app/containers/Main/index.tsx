@@ -15,9 +15,11 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import { Route } from 'react-router-dom';
 import { IRootState } from 'modules';
+import { navigate } from 'modules/engine/actions';
+import { reset, reloadPage } from 'modules/content/actions';
 
 import Main, { IMainProps } from 'components/Main';
 import Tables from 'containers/Main/containers/Admin/Tables';
@@ -138,8 +140,14 @@ const mapStateToProps = (state: IRootState) => ({
     pendingTransactions: state.tx.transactions.takeLast(5)
 });
 
-const mapDispatchToProps = {
-
-};
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+    onNavigateHome: () => {
+        dispatch(reset.started(null));
+        dispatch(navigate('/'));
+    },
+    onRefresh: () => {
+        dispatch(reloadPage.started(null));
+    }
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainContainer);

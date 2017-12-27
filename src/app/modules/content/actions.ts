@@ -30,6 +30,7 @@ export const alertClose = actionCreator<{ id: string, success: string, error: st
 export const ecosystemInit = actionCreator.async<undefined, { defaultMenu: { name: string, vde: boolean, content: IProtypoElement[] }, stylesheet: string }, string>('ECOSYSTEM_INIT');
 export const navigatePage = actionCreator.async<{ name: string, params: { [key: string]: any }, vde?: boolean }, undefined, undefined>('NAVIGATE_PAGE');
 export const renderPage = actionCreator.async<{ name: string, params?: { [key: string]: any }, vde?: boolean }, { menu: { name: string, vde: boolean, content: IProtypoElement[] }, page: { name: string, content: IProtypoElement[], error?: string } }, string>('RENDER_PAGE');
+export const reloadPage = actionCreator.async<{}, { vde: boolean, params: { [key: string]: any }, menu: { name: string, vde: boolean, content: IProtypoElement[] }, page: { name: string, content: IProtypoElement[], error?: string } }, string>('RELOAD_PAGE');
 export const reset = actionCreator.async<undefined, { menu: { name: string, vde: boolean, content: IProtypoElement[] }, page: { name: string, content: IProtypoElement[], error?: string } }, string>('RESET');
 
 // Image editor modal window

@@ -20,6 +20,7 @@ import LoadingBar from 'react-redux-loading-bar';
 import { OrderedMap } from 'immutable';
 import styled from 'styled-components';
 import platform from 'lib/platform';
+import { history } from 'store';
 
 import Titlebar from './Titlebar';
 import UserMenu from 'containers/Widgets/UserMenu';
@@ -47,6 +48,8 @@ export interface IMainProps {
     navigationVisible: boolean;
     pendingTransactions: OrderedMap<string, { uuid: string, block: string, error?: { type: string, error: string }, contract: string }>;
     transactionsCount: number;
+    onRefresh: () => void;
+    onNavigateHome: () => void;
 }
 
 const StyledControls = styled.div`
@@ -186,9 +189,9 @@ const StyledToolbar = styled.ul`
     }
 `;
 
-const ToolButton: React.SFC<{ icon: string }> = props => (
+const ToolButton: React.SFC<{ icon: string, onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void }> = props => (
     <li>
-        <button>
+        <button onClick={props.onClick}>
             <em className={`icon ${props.icon}`} />
             {props.children && (<span>{props.children}</span>)}
         </button>
@@ -213,6 +216,14 @@ class Main extends React.Component<IMainProps> {
         });
     }
 
+    onBack() {
+        history.goBack();
+    }
+
+    onForward() {
+        history.goForward();
+    }
+
     render() {
         return (
             <StyledWrapper className="wrapper component-main">
@@ -235,10 +246,10 @@ class Main extends React.Component<IMainProps> {
                         </li>
                     </StyledMenu>
                     <StyledToolbar>
-                        <ToolButton icon="icon-arrow-left" />
-                        <ToolButton icon="icon-arrow-right" />
-                        <ToolButton icon="icon-refresh" />
-                        <ToolButton icon="icon-home" />
+                        <ToolButton icon="icon-arrow-left" onClick={this.onBack} />
+                        <ToolButton icon="icon-arrow-right" onClick={this.onForward} />
+                        <ToolButton icon="icon-refresh" onClick={this.props.onRefresh} />
+                        <ToolButton icon="icon-home" onClick={this.props.onNavigateHome} />
                     </StyledToolbar>
                     <StyledLoadingBar
                         showFastActions
