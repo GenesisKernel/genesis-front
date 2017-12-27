@@ -17,12 +17,31 @@
 import * as React from 'react';
 
 import Validation from 'components/Validation';
+import * as classnames from 'classnames';
+import DnDComponent from './DnDComponent';
 
 export interface IInputProps {
     'format'?: string;
     'name'?: string;
     'width'?: string;
     'ratio'?: string;
+
+    'editable'?: boolean;
+    'changePage'?: any;
+    'setTagCanDropPosition'?: any;
+    'addTag'?: any;
+    'moveTag'?: any;
+    'selectTag'?: any;
+    'selected'?: boolean;
+    'tag'?: any;
+
+    'canDropPosition'?: string;
+
+    connectDropTarget?: any;
+    isOver?: boolean;
+
+    connectDragSource?: any;
+    isDragging?: boolean;
 }
 
 const ImageInput: React.SFC<IInputProps> = (props) => {
@@ -48,6 +67,42 @@ const ImageInput: React.SFC<IInputProps> = (props) => {
         width = null;
     }
 
+    const onClick = (e: any) => {
+        e.stopPropagation();
+        e.preventDefault();
+        props.selectTag({ tag: props.tag });
+    };
+
+    if (props.editable) {
+
+        const { connectDropTarget, isOver } = props;
+        const { connectDragSource, isDragging } = props;
+
+        const classes = classnames({
+            'input-group': true,
+            'editable': props.selected,
+            'can-drop': isOver,
+            ['can-drop_' + props.canDropPosition]: true,
+            'is-dragging': isDragging
+        });
+
+        return connectDragSource(connectDropTarget(
+            <div
+                className={classes}
+                onClick={onClick}
+            >
+
+                <input type="text" className="form-control" readOnly={true}/>
+                <div className="group-span-filestyle input-group-btn">
+                    <button className="btn btn-default" type="button">
+                        <span className="icon-span-filestyle glyphicon glyphicon-folder-open" />
+                        <span className="buttonText" />
+                    </button>
+                </div>
+            </div>
+        ));
+    }
+
     return (
         <Validation.components.ValidatedImage
             format={props.format as any}
@@ -58,4 +113,4 @@ const ImageInput: React.SFC<IInputProps> = (props) => {
     );
 };
 
-export default ImageInput;
+export default DnDComponent(ImageInput);

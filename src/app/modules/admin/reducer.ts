@@ -209,12 +209,24 @@ export default (state: State = initialState, action: Action): State => {
         if (tag) {
             if (action.payload.text) {
                 // todo: parse contentEditable tags and create children array
+
+                const regex = /(<[^\/>]+>[^<]*<\/[^>]+>)/ig; // remove tags
+                let plainText = action.payload.text.replace(regex, '');
+                const regex2 = /(<[^>]+>)/ig;    // remove empty tags
+                plainText = plainText.replace(regex2, '');
+
                 if (tag.children && tag.children.length) {
-                    let child = tag.children[0];
-                    if (child.text) {
-                        child.text = action.payload.text + '';
+                    for (let i = 0; i < tag.children.length; i++) {
+                        if (tag.children[i].tag === 'text') {
+                            tag.children[i].text = plainText;
+                            break;
+                        }
                     }
-                    tag.children = [child];
+                    // let child = tag.children[0];
+                    // if (child.text) {
+                    //     child.text = action.payload.text + '';
+                    // }
+                    // tag.children = [child];
                 }
             }
 
