@@ -475,43 +475,10 @@ export const getPageTreeEpic: Epic<Action, IRootState> =
                 );
         });
 
-export const getPageTreeSaveHistoryEpic: Epic<Action, IRootState> = (action$, store) => action$.ofAction(actions.getPageTree.done)
+export const getPageTreeDoneEpic: Epic<Action, IRootState> = (action$, store) => action$.ofAction(actions.getPageTree.done)
      .flatMap(action => {
          return Observable.of(actions.saveConstructorHistory({pageID: action.payload.params.id}));
      });
-
-export const saveConstructorHistory1Epic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(actions.changePage)
-        .flatMap(action => {
-            // const state = store.getState();
-            return Observable.of(
-                actions.saveConstructorHistory({
-                    pageID: action.payload.pageID
-                })
-            );
-        });
-
-export const saveConstructorHistory2Epic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(actions.addTag)
-        .flatMap(action => {
-            // const state = store.getState();
-            return Observable.of(
-                actions.saveConstructorHistory({
-                    pageID: action.payload.pageID
-                })
-            );
-        });
-
-export const saveConstructorHistory3Epic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(actions.moveTag)
-        .flatMap(action => {
-            // const state = store.getState();
-            return Observable.of(
-                actions.saveConstructorHistory({
-                    pageID: action.payload.pageID
-                })
-            );
-        });
 
 export const exportDataEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.exportData.started)
@@ -673,10 +640,7 @@ export default combineEpics(
     getPageEpic,
     getPageTreeEpic,
     getPageTreeCodeEpic,
-    getPageTreeSaveHistoryEpic,
-    saveConstructorHistory1Epic,
-    saveConstructorHistory2Epic,
-    saveConstructorHistory3Epic,
+    getPageTreeDoneEpic,
     getMenuEpic,
     getMenusEpic,
     getLanguagesEpic,

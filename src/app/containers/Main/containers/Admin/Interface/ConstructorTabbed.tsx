@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { getPageTree, changePage, setTagCanDropPosition, addTag, moveTag, selectTag, constructorUndo, constructorRedo } from 'modules/admin/actions';
+import { getPageTree, changePage, setTagCanDropPosition, addTag, moveTag, selectTag, constructorUndo, constructorRedo, saveConstructorHistory } from 'modules/admin/actions';
 import Constructor from 'components/Main/Admin/Interface/Constructor';
 import { CodeGenerator } from 'lib/constructor';
 
@@ -44,6 +44,7 @@ interface IConstructorTabbedContainerDispatch {
     selectTag: typeof selectTag;
     constructorUndo: typeof constructorUndo,
     constructorRedo: typeof constructorRedo,
+    saveConstructorHistory: typeof saveConstructorHistory
 }
 
 interface IConstructorTabbedState {
@@ -69,17 +70,19 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     changePage(payload?: any) {
         payload.pageID = this.props.pageID;
         this.props.changePage(payload);
-
+        this.props.saveConstructorHistory({pageID: this.props.pageID});
     }
 
     addTag(payload?: any) {
         payload.pageID = this.props.pageID;
         this.props.addTag(payload);
+        this.props.saveConstructorHistory({pageID: this.props.pageID});
     }
 
     moveTag(payload?: any) {
         payload.pageID = this.props.pageID;
         this.props.moveTag(payload);
+        this.props.saveConstructorHistory({pageID: this.props.pageID});
     }
 
     setTagCanDropPosition(payload?: any) {
@@ -151,7 +154,8 @@ const mapDispatchToProps = {
     moveTag,
     selectTag,
     constructorUndo,
-    constructorRedo
+    constructorRedo,
+    saveConstructorHistory
 };
 
 export default connect<IConstructorTabbedContainerState, IConstructorTabbedContainerDispatch, IConstructorTabbedContainerProps>(mapStateToProps, mapDispatchToProps)(ConstructorTabbedContainer);
