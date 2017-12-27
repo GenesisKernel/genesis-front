@@ -105,7 +105,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
     }
 
     componentWillReceiveProps(props: ILoginProps) {
-        if (this._pendingRemoval && props.alert && 'C_REMOVE_ACCOUNT' === props.alert.id) {
+        if (this._pendingRemoval && props.alert && 'C_REMOVE_ACCOUNT' === props.alert.id && props.alert.success) {
             const account = this._pendingRemoval.account;
             delete account.ecosystems[this._pendingRemoval.ecosystem];
             storage.accounts.save(account);
