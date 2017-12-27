@@ -1,7 +1,6 @@
 import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-// import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 
 // tslint:disable:no-var-requires
 // tslint:disable:no-require-imports
@@ -36,10 +35,6 @@ function createWindow() {
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
-
-    //   installExtension(REACT_DEVELOPER_TOOLS)
-    //     .then((name) => console.log(`Added Extension:  ${name}`))
-    //     .catch((err) => console.log('An error occurred: ', err));
 }
 
 app.on('ready', createWindow);
@@ -56,3 +51,26 @@ app.on('activate', () => {
         createWindow();
     }
 });
+
+const menu = require('menu');
+
+var template = [{
+    label: 'Apla',
+    submenu: [
+        { label: 'Quit', accelerator: 'Command+Q', click: function () { app.quit(); } }
+    ]
+}, {
+    label: 'Edit',
+    submenu: [
+        { label: 'Undo', accelerator: 'CmdOrCtrl+Z', selector: 'undo:' },
+        { label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', selector: 'redo:' },
+        { type: 'separator' },
+        { label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
+        { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
+        { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
+        { label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:' }
+    ]
+}
+];
+
+menu.setApplicationMenu(menu.buildFromTemplate(template));
