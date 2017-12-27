@@ -42,6 +42,7 @@ export interface IAccountButtonProps {
     ecosystemID: string;
     ecosystemName: string;
     onSelect: () => void;
+    onRemove: () => void;
 }
 
 const AccountButton: React.SFC<IAccountButtonProps> = props => (
@@ -66,7 +67,7 @@ const AccountButton: React.SFC<IAccountButtonProps> = props => (
                 </Button>
             </Col>
             <Col xs={2} className="p0 pl">
-                <Button block bsStyle="default">
+                <Button block bsStyle="default" onClick={props.onRemove}>
                     <em className="icon icon-trash text-muted" />
                 </Button>
             </Col>

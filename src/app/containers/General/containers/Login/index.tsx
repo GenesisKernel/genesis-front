@@ -21,10 +21,29 @@ import { login } from 'modules/auth/actions';
 import { alertShow } from 'modules/content/actions';
 
 import Login, { ILoginProps } from 'components/General/Login';
+import { IRootState } from 'modules';
 
-const LoginContainer: React.SFC<ILoginProps> = (props) => (
+export interface ILoginContainerProps {
+
+}
+
+interface ILoginContainerState {
+    alert: { id: string, success: string, error: string };
+}
+
+interface ILoginContainerDispatch {
+    navigate: typeof navigate;
+    login: typeof login.started;
+    alertShow: typeof alertShow;
+}
+
+const LoginContainer: React.SFC<ILoginProps & ILoginContainerState & ILoginContainerDispatch> = (props) => (
     <Login {...props} intl={null} />
 );
+
+const mapStateToProps = (state: IRootState) => ({
+    alert: state.content.alert
+});
 
 const mapDispatchToProps = {
     navigate,
@@ -32,4 +51,4 @@ const mapDispatchToProps = {
     alertShow
 };
 
-export default connect(null, mapDispatchToProps)(LoginContainer);
+export default connect<ILoginContainerState, ILoginContainerDispatch, ILoginContainerProps>(mapStateToProps, mapDispatchToProps)(LoginContainer);

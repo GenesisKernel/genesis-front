@@ -71,6 +71,7 @@ const StyledLogin = styled.div`
 `;
 
 export interface ILoginProps extends InjectedIntlProps {
+    alert: { id: string, success: string, error: string };
     navigate: typeof navigate;
     login: typeof login.started;
     alertShow: typeof alertShow;
@@ -84,6 +85,8 @@ interface ILoginState {
 }
 
 class Login extends React.Component<ILoginProps, ILoginState> {
+    private _pendingRemoval: { account: IStoredKey; ecosystem: string; };
+
     constructor(props: ILoginProps) {
         super(props);
         this.state = {
@@ -99,6 +102,18 @@ class Login extends React.Component<ILoginProps, ILoginState> {
             accounts: storage.accounts.loadAll(),
             account: null
         });
+    }
+
+    componentWillReceiveProps(props: ILoginProps) {
+        if (this._pendingRemoval && props.alert && 'C_REMOVE_ACCOUNT' === props.alert.id) {
+            const account = this._pendingRemoval.account;
+            delete account.ecosystems[this._pendingRemoval.ecosystem];
+            storage.accounts.save(account);
+            this.setState({
+                accounts: storage.accounts.loadAll(),
+                account: null
+            });
+        }
     }
 
     onCreateAccount() {
@@ -142,6 +157,22 @@ class Login extends React.Component<ILoginProps, ILoginState> {
         this.setState({
             account,
             ecosystem
+        });
+    }
+
+    onRemoveAccount(account: IStoredKey, ecosystem: string) {
+        this._pendingRemoval = {
+            account,
+            ecosystem
+        };
+
+        this.props.alertShow({
+            id: 'C_REMOVE_ACCOUNT',
+            title: 'Confirmation',
+            type: 'warning',
+            text: 'Do you really want to delete this account? THIS ACTION IS IRREVERSIBLE',
+            confirmButton: this.props.intl.formatMessage({ id: 'alert.confirm', defaultMessage: 'Confirm' }),
+            cancelButton: this.props.intl.formatMessage({ id: 'alert.cancel', defaultMessage: 'Cancel' }),
         });
     }
 
@@ -189,6 +220,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                                         <AccountButton
                                             active={this.state.account && this.state.account.id === l.id && this.state.ecosystem === l.ecosystem.id}
                                             onSelect={this.onSelectAccount.bind(this, l.ref, l.ecosystem.id)}
+                                            onRemove={this.onRemoveAccount.bind(this, l.ref, l.ecosystem.id)}
                                             key={l.id + l.ecosystem.id}
                                             avatar={l.avatar}
                                             keyID={l.id}
