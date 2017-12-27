@@ -20,9 +20,12 @@ import LoadingBar from 'react-redux-loading-bar';
 import { OrderedMap } from 'immutable';
 import styled from 'styled-components';
 import platform from 'lib/platform';
+
 import Titlebar from './Titlebar';
 import UserMenu from 'containers/Widgets/UserMenu';
 import Navigation from 'containers/Main/Navigation';
+// import NotificationsMenu from './NotificationsMenu';
+// import TransactionsMenu from './TransactionsMenu';
 
 export const styles = {
     headerHeight: platform.select({ desktop: 28, web: 0 }),
@@ -226,6 +229,8 @@ class Main extends React.Component<IMainProps> {
                         </MenuItem>
                         <MenuItem active>Home</MenuItem>
                         <li className="user-menu">
+                            {/*<NotificationsMenu />
+                            <TransactionsMenu />*/}
                             <UserMenu />
                         </li>
                     </StyledMenu>
