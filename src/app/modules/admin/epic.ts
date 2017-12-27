@@ -475,6 +475,11 @@ export const getPageTreeEpic: Epic<Action, IRootState> =
                 );
         });
 
+export const getPageTreeSaveHistoryEpic: Epic<Action, IRootState> = (action$, store) => action$.ofAction(actions.getPageTree.done)
+     .flatMap(action => {
+         return Observable.of(actions.saveConstructorHistory({pageID: action.payload.params.id}));
+     });
+
 export const saveConstructorHistory1Epic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.changePage)
         .flatMap(action => {
@@ -507,7 +512,6 @@ export const saveConstructorHistory3Epic: Epic<Action, IRootState> =
                 })
             );
         });
-
 
 export const exportDataEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.exportData.started)
@@ -669,6 +673,7 @@ export default combineEpics(
     getPageEpic,
     getPageTreeEpic,
     getPageTreeCodeEpic,
+    getPageTreeSaveHistoryEpic,
     saveConstructorHistory1Epic,
     saveConstructorHistory2Epic,
     saveConstructorHistory3Epic,

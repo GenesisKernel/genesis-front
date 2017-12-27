@@ -84,13 +84,14 @@ const BulletColor = styled.div`
     }
 `;
 
-export default class RadioButton extends React.Component<IRadioButtonColorProps, IRadioButtonColorState> {
+export default class RadioButtonColor extends React.Component<IRadioButtonColorProps, IRadioButtonColorState> {
 
     constructor(props: IRadioButtonColorProps) {
         super(props);
     }
 
     render() {
+        // alert(this.props.value + ' selected: ' + this.props.selectedValue);
         const classes = classnames({
             [this.props.value]: true,
             'selected': this.props.value === this.props.selectedValue

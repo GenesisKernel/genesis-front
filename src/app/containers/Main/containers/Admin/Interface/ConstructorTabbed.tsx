@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { getPageTree, changePage, setTagCanDropPosition, addTag, moveTag } from 'modules/admin/actions';
+import { getPageTree, changePage, setTagCanDropPosition, addTag, moveTag, selectTag, constructorUndo, constructorRedo } from 'modules/admin/actions';
 import Constructor from 'components/Main/Admin/Interface/Constructor';
 import { CodeGenerator } from 'lib/constructor';
 
@@ -41,10 +41,12 @@ interface IConstructorTabbedContainerDispatch {
     setTagCanDropPosition: typeof setTagCanDropPosition;
     addTag: typeof addTag;
     moveTag: typeof moveTag;
+    selectTag: typeof selectTag;
+    constructorUndo: typeof constructorUndo,
+    constructorRedo: typeof constructorRedo,
 }
 
 interface IConstructorTabbedState {
-    selectedTag: any;
     grid: boolean;
 }
 
@@ -52,7 +54,6 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     constructor(props: IConstructorTabbedContainerProps & IConstructorTabbedContainerState & IConstructorTabbedContainerDispatch) {
         super(props);
         this.state = {
-            selectedTag: null,
             grid: true
         };
     }
@@ -68,6 +69,7 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     changePage(payload?: any) {
         payload.pageID = this.props.pageID;
         this.props.changePage(payload);
+
     }
 
     addTag(payload?: any) {
@@ -86,8 +88,9 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     }
 
     selectTag(payload?: any) {
-        this.setState({
-            selectedTag: payload.tag
+        this.props.selectTag({
+            pageID: this.props.pageID,
+            tag: payload.tag
         });
     }
 
@@ -99,11 +102,11 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     }
 
     undo() {
-        alert('undo');
+        this.props.constructorUndo({pageID: this.props.pageID});
     }
 
     redo() {
-        alert('redo');
+        this.props.constructorRedo({pageID: this.props.pageID});
     }
 
     save() {
@@ -114,6 +117,7 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
 
     render() {
         let pageTree = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID] && this.props.tabData['interfaceConstructor' + this.props.pageID].data || null;
+        let selectedTag = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID] && this.props.tabData['interfaceConstructor' + this.props.pageID].selectedTag || null;
 
         return (
             <Constructor
@@ -124,7 +128,7 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
                 addTag={this.addTag.bind(this)}
                 moveTag={this.moveTag.bind(this)}
                 save={this.save.bind(this)}
-                selectedTag={this.state.selectedTag}
+                selectedTag={selectedTag}
                 grid={this.state.grid}
                 toggleGrid={this.toggleGrid.bind(this)}
                 undo={this.undo.bind(this)}
@@ -144,7 +148,10 @@ const mapDispatchToProps = {
     changePage,
     setTagCanDropPosition,
     addTag,
-    moveTag
+    moveTag,
+    selectTag,
+    constructorUndo,
+    constructorRedo
 };
 
 export default connect<IConstructorTabbedContainerState, IConstructorTabbedContainerDispatch, IConstructorTabbedContainerProps>(mapStateToProps, mapDispatchToProps)(ConstructorTabbedContainer);
