@@ -82,22 +82,31 @@ const History: React.SFC<IHistoryProps> = (props) => (
             }
         ]}
     >
-        <Table
-            striped
-            renderCell={renderValue}
-            columns={props.columns.map(column => ({
-                title: column.name,
-                sortable: false
-            }))}
-            data={
-                props.data.map(row =>
-                    props.columns.map(column => ({
-                        type: column.type,
-                        value: row[column.name]
-                    }))
-                )
-            }
-        />
+        {props.data && props.data.length ?
+            (
+                <Table
+                    striped
+                    renderCell={renderValue}
+                    columns={props.columns.map(column => ({
+                        title: column.name,
+                        sortable: false
+                    }))}
+                    data={
+                        props.data.map(row =>
+                            props.columns.map(column => ({
+                                type: column.type,
+                                value: row[column.name]
+                            }))
+                        )
+                    }
+                />
+            ) :
+            (
+                <div className="content-wrapper">
+                    <FormattedMessage id="admin.tables.history.empty" defaultMessage="This row has no history" />
+                </div>
+            )
+        }
     </Wrapper >
 );
 
