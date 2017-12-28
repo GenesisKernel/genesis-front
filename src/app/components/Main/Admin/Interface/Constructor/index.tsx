@@ -29,8 +29,8 @@ import Switch from './Switch';
 // import imgViewTablet from 'images/constructor/group.svg';
 // import imgViewLaptop from 'images/constructor/group-30.svg';
 // import imgViewDesktop from 'images/constructor/group-3.svg';
-import imgUndo from 'images/constructor/group-7.svg';
-import imgRedo from 'images/constructor/group-6.svg';
+// import imgUndo from 'images/constructor/group-7.svg';
+// import imgRedo from 'images/constructor/group-6.svg';
 import imgGroup11 from 'images/constructor/group-11.svg';
 import imgGroup12 from 'images/constructor/group-12.svg';
 import imgGroup13 from 'images/constructor/group-13.svg';
@@ -54,6 +54,8 @@ interface IConstructorProps {
     toggleGrid: any;
     undo?: any;
     redo?: any;
+    canUndo: boolean;
+    canRedo: boolean;
 }
 
 const ConstructorDiv = styled.div`
@@ -206,12 +208,12 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
         <div className="center-panel">
             <div className="b-instrument-panel b-panel-light">
                 <div className="b-instrument-panel__inner pull-left">
-                    <div className="b-icon pull-left">
-                        <img src={imgUndo} onClick={props.undo} />
-                    </div>
-                    <div className="b-icon pull-left">
-                        <img src={imgRedo} onClick={props.redo} />
-                    </div>
+                    <button className={props.canUndo ? 'btn-container btn-container_active' : 'btn-container btn-container_disabled'} onClick={props.undo}>
+                        <i className="apla-icon-undo apla-icon_big"/>
+                    </button>
+                    <button className={props.canRedo ? 'btn-container btn-container_active' : 'btn-container btn-container_disabled'} onClick={props.redo}>
+                        <i className="apla-icon-redo apla-icon_big"/>
+                    </button>
                 </div>
                 <div className="b-instrument-panel__inner pull-right">
                     {/*

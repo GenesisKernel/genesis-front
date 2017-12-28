@@ -57,3 +57,10 @@
     font-weight: 600;
     src: local('Source Sans Pro SemiBold Italic'), local('SourceSansPro-SemiBold-Italic'), url(./SourceSansPro-SemiboldIt.otf) format('opentype');
 }
+
+@font-face {
+    font-family: 'Apla Icons';
+    font-style: normal;
+    font-weight: normal;
+    src: url(./apla-icons.otf) format('opentype');
+}

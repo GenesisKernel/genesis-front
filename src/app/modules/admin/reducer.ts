@@ -20,6 +20,7 @@ import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse, IHistoryResponse } from 'lib/api';
 import { findTagById, resolveTagHandler, Properties, generateId } from 'lib/constructor';
+import { IProtypoElement } from 'components/Protypo/Protypo';
 
 export type State = {
     readonly pending: boolean;
@@ -35,7 +36,23 @@ export type State = {
     readonly interfaces: IInterfacesResponse;
     readonly contract: { id: string, active: string, name: string, conditions: string, address: string, value: string };
     readonly contracts: IContract[];
-    readonly tabs: { data: any, history: any, list: { id: string, type: string, name?: string, visible?: boolean }[] };
+    readonly tabs: {
+        data: {
+            [key: string]: {
+                type: string,
+                data: any,
+                selectedTag?: IProtypoElement
+            }
+        },
+        history: {
+            [key: string]: {
+                data: any,
+                position?: number,
+                canUndo?: boolean,
+                canRedo?: boolean
+            }
+        },
+        list: { id: string, type: string, name?: string, visible?: boolean }[] };
     readonly language: { id: string, res: any, name: string, conditions: string };
     readonly languages: { id: string, res: any, name: string, conditions: string }[];
     readonly parameter: IParameterResponse;
@@ -485,7 +502,6 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.saveConstructorHistory)) {
-        //alert('save history ' + action.payload.pageID);
         let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
         pageTree = _.cloneDeep(pageTree);
         let data = state.tabs.history['page' + action.payload.pageID] && state.tabs.history['page' + action.payload.pageID].data || [];
@@ -494,8 +510,11 @@ export default (state: State = initialState, action: Action): State => {
 
         // alert(JSON.stringify(data));
         if (position < data.length) {
-            data = [...data.slice(0, position)]
+            data = [...data.slice(0, position)];
         }
+
+        const canUndo = position > 0;
+        const canRedo = false;
 
         return {
             ...state,
@@ -503,7 +522,7 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 history: {
                     ...state.tabs.history,
-                    ['page' + action.payload.pageID]: { data: data.concat([pageTree]), position: position + 1 }
+                    ['page' + action.payload.pageID]: { data: data.concat([pageTree]), position: position + 1, canUndo, canRedo }
                 }
             }
         };
@@ -516,13 +535,15 @@ export default (state: State = initialState, action: Action): State => {
         let position = state.tabs.history['page' + action.payload.pageID] && state.tabs.history['page' + action.payload.pageID].position || 0;
         if (position > 1 && data.length > 1) {
             position--;
+            const canUndo = position > 1;
+            const canRedo = true;
             return {
                 ...state,
                 tabs: {
                     ...state.tabs,
                     history: {
                         ...state.tabs.history,
-                        ['page' + action.payload.pageID]: { data: data, position: position }
+                        ['page' + action.payload.pageID]: { data: data, position: position, canUndo, canRedo }
                     },
                     data: {
                         ...state.tabs.data,
@@ -542,13 +563,15 @@ export default (state: State = initialState, action: Action): State => {
         let position = state.tabs.history['page' + action.payload.pageID] && state.tabs.history['page' + action.payload.pageID].position || 0;
         if (position < data.length && data.length > 0) {
             position++;
+            const canUndo = position > 1;
+            const canRedo = position < data.length;
             return {
                 ...state,
                 tabs: {
                     ...state.tabs,
                     history: {
                         ...state.tabs.history,
-                        ['page' + action.payload.pageID]: { data: data, position: position }
+                        ['page' + action.payload.pageID]: { data: data, position: position, canUndo, canRedo }
                     },
                     data: {
                         ...state.tabs.data,
