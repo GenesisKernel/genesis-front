@@ -27,13 +27,19 @@ function createWindow() {
         height: 524,
         minWidth: 640,
         minHeight: 524,
-        frame: false
+        frame: false,
+        backgroundColor: '#17437b',
+        show: false
     });
     mainWindow.loadURL(appUrl);
     // mainWindow.webContents.openDevTools();
 
     mainWindow.on('closed', () => {
         mainWindow = null;
+    });
+
+    mainWindow.once('ready-to-show', () => {
+        mainWindow.show();
     });
 
     if (process.platform === 'darwin') {
