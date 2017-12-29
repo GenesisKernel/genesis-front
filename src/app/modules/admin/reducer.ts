@@ -15,6 +15,7 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as actions from './actions';
+import * as _ from 'lodash';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse, IHistoryResponse } from 'lib/api';
@@ -119,7 +120,7 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['interfacePage' + action.payload.result.page.id]: {
+                    ['interfacePage' + action.payload.result.page.id + (action.payload.params.vde ? '-vde' : '')]: {
                         type: 'interfacePage',
                         data: action.payload.result.page
                     }
@@ -167,7 +168,7 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.id]: null
+                    ['interfaceConstructor' + action.payload.id + (action.payload.vde ? '-vde' : '')]: null
                 }
             }
         };
@@ -180,7 +181,7 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.params.id]: {
+                    ['interfaceConstructor' + action.payload.params.id + (action.payload.params.vde ? '-vde' : '')]: {
                         type: 'interfaceConstructor',
                         data: action.payload.result.page.tree
                     }
@@ -196,14 +197,21 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.params.id]: null
+                    ['interfaceConstructor' + action.payload.params.id + (action.payload.params.vde ? '-vde' : '')]: null
                 }
             }
         };
     }
 
     if (isType(action, actions.changePage)) {
-        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data.concat() || null;
+        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')];
+        const pageTreeOrig = tabData && tabData.data || null;
+        let selectedTag = tabData && tabData.selectedTag || null;
+
+        let pageTree = null;
+        if (pageTreeOrig) {
+            pageTree = _.cloneDeep(pageTreeOrig);
+        }
 
         let tag = findTagById(pageTree, action.payload.tagID).el;
         if (tag) {
@@ -255,10 +263,10 @@ export default (state: State = initialState, action: Action): State => {
             if ('string' === typeof action.payload.color) {
                 tag.attr.class = properties.updateClassList(tag.attr.class || '', 'color', action.payload.color);
             }
+        }
 
-            if ('string' === typeof action.payload.canDropPosition) {
-                tag.attr.canDropPosition = action.payload.canDropPosition;
-            }
+        if (selectedTag && tag && selectedTag.id === tag.id) {
+            selectedTag = _.cloneDeep(tag);
         }
 
         return {
@@ -268,9 +276,10 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.pageID]: {
+                    ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                         type: 'interfaceConstructor',
-                        data: pageTree
+                        data: pageTree,
+                        selectedTag: selectedTag
                     }
                 }
             }
@@ -585,7 +594,7 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['contract' + action.payload.result.id + (action.payload.params.vde ? 'vde' : '')]: {
+                    ['contract' + action.payload.result.id + (action.payload.params.vde ? '-vde' : '')]: {
                         type: 'contract',
                         data: action.payload.result
                     }
@@ -639,7 +648,7 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['interfaceBlock' + action.payload.result.id]: {
+                    ['interfaceBlock' + action.payload.result.id + (action.payload.params.vde ? '-vde' : '')]: {
                         type: 'interfaceBlock',
                         data: action.payload.result
                     }
@@ -737,7 +746,7 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['parameter' + action.payload.result.name]: {
+                    ['parameter' + action.payload.result.name + (action.payload.params.vde ? '-vde' : '')]: {
                         type: 'parameter',
                         data: action.payload.result
                     }

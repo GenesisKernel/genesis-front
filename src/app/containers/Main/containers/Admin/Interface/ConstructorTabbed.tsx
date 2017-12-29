@@ -67,21 +67,25 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
 
     changePage(payload?: any) {
         payload.pageID = this.props.pageID;
+        payload.vde = this.props.vde;
         this.props.changePage(payload);
     }
 
     addTag(payload?: any) {
         payload.pageID = this.props.pageID;
+        payload.vde = this.props.vde;
         this.props.addTag(payload);
     }
 
     moveTag(payload?: any) {
         payload.pageID = this.props.pageID;
+        payload.vde = this.props.vde;
         this.props.moveTag(payload);
     }
 
     setTagCanDropPosition(payload?: any) {
         payload.pageID = this.props.pageID;
+        payload.vde = this.props.vde;
         this.props.setTagCanDropPosition(payload);
     }
 
@@ -99,14 +103,21 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     }
 
     save() {
-        let pageTree = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID] && this.props.tabData['interfaceConstructor' + this.props.pageID].data || null;
+        const pageTreeTab = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')] || null;
+        let pageTree = null;
+        if (pageTreeTab) {
+            pageTree = pageTreeTab.data;
+        }
         let codeGenerator = new CodeGenerator(pageTree);
         alert(codeGenerator.render());
     }
 
     render() {
-        let pageTree = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID] && this.props.tabData['interfaceConstructor' + this.props.pageID].data || null;
-
+        const interfaceConstructorTab = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')] || null;
+        let pageTree = null;
+        if (interfaceConstructorTab) {
+            pageTree = interfaceConstructorTab.data;
+        }
         return (
             <Constructor
                 pageTree={pageTree}

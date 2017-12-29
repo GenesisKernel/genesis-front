@@ -45,7 +45,7 @@ class EditContainer extends React.Component<IEditProps> {
     }
 
     render() {
-        const contractTab = this.props.tabData && this.props.tabData['contract' + this.props.contractID + (this.props.vde ? 'vde' : '')] || null;
+        const contractTab = this.props.tabData && this.props.tabData['contract' + this.props.contractID + (this.props.vde ? '-vde' : '')] || null;
         let contract = null;
         if (contractTab) {
             contract = contractTab.data;

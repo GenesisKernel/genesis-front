@@ -45,8 +45,11 @@ class EditMenuContainer extends React.Component<IEditMenuContainerProps & IEditM
     }
 
     render() {
-        let menu = this.props.tabData && this.props.tabData['interfaceMenu' + this.props.menuID] && this.props.tabData['interfaceMenu' + this.props.menuID].data || null;
-
+        const menuTab = this.props.tabData && this.props.tabData['interfaceMenu' + this.props.menuID + (this.props.vde ? '-vde' : '')] || null;
+        let menu = null;
+        if (menuTab) {
+            menu = menuTab.data;
+        }
         return (
             <EditMenu menu={menu} tabView={true}  />
         );

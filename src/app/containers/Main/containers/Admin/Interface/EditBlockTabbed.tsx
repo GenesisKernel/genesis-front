@@ -45,8 +45,11 @@ class EditBlockContainer extends React.Component<IEditBlockContainerProps & IEdi
     }
 
     render() {
-        let block = this.props.tabData && this.props.tabData['interfaceBlock' + this.props.blockID] && this.props.tabData['interfaceBlock' + this.props.blockID].data || null;
-
+        const blockTab = this.props.tabData && this.props.tabData['interfaceBlock' + this.props.blockID + (this.props.vde ? '-vde' : '')] || null;
+        let block = null;
+        if (blockTab) {
+            block = blockTab.data;
+        }
         return (
             <EditBlock block={block} tabView={true} />
         );
