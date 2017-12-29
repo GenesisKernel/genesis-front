@@ -14,31 +14,24 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-require('module').globalPaths.push(__dirname);
+import { MenuItemConstructorOptions, app, Menu } from 'electron';
 
-import { app } from 'electron';
-import { spawnWindow, window } from './windows/index';
-import generalWindow from './windows/general';
-import mainWindow from './windows/main';
-import { state } from './ipc';
+const template: MenuItemConstructorOptions[] = [{
+    label: 'Apla',
+    submenu: [
+        { label: 'Quit', accelerator: 'Command+Q', click: app.quit }
+    ]
+}, {
+    label: 'Edit',
+    submenu: [
+        { label: 'Undo', accelerator: 'CmdOrCtrl+Z', role: 'undo' },
+        { label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', role: 'redo' },
+        { type: 'separator' },
+        { label: 'Cut', accelerator: 'CmdOrCtrl+X', role: 'cut' },
+        { label: 'Copy', accelerator: 'CmdOrCtrl+C', role: 'copy' },
+        { label: 'Paste', accelerator: 'CmdOrCtrl+V', role: 'paste' },
+        { label: 'Select All', accelerator: 'CmdOrCtrl+A', role: 'selectall' }
+    ]
+}];
 
-app.on('ready', () => {
-    spawnWindow(generalWindow(), 'general');
-});
-
-app.on('window-all-closed', () => {
-    if ('darwin' !== process.platform) {
-        app.quit();
-    }
-});
-
-app.on('activate', () => {
-    if (null === window) {
-        if (state && state.auth.isAuthenticated) {
-            spawnWindow(mainWindow(), 'main');
-        }
-        else {
-            spawnWindow(generalWindow(), 'general');
-        }
-    }
-});
+export default Menu.buildFromTemplate(template);

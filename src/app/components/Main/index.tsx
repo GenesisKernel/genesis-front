@@ -50,6 +50,7 @@ export interface IMainProps {
     transactionsCount: number;
     onRefresh: () => void;
     onNavigateHome: () => void;
+    watchSession: () => void;
 }
 
 const StyledControls = styled.div`
@@ -205,15 +206,8 @@ const ToolButton: React.SFC<{ icon: string, onClick?: (e: React.MouseEvent<HTMLB
 );*/
 
 class Main extends React.Component<IMainProps> {
-    componentWillMount() {
-        platform.on('desktop', () => {
-            const { remote } = require('electron');
-            const window = remote.getCurrentWindow();
-            window.setResizable(true);
-            window.setSize(800, 600);
-            window.setMinimumSize(800, 600);
-            window.center();
-        });
+    componentDidMount() {
+        this.props.watchSession();
     }
 
     onBack() {

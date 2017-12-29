@@ -27,6 +27,6 @@ export const setAction = actionCreator<string>('SET_ACTION');
 export const importSeed = actionCreator.async<Blob, string, undefined>('IMPORT_SEED');
 export const importAccount = actionCreator.async<{ backup: string, password: string }, IStoredKey, string>('IMPORT_ACCOUNT');
 export const createAccount = actionCreator.async<{ seed: string, password: string }, IStoredKey, undefined>('CREATE_ACCOUNT');
-export const watchSession = actionCreator<{ timeout: number }>('WATCH_SESSION');
+export const watchSession = actionCreator<{ timeout?: number }>('WATCH_SESSION');
 export const refreshSession = actionCreator<{ token: string, refresh: string, sessionDuration: number }>('REFRESH_SESSION');
 export const updateMetadata = actionCreator.async<{ ecosystem: string, name: string, type: string, avatar: string }, { ecosystem: string, name: string, type: string, avatar: string }, undefined>('UPDATE_METADATA');

@@ -63,6 +63,23 @@ const configureStore = (initialState?: IRootState) => {
     );
 };
 
-const store = configureStore();
+const store = platform.select({
+    web: () => configureStore(),
+    desktop: () => {
+        const Electron = require('electron');
+        const initialState = Electron.ipcRenderer.sendSync('getState');
+        const storeInstance = initialState ? configureStore(initialState) : configureStore();
+
+        storeInstance.subscribe(() => {
+            const state = storeInstance.getState();
+            Electron.ipcRenderer.send('setState', {
+                auth: state.auth,
+                engine: state.engine
+            });
+        });
+
+        return storeInstance;
+    }
+})();
 
 export default store;

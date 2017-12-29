@@ -14,31 +14,26 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-require('module').globalPaths.push(__dirname);
+import { BrowserWindow } from 'electron';
+import * as Config from 'electron-config';
+const config = new Config();
 
-import { app } from 'electron';
-import { spawnWindow, window } from './windows/index';
-import generalWindow from './windows/general';
-import mainWindow from './windows/main';
-import { state } from './ipc';
+export default () => {
+    const options = {
+        minWidth: 800,
+        minHeight: 600,
+        frame: false,
+        backgroundColor: '#17437b',
+        resizable: true,
+        show: false,
+        ...config.get('dimensions')
+    };
 
-app.on('ready', () => {
-    spawnWindow(generalWindow(), 'general');
-});
+    const window = new BrowserWindow(options);
 
-app.on('window-all-closed', () => {
-    if ('darwin' !== process.platform) {
-        app.quit();
-    }
-});
+    window.on('close', () => {
+        config.set('dimensions', window.getBounds());
+    });
 
-app.on('activate', () => {
-    if (null === window) {
-        if (state && state.auth.isAuthenticated) {
-            spawnWindow(mainWindow(), 'main');
-        }
-        else {
-            spawnWindow(generalWindow(), 'general');
-        }
-    }
-});
+    return window;
+};

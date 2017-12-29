@@ -62,7 +62,7 @@ class App extends React.Component<IAppProps> {
             if (props.isConnected) {
                 const privateKey = storage.settings.load('privateKey');
                 const lastEcosystem = storage.settings.load('lastEcosystem');
-                if (privateKey && props.isInstalled) {
+                if (privateKey && props.isInstalled && !props.isAuthenticated) {
                     this.props.login({
                         privateKey,
                         ecosystem: lastEcosystem,

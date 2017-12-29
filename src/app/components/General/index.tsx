@@ -96,94 +96,80 @@ export interface IGeneralProps {
     return?: string | (() => void);
 }
 
-class General extends React.Component<IGeneralProps> {
-    componentDidMount() {
-        platform.on('desktop', () => {
-            const { remote } = require('electron');
-            const window = remote.getCurrentWindow();
-            window.setResizable(false);
-            window.setSize(640, 524);
-            window.setMinimumSize(640, 530);
-        });
-    }
-
-    render() {
-        return (
-            <StyledAuth>
-                <div className="content">
-                    <div className="auth-window desktop-flex-col desktop-flex-stretch">
-                        <div className="panel panel-flat desktop-flex-col desktop-flex-stretch">
-                            <div className="panel-heading text-center clearfix drag p0">
-                                {platform.select({
-                                    desktop: (
-                                        <Titlebar>
-                                            {this.props.return && (
-                                                <div className={`auth-back ${platform.select({ linux: 'auth-back-linux', darwin: 'auth-back-darwin' })}`}>
-                                                    {typeof this.props.return === 'function' ?
-                                                        (
-                                                            <a className="text-white" href="#" onClick={this.props.return}>
-                                                                <StyledBackButton className="icon icon-arrow-left" />
-                                                                <FormattedMessage id="general.back" defaultMessage="Back" />
-                                                            </a>
-                                                        ) : (
-                                                            <Link to={this.props.return.toString()} className="text-white">
-                                                                <StyledBackButton className="icon icon-arrow-left" />
-                                                                <FormattedMessage id="general.back" defaultMessage="Back" />
-                                                            </Link>
-                                                        )
-                                                    }
-                                                </div>
-                                            )}
-                                            <img src={imgLogo} className="auth-logo" />
-                                        </Titlebar>
-                                    ),
-                                    web: (
-                                        <div>
-                                            {this.props.return && (
-                                                <div className="auth-back">
-                                                    {typeof this.props.return === 'function' ?
-                                                        (
-                                                            <a className="text-white" href="#" onClick={this.props.return}>
-                                                                <StyledBackButton className="icon icon-arrow-left" />
-                                                                <FormattedMessage id="general.back" defaultMessage="Back" />
-                                                            </a>
-                                                        ) : (
-                                                            <Link to={this.props.return.toString()} className="text-white">
-                                                                <StyledBackButton className="icon icon-arrow-left" />
-                                                                <FormattedMessage id="general.back" defaultMessage="Back" />
-                                                            </Link>
-                                                        )
-                                                    }
-                                                </div>
-                                            )}
-                                            <Link to="/">
-                                                <img src={imgLogo} className="auth-logo block-center" style={{ height: 25 }} />
-                                            </Link>
-                                        </div>
-                                    )
-                                })}
-                            </div>
-                            <div className={`panel-body desktop-flex-col desktop-flex-stretch ${this.props.className || ''}`}>
-                                {this.props.children}
-                            </div>
-                        </div>
+const General: React.SFC<IGeneralProps> = props => (
+    <StyledAuth>
+        <div className="content">
+            <div className="auth-window desktop-flex-col desktop-flex-stretch">
+                <div className="panel panel-flat desktop-flex-col desktop-flex-stretch">
+                    <div className="panel-heading text-center clearfix drag p0">
                         {platform.select({
+                            desktop: (
+                                <Titlebar>
+                                    {props.return && (
+                                        <div className={`auth-back ${platform.select({ linux: 'auth-back-linux', darwin: 'auth-back-darwin' })}`}>
+                                            {typeof props.return === 'function' ?
+                                                (
+                                                    <a className="text-white" href="#" onClick={props.return}>
+                                                        <StyledBackButton className="icon icon-arrow-left" />
+                                                        <FormattedMessage id="general.back" defaultMessage="Back" />
+                                                    </a>
+                                                ) : (
+                                                    <Link to={props.return.toString()} className="text-white">
+                                                        <StyledBackButton className="icon icon-arrow-left" />
+                                                        <FormattedMessage id="general.back" defaultMessage="Back" />
+                                                    </Link>
+                                                )
+                                            }
+                                        </div>
+                                    )}
+                                    <img src={imgLogo} className="auth-logo" />
+                                </Titlebar>
+                            ),
                             web: (
-                                <div className="p-lg text-center text-white">
-                                    <div className="pull-left">
-                                        <div>Apla &copy; {new Date().getFullYear()} - <a href="http://apla.io">http://apla.io</a></div>
-                                    </div>
-                                    <div className="pull-right">
-                                        <a href="#">English(US)</a>
-                                    </div>
+                                <div>
+                                    {props.return && (
+                                        <div className="auth-back">
+                                            {typeof props.return === 'function' ?
+                                                (
+                                                    <a className="text-white" href="#" onClick={props.return}>
+                                                        <StyledBackButton className="icon icon-arrow-left" />
+                                                        <FormattedMessage id="general.back" defaultMessage="Back" />
+                                                    </a>
+                                                ) : (
+                                                    <Link to={props.return.toString()} className="text-white">
+                                                        <StyledBackButton className="icon icon-arrow-left" />
+                                                        <FormattedMessage id="general.back" defaultMessage="Back" />
+                                                    </Link>
+                                                )
+                                            }
+                                        </div>
+                                    )}
+                                    <Link to="/">
+                                        <img src={imgLogo} className="auth-logo block-center" style={{ height: 25 }} />
+                                    </Link>
                                 </div>
                             )
                         })}
                     </div>
+                    <div className={`panel-body desktop-flex-col desktop-flex-stretch ${props.className || ''}`}>
+                        {props.children}
+                    </div>
                 </div>
-            </StyledAuth>
-        );
-    }
-}
+                {platform.select({
+                    web: (
+                        <div className="p-lg text-center text-white">
+                            <div className="pull-left">
+                                <div>Apla &copy; {new Date().getFullYear()} - <a href="http://apla.io">http://apla.io</a></div>
+                            </div>
+                            <div className="pull-right">
+                                <a href="#">English(US)</a>
+                            </div>
+                        </div>
+                    )
+                })}
+            </div>
+        </div>
+    </StyledAuth>
+);
 
 export default General;

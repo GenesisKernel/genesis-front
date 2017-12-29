@@ -291,7 +291,7 @@ const api = {
         forsign: forSign,
         pubkey: publicKey
     }) as Promise<ISignTestResponse>,
-    login: (session: string, publicKey: string, signature: string, expirySeconds: number = 36000, ecosystem: string = '1') => securedRequest('login', session, {
+    login: (session: string, publicKey: string, signature: string, expirySeconds: number = 3600, ecosystem: string = '1') => securedRequest('login', session, {
         pubkey: publicKey.slice(2),
         signature,
         ecosystem,

@@ -14,31 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-require('module').globalPaths.push(__dirname);
+import actionCreatorFactory from 'typescript-fsa';
+import { TWindowType } from './reducer';
 
-import { app } from 'electron';
-import { spawnWindow, window } from './windows/index';
-import generalWindow from './windows/general';
-import mainWindow from './windows/main';
-import { state } from './ipc';
-
-app.on('ready', () => {
-    spawnWindow(generalWindow(), 'general');
-});
-
-app.on('window-all-closed', () => {
-    if ('darwin' !== process.platform) {
-        app.quit();
-    }
-});
-
-app.on('activate', () => {
-    if (null === window) {
-        if (state && state.auth.isAuthenticated) {
-            spawnWindow(mainWindow(), 'main');
-        }
-        else {
-            spawnWindow(generalWindow(), 'general');
-        }
-    }
-});
+const actionCreator = actionCreatorFactory('gui');
+export const switchWindow = actionCreator.async<{ window: TWindowType }, TWindowType, void>('SWITCH_WINDOW');

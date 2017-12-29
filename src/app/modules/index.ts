@@ -24,6 +24,7 @@ import * as auth from './auth';
 import * as content from './content';
 import * as engine from './engine';
 import * as tx from './tx';
+import * as gui from './gui';
 
 export interface IRootState {
     auth: auth.State;
@@ -31,6 +32,7 @@ export interface IRootState {
     content: content.State;
     engine: engine.State;
     tx: tx.State;
+    gui: gui.State;
     loadingBar: number;
     router: RouterState;
 }
@@ -41,6 +43,7 @@ export const rootEpic = combineEpics(
     content.epic,
     engine.epic,
     tx.epic,
+    gui.epic
 );
 
 export default combineReducers<IRootState>({
@@ -49,6 +52,7 @@ export default combineReducers<IRootState>({
     content: content.reducer,
     engine: engine.reducer,
     tx: tx.reducer,
+    gui: gui.reducer,
     loadingBar: loadingBarReducer,
     toastr: toastrReducer,
     router

@@ -21,6 +21,7 @@ import { Observable } from 'rxjs';
 import { IRootState } from 'modules';
 import * as engineActions from 'modules/engine/actions';
 import * as actions from './actions';
+import * as guiActions from 'modules/gui/actions';
 import { reset } from 'modules/content/actions';
 import { readTextFile } from 'lib/fs';
 import keyring from 'lib/keyring';
@@ -51,8 +52,8 @@ export const loginEpic = (actions$: Observable<Action>) =>
                                 account
                             }
                         }),
-                        actions.watchSession({
-                            timeout: payload.expiry
+                        guiActions.switchWindow.started({
+                            window: 'main'
                         })
                     ]);
                 }).catch((e: IAPIError) => {
@@ -73,6 +74,9 @@ export const logoutEpic: Epic<Action, IRootState> =
                 actions.logout.done({
                     params: action.payload,
                     result: null
+                }),
+                guiActions.switchWindow.started({
+                    window: 'general'
                 })
             ]);
         });
@@ -205,11 +209,11 @@ export const createAccountEpic: Epic<Action, IRootState> =
 export const refreshSessionEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.watchSession)
         .mergeMap(action => {
-            const timeout = (action.payload.timeout * 1000) - 60000;
+            const state = store.getState();
+            const timeout = ((action.payload.timeout || state.auth.sessionDuration) * 1000) - 60000;
 
             return Observable.timer(timeout, timeout)
                 .flatMap(() => {
-                    const state = store.getState();
                     return Observable.fromPromise(api.refresh(state.auth.sessionToken, state.auth.refreshToken, state.auth.sessionDuration))
                         .map(payload =>
                             actions.refreshSession({

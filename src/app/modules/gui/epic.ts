@@ -14,31 +14,26 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-require('module').globalPaths.push(__dirname);
+import { Action } from 'redux';
+import { combineEpics, Epic } from 'redux-observable';
+import { IRootState } from 'modules';
+import * as actions from './actions';
+import platform from 'lib/platform';
 
-import { app } from 'electron';
-import { spawnWindow, window } from './windows/index';
-import generalWindow from './windows/general';
-import mainWindow from './windows/main';
-import { state } from './ipc';
+export const switchWindowEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.switchWindow.started)
+        .map(action => {
+            platform.on('desktop', () => {
+                const Electron = require('electron');
+                Electron.ipcRenderer.sendSync('switchWindow', action.payload.window);
+            });
 
-app.on('ready', () => {
-    spawnWindow(generalWindow(), 'general');
-});
+            return actions.switchWindow.done({
+                params: action.payload,
+                result: action.payload.window
+            });
+        });
 
-app.on('window-all-closed', () => {
-    if ('darwin' !== process.platform) {
-        app.quit();
-    }
-});
-
-app.on('activate', () => {
-    if (null === window) {
-        if (state && state.auth.isAuthenticated) {
-            spawnWindow(mainWindow(), 'main');
-        }
-        else {
-            spawnWindow(generalWindow(), 'general');
-        }
-    }
-});
+export default combineEpics(
+    switchWindowEpic
+);

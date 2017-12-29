@@ -18,6 +18,7 @@ import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Route } from 'react-router-dom';
 import { IRootState } from 'modules';
+import { watchSession } from 'modules/auth/actions';
 import { navigate } from 'modules/engine/actions';
 import { reset, reloadPage } from 'modules/content/actions';
 
@@ -147,6 +148,9 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
     },
     onRefresh: () => {
         dispatch(reloadPage.started(null));
+    },
+    watchSession: () => {
+        dispatch(watchSession({}));
     }
 });
 
