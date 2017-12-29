@@ -295,7 +295,7 @@ const api = {
         pubkey: publicKey.slice(2),
         signature,
         ecosystem,
-        expiry: expirySeconds
+        expire: expirySeconds
     }).then((result: ILoginResponse) => ({
         ...result,
         expiry: expirySeconds
