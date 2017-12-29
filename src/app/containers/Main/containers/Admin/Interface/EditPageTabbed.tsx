@@ -23,6 +23,7 @@ import { navigatePage } from 'modules/content/actions';
 import EditPage from 'components/Main/Admin/Interface/EditPage';
 
 interface IEditPageProps {
+    vde?: boolean;
     pageID: string;
     tabData: any;
     // page: { id: string, name: string, menu: string, conditions: string, value: string };

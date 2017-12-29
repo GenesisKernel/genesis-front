@@ -34,7 +34,7 @@ export type State = {
     readonly interfaces: IInterfacesResponse;
     readonly contract: { id: string, active: string, name: string, conditions: string, address: string, value: string };
     readonly contracts: IContract[];
-    readonly tabs: { data: any, list: { id: string, type: string, name?: string, visible?: boolean }[] };
+    readonly tabs: { data: any, list: { id: string, type: string, name?: string, visible?: boolean, vde?: boolean }[] };
     readonly language: { id: string, res: any, name: string, conditions: string };
     readonly languages: { id: string, res: any, name: string, conditions: string }[];
     readonly parameter: IParameterResponse;
@@ -585,7 +585,7 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['contract' + action.payload.result.id]: {
+                    ['contract' + action.payload.result.id + (action.payload.params.vde ? 'vde' : '')]: {
                         type: 'contract',
                         data: action.payload.result
                     }

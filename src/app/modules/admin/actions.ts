@@ -64,5 +64,5 @@ export const importData = actionCreator.async<File, any, undefined>('IMPORT_DATA
 export const importDataPrune = actionCreator<{ name: string, key: string, index?: number }>('IMPORT_DATA_PRUNE');
 
 // Tabs
-export const getTabList = actionCreator.async<{ addID?: string, addName?: string, addType?: string }, ITabListResponse, string>('GET_TAB_LIST');
-export const removeTabList = actionCreator.async<{ id: string, type: string }, any, string>('REMOVE_TAB_LIST');
+export const getTabList = actionCreator.async<{ addID?: string, addName?: string, addType?: string, addVDE?: boolean }, ITabListResponse, string>('GET_TAB_LIST');
+export const removeTabList = actionCreator.async<{ id: string, type: string, vde?: boolean }, any, string>('REMOVE_TAB_LIST');

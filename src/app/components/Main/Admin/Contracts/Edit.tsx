@@ -103,19 +103,21 @@ class Edit extends React.Component<IEditProps, IEditState> {
     render() {
         if (this.props.tabView) {
             return (
-                <ContractEditor
-                    vde={this.props.vde}
-                    contractName="@1EditContract"
-                    mapContractParams={this.mapContractParams.bind(this)}
+                <div className="fullscreen-wrapper">
+                    <ContractEditor
+                        vde={this.props.vde}
+                        contractName="@1EditContract"
+                        mapContractParams={this.mapContractParams.bind(this)}
 
-                    code={this.state.code}
-                    wallet={this.state.wallet}
-                    conditions={this.state.conditions}
-                    contract={this.props.contract}
-                    onSourceEdit={this.onSourceEdit.bind(this)}
-                    onWalletEdit={this.onWalletEdit.bind(this)}
-                    onConditionsEdit={this.onConditionsEdit.bind(this)}
-                />
+                        code={this.state.code}
+                        wallet={this.state.wallet}
+                        conditions={this.state.conditions}
+                        contract={this.props.contract}
+                        onSourceEdit={this.onSourceEdit.bind(this)}
+                        onWalletEdit={this.onWalletEdit.bind(this)}
+                        onConditionsEdit={this.onConditionsEdit.bind(this)}
+                    />
+                </div>
             );
         }
 

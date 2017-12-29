@@ -25,7 +25,6 @@ export interface ILabelProps {
     'class'?: string;
     'for'?: string;
 
-
     'editable'?: boolean;
     'changePage'?: any;
     'setTagCanDropPosition'?: any;

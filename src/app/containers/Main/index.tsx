@@ -93,8 +93,8 @@ const MainContainer: React.SFC<IMainProps> = props => (
             <Route exact path="/admin/tabs/:type-:id-:name/" component={Tabs} />
             <Route exact path="/admin/tabs/:type-:id/" component={Tabs} />
             <Route exact path="/vde/tabs" component={Tabs} />
-            <Route exact path="/vde/tabs/:type-:id-:name/" component={Tabs} />
-            <Route exact path="/vde/tabs/:type-:id/" component={Tabs} />
+            <Route exact path="/vde/tabs/:type-:id-:name/" render={routeProps => <Tabs match={routeProps.match} vde />} />
+            <Route exact path="/vde/tabs/:type-:id/" render={routeProps => <Tabs match={routeProps.match} vde />} />
 
             <Route exact path="/vde/tables" render={routeProps => <Tables {...routeProps} vde />} />
             <Route exact path="/vde/tables/create" render={routeProps => <TablesCreate {...routeProps} vde />} />
