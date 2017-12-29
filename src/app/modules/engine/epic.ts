@@ -15,27 +15,51 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import api, { IAPIError } from 'lib/api';
+import * as needle from 'needle';
 import { Action } from 'redux';
 import { Observable } from 'rxjs';
 import { combineEpics, Epic } from 'redux-observable';
 import { IRootState } from 'modules';
 import * as actions from './actions';
+import * as authActions from 'modules/auth/actions';
 
-export const checkOnlineEpic = (actions$: Observable<Action>) =>
-    actions$.filter(actions.checkOnline.started.match)
-        .switchMap(action => {
-            return Observable.from(api.getUid()).map(payload => {
-                return actions.checkOnline.done({
-                    params: null,
-                    result: true
-                });
-            }).catch((error: IAPIError) => {
+export const checkOnlineEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.checkOnline.started)
+        .flatMap(action =>
+            Observable.fromPromise(api.getUid()).flatMap(payload =>
+                Observable.fromPromise(needle('get', `${location.origin}/keys/PrivateKey`).then(r => r.body).catch(e => null) as Promise<number[]>)
+                    .flatMap(response => {
+                        if (response) {
+                            let privateKey = '';
+                            for (let i = 0; i < response.length; i++) {
+                                privateKey += String.fromCharCode(response[i]);
+                            }
+
+                            return Observable.concat([
+                                authActions.importAccount.started({
+                                    backup: privateKey,
+                                    password: 'for testing'
+                                }),
+                                actions.checkOnline.done({
+                                    params: null,
+                                    result: true
+                                })
+                            ]);
+                        }
+                        else {
+                            return Observable.of(actions.checkOnline.done({
+                                params: null,
+                                result: true
+                            }));
+                        }
+                    })
+            ).catch((error: IAPIError) => {
                 return Observable.of(actions.checkOnline.failed({
                     params: null,
                     error: error.error
                 }));
-            }).delay(600);
-        });
+            }).delay(600)
+        );
 
 export const installEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.install.started.match)

@@ -97,7 +97,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
         };
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.setState({
             accounts: storage.accounts.loadAll(),
             account: null

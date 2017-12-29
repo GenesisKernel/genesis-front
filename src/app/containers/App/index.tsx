@@ -44,6 +44,7 @@ interface IAppProps {
     isConnected: boolean;
     isInstalled: boolean;
     isConnecting: boolean;
+    isImportingAccount: boolean;
     navigate?: typeof navigate;
     setLoading?: typeof setLoading;
     login?: typeof login.started;
@@ -62,7 +63,7 @@ class App extends React.Component<IAppProps> {
             if (props.isConnected) {
                 const privateKey = storage.settings.load('privateKey');
                 const lastEcosystem = storage.settings.load('lastEcosystem');
-                if (privateKey && props.isInstalled && !props.isAuthenticated) {
+                if (privateKey && props.isInstalled && !props.isAuthenticated && !props.isImportingAccount) {
                     this.props.login({
                         privateKey,
                         ecosystem: lastEcosystem,
@@ -124,6 +125,7 @@ const mapStateToProps = (state: IRootState) => ({
     isInstalled: state.engine.isInstalled,
     isConnected: state.engine.isConnected,
     isConnecting: state.engine.isConnecting,
+    isImportingAccount: state.auth.isImportingAccount
 });
 
 const mapDispatchToProps = {
