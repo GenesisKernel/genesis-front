@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 export interface IStoredData {
     id: string;
 }
@@ -25,14 +27,23 @@ export const deserializeData = <T>(serialized: string) => {
 
 class Storage<T extends IStoredData> {
     private _storageKey: string;
+    private _cache: T[];
 
     constructor(storageKey: string) {
         this._storageKey = storageKey;
     }
 
+    saveAll = _.debounce((values: T[]) => {
+        const data = serializeData(values);
+        localStorage.setItem(this._storageKey, data);
+    }, 100);
+
     loadAll() {
-        const data = localStorage.getItem(this._storageKey);
-        return deserializeData<T[]>(data) || [];
+        if (!this._cache) {
+            const data = localStorage.getItem(this._storageKey);
+            this._cache = deserializeData<T[]>(data) || [];
+        }
+        return this._cache;
     }
 
     load(key: string) {
@@ -43,11 +54,6 @@ class Storage<T extends IStoredData> {
             }
         }
         return null;
-    }
-
-    saveAll(values: T[]) {
-        const data = serializeData(values);
-        localStorage.setItem(this._storageKey, data);
     }
 
     save(value: T) {
@@ -87,5 +93,5 @@ const settingsStorage = {
 
 export default {
     settings: settingsStorage,
-    accounts: new Storage<IStoredKey>('accounts')
+    accounts: new Storage<IStoredKey>('accountsz')
 };
