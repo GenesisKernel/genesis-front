@@ -48,11 +48,18 @@ const renderCell: ICellRenderer = (data, rowData) => {
         );
 
         case 4: return (
-            <Link to={`/${rowData.rowData[4] ? 'vde' : 'admin'}/contracts/${rowData.rowData[0]}-${rowData.rowData[1]}`} className="btn btn-default btn-labeled btn-icon">
-                <span className="btn-label">
-                    <em className="icon-pencil" />
-                </span>
-            </Link>
+            <span>
+                <Link to={`/${rowData.rowData[4] ? 'vde' : 'admin'}/contracts/${rowData.rowData[0]}-${rowData.rowData[1]}`} className="btn btn-default btn-labeled btn-icon">
+                    <span className="btn-label">
+                        <em className="icon-pencil" />
+                    </span>
+                </Link>
+                <Link to={`/${rowData.rowData[4] ? 'vde' : 'admin'}/tabs/contract-${rowData.rowData[0]}-${rowData.rowData[1]}`} className="btn btn-default btn-labeled btn-icon">
+                    <span className="btn-label">
+                        <em className="icon-folder" />
+                    </span>
+                </Link>
+            </span>
         );
 
         default: return data;

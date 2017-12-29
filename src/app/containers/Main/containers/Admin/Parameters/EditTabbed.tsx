@@ -46,7 +46,11 @@ class EditContainer extends React.Component<IEditContainerProps & IEditContainer
     }
 
     render() {
-        let parameter = this.props.tabData && this.props.tabData['parameter' + this.props.parameterName] && this.props.tabData['parameter' + this.props.parameterName].data || null;
+        const parameterTab = this.props.tabData && this.props.tabData['parameter' + this.props.parameterName + (this.props.vde ? '-vde' : '')] || null;
+        let parameter = null;
+        if (parameterTab) {
+            parameter = parameterTab.data;
+        }
 
         return (
             <Edit parameter={parameter} vde={this.props.vde} tabView={true} />

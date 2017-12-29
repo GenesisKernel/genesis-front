@@ -340,7 +340,7 @@ export const getTabListEpic: Epic<Action, IRootState> =
             }
 
             if ('string' === typeof action.payload.addID) {
-                let index = tabList.findIndex((item: any) => item.id === action.payload.addID && item.type === action.payload.addType);
+                let index = tabList.findIndex((item: any) => item.id === action.payload.addID && item.type === action.payload.addType && !!item.vde === !!action.payload.addVDE);
                 // delete existing tab and add to the end. update name
                 if (index >= 0 && index < tabList.length) {
                     tabList = [
@@ -353,6 +353,7 @@ export const getTabListEpic: Epic<Action, IRootState> =
                     id: action.payload.addID,
                     name: action.payload.addName,
                     type: action.payload.addType,
+                    vde: action.payload.addVDE,
                     visible: true
                 });
 
@@ -362,7 +363,8 @@ export const getTabListEpic: Epic<Action, IRootState> =
                     settingsTabList.push({
                         id: item.id,
                         name: item.name,
-                        type: item.type
+                        type: item.type,
+                        vde: !!item.vde
                     });
                 }
                 storage.settings.save('tabList', JSON.stringify(settingsTabList));
@@ -384,7 +386,7 @@ export const removeTabListEpic: Epic<Action, IRootState> =
             let tabList = state.admin.tabs.list;
 
             if ('string' === typeof action.payload.id && 'string' === typeof action.payload.type) {
-                let index = tabList.findIndex((item: any) => item.id === action.payload.id && item.type === action.payload.type);
+                let index = tabList.findIndex((item: any) => item.id === action.payload.id && item.type === action.payload.type && !!item.vde === !!action.payload.vde);
                 if (index >= 0 && index < tabList.length) {
 
                     // store only visible tabs
@@ -400,7 +402,8 @@ export const removeTabListEpic: Epic<Action, IRootState> =
                             tabListStorageCleared.push({
                                 id: item.id,
                                 name: item.name,
-                                type: item.type
+                                type: item.type,
+                                vde: !!item.vde
                             });
                         }
                     }

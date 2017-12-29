@@ -23,6 +23,7 @@ import { navigatePage } from 'modules/content/actions';
 import EditPage from 'components/Main/Admin/Interface/EditPage';
 
 interface IEditPageProps {
+    vde?: boolean;
     pageID: string;
     tabData: any;
     // page: { id: string, name: string, menu: string, conditions: string, value: string };
@@ -38,7 +39,11 @@ class EditPageContainer extends React.Component<IEditPageProps> {
     }
 
     render() {
-        let page = this.props.tabData && this.props.tabData['interfacePage' + this.props.pageID] && this.props.tabData['interfacePage' + this.props.pageID].data || null;
+        const pageTab = this.props.tabData && this.props.tabData['interfacePage' + this.props.pageID + (this.props.vde ? '-vde' : '')] || null;
+        let page = null;
+        if (pageTab) {
+            page = pageTab.data;
+        }
 
         return (
             <EditPage page={page} menus={this.props.menus} tabView={true} navigatePage={this.props.navigatePage} />
