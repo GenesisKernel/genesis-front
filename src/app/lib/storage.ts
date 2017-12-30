@@ -93,5 +93,5 @@ const settingsStorage = {
 
 export default {
     settings: settingsStorage,
-    accounts: new Storage<IStoredKey>('accountsz')
+    accounts: new Storage<IStoredKey>('accounts')
 };
