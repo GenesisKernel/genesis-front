@@ -214,7 +214,8 @@ export const refreshSessionEpic: Epic<Action, IRootState> =
 
             return Observable.timer(timeout, timeout)
                 .flatMap(() => {
-                    return Observable.fromPromise(api.refresh(state.auth.sessionToken, state.auth.refreshToken, state.auth.sessionDuration))
+                    const actualState = store.getState();
+                    return Observable.fromPromise(api.refresh(actualState.auth.sessionToken, actualState.auth.refreshToken, actualState.auth.sessionDuration))
                         .map(payload =>
                             actions.refreshSession({
                                 token: payload.token,
