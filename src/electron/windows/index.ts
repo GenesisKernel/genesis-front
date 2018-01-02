@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, Menu } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import menu from '../menu';
@@ -43,6 +43,7 @@ export const spawnWindow = (wnd: BrowserWindow, name: string) => {
     }
 
     if (process.platform === 'darwin') {
+        Menu.setApplicationMenu(menu);
         wnd.setMenu(menu);
     }
 
