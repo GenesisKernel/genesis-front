@@ -20,6 +20,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import MonacoEditor from 'react-monaco-editor';
 import registerProtypo from './protypo';
+import registerSimvolio from './simvolio';
 import platform from 'lib/platform';
 
 const StyledEditor = styled.div`
@@ -46,6 +47,7 @@ interface IEditorProps {
 export default class Editor extends React.Component<IEditorProps> {
     editorWillMount(editor: typeof monaco) {
         registerProtypo(editor);
+        registerSimvolio(editor);
     }
 
     render() {
