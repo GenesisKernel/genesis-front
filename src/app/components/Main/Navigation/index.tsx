@@ -24,6 +24,11 @@ import ResizeHandle from 'containers/Main/Navigation/ResizeHandle';
 import { IProtypoElement } from 'components/Protypo/Protypo';
 
 const StyledNavigation = styled.aside`
+    &.navigation-collapsed {
+        overflow: hidden;
+        width: 0;
+    }
+
     position: absolute;
     top: 0;
     left: 0;
@@ -295,7 +300,7 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
 
     render() {
         return (
-            <StyledNavigation style={{ width: this.props.visible ? this.props.width : 0 }}>
+            <StyledNavigation className={this.props.visible ? '' : 'navigation-collapsed'} style={{ width: this.props.visible ? this.props.width : 0 }}>
                 <nav>
                     <StyledMenu style={{ top: this.props.topOffset }}>
                         <StackGroup

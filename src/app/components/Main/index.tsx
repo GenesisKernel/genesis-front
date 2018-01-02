@@ -50,6 +50,7 @@ export interface IMainProps {
     transactionsCount: number;
     onRefresh: () => void;
     onNavigateHome: () => void;
+    onNavigationToggle: () => void;
     watchSession: () => void;
 }
 
@@ -136,9 +137,9 @@ const StyledLoadingBar = styled(LoadingBar) `
     left: 0;
 `;
 
-const MenuItem: React.SFC<{ active?: boolean }> = props => (
+const MenuItem: React.SFC<{ active?: boolean, onClick?: () => void }> = props => (
     <li className={props.active ? 'active' : ''}>
-        <button>
+        <button onClick={props.onClick}>
             {props.children}
         </button>
     </li>
@@ -229,7 +230,7 @@ class Main extends React.Component<IMainProps> {
                         <Titlebar>Apla</Titlebar>
                     </StyledTitlebar>
                     <StyledMenu className="drag">
-                        <MenuItem>
+                        <MenuItem onClick={this.props.onNavigationToggle}>
                             <em className="icon-grid" />
                         </MenuItem>
                         <MenuItem active>Home</MenuItem>

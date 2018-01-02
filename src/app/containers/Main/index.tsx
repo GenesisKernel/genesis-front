@@ -20,7 +20,7 @@ import { Route } from 'react-router-dom';
 import { IRootState } from 'modules';
 import { watchSession } from 'modules/auth/actions';
 import { navigate } from 'modules/engine/actions';
-import { reset, reloadPage } from 'modules/content/actions';
+import { reset, reloadPage, navigationToggle } from 'modules/content/actions';
 
 import Main, { IMainProps } from 'components/Main';
 import Tables from 'containers/Main/containers/Admin/Tables';
@@ -142,6 +142,9 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+    onNavigationToggle: () => {
+        dispatch(navigationToggle());
+    },
     onNavigateHome: () => {
         dispatch(reset.started(null));
         dispatch(navigate('/'));
