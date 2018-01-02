@@ -114,6 +114,13 @@ const simvolioSyntax = () => ({
             [/'/, 'string.invalid']
         ],
 
+        comment: [
+            [/[^\/*]+/, 'comment'],
+            [/\/\*/, 'comment', '@push'],    // nested comment
+            ['\\*/', 'comment', '@pop'],
+            [/[\/*]/, 'comment']
+        ],
+
         string: [
             [/[^\\"]+/, 'string'],
             [/@escapes/, 'string.escape'],
@@ -130,7 +137,8 @@ const simvolioSyntax = () => ({
 
         whitespace: [
             [/[ \t\r\n]+/, 'white'],
-            [/\/\/.*$/, 'comment'],
+            [/\/\*/, 'comment', '@comment'],
+            [/\/\/.*$/, 'comment']
         ],
     },
 
