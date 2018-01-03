@@ -49,5 +49,20 @@ export default {
         if (platformType === platform) {
             callback();
         }
+    },
+
+    args: () => {
+        if (isElectron) {
+            const electron = require('electron');
+            const args: { [key: string]: string } = {};
+            (electron.remote.process.argv || []).forEach((arg: string) => {
+                const tokens = arg.split('=', 2);
+                args[tokens[0]] = tokens[1];
+            });
+            return args;
+        }
+        else {
+            return {};
+        }
     }
 };

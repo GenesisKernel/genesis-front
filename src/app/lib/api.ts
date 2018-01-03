@@ -15,8 +15,9 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import needle, { NeedleOptions } from 'needle';
+import platform from 'lib/platform';
 
-let apiUrl = process.env.REACT_APP_API_URL || 'http://127.0.0.1:7079/api/v2';
+let apiUrl = platform.args().API_URL || process.env.REACT_APP_API_URL || 'http://127.0.0.1:7079/api/v2';
 const defaultOptions: NeedleOptions = {
     method: 'POST',
     headers: {
