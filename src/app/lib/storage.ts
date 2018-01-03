@@ -28,15 +28,18 @@ export const deserializeData = <T>(serialized: string) => {
 class Storage<T extends IStoredData> {
     private _storageKey: string;
     private _cache: T[];
+    private _saveHandler = _.throttle((values: T[]) => {
+        localStorage.setItem(this._storageKey, serializeData(values));
+    }, 100);
 
     constructor(storageKey: string) {
         this._storageKey = storageKey;
     }
 
-    saveAll = _.debounce((values: T[]) => {
-        const data = serializeData(values);
-        localStorage.setItem(this._storageKey, data);
-    }, 100);
+    saveAll(values: T[]) {
+        this._cache = values;
+        this._saveHandler(values);
+    }
 
     loadAll() {
         if (!this._cache) {
@@ -54,6 +57,11 @@ class Storage<T extends IStoredData> {
             }
         }
         return null;
+    }
+
+    remove(key: string) {
+        const values = this.loadAll().filter(l => l.id !== key);
+        this.saveAll(values);
     }
 
     save(value: T) {

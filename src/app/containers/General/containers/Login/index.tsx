@@ -29,6 +29,7 @@ export interface ILoginContainerProps {
 
 interface ILoginContainerState {
     alert: { id: string, success: string, error: string };
+    isImportingAccount: boolean;
 }
 
 interface ILoginContainerDispatch {
@@ -42,7 +43,8 @@ const LoginContainer: React.SFC<ILoginProps & ILoginContainerState & ILoginConta
 );
 
 const mapStateToProps = (state: IRootState) => ({
-    alert: state.content.alert
+    alert: state.content.alert,
+    isImportingAccount: state.auth.isImportingAccount
 });
 
 const mapDispatchToProps = {

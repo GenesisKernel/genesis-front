@@ -72,6 +72,7 @@ const StyledLogin = styled.div`
 
 export interface ILoginProps extends InjectedIntlProps {
     alert: { id: string, success: string, error: string };
+    isImportingAccount: boolean;
     navigate: typeof navigate;
     login: typeof login.started;
     alertShow: typeof alertShow;
@@ -107,11 +108,24 @@ class Login extends React.Component<ILoginProps, ILoginState> {
     componentWillReceiveProps(props: ILoginProps) {
         if (this._pendingRemoval && props.alert && 'C_REMOVE_ACCOUNT' === props.alert.id && props.alert.success) {
             const account = this._pendingRemoval.account;
-            delete account.ecosystems[this._pendingRemoval.ecosystem];
-            storage.accounts.save(account);
+
+            if (1 === Object.keys(account.ecosystems).length) {
+                storage.accounts.remove(account.id);
+            }
+            else {
+                delete account.ecosystems[this._pendingRemoval.ecosystem];
+                storage.accounts.save(account);
+            }
+
             this.setState({
                 accounts: storage.accounts.loadAll(),
                 account: null
+            });
+        }
+
+        if (this.props.isImportingAccount !== props.isImportingAccount) {
+            this.setState({
+                accounts: storage.accounts.loadAll()
             });
         }
     }
