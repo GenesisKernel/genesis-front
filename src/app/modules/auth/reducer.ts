@@ -33,28 +33,9 @@ export type State = {
     readonly socketToken: string;
     readonly sessionDuration: number;
     readonly timestamp: string;
-    readonly createdAccount: {
-        id: string;
-        encKey: string;
-        ecosystems?: {
-            [id: string]: {
-                name?: string;
-                type?: string;
-                avatar?: string;
-            }
-        };
-    };
-    readonly importedAccount: {
-        id: string;
-        encKey: string;
-        ecosystems?: {
-            [id: string]: {
-                name?: string;
-                type?: string;
-                avatar?: string;
-            }
-        };
-    };
+    readonly defaultAccount: IStoredKey;
+    readonly createdAccount: IStoredKey;
+    readonly importedAccount: IStoredKey;
     readonly account: IStoredKey;
     readonly privateKey: string;
     readonly ecosystem: string;
@@ -76,6 +57,7 @@ export const initialState: State = {
     sessionDuration: null,
     createdAccount: null,
     importedAccount: null,
+    defaultAccount: null,
     account: null,
     privateKey: null,
     ecosystem: null
@@ -201,11 +183,21 @@ export default (state: State = initialState, action: Action): State => {
         };
     }
     else if (isType(action, actions.importAccount.done)) {
-        return {
-            ...state,
-            isImportingAccount: false,
-            importedAccount: action.payload.result
-        };
+        if (action.payload.params.isDefault) {
+            return {
+                ...state,
+                isImportingAccount: false,
+                importedAccount: action.payload.result,
+                defaultAccount: action.payload.result
+            };
+        }
+        else {
+            return {
+                ...state,
+                isImportingAccount: false,
+                importedAccount: action.payload.result
+            };
+        }
     }
     else if (isType(action, actions.importAccount.failed)) {
         return {

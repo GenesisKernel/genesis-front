@@ -72,6 +72,7 @@ const StyledLogin = styled.div`
 
 export interface ILoginProps extends InjectedIntlProps {
     alert: { id: string, success: string, error: string };
+    defaultAccount: IStoredKey;
     isImportingAccount: boolean;
     navigate: typeof navigate;
     login: typeof login.started;
@@ -99,7 +100,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
     }
 
     componentDidMount() {
-        this.loadAccounts(storage.accounts.loadAll());
+        this.loadAccounts(storage.accounts.loadAll(), this.props.defaultAccount);
     }
 
     componentWillReceiveProps(props: ILoginProps) {
@@ -114,26 +115,24 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                 storage.accounts.save(account);
             }
 
-            this.loadAccounts(storage.accounts.loadAll());
+            this.loadAccounts(storage.accounts.loadAll(), props.defaultAccount);
         }
 
         if (this.props.isImportingAccount !== props.isImportingAccount) {
-            this.loadAccounts(storage.accounts.loadAll());
+            this.loadAccounts(storage.accounts.loadAll(), props.defaultAccount);
         }
     }
 
-    loadAccounts(accounts: IStoredKey[]) {
-        if (this.state.account) {
-            const selectedAccount = accounts.find(l => l.id === this.state.account.id);
-            if (selectedAccount && selectedAccount.ecosystems[this.state.ecosystem]) {
-                this.setState({
-                    accounts
-                });
-                return;
-            }
+    loadAccounts(accounts: IStoredKey[], defaultAccount?: IStoredKey) {
+        if (defaultAccount && accounts.find(l => l.id === defaultAccount.id)) {
+            const ecosystems = Object.keys(defaultAccount.ecosystems);
+            this.setState({
+                accounts,
+                account: defaultAccount,
+                ecosystem: ecosystems[0]
+            });
         }
-
-        if (accounts.length) {
+        else if (accounts.length) {
             const firstAccount = accounts[0];
             const ecosystems = Object.keys(firstAccount.ecosystems);
             this.setState({

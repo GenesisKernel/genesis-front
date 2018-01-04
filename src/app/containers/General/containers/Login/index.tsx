@@ -19,6 +19,7 @@ import { connect } from 'react-redux';
 import { navigate } from 'modules/engine/actions';
 import { login } from 'modules/auth/actions';
 import { alertShow } from 'modules/content/actions';
+import { IStoredKey } from 'lib/storage';
 
 import Login, { ILoginProps } from 'components/General/Login';
 import { IRootState } from 'modules';
@@ -30,6 +31,7 @@ export interface ILoginContainerProps {
 interface ILoginContainerState {
     alert: { id: string, success: string, error: string };
     isImportingAccount: boolean;
+    defaultAccount: IStoredKey;
 }
 
 interface ILoginContainerDispatch {
@@ -44,7 +46,8 @@ const LoginContainer: React.SFC<ILoginProps & ILoginContainerState & ILoginConta
 
 const mapStateToProps = (state: IRootState) => ({
     alert: state.content.alert,
-    isImportingAccount: state.auth.isImportingAccount
+    isImportingAccount: state.auth.isImportingAccount,
+    defaultAccount: state.auth.defaultAccount
 });
 
 const mapDispatchToProps = {

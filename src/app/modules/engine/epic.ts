@@ -42,7 +42,8 @@ export const checkOnlineEpic: Epic<Action, IRootState> =
                                 return Observable.concat([
                                     authActions.importAccount.started({
                                         backup: privateKey,
-                                        password: 'for testing'
+                                        password: 'for testing',
+                                        isDefault: true
                                     }),
                                     actions.checkOnline.done({
                                         params: null,
