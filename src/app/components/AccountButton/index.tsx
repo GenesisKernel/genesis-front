@@ -31,11 +31,12 @@ const StyledAccountButton = styled.div`
     button {
         border: solid 1px transparent;
         padding: 0;
-        height: 52px;
+        height: 46px;
+        overflow: hidden;
 
         .avatar {
-            max-width: 50px;
-            max-height: 50px;
+            max-width: 44px;
+            max-height: 44px;
         }
     }
 `;

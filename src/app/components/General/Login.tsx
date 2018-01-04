@@ -99,10 +99,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
     }
 
     componentDidMount() {
-        this.setState({
-            accounts: storage.accounts.loadAll(),
-            account: null
-        });
+        this.loadAccounts(storage.accounts.loadAll());
     }
 
     componentWillReceiveProps(props: ILoginProps) {
@@ -117,15 +114,37 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                 storage.accounts.save(account);
             }
 
-            this.setState({
-                accounts: storage.accounts.loadAll(),
-                account: null
-            });
+            this.loadAccounts(storage.accounts.loadAll());
         }
 
         if (this.props.isImportingAccount !== props.isImportingAccount) {
+            this.loadAccounts(storage.accounts.loadAll());
+        }
+    }
+
+    loadAccounts(accounts: IStoredKey[]) {
+        if (this.state.account) {
+            const selectedAccount = accounts.find(l => l.id === this.state.account.id);
+            if (selectedAccount && selectedAccount.ecosystems[this.state.ecosystem]) {
+                this.setState({
+                    accounts
+                });
+                return;
+            }
+        }
+
+        if (accounts.length) {
+            const firstAccount = accounts[0];
+            const ecosystems = Object.keys(firstAccount.ecosystems);
             this.setState({
-                accounts: storage.accounts.loadAll()
+                accounts,
+                account: firstAccount,
+                ecosystem: ecosystems[0]
+            });
+        }
+        else {
+            this.setState({
+                accounts
             });
         }
     }
@@ -141,6 +160,9 @@ class Login extends React.Component<ILoginProps, ILoginState> {
 
         const privateKey = keyring.decryptAES(this.state.account.encKey, values.password);
         if (keyring.KEY_LENGTH === privateKey.length) {
+            // TODO: Will be reworked in future
+            values.remember = true;
+
             if (values.remember) {
                 storage.settings.save('privateKey', privateKey);
                 storage.settings.save('lastEcosystem', this.state.ecosystem);
@@ -260,14 +282,14 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                                             </Row>
                                         </Validation.components.ValidatedFormGroup>
                                     </fieldset>
-                                    <fieldset className="mb0 bb0" style={{ paddingBottom: 12 }}>
+                                    {/*<fieldset className="mb0 bb0" style={{ paddingBottom: 12 }}>
                                         <Row>
                                             <Col sm={3} />
                                             <Col sm={9} className="text-left">
                                                 <Validation.components.ValidatedCheckbox className="pt0" name="remember" checked disabled title={this.props.intl.formatMessage({ id: 'general.remember', defaultMessage: 'Remember password' })} />
                                             </Col>
                                         </Row>
-                                    </fieldset>
+                                    </fieldset>*/}
                                 </div>
                                 <div className="clearfix">
                                     <div className="pull-left">
@@ -276,7 +298,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                                         </Button>
                                     </div>
                                     <div className="pull-right">
-                                        <Button bsStyle="primary" type="submit" disabled={!this.state.account}>
+                                        <Button bsStyle="primary" type="submit">
                                             <FormattedMessage id="auth.login" defaultMessage="Login" />
                                         </Button>
                                     </div>
