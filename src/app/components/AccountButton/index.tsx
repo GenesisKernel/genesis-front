@@ -22,9 +22,16 @@ import imgAvatar from 'images/avatar.svg';
 const StyledAccountButton = styled.div`
     margin-top: 8px;
 
+    &.active {
+        button.account-main {
+            border: solid 1px #8eb7ec;
+        }
+    }
+
     button {
+        border: solid 1px transparent;
         padding: 0;
-        height: 50px;
+        height: 52px;
 
         .avatar {
             max-width: 50px;
@@ -49,7 +56,7 @@ const AccountButton: React.SFC<IAccountButtonProps> = props => (
     <StyledAccountButton className={props.active && 'active'}>
         <Row>
             <Col xs={10} className="p0">
-                <Button block bsStyle="default" onClick={props.onSelect}>
+                <Button className="account-main" block bsStyle="default" onClick={props.onSelect}>
                     <div className="media-box text-left">
                         <div className="pull-left">
                             <img src={props.avatar || imgAvatar} className="avatar" />
