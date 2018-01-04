@@ -236,7 +236,7 @@ class Main extends React.Component<IMainProps> {
                     </StyledTitlebar>
                     <StyledMenu className="drag">
                         <MenuItem onClick={this.props.onNavigationToggle}>
-                            <em className="icon-grid" />
+                            <em className="icon-menu" />
                         </MenuItem>
                         <MenuItem active>Home</MenuItem>
                         <li className="user-menu">
