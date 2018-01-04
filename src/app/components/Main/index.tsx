@@ -21,10 +21,12 @@ import { OrderedMap } from 'immutable';
 import styled from 'styled-components';
 import platform from 'lib/platform';
 import { history } from 'store';
+import url from 'url';
 
 import Titlebar from './Titlebar';
 import UserMenu from 'containers/Widgets/UserMenu';
 import Navigation from 'containers/Main/Navigation';
+import { apiUrl } from 'lib/api';
 // import NotificationsMenu from './NotificationsMenu';
 // import TransactionsMenu from './TransactionsMenu';
 
@@ -220,6 +222,9 @@ class Main extends React.Component<IMainProps> {
     }
 
     render() {
+        const apiUrlTokens = url.parse(apiUrl);
+        const appTitle = `Apla (${apiUrlTokens.protocol}//${apiUrlTokens.host})`;
+
         return (
             <StyledWrapper className="wrapper component-main">
                 <style type="text/css">
@@ -227,7 +232,7 @@ class Main extends React.Component<IMainProps> {
                 </style>
                 <StyledControls>
                     <StyledTitlebar className="drag">
-                        <Titlebar>Apla</Titlebar>
+                        <Titlebar>{appTitle}</Titlebar>
                     </StyledTitlebar>
                     <StyledMenu className="drag">
                         <MenuItem onClick={this.props.onNavigationToggle}>

@@ -17,7 +17,7 @@
 import needle, { NeedleOptions } from 'needle';
 import platform from 'lib/platform';
 
-let apiUrl = platform.args().API_URL || process.env.REACT_APP_API_URL || 'http://127.0.0.1:7079/api/v2';
+export let apiUrl = platform.args().API_URL || process.env.REACT_APP_API_URL || 'http://127.0.0.1:7079/api/v2';
 const defaultOptions: NeedleOptions = {
     method: 'POST',
     headers: {
