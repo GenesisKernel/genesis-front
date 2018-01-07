@@ -247,6 +247,7 @@ const request = async (endpoint: string, body: { [key: string]: any }, options?:
 
     try {
         const response = await needle(requestOptions.method as any, `${apiUrl}/${endpoint}`, body, {
+            connection: 'Keep-Alive',
             method: requestOptions.method,
             headers: {
                 ...requestOptions.headers
