@@ -93,11 +93,9 @@ class Em extends React.Component<IEmProps, IEmState> {
             ));
         }
         return (
-            <p
-                className={[this.props.class, this.props.className].join(' ')}
-            >
+            <em className={[this.props.class, this.props.className].join(' ')}>
                 {this.props.children}
-            </p>
+            </em>
         );
 
     }
