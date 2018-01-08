@@ -16,6 +16,7 @@
 
 import Protypo from './Protypo';
 import Button from './handlers/Button';
+import Code from 'components/Protypo/handlers/Code';
 import Data from './handlers/Data';
 import DBFind from './handlers/DBFind';
 import Div from './handlers/Div';
@@ -42,6 +43,7 @@ import addToolButton from './functions/addToolButton';
 
 const handlers = {
     'button': Button,
+    'code': Code,
     'data': Data,
     'dbfind': DBFind,
     'div': Div,
