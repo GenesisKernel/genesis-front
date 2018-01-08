@@ -18,6 +18,7 @@ import * as React from 'react';
 import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
 import DnDComponent from './DnDComponent';
+import TagWrapper from '../components/TagWrapper';
 import * as classnames from 'classnames';
 
 export interface IPProps {
@@ -40,6 +41,7 @@ export interface IPProps {
     isOver?: boolean;
 
     connectDragSource?: any;
+    connectDragPreview?: any;
     isDragging?: boolean;
 }
 
@@ -68,28 +70,37 @@ class P extends React.Component<IPProps, IPState> {
 
     render() {
         if (this.props.editable) {
-            const { connectDropTarget, isOver } = this.props;
-            const { connectDragSource, isDragging } = this.props;
+            const { connectDropTarget, connectDragPreview, isOver } = this.props;
+            const { connectDragSource/*, isDragging */} = this.props;
 
             const classes = classnames({
                 [this.props.class]: true,
                 [this.props.className]: true,
-                'editable': this.props.selected,
-                'can-drop': isOver,
-                ['can-drop_' + this.props.canDropPosition]: true,
-                'is-dragging': isDragging
+                'b-selected': this.props.selected,
+                // 'can-drop': isOver,
+                // ['can-drop_' + this.props.canDropPosition]: true,
+                // 'is-dragging': isDragging
             });
 
-            return connectDragSource(connectDropTarget(
-                <p
-                    className={classes}
-                    contentEditable={this.props.selected}
-                    onPaste={this.onPaste.bind(this)}
-                    onBlur={this.onBlur.bind(this)}
-                    onClick={this.onClick.bind(this)}
-                >
-                    {this.props.children}
-                </p>
+            return connectDragPreview(connectDropTarget(
+                <span>
+                    <TagWrapper
+                        selected={this.props.selected}
+                        canDrop={isOver}
+                        canDropPosition={this.props.canDropPosition}
+                        onBlur={this.onBlur.bind(this)}
+                        onClick={this.onClick.bind(this)}
+                        connectDragSource={connectDragSource}
+                    >
+                    <p
+                        className={classes}
+                        contentEditable={this.props.selected}
+                        onPaste={this.onPaste.bind(this)}
+                    >
+                        {this.props.children}
+                    </p>
+                    </TagWrapper>
+                </span>
             ));
         }
         return (

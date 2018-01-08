@@ -74,6 +74,7 @@ const Target = {
 function collectSource(connect: any, monitor: any) {
     return {
         connectDragSource: connect.dragSource(),
+        connectDragPreview: connect.dragPreview(),
         isDragging: monitor.isDragging()
     };
 }
