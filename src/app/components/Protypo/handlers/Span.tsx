@@ -93,11 +93,9 @@ class Span extends React.Component<ISpanProps, ISpanState> {
             ));
         }
         return (
-            <p
-                className={[this.props.class, this.props.className].join(' ')}
-            >
+            <span className={[this.props.class, this.props.className].join(' ')}>
                 {this.props.children}
-            </p>
+            </span>
         );
 
     }
