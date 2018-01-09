@@ -18,6 +18,7 @@ import * as React from 'react';
 import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
 import DnDComponent from './DnDComponent';
+import TagWrapper from '../components/TagWrapper';
 import * as classnames from 'classnames';
 
 export interface IDivProps {
@@ -29,6 +30,7 @@ export interface IDivProps {
     'setTagCanDropPosition'?: any;
     'addTag'?: any;
     'moveTag'?: any;
+    'removeTag'?: any;
     'selectTag'?: any;
     'selected'?: boolean;
     'tag'?: any;
@@ -39,6 +41,7 @@ export interface IDivProps {
     isOver?: boolean;
 
     connectDragSource?: any;
+    connectDragPreview?: any;
     isDragging?: boolean;
 }
 
@@ -64,32 +67,40 @@ class Div extends React.Component<IDivProps, IDivState> {
         this.props.changePage({ text: e.target.innerHTML, tagID: this.props.tag.id });
     }
 
+    removeTag() {
+        this.props.removeTag({ tag: this.props.tag });
+    }
+
     render() {
         if (this.props.editable) {
-            const { connectDropTarget, isOver } = this.props;
-            const { connectDragSource, isDragging } = this.props;
+            const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
 
             const classes = classnames({
-                [this.props.class ? this.props.class : '']: true,
-                [this.props.className ? this.props.className : '']: true,
-                'editable': this.props.selected,
-                'can-drop': isOver,
-                ['can-drop_' + this.props.canDropPosition]: true,
-                'is-dragging': isDragging
+                [this.props.class]: true,
+                [this.props.className]: true,
+                'b-selected': this.props.selected
             });
 
-            // <div style={{ position: 'absolute', width: '10px', height: '10px', left: 0, top: 0, ba }}></div>
-
-            return connectDragSource(connectDropTarget(
-                <div
-                    className={classes}
-                    contentEditable={this.props.selected}
-                    onPaste={this.onPaste.bind(this)}
-                    onBlur={this.onBlur.bind(this)}
-                    onClick={this.onClick.bind(this)}
-                >
-                    {this.props.children}
-                </div>
+            return connectDragPreview(connectDropTarget(
+                <span>
+                    <TagWrapper
+                        selected={this.props.selected}
+                        canDrop={isOver}
+                        canDropPosition={this.props.canDropPosition}
+                        onBlur={this.onBlur.bind(this)}
+                        onClick={this.onClick.bind(this)}
+                        removeTag={this.removeTag.bind(this)}
+                        connectDragSource={connectDragSource}
+                    >
+                    <div
+                        className={classes}
+                        contentEditable={this.props.selected}
+                        onPaste={this.onPaste.bind(this)}
+                    >
+                        {this.props.children}
+                    </div>
+                    </TagWrapper>
+                </span>
             ));
         }
         return (

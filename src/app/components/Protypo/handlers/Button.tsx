@@ -23,6 +23,7 @@ import Protypo, { IParamsSpec } from '../Protypo';
 import ValidatedForm from 'components/Validation/ValidatedForm';
 import TxButton from 'containers/Widgets/TxButton';
 
+import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 
 export interface IButtonProps {
@@ -44,6 +45,7 @@ export interface IButtonProps {
     'setTagCanDropPosition'?: any;
     'addTag'?: any;
     'moveTag'?: any;
+    'removeTag'?: any;
     'selectTag'?: any;
     'selected'?: boolean;
     'tag'?: any;
@@ -54,6 +56,7 @@ export interface IButtonProps {
     isOver?: boolean;
 
     connectDragSource?: any;
+    connectDragPreview?: any;
     isDragging?: boolean;
 }
 
@@ -115,27 +118,38 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
         props.changePage({ text: e.target.innerHTML, tagID: props.tag.id });
     };
 
+    const removeTag = () => {
+        props.removeTag({ tag: props.tag });
+    }
+
     if (props.editable) {
-        const { connectDropTarget, isOver } = props;
-        const { connectDragSource, isDragging } = props;
+        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = props;
 
         const classes = classnames({
             [props.class]: true,
-            'editable': props.selected,
-            'can-drop': isOver,
-            ['can-drop_' + props.canDropPosition]: true,
-            'is-dragging': isDragging
+            // [props.className]: true,
+            'b-selected': props.selected
         });
 
-        return connectDragSource(connectDropTarget(
-            <button
-                className={classes}
-                contentEditable={props.selected}
-                onBlur={onBlur}
-                onClick={onClick}
-            >
-                {props.children}
-            </button>
+        return connectDragPreview(connectDropTarget(
+            <span>
+                <TagWrapper
+                    selected={props.selected}
+                    canDrop={isOver}
+                    canDropPosition={props.canDropPosition}
+                    onBlur={onBlur}
+                    onClick={onClick}
+                    removeTag={removeTag}
+                    connectDragSource={connectDragSource}
+                >
+                <button
+                    className={classes}
+                    contentEditable={props.selected}
+                >
+                    {props.children}
+                </button>
+                </TagWrapper>
+            </span>
         ));
     }
 

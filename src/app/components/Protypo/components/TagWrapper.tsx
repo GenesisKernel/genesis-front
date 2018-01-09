@@ -24,16 +24,55 @@ const Wrapper = styled.div`
     border: 2px solid transparent;
     position: relative;
     
-    &.hover { 
+    &.b-hover { 
         border: 2px dotted #fec3fd;
     }
     
     &.b-selected-wrapper {
         border: 2px solid #55ADFF;
+        z-index: 100;
+    }
+    
+    .b-can-drop-position {
+        display: block;
+        position: absolute;        
+        left: 0;
+        width: 100%;        
+    }
+    
+    .b-can-drop-position_before {
+        top: -2px;        
+        border-top: 2px solid rgba(97, 178, 254, 0.5);
+    }
+    
+    .b-can-drop-position_after {
+        bottom: -2px;
+        border-top: 2px solid rgba(97, 178, 254, 0.5);
+    }
+    
+    .b-can-drop-position__arrow {
+        position: relative;
+        display: block;        
+    }
+    
+    .b-can-drop-position__arrow > i {
+        position: absolute;
+        font-size: 16px;
+        color: #61B2FE;
+        left: 50%;
+        margin-left: -3px;
+    }
+    
+    .b-can-drop-position_before .b-can-drop-position__arrow > i {
+        top: -15px;
+    }
+    
+    .b-can-drop-position_after .b-can-drop-position__arrow > i {
+        bottom: -11px;
     }
     
     .b-selected {
-        background-color: #E9ECFF;
+        background-color: #E9ECFF;        
     }
     
     .b-controls {
@@ -62,6 +101,7 @@ export interface ITagWrapperProps {
     canDropPosition: string;
     onBlur?: any;
     onClick?: any;
+    removeTag?: any;
     connectDragSource: any;
 }
 
@@ -77,14 +117,14 @@ class TagWrapper extends React.Component<ITagWrapperProps, ITagWrapperState> {
         };
     }
 
-    onMouseOver(e: React.MouseEvent<HTMLElement>) {
+    setOver(e: React.MouseEvent<HTMLElement>) {
         e.stopPropagation();
         this.setState({
             hover: true
         });
     }
 
-    onMouseOut(e: React.MouseEvent<HTMLElement>) {
+    setOut(e: React.MouseEvent<HTMLElement>) {
         e.stopPropagation();
         this.setState({
             hover: false
@@ -94,7 +134,8 @@ class TagWrapper extends React.Component<ITagWrapperProps, ITagWrapperState> {
     render() {
         const classes = classnames({
             'b-selected-wrapper': this.props.selected,
-            'hover': (this.state.hover && !this.props.canDrop) || (this.props.canDrop && this.props.canDropPosition === 'inside')
+            'b-hover': this.state.hover || this.props.canDrop, // (this.state.hover && !this.props.canDrop) || (this.props.canDrop && this.props.canDropPosition === 'inside')
+            //['can-drop-position-' + this.props.canDropPosition]: true
         });
 
         return (
@@ -102,12 +143,26 @@ class TagWrapper extends React.Component<ITagWrapperProps, ITagWrapperState> {
                 className={classes}
                 onBlur={this.props.onBlur.bind(this)}
                 onClick={this.props.onClick.bind(this)}
-                onMouseOver={this.onMouseOver.bind(this)}
-                onMouseOut={this.onMouseOut.bind(this)}
+                onMouseMove={this.setOver.bind(this)}
+                onMouseOut={this.setOut.bind(this)}
             >
                 { this.props.selected &&
                     <div className="b-controls">
-                        {this.props.connectDragSource(<span className="b-control fa fa-arrows"/>)} <span className="b-control fa fa-times"/> <span className="b-control fa fa-clone"/>
+                        {this.props.connectDragSource(<span className="b-control fa fa-arrows"/>)} <span className="b-control fa fa-times" onClick={this.props.removeTag.bind(this)}/> <span className="b-control fa fa-clone"/>
+                    </div>
+                }
+                {this.props.canDrop && this.props.canDropPosition === 'before' &&
+                    <div className="b-can-drop-position b-can-drop-position_before">
+                        <div className="b-can-drop-position__arrow">
+                            <i className="fa fa-caret-up"/>
+                        </div>
+                    </div>
+                }
+                {this.props.canDrop && this.props.canDropPosition === 'after' &&
+                    <div className="b-can-drop-position b-can-drop-position_after">
+                        <div className="b-can-drop-position__arrow">
+                            <i className="fa fa-caret-down"/>
+                        </div>
                     </div>
                 }
                 {this.props.children}

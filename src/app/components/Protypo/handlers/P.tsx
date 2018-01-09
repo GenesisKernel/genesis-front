@@ -31,6 +31,7 @@ export interface IPProps {
     'setTagCanDropPosition'?: any;
     'addTag'?: any;
     'moveTag'?: any;
+    'removeTag'?: any;
     'selectTag'?: any;
     'selected'?: boolean;
     'tag'?: any;
@@ -68,18 +69,18 @@ class P extends React.Component<IPProps, IPState> {
         this.props.changePage({ text: e.target.innerHTML, tagID: this.props.tag.id });
     }
 
+    removeTag() {
+        this.props.removeTag({ tag: this.props.tag });
+    }
+
     render() {
         if (this.props.editable) {
-            const { connectDropTarget, connectDragPreview, isOver } = this.props;
-            const { connectDragSource/*, isDragging */} = this.props;
+            const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
 
             const classes = classnames({
                 [this.props.class]: true,
                 [this.props.className]: true,
-                'b-selected': this.props.selected,
-                // 'can-drop': isOver,
-                // ['can-drop_' + this.props.canDropPosition]: true,
-                // 'is-dragging': isDragging
+                'b-selected': this.props.selected
             });
 
             return connectDragPreview(connectDropTarget(
@@ -90,6 +91,7 @@ class P extends React.Component<IPProps, IPState> {
                         canDropPosition={this.props.canDropPosition}
                         onBlur={this.onBlur.bind(this)}
                         onClick={this.onClick.bind(this)}
+                        removeTag={this.removeTag.bind(this)}
                         connectDragSource={connectDragSource}
                     >
                     <p

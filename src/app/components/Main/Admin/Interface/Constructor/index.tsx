@@ -48,6 +48,7 @@ interface IConstructorProps {
     selectTag?: any;
     addTag?: any;
     moveTag?: any;
+    removeTag?: any;
     selectedTag?: any;
     save?: any;
     grid: boolean;
@@ -259,6 +260,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                     selectTag={props.selectTag}
                     addTag={props.addTag}
                     moveTag={props.moveTag}
+                    removeTag={props.removeTag}
                     selectedTag={props.selectedTag}
                 />
             </Layout>

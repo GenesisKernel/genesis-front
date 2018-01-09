@@ -33,6 +33,7 @@ export interface IProtypoContainerProps {
     setTagCanDropPosition?: any;
     addTag?: any;
     moveTag?: any;
+    removeTag?: any;
     selectTag?: any;
     selectedTag?: any;
 }

@@ -501,6 +501,39 @@ export default (state: State = initialState, action: Action): State => {
         };
     }
 
+    if (isType(action, actions.removeTag)) {
+        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
+        pageTree = _.cloneDeep(pageTree);
+        if (!pageTree) {
+            pageTree = [];
+        }
+
+        // delete moved element
+        let sourceTag = findTagById(pageTree.concat(), action.payload.tag.id);
+        if (sourceTag.parent) {
+            sourceTag.parent.children.splice(sourceTag.parentPosition, 1);
+        }
+        else {
+            // root
+            pageTree.splice(sourceTag.parentPosition, 1);
+        }
+
+        return {
+            ...state,
+            pending: false,
+            tabs: {
+                ...state.tabs,
+                data: {
+                    ...state.tabs.data,
+                    ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                        type: 'interfaceConstructor',
+                        data: pageTree
+                    }
+                }
+            }
+        };
+    }
+
     if (isType(action, actions.saveConstructorHistory)) {
         let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')].data || null;
         pageTree = _.cloneDeep(pageTree);
