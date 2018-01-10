@@ -84,10 +84,10 @@ class Div extends React.Component<IDivProps, IDivState> {
             return connectDragPreview(connectDropTarget(
                 <span>
                     <TagWrapper
+                        display="block"
                         selected={this.props.selected}
                         canDrop={isOver}
                         canDropPosition={this.props.canDropPosition}
-                        onBlur={this.onBlur.bind(this)}
                         onClick={this.onClick.bind(this)}
                         removeTag={this.removeTag.bind(this)}
                         connectDragSource={connectDragSource}
@@ -95,6 +95,7 @@ class Div extends React.Component<IDivProps, IDivState> {
                     <div
                         className={classes}
                         contentEditable={this.props.selected}
+                        onBlur={this.onBlur.bind(this)}
                         onPaste={this.onPaste.bind(this)}
                     >
                         {this.props.children}

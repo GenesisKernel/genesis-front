@@ -240,6 +240,13 @@ class Protypo extends React.Component<IProtypoProps> {
             return React.cloneElement(this.props.wrapper, this.props.wrapper.props, children);
         }
         else {
+            if (this.props.editable) {
+                return (
+                    <div>
+                        {children}
+                    </div>
+                );
+            }
             return (
                 <div className="fullscreen">
                     {children}

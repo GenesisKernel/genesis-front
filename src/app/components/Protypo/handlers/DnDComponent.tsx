@@ -32,6 +32,8 @@ const Target = {
             return;
         }
 
+        // alert(JSON.stringify(monitor.getSourceClientOffset()));
+
         const droppedItem = monitor.getItem();
 
         if (droppedItem.tag && droppedItem.tag.id && props.tag.id === droppedItem.tag.id) {

@@ -84,12 +84,12 @@ class Em extends React.Component<IEmProps, IEmState> {
             });
 
             return connectDragPreview(connectDropTarget(
-                <span>
+                <span style={{display:'inline-block'}}>
                     <TagWrapper
+                        display="inline"
                         selected={this.props.selected}
                         canDrop={isOver}
                         canDropPosition={this.props.canDropPosition}
-                        onBlur={this.onBlur.bind(this)}
                         onClick={this.onClick.bind(this)}
                         removeTag={this.removeTag.bind(this)}
                         connectDragSource={connectDragSource}
@@ -97,6 +97,7 @@ class Em extends React.Component<IEmProps, IEmState> {
                     <em
                         className={classes}
                         contentEditable={this.props.selected}
+                        onBlur={this.onBlur.bind(this)}
                         onPaste={this.onPaste.bind(this)}
                     >
                         {this.props.children}

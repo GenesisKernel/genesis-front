@@ -86,10 +86,10 @@ class P extends React.Component<IPProps, IPState> {
             return connectDragPreview(connectDropTarget(
                 <span>
                     <TagWrapper
+                        display="block"
                         selected={this.props.selected}
                         canDrop={isOver}
                         canDropPosition={this.props.canDropPosition}
-                        onBlur={this.onBlur.bind(this)}
                         onClick={this.onClick.bind(this)}
                         removeTag={this.removeTag.bind(this)}
                         connectDragSource={connectDragSource}
@@ -98,6 +98,7 @@ class P extends React.Component<IPProps, IPState> {
                         className={classes}
                         contentEditable={this.props.selected}
                         onPaste={this.onPaste.bind(this)}
+                        onBlur={this.onBlur.bind(this)}
                     >
                         {this.props.children}
                     </p>
