@@ -15,6 +15,7 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import { js } from 'js-beautify';
 import { Button, Col, FormControlProps, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import Editor from 'components/Editor';
@@ -97,7 +98,7 @@ const ContractEditor: React.SFC<IContractEditorProps> = (props) => (
                 <FormattedMessage id="admin.save" defaultMessage="Save" />
             </Validation.components.ValidatedSubmit>
 
-            <Button bsStyle="link" type="button" disabled>
+            <Button bsStyle="link" type="button" onClick={() => props.onSourceEdit(js(props.code))}>
                 <em className="fa fa-code fa-fw mr-sm" />
                 <FormattedMessage id="admin.contract.format" defaultMessage="Format code" />
             </Button>
