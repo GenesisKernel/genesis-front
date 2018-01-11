@@ -25,7 +25,7 @@ export type State = {
 
 export const initialState: State = {
     accounts: [],
-    navigationSize: 350
+    navigationSize: 230
 };
 
 export default reducerWithInitialState<State>(initialState)
