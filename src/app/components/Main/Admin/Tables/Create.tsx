@@ -22,54 +22,44 @@ import { Link } from 'react-router-dom';
 import DocumentTitle from 'components/DocumentTitle';
 import Heading from 'components/Heading';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
-import Checkbox from 'components/Checkbox';
 import Validation from 'components/Validation';
 
 export const columnTypes = [
     {
         name: 'text',
-        title: 'Text',
-        denyIndex: true
+        title: 'Text'
     },
     {
         name: 'datetime',
-        title: 'Date/Time',
-        denyIndex: false
+        title: 'Date/Time'
     },
     {
         name: 'varchar',
-        title: 'Varchar',
-        denyIndex: false
+        title: 'Varchar'
     },
     {
         name: 'character',
-        title: 'Character',
-        denyIndex: true
+        title: 'Character'
     },
     {
         name: 'jsonb',
-        title: 'JSON',
-        denyIndex: true
+        title: 'JSON'
     },
     {
         name: 'number',
-        title: 'Number',
-        denyIndex: false
+        title: 'Number'
     },
     {
         name: 'money',
-        title: 'Money',
-        denyIndex: true
+        title: 'Money'
     },
     {
         name: 'double',
-        title: 'Double',
-        denyIndex: true
+        title: 'Double'
     },
     {
         name: 'bytea',
-        title: 'Binary',
-        denyIndex: true
+        title: 'Binary'
     },
 ];
 
@@ -82,7 +72,6 @@ interface ICreateState {
     columns: {
         name: string;
         type: string;
-        index: boolean;
     }[];
 }
 
@@ -91,7 +80,10 @@ class Create extends React.Component<ICreateProps, ICreateState> {
         super(props);
         this.state = {
             columns: [
-                { name: '', type: columnTypes[0].name, index: false }
+                {
+                    name: '',
+                    type: columnTypes[0].name
+                }
             ]
         };
     }
@@ -102,7 +94,6 @@ class Create extends React.Component<ICreateProps, ICreateState> {
             Columns: JSON.stringify(this.state.columns.map(col => ({
                 name: col.name,
                 type: col.type,
-                index: Number(col.index).toString(),
                 conditions: 'true'
             }))),
             Permissions: JSON.stringify({
@@ -125,7 +116,10 @@ class Create extends React.Component<ICreateProps, ICreateState> {
         this.setState({
             columns: [
                 ...this.state.columns,
-                { name: '', type: columnTypes[0].name, index: false }
+                {
+                    name: '',
+                    type: columnTypes[0].name,
+                }
             ]
         });
     }
@@ -151,9 +145,6 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                     ...this.state.columns.slice(0, index),
                     {
                         ...column,
-                        // Drop index value if requested column type is non-indexable
-                        // must be happening before actual [property] update
-                        index: this.isIndexDenied(index) ? false : column.index,
                         [property]: value
 
                     },
@@ -174,11 +165,6 @@ class Create extends React.Component<ICreateProps, ICreateState> {
         else {
             return null;
         }
-    }
-
-    isIndexDenied(index: number) {
-        const columnType = this.resolveColumnValue(index, 'type');
-        return !!columnTypes.find(l => l.name === columnType && l.denyIndex);
     }
 
     render() {
@@ -220,9 +206,6 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                                                             <FormattedMessage id="admin.tables.column.type" defaultMessage="Type" />
                                                         </th>
                                                         <th style={{ width: 1 }}>
-                                                            <FormattedMessage id="admin.tables.column.index" defaultMessage="Index" />
-                                                        </th>
-                                                        <th style={{ width: 1 }}>
                                                             <FormattedMessage id="admin.tables.column.action" defaultMessage="Action" />
                                                         </th>
                                                     </tr>
@@ -236,10 +219,6 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                                                             <select className="form-control" disabled>
                                                                 <option>Number</option>
                                                             </select>
-
-                                                        </td>
-                                                        <td>
-                                                            <Checkbox readOnly checked />
                                                         </td>
                                                         <td />
                                                     </tr>
@@ -268,14 +247,6 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                                                                         </option>
                                                                     ))}
                                                                 </Validation.components.ValidatedSelect>
-                                                            </td>
-                                                            <td>
-                                                                <Validation.components.ValidatedCheckbox
-                                                                    name={index + '_index'}
-                                                                    checked={this.isIndexDenied(index) ? false : (this.resolveColumnValue(index, 'index') || false)}
-                                                                    disabled={this.isIndexDenied(index)}
-                                                                    onChange={e => this.onColumnUpdate(index, 'index', e.target.checked || false)}
-                                                                />
                                                             </td>
                                                             <td>
                                                                 <Button
