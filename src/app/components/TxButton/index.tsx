@@ -139,6 +139,7 @@ class TxButton extends React.Component<ITxButtonProps & InjectedIntlProps> {
     render() {
         return (
             <button
+                type="button"
                 onClick={this.onClick.bind(this)}
                 disabled={this.props.disabled || this.props.pending}
                 className={this.props.className}
