@@ -31,6 +31,7 @@ export interface IEmProps {
     'setTagCanDropPosition'?: any;
     'addTag'?: any;
     'moveTag'?: any;
+    'copyTag'?: any;
     'removeTag'?: any;
     'selectTag'?: any;
     'selected'?: boolean;
@@ -84,7 +85,7 @@ class Em extends React.Component<IEmProps, IEmState> {
             });
 
             return connectDragPreview(connectDropTarget(
-                <span style={{display:'inline-block'}}>
+                <span style={{display: 'inline-block'}}>
                     <TagWrapper
                         display="inline"
                         selected={this.props.selected}

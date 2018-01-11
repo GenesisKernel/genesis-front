@@ -31,6 +31,7 @@ export interface IPProps {
     'setTagCanDropPosition'?: any;
     'addTag'?: any;
     'moveTag'?: any;
+    'copyTag'?: any;
     'removeTag'?: any;
     'selectTag'?: any;
     'selected'?: boolean;

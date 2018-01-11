@@ -394,6 +394,11 @@ input[type="number"] {
     font-weight: 500;
     font-family: "Avenir", "Source Sans Pro", sans-serif;
     padding-left: 45px;
+    cursor: move;
+}
+
+.b-category-sublist>li:hover {
+    background-color: #596d85;
 }
 
 .b-category-sublist>li:before {

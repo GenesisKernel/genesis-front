@@ -21,6 +21,7 @@ import * as classnames from 'classnames';
 import Protypo from '../';
 import StyledComponent from './StyledComponent';
 
+import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 
 export interface ITableProps {
@@ -34,6 +35,8 @@ export interface ITableProps {
     'setTagCanDropPosition'?: any;
     'addTag'?: any;
     'moveTag'?: any;
+    'copyTag'?: any;
+    'removeTag'?: any;
     'selectTag'?: any;
     'selected'?: boolean;
     'tag'?: any;
@@ -44,6 +47,7 @@ export interface ITableProps {
     isOver?: boolean;
 
     connectDragSource?: any;
+    connectDragPreview?: any;
     isDragging?: boolean;
 }
 
@@ -59,55 +63,66 @@ const Table: React.SFC<ITableProps> = (props, context: ITableContext) => {
             props.selectTag({ tag: props.tag });
         };
 
-        const { connectDropTarget, isOver } = props;
-        const { connectDragSource, isDragging } = props;
+        const removeTag = () => {
+            props.removeTag({ tag: props.tag });
+        };
+
+        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = props;
 
         const classes = classnames({
             'table': true,
             [props.className]: true,
-            'editable': props.selected,
-            'can-drop': isOver,
-            ['can-drop_' + props.canDropPosition]: true,
-            'is-dragging': isDragging
+            'b-selected': props.selected
         });
 
-        return connectDragSource(connectDropTarget(
-            <table
-                className={classes}
-                onClick={onClick}
-            >
-                <thead>
-                <tr>
-                    <th>Column 1</th>
-                    <th>Column 2</th>
-                    <th>Column 3</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>
-                        Row 1
-                    </td>
-                    <td>
-                        Value
-                    </td>
-                    <td>
-                        Value
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Row 2
-                    </td>
-                    <td>
-                        Value
-                    </td>
-                    <td>
-                        Value
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+        return connectDragPreview(connectDropTarget(
+            <span>
+                <TagWrapper
+                    display="block"
+                    selected={props.selected}
+                    canDrop={isOver}
+                    canDropPosition={props.canDropPosition}
+                    onClick={onClick}
+                    removeTag={removeTag}
+                    connectDragSource={connectDragSource}
+                >
+                    <table
+                        className={classes}
+                    >
+                        <thead>
+                        <tr>
+                            <th>Column 1</th>
+                            <th>Column 2</th>
+                            <th>Column 3</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                Row 1
+                            </td>
+                            <td>
+                                Value
+                            </td>
+                            <td>
+                                Value
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Row 2
+                            </td>
+                            <td>
+                                Value
+                            </td>
+                            <td>
+                                Value
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </TagWrapper>
+            </span>
         ));
     }
 

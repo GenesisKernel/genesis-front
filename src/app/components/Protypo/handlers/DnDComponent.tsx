@@ -15,15 +15,32 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import { findDOMNode } from 'react-dom';
 import { DropTarget, DragSource } from 'react-dnd';
 import { startHoverTimer, getDropPosition } from 'lib/constructor';
 
 const Source = {
     beginDrag(props: any, monitor: any, component: any) {
+
+        // findDOMNode(component).getAttribute('data-dropeffect'); // does not work :(
+        // custom function
+        let dropEffect = 'move';
+        const el = findDOMNode(component);
+        if (el) {
+            const re = /data\-dropeffect="([a-z]+)"/i;
+            if (re) {
+                const res = el.innerHTML.match(re);
+                if (res) {
+                    dropEffect = res[1];
+                }
+            }
+        }
+
         return {
-            tag: props.tag
+            tag: props.tag,
+            dropEffect
         };
-    }
+    },
 };
 
 const Target = {
@@ -31,8 +48,6 @@ const Target = {
         if (monitor.didDrop()) {
             return;
         }
-
-        // alert(JSON.stringify(monitor.getSourceClientOffset()));
 
         const droppedItem = monitor.getItem();
 
@@ -48,11 +63,24 @@ const Target = {
             });
         }
         else {
-            props.moveTag({
-                tag: droppedItem.tag,
-                destinationTagID: props.tag.id,
-                position: getDropPosition(monitor, component, props.tag)
-            });
+            switch (droppedItem.dropEffect) {
+                case 'move':
+                    props.moveTag({
+                        tag: droppedItem.tag,
+                        destinationTagID: props.tag.id,
+                        position: getDropPosition(monitor, component, props.tag)
+                    });
+                    break;
+                case 'copy':
+                    props.copyTag({
+                        tag: droppedItem.tag,
+                        destinationTagID: props.tag.id,
+                        position: getDropPosition(monitor, component, props.tag)
+                    });
+                    break;
+                default:
+                    break;
+            }
         }
     },
     hover(props: any, monitor: any, component: any) {

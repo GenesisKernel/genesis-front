@@ -30,6 +30,7 @@ export interface IDivProps {
     'setTagCanDropPosition'?: any;
     'addTag'?: any;
     'moveTag'?: any;
+    'copyTag'?: any;
     'removeTag'?: any;
     'selectTag'?: any;
     'selected'?: boolean;

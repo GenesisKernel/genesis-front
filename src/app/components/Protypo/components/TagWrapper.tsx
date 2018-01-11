@@ -131,6 +131,10 @@ const Wrapper = styled.div`
         cursor: pointer;
     }
     
+    .b-control_move {
+        cursor: move;
+    }
+    
 `;
 
 export interface ITagWrapperProps {
@@ -141,39 +145,46 @@ export interface ITagWrapperProps {
     onClick?: any;
     removeTag?: any;
     connectDragSource: any;
+    dropEffect?: string;
+
 }
 
 interface ITagWrapperState {
     hover: boolean;
+    dropEffect: string;
 }
 
 class TagWrapper extends React.Component<ITagWrapperProps, ITagWrapperState> {
+
     constructor(props: ITagWrapperProps) {
         super(props);
         this.state = {
-            hover: false
+            hover: false,
+            dropEffect: 'move'
         };
     }
 
     setOver(e: React.MouseEvent<HTMLElement>) {
         e.stopPropagation();
-        this.setState({
-            hover: true
-        });
+        const state = Object.assign(this.state, { hover: true });
+        this.setState(state);
     }
 
     setOut(e: React.MouseEvent<HTMLElement>) {
         e.stopPropagation();
-        this.setState({
-            hover: false
-        });
+        const state = Object.assign(this.state, { hover: false });
+        this.setState(state);
+    }
+
+    setDropEffect(effect: string) {
+        const props = Object.assign(this.state, { dropEffect: effect });
+        this.setState(props);
     }
 
     render() {
         const classes = classnames({
             'b-selected-wrapper': this.props.selected,
             'b-hover': this.state.hover || this.props.canDrop, // (this.state.hover && !this.props.canDrop) || (this.props.canDrop && this.props.canDropPosition === 'inside')
-            // ['can-drop-position-' + this.props.canDropPosition]: true
             ['b-display-' + this.props.display]: true
         });
 
@@ -183,10 +194,11 @@ class TagWrapper extends React.Component<ITagWrapperProps, ITagWrapperState> {
                 onClick={this.props.onClick.bind(this)}
                 onMouseMove={this.setOver.bind(this)}
                 onMouseOut={this.setOut.bind(this)}
+                data-dropeffect={this.state.dropEffect}
             >
                 { this.props.selected &&
                     <div className="b-controls">
-                        {this.props.connectDragSource(<span><span className="b-control fa fa-arrows"/> <span className="b-control fa fa-clone"/></span>)} <span className="b-control fa fa-times" onClick={this.props.removeTag.bind(this)}/>
+                        {this.props.connectDragSource(<span><span className="b-control fa fa-arrows b-control_move" onMouseDown={this.setDropEffect.bind(this, 'move')}/> <span className="b-control fa fa-clone" onMouseDown={this.setDropEffect.bind(this, 'copy')}/></span>)} <span className="b-control fa fa-times" onClick={this.props.removeTag.bind(this)}/>
                     </div>
                 }
                 {this.props.canDrop && this.props.canDropPosition === 'before' && this.props.display === 'block' &&

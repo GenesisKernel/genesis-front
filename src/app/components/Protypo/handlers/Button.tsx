@@ -25,7 +25,6 @@ import TxButton from 'containers/Widgets/TxButton';
 
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
-// import insertHtmlAtCursor from 'lib/constructor';
 
 export interface IButtonProps {
     'class'?: string;
@@ -46,6 +45,7 @@ export interface IButtonProps {
     'setTagCanDropPosition'?: any;
     'addTag'?: any;
     'moveTag'?: any;
+    'copyTag'?: any;
     'removeTag'?: any;
     'selectTag'?: any;
     'selected'?: boolean;
@@ -109,28 +109,10 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
         }
     };
 
-    // const insertHtmlAtCursor = (html: any) => {
-    //     var range, node;
-    //     if (window.getSelection && window.getSelection().getRangeAt) {
-    //         range = window.getSelection().getRangeAt(0);
-    //         node = range.createContextualFragment(html);
-    //         range.insertNode(node);
-    //     } else if (document['selection'] && document['selection'].createRange) {
-    //         document['selection'].createRange().pasteHTML(html);
-    //     }
-    // };
-
     const onClick = (e: any) => {
         e.stopPropagation();
         props.selectTag({ tag: props.tag });
     };
-
-    // const onClickSpace = (e: any) => {
-    //     if (!e.x && !e.y && !e.clientX && !e.clientY) {
-    //         e.preventDefault();
-    //         insertHtmlAtCursor(' ');
-    //     }
-    // };
 
     const onBlur = (e: any) => {
         e.stopPropagation();
@@ -151,7 +133,7 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
         });
 
         return connectDragPreview(connectDropTarget(
-            <span style={{display:'inline-block'}}>
+            <span style={{display: 'inline-block'}}>
                 <TagWrapper
                     display="inline"
                     selected={props.selected}

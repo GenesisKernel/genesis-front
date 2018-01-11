@@ -21,6 +21,7 @@ import * as classnames from 'classnames';
 import StyledComponent from './StyledComponent';
 import Validation from 'components/Validation';
 import { IValidator } from 'components/Validation/Validators';
+import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 
 export interface IInputProps {
@@ -40,6 +41,8 @@ export interface IInputProps {
     'setTagCanDropPosition'?: any;
     'addTag'?: any;
     'moveTag'?: any;
+    'copyTag'?: any;
+    'removeTag'?: any;
     'selectTag'?: any;
     'selected'?: boolean;
     'tag'?: any;
@@ -50,6 +53,7 @@ export interface IInputProps {
     isOver?: boolean;
 
     connectDragSource?: any;
+    connectDragPreview?: any;
     isDragging?: boolean;
 }
 
@@ -72,27 +76,38 @@ const Input: React.SFC<IInputProps> = (props) => {
             props.selectTag({ tag: props.tag });
         };
 
-        const { connectDropTarget, isOver } = props;
-        const { connectDragSource, isDragging } = props;
+        const removeTag = () => {
+            props.removeTag({ tag: props.tag });
+        };
+
+        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = props;
 
         const classes = classnames({
             [props.class]: true,
             [props.className]: true,
-            'editable': props.selected,
-            'can-drop': isOver,
-            ['can-drop_' + props.canDropPosition]: true,
-            'is-dragging': isDragging
+            'b-selected': props.selected
         });
 
-        return connectDragSource(connectDropTarget(
-            <input
-                name={props.name}
-                className={classes}
-                disabled={!!props.disabled}
-                type={props.type}
-                placeholder={props.placeholder}
-                onClick={onClick}
-            />
+        return connectDragPreview(connectDropTarget(
+            <span style={{display: 'inline-block'}}>
+                <TagWrapper
+                    display="inline"
+                    selected={props.selected}
+                    canDrop={isOver}
+                    canDropPosition={props.canDropPosition}
+                    onClick={onClick}
+                    removeTag={removeTag}
+                    connectDragSource={connectDragSource}
+                >
+                <input
+                    name={props.name}
+                    className={classes}
+                    disabled={!!props.disabled}
+                    type={props.type}
+                    placeholder={props.placeholder}
+                />
+                </TagWrapper>
+            </span>
         ));
     }
 

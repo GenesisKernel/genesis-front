@@ -19,7 +19,7 @@ import * as _ from 'lodash';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse, IHistoryResponse } from 'lib/api';
-import { findTagById, resolveTagHandler, Properties, generateId } from 'lib/constructor';
+import { findTagById, resolveTagHandler, Properties, generateId, setIds } from 'lib/constructor';
 import { IProtypoElement } from 'components/Protypo/Protypo';
 
 export type State = {
@@ -431,15 +431,15 @@ export default (state: State = initialState, action: Action): State => {
             pageTree = [];
         }
 
+        let tagCopy = Object.assign({}, action.payload.tag);
+        // generate new id for inserted tag
+        tagCopy.id = generateId();
+
         if ('string' === typeof action.payload.destinationTagID &&
             'string' === typeof action.payload.position) {
             let tag = findTagById(pageTree, action.payload.destinationTagID);
             // alert(JSON.stringify(tag));
             if (tag.el) {
-                // generate new id for inserted tag
-                // todo: generate subtags ids for copy function
-                let tagCopy = Object.assign({}, action.payload.tag);
-                tagCopy.id = generateId();
                 switch (action.payload.position) {
                     case 'inside':
                         tag.el.children.push(tagCopy);
@@ -471,7 +471,7 @@ export default (state: State = initialState, action: Action): State => {
         }
         else {
             pageTree = pageTree.concat(
-                action.payload.tag
+                tagCopy
             );
         }
 
@@ -483,6 +483,80 @@ export default (state: State = initialState, action: Action): State => {
         else {
             // root
             pageTree.splice(sourceTag.parentPosition, 1);
+        }
+
+        return {
+            ...state,
+            pending: false,
+            tabs: {
+                ...state.tabs,
+                data: {
+                    ...state.tabs.data,
+                    ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                        type: 'interfaceConstructor',
+                        data: pageTree
+                    }
+                }
+            }
+        };
+    }
+
+    if (isType(action, actions.copyTag)) {
+        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
+        pageTree = _.cloneDeep(pageTree);
+        if (!pageTree) {
+            pageTree = [];
+        }
+
+        let tagCopy = Object.assign({}, action.payload.tag);
+        // generate new id for inserted tag
+        tagCopy.id = generateId();
+        // generate subtags ids for copy function
+        if (tagCopy.children) {
+            setIds(tagCopy.children, true);
+        }
+
+        if ('string' === typeof action.payload.destinationTagID &&
+            'string' === typeof action.payload.position) {
+            let tag = findTagById(pageTree, action.payload.destinationTagID);
+            // alert(JSON.stringify(tag));
+            if (tag.el) {
+                // generate new id for inserted tag
+                // tagCopy.id = generateId();
+
+                switch (action.payload.position) {
+                    case 'inside':
+                        tag.el.children.push(tagCopy);
+                        break;
+                    case 'before':
+                        // tag.el.children.push(Tag.generateTreeJSON(action.payload.tag.text));
+                        if (tag.parent && tag.parent.id && tag.parent.children) {
+                            tag.parent.children.splice(tag.parentPosition, 0, tagCopy);
+                        }
+                        else {
+                            pageTree.splice(tag.parentPosition, 0, tagCopy);
+                        }
+                        break;
+                    case 'after':
+                        if (tag.parent && tag.parent.id && tag.parent.children) {
+                            tag.parent.children.splice(tag.parentPosition + 1, 0, tagCopy);
+                        }
+                        else {
+                            pageTree.splice(tag.parentPosition + 1, 0, tagCopy);
+                        }
+                        // tag.el.children.push(Tag.generateTreeJSON(action.payload.tag.text));
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+            // alert(tag.el.id + ' parent ' + (tag.parent && tag.parent.id || 'root') + " pos " + tag.parentPosition);
+        }
+        else {
+            pageTree = pageTree.concat(
+                tagCopy
+            );
         }
 
         return {

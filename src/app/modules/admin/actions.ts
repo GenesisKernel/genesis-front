@@ -42,6 +42,7 @@ export const changePage = actionCreator<{ text?: string, class?: string; align?:
 export const setTagCanDropPosition = actionCreator<{ tagID: string, pageID: string, vde?: boolean, position: string }>('SET_TAG_CAN_DROP_POSITION');
 export const addTag = actionCreator<{ tag: any, pageID: string, vde?: boolean, destinationTagID?: string, position?: string }>('ADD_TAG');
 export const moveTag = actionCreator<{ tag: any, pageID: string, vde?: boolean, destinationTagID?: string, position?: string }>('MOVE_TAG');
+export const copyTag = actionCreator<{ tag: any, pageID: string, vde?: boolean, destinationTagID?: string, position?: string }>('COPY_TAG');
 export const removeTag = actionCreator<{ tag: any, pageID: string, vde?: boolean }>('REMOVE_TAG');
 export const selectTag = actionCreator<{ tag: any, pageID: string, vde?: boolean }>('SELECT_TAG');
 export const saveConstructorHistory = actionCreator<{ pageID: string, vde?: boolean }>('SAVE_CONSTRUCTOR_HISTORY');
