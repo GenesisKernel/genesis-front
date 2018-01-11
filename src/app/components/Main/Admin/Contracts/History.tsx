@@ -22,43 +22,39 @@ import HistoryViewer from 'containers/Main/containers/Admin/HistoryViewer';
 
 export interface IHistoryProps {
     id: string;
-    table: string;
+    name: string;
 }
 
 const History: React.SFC<IHistoryProps> = (props) => (
     <Wrapper
         type="fullscreen"
         title={{
-            title: 'admin.tables',
-            defaultTitle: 'Tables'
+            title: 'admin.contracts',
+            defaultTitle: 'Smart contracts'
         }}
         heading={{
             content: (
-                <FormattedMessage id="admin.tables" defaultMessage="Tables" />
-            )
+                <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
+            ),
         }}
         breadcrumbs={[
             {
+                url: '/admin/contracts',
                 title: (
-                    <FormattedMessage id="admin.tables" defaultMessage="Tables" />
-                ),
-                url: '/admin/tables'
-            },
-            {
-                title: props.table,
-                url: `/admin/tables/${props.table}`
-            },
-            {
-                title: props.id
+                    <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
+                )
             },
             {
                 title: (
                     <FormattedMessage id="admin.tables.history" defaultMessage="History" />
                 )
+            },
+            {
+                title: props.name || props.id
             }
         ]}
     >
-        <HistoryViewer {...props} />
+        <HistoryViewer id={props.id} table="contracts" />
     </Wrapper >
 );
 

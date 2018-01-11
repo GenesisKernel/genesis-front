@@ -28,15 +28,18 @@ import TablesEdit from 'containers/Main/containers/Admin/Tables/EditTable';
 import TablesAddColumn from 'containers/Main/containers/Admin/Tables/AddColumn';
 import TablesEditColumn from 'containers/Main/containers/Admin/Tables/EditColumn';
 import TablesView from 'containers/Main/containers/Admin/Tables/View';
-import TablesHistory from 'containers/Main/containers/Admin/Tables/History';
+import TablesHistory from 'components/Main/Admin/Tables/History';
 import Interface from 'containers/Main/containers/Admin/Interface';
 import CreatePage from 'containers/Main/containers/Admin/Interface/CreatePage';
 import EditPage from 'containers/Main/containers/Admin/Interface/EditPage';
+import PageHistory from 'components/Main/Admin/Interface/PageHistory';
 import CreateMenu from 'containers/Main/containers/Admin/Interface/CreateMenu';
 import EditMenu from 'containers/Main/containers/Admin/Interface/EditMenu';
+import MenuHistory from 'components/Main/Admin/Interface/MenuHistory';
 import CreateBlock from 'containers/Main/containers/Admin/Interface/CreateBlock';
 import EditBlock from 'containers/Main/containers/Admin/Interface/EditBlock';
 import Contracts from 'containers/Main/containers/Admin/Contracts';
+import ContractHistory from 'components/Main/Admin/Contracts/History';
 import CreateContract from 'containers/Main/containers/Admin/Contracts/Create';
 import Languages from 'containers/Main/containers/Admin/Languages';
 import CreateLanguage from 'containers/Main/containers/Admin/Languages/Create';
@@ -73,11 +76,14 @@ const MainContainer: React.SFC<IMainProps> = props => (
             <Route exact path="/admin/interface/create-page" component={CreatePage} />
             <Route exact path="/admin/interface/page/:pageID-:pageName" component={EditPage} />
             <Route exact path="/admin/interface/menu/:menuID-:menuName" component={EditMenu} />
+            <Route exact path="/admin/interface/page/history/:pageID-:pageName" render={routeProps => <PageHistory id={routeProps.match.params.pageID} name={routeProps.match.params.pageName} />} />
+            <Route exact path="/admin/interface/menu/history/:menuID-:menuName" render={routeProps => <MenuHistory id={routeProps.match.params.menuID} name={routeProps.match.params.menuName} />} />
             <Route exact path="/admin/interface/block/:blockID-:blockName" component={EditBlock} />
             <Route exact path="/admin/interface/create-menu" component={CreateMenu} />
             <Route exact path="/admin/interface/create-block" component={CreateBlock} />
             <Route exact path="/admin/contracts" component={Contracts} />
             <Route exact path="/admin/contracts/create" component={CreateContract} />
+            <Route exact path="/admin/contracts/history/:contractID-:contractName" render={routeProps => <ContractHistory id={routeProps.match.params.contractID} name={routeProps.match.params.contractName} />} />
             <Route exact path="/admin/contracts/:contractID-:contractName" component={EditContract} />
             <Route exact path="/admin/languages" component={Languages} />
             <Route exact path="/admin/languages/create" component={CreateLanguage} />

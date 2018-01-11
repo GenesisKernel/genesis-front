@@ -20,46 +20,47 @@ import { FormattedMessage } from 'react-intl';
 import Wrapper from 'components/Wrapper';
 import HistoryViewer from 'containers/Main/containers/Admin/HistoryViewer';
 
-export interface IHistoryProps {
+export interface IPageHistoryProps {
     id: string;
-    table: string;
+    name: string;
 }
 
-const History: React.SFC<IHistoryProps> = (props) => (
+const PageHistory: React.SFC<IPageHistoryProps> = (props) => (
     <Wrapper
         type="fullscreen"
         title={{
-            title: 'admin.tables',
-            defaultTitle: 'Tables'
+            title: 'admin.interface',
+            defaultTitle: 'Interface'
         }}
         heading={{
             content: (
-                <FormattedMessage id="admin.tables" defaultMessage="Tables" />
-            )
+                <FormattedMessage id="admin.interface" defaultMessage="Interface" />
+            ),
         }}
         breadcrumbs={[
             {
+                url: '/admin/interface',
                 title: (
-                    <FormattedMessage id="admin.tables" defaultMessage="Tables" />
-                ),
-                url: '/admin/tables'
-            },
-            {
-                title: props.table,
-                url: `/admin/tables/${props.table}`
-            },
-            {
-                title: props.id
-            },
-            {
-                title: (
-                    <FormattedMessage id="admin.tables.history" defaultMessage="History" />
+                    <FormattedMessage id="admin.interface" defaultMessage="Interface" />
                 )
+            },
+            {
+                title: (
+                    <FormattedMessage id="admin.interface.pages" defaultMessage="Pages" />
+                )
+            },
+            {
+                title: (
+                    <FormattedMessage id="admin.interface.history" defaultMessage="History" />
+                )
+            },
+            {
+                title: props.name || props.id
             }
         ]}
     >
-        <HistoryViewer {...props} />
+        <HistoryViewer id={props.id} table="pages" />
     </Wrapper >
 );
 
-export default History;
+export default PageHistory;
