@@ -32,7 +32,7 @@ export const getTableEpic: Epic<Action, IRootState> =
             const state = store.getState();
             return Observable.fromPromise(api.table(state.auth.sessionToken, action.payload.table, action.payload.vde))
                 .flatMap(tableStruct => {
-                    const columns: string[] = action.payload.vde ? ['id'] : ['id', 'rb_id'];
+                    const columns: string[] = [];
                     tableStruct.columns.forEach(column => {
                         if (-1 !== action.payload.columnTypes.indexOf(column.type)) {
                             columns.push(column.name);

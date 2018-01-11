@@ -51,7 +51,7 @@ class ParametersContainer extends React.Component<IHistoryContainerProps & IHist
 
     render() {
         return (
-            <DataPreloader data={[this.props.data && this.props.data.list, this.props.struct && this.props.struct.columns]}>
+            <DataPreloader data={[this.props.data, this.props.struct && this.props.struct.columns]}>
                 <History
                     id={this.props.id}
                     table={this.props.table}

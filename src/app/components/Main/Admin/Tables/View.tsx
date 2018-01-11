@@ -109,17 +109,9 @@ const View: React.SFC<IViewProps> = (props) => (
                                             ))}
                                             {!props.vde && (
                                                 <td>
-                                                    {'0' === row.rb_id ?
-                                                        (
-                                                            <span className="text-muted">
-                                                                <FormattedMessage id="admin.tables.unchanged" defaultMessage="Unchanged" />
-                                                            </span>
-                                                        ) : (
-                                                            <Link className="btn btn-primary" to={`/admin/tables/${props.table.name}/${row.id}/history`}>
-                                                                <FormattedMessage id="admin.tables.history" defaultMessage="History" />
-                                                            </Link>
-                                                        )
-                                                    }
+                                                    <Link className="btn btn-primary" to={`/admin/tables/${props.table.name}/${row.id}/history`}>
+                                                        <FormattedMessage id="admin.tables.history" defaultMessage="History" />
+                                                    </Link>
                                                 </td>
                                             )}
                                         </tr>
