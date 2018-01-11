@@ -29,17 +29,7 @@ export interface ICreateContainerProps {
 
 interface ICreateContainerState {
     isCreatingAccount: boolean;
-    createdAccount: {
-        id: string;
-        encKey: string;
-        ecosystems?: {
-            [id: string]: {
-                name?: string;
-                avatar?: string;
-                type?: string;
-            }
-        };
-    };
+    createAccountError: string;
     loadedSeed: string;
 }
 
@@ -57,7 +47,7 @@ const CreateContainer: React.SFC<ICreateContainerProps & ICreateContainerState &
 
 const mapStateToProps = (state: IRootState) => ({
     isCreatingAccount: state.auth.isCreatingAccount,
-    createdAccount: state.auth.createdAccount,
+    createAccountError: state.auth.createAccountError,
     loadedSeed: state.auth.loadedSeed
 });
 

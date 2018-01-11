@@ -17,9 +17,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { navigate } from 'modules/engine/actions';
-import { login } from 'modules/auth/actions';
+import { login, logout, selectAccount } from 'modules/auth/actions';
 import { alertShow } from 'modules/content/actions';
-import { IStoredKey } from 'lib/storage';
+import { removeAccount } from 'modules/storage/actions';
+import { IStoredAccount } from 'apla/storage';
 
 import Login, { ILoginProps } from 'components/General/Login';
 import { IRootState } from 'modules';
@@ -29,14 +30,19 @@ export interface ILoginContainerProps {
 }
 
 interface ILoginContainerState {
+    isLoggingIn: boolean;
+    account: IStoredAccount;
+    accounts: IStoredAccount[];
     alert: { id: string, success: string, error: string };
-    isImportingAccount: boolean;
-    defaultAccount: IStoredKey;
+    defaultAccount: string;
 }
 
 interface ILoginContainerDispatch {
+    selectAccount: typeof selectAccount;
+    removeAccount: typeof removeAccount;
     navigate: typeof navigate;
     login: typeof login.started;
+    logout: typeof logout.started;
     alertShow: typeof alertShow;
 }
 
@@ -45,12 +51,18 @@ const LoginContainer: React.SFC<ILoginProps & ILoginContainerState & ILoginConta
 );
 
 const mapStateToProps = (state: IRootState) => ({
+    isLoggingIn: state.auth.isLoggingIn,
+    authenticationError: state.auth.authenticationError,
+    account: state.auth.account,
+    accounts: state.storage.accounts,
     alert: state.content.alert,
-    isImportingAccount: state.auth.isImportingAccount,
     defaultAccount: state.auth.defaultAccount
 });
 
 const mapDispatchToProps = {
+    removeAccount,
+    selectAccount: selectAccount.started,
+    logout: logout.started,
     navigate,
     login: login.started,
     alertShow

@@ -21,7 +21,6 @@ const actionCreator = actionCreatorFactory('content');
 
 // Navigation
 export const setResizing = actionCreator<boolean>('SET_RESIZING');
-export const navigationResize = actionCreator<number>('NAVIGATION_RESIZE');
 export const navigationToggle = actionCreator('NAVIGATION_TOGGLE');
 export const menuPop = actionCreator('MENU_POP');
 export const menuPush = actionCreator<{ name: string, vde: boolean, content: IProtypoElement[] }>('MENU_PUSH');

@@ -14,40 +14,64 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import api, { IAPIError } from 'lib/api';
+import api, { IAPIError, ILoginResponse } from 'lib/api';
 import { Action } from 'redux';
 import { combineEpics, Epic } from 'redux-observable';
 import { Observable } from 'rxjs';
 import { IRootState } from 'modules';
+import Promise from 'bluebird';
+import swal from 'sweetalert2';
 import * as engineActions from 'modules/engine/actions';
 import * as actions from './actions';
+import * as storageActions from 'modules/storage/actions';
 import * as guiActions from 'modules/gui/actions';
-import { reset } from 'modules/content/actions';
+import * as contentActions from 'modules/content/actions';
 import { readTextFile } from 'lib/fs';
 import keyring from 'lib/keyring';
-import storage from 'lib/storage';
+import { IStoredAccount } from 'apla/storage';
 
 export const loginEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.login.started.match)
         .flatMap(action => {
-            const publicKey = keyring.generatePublicKey(action.payload.privateKey);
+            const privateKey = keyring.decryptAES(action.payload.encKey, action.payload.password);
+
+            if (!keyring.validatePrivateKey(privateKey)) {
+                return Observable.of(actions.login.failed({
+                    params: action.payload,
+                    error: 'E_INVALID_PASSWORD'
+                })).delay(1);
+            }
+
+            const publicKey = keyring.generatePublicKey(privateKey);
 
             const promise = api.getUid().then(uid => {
-                const signature = keyring.sign(uid.uid, action.payload.privateKey);
+                const signature = keyring.sign(uid.uid, privateKey);
                 return api.login(uid.token, publicKey, signature, undefined, action.payload.ecosystem);
             });
 
             return Observable.from(promise)
                 .flatMap(payload => {
-                    const account = storage.accounts.load(payload.key_id);
+                    const account: IStoredAccount = {
+                        id: payload.key_id,
+                        encKey: action.payload.encKey,
+                        address: payload.address,
+                        ecosystem: action.payload.ecosystem,
+                        ecosystemName: null,
+                        avatar: null,
+                        username: payload.key_id,
+                        sessionToken: payload.token,
+                        refreshToken: payload.refresh
+                    };
+
                     return Observable.concat([
+                        storageActions.saveAccount(account),
                         actions.login.done({
                             params: action.payload,
                             result: {
                                 ...payload,
                                 // TODO: Not remembering the key is not implemented yet
                                 // privateKey: action.payload.remember ? action.payload.privateKey : null,
-                                privateKey: action.payload.privateKey,
+                                privateKey: privateKey,
                                 publicKey,
                                 account
                             }
@@ -71,6 +95,7 @@ export const logoutEpic: Epic<Action, IRootState> =
             localStorage.removeItem('lastEcosystem');
             return Observable.concat([
                 engineActions.navigate('/'),
+                actions.deauthorize(null),
                 actions.logout.done({
                     params: action.payload,
                     result: null
@@ -81,37 +106,81 @@ export const logoutEpic: Epic<Action, IRootState> =
             ]);
         });
 
-export const switchEcosystemEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(actions.switchEcosystem.started)
+export const selectAccountEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.selectAccount.started)
         .flatMap(action => {
-            const state = store.getState();
-            const promise = api.getUid().then(uid => {
-                const signature = keyring.sign(uid.uid, state.auth.privateKey);
-                const publicKey = keyring.generatePublicKey(state.auth.privateKey);
-                return api.login(uid.token, publicKey, signature, null, action.payload);
-            });
+            const promise = api.refresh(action.payload.account.sessionToken, action.payload.account.refreshToken, action.payload.sessionDuration)
+                .then(tokens =>
+                    api.row(tokens.token, 'member', action.payload.account.id, 'avatar,username')
+                        .then(memberResult => ({
+                            avatar: memberResult.value.avatar,
+                            username: memberResult.value.username,
+                            ...tokens
+                        }))
+                );
 
-            return Observable.fromPromise(promise);
-        })
-        .flatMap(payload =>
-            Observable.concat(
-                Observable.of(reset.started(null)),
-                Observable.of(actions.switchEcosystem.done({
-                    params: payload.ecosystem_id,
-                    result: {
-                        token: payload.token,
-                        refresh: payload.refresh,
-                        sessionDuration: payload.expiry
-                    }
-                })),
-                Observable.of(engineActions.navigate('/'))
+            return Observable.fromPromise(promise)
+                .flatMap(payload => {
+                    const account: IStoredAccount = {
+                        ...action.payload.account,
+                        avatar: payload.avatar,
+                        username: payload.username,
+                        sessionToken: payload.token,
+                        refreshToken: payload.refresh
+                    };
+
+                    return Observable.concat(
+                        Observable.of(storageActions.saveAccount(account)),
+                        Observable.of(actions.selectAccount.done({
+                            params: {
+                                account,
+                                sessionDuration: action.payload.sessionDuration
+                            },
+                            result: {
+                                sessionToken: payload.token,
+                                refreshToken: payload.refresh
+                            }
+                        })),
+                        Observable.of(contentActions.reset.started(null))
+                    );
+                })
+                .catch((e: IAPIError) =>
+                    Observable.concat([
+                        actions.selectAccount.failed({
+                            params: action.payload,
+                            error: e.error
+                        }),
+                        engineActions.navigate('/'),
+                    ])
+                );
+        });
+
+export const authorizeAccountEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.authorizeAccount)
+        .flatMap(action => {
+            return Observable.fromPromise(swal({
+                title: 'Confirmation',
+                text: 'Please enter your password to sign in',
+                input: 'password',
+                showCancelButton: true
+            })
+                .then(result => ({ success: result, error: null }))
+                .catch(error => ({ success: null, error }))
             )
-        )
-        .catch((e: IAPIError) => {
-            return Observable.of(actions.switchEcosystem.failed({
-                params: null,
-                error: e.error
-            }));
+                .flatMap(payload => {
+                    if (payload.success) {
+                        const state = store.getState();
+
+                        return Observable.of(actions.login.started({
+                            encKey: action.payload.account.encKey,
+                            password: payload.success,
+                            ecosystem: state.auth.account.ecosystem
+                        }));
+                    }
+                    else {
+                        return Observable.empty();
+                    }
+                });
         });
 
 export const importSeedEpic = (actions$: Observable<Action>) =>
@@ -132,7 +201,7 @@ export const importSeedEpic = (actions$: Observable<Action>) =>
 
 export const importAccountEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.importAccount.started)
-        .switchMap(action => {
+        .flatMap(action => {
             const backup = keyring.restore(action.payload.backup);
             if (!backup || backup.privateKey.length !== keyring.KEY_LENGTH) {
                 return Observable.of(actions.importAccount.failed({
@@ -144,41 +213,47 @@ export const importAccountEpic: Epic<Action, IRootState> =
                 })).delay(1);
             }
 
+            const ecosystems = ['1', ...backup.ecosystems];
             const publicKey = keyring.generatePublicKey(backup.privateKey);
-            const promise = api.getUid().then(uid => {
-                const signature = keyring.sign(uid.uid, backup.privateKey);
-                return api.login(uid.token, publicKey, signature);
-            });
+            const promise = Promise.map(ecosystems, ecosystem =>
+                api.getUid()
+                    .then(uid => {
+                        const signature = keyring.sign(uid.uid, backup.privateKey);
+                        return api.login(uid.token, publicKey, signature, undefined, ecosystem);
+                    })
+                    .catch(e => null as ILoginResponse)
+            );
 
             return Observable.from(promise)
-                .map(payload => {
-                    const account = {
-                        encKey: keyring.encryptAES(backup.privateKey, action.payload.password),
-                        id: payload.key_id,
-                        address: payload.address,
-                        ecosystems: {
-                            '1': {
-                                name: 'APL-WALLET'
-                            }
-                        }
-                    };
-                    for (let itr in backup.ecosystems) {
-                        if (backup.ecosystems.hasOwnProperty(itr)) {
-                            account.ecosystems[itr] = {};
-                        }
-                    }
-                    storage.accounts.save(account);
+                .flatMap(payload => {
+                    const encKey = keyring.encryptAES(backup.privateKey, action.payload.password);
+                    const accounts: IStoredAccount[] = payload.filter(l => l !== null).map(response => ({
+                        id: response.key_id,
+                        encKey,
+                        address: response.address,
+                        ecosystem: response.ecosystem_id,
+                        ecosystemName: null,
+                        username: response.key_id,
+                        avatar: null,
+                        sessionToken: response.token,
+                        refreshToken: response.refresh
+                    }));
 
-                    return actions.importAccount.done({
-                        params: action.payload,
-                        result: account
-                    });
+                    return Observable.concat([
+                        ...accounts.map(l =>
+                            storageActions.saveAccount(l)
+                        ),
+                        actions.importAccount.done({
+                            params: action.payload,
+                            result: accounts
+                        })
+                    ]);
                 });
         });
 
 export const createAccountEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.createAccount.started)
-        .switchMap(action => {
+        .flatMap(action => {
             const keys = keyring.generateKeyPair(action.payload.seed);
             const promise = api.getUid().then(uid => {
                 const signature = keyring.sign(uid.uid, keys.private);
@@ -186,84 +261,54 @@ export const createAccountEpic: Epic<Action, IRootState> =
             });
 
             return Observable.from(promise)
-                .map(payload => {
-                    const account = {
-                        encKey: keyring.encryptAES(keys.private, action.payload.password),
+                .flatMap(payload => {
+                    const account: IStoredAccount = {
                         id: payload.key_id,
+                        encKey: keyring.encryptAES(keys.private, action.payload.password),
                         address: payload.address,
-                        ecosystems: {
-                            1: {
-                                name: 'APL-WALLET'
-                            }
-                        }
+                        ecosystem: '1',
+                        ecosystemName: null,
+                        username: payload.key_id,
+                        avatar: null,
+                        sessionToken: payload.token,
+                        refreshToken: payload.refresh
                     };
-                    storage.accounts.save(account);
 
-                    return actions.createAccount.done({
-                        params: action.payload,
-                        result: account
-                    });
+                    return Observable.concat([
+                        storageActions.saveAccount(account),
+                        actions.createAccount.done({
+                            params: action.payload,
+                            result: account
+                        }),
+                    ]);
                 });
-        });
+        })
+        .catch((e: IAPIError) =>
+            Observable.of(actions.createAccount.failed({
+                params: null,
+                error: e.error
+            }))
+        );
 
-export const refreshSessionEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(actions.watchSession)
+export const authorizeEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.authorize)
         .mergeMap(action => {
-            const state = store.getState();
-            const timeout = ((action.payload.timeout || state.auth.sessionDuration) * 1000) - 60000;
+            const timeout = 60000 * 60;
 
             return Observable.timer(timeout, timeout)
-                .flatMap(() => {
-                    const actualState = store.getState();
-                    return Observable.fromPromise(api.refresh(actualState.auth.sessionToken, actualState.auth.refreshToken, actualState.auth.sessionDuration))
-                        .map(payload =>
-                            actions.refreshSession({
-                                token: payload.token,
-                                refresh: payload.refresh,
-                                sessionDuration: payload.expiry
-                            })
-                        )
-                        .catch((e: IAPIError) =>
-                            Observable.of(actions.logout.started({}))
-                        );
+                .map(() => {
+                    return actions.deauthorize(null);
                 })
-                .takeUntil(action$.ofAction(actions.logout.done));
-        });
-
-export const updateMetadataEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(actions.updateMetadata.started)
-        .flatMap(action => {
-            if (!action.payload) {
-                return Observable.of(actions.updateMetadata.failed({
-                    params: action.payload,
-                    error: null
-                }));
-            }
-            const state = store.getState();
-            storage.accounts.save({
-                ...state.auth.account,
-                ecosystems: {
-                    ...state.auth.account.ecosystems,
-                    [action.payload.ecosystem]: {
-                        name: action.payload.name,
-                        type: action.payload.type,
-                        avatar: action.payload.avatar
-                    }
-                }
-            });
-            return Observable.of(actions.updateMetadata.done({
-                params: action.payload,
-                result: action.payload
-            }));
+                .takeUntil(action$.ofAction(actions.authorize));
         });
 
 export default combineEpics(
     loginEpic,
     logoutEpic,
-    switchEcosystemEpic,
+    selectAccountEpic,
     importSeedEpic,
     importAccountEpic,
     createAccountEpic,
-    refreshSessionEpic,
-    updateMetadataEpic
+    authorizeAccountEpic,
+    authorizeEpic
 );

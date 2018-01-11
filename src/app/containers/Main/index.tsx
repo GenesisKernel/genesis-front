@@ -18,7 +18,6 @@ import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Route } from 'react-router-dom';
 import { IRootState } from 'modules';
-import { watchSession } from 'modules/auth/actions';
 import { navigate } from 'modules/engine/actions';
 import { reset, reloadPage, navigationToggle } from 'modules/content/actions';
 
@@ -134,8 +133,9 @@ const MainContainer: React.SFC<IMainProps> = props => (
 const mapStateToProps = (state: IRootState) => ({
     pending: state.content.pending,
     isEcosystemOwner: state.auth.isEcosystemOwner,
+    isAuthorized: !!state.auth.privateKey,
     stylesheet: state.content.stylesheet,
-    navigationWidth: state.content.navigationWidth,
+    navigationSize: state.storage.navigationSize,
     navigationVisible: state.content.navigationVisible,
     transactionsCount: state.tx.transactions.count(),
     pendingTransactions: state.tx.transactions.takeLast(5)
@@ -151,9 +151,6 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
     },
     onRefresh: () => {
         dispatch(reloadPage.started(null));
-    },
-    watchSession: () => {
-        dispatch(watchSession({}));
     }
 });
 

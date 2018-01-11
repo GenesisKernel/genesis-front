@@ -24,7 +24,6 @@ import { Action } from 'redux';
 import { Observable } from 'rxjs';
 import { IRootState } from 'modules';
 import * as actions from './actions';
-import storage from 'lib/storage';
 import { setIds } from 'lib/constructor';
 
 export const getTableEpic: Epic<Action, IRootState> =
@@ -322,7 +321,7 @@ export const getParameterEpic: Epic<Action, IRootState> =
                 );
         });
 
-export const getTabListEpic: Epic<Action, IRootState> =
+/*export const getTabListEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getTabList.started)
         .flatMap(action => {
 
@@ -418,7 +417,7 @@ export const removeTabListEpic: Epic<Action, IRootState> =
                 result: { tabList: tabList }
             }));
 
-        });
+        });*/
 
 export const getPageTreeCodeEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getPageTreeCode.started)
@@ -641,8 +640,8 @@ export default combineEpics(
     getLanguageEpic,
     getParameterEpic,
     getParametersEpic,
-    getTabListEpic,
-    removeTabListEpic,
+    //getTabListEpic,
+    //removeTabListEpic,
     exportDataEpic,
     importDataEpic
 );

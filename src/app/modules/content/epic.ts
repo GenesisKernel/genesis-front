@@ -20,8 +20,8 @@ import { Observable } from 'rxjs';
 import { combineEpics, Epic } from 'redux-observable';
 import swal, { SweetAlertType } from 'sweetalert2';
 import { IRootState } from 'modules';
-import * as authActions from 'modules/auth/actions';
 import * as actions from './actions';
+import * as storageActions from 'modules/storage/actions';
 import { history } from 'store';
 
 export const navigatePageEpic: Epic<Action, IRootState> =
@@ -102,63 +102,29 @@ export const ecosystemInitEpic: Epic<Action, IRootState> =
             const promise = Promise.all([
                 api.contentMenu(state.auth.sessionToken, 'default_menu'),
                 api.parameter(state.auth.sessionToken, 'stylesheet'),
-                Promise.all([
-                    api.parameter(state.auth.sessionToken, 'key_mask'),
-                    api.parameter(state.auth.sessionToken, 'ava').catch(e => ({ value: null })),
-                    api.parameter(state.auth.sessionToken, 'ecosystem_name')
-
-                ]).then(results => {
-                    const keyMask = JSON.parse(results[0].value);
-                    const avatars = JSON.parse(results[1].value);
-
-                    return api.row(state.auth.sessionToken, 'keys', state.auth.account.id, 'type')
-                        .then(typeResult => typeResult.value.type)
-                        .then((type: string) => {
-                            const userType = keyMask[type];
-                            const avatar = avatars[userType];
-
-                            return api.row(state.auth.sessionToken, userType, state.auth.account.id, 'ava')
-                                .then(avatarResult => {
-                                    if (!avatarResult.value.ava) {
-                                        throw 'E_EMPTY_AVATAR';
-                                    }
-                                    else {
-                                        return {
-                                            type: userType,
-                                            name: results[2].value,
-                                            avatar: avatarResult.value.ava
-                                        };
-                                    }
-                                })
-                                .catch(e => {
-                                    return {
-                                        type: userType,
-                                        name: results[2].value,
-                                        avatar
-                                    };
-                                });
-                        });
-                }).catch(e => null)
+                api.parameter(state.auth.sessionToken, 'ecosystem_name')
             ]);
 
             return Observable.fromPromise(promise)
-                .flatMap(payload => Observable.concat([
-                    authActions.updateMetadata.started({
-                        ...payload[2],
-                        ecosystem: state.auth.ecosystem
-                    }),
-                    actions.ecosystemInit.done({
-                        params: action.payload,
-                        result: {
-                            stylesheet: payload[1].value || null,
-                            defaultMenu: {
-                                name: 'default_menu',
-                                vde: false,
-                                content: payload[0].tree
+                .flatMap(payload =>
+                    Observable.concat([
+                        storageActions.saveAccount({
+                            ...state.auth.account,
+                            ecosystemName: payload[2].value
+                        }),
+                        actions.ecosystemInit.done({
+                            params: action.payload,
+                            result: {
+                                stylesheet: payload[1].value || null,
+                                defaultMenu: {
+                                    name: 'default_menu',
+                                    vde: false,
+                                    content: payload[0].tree
+                                }
                             }
-                        }
-                    })
-                ]))
+                        })
+                    ])
+                )
                 .catch((e: IAPIError) =>
                     Observable.of(actions.ecosystemInit.failed({
                         params: action.payload,

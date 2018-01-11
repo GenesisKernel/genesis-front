@@ -43,17 +43,17 @@ const StyledWrapper = styled.div`
 
 export interface IMainProps {
     session: string;
+    isAuthorized: boolean;
     isEcosystemOwner: boolean;
     pending: boolean;
     stylesheet: string;
-    navigationWidth: number;
+    navigationSize: number;
     navigationVisible: boolean;
     pendingTransactions: OrderedMap<string, { uuid: string, block: string, error?: { type: string, error: string }, contract: string }>;
     transactionsCount: number;
     onRefresh: () => void;
     onNavigateHome: () => void;
     onNavigationToggle: () => void;
-    watchSession: () => void;
 }
 
 const StyledControls = styled.div`
@@ -193,8 +193,8 @@ const StyledToolbar = styled.ul`
     }
 `;
 
-const ToolButton: React.SFC<{ icon: string, onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void }> = props => (
-    <li>
+const ToolButton: React.SFC<{ icon: string, right?: boolean, onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void }> = props => (
+    <li style={{ float: props.right ? 'right' : null }}>
         <button onClick={props.onClick}>
             <em className={`icon ${props.icon}`} />
             {props.children && (<span>{props.children}</span>)}
@@ -209,10 +209,6 @@ const ToolButton: React.SFC<{ icon: string, onClick?: (e: React.MouseEvent<HTMLB
 );*/
 
 class Main extends React.Component<IMainProps> {
-    componentDidMount() {
-        this.props.watchSession();
-    }
-
     onBack() {
         history.goBack();
     }
@@ -250,6 +246,9 @@ class Main extends React.Component<IMainProps> {
                         <ToolButton icon="icon-arrow-right" onClick={this.onForward} />
                         <ToolButton icon="icon-refresh" onClick={this.props.onRefresh} />
                         <ToolButton icon="icon-home" onClick={this.props.onNavigateHome} />
+                        {this.props.isAuthorized && (
+                            <ToolButton right icon="icon-key" />
+                        )}
                     </StyledToolbar>
                     <StyledLoadingBar
                         showFastActions
@@ -261,7 +260,7 @@ class Main extends React.Component<IMainProps> {
                     />
                 </StyledControls>
                 <Navigation topOffset={styles.headerHeight + styles.menuHeight + styles.toolbarHeight} />
-                <StyledContent style={{ marginLeft: this.props.navigationVisible ? this.props.navigationWidth : 0 }}>
+                <StyledContent style={{ marginLeft: this.props.navigationVisible ? this.props.navigationSize : 0 }}>
                     <ReduxToastr
                         timeOut={3000}
                         newestOnTop

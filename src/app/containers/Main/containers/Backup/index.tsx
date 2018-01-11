@@ -20,6 +20,20 @@ import { IRootState } from 'modules';
 import { alertShow } from 'modules/content/actions';
 
 import Backup, { IBackupProps } from 'components/Main/Backup';
+import { IStoredAccount } from 'apla/storage';
+
+export interface IBackupProps {
+}
+
+interface IBackupState {
+    account: IStoredAccount;
+    ecosystems: string[];
+    privateKey: string;
+}
+
+interface IBackupDispatch {
+    alertShow: typeof alertShow;
+}
 
 const BackupContainer: React.SFC<IBackupProps> = (props) => (
     <Backup {...props} />
@@ -27,6 +41,10 @@ const BackupContainer: React.SFC<IBackupProps> = (props) => (
 
 const mapStateToProps = (state: IRootState) => ({
     account: state.auth.account,
+    ecosystems: state.storage.accounts
+        .filter(l => l.id === state.auth.account.id && '1' !== l.ecosystem)
+        .map(l => l.ecosystem)
+        .sort((a, b) => parseInt(a, 10) - parseInt(b, 10)),
     privateKey: state.auth.privateKey
 });
 
@@ -34,4 +52,4 @@ const mapDispatchToProps = {
     alertShow
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(BackupContainer);
+export default connect<IBackupState, IBackupDispatch, IBackupProps>(mapStateToProps, mapDispatchToProps)(BackupContainer);

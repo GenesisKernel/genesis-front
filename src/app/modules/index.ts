@@ -25,6 +25,7 @@ import * as content from './content';
 import * as engine from './engine';
 import * as tx from './tx';
 import * as gui from './gui';
+import * as storage from './storage';
 
 export interface IRootState {
     auth: auth.State;
@@ -33,6 +34,7 @@ export interface IRootState {
     engine: engine.State;
     tx: tx.State;
     gui: gui.State;
+    storage: storage.State;
     loadingBar: number;
     router: RouterState;
 }
@@ -53,6 +55,7 @@ export default combineReducers<IRootState>({
     engine: engine.reducer,
     tx: tx.reducer,
     gui: gui.reducer,
+    storage: storage.reducer,
     loadingBar: loadingBarReducer,
     toastr: toastrReducer,
     router

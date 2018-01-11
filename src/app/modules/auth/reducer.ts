@@ -15,28 +15,28 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as actions from './actions';
-import { Action } from 'redux';
-import { isType } from 'typescript-fsa';
-import { IStoredKey } from 'lib/storage';
+import { reducerWithInitialState } from 'typescript-fsa-reducers';
+import { IStoredAccount } from 'apla/storage';
 
 export type State = {
     readonly loadedSeed: string;
     readonly isAuthenticated: boolean;
+    readonly authenticationError: string;
     readonly isLoggingIn: boolean;
-    readonly isCreatingAccount: boolean;
-    readonly isImportingAccount: boolean
     readonly isNodeOwner: boolean;
     readonly isEcosystemOwner: boolean;
+    readonly isCreatingAccount: boolean;
+    readonly createAccountError: string;
+    readonly isImportingAccount: boolean;
+    readonly importAccountError: string;
     readonly wallet: string;
     readonly sessionToken: string;
     readonly refreshToken: string;
     readonly socketToken: string;
     readonly sessionDuration: number;
     readonly timestamp: string;
-    readonly defaultAccount: IStoredKey;
-    readonly createdAccount: IStoredKey;
-    readonly importedAccount: IStoredKey;
-    readonly account: IStoredKey;
+    readonly defaultAccount: string;
+    readonly account: IStoredAccount;
     readonly privateKey: string;
     readonly ecosystem: string;
 };
@@ -44,224 +44,152 @@ export type State = {
 export const initialState: State = {
     loadedSeed: null,
     isAuthenticated: false,
+    authenticationError: null,
     isLoggingIn: false,
-    isCreatingAccount: false,
-    isImportingAccount: false,
     isNodeOwner: false,
     isEcosystemOwner: false,
+    isCreatingAccount: false,
+    createAccountError: null,
+    isImportingAccount: false,
+    importAccountError: null,
     wallet: null,
     sessionToken: null,
     refreshToken: null,
     socketToken: null,
     timestamp: null,
     sessionDuration: null,
-    createdAccount: null,
-    importedAccount: null,
     defaultAccount: null,
     account: null,
     privateKey: null,
     ecosystem: null
 };
 
-export default (state: State = initialState, action: Action): State => {
-    if (isType(action, actions.login.started)) {
-        return {
-            ...state,
-            isAuthenticated: false,
-            isLoggingIn: true,
-            isNodeOwner: false,
-            isEcosystemOwner: false,
-            account: null,
-            sessionToken: null,
-            refreshToken: null,
-            socketToken: null,
-            timestamp: null
-        };
-    }
-    else if (isType(action, actions.login.done)) {
-        return {
-            ...state,
-            isAuthenticated: true,
-            isLoggingIn: false,
-            isNodeOwner: action.payload.result.isnode,
-            isEcosystemOwner: action.payload.result.isowner,
-            account: action.payload.result.account,
-            ecosystem: action.payload.result.ecosystem_id,
-            sessionToken: action.payload.result.token,
-            refreshToken: action.payload.result.refresh,
-            privateKey: action.payload.result.privateKey,
-            sessionDuration: action.payload.result.expiry,
-            socketToken: action.payload.result.notify_key,
-            timestamp: action.payload.result.timestamp
-        };
-    }
-    else if (isType(action, actions.login.failed)) {
-        return {
-            ...state,
-            isLoggingIn: false
-        };
-    }
+export default reducerWithInitialState<State>(initialState)
+    // Login
+    .case(actions.login.started, (state, payload) => ({
+        ...state,
+        isAuthenticated: false,
+        isLoggingIn: true,
+        isNodeOwner: false,
+        isEcosystemOwner: false,
+        account: null,
+        sessionToken: null,
+        refreshToken: null,
+        socketToken: null,
+        timestamp: null
+    }))
+    .case(actions.login.done, (state, payload) => ({
+        ...state,
+        isAuthenticated: true,
+        isLoggingIn: false,
+        isNodeOwner: payload.result.isnode,
+        isEcosystemOwner: payload.result.isowner,
+        account: payload.result.account,
+        ecosystem: payload.result.ecosystem_id,
+        sessionToken: payload.result.token,
+        refreshToken: payload.result.refresh,
+        privateKey: payload.result.privateKey,
+        sessionDuration: payload.result.expiry,
+        socketToken: payload.result.notify_key,
+        timestamp: payload.result.timestamp,
+        authenticationError: null
+    }))
+    .case(actions.login.failed, (state, payload) => ({
+        ...state,
+        isLoggingIn: false,
+        authenticationError: payload.error
+    }))
 
-    if (isType(action, actions.logout.done)) {
-        return {
-            ...state,
-            isAuthenticated: false,
-            isLoggingIn: false,
-            isNodeOwner: false,
-            isEcosystemOwner: false,
-            account: null,
-            sessionToken: null,
-            refreshToken: null
-        };
-    }
+    // Logout
+    .case(actions.logout.done, (state, payload) => ({
+        ...state,
+        account: null,
+        isAuthenticated: false,
+        isLoggingIn: false,
+        isNodeOwner: false,
+        isEcosystemOwner: false
+    }))
 
-    if (isType(action, actions.switchEcosystem.started)) {
-        return {
-            ...state,
-            isAuthenticated: false,
-            isLoggingIn: true,
-            sessionToken: null,
-            refreshToken: null
-        };
-    }
-    else if (isType(action, actions.switchEcosystem.done)) {
-        return {
-            ...state,
-            isAuthenticated: true,
-            isLoggingIn: false,
-            ecosystem: action.payload.params,
-            sessionToken: action.payload.result.token,
-            refreshToken: action.payload.result.refresh,
-            sessionDuration: action.payload.result.sessionDuration
-        };
-    }
-    else if (isType(action, actions.switchEcosystem.failed)) {
-        return {
-            ...state,
-            isAuthenticated: false,
-            isLoggingIn: false,
-            account: null,
-            sessionToken: null,
-            refreshToken: null
-        };
-    }
+    // CreateAccount
+    .case(actions.createAccount.started, (state, payload) => ({
+        ...state,
+        isCreatingAccount: true,
+        createAccountError: null
+    }))
+    .case(actions.createAccount.done, (state, payload) => ({
+        ...state,
+        isCreatingAccount: false,
+        createAccountError: null
+    }))
+    .case(actions.createAccount.failed, (state, payload) => ({
+        ...state,
+        isCreatingAccount: false,
+        createAccountError: payload.error
+    }))
 
-    if (isType(action, actions.createEcosystem)) {
-        return {
-            ...state,
-            account: {
-                ...state.account,
-                ecosystems: {
-                    ...state.account.ecosystems,
-                    [action.payload.id]: {
-                        name: action.payload.name
-                    }
-                }
-            }
-        };
-    }
+    // ImportAccount
+    .case(actions.importAccount.started, (state, payload) => ({
+        ...state,
+        isImportingAccount: true,
+        importAccountError: null
+    }))
+    .case(actions.importAccount.done, (state, payload) => ({
+        ...state,
+        isImportingAccount: false,
+        importAccountError: null
+    }))
+    .case(actions.importAccount.failed, (state, payload) => ({
+        ...state,
+        isImportingAccount: false,
+        importAccountError: payload.error
+    }))
 
-    if (isType(action, actions.importSeed.done)) {
-        return {
-            ...state,
-            loadedSeed: action.payload.result
-        };
-    }
-    else if (isType(action, actions.createAccount.started)) {
-        return {
-            ...state,
-            isCreatingAccount: true,
-            createdAccount: null,
-        };
-    }
-
-    if (isType(action, actions.importAccount.started)) {
-        return {
-            ...state,
-            isImportingAccount: true,
-            importedAccount: null
-        };
-    }
-    else if (isType(action, actions.importAccount.done)) {
-        if (action.payload.params.isDefault) {
+    // ImportAccount
+    .case(actions.importAccount.done, (state, payload) => {
+        if (payload.params.isDefault) {
             return {
                 ...state,
-                isImportingAccount: false,
-                importedAccount: action.payload.result,
-                defaultAccount: action.payload.result
+                defaultAccount: payload.result[0].id
             };
         }
         else {
-            return {
-                ...state,
-                isImportingAccount: false,
-                importedAccount: action.payload.result
-            };
+            return state;
         }
-    }
-    else if (isType(action, actions.importAccount.failed)) {
-        return {
-            ...state,
-            isImportingAccount: false,
-            importedAccount: null
-        };
-    }
+    })
 
-    if (isType(action, actions.createAccount.started)) {
-        return {
-            ...state,
-            isCreatingAccount: true,
-            createdAccount: null
-        };
-    }
-    else if (isType(action, actions.createAccount.done)) {
-        return {
-            ...state,
-            isCreatingAccount: false,
-            createdAccount: action.payload.result
-        };
-    }
-    else if (isType(action, actions.createAccount.failed)) {
-        return {
-            ...state,
-            isCreatingAccount: false,
-            createdAccount: action.payload.error
-        };
-    }
+    // ImportSeed
+    .case(actions.importSeed.done, (state, payload) => ({
+        ...state,
+        loadedSeed: payload.result
+    }))
 
-    if (isType(action, actions.createAccount.failed)) {
-        return {
-            ...state,
-            isCreatingAccount: false,
-            createdAccount: null
-        };
-    }
+    // SwitchAccount
+    .case(actions.selectAccount.started, (state, payload) => ({
+        ...state,
+        authenticationError: null,
+        account: payload.account
+    }))
+    .case(actions.selectAccount.done, (state, payload) => ({
+        ...state,
+        isAuthenticated: true,
+        authenticationError: null,
+        sessionToken: payload.result.sessionToken,
+        refreshToken: payload.result.refreshToken,
+        account: payload.params.account
+    }))
+    .case(actions.selectAccount.failed, (state, payload) => ({
+        ...state,
+        isAuthenticated: false,
+        authenticationError: payload.error,
+        account: payload.params.account
+    }))
 
-    if (isType(action, actions.refreshSession)) {
-        return {
-            ...state,
-            sessionToken: action.payload.token,
-            refreshToken: action.payload.refresh,
-            sessionDuration: action.payload.sessionDuration
-        };
-    }
-
-    if (isType(action, actions.updateMetadata.done)) {
-        return {
-            ...state,
-            account: {
-                ...state.account,
-                ecosystems: {
-                    ...state.account.ecosystems,
-                    [action.payload.result.ecosystem]: {
-                        name: action.payload.result.name,
-                        type: action.payload.result.type,
-                        avatar: action.payload.result.avatar,
-                    }
-                }
-            }
-        };
-    }
-
-    return state;
-};
+    // Authorize/Deauthorize
+    .case(actions.authorize, (state, payload) => ({
+        ...state,
+        privateKey: payload.privateKey
+    }))
+    .case(actions.deauthorize, (state, payload) => ({
+        ...state,
+        privateKey: null
+    }));

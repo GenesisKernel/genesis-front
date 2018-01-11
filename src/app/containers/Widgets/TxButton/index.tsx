@@ -19,7 +19,7 @@ import * as uuid from 'uuid';
 import { Map } from 'immutable';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { contractExec } from 'modules/tx/actions';
+import { txCall } from 'modules/tx/actions';
 import { alertShow, navigatePage } from 'modules/content/actions';
 
 import TxButton, { ITxButtonConfirm } from 'components/TxButton';
@@ -43,7 +43,7 @@ interface ITxButtonStateProps {
 }
 
 interface ITxButtonDispatchProps {
-    contractExec: typeof contractExec.started;
+    callContract: typeof txCall;
     alertShow: typeof alertShow;
     navigatePage: typeof navigatePage.started;
 }
@@ -98,7 +98,7 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
                 contractParams = this.props.contractParams;
             }
 
-            this.props.contractExec({
+            this.props.callContract({
                 uuid: this._uuid,
                 name: this.props.contractName,
                 params: contractParams,
@@ -183,7 +183,7 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    contractExec: contractExec.started,
+    callContract: txCall,
     navigatePage: navigatePage.started,
     alertShow,
 };

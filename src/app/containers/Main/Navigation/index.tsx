@@ -51,7 +51,7 @@ const mapStateToProps = (state: IRootState) => ({
     isEcosystemOwner: state.auth.isEcosystemOwner,
     preloading: state.content.preloading,
     visible: state.content.navigationVisible,
-    width: state.content.navigationWidth,
+    width: state.storage.navigationSize,
     menus: state.content.menus
 });
 

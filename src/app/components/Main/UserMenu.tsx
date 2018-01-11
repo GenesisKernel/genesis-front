@@ -15,12 +15,11 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import * as _ from 'lodash';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { IStoredKey } from 'lib/storage';
 import imgAvatar from 'images/avatar.svg';
 import { FormattedMessage } from 'react-intl';
+import { IStoredAccount } from 'apla/storage';
 
 import DropdownButton, { CloseDropdownButton } from 'components/DropdownButton';
 
@@ -74,17 +73,13 @@ const StyledUserMenu = styled.div`
 `;
 
 export interface IUserMenuProps {
-    ecosystem: string;
-    account: IStoredKey;
-    onSwitchEcosystem: (ecosystem: string) => void;
-    onLogout: () => void;
+    account: IStoredAccount;
+    ecosystemAccounts: IStoredAccount[];
+    switchAccount: (options: { account: IStoredAccount, sessionDuration: number }) => void;
+    logout: () => void;
 }
 
 class UserMenu extends React.Component<IUserMenuProps> {
-    onSwitchEcosystem(ecosystem: string) {
-        this.props.onSwitchEcosystem(ecosystem);
-    }
-
     render() {
         return this.props.account && (
             <DropdownButton
@@ -114,7 +109,7 @@ class UserMenu extends React.Component<IUserMenuProps> {
                                 </Link>
                             </li>
                             <li>
-                                <CloseDropdownButton onClick={this.props.onLogout}>
+                                <CloseDropdownButton onClick={this.props.logout}>
                                     <em className="icon icon-logout text-danger" />
                                     <span>
                                         <FormattedMessage id="general.account.signout" defaultMessage="Sign out" />
@@ -124,13 +119,27 @@ class UserMenu extends React.Component<IUserMenuProps> {
                         </ul>
                         <div className="dropdown-heading">Ecosystems</div>
                         <ul className="dropdown-group">
-                            {_.map(this.props.account.ecosystems, ((value, key) => (
+                            {this.props.ecosystemAccounts.map(account => (
+                                <li key={account.ecosystem}>
+                                    <CloseDropdownButton onClick={account.ecosystem !== this.props.account.ecosystem && this.props.switchAccount.bind(this, { account })}>
+                                        {account.ecosystemName ?
+                                            (
+                                                account.ecosystemName
+                                            ) :
+                                            (
+                                                <FormattedMessage id="general.account.ecosystemNo" defaultMessage="Ecosystem #{ecosystem}" values={{ ecosystem: account.ecosystem }} />
+                                            )
+                                        }
+                                    </CloseDropdownButton>
+                                </li>
+                            ))}
+                            {/*_.map(this.props.account.ecosystems, ((value, key) => (
                                 <li key={key}>
                                     <CloseDropdownButton onClick={key !== this.props.ecosystem && this.onSwitchEcosystem.bind(this, key)}>
                                         {value.name || key}
                                     </CloseDropdownButton>
                                 </li>
-                            )))}
+                            )))*/}
                         </ul>
                     </div>
                 }
@@ -138,15 +147,15 @@ class UserMenu extends React.Component<IUserMenuProps> {
                 <StyledUserMenu>
                     <div className="user-info">
                         <div className="user-title">
-                            {this.props.account.ecosystems[this.props.ecosystem].type || this.props.account.address}
+                            {this.props.account.username || this.props.account.address}
                         </div>
                         <div className="user-subtitle">
-                            {this.props.account.ecosystems[this.props.ecosystem].name || (
-                                <FormattedMessage id="general.ecosystem.id" defaultMessage="Ecosystem {name}" values={{ name: this.props.ecosystem }} />
+                            {this.props.account.ecosystemName || (
+                                <FormattedMessage id="general.account.ecosystemNo" defaultMessage="Ecosystem #{ecosystem}" values={{ ecosystem: this.props.account.ecosystem }} />
                             )}
                         </div>
                     </div>
-                    <img className="user-avatar" src={this.props.account.ecosystems[this.props.ecosystem].avatar || imgAvatar} />
+                    <img className="user-avatar" src={this.props.account.avatar || imgAvatar} />
                 </StyledUserMenu>
             </DropdownButton>
         );

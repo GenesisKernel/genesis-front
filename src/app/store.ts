@@ -20,7 +20,11 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { routerMiddleware } from 'react-router-redux';
 import { createEpicMiddleware } from 'redux-observable';
 import { loadingBarMiddleware } from 'react-redux-loading-bar';
-import txMiddleware from 'modules/middleware/tx';
+import persistState, { mergePersistedState } from 'redux-localstorage';
+import adapter from 'redux-localstorage/lib/adapters/localStorage';
+import filter from 'redux-localstorage-filter';
+import debounce from 'redux-localstorage-debounce';
+
 import { History } from 'history';
 import createHistory from 'history/createBrowserHistory';
 import createMemoryHistory from 'history/createMemoryHistory';
@@ -32,6 +36,21 @@ export const history = platform.select<() => History>({
     web: createHistory
 })();
 
+const reducer = compose(
+    mergePersistedState()
+)(rootReducer);
+
+const storage = compose(
+    debounce(1000, 5000),
+    filter([
+        'storage',
+        'auth.isAuthenticated',
+        'auth.sessionToken',
+        'auth.refreshToken',
+        'auth.account'
+    ])
+)(adapter(window.localStorage));
+
 const configureStore = (initialState?: IRootState) => {
     const enhancers: any[] = [];
     const middleware = [
@@ -39,8 +58,7 @@ const configureStore = (initialState?: IRootState) => {
         createEpicMiddleware(rootEpic),
         loadingBarMiddleware({
             promiseTypeSuffixes: ['STARTED', 'DONE', 'FAILED']
-        }),
-        txMiddleware
+        })
     ];
 
     if (process.env.NODE_ENV === 'development') {
@@ -53,11 +71,12 @@ const configureStore = (initialState?: IRootState) => {
 
     const composedEnhancers = compose(
         applyMiddleware(...middleware),
+        persistState(storage, 'persistentData'),
         ...enhancers
     );
 
     return createStore<IRootState>(
-        rootReducer,
+        reducer,
         initialState!,
         composedEnhancers
     );

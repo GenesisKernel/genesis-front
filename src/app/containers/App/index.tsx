@@ -21,7 +21,6 @@ import { IRootState } from 'modules';
 import { IntlProvider } from 'react-intl';
 import { login } from 'modules/auth/actions';
 import { navigate, checkOnline, setLoading } from 'modules/engine/actions';
-import storage from 'lib/storage';
 import platform from 'lib/platform';
 import * as classnames from 'classnames';
 
@@ -61,7 +60,7 @@ class App extends React.Component<IAppProps> {
     componentWillReceiveProps(props: IAppProps) {
         if (null === this.props.isConnected && null !== props.isConnected) {
             if (props.isConnected) {
-                const privateKey = storage.settings.load('privateKey');
+                /*const privateKey = storage.settings.load('privateKey');
                 const lastEcosystem = storage.settings.load('lastEcosystem');
                 if (privateKey && props.isInstalled && !props.isAuthenticated && !props.isImportingAccount) {
                     this.props.login({
@@ -72,7 +71,8 @@ class App extends React.Component<IAppProps> {
                 }
                 else {
                     this.props.setLoading(false);
-                }
+                }*/
+                this.props.setLoading(false);
             }
             else {
                 this.props.setLoading(false);
