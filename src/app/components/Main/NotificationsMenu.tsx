@@ -36,9 +36,9 @@ const NotificationsMenu: React.SFC<INotificationsMenuProps> = props => (
                 <div className="dropdown-heading">
                     <FormattedMessage id="notifications" defaultMessage="Notifications" />
                 </div>
-                <ul className="dropdown-group">
+                <div>
                     <Protypo context="page" payload={props.notificationsBody} />
-                </ul>
+                </div>
             </div>
         )}
     >
