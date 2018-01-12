@@ -27,7 +27,7 @@ import Titlebar from './Titlebar';
 import UserMenu from 'containers/Widgets/UserMenu';
 import Navigation from 'containers/Main/Navigation';
 import { apiUrl } from 'lib/api';
-// import NotificationsMenu from './NotificationsMenu';
+import NotificationsMenu from 'containers/Widgets/NotificationsMenu';
 // import TransactionsMenu from './TransactionsMenu';
 
 export const styles = {
@@ -236,8 +236,8 @@ class Main extends React.Component<IMainProps> {
                         </MenuItem>
                         <MenuItem active>Home</MenuItem>
                         <li className="user-menu">
-                            {/*<NotificationsMenu />
-                            <TransactionsMenu />*/}
+                            <NotificationsMenu />
+                            {/*<TransactionsMenu />*/}
                             <UserMenu />
                         </li>
                     </StyledMenu>

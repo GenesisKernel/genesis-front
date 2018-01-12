@@ -22,6 +22,7 @@ import { combineEpics, Epic } from 'redux-observable';
 import { IRootState } from 'modules';
 import * as actions from './actions';
 import * as authActions from 'modules/auth/actions';
+import { connect } from 'modules/socket/actions';
 import platform from 'lib/platform';
 
 export const checkOnlineEpic: Epic<Action, IRootState> =
@@ -52,18 +53,34 @@ export const checkOnlineEpic: Epic<Action, IRootState> =
                                 ]);
                             }
                             else {
-                                return Observable.of(actions.checkOnline.done({
-                                    params: null,
-                                    result: true
-                                }));
+                                const state = store.getState();
+                                return Observable.concat([
+                                    actions.checkOnline.done({
+                                        params: null,
+                                        result: true
+                                    }),
+                                    connect.started({
+                                        socketToken: state.auth.socketToken,
+                                        timestamp: state.auth.timestamp,
+                                        userID: state.auth.id
+                                    })
+                                ]);
                             }
                         });
                 }
                 else {
-                    return Observable.of(actions.checkOnline.done({
-                        params: null,
-                        result: true
-                    }));
+                    const state = store.getState();
+                    return Observable.concat([
+                        actions.checkOnline.done({
+                            params: null,
+                            result: true
+                        }),
+                        connect.started({
+                            socketToken: state.auth.socketToken,
+                            timestamp: state.auth.timestamp,
+                            userID: state.auth.id
+                        })
+                    ]);
                 }
             }).catch((error: IAPIError) => {
                 return Observable.of(actions.checkOnline.failed({

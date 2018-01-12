@@ -14,18 +14,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-declare module 'apla/storage' {
-    interface IStoredAccount {
-        id: string;
-        encKey: string;
-        address: string;
-        ecosystem: string;
-        ecosystemName: string;
-        avatar: string;
-        username: string;
-        sessionToken: string;
-        refreshToken: string;
-        socketToken: string;
-        timestamp: string;
-    }
-}
+import actionCreatorFactory from 'typescript-fsa';
+import { IStoredAccount } from 'apla/storage';
+import { INotificationsMessage } from 'apla/socket';
+
+const actionCreator = actionCreatorFactory('socket');
+export const connect = actionCreator.async<{ userID: string, socketToken: string, timestamp: string }, object, void>('CONNECT');
+export const watchNotifications = actionCreator<{ accounts: IStoredAccount[] }>('WATCH_NOTIFICATIONS');
+export const setNotificationsCount = actionCreator<INotificationsMessage>('SET_NOTIFICATIONS_COUNT');

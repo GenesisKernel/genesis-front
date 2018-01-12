@@ -37,8 +37,8 @@ const StyledUserMenu = styled.div`
         text-align: right;
         float: left;
         margin-right: 5px;
-        width: 170px;
         white-space: nowrap;
+        max-width: 170px;
 
         > .user-title {
             margin-top: 4px;

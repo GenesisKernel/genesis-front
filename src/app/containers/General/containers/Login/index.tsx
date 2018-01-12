@@ -21,6 +21,7 @@ import { login, logout, selectAccount } from 'modules/auth/actions';
 import { alertShow } from 'modules/content/actions';
 import { removeAccount } from 'modules/storage/actions';
 import { IStoredAccount } from 'apla/storage';
+import { INotificationsMessage } from 'apla/socket';
 
 import Login, { ILoginProps } from 'components/General/Login';
 import { IRootState } from 'modules';
@@ -33,6 +34,7 @@ interface ILoginContainerState {
     isLoggingIn: boolean;
     account: IStoredAccount;
     accounts: IStoredAccount[];
+    notifications: INotificationsMessage[];
     alert: { id: string, success: string, error: string };
     defaultAccount: string;
 }
@@ -55,6 +57,7 @@ const mapStateToProps = (state: IRootState) => ({
     authenticationError: state.auth.authenticationError,
     account: state.auth.account,
     accounts: state.storage.accounts,
+    notifications: state.socket.notifications,
     alert: state.content.alert,
     defaultAccount: state.auth.defaultAccount
 });

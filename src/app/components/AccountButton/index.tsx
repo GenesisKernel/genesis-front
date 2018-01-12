@@ -25,14 +25,28 @@ const StyledAccountButton = styled.div`
     position: relative;
 
     button.account-main {
+        position: relative;
         border: solid 1px transparent;
         padding: 0;
         height: 46px;
         overflow: hidden;
+        padding-right: 45px;
 
         .avatar {
             max-width: 44px;
             max-height: 44px;
+        }
+
+        .notifications {
+            text-align: center;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            bottom: 10px;
+            width: 25px;
+            line-height: 25px;
+            background: #d87272;
+            color: #fff;
         }
     }
 
@@ -60,6 +74,7 @@ export interface IAccountButtonProps {
     username: string;
     ecosystemID: string;
     ecosystemName: string;
+    notifications?: number;
     onSelect: () => void;
     onRemove: () => void;
 }
@@ -80,6 +95,11 @@ const AccountButton: React.SFC<IAccountButtonProps> = props => (
                         <small>{props.address}</small>
                     </p>
                 </div>
+                {props.notifications && (
+                    <div className="notifications">
+                        {props.notifications}
+                    </div>
+                )}
             </div>
         </Button>
         <button className="account-delete" onClick={props.onRemove}>x</button>

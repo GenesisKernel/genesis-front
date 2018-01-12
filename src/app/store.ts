@@ -47,7 +47,10 @@ const storage = compose(
         'auth.isAuthenticated',
         'auth.sessionToken',
         'auth.refreshToken',
-        'auth.account'
+        'auth.socketToken',
+        'auth.id',
+        'auth.account',
+        'auth.timestamp'
     ])
 )(adapter(window.localStorage));
 

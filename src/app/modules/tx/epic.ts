@@ -103,6 +103,8 @@ export const txExecEpic: Epic<Action, IRootState> =
                                         username: null,
                                         sessionToken: null,
                                         refreshToken: null,
+                                        socketToken: null,
+                                        timestamp: null,
                                         ecosystem: payload.result,
                                         ecosystemName
                                     }))

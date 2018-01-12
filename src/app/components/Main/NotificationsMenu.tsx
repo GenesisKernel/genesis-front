@@ -15,36 +15,29 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import Protypo from 'containers/Widgets/Protypo';
+import { FormattedMessage } from 'react-intl';
+import { IProtypoElement } from 'components/Protypo/Protypo';
 
 import DropdownButton from 'components/DropdownButton';
 
 export interface INotificationsMenuProps {
-
+    count: number;
+    notificationsBody: IProtypoElement[];
 }
 
 const NotificationsMenu: React.SFC<INotificationsMenuProps> = props => (
     <DropdownButton
         align="right"
         width={250}
+        badge={props.count}
         content={(
-            <div style={{ color: '#000' }}>
-                <div className="dropdown-heading">Notifications</div>
+            <div style={{ color: '#000', overflow: 'hidden' }}>
+                <div className="dropdown-heading">
+                    <FormattedMessage id="notifications" defaultMessage="Notifications" />
+                </div>
                 <ul className="dropdown-group">
-                    <li>
-                        <button>Go to Hell</button>
-                    </li>
-                    <li>
-                        <button>Go to Hell</button>
-                    </li>
-                    <li>
-                        <button>Go to Hell</button>
-                    </li>
-                    <li>
-                        <button>Go to Hell</button>
-                    </li>
-                    <li>
-                        <button>Go to Hell</button>
-                    </li>
+                    <Protypo context="page" payload={props.notificationsBody} />
                 </ul>
             </div>
         )}

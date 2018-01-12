@@ -21,6 +21,7 @@ import styled from 'styled-components';
 import { navigate } from 'modules/engine/actions';
 import { alertShow } from 'modules/content/actions';
 import { IStoredAccount } from 'apla/storage';
+import { INotificationsMessage } from 'apla/socket';
 import imgAvatar from 'images/avatar.svg';
 
 import DocumentTitle from 'components/DocumentTitle';
@@ -99,6 +100,7 @@ export interface ILoginProps extends InjectedIntlProps {
     authenticationError: string;
     account: IStoredAccount;
     accounts: IStoredAccount[];
+    notifications: INotificationsMessage[];
     alert: { id: string, success: string, error: string };
     defaultAccount: string;
     navigate: typeof navigate;
@@ -183,6 +185,15 @@ class Login extends React.Component<ILoginProps> {
             );
     }
 
+    getNotificationsCount(account: IStoredAccount) {
+        const notifications = this.props.notifications.filter(n =>
+            n.id === account.id &&
+            n.ecosystem === account.ecosystem,
+        ).map(n => n.count);
+
+        return notifications.length ? notifications.reduce((a, b) => a + b) : 0;
+    }
+
     renderAccountList() {
         return (
             <div className="auth-body form-horizontal desktop-flex-col desktop-flex-stretch">
@@ -197,6 +208,7 @@ class Login extends React.Component<ILoginProps> {
                             key={index}
                             avatar={l.avatar}
                             keyID={l.id}
+                            notifications={this.getNotificationsCount(l)}
                             username={l.username}
                             address={l.address}
                             ecosystemID={l.ecosystem}

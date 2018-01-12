@@ -112,6 +112,7 @@ export const ecosystemInitEpic: Epic<Action, IRootState> =
                             ...state.auth.account,
                             ecosystemName: payload[2].value
                         }),
+                        actions.fetchNotifications.started(null),
                         actions.ecosystemInit.done({
                             params: action.payload,
                             result: {

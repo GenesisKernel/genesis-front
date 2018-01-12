@@ -18,6 +18,8 @@ import needle, { NeedleOptions } from 'needle';
 import platform from 'lib/platform';
 
 export let apiUrl = platform.args().API_URL || process.env.REACT_APP_API_URL || 'http://127.0.0.1:7079/api/v2';
+export let socketUrl = platform.args().SOCKET_URL || process.env.REACT_APP_SOCKET_URL || 'ws://127.0.0.1:8000';
+
 const defaultOptions: NeedleOptions = {
     method: 'POST',
     headers: {
@@ -25,8 +27,13 @@ const defaultOptions: NeedleOptions = {
     }
 };
 
-export const overrideSettings = (settings: { apiUrl: string }) => {
-    apiUrl = settings.apiUrl;
+export const overrideSettings = (settings: { apiUrl?: string, socketUrl?: string }) => {
+    if (settings.apiUrl) {
+        apiUrl = settings.apiUrl;
+    }
+    if (settings.socketUrl) {
+        socketUrl = settings.socketUrl;
+    }
 };
 
 export interface IResponse extends IAPIError {

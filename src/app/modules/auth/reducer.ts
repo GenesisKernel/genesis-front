@@ -29,7 +29,7 @@ export type State = {
     readonly createAccountError: string;
     readonly isImportingAccount: boolean;
     readonly importAccountError: string;
-    readonly wallet: string;
+    readonly id: string;
     readonly sessionToken: string;
     readonly refreshToken: string;
     readonly socketToken: string;
@@ -52,7 +52,7 @@ export const initialState: State = {
     createAccountError: null,
     isImportingAccount: false,
     importAccountError: null,
-    wallet: null,
+    id: null,
     sessionToken: null,
     refreshToken: null,
     socketToken: null,
@@ -92,7 +92,8 @@ export default reducerWithInitialState<State>(initialState)
         sessionDuration: payload.result.expiry,
         socketToken: payload.result.notify_key,
         timestamp: payload.result.timestamp,
-        authenticationError: null
+        authenticationError: null,
+        id: payload.result.account.id
     }))
     .case(actions.login.failed, (state, payload) => ({
         ...state,
@@ -175,7 +176,10 @@ export default reducerWithInitialState<State>(initialState)
         authenticationError: null,
         sessionToken: payload.result.sessionToken,
         refreshToken: payload.result.refreshToken,
-        account: payload.params.account
+        socketToken: payload.params.account.socketToken,
+        timestamp: payload.params.account.timestamp,
+        account: payload.params.account,
+        id: payload.params.account.id
     }))
     .case(actions.selectAccount.failed, (state, payload) => ({
         ...state,

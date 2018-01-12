@@ -60,7 +60,9 @@ export const loginEpic = (actions$: Observable<Action>) =>
                         avatar: null,
                         username: payload.key_id,
                         sessionToken: payload.token,
-                        refreshToken: payload.refresh
+                        refreshToken: payload.refresh,
+                        socketToken: payload.notify_key,
+                        timestamp: payload.timestamp
                     };
 
                     return Observable.concat([
@@ -236,7 +238,9 @@ export const importAccountEpic: Epic<Action, IRootState> =
                         username: response.key_id,
                         avatar: null,
                         sessionToken: response.token,
-                        refreshToken: response.refresh
+                        refreshToken: response.refresh,
+                        socketToken: response.notify_key,
+                        timestamp: response.timestamp
                     }));
 
                     return Observable.concat([
@@ -271,7 +275,9 @@ export const createAccountEpic: Epic<Action, IRootState> =
                         username: payload.key_id,
                         avatar: null,
                         sessionToken: payload.token,
-                        refreshToken: payload.refresh
+                        refreshToken: payload.refresh,
+                        socketToken: payload.notify_key,
+                        timestamp: payload.timestamp
                     };
 
                     return Observable.concat([

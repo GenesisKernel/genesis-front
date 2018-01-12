@@ -35,6 +35,20 @@ const StyledDropdown = styled.div`
         line-height: 40px;
         padding: 0 10px;
         text-align: center;
+
+        .dropdown-badge {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: #d46565;
+            display: block;
+            width: 16px;
+            height: 16px;
+            padding: 0;
+            line-height: 16px;
+            font-size: 12px;
+            font-weight: bold;
+        }
     }
 
     .dropdown-content {
@@ -118,6 +132,7 @@ export interface IDropdownButtonProps {
     rightMost?: boolean;
     align?: 'left' | 'right';
     width?: number;
+    badge?: number;
     onClick?: React.EventHandler<React.MouseEvent<HTMLButtonElement>>;
 }
 
@@ -165,6 +180,9 @@ class DropdownButton extends React.Component<IDropdownButtonProps & InjectedOnCl
             <StyledDropdown className={this.state.active ? 'dropdown-active' : ''}>
                 <button className={classNames('dropdown-toggle', this.props.className)} onClick={this.onClick.bind(this)}>
                     {this.props.children}
+                    {this.props.badge ? (
+                        <span className="dropdown-badge">{Math.min(this.props.badge, 99)}</span>
+                    ) : null}
                 </button>
                 <Dropdown visible={this.state.active} align={this.props.align} width={this.props.width}>
                     <div className={classNames('dropdown-content', { 'dropdown-leftmost': this.props.leftMost, 'dropdown-rightmost': this.props.rightMost })}>

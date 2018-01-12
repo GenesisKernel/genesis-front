@@ -14,18 +14,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-declare module 'apla/storage' {
-    interface IStoredAccount {
+declare module 'apla/socket' {
+    interface INotificationsMessage {
         id: string;
-        encKey: string;
-        address: string;
         ecosystem: string;
-        ecosystemName: string;
-        avatar: string;
-        username: string;
-        sessionToken: string;
-        refreshToken: string;
-        socketToken: string;
-        timestamp: string;
+        role: number;
+        count: number;
     }
 }
