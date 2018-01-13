@@ -19,8 +19,8 @@ import { ILoginResponse } from 'lib/api';
 import { IStoredAccount } from 'apla/storage';
 
 const actionCreator = actionCreatorFactory('auth');
-export const selectAccount = actionCreator.async<{ account: IStoredAccount, sessionDuration: number }, { sessionToken: string, refreshToken: string }, string>('SELECT_ACCOUNT');
-export const authorizeAccount = actionCreator<{ account: IStoredAccount, sessionDuration: number }>('AUTHORIZE_ACCOUNT');
+export const selectAccount = actionCreator.async<{ account: IStoredAccount }, { sessionToken: string, refreshToken: string }, string>('SELECT_ACCOUNT');
+export const authorizeAccount = actionCreator<{ account: IStoredAccount }>('AUTHORIZE_ACCOUNT');
 export const login = actionCreator.async<{ encKey: string, ecosystem: string, password: string }, ILoginResponse & { account: IStoredAccount, privateKey: string, publicKey: string }, string>('LOGIN');
 export const logout = actionCreator.async('LOGOUT');
 export const createEcosystem = actionCreator<{ name: string, id: string }>('CREATE_ECOSYSTEM');

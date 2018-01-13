@@ -107,7 +107,7 @@ export interface ILoginProps extends InjectedIntlProps {
     alertShow: typeof alertShow;
     login: (params: { encKey: string, ecosystem: string, password: string }) => void;
     logout: (params: {}) => void;
-    selectAccount: (params: { account: IStoredAccount, sessionDuration: number }) => void;
+    selectAccount: (params: { account: IStoredAccount }) => void;
     removeAccount: (account: { id: string, ecosystem: string }) => void;
 }
 
@@ -157,8 +157,7 @@ class Login extends React.Component<ILoginProps> {
 
     onSelectAccount(account: IStoredAccount) {
         this.props.selectAccount({
-            account,
-            sessionDuration: 60 * 60 * 24 * 30
+            account
         });
     }
 

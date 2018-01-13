@@ -33,7 +33,6 @@ export type State = {
     readonly sessionToken: string;
     readonly refreshToken: string;
     readonly socketToken: string;
-    readonly sessionDuration: number;
     readonly timestamp: string;
     readonly defaultAccount: string;
     readonly account: IStoredAccount;
@@ -57,7 +56,6 @@ export const initialState: State = {
     refreshToken: null,
     socketToken: null,
     timestamp: null,
-    sessionDuration: null,
     defaultAccount: null,
     account: null,
     privateKey: null,
@@ -89,7 +87,6 @@ export default reducerWithInitialState<State>(initialState)
         sessionToken: payload.result.token,
         refreshToken: payload.result.refresh,
         privateKey: payload.result.privateKey,
-        sessionDuration: payload.result.expiry,
         socketToken: payload.result.notify_key,
         timestamp: payload.result.timestamp,
         authenticationError: null,

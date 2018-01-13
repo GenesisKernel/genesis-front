@@ -134,8 +134,7 @@ export const ecosystemInitEpic: Epic<Action, IRootState> =
                         return Observable.concat([
                             logout.started({}),
                             selectAccount.started({
-                                account,
-                                sessionDuration: 3600
+                                account
                             }),
                             actions.ecosystemInit.failed({
                                 params: action.payload,

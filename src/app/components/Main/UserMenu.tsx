@@ -75,7 +75,7 @@ const StyledUserMenu = styled.div`
 export interface IUserMenuProps {
     account: IStoredAccount;
     ecosystemAccounts: IStoredAccount[];
-    switchAccount: (options: { account: IStoredAccount, sessionDuration: number }) => void;
+    switchAccount: (options: { account: IStoredAccount }) => void;
     logout: () => void;
 }
 

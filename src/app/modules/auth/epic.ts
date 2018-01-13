@@ -111,7 +111,7 @@ export const logoutEpic: Epic<Action, IRootState> =
 export const selectAccountEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.selectAccount.started)
         .flatMap(action => {
-            const promise = api.refresh(action.payload.account.sessionToken, action.payload.account.refreshToken, action.payload.sessionDuration)
+            const promise = api.refresh(action.payload.account.sessionToken, action.payload.account.refreshToken)
                 .then(tokens =>
                     api.row(tokens.token, 'member', action.payload.account.id, 'avatar,username')
                         .then(memberResult => ({
@@ -135,8 +135,7 @@ export const selectAccountEpic: Epic<Action, IRootState> =
                         Observable.of(storageActions.saveAccount(account)),
                         Observable.of(actions.selectAccount.done({
                             params: {
-                                account,
-                                sessionDuration: action.payload.sessionDuration
+                                account
                             },
                             result: {
                                 sessionToken: payload.token,
