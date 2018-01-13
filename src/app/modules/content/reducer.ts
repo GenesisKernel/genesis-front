@@ -22,6 +22,7 @@ import { IProtypoElement } from 'components/Protypo/Protypo';
 export type State = {
     readonly pending: boolean;
     readonly preloading: boolean;
+    readonly preloadingError: string;
     readonly stylesheet: string;
     readonly navigationResizing: boolean;
     readonly navigationVisible: boolean;
@@ -35,6 +36,7 @@ export type State = {
 export const initialState: State = {
     pending: false,
     preloading: false,
+    preloadingError: null,
     stylesheet: null,
     navigationResizing: false,
     navigationVisible: true,
@@ -175,6 +177,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             preloading: true,
+            preloadingError: null
         };
     }
     else if (isType(action, actions.ecosystemInit.done)) {
@@ -183,6 +186,7 @@ export default (state: State = initialState, action: Action): State => {
             return {
                 ...state,
                 preloading: false,
+                preloadingError: null,
                 stylesheet: action.payload.result.stylesheet,
                 menus: [action.payload.result.defaultMenu, ...state.menus]
             };
@@ -197,7 +201,8 @@ export default (state: State = initialState, action: Action): State => {
     else if (isType(action, actions.ecosystemInit.failed)) {
         return {
             ...state,
-            preloading: false
+            preloading: false,
+            preloadingError: action.payload.error
         };
     }
 

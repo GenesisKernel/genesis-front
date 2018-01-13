@@ -21,6 +21,7 @@ import { combineEpics, Epic } from 'redux-observable';
 import swal, { SweetAlertType } from 'sweetalert2';
 import { IRootState } from 'modules';
 import * as actions from './actions';
+import { logout, selectAccount } from 'modules/auth/actions';
 import * as storageActions from 'modules/storage/actions';
 import { history } from 'store';
 
@@ -126,12 +127,27 @@ export const ecosystemInitEpic: Epic<Action, IRootState> =
                         })
                     ])
                 )
-                .catch((e: IAPIError) =>
-                    Observable.of(actions.ecosystemInit.failed({
+                .catch((e: IAPIError) => {
+                    if ('E_SERVER' === e.error || 'E_TOKENEXPIRED' === e.error) {
+                        const account = store.getState().auth.account;
+
+                        return Observable.concat([
+                            logout.started({}),
+                            selectAccount.started({
+                                account,
+                                sessionDuration: 3600
+                            }),
+                            actions.ecosystemInit.failed({
+                                params: action.payload,
+                                error: e.error
+                            })
+                        ]);
+                    }
+                    return Observable.of(actions.ecosystemInit.failed({
                         params: action.payload,
                         error: e.error
-                    }))
-                );
+                    }));
+                });
         });
 
 export const alertEpic: Epic<Action, IRootState> =

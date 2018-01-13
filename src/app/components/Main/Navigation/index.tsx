@@ -126,6 +126,7 @@ const StyledDevButton = styled.div`
 export interface INavigationProps {
     isEcosystemOwner: boolean;
     preloading: boolean;
+    preloadingError: string;
     visible: boolean;
     topOffset: number;
     width: number;
@@ -149,7 +150,8 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
     }
 
     preloadMenu(props: INavigationProps) {
-        if (!props.preloading && !props.menus.find(l => l.name === 'default_menu')) {
+        if (!props.preloadingError && !props.preloading && !props.menus.find(l => l.name === 'default_menu')) {
+            console.log('ECOSYSTEMINIT:::', props.preloading);
             this.props.ecosystemInit(null);
         }
     }
