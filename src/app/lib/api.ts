@@ -19,6 +19,7 @@ import platform from 'lib/platform';
 
 export let apiUrl = platform.args().API_URL || process.env.REACT_APP_API_URL || 'http://127.0.0.1:7079/api/v2';
 export let socketUrl = platform.args().SOCKET_URL || process.env.REACT_APP_SOCKET_URL || 'ws://127.0.0.1:8000';
+export const SESSION_DURATION_DEFAULT = 60 * 60 * 24 * 30;
 
 const defaultOptions: NeedleOptions = {
     method: 'POST',
@@ -300,7 +301,7 @@ const api = {
         forsign: forSign,
         pubkey: publicKey
     }) as Promise<ISignTestResponse>,
-    login: (session: string, publicKey: string, signature: string, expirySeconds: number = 3600, ecosystem: string = '1') => securedRequest('login', session, {
+    login: (session: string, publicKey: string, signature: string, expirySeconds: number = SESSION_DURATION_DEFAULT, ecosystem: string = '1') => securedRequest('login', session, {
         pubkey: publicKey.slice(2),
         signature,
         ecosystem,
@@ -309,7 +310,7 @@ const api = {
         ...result,
         expiry: expirySeconds
     })) as Promise<ILoginResponse>,
-    refresh: (session: string, token: string, expirySeconds: number = 36000) => securedRequest('refresh', session, { token }).then((result: IRefreshResponse) => ({
+    refresh: (session: string, token: string, expirySeconds: number = SESSION_DURATION_DEFAULT) => securedRequest('refresh', session, { token }).then((result: IRefreshResponse) => ({
         ...result,
         expiry: expirySeconds
     })) as Promise<IRefreshResponse>,
