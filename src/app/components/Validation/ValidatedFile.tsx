@@ -106,8 +106,8 @@ export default class ValidatedFile extends React.Component<IValidatedFileProps, 
                 />
                 <input type="text" className="form-control" readOnly value={this.state.filename} placeholder={this.props.placeholder} />
                 <div className="group-span-filestyle input-group-btn">
-                    <button className="btn btn-default" type="button" disabled={this.props.disabled} onClick={this.onBrowse.bind(this)}>
-                        <span className="icon-span-filestyle glyphicon glyphicon-folder-open" />
+                    <button className="btn btn-default" style={{ border: 'solid 1px #dde6e9' }} type="button" disabled={this.props.disabled} onClick={this.onBrowse.bind(this)}>
+                        <span className="text-muted icon-span-filestyle glyphicon glyphicon-folder-open" />
                         <span className="buttonText" />
                     </button>
                 </div>
