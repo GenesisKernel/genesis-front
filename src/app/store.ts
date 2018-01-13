@@ -58,7 +58,11 @@ const configureStore = (initialState?: IRootState) => {
     const enhancers: any[] = [];
     const middleware = [
         routerMiddleware(history),
-        createEpicMiddleware(rootEpic),
+        createEpicMiddleware(rootEpic, {
+            dependencies: {
+                
+            }
+        }),
         loadingBarMiddleware({
             promiseTypeSuffixes: ['STARTED', 'DONE', 'FAILED']
         })

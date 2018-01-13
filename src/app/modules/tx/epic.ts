@@ -19,6 +19,8 @@ import { combineEpics, Epic } from 'redux-observable';
 import { Action } from 'redux';
 import { Observable } from 'rxjs';
 import swal from 'sweetalert2';
+import * as Promise from 'bluebird';
+import * as _ from 'lodash';
 import * as actions from './actions';
 import * as authActions from 'modules/auth/actions';
 import * as storageActions from 'modules/storage/actions';
@@ -43,9 +45,17 @@ export const txCallEpic: Epic<Action, IRootState> =
 export const txAuthorizeEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.txAuthorize)
         .flatMap(action => {
+            const state = store.getState();
+
             return Observable.fromPromise(swal({
-                title: 'txExec',
-                text: `Enter your password to sign contract '${action.payload.name}'`,
+                title: state.engine.intl.formatMessage({
+                    id: 'tx',
+                    defaultMessage: 'Transaction'
+                }),
+                text: state.engine.intl.formatMessage({
+                    id: 'tx.password',
+                    defaultMessage: 'Enter your password to sign contract \'{contract}\''
+                }, { contract: action.payload.name }),
                 input: 'password',
                 showCancelButton: true
             })
@@ -54,8 +64,7 @@ export const txAuthorizeEpic: Epic<Action, IRootState> =
             )
                 .flatMap(payload => {
                     if (payload.success) {
-                        const state = store.getState();
-                        const privateKey = keyring.decryptAES(state.auth.account.encKey, payload.success);
+                        const privateKey = keyring.decryptAES(store.getState().auth.account.encKey, payload.success);
 
                         return Observable.of(actions.txExec.started({
                             tx: action.payload,
@@ -76,14 +85,62 @@ export const txExecEpic: Epic<Action, IRootState> =
             if (keyring.validatePrivateKey(action.payload.privateKey)) {
                 return Observable.fromPromise(api.txPrepare(state.auth.sessionToken, action.payload.tx.name, action.payload.tx.params, action.payload.tx.vde)
                     .then(response => {
-                        const signature = keyring.sign(response.forsign, action.payload.privateKey);
-                        const publicKey = keyring.generatePublicKey(action.payload.privateKey);
-                        return api.txExec(state.auth.sessionToken, action.payload.tx.name, {
-                            ...action.payload.tx.params,
-                            pubkey: publicKey,
-                            signature,
-                            time: response.time
-                        }, action.payload.tx.vde);
+                        let forSign = response.forsign;
+                        const signParams = {};
+
+                        const execTx = () => {
+                            const signature = keyring.sign(forSign, action.payload.privateKey);
+                            const publicKey = keyring.generatePublicKey(action.payload.privateKey);
+
+                            return api.txExec(state.auth.sessionToken, action.payload.tx.name, {
+                                ...action.payload.tx.params,
+                                pubkey: publicKey,
+                                signature,
+                                time: response.time,
+                                ...signParams
+                            }, action.payload.tx.vde);
+                        };
+
+                        if (response.signs) {
+                            return Promise.each(response.signs, sign => {
+                                return swal({
+                                    title: state.engine.intl.formatMessage({ id: 'tx.confirm', defaultMessage: 'Signature required' }),
+                                    html: `
+                                        <div class="text-left">
+                                            <div>${_.escape(sign.title)}</div>
+                                            <div>
+                                                ${sign.params.map(param => `
+                                                    <hr/>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div><strong>${_.escape(param.name)}</strong></div>
+                                                            <div class="text-muted">${_.escape(param.text)}</div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div><strong>${state.engine.intl.formatMessage({ id: 'tx.param.value', defaultMessage: 'Value' })}</strong></div>
+                                                            ${_.escape(action.payload.tx.params[param.name] || '-')}
+                                                        </div>
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                        </div>
+                                    `,
+                                    showCancelButton: true
+                                }).catch(e => {
+                                    throw new Error('E_TX_CANCELLED');
+                                });
+                            }).then(result => {
+                                response.signs.forEach(sign => {
+                                    const childSign = keyring.sign(sign.forsign, action.payload.privateKey);
+                                    signParams[sign.field] = childSign;
+                                    forSign += `,${childSign}`;
+                                });
+                                return execTx();
+                            });
+                        }
+                        else {
+                            return execTx();
+                        }
                     }))
                     .flatMap(payload => {
                         // We must listen to this transaction or we will never catch

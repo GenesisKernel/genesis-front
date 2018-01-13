@@ -196,7 +196,19 @@ export interface IRowResponse extends IResponse {
 
 export interface ITxPrepareResponse extends IResponse {
     forsign: string;
-    time: number;
+    signs?: {
+        forsign: string;
+        field: string;
+        title: string;
+        params: {
+            name: string;
+            text: string;
+        }[];
+    }[];
+    values: {
+
+    };
+    time: string;
 }
 
 export interface ITxExecResponse extends IResponse {
