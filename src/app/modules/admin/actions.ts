@@ -48,6 +48,7 @@ export const selectTag = actionCreator<{ tag: any, pageID: string, vde?: boolean
 export const saveConstructorHistory = actionCreator<{ pageID: string, vde?: boolean }>('SAVE_CONSTRUCTOR_HISTORY');
 export const constructorUndo = actionCreator<{ pageID: string, vde?: boolean }>('CONSTRUCTOR_UNDO');
 export const constructorRedo = actionCreator<{ pageID: string, vde?: boolean }>('CONSTRUCTOR_REDO');
+export const generatePageTemplate = actionCreator<{ pageID: string, vde?: boolean }>('GENERATE_PAGE_TEMPLATE');
 
 // Menus
 export const getMenu = actionCreator.async<{ id: string, vde?: boolean }, { id: string, name: string, value: string, conditions: string }, string>('GET_MENU');

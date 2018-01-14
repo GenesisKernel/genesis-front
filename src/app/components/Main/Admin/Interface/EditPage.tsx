@@ -22,13 +22,16 @@ import DocumentTitle from 'components/DocumentTitle';
 import Heading from 'components/Heading';
 import PageEditor from './PageEditor';
 import PageOnlyEditor from './PageOnlyEditor';
+import PageEditorSaveButton from './PageEditorSaveButton';
 
 export interface IEditPageProps {
     vde?: boolean;
     tabView?: boolean;
+    saveButton?: boolean;
     page: { id: string, name: string, menu: string, conditions: string, value: string };
     menus: { id: string, name: string, conditions: string, value: string }[];
     navigatePage: (params: { name: string, params?: any, vde?: boolean }) => void;
+    pageTemplate?: string;
 }
 
 interface IEditPageState {
@@ -53,6 +56,12 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
                 template: props.page.value,
                 conditions: props.page.conditions,
                 menu: props.menus.find(l => l.name === props.page.menu)
+            });
+        }
+
+        if (props.pageTemplate && this.props.pageTemplate !== props.pageTemplate) {
+            this.setState({
+                template: props.pageTemplate
             });
         }
     }
@@ -93,6 +102,22 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
     }
 
     render() {
+        if (this.props.saveButton) {
+            return (
+                <PageEditorSaveButton
+                    contractName="@1EditPage"
+                    mapContractParams={this.mapContractParams.bind(this)}
+                    template={this.state.template}
+                    conditions={this.state.conditions}
+                    page={this.props.page}
+                    menu={this.state.menu}
+                    menus={this.props.menus || []}
+                    onConditionsEdit={this.onConditionsEdit.bind(this)}
+                    onSourceEdit={this.onSourceEdit.bind(this)}
+                    onMenuSelect={this.onMenuSelect.bind(this)}
+                />
+            );
+        }
         if (this.props.tabView) {
             return (
                 <PageOnlyEditor

@@ -35,7 +35,7 @@ interface IEditPageProps {
 
 class EditPageContainer extends React.Component<IEditPageProps> {
     componentWillMount() {
-        this.props.getPage({ id: this.props.pageID });
+        this.props.getPage({ id: this.props.pageID, vde: this.props.vde });
     }
 
     render() {
