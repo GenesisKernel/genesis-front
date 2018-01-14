@@ -22,3 +22,4 @@ const actionCreator = actionCreatorFactory('socket');
 export const connect = actionCreator.async<{ userID: string, socketToken: string, timestamp: string }, object, void>('CONNECT');
 export const watchNotifications = actionCreator<{ accounts: IStoredAccount[] }>('WATCH_NOTIFICATIONS');
 export const setNotificationsCount = actionCreator<INotificationsMessage>('SET_NOTIFICATIONS_COUNT');
+export const getNotificationsCount = actionCreator<{ ids: { id: string, ecosystem: string }[] }>('GET_NOTIFICATIONS_COUNT');

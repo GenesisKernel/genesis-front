@@ -18,7 +18,7 @@ import { Action } from 'redux';
 import { Observable } from 'rxjs/Observable';
 import { combineEpics, Epic } from 'redux-observable';
 import { IRootState } from 'modules';
-import { socketUrl } from 'lib/api';
+import api, { socketUrl } from 'lib/api';
 import * as _ from 'lodash';
 import * as actions from './actions';
 import * as Centrifuge from 'centrifuge';
@@ -88,6 +88,15 @@ export const watchNotificationsEpic: Epic<Action, IRootState> =
                             }))
                         );
                     });
+
+                    observer.next(
+                        actions.getNotificationsCount({
+                            ids: action.payload.accounts.map(l => ({
+                                id: l.id,
+                                ecosystem: l.ecosystem
+                            }))
+                        })
+                    );
                 }) as Observable<Action>
             );
 
@@ -95,7 +104,15 @@ export const watchNotificationsEpic: Epic<Action, IRootState> =
         })
         .flatMap(actions$ => actions$);
 
+export const getNotificationsCountEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.getNotificationsCount)
+        .flatMap(action => {
+            api.updNotificator(store.getState().auth.sessionToken, action.payload.ids);
+            return Observable.empty();
+        });
+
 export default combineEpics(
     socketConnectEpic,
-    watchNotificationsEpic
+    watchNotificationsEpic,
+    getNotificationsCountEpic
 );

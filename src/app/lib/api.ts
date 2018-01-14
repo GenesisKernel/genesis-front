@@ -391,6 +391,11 @@ const api = {
     }) as Promise<ITxStatusResponse>,
     txStatus: (session: string, hash: string, vde = false) => securedRequest(`txstatus/${hash}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITxStatusResponse>,
 
+    updNotificator: (session: string, ids: { id: string, ecosystem: string }[]) =>
+        securedRequest('updnotificator', session, {
+            ids: JSON.stringify(ids)
+        }) as Promise<any>,
+
     // Utilities
     resolveData: (name: string) =>
         apiUrl + name
