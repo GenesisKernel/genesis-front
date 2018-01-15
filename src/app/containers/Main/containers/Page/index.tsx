@@ -64,6 +64,7 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
         return (
             <Page
                 vde={isVDE}
+                error={this.props.page && this.props.page.error}
                 name={this.props.page && this.props.page.name}
                 payload={this.props.page && this.props.page.content}
             />

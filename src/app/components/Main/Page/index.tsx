@@ -19,17 +19,30 @@ import Protypo from 'containers/Widgets/Protypo';
 import { IProtypoElement } from 'components/Protypo/Protypo';
 
 import DocumentTitle from 'components/DocumentTitle';
+import Error from './Error';
+import Timeout from './Timeout';
 
 export interface IPageProps {
-    vde?: boolean;
     name: string;
+    vde?: boolean;
+    error?: string;
     payload: IProtypoElement[];
 }
 
-const Page: React.SFC<IPageProps> = (props) => (
-    <DocumentTitle title={props.name}>
-        <Protypo context="page" {...props} vde={props.vde} />
-    </DocumentTitle>
-);
+const Page: React.SFC<IPageProps> = (props) => {
+    if (props.error) {
+        switch (props.error) {
+            case 'E_HEAVYPAGE': return (<Timeout />);
+            default: return (<Error error={props.error} />);
+        }
+    }
+    else {
+        return (
+            <DocumentTitle title={props.name}>
+                <Protypo context="page" {...props} vde={props.vde} />
+            </DocumentTitle >
+        );
+    }
+};
 
 export default Page;
