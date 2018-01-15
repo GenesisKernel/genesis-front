@@ -398,7 +398,11 @@ const api = {
 
     // Utilities
     resolveData: (name: string) =>
-        apiUrl + name
+        apiUrl + name,
+
+    resolveTextData: (link: string) =>
+        needle('get', `${apiUrl}${link}`)
+            .then(response => response.body) as Promise<string>
 };
 
 export default api;

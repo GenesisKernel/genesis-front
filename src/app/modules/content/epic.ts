@@ -217,6 +217,33 @@ export const fetchNotificationsEpic: Epic<Action, IRootState> =
                 );
         });
 
+export const displayDataEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.displayData.started)
+        .flatMap(action => {
+            return Observable.fromPromise(api.resolveTextData(action.payload))
+                .map(payload => {
+                    const state = store.getState();
+                    swal({
+                        title: state.engine.intl.formatMessage({ id: 'alert.info', defaultMessage: 'Information' }),
+                        html: `
+                            <div style="white-space: pre-wrap;text-align:left;">${payload}</div>
+                        `,
+                        type: 'info'
+                    }).catch(e => null);
+
+                    return actions.displayData.done({
+                        params: action.payload,
+                        result: payload
+                    });
+                })
+                .catch((e: IAPIError) =>
+                    Observable.of(actions.displayData.failed({
+                        params: action.payload,
+                        error: e.error
+                    }))
+                );
+        });
+
 export default combineEpics(
     renderPageEpic,
     reloadPageEpic,
@@ -224,5 +251,6 @@ export default combineEpics(
     resetEpic,
     alertEpic,
     navigatePageEpic,
-    fetchNotificationsEpic
+    fetchNotificationsEpic,
+    displayDataEpic
 );

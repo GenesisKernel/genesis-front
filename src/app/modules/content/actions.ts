@@ -32,6 +32,9 @@ export const renderPage = actionCreator.async<{ name: string, params?: { [key: s
 export const reloadPage = actionCreator.async<{}, { vde: boolean, params: { [key: string]: any }, menu: { name: string, vde: boolean, content: IProtypoElement[] }, page: { name: string, content: IProtypoElement[], error?: string } }, string>('RELOAD_PAGE');
 export const reset = actionCreator.async<undefined, { menu: { name: string, vde: boolean, content: IProtypoElement[] }, page: { name: string, content: IProtypoElement[], error?: string } }, string>('RESET');
 
+// Protypo-specific
+export const displayData = actionCreator.async<string, string, string>('DISPLAY_DATA');
+
 // Image editor modal window
 export const imageEditorOpen = actionCreator<{ mime: string, data: string, width?: number, aspectRatio?: number }>('IMAGE_EDITOR_OPEN');
 export const imageEditorClose = actionCreator<string>('IMAGE_EDITOR_CLOSE');
