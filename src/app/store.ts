@@ -45,6 +45,7 @@ const storage = compose(
     filter([
         'storage',
         'auth.isAuthenticated',
+        'auth.isEcosystemOwner',
         'auth.sessionToken',
         'auth.refreshToken',
         'auth.socketToken',
@@ -60,7 +61,7 @@ const configureStore = (initialState?: IRootState) => {
         routerMiddleware(history),
         createEpicMiddleware(rootEpic, {
             dependencies: {
-                
+
             }
         }),
         loadingBarMiddleware({
