@@ -28,6 +28,8 @@ export interface IConstructorTabbedContainerProps {
     vde?: boolean;
     navigatePage?: (params: { name: string, params?: any }) => void;
     menus?: { id: string, name: string, conditions: string, value: string }[];
+    onSave?: (pageID: string, vde?: boolean) => void;
+    random?: number;
 }
 
 interface IConstructorTabbedContainerState {
@@ -79,6 +81,16 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     }
 
     componentWillMount() {
+        this.getPage();
+    }
+
+    componentWillReceiveProps(props: IConstructorTabbedContainerProps & IConstructorTabbedContainerState & IConstructorTabbedContainerDispatch) {
+        if (props.random && this.props.random !== props.random) {
+            this.getPage();
+        }
+    }
+
+    getPage() {
         this.props.getPageTree({
             id: this.props.pageID,
             name: this.props.pageName,
@@ -159,6 +171,12 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
         this.props.constructorRedo({pageID: this.props.pageID});
     }
 
+    onSave(block: string, error?: { type: string, error: string }) {
+        if (this.props.onSave) {
+            this.props.onSave(this.props.pageID, this.props.vde);
+        }
+    }
+
     render() {
         const pageTree = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')] && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')].data || null;
         const pageTemplate = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')] && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')].pageTemplate || null;
@@ -193,6 +211,7 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
                 pageTemplate={pageTemplate}
                 menus={this.props.menus}
                 navigatePage={this.props.navigatePage}
+                onSave={this.onSave.bind(this)}
             />
         );
     }

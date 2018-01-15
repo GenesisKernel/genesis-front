@@ -32,6 +32,7 @@ export interface IEditPageProps {
     menus: { id: string, name: string, conditions: string, value: string }[];
     navigatePage: (params: { name: string, params?: any, vde?: boolean }) => void;
     pageTemplate?: string;
+    onExec?: (block: string, error?: { type: string, error: string }) => void;
 }
 
 interface IEditPageState {
@@ -115,6 +116,7 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
                     onConditionsEdit={this.onConditionsEdit.bind(this)}
                     onSourceEdit={this.onSourceEdit.bind(this)}
                     onMenuSelect={this.onMenuSelect.bind(this)}
+                    onExec={this.props.onExec && this.props.onExec}
                 />
             );
         }
@@ -131,6 +133,7 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
                     onConditionsEdit={this.onConditionsEdit.bind(this)}
                     onSourceEdit={this.onSourceEdit.bind(this)}
                     onMenuSelect={this.onMenuSelect.bind(this)}
+                    onExec={this.props.onExec && this.props.onExec}
                 />
             );
         }

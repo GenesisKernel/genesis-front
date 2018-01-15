@@ -42,7 +42,21 @@ interface ITabsContainerProps {
     vde?: boolean;
 }
 
-class TabsContainer extends React.Component<ITabsContainerProps & { match: { params: { type: string, id: string, name: string } } }> {
+interface ITabsContainerState {
+    random: {
+        [key: string]: number
+    };
+
+}
+
+class TabsContainer extends React.Component<ITabsContainerProps & { match: { params: { type: string, id: string, name: string } } }, ITabsContainerState> {
+    constructor(props: ITabsContainerProps & { match: { params: { type: string, id: string, name: string } } }) {
+        super(props);
+        this.state = {
+            random: null
+        };
+    }
+
     componentWillMount() {
         let addTab = {};
         if (this.props.match.params.type && this.props.match.params.id) {
@@ -79,6 +93,16 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
         this.props.removeTabList({ id, type, vde });
     }
 
+    onTabSave(pageID: string, vde?: boolean) {
+        // alert('saved tab ' + pageID + ' ' + (vde ? 'vde' : 'not vde'));
+        this.setState({
+            random: {
+                ...this.state.random,
+                ['page' + pageID + (vde ? 'vde' : '')]: Math.random()
+            }
+        });
+    }
+
     renderTabsContent() {
         let tabsContent: JSX.Element[] = [];
         if (this.props.tabList.length) {
@@ -88,7 +112,7 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
                     tabsContent.push(
                         <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
                             <Title>Interface Page</Title>
-                            <InterfacePageEditTabbed pageID={tabListItem.id} vde={tabListItem.vde}/>
+                            <InterfacePageEditTabbed pageID={tabListItem.id} vde={tabListItem.vde} onSave={this.onTabSave.bind(this)} random={this.state.random && this.state.random['page' + tabListItem.id + (tabListItem.vde ? 'vde' : '')]}/>
                         </div>
                     );
                 }
@@ -115,7 +139,7 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
                     tabsContent.push(
                         <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
                             <Title>Interface Constructor</Title>
-                            <InterfaceConstructorTabbed pageID={tabListItem.id} pageName={tabListItem.name} vde={tabListItem.vde}/>
+                            <InterfaceConstructorTabbed pageID={tabListItem.id} pageName={tabListItem.name} vde={tabListItem.vde} onSave={this.onTabSave.bind(this)} random={this.state.random && this.state.random['page' + tabListItem.id + (tabListItem.vde ? 'vde' : '')]}/>
                         </div>
                     );
                 }

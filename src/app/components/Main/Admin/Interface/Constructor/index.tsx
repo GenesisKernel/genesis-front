@@ -54,6 +54,7 @@ interface IConstructorProps {
 
     navigatePage?: (params: { name: string, params?: any }) => void;
     menus?: { id: string, name: string, conditions: string, value: string }[];
+    onSave?: (block: string, error?: { type: string, error: string }) => void;
 }
 
 const ConstructorDiv = styled.div`
@@ -269,7 +270,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                 tag={props.selectedTag}
                 changePage={props.changePage}
             />
-            <EditPage page={props.page} pageTemplate={props.pageTemplate} menus={props.menus} tabView={true} saveButton={true} navigatePage={props.navigatePage} />
+            <EditPage page={props.page} pageTemplate={props.pageTemplate} menus={props.menus} tabView={true} saveButton={true} navigatePage={props.navigatePage} onExec={props.onSave}/>
         </div>
     </ConstructorDiv>
 
