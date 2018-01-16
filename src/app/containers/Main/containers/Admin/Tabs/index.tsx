@@ -36,19 +36,35 @@ const Title = styled.div`
 
 interface ITabsContainerProps {
     tabData: any;
-    tabList: { id: string, type: string, name?: string, visible?: boolean }[];
-    getTabList: typeof getTabList.started;
-    removeTabList: typeof removeTabList.started;
+    tabList: { id: string, type: string, name?: string, vde?: boolean; visible?: boolean }[];
+    getTabList?: typeof getTabList.started;
+    removeTabList?: typeof removeTabList.started;
+    vde?: boolean;
 }
 
-class TabsContainer extends React.Component<ITabsContainerProps & { match: { params: { type: string, id: string, name: string } } }> {
+interface ITabsContainerState {
+    random: {
+        [key: string]: number
+    };
+
+}
+
+class TabsContainer extends React.Component<ITabsContainerProps & { match: { params: { type: string, id: string, name: string } } }, ITabsContainerState> {
+    constructor(props: ITabsContainerProps & { match: { params: { type: string, id: string, name: string } } }) {
+        super(props);
+        this.state = {
+            random: null
+        };
+    }
+
     componentWillMount() {
         let addTab = {};
         if (this.props.match.params.type && this.props.match.params.id) {
             addTab = {
                 addID: this.props.match.params.id,
                 addName: this.props.match.params.name,
-                addType: this.props.match.params.type
+                addType: this.props.match.params.type,
+                addVDE: !!this.props.vde
             };
         }
         // this.props.loadTabList(addTab);
@@ -60,20 +76,31 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
         // alert('new' + JSON.stringify(this.props));
         // TODO: bugfix reopen closed tab from same page
         if (props.match.params.type && props.match.params.id) {
-            if (this.props.match.params.type !== props.match.params.type || this.props.match.params.id !== props.match.params.id || this.props.match.params.name !== props.match.params.name) {
+            if (this.props.match.params.type !== props.match.params.type || this.props.match.params.id !== props.match.params.id || this.props.match.params.name !== props.match.params.name || this.props.vde !== props.vde) {
                 let addTab = {
                     addID: props.match.params.id,
                     addName: props.match.params.name,
-                    addType: props.match.params.type
+                    addType: props.match.params.type,
+                    addVDE: !!props.vde
                 };
                 this.props.getTabList(addTab);
             }
         }
     }
 
-    onTabClose(id: string, type: string) {
+    onTabClose(id: string, type: string, vde: boolean) {
         // alert('close ' + index);
-        this.props.removeTabList({ id: id, type: type });
+        this.props.removeTabList({ id, type, vde });
+    }
+
+    onTabSave(pageID: string, vde?: boolean) {
+        // alert('saved tab ' + pageID + ' ' + (vde ? 'vde' : 'not vde'));
+        this.setState({
+            random: {
+                ...this.state.random,
+                ['page' + pageID + (vde ? 'vde' : '')]: Math.random()
+            }
+        });
     }
 
     renderTabsContent() {
@@ -83,54 +110,54 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
                 // switch components depending on tabListItem.type: page, contract, etc
                 if (tabListItem.type === 'interfacePage') {
                     tabsContent.push(
-                        <div key={tabListItem.type + tabListItem.id}>
+                        <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
                             <Title>Interface Page</Title>
-                            <InterfacePageEditTabbed pageID={tabListItem.id}/>
+                            <InterfacePageEditTabbed pageID={tabListItem.id} vde={tabListItem.vde} onSave={this.onTabSave.bind(this)} random={this.state.random && this.state.random['page' + tabListItem.id + (tabListItem.vde ? 'vde' : '')]}/>
                         </div>
                     );
                 }
                 else
                 if (tabListItem.type === 'interfaceBlock') {
                     tabsContent.push(
-                        <div key={tabListItem.type + tabListItem.id}>
+                        <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
                             <Title>Interface Block</Title>
-                            <InterfaceBlockEditTabbed blockID={tabListItem.id}/>
+                            <InterfaceBlockEditTabbed blockID={tabListItem.id} vde={tabListItem.vde}/>
                         </div>
                     );
                 }
                 else
                 if (tabListItem.type === 'interfaceMenu') {
                     tabsContent.push(
-                        <div key={tabListItem.type + tabListItem.id}>
+                        <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
                             <Title>Interface Menu</Title>
-                            <InterfaceMenuEditTabbed menuID={tabListItem.id}/>
+                            <InterfaceMenuEditTabbed menuID={tabListItem.id} vde={tabListItem.vde}/>
                         </div>
                     );
                 }
                 else
                 if (tabListItem.type === 'interfaceConstructor') {
                     tabsContent.push(
-                        <div key={tabListItem.type + tabListItem.id}>
+                        <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
                             <Title>Interface Constructor</Title>
-                            <InterfaceConstructorTabbed pageID={tabListItem.id} pageName={tabListItem.name}/>
+                            <InterfaceConstructorTabbed pageID={tabListItem.id} pageName={tabListItem.name} vde={tabListItem.vde} onSave={this.onTabSave.bind(this)} random={this.state.random && this.state.random['page' + tabListItem.id + (tabListItem.vde ? 'vde' : '')]}/>
                         </div>
                     );
                 }
                 else
                 if (tabListItem.type === 'contract') {
                     tabsContent.push(
-                        <div key={tabListItem.type + tabListItem.id}>
+                        <div className="fullscreen animated fadeIn" key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
                             <Title>Smart Contract</Title>
-                            <ContractEditTabbed contractID={tabListItem.id}/>
+                            <ContractEditTabbed contractID={tabListItem.id} vde={tabListItem.vde}/>
                         </div>
                     );
                 }
                 else
                 if (tabListItem.type === 'parameter') {
                     tabsContent.push(
-                        <div key={tabListItem.type + tabListItem.id}>
+                        <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
                             <Title>Ecosystem Parameter</Title>
-                            <ParameterEditTabbed parameterName={tabListItem.id}/>
+                            <ParameterEditTabbed parameterName={tabListItem.id} vde={tabListItem.vde}/>
                         </div>
                     );
                 }
@@ -154,15 +181,17 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
                     id: tabListItem.id,
                     type: tabListItem.type,
                     name: tabListItem.name || tabListItem.id,
+                    vde: !!tabListItem.vde,
                     visible: tabListItem.visible
                 });
             }
         }
 
-        let openedTab = { id: '', type: '' };
+        let openedTab = { id: '', type: '', vde: false };
         if (this.props.match.params.id && this.props.match.params.type) {
             openedTab.id = this.props.match.params.id;
             openedTab.type = this.props.match.params.type;
+            openedTab.vde = !!this.props.vde;
         }
 
         return (

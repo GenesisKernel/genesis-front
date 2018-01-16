@@ -34,6 +34,7 @@ const Source = {
 function collect(connect: any, monitor: any) {
     return {
         connectDragSource: connect.dragSource(),
+        connectDragPreview: connect.dragPreview(),
         isDragging: monitor.isDragging()
     };
 }
@@ -42,6 +43,7 @@ interface ISourceElementProps {
     text: string;
     element: string;
     connectDragSource?: any;
+    connectDragPreview?: any;
     isDragging?: boolean;
 }
 
@@ -54,11 +56,13 @@ class SourceElement extends React.Component<ISourceElementProps, ISourceElementS
         super(props);
     }
     render() {
-        const { connectDragSource, isDragging } = this.props;
-        return connectDragSource(
+        const { connectDragSource, connectDragPreview, isDragging } = this.props;
+        return connectDragPreview(connectDragSource(
             <li>
                 {this.props.text} {isDragging ? '' : ''}
             </li>
+            ),
+            { offsetY: -10 }
         );
     }
 }

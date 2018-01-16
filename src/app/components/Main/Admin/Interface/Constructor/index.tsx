@@ -19,39 +19,42 @@ import styled from 'styled-components';
 
 import Protypo from 'containers/Widgets/Protypo';
 import Layout from './Layout';
+import EditPage from 'components/Main/Admin/Interface/EditPage';
 import CollapsedListItem from './CollapsedListItem';
 import Panel from './Panel';
 import SourceElement from './SourceElement';
 import Properties from './Properties';
 import Switch from './Switch';
 
-// import imgViewMobile from 'images/constructor/group-2.svg';
-// import imgViewTablet from 'images/constructor/group.svg';
-// import imgViewLaptop from 'images/constructor/group-30.svg';
-// import imgViewDesktop from 'images/constructor/group-3.svg';
-// import imgUndo from 'images/constructor/group-7.svg';
-// import imgRedo from 'images/constructor/group-6.svg';
 import imgGroup11 from 'images/constructor/group-11.svg';
 import imgGroup12 from 'images/constructor/group-12.svg';
 import imgGroup13 from 'images/constructor/group-13.svg';
 import imgGroup34 from 'images/constructor/group-34.svg';
 import imgGroup35 from 'images/constructor/group-35.svg';
-// import imgGroup36 from 'images/constructor/group-36.svg';
-// import imgGroup37 from 'images/constructor/group-37.svg';
-// import imgStroke75 from 'images/constructor/stroke-75.svg';
 import imgGrid from 'images/constructor/grid.png';
 
 interface IConstructorProps {
     pageTree: any;
+    page?: any;
+    pageTemplate: string;
     changePage?: any;
     setTagCanDropPosition?: any;
     selectTag?: any;
     addTag?: any;
     moveTag?: any;
+    copyTag?: any;
+    removeTag?: any;
     selectedTag?: any;
-    save?: any;
     grid: boolean;
     toggleGrid: any;
+    undo?: any;
+    redo?: any;
+    canUndo: boolean;
+    canRedo: boolean;
+
+    navigatePage?: (params: { name: string, params?: any }) => void;
+    menus?: { id: string, name: string, conditions: string, value: string }[];
+    onSave?: (block: string, error?: { type: string, error: string }) => void;
 }
 
 const ConstructorDiv = styled.div`
@@ -204,14 +207,12 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
         <div className="center-panel">
             <div className="b-instrument-panel b-panel-light">
                 <div className="b-instrument-panel__inner pull-left">
-                    {/*
-                    <div className="b-icon pull-left">
-                        <img src={imgUndo} />
-                    </div>
-                    <div className="b-icon pull-left">
-                        <img src={imgRedo} />
-                    </div>
-                    */}
+                    <button className={props.canUndo ? 'btn-container btn-container_active' : 'btn-container btn-container_disabled'} onClick={props.undo}>
+                        <i className="apla-icon-undo apla-icon_big"/>
+                    </button>
+                    <button className={props.canRedo ? 'btn-container btn-container_active' : 'btn-container btn-container_disabled'} onClick={props.redo}>
+                        <i className="apla-icon-redo apla-icon_big"/>
+                    </button>
                 </div>
                 <div className="b-instrument-panel__inner pull-right">
                     {/*
@@ -247,7 +248,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                 </div>
             </div>
 
-            <Layout grid={props.grid} addTag={props.addTag} moveTag={props.moveTag}>
+            <Layout grid={props.grid} addTag={props.addTag} moveTag={props.moveTag} copyTag={props.copyTag}>
                 <Protypo
                     context="page"
                     payload={props.pageTree}
@@ -257,6 +258,8 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                     selectTag={props.selectTag}
                     addTag={props.addTag}
                     moveTag={props.moveTag}
+                    copyTag={props.copyTag}
+                    removeTag={props.removeTag}
                     selectedTag={props.selectedTag}
                 />
             </Layout>
@@ -267,8 +270,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                 tag={props.selectedTag}
                 changePage={props.changePage}
             />
-            <br />
-            <div className="btn btn-primary" onClick={props.save}>Save</div>
+            <EditPage page={props.page} pageTemplate={props.pageTemplate} menus={props.menus} tabView={true} saveButton={true} navigatePage={props.navigatePage} onExec={props.onSave}/>
         </div>
     </ConstructorDiv>
 

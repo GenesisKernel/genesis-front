@@ -31,9 +31,21 @@ const layoutTarget = {
             });
         }
         else {
-            props.moveTag({
-                tag: droppedItem.tag
-            });
+            switch (droppedItem.dropEffect) {
+                case 'move':
+                    props.moveTag({
+                        tag: droppedItem.tag
+                    });
+                    break;
+                case 'copy':
+                    props.copyTag({
+                        tag: droppedItem.tag
+                    });
+                    break;
+                default:
+                    break;
+            }
+
         }
     }
 };
@@ -55,6 +67,7 @@ interface ILayoutProps {
     isOver?: boolean;
     addTag?: any;
     moveTag?: any;
+    copyTag?: any;
 }
 
 interface ILayoutState {

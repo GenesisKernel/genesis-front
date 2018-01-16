@@ -17,34 +17,58 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { getPageTree, changePage, setTagCanDropPosition, addTag, moveTag } from 'modules/admin/actions';
+import { getPageTree, getPage, changePage, setTagCanDropPosition, addTag, moveTag, copyTag, removeTag, selectTag, constructorUndo, constructorRedo, saveConstructorHistory, generatePageTemplate } from 'modules/admin/actions';
+import { navigatePage } from 'modules/content/actions';
 import Constructor from 'components/Main/Admin/Interface/Constructor';
-import { CodeGenerator } from 'lib/constructor';
-
-// import HTML5Backend from 'react-dnd-html5-backend';
-// import { DragDropContext } from 'react-dnd';
+import { IProtypoElement } from 'components/Protypo/Protypo';
 
 export interface IConstructorTabbedContainerProps {
     pageID: string;
     pageName: string;
     vde?: boolean;
+    navigatePage?: (params: { name: string, params?: any }) => void;
+    menus?: { id: string, name: string, conditions: string, value: string }[];
+    onSave?: (pageID: string, vde?: boolean) => void;
+    random?: number;
 }
 
 interface IConstructorTabbedContainerState {
     session: string;
-    tabData: any;
+    tabData: {
+        [key: string]: {
+            type: string,
+            data: any,
+            pageTemplate?: string,
+            selectedTag?: IProtypoElement
+        }
+    };
+    tabHistory: {
+        [key: string]: {
+            data: any,
+            position?: number,
+            canUndo?: boolean,
+            canRedo?: boolean
+        }
+    };
 }
 
 interface IConstructorTabbedContainerDispatch {
     getPageTree: typeof getPageTree.started;
+    getPage?: typeof getPage.started;
     changePage: typeof changePage;
     setTagCanDropPosition: typeof setTagCanDropPosition;
     addTag: typeof addTag;
     moveTag: typeof moveTag;
+    copyTag: typeof copyTag;
+    removeTag: typeof removeTag;
+    selectTag: typeof selectTag;
+    constructorUndo: typeof constructorUndo;
+    constructorRedo: typeof constructorRedo;
+    saveConstructorHistory: typeof saveConstructorHistory;
+    generatePageTemplate: typeof generatePageTemplate;
 }
 
 interface IConstructorTabbedState {
-    selectedTag: any;
     grid: boolean;
 }
 
@@ -52,42 +76,83 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     constructor(props: IConstructorTabbedContainerProps & IConstructorTabbedContainerState & IConstructorTabbedContainerDispatch) {
         super(props);
         this.state = {
-            selectedTag: null,
             grid: true
         };
     }
 
     componentWillMount() {
+        this.getPage();
+    }
+
+    componentWillReceiveProps(props: IConstructorTabbedContainerProps & IConstructorTabbedContainerState & IConstructorTabbedContainerDispatch) {
+        if (props.random && this.props.random !== props.random) {
+            this.getPage();
+        }
+    }
+
+    getPage() {
         this.props.getPageTree({
             id: this.props.pageID,
             name: this.props.pageName,
+            vde: this.props.vde
+        });
+        this.props.getPage({
+            id: this.props.pageID,
             vde: this.props.vde
         });
     }
 
     changePage(payload?: any) {
         payload.pageID = this.props.pageID;
+        payload.vde = this.props.vde;
         this.props.changePage(payload);
+        this.props.saveConstructorHistory({pageID: this.props.pageID, vde: this.props.vde});
+        this.props.generatePageTemplate({pageID: this.props.pageID, vde: this.props.vde});
     }
 
     addTag(payload?: any) {
         payload.pageID = this.props.pageID;
+        payload.vde = this.props.vde;
         this.props.addTag(payload);
+        this.props.saveConstructorHistory({pageID: this.props.pageID, vde: this.props.vde});
+        this.props.generatePageTemplate({pageID: this.props.pageID, vde: this.props.vde});
     }
 
     moveTag(payload?: any) {
         payload.pageID = this.props.pageID;
+        payload.vde = this.props.vde;
         this.props.moveTag(payload);
+        this.props.saveConstructorHistory({pageID: this.props.pageID, vde: this.props.vde});
+        this.props.generatePageTemplate({pageID: this.props.pageID, vde: this.props.vde});
+    }
+
+    copyTag(payload?: any) {
+        payload.pageID = this.props.pageID;
+        payload.vde = this.props.vde;
+        this.props.copyTag(payload);
+        this.props.saveConstructorHistory({pageID: this.props.pageID, vde: this.props.vde});
+        this.props.generatePageTemplate({pageID: this.props.pageID, vde: this.props.vde});
+    }
+
+    removeTag(payload?: any) {
+        payload.pageID = this.props.pageID;
+        payload.vde = this.props.vde;
+        this.props.removeTag(payload);
+        this.props.saveConstructorHistory({pageID: this.props.pageID, vde: this.props.vde});
+        this.props.generatePageTemplate({pageID: this.props.pageID, vde: this.props.vde});
     }
 
     setTagCanDropPosition(payload?: any) {
         payload.pageID = this.props.pageID;
+        payload.vde = this.props.vde;
         this.props.setTagCanDropPosition(payload);
     }
 
     selectTag(payload?: any) {
-        this.setState({
-            selectedTag: payload.tag
+        this.props.selectTag({
+            pageID: this.props.pageID,
+            vde: this.props.vde,
+            tag: payload.tag
         });
     }
 
@@ -98,14 +163,32 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
         });
     }
 
-    save() {
-        let pageTree = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID] && this.props.tabData['interfaceConstructor' + this.props.pageID].data || null;
-        let codeGenerator = new CodeGenerator(pageTree);
-        alert(codeGenerator.render());
+    undo() {
+        this.props.constructorUndo({pageID: this.props.pageID});
+    }
+
+    redo() {
+        this.props.constructorRedo({pageID: this.props.pageID});
+    }
+
+    onSave(block: string, error?: { type: string, error: string }) {
+        if (this.props.onSave) {
+            this.props.onSave(this.props.pageID, this.props.vde);
+        }
     }
 
     render() {
-        let pageTree = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID] && this.props.tabData['interfaceConstructor' + this.props.pageID].data || null;
+        const pageTree = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')] && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')].data || null;
+        const pageTemplate = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')] && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')].pageTemplate || null;
+        const selectedTag = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')] && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')].selectedTag || null;
+        const canUndo = this.props.tabHistory && this.props.tabHistory['page' + this.props.pageID + (this.props.vde ? '-vde' : '')] && this.props.tabHistory['page' + this.props.pageID + (this.props.vde ? '-vde' : '')].canUndo || false;
+        const canRedo = this.props.tabHistory && this.props.tabHistory['page' + this.props.pageID + (this.props.vde ? '-vde' : '')] && this.props.tabHistory['page' + this.props.pageID + (this.props.vde ? '-vde' : '')].canRedo || false;
+
+        const pageTab = this.props.tabData && this.props.tabData['interfacePage' + this.props.pageID + (this.props.vde ? '-vde' : '')] || null;
+        let page = null;
+        if (pageTab) {
+            page = pageTab.data;
+        }
 
         return (
             <Constructor
@@ -115,10 +198,20 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
                 selectTag={this.selectTag.bind(this)}
                 addTag={this.addTag.bind(this)}
                 moveTag={this.moveTag.bind(this)}
-                save={this.save.bind(this)}
-                selectedTag={this.state.selectedTag}
+                copyTag={this.copyTag.bind(this)}
+                removeTag={this.removeTag.bind(this)}
+                selectedTag={selectedTag}
                 grid={this.state.grid}
                 toggleGrid={this.toggleGrid.bind(this)}
+                undo={this.undo.bind(this)}
+                redo={this.redo.bind(this)}
+                canUndo={canUndo}
+                canRedo={canRedo}
+                page={page}
+                pageTemplate={pageTemplate}
+                menus={this.props.menus}
+                navigatePage={this.props.navigatePage}
+                onSave={this.onSave.bind(this)}
             />
         );
     }
@@ -126,19 +219,26 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
 
 const mapStateToProps = (state: IRootState) => ({
     tabData: state.admin.tabs && state.admin.tabs.data || null,
+    tabHistory: state.admin.tabs && state.admin.tabs.history || null,
+    menus: state.admin.menus,
     session: state.auth.sessionToken
 });
 
 const mapDispatchToProps = {
     getPageTree: getPageTree.started,
+    getPage: getPage.started,
+    navigatePage: navigatePage.started,
     changePage,
     setTagCanDropPosition,
     addTag,
-    moveTag
+    moveTag,
+    copyTag,
+    removeTag,
+    selectTag,
+    constructorUndo,
+    constructorRedo,
+    saveConstructorHistory,
+    generatePageTemplate
 };
 
 export default connect<IConstructorTabbedContainerState, IConstructorTabbedContainerDispatch, IConstructorTabbedContainerProps>(mapStateToProps, mapDispatchToProps)(ConstructorTabbedContainer);
-
-// export default DragDropContext(HTML5Backend)(
-//     connect<IConstructorTabbedContainerState, IConstructorTabbedContainerDispatch, IConstructorTabbedContainerProps>(mapStateToProps, mapDispatchToProps)(ConstructorTabbedContainer)
-// );

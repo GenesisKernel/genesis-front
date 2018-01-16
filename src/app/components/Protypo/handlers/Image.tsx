@@ -20,6 +20,7 @@ import * as propTypes from 'prop-types';
 import Protypo from '../Protypo';
 import StyledComponent from './StyledComponent';
 import * as classnames from 'classnames';
+import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 
 export interface IImageProps {
@@ -33,6 +34,8 @@ export interface IImageProps {
     'setTagCanDropPosition'?: any;
     'addTag'?: any;
     'moveTag'?: any;
+    'copyTag'?: any;
+    'removeTag'?: any;
     'selectTag'?: any;
     'selected'?: boolean;
     'tag'?: any;
@@ -43,6 +46,7 @@ export interface IImageProps {
     isOver?: boolean;
 
     connectDragSource?: any;
+    connectDragPreview?: any;
     isDragging?: boolean;
 }
 
@@ -56,32 +60,44 @@ const Image: React.SFC<IImageProps> = (props, context: IImageContext) => {
         props.selectTag({ tag: props.tag });
     };
 
+    const removeTag = () => {
+        props.removeTag({ tag: props.tag });
+    };
+
     if (props.editable) {
-        const { connectDropTarget, isOver } = props;
-        const { connectDragSource, isDragging } = props;
+        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = props;
 
         const classes = classnames({
             [props.class]: true,
-            'editable': props.selected,
-            'can-drop': isOver,
-            ['can-drop_' + props.canDropPosition]: true,
-            'is-dragging': isDragging
+            // [props.className]: true,
+            'b-selected': props.selected
         });
 
-        return connectDragSource(connectDropTarget(
-            <img
-                className={classes}
-                onClick={onClick}
-                src={context.protypo.resolveData(props.src)}
-                alt={props.alt}
-            />
+        return connectDragPreview(connectDropTarget(
+            <span style={{display: 'inline-block'}}>
+                <TagWrapper
+                    display="inline"
+                    selected={props.selected}
+                    canDrop={isOver}
+                    canDropPosition={props.canDropPosition}
+                    onClick={onClick}
+                    removeTag={removeTag}
+                    connectDragSource={connectDragSource}
+                >
+                    <img
+                        className={classes}
+                        src={context.protypo.resolveData(props.src)}
+                        alt={props.alt}
+                    />
+                </TagWrapper>
+            </span>
         ));
     }
 
     return (
         <img className={[props.class, props.className].join(' ')} src={context.protypo.resolveData(props.src)} alt={props.alt} />
     );
-}
+};
 
 Image.contextTypes = {
     protypo: propTypes.object.isRequired

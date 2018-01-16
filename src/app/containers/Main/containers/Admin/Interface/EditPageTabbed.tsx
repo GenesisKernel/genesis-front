@@ -23,25 +23,47 @@ import { navigatePage } from 'modules/content/actions';
 import EditPage from 'components/Main/Admin/Interface/EditPage';
 
 interface IEditPageProps {
+    vde?: boolean;
     pageID: string;
     tabData: any;
     // page: { id: string, name: string, menu: string, conditions: string, value: string };
     menus: { id: string, name: string, conditions: string, value: string }[];
     navigatePage?: (params: { name: string, params?: any }) => void;
     getPage?: typeof getPage.started;
-
+    onSave?: (pageID: string, vde?: boolean) => void;
+    random?: number;
 }
 
 class EditPageContainer extends React.Component<IEditPageProps> {
     componentWillMount() {
-        this.props.getPage({ id: this.props.pageID });
+        this.getPage();
+    }
+
+    getPage() {
+        this.props.getPage({ id: this.props.pageID, vde: this.props.vde });
+    }
+
+    componentWillReceiveProps(props: IEditPageProps) {
+        if (props.random && this.props.random !== props.random) {
+            this.getPage();
+        }
+    }
+
+    onSave(block: string, error?: { type: string, error: string }) {
+        if (this.props.onSave) {
+            this.props.onSave(this.props.pageID, this.props.vde);
+        }
     }
 
     render() {
-        let page = this.props.tabData && this.props.tabData['interfacePage' + this.props.pageID] && this.props.tabData['interfacePage' + this.props.pageID].data || null;
+        const pageTab = this.props.tabData && this.props.tabData['interfacePage' + this.props.pageID + (this.props.vde ? '-vde' : '')] || null;
+        let page = null;
+        if (pageTab) {
+            page = pageTab.data;
+        }
 
         return (
-            <EditPage page={page} menus={this.props.menus} tabView={true} navigatePage={this.props.navigatePage} />
+            <EditPage page={page} menus={this.props.menus} tabView={true} navigatePage={this.props.navigatePage} onExec={this.onSave.bind(this)}/>
         );
     }
 }

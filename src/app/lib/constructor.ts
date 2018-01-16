@@ -60,19 +60,18 @@ export function generateId() {
     return 'tag_' + (10000000 + Math.floor(Math.random() * 89999999));
 }
 
-export function setIds(children: any[]) {
+export function setIds(children: any[], force: boolean = false) {
     for (let tag of children) {
         if (!tag) {
             continue;
         }
-        if (!tag.id) {
+        if (!tag.id || force) {
             tag.id = generateId();
         }
         if (tag.children) {
-            setIds(tag.children);
+            setIds(tag.children, force);
         }
     }
-
 }
 
 let onPasteStripFormattingIEPaste: boolean = false;
