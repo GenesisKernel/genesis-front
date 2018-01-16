@@ -1,3 +1,5 @@
+[![Throughput Graph](https://graphs.waffle.io/AplaProject/apla-front/throughput.svg)](https://waffle.io/AplaProject/apla-front/metrics/throughput)
+
 ## Apla-front
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). You will find most of the information of how to use it there.
 
