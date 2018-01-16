@@ -92,21 +92,16 @@ export const loginEpic = (actions$: Observable<Action>) =>
 
 export const logoutEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.logout.started)
-        .flatMap(action => {
-            localStorage.removeItem('privateKey');
-            localStorage.removeItem('lastEcosystem');
-            return Observable.concat([
+        .flatMap(action =>
+            Observable.concat([
                 engineActions.navigate('/'),
                 actions.deauthorize(null),
                 actions.logout.done({
                     params: action.payload,
                     result: null
-                }),
-                guiActions.switchWindow.started({
-                    window: 'general'
                 })
-            ]);
-        });
+            ])
+        );
 
 export const selectAccountEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.selectAccount.started)

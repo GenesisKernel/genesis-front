@@ -40,8 +40,7 @@ const reducer = compose(
     mergePersistedState()
 )(rootReducer);
 
-const storage = compose(
-    debounce(1000, 5000),
+const storageAdapters = [
     filter([
         'storage',
         'auth.isAuthenticated',
@@ -53,7 +52,13 @@ const storage = compose(
         'auth.account',
         'auth.timestamp'
     ])
-)(adapter(window.localStorage));
+];
+
+platform.on('web', () => {
+    storageAdapters.unshift(debounce(1000, 5000))
+});
+
+const storage = compose.apply(null, storageAdapters)(adapter(window.localStorage));
 
 const configureStore = (initialState?: IRootState) => {
     const enhancers: any[] = [];
@@ -101,7 +106,8 @@ const store = platform.select({
             const state = storeInstance.getState();
             Electron.ipcRenderer.send('setState', {
                 auth: state.auth,
-                engine: state.engine
+                engine: state.engine,
+                storage: state.storage
             });
         });
 

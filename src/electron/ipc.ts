@@ -23,7 +23,15 @@ export type TState = {
     [key: string]: any;
     auth: {
         isAuthenticated: boolean;
+        account: any;
+        id: string;
+        isEcosystemOwner: boolean;
+        sessionToken: string;
+        refreshToken: string;
+        socketToken: string;
+        timestamp: string;
     };
+    storage: any;
 };
 
 export let state: TState = null;

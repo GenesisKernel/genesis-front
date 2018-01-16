@@ -44,6 +44,10 @@ body {
     float: none;
 }
 
+.abs-center {
+    height: auto;
+}
+
 .align-top {
     vertical-align: top;
 }

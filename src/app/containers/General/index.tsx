@@ -21,6 +21,7 @@ import { IRootState } from 'modules';
 import { navigate } from 'modules/engine/actions';
 
 import { AnimatedSwitch } from 'components/Animation';
+import Offline from './containers/Offline';
 import Login from './containers/Login';
 import Account from './containers/Account';
 import Import from './containers/Account/Import';
@@ -30,10 +31,14 @@ import NotFound from './containers/NotFound';
 
 interface IGeneralContainerProps {
     isInstalled: boolean;
+    isConnected: boolean;
 }
 
 const GeneralContainer: React.SFC<IGeneralContainerProps> = (props) => (
     <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
+        {!props.isConnected && (
+            <Route path="*" component={Offline} />
+        )}
         {!props.isInstalled && (
             <Route path="/" component={Install} />
         )}

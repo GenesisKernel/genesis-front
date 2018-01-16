@@ -26,7 +26,6 @@ import * as classnames from 'classnames';
 
 import { AnimatedSwitch } from 'components/Animation';
 import Splash from 'components/Splash';
-import Offline from 'containers/Offline';
 import ModalDispatcher from 'containers/Widgets/ModalDispatcher';
 import Main from 'containers/Main';
 import General from 'containers/General';
@@ -34,6 +33,7 @@ import General from 'containers/General';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 import IntlHook from 'containers/App/IntlHook';
+import { switchWindow } from 'modules/gui/actions';
 
 interface IAppProps {
     locale: string;
@@ -49,6 +49,7 @@ interface IAppProps {
     setLoading?: typeof setLoading;
     login?: typeof login.started;
     checkOnline?: typeof checkOnline.started;
+    switchWindow?: typeof switchWindow.started;
 }
 
 class App extends React.Component<IAppProps> {
@@ -59,6 +60,12 @@ class App extends React.Component<IAppProps> {
     }
 
     componentWillReceiveProps(props: IAppProps) {
+        if (this.props.isAuthenticated !== props.isAuthenticated) {
+            props.switchWindow({
+                window: props.isAuthenticated ? 'main' : 'general'
+            });
+        }
+
         if (null === this.props.isConnected && null !== props.isConnected) {
             if (props.isConnected) {
                 /*const privateKey = storage.settings.load('privateKey');
@@ -73,7 +80,11 @@ class App extends React.Component<IAppProps> {
                 else {
                     this.props.setLoading(false);
                 }*/
+
                 this.props.setLoading(false);
+                /*if (props.isAuthenticated) {
+                    this.props.switchWindow({ window: 'main' });
+                }*/
             }
             else {
                 this.props.setLoading(false);
@@ -104,9 +115,6 @@ class App extends React.Component<IAppProps> {
                         {this.props.isLoading && (
                             <Route path="/" component={Splash} />
                         )}
-                        {!this.props.isConnected && (
-                            <Route path="/" component={Offline} />
-                        )}
                         {!this.props.isAuthenticated && (
                             <Route path="/" component={General} />
                         )}
@@ -134,7 +142,8 @@ const mapDispatchToProps = {
     navigate,
     setLoading,
     checkOnline: checkOnline.started,
-    login: login.started
+    login: login.started,
+    switchWindow: switchWindow.started
 };
 
 // export default connect(mapStateToProps, mapDispatchToProps, null, { pure: false })(App);

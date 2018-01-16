@@ -37,6 +37,10 @@ export const appUrl =
         });
 
 export const spawnWindow = (wnd: BrowserWindow, name: string) => {
+    if (window && windowName === name) {
+        return;
+    }
+
     if (window) {
         window.close();
         window.destroy();
