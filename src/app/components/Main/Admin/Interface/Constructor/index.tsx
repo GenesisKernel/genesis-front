@@ -52,6 +52,10 @@ interface IConstructorProps {
     save?: any;
     grid: boolean;
     toggleGrid: any;
+    undo?: any;
+    redo?: any;
+    canUndo: boolean;
+    canRedo: boolean;
 }
 
 const ConstructorDiv = styled.div`
@@ -204,14 +208,12 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
         <div className="center-panel">
             <div className="b-instrument-panel b-panel-light">
                 <div className="b-instrument-panel__inner pull-left">
-                    {/*
-                    <div className="b-icon pull-left">
-                        <img src={imgUndo} />
-                    </div>
-                    <div className="b-icon pull-left">
-                        <img src={imgRedo} />
-                    </div>
-                    */}
+                    <button className={props.canUndo ? 'btn-container btn-container_active' : 'btn-container btn-container_disabled'} onClick={props.undo}>
+                        <i className="apla-icon-undo apla-icon_big"/>
+                    </button>
+                    <button className={props.canRedo ? 'btn-container btn-container_active' : 'btn-container btn-container_disabled'} onClick={props.redo}>
+                        <i className="apla-icon-redo apla-icon_big"/>
+                    </button>
                 </div>
                 <div className="b-instrument-panel__inner pull-right">
                     {/*

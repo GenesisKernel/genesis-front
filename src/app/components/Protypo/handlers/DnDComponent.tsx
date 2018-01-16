@@ -67,7 +67,7 @@ const Target = {
             return;
         }
 
-        props.changePage({ canDropPosition: getDropPosition(monitor, component, props.tag), tagID: props.tag.id });
+        props.setTagCanDropPosition({ position: getDropPosition(monitor, component, props.tag), tagID: props.tag.id });
     }
 };
 
