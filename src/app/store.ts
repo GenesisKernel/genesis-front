@@ -55,7 +55,7 @@ const storageAdapters = [
 ];
 
 platform.on('web', () => {
-    storageAdapters.unshift(debounce(1000, 5000))
+    storageAdapters.unshift(debounce(1000, 5000));
 });
 
 const storage = compose.apply(null, storageAdapters)(adapter(window.localStorage));
