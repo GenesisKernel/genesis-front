@@ -15,20 +15,20 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { Button, Col, Row } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
-import storage, { IStoredKey } from 'lib/storage';
-import keyring from 'lib/keyring';
 import styled from 'styled-components';
 import { navigate } from 'modules/engine/actions';
-import { login } from 'modules/auth/actions';
 import { alertShow } from 'modules/content/actions';
+import { IStoredAccount } from 'apla/storage';
+import { INotificationsMessage } from 'apla/socket';
+import imgAvatar from 'images/avatar.svg';
 
 import DocumentTitle from 'components/DocumentTitle';
 import General from 'components/General';
 import Welcome from 'components/General/Welcome';
-import Validation from 'components/Validation';
 import AccountButton from 'components/AccountButton';
+import Validation from 'components/Validation';
 
 const StyledLogin = styled.div`
     background: rgba(0,0,0,0.3);
@@ -64,6 +64,31 @@ const StyledLogin = styled.div`
         }
     }
 
+    .avatar-holder {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 15px auto;
+
+        > img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 100%;
+        }
+    }
+
+    .password-prompt {
+        position: relative;
+        padding-right: 80px;
+
+        button {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            width: 80px;
+        }
+    }
+
     .auth-body {
         background: #fff;
         padding: 30px;
@@ -71,63 +96,38 @@ const StyledLogin = styled.div`
 `;
 
 export interface ILoginProps extends InjectedIntlProps {
+    isLoggingIn: boolean;
+    authenticationError: string;
+    account: IStoredAccount;
+    accounts: IStoredAccount[];
+    notifications: INotificationsMessage[];
+    alert: { id: string, success: string, error: string };
+    defaultAccount: string;
     navigate: typeof navigate;
-    login: typeof login.started;
     alertShow: typeof alertShow;
+    login: (params: { encKey: string, ecosystem: string, password: string }) => void;
+    logout: (params: {}) => void;
+    selectAccount: (params: { account: IStoredAccount }) => void;
+    removeAccount: (account: { id: string, ecosystem: string }) => void;
 }
 
-interface ILoginState {
-    remember: boolean;
-    accounts: IStoredKey[];
-    account: IStoredKey;
-    ecosystem: string;
-}
+class Login extends React.Component<ILoginProps> {
+    private _pendingRemoval: { account: IStoredAccount };
 
-class Login extends React.Component<ILoginProps, ILoginState> {
     constructor(props: ILoginProps) {
         super(props);
         this.state = {
-            remember: false,
-            accounts: [],
-            account: null,
-            ecosystem: null
+            account: null
         };
     }
 
-    componentWillMount() {
-        this.setState({
-            accounts: storage.accounts.loadAll(),
-            account: null
-        });
-    }
-
-    onCreateAccount() {
-        this.props.navigate('/account');
-    }
-
-    onSubmit(values: { [key: string]: any }) {
-        if (!this.state.account || !this.state.account.encKey) {
-            return;
+    componentWillReceiveProps(props: ILoginProps) {
+        if (this._pendingRemoval && props.alert && 'C_REMOVE_ACCOUNT' === props.alert.id && props.alert.success) {
+            this.props.removeAccount(this._pendingRemoval.account);
+            this._pendingRemoval = null;
         }
 
-        const privateKey = keyring.decryptAES(this.state.account.encKey, values.password);
-        if (keyring.KEY_LENGTH === privateKey.length) {
-            if (values.remember) {
-                storage.settings.save('privateKey', privateKey);
-                storage.settings.save('lastEcosystem', this.state.ecosystem);
-            }
-            else {
-                storage.settings.remove('privateKey');
-                storage.settings.remove('lastEcosystem');
-            }
-            this.props.login({
-                privateKey,
-                ecosystem: this.state.ecosystem,
-                remember: values.remember
-            });
-            this.props.navigate('/');
-        }
-        else {
+        if (this.props.isLoggingIn && !props.isLoggingIn && props.authenticationError) {
             this.props.alertShow({
                 id: 'E_INVALID_PASSWORD',
                 title: this.props.intl.formatMessage({ id: 'alert.error', defaultMessage: 'Error' }),
@@ -138,104 +138,131 @@ class Login extends React.Component<ILoginProps, ILoginState> {
         }
     }
 
-    onSelectAccount(account: IStoredKey, ecosystem: string) {
-        this.setState({
-            account,
-            ecosystem
+    onCreateAccount() {
+        this.props.navigate('/account');
+    }
+
+    onSubmit(values: { [key: string]: any }) {
+        /*if (!this.state.account || !this.state.account.encKey) {
+            return;
+        }*/
+
+        this.props.login({
+            encKey: this.props.account.encKey,
+            password: values.password,
+            ecosystem: this.props.account.ecosystem,
+        });
+        this.props.navigate('/');
+    }
+
+    onSelectAccount(account: IStoredAccount) {
+        this.props.selectAccount({
+            account
         });
     }
 
-    render() {
-        const accounts: {
-            id: string;
-            avatar: string;
-            type: string;
-            address: string;
-            ecosystem: {
-                id: string;
-                name: string;
-            },
-            ref: IStoredKey;
-        }[] = [];
-        this.state.accounts.forEach(account => {
-            for (let itr in account.ecosystems) {
-                if (account.ecosystems.hasOwnProperty(itr)) {
-                    accounts.push({
-                        id: account.id,
-                        avatar: account.ecosystems[itr].avatar,
-                        type: account.ecosystems[itr].type,
-                        address: account.address,
-                        ecosystem: {
-                            id: itr,
-                            name: account.ecosystems[itr].name
-                        },
-                        ref: account
-                    });
-                }
-            }
-        });
+    onRemoveAccount(account: IStoredAccount) {
+        this._pendingRemoval = {
+            account
+        };
 
-        return this.state.accounts.length ?
+        this.props.alertShow({
+            id: 'C_REMOVE_ACCOUNT',
+            title: 'Confirmation',
+            type: 'warning',
+            text: 'Do you really want to delete this account? THIS ACTION IS IRREVERSIBLE',
+            confirmButton: this.props.intl.formatMessage({ id: 'alert.confirm', defaultMessage: 'Confirm' }),
+            cancelButton: this.props.intl.formatMessage({ id: 'alert.cancel', defaultMessage: 'Cancel' }),
+        });
+    }
+
+    getSortedAccounts() {
+        return this.props.accounts
+            .sort((a, b) =>
+                parseInt(a.id, 10) - parseInt(b.id, 10) ||
+                parseInt(a.ecosystem, 10) - parseInt(b.ecosystem, 10)
+            );
+    }
+
+    getNotificationsCount(account: IStoredAccount) {
+        const notifications = this.props.notifications.filter(n =>
+            n.id === account.id &&
+            n.ecosystem === account.ecosystem,
+        ).map(n => n.count);
+
+        return notifications.length ? notifications.reduce((a, b) => a + b) : 0;
+    }
+
+    renderAccountList() {
+        return (
+            <div className="auth-body form-horizontal desktop-flex-col desktop-flex-stretch">
+                <h2 className="text-center mt0">
+                    <FormattedMessage id="auth.accounts" defaultMessage="Accounts" />
+                </h2>
+                <div className="text-center desktop-flex-stretch">
+                    {this.getSortedAccounts().map((l, index) => (
+                        <AccountButton
+                            onSelect={this.onSelectAccount.bind(this, l)}
+                            onRemove={this.onRemoveAccount.bind(this, l)}
+                            key={index}
+                            avatar={l.avatar}
+                            keyID={l.id}
+                            notifications={this.getNotificationsCount(l)}
+                            username={l.username}
+                            address={l.address}
+                            ecosystemID={l.ecosystem}
+                            ecosystemName={l.ecosystemName}
+                        />
+                    ))}
+                </div>
+                <div className="text-center">
+                    <Button bsStyle="link" onClick={this.onCreateAccount.bind(this)}>
+                        <FormattedMessage id="auth.account.different" defaultMessage="Choose different account" />
+                    </Button>
+                </div>
+            </div>
+        );
+    }
+
+    renderPasswordPrompt() {
+        return (
+            <StyledLogin className="desktop-flex-col desktop-flex-stretch">
+                <Validation.components.ValidatedForm className="auth-body form-horizontal desktop-flex-col desktop-flex-stretch" onSubmitSuccess={this.onSubmit.bind(this)}>
+                    <div className="text-center desktop-flex-stretch">
+                        <div className="avatar-holder">
+                            <img src={this.props.account.avatar || imgAvatar} />
+                        </div>
+                        <h4 className="text-center mt0">
+                            {`${this.props.account.username || this.props.account.id} (${this.props.account.ecosystemName || this.props.account.ecosystem})`}
+                        </h4>
+                        <p>
+                            <FormattedMessage id="auth.session.expired" defaultMessage="Your session has expired. Please enter your password to sign in" />
+                        </p>
+                        <div className="password-prompt">
+                            <Validation.components.ValidatedControl type="password" name="password" placeholder={this.props.intl.formatMessage({ id: 'auth.password', defaultMessage: 'Enter your password...' })} />
+                            <Validation.components.ValidatedSubmit className="btn-block">
+                                <em className="icon icon-login" />
+                            </Validation.components.ValidatedSubmit>
+                        </div>
+                    </div>
+                    <div className="text-center">
+                        <Button bsStyle="link" onClick={this.props.logout}>
+                            <FormattedMessage id="auth.account.different" defaultMessage="Choose different account" />
+                        </Button>
+                    </div>
+                </Validation.components.ValidatedForm>
+            </StyledLogin>
+        );
+    }
+
+    render() {
+        const body = this.props.account && this.props.authenticationError ? this.renderPasswordPrompt() : this.renderAccountList();
+        return this.props.accounts.length ?
             (
                 <DocumentTitle title="auth.login" defaultTitle="Login">
                     <General className="p0">
                         <StyledLogin className="desktop-flex-col desktop-flex-stretch">
-                            <Validation.components.ValidatedForm className="auth-body form-horizontal desktop-flex-col desktop-flex-stretch" onSubmitSuccess={this.onSubmit.bind(this)}>
-                                <h2 className="text-center mt0">
-                                    <FormattedMessage id="auth.accounts" defaultMessage="Accounts" />
-                                </h2>
-                                <div className="text-center desktop-flex-stretch">
-                                    {accounts.map(l => (
-                                        <AccountButton
-                                            active={this.state.account && this.state.account.id === l.id && this.state.ecosystem === l.ecosystem.id}
-                                            onSelect={this.onSelectAccount.bind(this, l.ref, l.ecosystem.id)}
-                                            key={l.id + l.ecosystem.id}
-                                            avatar={l.avatar}
-                                            keyID={l.id}
-                                            address={l.address}
-                                            type={l.type}
-                                            ecosystemID={l.ecosystem.id}
-                                            ecosystemName={l.ecosystem.name}
-                                        />
-                                    ))}
-                                </div>
-                                <div className="panel-body pb0">
-                                    <fieldset className="bb0">
-                                        <Validation.components.ValidatedFormGroup for="password">
-                                            <Row>
-                                                <Col sm={3}>
-                                                    <label className="control-label">
-                                                        <FormattedMessage id="general.password" defaultMessage="Password" />
-                                                    </label>
-                                                </Col>
-                                                <Col sm={9}>
-                                                    <Validation.components.ValidatedControl name="password" type="password" validators={[Validation.validators.required]} />
-                                                </Col>
-                                            </Row>
-                                        </Validation.components.ValidatedFormGroup>
-                                    </fieldset>
-                                    <fieldset className="mb0 bb0" style={{ paddingBottom: 12 }}>
-                                        <Row>
-                                            <Col sm={3} />
-                                            <Col sm={9} className="text-left">
-                                                <Validation.components.ValidatedCheckbox className="pt0" name="remember" checked disabled title={this.props.intl.formatMessage({ id: 'general.remember', defaultMessage: 'Remember password' })} />
-                                            </Col>
-                                        </Row>
-                                    </fieldset>
-                                </div>
-                                <div className="clearfix">
-                                    <div className="pull-left">
-                                        <Button bsStyle="link" onClick={this.onCreateAccount.bind(this)}>
-                                            <FormattedMessage id="auth.account.create" defaultMessage="Create account" />
-                                        </Button>
-                                    </div>
-                                    <div className="pull-right">
-                                        <Button bsStyle="primary" type="submit" disabled={!this.state.account}>
-                                            <FormattedMessage id="auth.login" defaultMessage="Login" />
-                                        </Button>
-                                    </div>
-                                </div>
-                            </Validation.components.ValidatedForm>
+                            {body}
                         </StyledLogin>
                     </General>
                 </DocumentTitle>

@@ -73,7 +73,14 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                         <tbody>
                                             {props.pages.map(page => (
                                                 <tr key={page.id}>
-                                                    <td>{page.name}</td>
+                                                    <td>
+                                                        <div>{page.name}</div>
+                                                        {!props.vde && (
+                                                            <Link to={`/admin/interface/page/history/${page.id}-${page.name}`} className="btn btn-link p0">
+                                                                <FormattedMessage id="admin.interface.page.history" defaultMessage="View history" />
+                                                            </Link>
+                                                        )}
+                                                    </td>
                                                     <td style={{ width: 1 }}>
                                                         <Link to={`/${props.vde ? 'vde' : 'admin'}/interface/page/${page.id}-${page.name}`}>
                                                             <Button bsStyle="default" className="btn-labeled btn-icon">
@@ -115,7 +122,14 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                         <tbody>
                                             {props.menus.map(menu => (
                                                 <tr key={menu.id}>
-                                                    <td>{menu.name}</td>
+                                                    <td>
+                                                        <div>{menu.name}</div>
+                                                        {!props.vde && (
+                                                            <Link to={`/admin/interface/menu/history/${menu.id}-${menu.name}`} className="btn btn-link p0">
+                                                                <FormattedMessage id="admin.interface.menu.history" defaultMessage="View history" />
+                                                            </Link>
+                                                        )}
+                                                    </td>
                                                     <td style={{ width: 1 }}>
                                                         <Link to={`/${props.vde ? 'vde' : 'admin'}/interface/menu/${menu.id}-${menu.name}`}>
                                                             <Button bsStyle="default" className="btn-labeled btn-icon">

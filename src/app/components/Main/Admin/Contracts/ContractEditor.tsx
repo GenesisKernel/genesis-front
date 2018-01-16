@@ -15,16 +15,19 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import { js } from 'js-beautify';
 import { Button, Col, FormControlProps, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import Editor from 'components/Editor';
 
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
+import TxButton from 'containers/Widgets/TxButton';
 
 interface IContractEditorProps {
     vde?: boolean;
     contractName: string;
+    bound: boolean;
     code: string;
     wallet: string;
     conditions: string;
@@ -36,6 +39,7 @@ interface IContractEditorProps {
         address: string;
         value: string;
     };
+    setBound: (bound: boolean) => void;
     onSourceEdit: (code: string) => void;
     onWalletEdit: React.FormEventHandler<React.Component<FormControlProps>>;
     onConditionsEdit: React.ChangeEventHandler<React.Component<FormControlProps>>;
@@ -69,15 +73,15 @@ const ContractEditor: React.SFC<IContractEditorProps> = (props) => (
                 </Col>
                 {props.contract && (
                     <Col md={2}>
-                        {'1' === props.contract.active ?
+                        {props.bound ?
                             (
-                                <Button bsStyle="primary" block>
-                                    <FormattedMessage id="admin.contracts.bind" defaultMessage="Bind" />
-                                </Button>
-                            ) : (
-                                <Button bsStyle="primary" block>
+                                <TxButton className="btn btn-primary btn-block" contractName="@1DeactivateContract" contractParams={{ Id: props.contract.id }} onExec={block => block && props.setBound(false)}>
                                     <FormattedMessage id="admin.contracts.unbind" defaultMessage="Unbind" />
-                                </Button>
+                                </TxButton>
+                            ) : (
+                                <TxButton className="btn btn-primary btn-block" contractName="@1ActivateContract" contractParams={{ Id: props.contract.id }} onExec={block => block && props.setBound(true)}>
+                                    <FormattedMessage id="admin.contracts.bind" defaultMessage="Bind" />
+                                </TxButton>
                             )
                         }
                     </Col>
@@ -97,7 +101,7 @@ const ContractEditor: React.SFC<IContractEditorProps> = (props) => (
                 <FormattedMessage id="admin.save" defaultMessage="Save" />
             </Validation.components.ValidatedSubmit>
 
-            <Button bsStyle="link" type="button" disabled>
+            <Button bsStyle="link" type="button" onClick={() => props.onSourceEdit(js(props.code))}>
                 <em className="fa fa-code fa-fw mr-sm" />
                 <FormattedMessage id="admin.contract.format" defaultMessage="Format code" />
             </Button>

@@ -21,7 +21,13 @@ const animationDuration = 300;
 const containerAnimationDef = {
     defaultStyle: {
         position: 'absolute',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        zIndex: 600
+    },
+
+    alignStyle: {
+        left: { left: 0 },
+        right: { right: 0 }
     },
 
     // Negative margins are used to mitigate padding that is used to
@@ -40,7 +46,8 @@ const containerAnimationDef = {
     exiting: {
         padding: '0 50px 50px',
         margin: '0 -50px',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        zIndex: 500
     }
 };
 
@@ -67,13 +74,14 @@ const animationDef = {
 
 export interface IDropdownProps {
     visible: boolean;
+    align?: 'left' | 'right';
     width?: number;
 }
 
 const Dropdown: React.SFC<IDropdownProps> = props => (
     <Transition in={props.visible} timeout={animationDuration}>
         {(state: string) => (
-            <div style={{ ...containerAnimationDef.defaultStyle, ...containerAnimationDef[state] }}>
+            <div style={{ ...containerAnimationDef.defaultStyle, ...containerAnimationDef[state], ...(props.align ? containerAnimationDef.alignStyle[props.align] : null) }}>
                 <div style={{ ...animationDef.defaultStyle, ...animationDef[state], width: props.width }}>
                     {props.children}
                 </div>

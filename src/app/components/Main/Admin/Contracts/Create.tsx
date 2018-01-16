@@ -117,6 +117,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                 ]}
             >
                 <ContractEditor
+                    bound={false}
                     vde={this.props.vde}
                     contractName="@1NewContract"
                     mapContractParams={this.mapContractParams.bind(this)}
@@ -124,6 +125,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                     code={this.state.code}
                     wallet={this.state.wallet}
                     conditions={this.state.conditions}
+                    setBound={null}
                     onSourceEdit={this.onSourceEdit.bind(this)}
                     onWalletEdit={this.onWalletEdit.bind(this)}
                     onConditionsEdit={this.onConditionsEdit.bind(this)}

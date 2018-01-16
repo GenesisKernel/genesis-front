@@ -21,7 +21,6 @@ import { IRootState } from 'modules';
 import { IntlProvider } from 'react-intl';
 import { login } from 'modules/auth/actions';
 import { navigate, checkOnline, setLoading } from 'modules/engine/actions';
-import storage from 'lib/storage';
 import platform from 'lib/platform';
 import * as classnames from 'classnames';
 
@@ -34,6 +33,7 @@ import General from 'containers/General';
 
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
+import IntlHook from 'containers/App/IntlHook';
 
 interface IAppProps {
     locale: string;
@@ -44,6 +44,7 @@ interface IAppProps {
     isConnected: boolean;
     isInstalled: boolean;
     isConnecting: boolean;
+    isImportingAccount: boolean;
     navigate?: typeof navigate;
     setLoading?: typeof setLoading;
     login?: typeof login.started;
@@ -60,9 +61,9 @@ class App extends React.Component<IAppProps> {
     componentWillReceiveProps(props: IAppProps) {
         if (null === this.props.isConnected && null !== props.isConnected) {
             if (props.isConnected) {
-                const privateKey = storage.settings.load('privateKey');
+                /*const privateKey = storage.settings.load('privateKey');
                 const lastEcosystem = storage.settings.load('lastEcosystem');
-                if (privateKey && props.isInstalled) {
+                if (privateKey && props.isInstalled && !props.isAuthenticated && !props.isImportingAccount) {
                     this.props.login({
                         privateKey,
                         ecosystem: lastEcosystem,
@@ -71,7 +72,8 @@ class App extends React.Component<IAppProps> {
                 }
                 else {
                     this.props.setLoading(false);
-                }
+                }*/
+                this.props.setLoading(false);
             }
             else {
                 this.props.setLoading(false);
@@ -96,6 +98,7 @@ class App extends React.Component<IAppProps> {
         return (
             <IntlProvider locale={this.props.locale} defaultLocale={this.props.locale}>
                 <div className={classes}>
+                    <IntlHook />
                     <ModalDispatcher />
                     <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
                         {this.props.isLoading && (
@@ -124,6 +127,7 @@ const mapStateToProps = (state: IRootState) => ({
     isInstalled: state.engine.isInstalled,
     isConnected: state.engine.isConnected,
     isConnecting: state.engine.isConnecting,
+    isImportingAccount: state.auth.isImportingAccount
 });
 
 const mapDispatchToProps = {

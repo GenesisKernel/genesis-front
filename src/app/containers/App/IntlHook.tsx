@@ -16,45 +16,38 @@
 
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { InjectedIntlProps, injectIntl } from 'react-intl';
 import { IRootState } from 'modules';
-import { IProtypoElement } from 'components/Protypo/Protypo';
-import { fetchNotifications } from 'modules/content/actions';
+import { registerIntl } from 'modules/engine/actions';
 
-import Page from 'components/Main/Page';
-
-export interface INotificationsContainerProps {
+export interface IIntlHookProps {
 
 }
 
-interface INotificationsContainerState {
-    notifications: IProtypoElement[];
+interface IIntlHookState {
+
 }
 
-interface INotificationsContainerDispatch {
-    fetchNotifications: typeof fetchNotifications.started;
+interface IIntlHookDispatch {
+    registerIntl: typeof registerIntl;
 }
 
-class NotificationsContainer extends React.Component<INotificationsContainerProps & INotificationsContainerState & INotificationsContainerDispatch> {
+class IntlHook extends React.Component<IIntlHookProps & IIntlHookState & IIntlHookDispatch & InjectedIntlProps> {
     componentDidMount() {
-        this.props.fetchNotifications(null);
+        this.props.registerIntl(this.props.intl);
     }
 
     render() {
-        return (
-            <Page
-                name="notifications"
-                payload={this.props.notifications || []}
-            />
-        );
+        return null as JSX.Element;
     }
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    notifications: state.content.notifications
+
 });
 
 const mapDispatchToProps = {
-    fetchNotifications: fetchNotifications.started
+    registerIntl
 };
 
-export default connect<INotificationsContainerState, INotificationsContainerDispatch, INotificationsContainerProps>(mapStateToProps, mapDispatchToProps)(NotificationsContainer);
+export default injectIntl(connect<IIntlHookState, IIntlHookDispatch, IIntlHookProps>(mapStateToProps, mapDispatchToProps)(IntlHook));

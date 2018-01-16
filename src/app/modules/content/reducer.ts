@@ -22,12 +22,12 @@ import { IProtypoElement } from 'components/Protypo/Protypo';
 export type State = {
     readonly pending: boolean;
     readonly preloading: boolean;
+    readonly preloadingError: string;
     readonly stylesheet: string;
-    readonly navigationWidth: number;
     readonly navigationResizing: boolean;
     readonly navigationVisible: boolean;
     readonly menus: { name: string, vde: boolean, content: IProtypoElement[] }[];
-    readonly page: { name: string, content: IProtypoElement[], error?: string };
+    readonly page: { name: string, content: IProtypoElement[], params: { [key: string]: any }, error?: string, vde?: boolean };
     readonly notifications: IProtypoElement[];
     readonly alert: { id: string, success: string, error: string };
     readonly imageEditor: { mime: string, data: string, aspectRatio: number, minWidth: number, result: string };
@@ -36,8 +36,8 @@ export type State = {
 export const initialState: State = {
     pending: false,
     preloading: false,
+    preloadingError: null,
     stylesheet: null,
-    navigationWidth: 350,
     navigationResizing: false,
     navigationVisible: true,
     menus: [],
@@ -52,27 +52,6 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             navigationResizing: action.payload
-        };
-    }
-
-    if (isType(action, actions.navigationResize)) {
-        // Hardcoded min/max values
-        if (action.payload < 200) {
-            return {
-                ...state,
-                navigationWidth: 200
-            };
-        }
-        else if (action.payload > 800) {
-            return {
-                ...state,
-                navigationWidth: 800
-            };
-        }
-
-        return {
-            ...state,
-            navigationWidth: action.payload
         };
     }
 
@@ -104,7 +83,11 @@ export default (state: State = initialState, action: Action): State => {
                 ...state,
                 pending: false,
                 menus: [...state.menus, action.payload.result.menu],
-                page: action.payload.result.page
+                page: {
+                    params: action.payload.params.params,
+                    vde: action.payload.params.vde,
+                    ...action.payload.result.page,
+                }
             };
         }
         else {
@@ -112,7 +95,11 @@ export default (state: State = initialState, action: Action): State => {
                 ...state,
                 pending: false,
                 menus: state.menus.slice(0, menuIndex + 1),
-                page: action.payload.result.page
+                page: {
+                    params: action.payload.params.params,
+                    vde: action.payload.params.vde,
+                    ...action.payload.result.page
+                }
             };
         }
     }
@@ -121,11 +108,41 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             pending: false,
             page: {
+                params: action.payload.params.params,
+                vde: action.payload.params.vde,
                 name: action.payload.params.name,
                 content: null,
                 error: action.payload.error
             }
         };
+    }
+
+    if (isType(action, actions.reloadPage.done)) {
+        const menuIndex = state.menus.findIndex(l => l.name === action.payload.result.menu.name && Boolean(l.vde) === Boolean(action.payload.result.menu.vde));
+        if (-1 === menuIndex) {
+            return {
+                ...state,
+                pending: false,
+                menus: [...state.menus, action.payload.result.menu],
+                page: {
+                    params: action.payload.result.params,
+                    vde: action.payload.result.vde,
+                    ...action.payload.result.page,
+                }
+            };
+        }
+        else {
+            return {
+                ...state,
+                pending: false,
+                menus: state.menus.slice(0, menuIndex + 1),
+                page: {
+                    params: action.payload.result.params,
+                    vde: action.payload.result.vde,
+                    ...action.payload.result.page
+                }
+            };
+        }
     }
 
     if (isType(action, actions.menuPop)) {
@@ -160,6 +177,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             preloading: true,
+            preloadingError: null
         };
     }
     else if (isType(action, actions.ecosystemInit.done)) {
@@ -168,6 +186,7 @@ export default (state: State = initialState, action: Action): State => {
             return {
                 ...state,
                 preloading: false,
+                preloadingError: null,
                 stylesheet: action.payload.result.stylesheet,
                 menus: [action.payload.result.defaultMenu, ...state.menus]
             };
@@ -182,7 +201,8 @@ export default (state: State = initialState, action: Action): State => {
     else if (isType(action, actions.ecosystemInit.failed)) {
         return {
             ...state,
-            preloading: false
+            preloading: false,
+            preloadingError: action.payload.error
         };
     }
 
@@ -212,7 +232,10 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             pending: false,
             menus: [action.payload.result.menu],
-            page: action.payload.result.page
+            page: {
+                params: {},
+                ...action.payload.result.page
+            }
         };
     }
     else if (isType(action, actions.reset.failed)) {
@@ -220,6 +243,7 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             pending: false,
             page: {
+                params: null,
                 name: null,
                 content: null,
                 error: action.payload.error

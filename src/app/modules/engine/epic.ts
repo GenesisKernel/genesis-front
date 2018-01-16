@@ -15,27 +15,80 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import api, { IAPIError } from 'lib/api';
+import * as needle from 'needle';
 import { Action } from 'redux';
 import { Observable } from 'rxjs';
 import { combineEpics, Epic } from 'redux-observable';
 import { IRootState } from 'modules';
 import * as actions from './actions';
+import * as authActions from 'modules/auth/actions';
+import { connect } from 'modules/socket/actions';
+import platform from 'lib/platform';
 
-export const checkOnlineEpic = (actions$: Observable<Action>) =>
-    actions$.filter(actions.checkOnline.started.match)
-        .switchMap(action => {
-            return Observable.from(api.getUid()).map(payload => {
-                return actions.checkOnline.done({
-                    params: null,
-                    result: true
-                });
+export const checkOnlineEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.checkOnline.started)
+        .flatMap(action =>
+            Observable.fromPromise(api.getUid()).flatMap(payload => {
+                const privateKeyLocation = platform.args().PRIVATE_KEY;
+
+                if (privateKeyLocation) {
+                    return Observable.fromPromise(needle('get', privateKeyLocation).then(r => r.body).catch(e => null) as Promise<number[]>)
+                        .flatMap(response => {
+                            if (response) {
+                                let privateKey = '';
+                                for (let i = 0; i < response.length; i++) {
+                                    privateKey += String.fromCharCode(response[i]);
+                                }
+
+                                return Observable.concat([
+                                    authActions.importAccount.started({
+                                        backup: privateKey,
+                                        password: 'for testing',
+                                        isDefault: true
+                                    }),
+                                    actions.checkOnline.done({
+                                        params: null,
+                                        result: true
+                                    })
+                                ]);
+                            }
+                            else {
+                                const state = store.getState();
+                                return Observable.concat([
+                                    actions.checkOnline.done({
+                                        params: null,
+                                        result: true
+                                    }),
+                                    connect.started({
+                                        socketToken: state.auth.socketToken,
+                                        timestamp: state.auth.timestamp,
+                                        userID: state.auth.id
+                                    })
+                                ]);
+                            }
+                        });
+                }
+                else {
+                    const state = store.getState();
+                    return Observable.concat([
+                        actions.checkOnline.done({
+                            params: null,
+                            result: true
+                        }),
+                        connect.started({
+                            socketToken: state.auth.socketToken,
+                            timestamp: state.auth.timestamp,
+                            userID: state.auth.id
+                        })
+                    ]);
+                }
             }).catch((error: IAPIError) => {
                 return Observable.of(actions.checkOnline.failed({
                     params: null,
                     error: error.error
                 }));
-            }).delay(600);
-        });
+            }).delay(600)
+        );
 
 export const installEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.install.started.match)

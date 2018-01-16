@@ -15,9 +15,9 @@ $ yarn install
 $ yarn start
 ```
 
-Start script will launch the development server which binds to http://127.0.0.1:7079/api/v2 by default.
+Start script will launch the development server which binds to http://127.0.0.1:7079/api/v2 by default. You can also use start-desktop to debug the project in desktop environment
 
-You can customize API binding to the value of your choice. Simply pass REACT_APP_API_URL as an environment variable to use it instead.
+API binding can be customized to the value of your choice. Simply pass REACT_APP_API_URL as an environment variable to use it instead.
 
 ### Example
 
@@ -44,6 +44,33 @@ $ REACT_APP_API_URL='http://example.org:8080/api/v2' yarn build
 ```
 
 After building, redistributable files will be placed to the '/build' directory. You can serve it with any web-server of your choice
+
+----------
+
+## Building desktop application
+Install the dependencies if you not did it already:
+```bash
+$ yarn install
+```
+
+Build the project using REACT_APP_API_URL environment variable which will bind our application to the backend.
+
+### Example
+
+```bash
+$ REACT_APP_API_URL='http://example.org:8080/api/v2' yarn build-desktop
+```
+
+When build process finishes you will need to package your application using "release". You will also need to specify "--publish never" so your project will not be published to github
+
+Platforms can be specified with the combination of m/w/l arguments, where "m" stands for macOS, "w" for windows and "l" for linux
+
+### Example
+
+```bash
+$ yarn release --publish never -mwl
+```
+Will release desktop applications for macOS, windows and linux
 
 ----------
 

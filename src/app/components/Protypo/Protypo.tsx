@@ -34,6 +34,7 @@ export interface IProtypoProps {
     menuPush: (params: { name: string, content: IProtypoElement[] }) => void;
     navigatePage: (params: { name: string, params: any, vde?: boolean }) => void;
     navigate: (url: string) => void;
+    displayData: (link: string) => void;
     changePage?: any;
     addTag?: any;
     moveTag?: any;
@@ -100,6 +101,10 @@ class Protypo extends React.Component<IProtypoProps> {
 
     addToolButton(props: IToolButtonProps) {
         this._toolButtons.push(props);
+    }
+
+    displayData(link: string) {
+        this.props.displayData(link);
     }
 
     registerSource(name: string, payload: { columns: string[], types: string[], data: string[][] }) {

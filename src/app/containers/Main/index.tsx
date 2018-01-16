@@ -15,9 +15,11 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import { Route } from 'react-router-dom';
 import { IRootState } from 'modules';
+import { navigate } from 'modules/engine/actions';
+import { reset, reloadPage, navigationToggle } from 'modules/content/actions';
 
 import Main, { IMainProps } from 'components/Main';
 import Tables from 'containers/Main/containers/Admin/Tables';
@@ -26,15 +28,18 @@ import TablesEdit from 'containers/Main/containers/Admin/Tables/EditTable';
 import TablesAddColumn from 'containers/Main/containers/Admin/Tables/AddColumn';
 import TablesEditColumn from 'containers/Main/containers/Admin/Tables/EditColumn';
 import TablesView from 'containers/Main/containers/Admin/Tables/View';
-import TablesHistory from 'containers/Main/containers/Admin/Tables/History';
+import TablesHistory from 'components/Main/Admin/Tables/History';
 import Interface from 'containers/Main/containers/Admin/Interface';
 import CreatePage from 'containers/Main/containers/Admin/Interface/CreatePage';
 import EditPage from 'containers/Main/containers/Admin/Interface/EditPage';
+import PageHistory from 'components/Main/Admin/Interface/PageHistory';
 import CreateMenu from 'containers/Main/containers/Admin/Interface/CreateMenu';
 import EditMenu from 'containers/Main/containers/Admin/Interface/EditMenu';
+import MenuHistory from 'components/Main/Admin/Interface/MenuHistory';
 import CreateBlock from 'containers/Main/containers/Admin/Interface/CreateBlock';
 import EditBlock from 'containers/Main/containers/Admin/Interface/EditBlock';
 import Contracts from 'containers/Main/containers/Admin/Contracts';
+import ContractHistory from 'components/Main/Admin/Contracts/History';
 import CreateContract from 'containers/Main/containers/Admin/Contracts/Create';
 import Languages from 'containers/Main/containers/Admin/Languages';
 import CreateLanguage from 'containers/Main/containers/Admin/Languages/Create';
@@ -52,7 +57,7 @@ import Page from 'containers/Main/containers/Page';
 import Debug from 'containers/Main/containers/Debug';
 import DebugWs from 'containers/Main/containers/Debug/Ws';
 import Backup from 'containers/Main/containers/Backup';
-import NotFound from 'containers/Main/containers/NotFound';
+import NotFound from 'components/NotFound';
 import { AnimatedSwitch } from 'components/Animation';
 
 const MainContainer: React.SFC<IMainProps> = props => (
@@ -71,11 +76,14 @@ const MainContainer: React.SFC<IMainProps> = props => (
             <Route exact path="/admin/interface/create-page" component={CreatePage} />
             <Route exact path="/admin/interface/page/:pageID-:pageName" component={EditPage} />
             <Route exact path="/admin/interface/menu/:menuID-:menuName" component={EditMenu} />
+            <Route exact path="/admin/interface/page/history/:pageID-:pageName" render={routeProps => <PageHistory id={routeProps.match.params.pageID} name={routeProps.match.params.pageName} />} />
+            <Route exact path="/admin/interface/menu/history/:menuID-:menuName" render={routeProps => <MenuHistory id={routeProps.match.params.menuID} name={routeProps.match.params.menuName} />} />
             <Route exact path="/admin/interface/block/:blockID-:blockName" component={EditBlock} />
             <Route exact path="/admin/interface/create-menu" component={CreateMenu} />
             <Route exact path="/admin/interface/create-block" component={CreateBlock} />
             <Route exact path="/admin/contracts" component={Contracts} />
             <Route exact path="/admin/contracts/create" component={CreateContract} />
+            <Route exact path="/admin/contracts/history/:contractID-:contractName" render={routeProps => <ContractHistory id={routeProps.match.params.contractID} name={routeProps.match.params.contractName} />} />
             <Route exact path="/admin/contracts/:contractID-:contractName" component={EditContract} />
             <Route exact path="/admin/languages" component={Languages} />
             <Route exact path="/admin/languages/create" component={CreateLanguage} />
@@ -123,7 +131,7 @@ const MainContainer: React.SFC<IMainProps> = props => (
             <Route exact path="/debug" component={Debug} />
             <Route exact path="/debug/ws" component={DebugWs} />
             <Route exact path="/backup" component={Backup} />
-            <Route path="*" component={NotFound} />
+            <Route path="*" render={() => <NotFound main />} />
         </AnimatedSwitch>
     </Main>
 );
@@ -131,15 +139,25 @@ const MainContainer: React.SFC<IMainProps> = props => (
 const mapStateToProps = (state: IRootState) => ({
     pending: state.content.pending,
     isEcosystemOwner: state.auth.isEcosystemOwner,
+    isAuthorized: !!state.auth.privateKey,
     stylesheet: state.content.stylesheet,
-    navigationWidth: state.content.navigationWidth,
+    navigationSize: state.storage.navigationSize,
     navigationVisible: state.content.navigationVisible,
     transactionsCount: state.tx.transactions.count(),
     pendingTransactions: state.tx.transactions.takeLast(5)
 });
 
-const mapDispatchToProps = {
-
-};
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+    onNavigationToggle: () => {
+        dispatch(navigationToggle());
+    },
+    onNavigateHome: () => {
+        dispatch(reset.started(null));
+        dispatch(navigate('/'));
+    },
+    onRefresh: () => {
+        dispatch(reloadPage.started(null));
+    }
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainContainer);

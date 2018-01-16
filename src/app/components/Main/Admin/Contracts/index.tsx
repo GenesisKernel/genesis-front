@@ -48,18 +48,16 @@ const renderCell: ICellRenderer = (data, rowData) => {
         );
 
         case 4: return (
-            <span>
-                <Link to={`/${rowData.rowData[4] ? 'vde' : 'admin'}/contracts/${rowData.rowData[0]}-${rowData.rowData[1]}`} className="btn btn-default btn-labeled btn-icon">
-                    <span className="btn-label">
-                        <em className="icon-pencil" />
-                    </span>
+            <div>
+                <Link to={`/${rowData.rowData[4] ? 'vde' : 'admin'}/contracts/${rowData.rowData[0]}-${rowData.rowData[1]}`} className="btn btn-link">
+                    <FormattedMessage id="admin.contracts.edit" defaultMessage="Edit" />
                 </Link>
-                <Link to={`/${rowData.rowData[4] ? 'vde' : 'admin'}/tabs/contract-${rowData.rowData[0]}-${rowData.rowData[1]}`} className="btn btn-default btn-labeled btn-icon">
-                    <span className="btn-label">
-                        <em className="icon-folder" />
-                    </span>
-                </Link>
-            </span>
+                {!rowData.rowData[4] && (
+                    <Link to={`/admin/contracts/history/${rowData.rowData[0]}-${rowData.rowData[1]}`} className="btn btn-link">
+                        <FormattedMessage id="admin.contracts.edit" defaultMessage="History" />
+                    </Link>
+                )}
+            </div>
         );
 
         default: return data;
@@ -100,7 +98,7 @@ const Contracts: React.SFC<IContractsProps & InjectedIntlProps> = (props) => (
                 { title: props.intl.formatMessage({ id: 'admin.contracts.name', defaultMessage: 'Name' }), sortable: true },
                 { title: props.intl.formatMessage({ id: 'admin.contracts.wallet', defaultMessage: 'Wallet' }), sortable: true, width: 200 },
                 { title: props.intl.formatMessage({ id: 'admin.contracts.active', defaultMessage: 'Active' }), sortable: true, width: 1 },
-                { width: 1 }
+                { width: 100 }
             ]}
         />
     </Wrapper>

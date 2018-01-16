@@ -20,9 +20,10 @@ import * as classnames from 'classnames';
 
 import Protypo from '../';
 import StyledComponent from './StyledComponent';
-
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
+import LongText from 'components/Protypo/components/LongText';
+import BlobData from 'components/Protypo/components/BlobData';
 
 export interface ITableProps {
     id: string;
@@ -56,7 +57,6 @@ interface ITableContext {
 }
 
 const Table: React.SFC<ITableProps> = (props, context: ITableContext) => {
-
     if (props.editable) {
         const onClick = (e: any) => {
             e.stopPropagation();
@@ -162,12 +162,34 @@ const Table: React.SFC<ITableProps> = (props, context: ITableContext) => {
             case 'text':
                 return value;
 
+            case 'blob':
+                try {
+                    const payload: { title: string, link: string } = JSON.parse(value);
+                    return (
+                        <BlobData link={payload.link}>{payload.title}</BlobData>
+                    );
+                }
+                catch {
+                    return null;
+                }
+
+            case 'long_text':
+                try {
+                    const payload: { title: string, link: string } = JSON.parse(value);
+                    return (
+                        <LongText link={payload.link}>{payload.title}</LongText>
+                    );
+                }
+                catch {
+                    return null;
+                }
+
             case 'tags':
                 try {
                     const payload = JSON.parse(value);
                     return context.protypo.renderElements(payload, props.id);
                 }
-                catch (e) {
+                catch {
                     return null;
                 }
         }

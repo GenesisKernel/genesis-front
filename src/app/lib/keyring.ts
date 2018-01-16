@@ -167,7 +167,7 @@ const WORD_LIST = ['abandon', 'ability', 'able', 'about', 'above', 'absent', 'ab
 
 export interface IKeyBackup {
     privateKey: string;
-    ecosystems: { [key: string]: string };
+    ecosystems: string[];
 }
 
 const randomEngine = Random();
@@ -186,6 +186,15 @@ export interface IWalletData {
 const keyring = {
     MAX_KEY_SIZE: 1024 * 10, // 10 KiB
     KEY_LENGTH: 64,
+
+    validatePrivateKey: (privateKey: string) => {
+        if (!privateKey || keyring.KEY_LENGTH !== privateKey.length) {
+            return false;
+        }
+        else {
+            return /[a-f0-9]/i.test(privateKey);
+        }
+    },
 
     generateSeed: (count: number = 15) => {
         const result: string[] = [];
@@ -281,20 +290,14 @@ const keyring = {
     },
 
     backup: (key: IKeyBackup) => {
-        const ecosystems: string[] = [];
-        for (let itr in key.ecosystems) {
-            if (key.ecosystems.hasOwnProperty(itr)) {
-                ecosystems.push(itr);
-            }
-        }
-        return `${key.privateKey};${ecosystems.join(';')}`;
+        return `${key.privateKey};${key.ecosystems.join(';')}`;
     },
 
     restore: (payload: string): IKeyBackup => {
         const tokens = payload.split(';');
         if (tokens.length) {
             const privateKey = tokens[0].trim();
-            const ecosystems: { [key: string]: string } = {};
+            const ecosystems: string[] = [];
 
             // Ecosystems are stored as string, but we still need to
             // check if stored values are correct ones
@@ -303,7 +306,7 @@ const keyring = {
 
                 // Check if value is not NaN
                 if (ecosystemToken === ecosystemToken) {
-                    ecosystems[ecosystemToken.toString()] = null;
+                    ecosystems.push(ecosystemToken.toString());
                 }
             }
 

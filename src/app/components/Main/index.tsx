@@ -20,9 +20,15 @@ import LoadingBar from 'react-redux-loading-bar';
 import { OrderedMap } from 'immutable';
 import styled from 'styled-components';
 import platform from 'lib/platform';
+import { history } from 'store';
+import url from 'url';
+
 import Titlebar from './Titlebar';
 import UserMenu from 'containers/Widgets/UserMenu';
 import Navigation from 'containers/Main/Navigation';
+import { apiUrl } from 'lib/api';
+import NotificationsMenu from 'containers/Widgets/NotificationsMenu';
+// import TransactionsMenu from './TransactionsMenu';
 
 export const styles = {
     headerHeight: platform.select({ desktop: 28, web: 0 }),
@@ -37,13 +43,17 @@ const StyledWrapper = styled.div`
 
 export interface IMainProps {
     session: string;
+    isAuthorized: boolean;
     isEcosystemOwner: boolean;
     pending: boolean;
     stylesheet: string;
-    navigationWidth: number;
+    navigationSize: number;
     navigationVisible: boolean;
     pendingTransactions: OrderedMap<string, { uuid: string, block: string, error?: { type: string, error: string }, contract: string }>;
     transactionsCount: number;
+    onRefresh: () => void;
+    onNavigateHome: () => void;
+    onNavigationToggle: () => void;
 }
 
 const StyledControls = styled.div`
@@ -129,9 +139,9 @@ const StyledLoadingBar = styled(LoadingBar) `
     left: 0;
 `;
 
-const MenuItem: React.SFC<{ active?: boolean }> = props => (
+const MenuItem: React.SFC<{ active?: boolean, onClick?: () => void }> = props => (
     <li className={props.active ? 'active' : ''}>
-        <button>
+        <button onClick={props.onClick}>
             {props.children}
         </button>
     </li>
@@ -183,9 +193,9 @@ const StyledToolbar = styled.ul`
     }
 `;
 
-const ToolButton: React.SFC<{ icon: string }> = props => (
-    <li>
-        <button>
+const ToolButton: React.SFC<{ icon: string, right?: boolean, onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void }> = props => (
+    <li style={{ float: props.right ? 'right' : null }}>
+        <button onClick={props.onClick}>
             <em className={`icon ${props.icon}`} />
             {props.children && (<span>{props.children}</span>)}
         </button>
@@ -199,18 +209,18 @@ const ToolButton: React.SFC<{ icon: string }> = props => (
 );*/
 
 class Main extends React.Component<IMainProps> {
-    componentWillMount() {
-        platform.on('desktop', () => {
-            const { remote } = require('electron');
-            const window = remote.getCurrentWindow();
-            window.setResizable(true);
-            window.setSize(800, 600);
-            window.setMinimumSize(800, 600);
-            window.center();
-        });
+    onBack() {
+        history.goBack();
+    }
+
+    onForward() {
+        history.goForward();
     }
 
     render() {
+        const apiUrlTokens = url.parse(apiUrl);
+        const appTitle = `Apla (${apiUrlTokens.protocol}//${apiUrlTokens.host})`;
+
         return (
             <StyledWrapper className="wrapper component-main">
                 <style type="text/css">
@@ -218,22 +228,27 @@ class Main extends React.Component<IMainProps> {
                 </style>
                 <StyledControls>
                     <StyledTitlebar className="drag">
-                        <Titlebar>Apla</Titlebar>
+                        <Titlebar>{appTitle}</Titlebar>
                     </StyledTitlebar>
                     <StyledMenu className="drag">
-                        <MenuItem>
-                            <em className="icon-grid" />
+                        <MenuItem onClick={this.props.onNavigationToggle}>
+                            <em className="icon-menu" />
                         </MenuItem>
                         <MenuItem active>Home</MenuItem>
                         <li className="user-menu">
+                            <NotificationsMenu />
+                            {/*<TransactionsMenu />*/}
                             <UserMenu />
                         </li>
                     </StyledMenu>
                     <StyledToolbar>
-                        <ToolButton icon="icon-arrow-left" />
-                        <ToolButton icon="icon-arrow-right" />
-                        <ToolButton icon="icon-refresh" />
-                        <ToolButton icon="icon-home" />
+                        <ToolButton icon="icon-arrow-left" onClick={this.onBack} />
+                        <ToolButton icon="icon-arrow-right" onClick={this.onForward} />
+                        <ToolButton icon="icon-refresh" onClick={this.props.onRefresh} />
+                        <ToolButton icon="icon-home" onClick={this.props.onNavigateHome} />
+                        {this.props.isAuthorized && (
+                            <ToolButton right icon="icon-key" />
+                        )}
                     </StyledToolbar>
                     <StyledLoadingBar
                         showFastActions
@@ -245,7 +260,7 @@ class Main extends React.Component<IMainProps> {
                     />
                 </StyledControls>
                 <Navigation topOffset={styles.headerHeight + styles.menuHeight + styles.toolbarHeight} />
-                <StyledContent style={{ marginLeft: this.props.navigationVisible ? this.props.navigationWidth : 0 }}>
+                <StyledContent style={{ marginLeft: this.props.navigationVisible ? this.props.navigationSize : 0 }}>
                     <ReduxToastr
                         timeOut={3000}
                         newestOnTop

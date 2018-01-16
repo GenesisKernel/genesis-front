@@ -28,6 +28,7 @@ interface IResizeHandleProps {
 }
 
 export const styles = {
+    hoverWidth: 10,
     initialWidth: 2,
     extendWidth: 2
 };
@@ -38,13 +39,14 @@ const StyledResizeHandle = styled.button`
     bottom: 0;
     right: 0;
     text-align: center;
-    width: 9px;
+    width: ${styles.hoverWidth}px;
     outline: 0;
     border: 0;
     background: none;
     padding: 0;
     margin: 0;
     cursor: col-resize;
+    margin-right: -${styles.hoverWidth / 2}px;
 
     &.disabled {
         cursor: default;
@@ -54,7 +56,7 @@ const StyledResizeHandle = styled.button`
         position: absolute;
         top: 0;
         bottom: 0;
-        right: 0;
+        right: ${(styles.hoverWidth / 2) - (styles.initialWidth / 2)}px;
         margin: 0;
         width: ${styles.initialWidth}px;
         background: #e5e4e5;

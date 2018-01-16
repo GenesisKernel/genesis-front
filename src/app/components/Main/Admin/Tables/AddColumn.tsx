@@ -15,7 +15,6 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { Col, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { columnTypes } from './Create';
@@ -32,15 +31,13 @@ export interface IAddColumnProps {
 
 interface IAddColumnState {
     type: string;
-    index: boolean;
 }
 
 class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
     constructor(props: IAddColumnProps) {
         super(props);
         this.state = {
-            type: columnTypes[0].name,
-            index: false
+            type: columnTypes[0].name
         };
     }
 
@@ -53,21 +50,10 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
         };
     }
 
-    onIndexChange(e: React.ChangeEvent<HTMLInputElement>) {
-        this.setState({
-            index: e.target.checked
-        });
-    }
-
     onTypeChange(e: React.ChangeEvent<HTMLSelectElement>) {
         this.setState({
-            type: e.target.value,
-            index: this.isIndexDenied(e.target.value) ? false : this.state.index
+            type: e.target.value
         });
-    }
-
-    isIndexDenied(type?: string) {
-        return !!columnTypes.find(l => l.name === (type || this.state.type) && l.denyIndex);
     }
 
     render() {
@@ -107,35 +93,18 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
                                         </label>
                                         <Validation.components.ValidatedControl type="text" name="name" validators={[Validation.validators.required]} />
                                     </Validation.components.ValidatedFormGroup>
-                                    <Row>
-                                        <Col md={11}>
-                                            <Validation.components.ValidatedFormGroup for="type">
-                                                <label htmlFor="type">
-                                                    <FormattedMessage id="admin.tables.column.type" defaultMessage="Type" />
-                                                </label>
-                                                <Validation.components.ValidatedSelect name="type" onChange={this.onTypeChange.bind(this)} value={this.state.type}>
-                                                    {columnTypes.map(type => (
-                                                        <option key={type.name} value={type.name}>
-                                                            {type.title}
-                                                        </option>
-                                                    ))}
-                                                </Validation.components.ValidatedSelect>
-                                            </Validation.components.ValidatedFormGroup>
-                                        </Col>
-                                        <Col md={1}>
-                                            <Validation.components.ValidatedFormGroup for="index">
-                                                <label htmlFor="index">
-                                                    <FormattedMessage id="admin.tables.column.index" defaultMessage="Index" />
-                                                </label>
-                                                <Validation.components.ValidatedCheckbox
-                                                    name="index"
-                                                    checked={this.state.index}
-                                                    onChange={this.onIndexChange.bind(this)}
-                                                    disabled={this.isIndexDenied()}
-                                                />
-                                            </Validation.components.ValidatedFormGroup>
-                                        </Col>
-                                    </Row>
+                                    <Validation.components.ValidatedFormGroup for="type">
+                                        <label htmlFor="type">
+                                            <FormattedMessage id="admin.tables.column.type" defaultMessage="Type" />
+                                        </label>
+                                        <Validation.components.ValidatedSelect name="type" onChange={this.onTypeChange.bind(this)} value={this.state.type}>
+                                            {columnTypes.map(type => (
+                                                <option key={type.name} value={type.name}>
+                                                    {type.title}
+                                                </option>
+                                            ))}
+                                        </Validation.components.ValidatedSelect>
+                                    </Validation.components.ValidatedFormGroup>
                                     <Validation.components.ValidatedFormGroup for="permissions">
                                         <label htmlFor="permissions">
                                             <FormattedMessage id="admin.tables.permissions" defaultMessage="Permissions" />

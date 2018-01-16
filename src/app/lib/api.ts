@@ -15,8 +15,12 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import needle, { NeedleOptions } from 'needle';
+import platform from 'lib/platform';
 
-let apiUrl = process.env.REACT_APP_API_URL || 'http://127.0.0.1:7079/api/v2';
+export let apiUrl = platform.args().API_URL || process.env.REACT_APP_API_URL || 'http://127.0.0.1:7079/api/v2';
+export let socketUrl = platform.args().SOCKET_URL || process.env.REACT_APP_SOCKET_URL || 'ws://127.0.0.1:8000';
+export const SESSION_DURATION_DEFAULT = 60 * 60 * 24 * 30;
+
 const defaultOptions: NeedleOptions = {
     method: 'POST',
     headers: {
@@ -24,8 +28,13 @@ const defaultOptions: NeedleOptions = {
     }
 };
 
-export const overrideSettings = (settings: { apiUrl: string }) => {
-    apiUrl = settings.apiUrl;
+export const overrideSettings = (settings: { apiUrl?: string, socketUrl?: string }) => {
+    if (settings.apiUrl) {
+        apiUrl = settings.apiUrl;
+    }
+    if (settings.socketUrl) {
+        socketUrl = settings.socketUrl;
+    }
 };
 
 export interface IResponse extends IAPIError {
@@ -187,7 +196,19 @@ export interface IRowResponse extends IResponse {
 
 export interface ITxPrepareResponse extends IResponse {
     forsign: string;
-    time: number;
+    signs?: {
+        forsign: string;
+        field: string;
+        title: string;
+        params: {
+            name: string;
+            text: string;
+        }[];
+    }[];
+    values: {
+
+    };
+    time: string;
 }
 
 export interface ITxExecResponse extends IResponse {
@@ -246,6 +267,7 @@ const request = async (endpoint: string, body: { [key: string]: any }, options?:
 
     try {
         const response = await needle(requestOptions.method as any, `${apiUrl}/${endpoint}`, body, {
+            connection: 'Keep-Alive',
             method: requestOptions.method,
             headers: {
                 ...requestOptions.headers
@@ -291,16 +313,16 @@ const api = {
         forsign: forSign,
         pubkey: publicKey
     }) as Promise<ISignTestResponse>,
-    login: (session: string, publicKey: string, signature: string, expirySeconds: number = 36000, ecosystem: string = '1') => securedRequest('login', session, {
+    login: (session: string, publicKey: string, signature: string, expirySeconds: number = SESSION_DURATION_DEFAULT, ecosystem: string = '1') => securedRequest('login', session, {
         pubkey: publicKey.slice(2),
         signature,
         ecosystem,
-        expiry: expirySeconds
+        expire: expirySeconds
     }).then((result: ILoginResponse) => ({
         ...result,
         expiry: expirySeconds
     })) as Promise<ILoginResponse>,
-    refresh: (session: string, token: string, expirySeconds: number = 36000) => securedRequest('refresh', session, { token }).then((result: IRefreshResponse) => ({
+    refresh: (session: string, token: string, expirySeconds: number = SESSION_DURATION_DEFAULT) => securedRequest('refresh', session, { token }).then((result: IRefreshResponse) => ({
         ...result,
         expiry: expirySeconds
     })) as Promise<IRefreshResponse>,
@@ -369,9 +391,18 @@ const api = {
     }) as Promise<ITxStatusResponse>,
     txStatus: (session: string, hash: string, vde = false) => securedRequest(`txstatus/${hash}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITxStatusResponse>,
 
+    updNotificator: (session: string, ids: { id: string, ecosystem: string }[]) =>
+        securedRequest('updnotificator', session, {
+            ids: JSON.stringify(ids)
+        }) as Promise<any>,
+
     // Utilities
     resolveData: (name: string) =>
-        apiUrl + name
+        apiUrl + name,
+
+    resolveTextData: (link: string) =>
+        needle('get', `${apiUrl}${link}`)
+            .then(response => response.body) as Promise<string>
 };
 
 export default api;

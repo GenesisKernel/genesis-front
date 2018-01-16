@@ -17,8 +17,8 @@
 import * as React from 'react';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
-import { IStoredKey } from 'lib/storage';
-import { logout, switchEcosystem } from 'modules/auth/actions';
+import { logout, selectAccount } from 'modules/auth/actions';
+import { IStoredAccount } from 'apla/storage';
 
 import UserMenu from 'components/Main//UserMenu';
 
@@ -27,32 +27,36 @@ export interface IUserMenuContainerProps {
 }
 
 interface IUserMenuContainerState {
-    account: IStoredKey;
-    ecosystem: string;
+    account: IStoredAccount;
+    ecosystemAccounts: IStoredAccount[];
 }
 
 interface IUserMenuContainerDispatch {
     logout: typeof logout.started;
-    switchEcosystem: typeof switchEcosystem.started;
+    selectAccount: typeof selectAccount.started;
 }
 
 const UserMenuContainer: React.SFC<IUserMenuContainerProps & IUserMenuContainerState & IUserMenuContainerDispatch> = (props) => (
     <UserMenu
         account={props.account}
-        ecosystem={props.ecosystem}
-        onLogout={() => props.logout(null)}
-        onSwitchEcosystem={ecosystem => props.switchEcosystem(ecosystem)}
+        ecosystemAccounts={props.ecosystemAccounts}
+        logout={() => props.logout({})}
+        switchAccount={props.selectAccount}
     />
 );
 
 const mapStateToProps = (state: IRootState) => ({
     account: state.auth.account,
+    ecosystemAccounts: state.auth.account ?
+        state.storage.accounts.filter(l =>
+            l.id === state.auth.account.id
+        ).sort((a, b) => parseInt(a.ecosystem, 10) - parseInt(b.ecosystem, 10)) : [],
     ecosystem: state.auth.ecosystem
 });
 
 const mapDispatchToProps = {
     logout: logout.started,
-    switchEcosystem: switchEcosystem.started
+    selectAccount: selectAccount.started
 };
 
 export default connect<IUserMenuContainerState, IUserMenuContainerDispatch, IUserMenuContainerProps>(mapStateToProps, mapDispatchToProps)(UserMenuContainer);
