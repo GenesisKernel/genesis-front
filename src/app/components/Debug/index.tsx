@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { Button, Col } from 'react-bootstrap';
 import api from 'lib/api';
-import { contractExec } from 'modules/tx/actions';
+import { txCall } from 'modules/tx/actions';
 import styled from 'styled-components';
 import { history } from 'store';
 
@@ -32,7 +32,7 @@ import TxButton from 'containers/Widgets/TxButton';
 
 export interface IDebugProps {
     session: string;
-    contractExec: typeof contractExec.started;
+    callContract: typeof txCall;
 }
 
 interface IDebugState {
@@ -107,7 +107,7 @@ export default class extends React.Component<IDebugProps, IDebugState> {
     }
 
     onPush() {
-        history.push('/page/first', { hello: 1488 });
+        history.push('/page/first', { hello: 1337 });
     }
 
     render() {

@@ -58,6 +58,14 @@ class TxButton extends React.Component<ITxButtonProps & InjectedIntlProps> {
             }
             else if (props.contractStatus.error) {
                 switch (props.contractStatus.error.type) {
+                    case 'E_INVALID_PASSWORD':
+                        this.props.alert(
+                            'error',
+                            this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error' }),
+                            this.props.intl.formatMessage({ id: 'tx.error.invalid_password', defaultMessage: 'Invalid password' }),
+                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
+                        ); break;
+
                     case 'E_CONTRACT':
                         this.props.alert(
                             'error',
@@ -131,6 +139,7 @@ class TxButton extends React.Component<ITxButtonProps & InjectedIntlProps> {
     render() {
         return (
             <button
+                type="button"
                 onClick={this.onClick.bind(this)}
                 disabled={this.props.disabled || this.props.pending}
                 className={this.props.className}

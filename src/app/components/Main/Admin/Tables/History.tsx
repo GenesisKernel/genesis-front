@@ -16,38 +16,14 @@
 
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { columnDisplayRules } from './View';
 
 import Wrapper from 'components/Wrapper';
-import Table, { ICellRenderer } from 'components/Table';
+import HistoryViewer from 'containers/Main/containers/Admin/HistoryViewer';
 
 export interface IHistoryProps {
     id: string;
     table: string;
-    columns: {
-        name: string;
-        type: string;
-        perm: string;
-        index: string;
-    }[];
-    data: {
-        [key: string]: string;
-    }[];
 }
-
-const renderValue: ICellRenderer = (value: { type: string, value: any }, rowData) => {
-    const displayRule = columnDisplayRules[value.type];
-    if (displayRule) {
-        return (
-            <div>{displayRule.render(value.value)}</div>
-        );
-    }
-    else {
-        return (
-            <div>{value.value && value.value.toString()}</div>
-        );
-    }
-};
 
 const History: React.SFC<IHistoryProps> = (props) => (
     <Wrapper
@@ -82,22 +58,7 @@ const History: React.SFC<IHistoryProps> = (props) => (
             }
         ]}
     >
-        <Table
-            striped
-            renderCell={renderValue}
-            columns={props.columns.map(column => ({
-                title: column.name,
-                sortable: false
-            }))}
-            data={
-                props.data.map(row =>
-                    props.columns.map(column => ({
-                        type: column.type,
-                        value: row[column.name]
-                    }))
-                )
-            }
-        />
+        <HistoryViewer {...props} />
     </Wrapper >
 );
 

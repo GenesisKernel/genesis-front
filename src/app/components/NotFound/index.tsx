@@ -21,37 +21,45 @@ import { FormattedMessage } from 'react-intl';
 import DocumentTitle from 'components/DocumentTitle';
 import Center from 'components/Center';
 
-const NotFound: React.SFC = (props) => (
+export interface INotFoundProps {
+    main?: boolean;
+}
+
+const NotFound: React.SFC<INotFoundProps> = (props) => (
     <DocumentTitle title="general.notfound" defaultTitle="Not found">
         <Center>
-            <div className="text-center mb-xl">
-                <div className="text-lg mb-lg">404</div>
-                <p className="lead m0">
-                    <FormattedMessage id="general.notfound.page" defaultMessage="We couldn't find this page" />
-                </p>
-                <p>
-                    <FormattedMessage id="general.notfound.page.notexists" defaultMessage="The page you are looking for does not exists" />
-                </p>
+            <div className={props.main ? 'text-muted' : 'text-white'}>
+                <div className="text-center mb-xl">
+                    <div className="text-lg mb-lg">404</div>
+                    <p className="lead m0">
+                        <FormattedMessage id="general.notfound.page" defaultMessage="We couldn't find this page" />
+                    </p>
+                    <p>
+                        <FormattedMessage id="general.notfound.page.notexists" defaultMessage="The page you are looking for does not exists" />
+                    </p>
+                </div>
+                {!props.main && (
+                    <ul className="list-inline text-center text-sm mb-xl">
+                        <li>
+                            <Link to="/">
+                                <FormattedMessage id="general.home" defaultMessage="Home" />
+                            </Link>
+                        </li>
+                        <li>|</li>
+                        <li>
+                            <Link to="">
+                                <FormattedMessage id="account.login" defaultMessage="Login" />
+                            </Link>
+                        </li>
+                        <li >|</li>
+                        <li>
+                            <Link to="/account/create">
+                                <FormattedMessage id="account.create" defaultMessage="Create account" />
+                            </Link>
+                        </li>
+                    </ul>
+                )}
             </div>
-            <ul className="list-inline text-center text-sm mb-xl">
-                <li>
-                    <Link className="text-muted" to="/">
-                        <FormattedMessage id="general.home" defaultMessage="Home" />
-                    </Link>
-                </li>
-                <li className="text-muted">|</li>
-                <li>
-                    <Link className="text-muted" to="">
-                        <FormattedMessage id="account.login" defaultMessage="Login" />
-                    </Link>
-                </li>
-                <li className="text-muted">|</li>
-                <li>
-                    <Link className="text-muted" to="/account/create">
-                        <FormattedMessage id="account.create" defaultMessage="Create account" />
-                    </Link>
-                </li>
-            </ul>
         </Center>
     </DocumentTitle>
 );

@@ -15,62 +15,94 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { Button, Col, Row } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import imgAvatar from 'images/avatar.svg';
 
 const StyledAccountButton = styled.div`
+    padding-right: 46px;
     margin-top: 8px;
+    position: relative;
 
-    button {
+    button.account-main {
+        position: relative;
+        border: solid 1px transparent;
         padding: 0;
-        height: 50px;
+        height: 46px;
+        overflow: hidden;
+        padding-right: 45px;
 
         .avatar {
-            max-width: 50px;
-            max-height: 50px;
+            max-width: 44px;
+            max-height: 44px;
+        }
+
+        .notifications {
+            text-align: center;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            bottom: 10px;
+            width: 25px;
+            line-height: 25px;
+            background: #d87272;
+            color: #fff;
+        }
+    }
+
+    button.account-delete {
+        font-size: 19px;
+        border: 0;
+        background: 0;
+        margin: 5px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        color: #999;
+
+        &:hover {
+            color: #666;
         }
     }
 `;
 
 export interface IAccountButtonProps {
-    active: boolean;
     avatar: string;
     keyID: string;
     address: string;
-    type: string;
+    username: string;
     ecosystemID: string;
     ecosystemName: string;
+    notifications?: number;
     onSelect: () => void;
+    onRemove: () => void;
 }
 
 const AccountButton: React.SFC<IAccountButtonProps> = props => (
-    <StyledAccountButton className={props.active && 'active'}>
-        <Row>
-            <Col xs={10} className="p0">
-                <Button block bsStyle="default" onClick={props.onSelect}>
-                    <div className="media-box text-left">
-                        <div className="pull-left">
-                            <img src={props.avatar || imgAvatar} className="avatar" />
-                        </div>
-                        <div className="media-box-body clearfix">
-                            <p className="m0">
-                                <b>{props.ecosystemName || props.ecosystemID}</b>
-                                <span className="ml">({props.type || props.keyID})</span>
-                            </p>
-                            <p className="m0">
-                                <small>{props.address}</small>
-                            </p>
-                        </div>
+    <StyledAccountButton>
+        <Button className="account-main" block bsStyle="default" onClick={props.onSelect}>
+            <div className="media-box text-left">
+                <div className="pull-left">
+                    <img src={props.avatar || imgAvatar} className="avatar" />
+                </div>
+                <div className="media-box-body clearfix">
+                    <p className="m0">
+                        <b>{props.username || props.keyID}</b>
+                        <span className="ml">({props.ecosystemName || props.ecosystemID})</span>
+                    </p>
+                    <p className="m0">
+                        <small>{props.address}</small>
+                    </p>
+                </div>
+                {props.notifications && (
+                    <div className="notifications">
+                        {props.notifications}
                     </div>
-                </Button>
-            </Col>
-            <Col xs={2} className="p0 pl">
-                <Button block bsStyle="default">
-                    <em className="icon icon-trash text-muted" />
-                </Button>
-            </Col>
-        </Row>
+                )}
+            </div>
+        </Button>
+        <button className="account-delete" onClick={props.onRemove}>x</button>
     </StyledAccountButton>
 );
 

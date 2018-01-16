@@ -29,18 +29,8 @@ export interface IImportContainerProps {
 
 interface IImportContainerState {
     isImportingAccount: boolean;
+    importAccountError: string;
     loadedSeed: string;
-    importedAccount: {
-        id: string;
-        encKey: string;
-        ecosystems?: {
-            [id: string]: {
-                name?: string;
-                avatar?: string;
-                type?: string;
-            }
-        };
-    };
 }
 
 interface IImportContainerDispatch {
@@ -59,8 +49,8 @@ const ImportContainer: React.SFC<IImportProps> = (props) => {
 
 const mapStateToProps = (state: IRootState) => ({
     isImportingAccount: state.auth.isImportingAccount,
-    loadedSeed: state.auth.loadedSeed,
-    importedAccount: state.auth.importedAccount
+    importAccountError: state.auth.importAccountError,
+    loadedSeed: state.auth.loadedSeed
 });
 
 const mapDispatchToProps = {

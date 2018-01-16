@@ -1,58 +1,44 @@
-import { app, BrowserWindow } from 'electron';
-import * as path from 'path';
-import * as url from 'url';
-// import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
+// Copyright 2017 The apla-front Authors
+// This file is part of the apla-front library.
+// 
+// The apla-front library is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// The apla-front library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-// tslint:disable:no-var-requires
-// tslint:disable:no-require-imports
 require('module').globalPaths.push(__dirname);
-let mainWindow: Electron.BrowserWindow | null;
 
-function createWindow() {
-    const ENV = process.env.NODE_ENV || 'production';
-    const PROTOCOL = process.env.HTTPS === 'true' ? 'https' : 'http';
-    const PORT = parseInt(process.env.PORT || '', 10) || 3000;
-    const HOST = process.env.HOST || '127.0.0.1';
+import { app } from 'electron';
+import { spawnWindow, window } from './windows/index';
+import generalWindow from './windows/general';
+import mainWindow from './windows/main';
+import { state } from './ipc';
 
-    const appUrl =
-        ENV !== 'production'
-            ? `${PROTOCOL}://${HOST}:${PORT}`
-            : url.format({
-                pathname: path.join(__dirname, '..', 'app', 'index.html'),
-                protocol: 'file:',
-                slashes: true,
-            });
+app.on('ready', () => {
+    spawnWindow(generalWindow(), 'general');
+});
 
-    mainWindow = new BrowserWindow({
-        width: 640,
-        height: 524,
-        minWidth: 640,
-        minHeight: 524,
-        frame: false
-    });
-    mainWindow.loadURL(appUrl);
-    // mainWindow.webContents.openDevTools();
-
-    mainWindow.on('closed', () => {
-        mainWindow = null;
-    });
-
-    //   installExtension(REACT_DEVELOPER_TOOLS)
-    //     .then((name) => console.log(`Added Extension:  ${name}`))
-    //     .catch((err) => console.log('An error occurred: ', err));
-}
-
-app.on('ready', createWindow);
-
-// Quit when all windows are closed.
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
+    if ('darwin' !== process.platform) {
         app.quit();
     }
 });
 
 app.on('activate', () => {
-    if (mainWindow === null) {
-        createWindow();
+    if (null === window) {
+        if (state && state.auth.isAuthenticated) {
+            spawnWindow(mainWindow(), 'main');
+        }
+        else {
+            spawnWindow(generalWindow(), 'general');
+        }
     }
 });

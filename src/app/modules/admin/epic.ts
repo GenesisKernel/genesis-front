@@ -24,7 +24,6 @@ import { Action } from 'redux';
 import { Observable } from 'rxjs';
 import { IRootState } from 'modules';
 import * as actions from './actions';
-import storage from 'lib/storage';
 import { setIds } from 'lib/constructor';
 
 export const getTableEpic: Epic<Action, IRootState> =
@@ -33,7 +32,7 @@ export const getTableEpic: Epic<Action, IRootState> =
             const state = store.getState();
             return Observable.fromPromise(api.table(state.auth.sessionToken, action.payload.table, action.payload.vde))
                 .flatMap(tableStruct => {
-                    const columns: string[] = action.payload.vde ? ['id'] : ['id', 'rb_id'];
+                    const columns: string[] = [];
                     tableStruct.columns.forEach(column => {
                         if (-1 !== action.payload.columnTypes.indexOf(column.type)) {
                             columns.push(column.name);
@@ -322,7 +321,7 @@ export const getParameterEpic: Epic<Action, IRootState> =
                 );
         });
 
-export const getTabListEpic: Epic<Action, IRootState> =
+/*export const getTabListEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getTabList.started)
         .flatMap(action => {
 
@@ -421,7 +420,7 @@ export const removeTabListEpic: Epic<Action, IRootState> =
                 result: { tabList: tabList }
             }));
 
-        });
+        });*/
 
 export const getPageTreeCodeEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getPageTreeCode.started)
@@ -650,8 +649,8 @@ export default combineEpics(
     getLanguageEpic,
     getParameterEpic,
     getParametersEpic,
-    getTabListEpic,
-    removeTabListEpic,
+    //getTabListEpic,
+    //removeTabListEpic,
     exportDataEpic,
     importDataEpic
 );

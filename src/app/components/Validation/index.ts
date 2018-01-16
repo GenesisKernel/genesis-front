@@ -14,8 +14,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import ValidatedControl from './ValidatedControl';
 import ValidatedCheckbox from './ValidatedCheckbox';
+import ValidatedControl from './ValidatedControl';
+import ValidatedFile from './ValidatedFile';
 import ValidatedImage from './ValidatedImage';
 import ValidatedSelect from './ValidatedSelect';
 import ValidationMessage from './ValidationMessage';
@@ -28,8 +29,9 @@ import * as validators from './Validators';
 
 export default {
     components: {
-        ValidatedControl,
         ValidatedCheckbox,
+        ValidatedControl,
+        ValidatedFile,
         ValidatedImage,
         ValidatedSelect,
         ValidatedTextarea,

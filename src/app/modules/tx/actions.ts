@@ -15,6 +15,9 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import actionCreatorFactory from 'typescript-fsa';
+import { ITransactionCall } from 'apla/tx';
 
 const actionCreator = actionCreatorFactory('tx');
-export const contractExec = actionCreator.async<{ vde?: boolean, uuid: string, name: string, params: { [key: string]: any } }, string, { type: string, error: string }>('CONTRACT_EXEC');
+export const txCall = actionCreator<ITransactionCall>('TX_CALL');
+export const txAuthorize = actionCreator<ITransactionCall>('TX_AUTHORIZE');
+export const txExec = actionCreator.async<{ tx: ITransactionCall, privateKey: string }, string, { type: string, error: string }>('TX_EXEC');

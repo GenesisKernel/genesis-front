@@ -17,7 +17,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { setResizing, navigationResize, navigationToggle } from 'modules/content/actions';
+import { setResizing, navigationToggle } from 'modules/content/actions';
+import { saveNavigationSize } from 'modules/storage/actions';
 
 import ResizeHandle from 'components/Main/Navigation/ResizeHandle';
 
@@ -33,7 +34,7 @@ interface IResizeHandleContainerState {
 
 interface IResizeHandleContainerDispatch {
     setResizing: typeof setResizing;
-    navigationResize: typeof navigationResize;
+    navigationResize: typeof saveNavigationSize;
     navigationToggle: typeof navigationToggle;
 }
 
@@ -42,14 +43,14 @@ const ResizeHandleContainer: React.SFC<IResizeHandleContainerProps & IResizeHand
 );
 
 const mapStateToProps = (state: IRootState) => ({
-    width: state.content.navigationWidth,
+    width: state.storage.navigationSize,
     resizing: state.content.navigationResizing,
     disabled: !state.engine.isCollapsed
 });
 
 const mapDispatchToProps = {
     setResizing,
-    navigationResize,
+    navigationResize: saveNavigationSize,
     navigationToggle
 };
 

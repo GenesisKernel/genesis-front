@@ -16,17 +16,17 @@
 
 import actionCreatorFactory from 'typescript-fsa';
 import { ILoginResponse } from 'lib/api';
-import { IStoredKey } from 'lib/storage';
+import { IStoredAccount } from 'apla/storage';
 
 const actionCreator = actionCreatorFactory('auth');
-export const login = actionCreator.async<{ privateKey: string, ecosystem: string, remember: boolean }, ILoginResponse & { account: IStoredKey, privateKey: string, publicKey: string }, string>('LOGIN');
+export const selectAccount = actionCreator.async<{ account: IStoredAccount }, { sessionToken: string, refreshToken: string }, string>('SELECT_ACCOUNT');
+export const authorizeAccount = actionCreator<{ account: IStoredAccount }>('AUTHORIZE_ACCOUNT');
+export const login = actionCreator.async<{ encKey: string, ecosystem: string, password: string }, ILoginResponse & { account: IStoredAccount, privateKey: string, publicKey: string }, string>('LOGIN');
 export const logout = actionCreator.async('LOGOUT');
-export const switchEcosystem = actionCreator.async<string, { token: string, refresh: string, sessionDuration: number }, string>('SWITCH_ECOSYSTEM');
 export const createEcosystem = actionCreator<{ name: string, id: string }>('CREATE_ECOSYSTEM');
 export const setAction = actionCreator<string>('SET_ACTION');
 export const importSeed = actionCreator.async<Blob, string, undefined>('IMPORT_SEED');
-export const importAccount = actionCreator.async<{ backup: string, password: string }, IStoredKey, string>('IMPORT_ACCOUNT');
-export const createAccount = actionCreator.async<{ seed: string, password: string }, IStoredKey, undefined>('CREATE_ACCOUNT');
-export const watchSession = actionCreator<{ timeout: number }>('WATCH_SESSION');
-export const refreshSession = actionCreator<{ token: string, refresh: string, sessionDuration: number }>('REFRESH_SESSION');
-export const updateMetadata = actionCreator.async<{ ecosystem: string, name: string, type: string, avatar: string }, { ecosystem: string, name: string, type: string, avatar: string }, undefined>('UPDATE_METADATA');
+export const importAccount = actionCreator.async<{ backup: string, password: string, isDefault?: boolean }, IStoredAccount[], string>('IMPORT_ACCOUNT');
+export const createAccount = actionCreator.async<{ seed: string, password: string }, IStoredAccount, string>('CREATE_ACCOUNT');
+export const authorize = actionCreator<{ privateKey: string }>('AUTHORIZE');
+export const deauthorize = actionCreator<void>('DEAUTHORIZE');

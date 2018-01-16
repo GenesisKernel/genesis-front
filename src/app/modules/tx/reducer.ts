@@ -17,40 +17,43 @@
 import { OrderedMap } from 'immutable';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import * as actions from './actions';
+import { ITransaction } from 'apla/tx';
 
 export type State = {
-    readonly transactions: OrderedMap<string, { uuid: string, contract: string, block: string, error?: { type: string, error: string } }>;
+    readonly pendingTransaction: ITransaction;
+    readonly transactions: OrderedMap<string, ITransaction>;
 };
 
 export const initialState: State = {
+    pendingTransaction: null,
     transactions: OrderedMap()
 };
 
 export default reducerWithInitialState(initialState)
-    .case(actions.contractExec.started, (state, payload) => ({
+    .case(actions.txExec.started, (state, payload) => ({
         ...state,
-        transactions: state.transactions.set(payload.uuid, {
+        transactions: state.transactions.set(payload.tx.uuid, {
             block: null,
             error: null,
-            contract: payload.name,
-            uuid: payload.uuid
+            contract: payload.tx.name,
+            uuid: payload.tx.uuid
         })
     }))
-    .case(actions.contractExec.done, (state, payload) => ({
+    .case(actions.txExec.done, (state, payload) => ({
         ...state,
-        transactions: state.transactions.set(payload.params.uuid, {
+        transactions: state.transactions.set(payload.params.tx.uuid, {
             block: payload.result,
             error: null,
-            contract: payload.params.name,
-            uuid: payload.params.uuid
+            contract: payload.params.tx.name,
+            uuid: payload.params.tx.uuid
         })
     }))
-    .case(actions.contractExec.failed, (state, payload) => ({
+    .case(actions.txExec.failed, (state, payload) => ({
         ...state,
-        transactions: state.transactions.set(payload.params.uuid, {
+        transactions: state.transactions.set(payload.params.tx.uuid, {
             block: null,
             error: payload.error,
-            contract: payload.params.name,
-            uuid: payload.params.uuid
+            contract: payload.params.tx.name,
+            uuid: payload.params.tx.uuid
         })
     }));

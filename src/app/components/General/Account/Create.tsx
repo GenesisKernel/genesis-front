@@ -39,17 +39,7 @@ export interface ICreateProps {
     return: string;
     loadedSeed: string;
     isCreatingAccount: boolean;
-    createdAccount: {
-        id: string;
-        encKey: string;
-        ecosystems?: {
-            [id: string]: {
-                name?: string;
-                avatar?: string;
-                type?: string;
-            }
-        };
-    };
+    createAccountError: string;
     navigate: typeof navigate;
     alertShow: typeof alertShow;
     login: typeof login.started;
@@ -91,9 +81,8 @@ class Create extends React.Component<ICreateProps & InjectedIntlProps, ICreateSt
             }
         }
 
-        if (this.props.isCreatingAccount && !props.isCreatingAccount && props.createdAccount) {
+        if (this.props.isCreatingAccount && !props.isCreatingAccount && !props.createAccountError) {
             this.onCreateSuccess();
-            props.navigate('/');
         }
     }
 
@@ -122,6 +111,7 @@ class Create extends React.Component<ICreateProps & InjectedIntlProps, ICreateSt
             text: this.props.intl.formatMessage({ id: 'auth.create.success', defaultMessage: 'Account has been successfully created' }),
             cancelButton: this.props.intl.formatMessage({ id: 'alert.close', defaultMessage: 'Close' }),
         });
+        this.props.navigate('/');
     }
 
     onInvalidSeed() {

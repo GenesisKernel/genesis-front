@@ -97,6 +97,15 @@ const Input: React.SFC<IInputProps> = (props) => {
     }
 
     switch (props.type) {
+        case 'file':
+            return (
+                <Validation.components.ValidatedFile
+                    disabled={!!props.disabled}
+                    name={props.name}
+                    placeholder={props.placeholder}
+                    validators={compiledValidators}
+                />
+            );
         case 'textarea':
             return (
                 <Validation.components.ValidatedTextarea

@@ -22,14 +22,18 @@ import { navigatePage } from 'modules/content/actions';
 import { IProtypoElement } from 'components/Protypo/Protypo';
 import Page from 'components/Main/Page';
 
-interface IDefaultPageContainerProps {
-    session: string;
-    pending: boolean;
+export interface IDefaultPageContainerProps {
+}
+
+interface IDefaultPageContainerState {
     page: { name: string, content: IProtypoElement[] };
+}
+
+interface IDefaultPageContainerDispatch {
     navigatePage: typeof navigatePage.started;
 }
 
-class DefaultPageContainer extends React.Component<IDefaultPageContainerProps> {
+class DefaultPageContainer extends React.Component<IDefaultPageContainerProps & IDefaultPageContainerState & IDefaultPageContainerDispatch> {
     componentWillMount() {
         this.props.navigatePage({
             name: 'default_page',
@@ -55,4 +59,4 @@ const mapDispatchToProps = {
     navigatePage: navigatePage.started
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DefaultPageContainer);
+export default connect<IDefaultPageContainerState, IDefaultPageContainerDispatch, IDefaultPageContainerProps>(mapStateToProps, mapDispatchToProps)(DefaultPageContainer);

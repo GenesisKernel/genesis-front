@@ -24,6 +24,11 @@ import ResizeHandle from 'containers/Main/Navigation/ResizeHandle';
 import { IProtypoElement } from 'components/Protypo/Protypo';
 
 const StyledNavigation = styled.aside`
+    &.navigation-collapsed {
+        overflow: hidden;
+        width: 0;
+    }
+
     position: absolute;
     top: 0;
     left: 0;
@@ -121,6 +126,7 @@ const StyledDevButton = styled.div`
 export interface INavigationProps {
     isEcosystemOwner: boolean;
     preloading: boolean;
+    preloadingError: string;
     visible: boolean;
     topOffset: number;
     width: number;
@@ -144,7 +150,7 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
     }
 
     preloadMenu(props: INavigationProps) {
-        if (!props.preloading && !props.menus.find(l => l.name === 'default_menu')) {
+        if (!props.preloadingError && !props.preloading && !props.menus.find(l => l.name === 'default_menu')) {
             this.props.ecosystemInit(null);
         }
     }
@@ -295,7 +301,7 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
 
     render() {
         return (
-            <StyledNavigation style={{ width: this.props.visible ? this.props.width : 0 }}>
+            <StyledNavigation className={this.props.visible ? '' : 'navigation-collapsed'} style={{ width: this.props.visible ? this.props.width : 0 }}>
                 <nav>
                     <StyledMenu style={{ top: this.props.topOffset }}>
                         <StackGroup

@@ -52,19 +52,9 @@ const StyledForm = styled.div`
 
 export interface IImportProps extends InjectedIntlProps {
     isImportingAccount: boolean;
+    importAccountError: string;
     return: string;
     loadedSeed: string;
-    importedAccount: {
-        id: string;
-        encKey: string;
-        ecosystems?: {
-            [id: string]: {
-                name?: string;
-                avatar?: string;
-                type?: string;
-            }
-        };
-    };
     navigate: typeof navigate;
     alertShow: typeof alertShow;
     login: typeof login.started;
@@ -93,12 +83,12 @@ class Import extends React.Component<IImportProps, IImportState> {
             });
         }
 
-        if (this.props.isImportingAccount && !props.isImportingAccount) {
-            if (props.importedAccount) {
-                this.onImportSuccess();
+        if (this.props.isImportingAccount && !props.isImportingAccount && !props.importAccountError) {
+            if (props.importAccountError) {
+                this.onInvalidKey();
             }
             else {
-                this.onInvalidKey();
+                this.onImportSuccess();
             }
         }
     }

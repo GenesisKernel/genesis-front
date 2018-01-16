@@ -20,8 +20,9 @@ import { Observable } from 'rxjs';
 import { combineEpics, Epic } from 'redux-observable';
 import swal, { SweetAlertType } from 'sweetalert2';
 import { IRootState } from 'modules';
-import * as authActions from 'modules/auth/actions';
 import * as actions from './actions';
+import { logout, selectAccount } from 'modules/auth/actions';
+import * as storageActions from 'modules/storage/actions';
 import { history } from 'store';
 
 export const navigatePageEpic: Epic<Action, IRootState> =
@@ -63,6 +64,37 @@ export const renderPageEpic: Epic<Action, IRootState> =
                 );
         });
 
+export const reloadPageEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.reloadPage.started)
+        .flatMap(action => {
+            const state = store.getState();
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, state.content.page.name, state.content.page, state.content.page.vde))
+                .map(payload =>
+                    actions.reloadPage.done({
+                        params: action.payload,
+                        result: {
+                            vde: state.content.page.vde,
+                            params: state.content.page.params,
+                            menu: {
+                                name: payload.menu,
+                                vde: state.content.page.vde,
+                                content: payload.menutree
+                            },
+                            page: {
+                                name: state.content.page.name,
+                                content: payload.tree
+                            }
+                        }
+                    })
+                )
+                .catch((e: IAPIError) =>
+                    Observable.of(actions.reloadPage.failed({
+                        params: action.payload,
+                        error: e.error
+                    }))
+                );
+        });
+
 export const ecosystemInitEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.ecosystemInit.started)
         .flatMap(action => {
@@ -71,69 +103,50 @@ export const ecosystemInitEpic: Epic<Action, IRootState> =
             const promise = Promise.all([
                 api.contentMenu(state.auth.sessionToken, 'default_menu'),
                 api.parameter(state.auth.sessionToken, 'stylesheet'),
-                Promise.all([
-                    api.parameter(state.auth.sessionToken, 'key_mask'),
-                    api.parameter(state.auth.sessionToken, 'ava').catch(e => ({ value: null })),
-                    api.parameter(state.auth.sessionToken, 'ecosystem_name')
-
-                ]).then(results => {
-                    const keyMask = JSON.parse(results[0].value);
-                    const avatars = JSON.parse(results[1].value);
-
-                    return api.row(state.auth.sessionToken, 'keys', state.auth.account.id, 'type')
-                        .then(typeResult => typeResult.value.type)
-                        .then((type: string) => {
-                            const userType = keyMask[type];
-                            const avatar = avatars[userType];
-
-                            return api.row(state.auth.sessionToken, userType, state.auth.account.id, 'ava')
-                                .then(avatarResult => {
-                                    if (!avatarResult.value.ava) {
-                                        throw 'E_EMPTY_AVATAR';
-                                    }
-                                    else {
-                                        return {
-                                            type: userType,
-                                            name: results[2].value,
-                                            avatar: avatarResult.value.ava
-                                        };
-                                    }
-                                })
-                                .catch(e => {
-                                    return {
-                                        type: userType,
-                                        name: results[2].value,
-                                        avatar
-                                    };
-                                });
-                        });
-                }).catch(e => null)
+                api.parameter(state.auth.sessionToken, 'ecosystem_name')
             ]);
 
             return Observable.fromPromise(promise)
-                .flatMap(payload => Observable.concat([
-                    authActions.updateMetadata.started({
-                        ...payload[2],
-                        ecosystem: state.auth.ecosystem
-                    }),
-                    actions.ecosystemInit.done({
-                        params: action.payload,
-                        result: {
-                            stylesheet: payload[1].value || null,
-                            defaultMenu: {
-                                name: 'default_menu',
-                                vde: false,
-                                content: payload[0].tree
+                .flatMap(payload =>
+                    Observable.concat([
+                        storageActions.saveAccount({
+                            ...state.auth.account,
+                            ecosystemName: payload[2].value
+                        }),
+                        actions.fetchNotifications.started(null),
+                        actions.ecosystemInit.done({
+                            params: action.payload,
+                            result: {
+                                stylesheet: payload[1].value || null,
+                                defaultMenu: {
+                                    name: 'default_menu',
+                                    vde: false,
+                                    content: payload[0].tree
+                                }
                             }
-                        }
-                    })
-                ]))
-                .catch((e: IAPIError) =>
-                    Observable.of(actions.ecosystemInit.failed({
+                        })
+                    ])
+                )
+                .catch((e: IAPIError) => {
+                    if ('E_SERVER' === e.error || 'E_TOKENEXPIRED' === e.error) {
+                        const account = store.getState().auth.account;
+
+                        return Observable.concat([
+                            logout.started({}),
+                            selectAccount.started({
+                                account
+                            }),
+                            actions.ecosystemInit.failed({
+                                params: action.payload,
+                                error: e.error
+                            })
+                        ]);
+                    }
+                    return Observable.of(actions.ecosystemInit.failed({
                         params: action.payload,
                         error: e.error
-                    }))
-                );
+                    }));
+                });
         });
 
 export const alertEpic: Epic<Action, IRootState> =
@@ -204,11 +217,40 @@ export const fetchNotificationsEpic: Epic<Action, IRootState> =
                 );
         });
 
+export const displayDataEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.displayData.started)
+        .flatMap(action => {
+            return Observable.fromPromise(api.resolveTextData(action.payload))
+                .map(payload => {
+                    const state = store.getState();
+                    swal({
+                        title: state.engine.intl.formatMessage({ id: 'alert.info', defaultMessage: 'Information' }),
+                        html: `
+                            <div style="white-space: pre-wrap;text-align:left;">${payload}</div>
+                        `,
+                        type: 'info'
+                    }).catch(e => null);
+
+                    return actions.displayData.done({
+                        params: action.payload,
+                        result: payload
+                    });
+                })
+                .catch((e: IAPIError) =>
+                    Observable.of(actions.displayData.failed({
+                        params: action.payload,
+                        error: e.error
+                    }))
+                );
+        });
+
 export default combineEpics(
     renderPageEpic,
+    reloadPageEpic,
     ecosystemInitEpic,
     resetEpic,
     alertEpic,
     navigatePageEpic,
-    fetchNotificationsEpic
+    fetchNotificationsEpic,
+    displayDataEpic
 );

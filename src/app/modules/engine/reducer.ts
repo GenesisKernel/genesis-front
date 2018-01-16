@@ -17,6 +17,7 @@
 import * as actions from './actions';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
+import { InjectedIntl } from 'react-intl';
 
 export type State = {
     readonly locale: string;
@@ -28,6 +29,7 @@ export type State = {
     readonly isCollapsed: boolean;
     readonly isCreatingVDE: boolean;
     readonly createVDEResult: boolean;
+    readonly intl: InjectedIntl;
 };
 
 export const initialState: State = {
@@ -39,7 +41,8 @@ export const initialState: State = {
     isConnecting: false,
     isCreatingVDE: false,
     createVDEResult: null,
-    isCollapsed: true
+    isCollapsed: true,
+    intl: null
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -151,6 +154,13 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             isCreatingVDE: false,
             createVDEResult: action.payload.error
+        };
+    }
+
+    if (isType(action, actions.registerIntl)) {
+        return {
+            ...state,
+            intl: action.payload
         };
     }
 

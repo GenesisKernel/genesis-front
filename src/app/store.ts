@@ -20,7 +20,11 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { routerMiddleware } from 'react-router-redux';
 import { createEpicMiddleware } from 'redux-observable';
 import { loadingBarMiddleware } from 'react-redux-loading-bar';
-import txMiddleware from 'modules/middleware/tx';
+import persistState, { mergePersistedState } from 'redux-localstorage';
+import adapter from 'redux-localstorage/lib/adapters/localStorage';
+import filter from 'redux-localstorage-filter';
+import debounce from 'redux-localstorage-debounce';
+
 import { History } from 'history';
 import createHistory from 'history/createBrowserHistory';
 import createMemoryHistory from 'history/createMemoryHistory';
@@ -32,15 +36,37 @@ export const history = platform.select<() => History>({
     web: createHistory
 })();
 
+const reducer = compose(
+    mergePersistedState()
+)(rootReducer);
+
+const storage = compose(
+    debounce(1000, 5000),
+    filter([
+        'storage',
+        'auth.isAuthenticated',
+        'auth.isEcosystemOwner',
+        'auth.sessionToken',
+        'auth.refreshToken',
+        'auth.socketToken',
+        'auth.id',
+        'auth.account',
+        'auth.timestamp'
+    ])
+)(adapter(window.localStorage));
+
 const configureStore = (initialState?: IRootState) => {
     const enhancers: any[] = [];
     const middleware = [
         routerMiddleware(history),
-        createEpicMiddleware(rootEpic),
+        createEpicMiddleware(rootEpic, {
+            dependencies: {
+
+            }
+        }),
         loadingBarMiddleware({
             promiseTypeSuffixes: ['STARTED', 'DONE', 'FAILED']
-        }),
-        txMiddleware
+        })
     ];
 
     if (process.env.NODE_ENV === 'development') {
@@ -53,16 +79,34 @@ const configureStore = (initialState?: IRootState) => {
 
     const composedEnhancers = compose(
         applyMiddleware(...middleware),
+        persistState(storage, 'persistentData'),
         ...enhancers
     );
 
     return createStore<IRootState>(
-        rootReducer,
+        reducer,
         initialState!,
         composedEnhancers
     );
 };
 
-const store = configureStore();
+const store = platform.select({
+    web: () => configureStore(),
+    desktop: () => {
+        const Electron = require('electron');
+        const initialState = Electron.ipcRenderer.sendSync('getState');
+        const storeInstance = initialState ? configureStore(initialState) : configureStore();
+
+        storeInstance.subscribe(() => {
+            const state = storeInstance.getState();
+            Electron.ipcRenderer.send('setState', {
+                auth: state.auth,
+                engine: state.engine
+            });
+        });
+
+        return storeInstance;
+    }
+})();
 
 export default store;

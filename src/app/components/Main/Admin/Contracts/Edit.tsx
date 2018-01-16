@@ -37,6 +37,7 @@ export interface IEditProps {
 }
 
 interface IEditState {
+    bound: boolean;
     code: string;
     wallet: string;
     conditions: string;
@@ -47,10 +48,12 @@ class Edit extends React.Component<IEditProps, IEditState> {
         super(props);
         this.state = props.contract ?
             {
+                bound: '1' === props.contract.active,
                 code: props.contract.value,
                 conditions: props.contract.conditions,
                 wallet: props.contract.address
             } : {
+                bound: false,
                 code: '',
                 conditions: '',
                 wallet: ''
@@ -60,6 +63,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
     componentWillReceiveProps(props: IEditProps) {
         if (props.contract && this.props.contract !== props.contract) {
             this.setState({
+                bound: '1' === props.contract.active,
                 code: props.contract.value,
                 conditions: props.contract.conditions,
                 wallet: props.contract.address
@@ -73,6 +77,12 @@ class Edit extends React.Component<IEditProps, IEditState> {
             Value: this.state.code,
             Conditions: this.state.conditions
         };
+    }
+
+    setBound(bound: boolean) {
+        this.setState({
+            bound
+        });
     }
 
     onContractActivation(block: string, error: string) {
@@ -148,6 +158,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
                 ]}
             >
                 <ContractEditor
+                    bound={this.state.bound}
                     vde={this.props.vde}
                     contractName="@1EditContract"
                     mapContractParams={this.mapContractParams.bind(this)}
@@ -156,6 +167,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
                     wallet={this.state.wallet}
                     conditions={this.state.conditions}
                     contract={this.props.contract}
+                    setBound={this.setBound.bind(this)}
                     onSourceEdit={this.onSourceEdit.bind(this)}
                     onWalletEdit={this.onWalletEdit.bind(this)}
                     onConditionsEdit={this.onConditionsEdit.bind(this)}

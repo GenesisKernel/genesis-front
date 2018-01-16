@@ -19,15 +19,16 @@ import { Button, Panel } from 'react-bootstrap';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import keyring from 'lib/keyring';
 import { sendAttachment } from 'lib/fs';
-import { IStoredKey } from 'lib/storage';
 import { alertShow } from 'modules/content/actions';
 import * as CopyToClipboard from 'react-copy-to-clipboard';
+import { IStoredAccount } from 'apla/storage';
 
 import Wrapper from 'components/Wrapper';
 import Validation from 'components/Validation';
 
 export interface IBackupProps extends InjectedIntlProps {
-    account: IStoredKey;
+    account: IStoredAccount;
+    ecosystems: string[];
     privateKey: string;
     alertShow: typeof alertShow;
 }
@@ -48,9 +49,9 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
 
     onSubmit(values: { [key: string]: string }) {
         const privateKey = keyring.decryptAES(this.props.account.encKey, values.password);
-        const publicKey = keyring.generatePublicKey(privateKey);
 
-        if (privateKey) {
+        if (keyring.validatePrivateKey(privateKey)) {
+            const publicKey = keyring.generatePublicKey(privateKey);
             this.setState({
                 privateKey,
                 publicKey
@@ -86,15 +87,9 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
     }
 
     generatePayload() {
-        const ecosystems = {};
-        for (let itr in this.props.account.ecosystems) {
-            if (this.props.account.ecosystems.hasOwnProperty(itr)) {
-                ecosystems[itr] = {};
-            }
-        }
         return keyring.backup({
             privateKey: this.state.privateKey,
-            ecosystems
+            ecosystems: this.props.ecosystems
         });
     }
 
@@ -163,7 +158,13 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
                                 <td>
                                     <FormattedMessage id="general.address" defaultMessage="Address" />
                                 </td>
-                                <td>{this.props.account.id}</td>
+                                <td>{this.props.account.address}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <FormattedMessage id="general.ecosystems" defaultMessage="Ecosystems" />
+                                </td>
+                                <td>{this.props.ecosystems.join(',')}</td>
                             </tr>
                         </tbody>
                     </table>

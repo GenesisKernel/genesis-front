@@ -20,7 +20,7 @@ import { injectIntl, InjectedIntlProps } from 'react-intl';
 import { toastr } from 'react-redux-toastr';
 import { Map } from 'immutable';
 import { IRootState } from 'modules';
-import { contractExec } from 'modules/tx/actions';
+import { txCall } from 'modules/tx/actions';
 import { alertShow } from 'modules/content/actions';
 import * as uuid from 'uuid';
 
@@ -39,7 +39,7 @@ interface IValidatedContractFormStateProps {
 }
 
 interface IValidatedContractFormDispatchProps {
-    contractExec: typeof contractExec.started;
+    callContract: typeof txCall;
     alertShow: typeof alertShow;
 }
 
@@ -71,6 +71,14 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
             }
             else if (transaction.error) {
                 switch (transaction.error.type) {
+                    case 'E_INVALID_PASSWORD':
+                        this.alert(
+                            'error',
+                            this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error' }),
+                            this.props.intl.formatMessage({ id: 'tx.error.invalid_password', defaultMessage: 'Invalid password' }),
+                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
+                        ); break;
+
                     case 'E_CONTRACT':
                         this.alert(
                             'error',
@@ -124,6 +132,7 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
                     props.contractName,
                     this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error executing transaction' })
                 );
+                this._uuid = uuid.v4();
             }
 
             if (this.props.onExec) {
@@ -145,7 +154,7 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
     onSubmit(values: { [key: string]: any }) {
         const params = this.props.mapContractParams(values);
         this._pending = true;
-        this.props.contractExec({
+        this.props.callContract({
             vde: this.props.vde,
             uuid: this._uuid,
             name: this.props.contractName,
@@ -171,7 +180,7 @@ const mapStateToProps = (state: IRootState) => ({
 
 const mapDispatchToProps = {
     alertShow,
-    contractExec: contractExec.started
+    callContract: txCall
 };
 
 const LocalizedValidatedContractForm = injectIntl(ValidatedContractForm);
