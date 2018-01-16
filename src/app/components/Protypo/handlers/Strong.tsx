@@ -17,45 +17,91 @@
 import * as React from 'react';
 import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
+import TagWrapper from '../components/TagWrapper';
+import DnDComponent from './DnDComponent';
+import * as classnames from 'classnames';
 
-export interface IPProps {
+export interface IStrongProps {
     'className'?: string;
     'class'?: string;
     'children': any;
+
     'editable'?: boolean;
     'changePage'?: any;
+    'setTagCanDropPosition'?: any;
+    'addTag'?: any;
+    'moveTag'?: any;
+    'copyTag'?: any;
+    'removeTag'?: any;
     'selectTag'?: any;
     'selected'?: boolean;
     'tag'?: any;
+
+    'canDropPosition'?: string;
+
+    connectDropTarget?: any;
+    isOver?: boolean;
+
+    connectDragSource?: any;
+    connectDragPreview?: any;
+    isDragging?: boolean;
 }
 
-class Strong extends React.Component<IPProps> {
+interface IStrongState {
+}
+
+class Strong extends React.Component<IStrongProps, IStrongState> {
 
     onPaste(e: any) {
         OnPasteStripFormatting(this, e);
     }
 
-    onFocus(e: any) {
+    onClick(e: any) {
+        e.stopPropagation();
         this.props.selectTag({ tag: this.props.tag });
     }
 
     onBlur(e: any) {
+        e.stopPropagation();
         this.props.changePage({ text: e.target.innerHTML, tagID: this.props.tag.id });
+    }
+
+    removeTag() {
+        this.props.removeTag({ tag: this.props.tag });
     }
 
     render() {
         if (this.props.editable) {
-            return (
-                <strong
-                    className={[this.props.class, this.props.className, this.props.selected ? 'editable' : ''].join(' ')}
-                    contentEditable={true}
-                    onPaste={this.onPaste.bind(this)}
-                    onBlur={this.onBlur.bind(this)}
-                    onFocus={this.onFocus.bind(this)}
-                >
-                    {this.props.children}
-                </strong>
-            );
+            const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
+
+            const classes = classnames({
+                [this.props.class]: true,
+                [this.props.className]: true,
+                'b-selected': this.props.selected
+            });
+
+            return connectDragPreview(connectDropTarget(
+                <span style={{display: 'inline-block'}}>
+                    <TagWrapper
+                        display="inline"
+                        selected={this.props.selected}
+                        canDrop={isOver}
+                        canDropPosition={this.props.canDropPosition}
+                        onClick={this.onClick.bind(this)}
+                        removeTag={this.removeTag.bind(this)}
+                        connectDragSource={connectDragSource}
+                    >
+                    <strong
+                        className={classes}
+                        contentEditable={this.props.selected}
+                        onBlur={this.onBlur.bind(this)}
+                        onPaste={this.onPaste.bind(this)}
+                    >
+                        {this.props.children}
+                    </strong>
+                    </TagWrapper>
+                </span>
+            ));
         }
         return (
             <strong
@@ -68,4 +114,4 @@ class Strong extends React.Component<IPProps> {
     }
 }
 
-export default StyledComponent(Strong);
+export default DnDComponent(StyledComponent(Strong));

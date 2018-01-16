@@ -48,6 +48,8 @@ interface IConstructorProps {
     selectTag?: any;
     addTag?: any;
     moveTag?: any;
+    copyTag?: any;
+    removeTag?: any;
     selectedTag?: any;
     save?: any;
     grid: boolean;
@@ -249,7 +251,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                 </div>
             </div>
 
-            <Layout grid={props.grid} addTag={props.addTag} moveTag={props.moveTag}>
+            <Layout grid={props.grid} addTag={props.addTag} moveTag={props.moveTag} copyTag={props.copyTag}>
                 <Protypo
                     context="page"
                     payload={props.pageTree}
@@ -259,6 +261,8 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                     selectTag={props.selectTag}
                     addTag={props.addTag}
                     moveTag={props.moveTag}
+                    copyTag={props.copyTag}
+                    removeTag={props.removeTag}
                     selectedTag={props.selectedTag}
                 />
             </Layout>

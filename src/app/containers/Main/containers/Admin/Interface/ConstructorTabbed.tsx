@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { getPageTree, changePage, setTagCanDropPosition, addTag, moveTag, selectTag, constructorUndo, constructorRedo, saveConstructorHistory } from 'modules/admin/actions';
+import { getPageTree, changePage, setTagCanDropPosition, addTag, moveTag, copyTag, removeTag, selectTag, constructorUndo, constructorRedo, saveConstructorHistory } from 'modules/admin/actions';
 import Constructor from 'components/Main/Admin/Interface/Constructor';
 import { CodeGenerator } from 'lib/constructor';
 import { IProtypoElement } from 'components/Protypo/Protypo';
@@ -56,6 +56,8 @@ interface IConstructorTabbedContainerDispatch {
     setTagCanDropPosition: typeof setTagCanDropPosition;
     addTag: typeof addTag;
     moveTag: typeof moveTag;
+    copyTag: typeof copyTag;
+    removeTag: typeof removeTag;
     selectTag: typeof selectTag;
     constructorUndo: typeof constructorUndo;
     constructorRedo: typeof constructorRedo;
@@ -100,6 +102,20 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
         payload.pageID = this.props.pageID;
         payload.vde = this.props.vde;
         this.props.moveTag(payload);
+        this.props.saveConstructorHistory({pageID: this.props.pageID});
+    }
+
+    copyTag(payload?: any) {
+        payload.pageID = this.props.pageID;
+        payload.vde = this.props.vde;
+        this.props.copyTag(payload);
+        this.props.saveConstructorHistory({pageID: this.props.pageID});
+    }
+
+    removeTag(payload?: any) {
+        payload.pageID = this.props.pageID;
+        payload.vde = this.props.vde;
+        this.props.removeTag(payload);
         this.props.saveConstructorHistory({pageID: this.props.pageID});
     }
 
@@ -157,6 +173,8 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
                 selectTag={this.selectTag.bind(this)}
                 addTag={this.addTag.bind(this)}
                 moveTag={this.moveTag.bind(this)}
+                copyTag={this.copyTag.bind(this)}
+                removeTag={this.removeTag.bind(this)}
                 save={this.save.bind(this)}
                 selectedTag={selectedTag}
                 grid={this.state.grid}
@@ -182,6 +200,8 @@ const mapDispatchToProps = {
     setTagCanDropPosition,
     addTag,
     moveTag,
+    copyTag,
+    removeTag,
     selectTag,
     constructorUndo,
     constructorRedo,

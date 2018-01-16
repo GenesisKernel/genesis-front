@@ -38,6 +38,8 @@ export interface IProtypoProps {
     changePage?: any;
     addTag?: any;
     moveTag?: any;
+    copyTag?: any;
+    removeTag?: any;
     setTagCanDropPosition?: any;
     selectTag?: any;
     selectedTag?: any;
@@ -164,6 +166,8 @@ class Protypo extends React.Component<IProtypoProps> {
                                 setTagCanDropPosition={this.props.setTagCanDropPosition}
                                 addTag={this.props.addTag}
                                 moveTag={this.props.moveTag}
+                                copyTag={this.props.copyTag}
+                                removeTag={this.props.removeTag}
                                 selectTag={this.props.selectTag}
                                 selected={selected}
                             >
@@ -202,7 +206,7 @@ class Protypo extends React.Component<IProtypoProps> {
     }
 
     renderHeading() {
-        return this.props.context === 'page' ? (
+        return (this.props.context === 'page' && !this.props.editable) ? (
             <Heading key="func_heading">
                 <span>{this._title}</span>
                 <div className="pull-right">
@@ -243,6 +247,13 @@ class Protypo extends React.Component<IProtypoProps> {
             return React.cloneElement(this.props.wrapper, this.props.wrapper.props, children);
         }
         else {
+            if (this.props.editable) {
+                return (
+                    <div>
+                        {children}
+                    </div>
+                );
+            }
             return (
                 <div className="fullscreen">
                     {children}

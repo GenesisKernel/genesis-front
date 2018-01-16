@@ -18,6 +18,7 @@ import * as React from 'react';
 
 import Validation from 'components/Validation';
 import * as classnames from 'classnames';
+import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 
 export interface IInputProps {
@@ -31,6 +32,8 @@ export interface IInputProps {
     'setTagCanDropPosition'?: any;
     'addTag'?: any;
     'moveTag'?: any;
+    'copyTag'?: any;
+    'removeTag'?: any;
     'selectTag'?: any;
     'selected'?: boolean;
     'tag'?: any;
@@ -41,6 +44,7 @@ export interface IInputProps {
     isOver?: boolean;
 
     connectDragSource?: any;
+    connectDragPreview?: any;
     isDragging?: boolean;
 }
 
@@ -73,33 +77,43 @@ const ImageInput: React.SFC<IInputProps> = (props) => {
         props.selectTag({ tag: props.tag });
     };
 
+    const removeTag = () => {
+        props.removeTag({ tag: props.tag });
+    };
+
     if (props.editable) {
 
-        const { connectDropTarget, isOver } = props;
-        const { connectDragSource, isDragging } = props;
+        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = props;
 
         const classes = classnames({
-            'input-group': true,
-            'editable': props.selected,
-            'can-drop': isOver,
-            ['can-drop_' + props.canDropPosition]: true,
-            'is-dragging': isDragging
+            'b-selected': props.selected,
+            'input-group': true
         });
 
-        return connectDragSource(connectDropTarget(
-            <div
-                className={classes}
-                onClick={onClick}
-            >
-
-                <input type="text" className="form-control" readOnly={true}/>
-                <div className="group-span-filestyle input-group-btn">
-                    <button className="btn btn-default" type="button">
-                        <span className="icon-span-filestyle glyphicon glyphicon-folder-open" />
-                        <span className="buttonText" />
-                    </button>
-                </div>
-            </div>
+        return connectDragPreview(connectDropTarget(
+            <span>
+                <TagWrapper
+                    display="block"
+                    selected={props.selected}
+                    canDrop={isOver}
+                    canDropPosition={props.canDropPosition}
+                    onClick={onClick}
+                    removeTag={removeTag}
+                    connectDragSource={connectDragSource}
+                >
+                    <div
+                        className={classes}
+                    >
+                        <input type="text" className="form-control" readOnly={true}/>
+                        <div className="group-span-filestyle input-group-btn">
+                            <button className="btn btn-default" type="button">
+                                <span className="icon-span-filestyle glyphicon glyphicon-folder-open" />
+                                <span className="buttonText" />
+                            </button>
+                        </div>
+                    </div>
+                </TagWrapper>
+            </span>
         ));
     }
 
