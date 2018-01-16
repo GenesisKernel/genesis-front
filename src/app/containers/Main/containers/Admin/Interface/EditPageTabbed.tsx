@@ -30,12 +30,29 @@ interface IEditPageProps {
     menus: { id: string, name: string, conditions: string, value: string }[];
     navigatePage?: (params: { name: string, params?: any }) => void;
     getPage?: typeof getPage.started;
-
+    onSave?: (pageID: string, vde?: boolean) => void;
+    random?: number;
 }
 
 class EditPageContainer extends React.Component<IEditPageProps> {
     componentWillMount() {
-        this.props.getPage({ id: this.props.pageID });
+        this.getPage();
+    }
+
+    getPage() {
+        this.props.getPage({ id: this.props.pageID, vde: this.props.vde });
+    }
+
+    componentWillReceiveProps(props: IEditPageProps) {
+        if (props.random && this.props.random !== props.random) {
+            this.getPage();
+        }
+    }
+
+    onSave(block: string, error?: { type: string, error: string }) {
+        if (this.props.onSave) {
+            this.props.onSave(this.props.pageID, this.props.vde);
+        }
     }
 
     render() {
@@ -46,7 +63,7 @@ class EditPageContainer extends React.Component<IEditPageProps> {
         }
 
         return (
-            <EditPage page={page} menus={this.props.menus} tabView={true} navigatePage={this.props.navigatePage} />
+            <EditPage page={page} menus={this.props.menus} tabView={true} navigatePage={this.props.navigatePage} onExec={this.onSave.bind(this)}/>
         );
     }
 }

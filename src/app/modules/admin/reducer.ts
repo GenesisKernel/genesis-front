@@ -19,7 +19,7 @@ import * as _ from 'lodash';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse, IHistoryResponse } from 'lib/api';
-import { findTagById, resolveTagHandler, Properties, generateId, setIds } from 'lib/constructor';
+import { findTagById, resolveTagHandler, Properties, generateId, setIds, CodeGenerator } from 'lib/constructor';
 import { IProtypoElement } from 'components/Protypo/Protypo';
 
 export type State = {
@@ -41,6 +41,7 @@ export type State = {
             [key: string]: {
                 type: string,
                 data: any,
+                pageTemplate?: string,
                 selectedTag?: IProtypoElement
             }
         },
@@ -630,6 +631,27 @@ export default (state: State = initialState, action: Action): State => {
                 history: {
                     ...state.tabs.history,
                     ['page' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: { data: data.concat([pageTree]), position: position + 1, canUndo, canRedo }
+                }
+            }
+        };
+    }
+
+    if (isType(action, actions.generatePageTemplate)) {
+        const pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')].data || null;
+        const codeGenerator = new CodeGenerator(pageTree);
+        const pageTemplate = codeGenerator.render();
+
+        return {
+            ...state,
+            pending: false,
+            tabs: {
+                ...state.tabs,
+                data: {
+                    ...state.tabs.data,
+                    ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                        ...state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')],
+                        pageTemplate: pageTemplate
+                    }
                 }
             }
         };
