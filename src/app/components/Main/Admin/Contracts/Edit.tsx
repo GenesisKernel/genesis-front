@@ -119,10 +119,12 @@ class Edit extends React.Component<IEditProps, IEditState> {
                         contractName="@1EditContract"
                         mapContractParams={this.mapContractParams.bind(this)}
 
+                        bound={this.state.bound}
                         code={this.state.code}
                         wallet={this.state.wallet}
                         conditions={this.state.conditions}
                         contract={this.props.contract}
+                        setBound={this.setBound.bind(this)}
                         onSourceEdit={this.onSourceEdit.bind(this)}
                         onWalletEdit={this.onWalletEdit.bind(this)}
                         onConditionsEdit={this.onConditionsEdit.bind(this)}
