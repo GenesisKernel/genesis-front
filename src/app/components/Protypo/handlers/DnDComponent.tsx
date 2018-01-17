@@ -127,7 +127,7 @@ interface IStyledComponentProps {
 }
 
 export default function dndComponent<T>(Component: TComponentConstructor<T & IStyledComponentProps>) {
-    return DragSource(ItemTypes.SOURCE, Source, collectSource)(
-        DropTarget(ItemTypes.SOURCE, Target, collectTarget)(Component)
+    return DragSource<T>(ItemTypes.SOURCE, Source, collectSource)(
+        DropTarget<T>(ItemTypes.SOURCE, Target, collectTarget)(Component)
     );
 }
