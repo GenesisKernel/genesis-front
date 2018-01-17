@@ -16,28 +16,37 @@
 
 import { ipcMain, Event } from 'electron';
 import { spawnWindow } from './windows/index';
-import generalWindow from './windows/general';
-import mainWindow from './windows/main';
+import config from './config';
+import * as _ from 'lodash';
 
-export type TState = {
-    [key: string]: any;
-    auth: {
-        isAuthenticated: boolean;
-        account: any;
-        id: string;
-        isEcosystemOwner: boolean;
-        sessionToken: string;
-        refreshToken: string;
-        socketToken: string;
-        timestamp: string;
-    };
-    storage: any;
-};
+export let state: any = null;
 
-export let state: TState = null;
+try {
+    state = JSON.parse(config.get('persistentData'));
+}
+catch {
+    // Suppress errors
+}
 
-ipcMain.on('setState', (e: Event, updatedState: TState) => {
+const saveState = _.throttle(() => {
+    config.set('persistentData', JSON.stringify({
+        storage: state.storage,
+        auth: {
+            isAuthenticated: state.auth.isAuthenticated,
+            isEcosystemOwner: state.auth.isEcosystemOwner,
+            sessionToken: state.auth.sessionToken,
+            refreshToken: state.auth.refreshToken,
+            socketToken: state.auth.socketToken,
+            id: state.auth.id,
+            account: state.auth.account,
+            timestamp: state.auth.timestamp
+        }
+    }));
+}, 1000, { leading: true });
+
+ipcMain.on('setState', (e: Event, updatedState: any) => {
     state = updatedState;
+    saveState();
 });
 
 ipcMain.on('getState', (e: Event) => {
@@ -45,16 +54,6 @@ ipcMain.on('getState', (e: Event) => {
 });
 
 ipcMain.on('switchWindow', (e: Event, wnd: string) => {
-    switch (wnd) {
-        case 'general':
-            spawnWindow(generalWindow(), wnd);
-            break;
-
-        case 'main':
-            spawnWindow(mainWindow(), wnd);
-            break;
-
-        default:
-            break;
-    }
+    e.returnValue = null;
+    spawnWindow(wnd);
 });

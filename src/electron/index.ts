@@ -18,12 +18,15 @@ require('module').globalPaths.push(__dirname);
 
 import { app } from 'electron';
 import { spawnWindow, window } from './windows/index';
-import generalWindow from './windows/general';
-import mainWindow from './windows/main';
 import { state } from './ipc';
 
 app.on('ready', () => {
-    spawnWindow(generalWindow(), 'general');
+    if (state && state.auth.isAuthenticated) {
+        spawnWindow('main');
+    }
+    else {
+        spawnWindow('general');
+    }
 });
 
 app.on('window-all-closed', () => {
@@ -35,10 +38,10 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
     if (null === window) {
         if (state && state.auth.isAuthenticated) {
-            spawnWindow(mainWindow(), 'main');
+            spawnWindow('main');
         }
         else {
-            spawnWindow(generalWindow(), 'general');
+            spawnWindow('general');
         }
     }
 });

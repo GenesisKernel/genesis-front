@@ -30,14 +30,18 @@ export const checkOnlineEpic: Epic<Action, IRootState> =
         .flatMap(action =>
             Observable.fromPromise(api.getUid()).flatMap(payload => {
                 const privateKeyLocation = platform.args().PRIVATE_KEY;
-
                 if (privateKeyLocation) {
-                    return Observable.fromPromise(needle('get', privateKeyLocation).then(r => r.body).catch(e => null) as Promise<number[]>)
+                    return Observable.fromPromise(needle('get', privateKeyLocation).then(r => r.body).catch(e => null) as Promise<number[] | string>)
                         .flatMap(response => {
                             if (response) {
                                 let privateKey = '';
-                                for (let i = 0; i < response.length; i++) {
-                                    privateKey += String.fromCharCode(response[i]);
+                                if (Array.isArray(response)) {
+                                    for (let i = 0; i < response.length; i++) {
+                                        privateKey += String.fromCharCode(response[i]);
+                                    }
+                                }
+                                else {
+                                    privateKey = response;
                                 }
 
                                 return Observable.concat([

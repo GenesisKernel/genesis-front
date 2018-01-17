@@ -18,6 +18,8 @@ import { BrowserWindow, Menu } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import menu from '../menu';
+import generalWindow from './general';
+import mainWindow from './main';
 
 export let window: BrowserWindow;
 export let windowName: string;
@@ -36,9 +38,23 @@ export const appUrl =
             slashes: true,
         });
 
-export const spawnWindow = (wnd: BrowserWindow, name: string) => {
+export const spawnWindow = (name: string) => {
     if (window && windowName === name) {
         return;
+    }
+
+    let wnd: BrowserWindow;
+    switch (name) {
+        case 'general':
+            wnd = generalWindow();
+            break;
+
+        case 'main':
+            wnd = mainWindow();
+            break;
+
+        default:
+            return;
     }
 
     if (window) {

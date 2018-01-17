@@ -81,7 +81,7 @@ export interface IUserMenuProps {
 
 class UserMenu extends React.Component<IUserMenuProps> {
     render() {
-        return this.props.account && (
+        return this.props.account ? (
             <DropdownButton
                 className="p0"
                 width={225}
@@ -158,7 +158,7 @@ class UserMenu extends React.Component<IUserMenuProps> {
                     <img className="user-avatar" src={this.props.account.avatar || imgAvatar} />
                 </StyledUserMenu>
             </DropdownButton>
-        );
+        ) : null;
     }
 }
 

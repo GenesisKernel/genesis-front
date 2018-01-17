@@ -15,8 +15,7 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { BrowserWindow } from 'electron';
-import * as Config from 'electron-config';
-const config = new Config();
+import config from '../config';
 
 export default () => {
     const options = {
@@ -26,6 +25,7 @@ export default () => {
         backgroundColor: '#17437b',
         resizable: true,
         show: false,
+        maximized: config.get('maximized') || false,
         ...config.get('dimensions')
     };
 
@@ -33,6 +33,7 @@ export default () => {
 
     window.on('close', () => {
         config.set('dimensions', window.getBounds());
+        config.set('maximized', window.isMaximized() || window.isMaximized);
     });
 
     return window;

@@ -36,9 +36,12 @@ export const history = platform.select<() => History>({
     web: createHistory
 })();
 
-const reducer = compose(
-    mergePersistedState()
-)(rootReducer);
+const reducer = platform.select({
+    web: compose(
+        mergePersistedState()
+    )(rootReducer),
+    desktop: rootReducer
+});
 
 const storageAdapters = [
     filter([
@@ -82,9 +85,12 @@ const configureStore = (initialState?: IRootState) => {
         }
     }
 
+    platform.on('web', () => {
+        enhancers.unshift(persistState(storage, 'persistentData'));
+    });
+
     const composedEnhancers = compose(
         applyMiddleware(...middleware),
-        persistState(storage, 'persistentData'),
         ...enhancers
     );
 
@@ -99,8 +105,8 @@ const store = platform.select({
     web: () => configureStore(),
     desktop: () => {
         const Electron = require('electron');
-        const initialState = Electron.ipcRenderer.sendSync('getState');
-        const storeInstance = initialState ? configureStore(initialState) : configureStore();
+        const storedState = Electron.ipcRenderer.sendSync('getState');
+        const storeInstance = Object.keys(storedState).length ? configureStore(storedState) : configureStore();
 
         storeInstance.subscribe(() => {
             const state = storeInstance.getState();

@@ -81,10 +81,7 @@ class App extends React.Component<IAppProps> {
                     this.props.setLoading(false);
                 }*/
 
-                this.props.setLoading(false);
-                /*if (props.isAuthenticated) {
-                    this.props.switchWindow({ window: 'main' });
-                }*/
+                props.setLoading(false);
             }
             else {
                 this.props.setLoading(false);
