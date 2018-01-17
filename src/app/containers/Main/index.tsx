@@ -55,7 +55,6 @@ import Tabs from 'containers/Main/containers/Admin/Tabs';
 import DefaultPage from 'containers/Main/containers/DefaultPage';
 import Page from 'containers/Main/containers/Page';
 import Debug from 'containers/Main/containers/Debug';
-import DebugWs from 'containers/Main/containers/Debug/Ws';
 import Backup from 'containers/Main/containers/Backup';
 import NotFound from 'components/NotFound';
 import { AnimatedSwitch } from 'components/Animation';
@@ -129,7 +128,6 @@ const MainContainer: React.SFC<IMainProps> = props => (
             <Route exact path="/(vde)?/page/:pageName" component={Page} />
 
             <Route exact path="/debug" component={Debug} />
-            <Route exact path="/debug/ws" component={DebugWs} />
             <Route exact path="/backup" component={Backup} />
             <Route path="*" render={() => <NotFound main />} />
         </AnimatedSwitch>
