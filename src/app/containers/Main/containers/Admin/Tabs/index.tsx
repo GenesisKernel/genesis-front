@@ -37,8 +37,8 @@ const Title = styled.div`
 interface ITabsContainerProps {
     tabData: any;
     tabList: { id: string, type: string, name?: string, vde?: boolean; visible?: boolean }[];
-    getTabList?: typeof getTabList.started;
-    removeTabList?: typeof removeTabList.started;
+    getTabList?: typeof getTabList;
+    removeTabList?: typeof removeTabList;
     vde?: boolean;
 }
 
@@ -212,8 +212,8 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    getTabList: getTabList.started,
-    removeTabList: removeTabList.started
+    getTabList: getTabList,
+    removeTabList: removeTabList
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TabsContainer);

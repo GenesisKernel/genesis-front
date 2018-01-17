@@ -15,7 +15,7 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IPageResponse, IContractsResponse, IParameterResponse, ITabListResponse, IHistoryResponse } from 'lib/api';
+import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IPageResponse, IContractsResponse, IParameterResponse, IHistoryResponse } from 'lib/api';
 import { IProtypoElement } from 'lib/api';
 
 const actionCreator = actionCreatorFactory('admin');
@@ -71,5 +71,8 @@ export const importData = actionCreator.async<File, any, undefined>('IMPORT_DATA
 export const importDataPrune = actionCreator<{ name: string, key: string, index?: number }>('IMPORT_DATA_PRUNE');
 
 // Tabs
-export const getTabList = actionCreator.async<{ addID?: string, addName?: string, addType?: string, addVDE?: boolean }, ITabListResponse, string>('GET_TAB_LIST');
-export const removeTabList = actionCreator.async<{ id: string, type: string, vde?: boolean }, any, string>('REMOVE_TAB_LIST');
+// export const getTabList = actionCreator.async<{ addID?: string, addName?: string, addType?: string, addVDE?: boolean }, ITabListResponse, string>('GET_TAB_LIST');
+// export const removeTabList = actionCreator.async<{ id: string, type: string, vde?: boolean }, any, string>('REMOVE_TAB_LIST');
+export const getTabList = actionCreator<{ addID?: string, addName?: string, addType?: string, addVDE?: boolean }>('GET_TAB_LIST');
+export const removeTabList = actionCreator<{ id: string, type: string, vde?: boolean }>('REMOVE_TAB_LIST');
+

@@ -73,6 +73,7 @@ export type State = {
             Data: any[][];
         }[];
     };
+    readonly storage: any;
 };
 
 export const initialState: State = {
@@ -95,7 +96,8 @@ export const initialState: State = {
     parameter: null,
     parameters: null,
     exportPayload: null,
-    importPayload: null
+    importPayload: null,
+    storage: {}
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -1116,24 +1118,96 @@ export default (state: State = initialState, action: Action): State => {
         };
     }
 
-    if (isType(action, actions.getTabList.done)) {
-        let tabList = action.payload.result.tabList;
+    if (isType(action, actions.getTabList)) {
+        let tabList = state.storage.tabList;
+        if (!tabList) {
+            tabList = [];
+        }
+
+        let settingsTabList = [];
+
+        if ('string' === typeof action.payload.addID) {
+            let index = tabList.findIndex((item: any) => item.id === action.payload.addID && item.type === action.payload.addType && !!item.vde === !!action.payload.addVDE);
+            // delete existing tab and add to the end. update name
+            if (index >= 0 && index < tabList.length) {
+                tabList = [
+                    ...tabList.slice(0, index),
+                    ...tabList.slice(index + 1)
+                ];
+            }
+
+            tabList = tabList.concat({
+                id: action.payload.addID,
+                name: action.payload.addName,
+                type: action.payload.addType,
+                vde: action.payload.addVDE,
+                visible: true
+            });
+
+            for (let item of tabList) {
+                settingsTabList.push({
+                    id: item.id,
+                    name: item.name,
+                    type: item.type,
+                    vde: !!item.vde
+                });
+            }
+        }
+
         return {
             ...state,
             tabs: {
                 ...state.tabs,
                 list: tabList
+            },
+            storage: {
+                ...state.storage,
+                tabList: settingsTabList
             }
         };
     }
 
-    if (isType(action, actions.removeTabList.done)) {
-        let tabList = action.payload.result.tabList;
+    if (isType(action, actions.removeTabList)) {
+        let tabList = state.tabs.list;
+        let tabListStorageCleared = [];
+
+        if ('string' === typeof action.payload.id && 'string' === typeof action.payload.type) {
+            let index = tabList.findIndex((item: any) => item.id === action.payload.id && item.type === action.payload.type && !!item.vde === !!action.payload.vde);
+            if (index >= 0 && index < tabList.length) {
+
+                // store only visible tabs
+                let tabListStorage = [
+                    ...tabList.slice(0, index),
+                    ...tabList.slice(index + 1)
+                ];
+
+                // remove visible attr
+                for (let item of tabListStorage) {
+                    if (item.visible !== false) {
+                        tabListStorageCleared.push({
+                            id: item.id,
+                            name: item.name,
+                            type: item.type,
+                            vde: !!item.vde
+                        });
+                    }
+                }
+
+                // mark tab is invisible to prevent reload pages
+                tabList = tabList.concat();
+                tabList[index].visible = false;
+            }
+        }
+
         return {
             ...state,
             tabs: {
                 ...state.tabs,
                 list: tabList
+            },
+            storage: {
+                ...state.storage,
+                tabList: tabListStorageCleared
             }
         };
 
