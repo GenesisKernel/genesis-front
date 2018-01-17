@@ -169,17 +169,17 @@ const StyledToolbar = styled.ul`
         > button {
             text-align: center;
             border-radius: 0;
-            min-width: 40px;
-            height: 40px;
+            min-width: 30px;
+            height: 30px;
             outline: 0;
             border: 0;
             background: 0;
-            margin: 0;
+            margin: 5px;
             padding: 0;
-            color: #7e7e7e;
+            color: #757e8a;
             font-size: 14px;
             font-weight: 300;
-            line-height: 40px;
+            line-height: 30px;
             transition: background .15s;
 
             > span {
