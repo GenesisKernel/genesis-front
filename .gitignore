@@ -12,6 +12,7 @@
 # production
 /build
 /releases
+config.json
 
 # build artifacts
 /src/app/styles/built
