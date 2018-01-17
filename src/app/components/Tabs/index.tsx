@@ -134,7 +134,7 @@ export default class ConstructorTabs extends React.Component<IConstructorTabsPro
     componentWillReceiveProps(props: IConstructorTabsProps) {
         // open selected tab
         if (props.tabList && !this.state.loaded) {
-            let tabIndex = props.tabList.findIndex((item: any) => item.id === props.openedTab.id && item.type === props.openedTab.type);
+            let tabIndex = props.tabList.findIndex((item: any) => item.id === props.openedTab.id && item.type === props.openedTab.type && !!item.vde === !!props.openedTab.vde);
             if (tabIndex >= 0 && this.state.tabIndex < tabIndex) {
                 this.setState({
                     tabIndex,
@@ -148,7 +148,7 @@ export default class ConstructorTabs extends React.Component<IConstructorTabsPro
         // if closed tab was active, set first tab active
 
         if (this.props.tabList) {
-            let closedTabItemIndex = this.props.tabList.findIndex((tabItem: any) => tabItem.id === id && !!tabItem.vde === !!vde);
+            let closedTabItemIndex = this.props.tabList.findIndex((tabItem: any) => tabItem.id === id && tabItem.type === type && !!tabItem.vde === !!vde);
             if (closedTabItemIndex === this.state.tabIndex) {
                 let switchToTabIndex = this.props.tabList.findIndex((tabItem: any, index: number) =>
                     tabItem.visible !== false && index !== closedTabItemIndex

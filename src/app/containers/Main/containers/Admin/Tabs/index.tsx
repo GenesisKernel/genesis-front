@@ -18,7 +18,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import Tabs from 'components/Tabs';
-import { getTabList, removeTabList } from 'modules/admin/actions';
+// import { removeTabList } from 'modules/admin/actions';
+import { addTabList, removeTabList } from 'modules/storage/actions';
 import styled from 'styled-components';
 import ContractEditTabbed from 'containers/Main/containers/Admin/Contracts/EditTabbed';
 import ParameterEditTabbed from 'containers/Main/containers/Admin/Parameters/EditTabbed';
@@ -37,7 +38,8 @@ const Title = styled.div`
 interface ITabsContainerProps {
     tabData: any;
     tabList: { id: string, type: string, name?: string, vde?: boolean; visible?: boolean }[];
-    getTabList?: typeof getTabList;
+    // getTabList?: typeof getTabList.started;
+    addTabList?: typeof addTabList;
     removeTabList?: typeof removeTabList;
     vde?: boolean;
 }
@@ -68,7 +70,8 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
             };
         }
         // this.props.loadTabList(addTab);
-        this.props.getTabList(addTab);
+        this.props.addTabList(addTab);
+        // this.props.getTabList(addTab);
     }
 
     componentWillReceiveProps(props: ITabsContainerProps & { match: { params: { type: string, id: string, name: string } } }) {
@@ -83,7 +86,8 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
                     addType: props.match.params.type,
                     addVDE: !!props.vde
                 };
-                this.props.getTabList(addTab);
+                this.props.addTabList(addTab);
+                // this.props.getTabList(addTab);
             }
         }
     }
@@ -212,7 +216,8 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    getTabList: getTabList,
+    // getTabList: getTabList.started,
+    addTabList: addTabList,
     removeTabList: removeTabList
 };
 
