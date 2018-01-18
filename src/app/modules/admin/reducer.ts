@@ -73,7 +73,6 @@ export type State = {
             Data: any[][];
         }[];
     };
-    readonly storage: any;
 };
 
 export const initialState: State = {
@@ -96,8 +95,7 @@ export const initialState: State = {
     parameter: null,
     parameters: null,
     exportPayload: null,
-    importPayload: null,
-    storage: {}
+    importPayload: null
 };
 
 export default (state: State = initialState, action: Action): State => {
