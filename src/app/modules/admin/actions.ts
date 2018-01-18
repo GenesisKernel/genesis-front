@@ -15,7 +15,7 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IPageResponse, IContractsResponse, IParameterResponse, ITabListResponse, IHistoryResponse } from 'lib/api';
+import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IPageResponse, IContractsResponse, IParameterResponse, IHistoryResponse, ITabListResponse } from 'lib/api';
 import { IProtypoElement } from 'lib/api';
 
 const actionCreator = actionCreatorFactory('admin');
