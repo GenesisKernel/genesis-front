@@ -20,17 +20,15 @@ import styled from 'styled-components';
 import Protypo from 'containers/Widgets/Protypo';
 import Layout from './Layout';
 import EditPage from 'components/Main/Admin/Interface/EditPage';
-import CollapsedListItem from './CollapsedListItem';
+
 import Panel from './Panel';
-import SourceElement from './SourceElement';
+
+import SourceElements from './SourceElements';
 import Properties from './Properties';
 import Switch from './Switch';
+// import SortableTree from 'react-sortable-tree';
+import { SortableTreeWithoutDndContext as SortableTree } from 'react-sortable-tree';
 
-import imgGroup11 from 'images/constructor/group-11.svg';
-import imgGroup12 from 'images/constructor/group-12.svg';
-import imgGroup13 from 'images/constructor/group-13.svg';
-import imgGroup34 from 'images/constructor/group-34.svg';
-import imgGroup35 from 'images/constructor/group-35.svg';
 import imgGrid from 'images/constructor/grid.png';
 
 interface IConstructorProps {
@@ -106,63 +104,18 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
     <ConstructorDiv>
         <div className="left-panel">
             <Panel title="Objects">
-                <ul className="b-category-list">
-                    <CollapsedListItem text="Structure" icon={imgGroup11}>
-                        <ul className="b-category-sublist">
-                            <SourceElement text="Panel" element="div" />
-                            <SourceElement text="Block" element="div" />
-                        </ul>
-                    </CollapsedListItem>
-                    <CollapsedListItem text="Text" icon={imgGroup12}>
-                        <ul className="b-category-sublist">
-                            <SourceElement text="Paragraph" element="p" />
-                            <SourceElement text="Span" element="span" />
-                            <SourceElement text="Strong" element="strong" />
-                            <SourceElement text="Emphasize" element="em" />
-                        </ul>
-                    </CollapsedListItem>
-                    {/*
-                    <CollapsedListItem text="Lists" icon={imgGroup37}>
-                        <ul className="b-category-sublist">
-                            <li>Ordered</li>
-                            <li>Unordered</li>
-                        </ul>
-                    </CollapsedListItem>
-                    < CollapsedListItem text="Containers" icon={imgGroup36}>
-                        <ul className="b-category-sublist">
-                            <li>Wrapper</li>
-                            <li>Block</li>
-                        </ul>
-                    </CollapsedListItem>
-                    */}
-                    <CollapsedListItem text="Forms" icon={imgGroup34}>
-                        <ul className="b-category-sublist">
-                            <SourceElement text="Form" element="form" />
-                            <SourceElement text="Input" element="input" />
-                            <SourceElement text="Label" element="label" />
-                            <SourceElement text="Button" element="button" />
-                            <SourceElement text="Image input" element="imageinput" />
-                        </ul>
-                    </CollapsedListItem>
-                    <CollapsedListItem text="Image" icon={imgGroup35}>
-                        <ul className="b-category-sublist">
-                            <SourceElement text="Picture" element="image" />
-                        </ul>
-                    </CollapsedListItem>
-                    {/*<CollapsedListItem text="Navigation" icon={imgStroke75}>
-                        <ul className="b-category-sublist">
-                            <li>Breadcrumps</li>
-                            <li>Link</li>
-                        </ul>
-                    </CollapsedListItem>*/}
-                    <CollapsedListItem text="Tables" icon={imgGroup13}>
-                        <ul className="b-category-sublist">
-                            <SourceElement text="Table" element="table" />
-                        </ul>
-                    </CollapsedListItem>
-                    <li />
-                </ul>
+                <SourceElements/>
             </Panel>
+
+            <div style={{ height: 200 }}>
+                <SortableTree
+                    treeData={
+                        [{ title: 'Chicken', children: [ { title: 'Egg' } ] }, { title: 'Fish', children: [ { title: 'Fish Egg' } ] }]
+                    }
+                    onChange={(treeData: any) => {}}
+                />
+            </div>
+
             {/*<Panel title="Structure">
                 <ul className="b-tree">
                     <li>

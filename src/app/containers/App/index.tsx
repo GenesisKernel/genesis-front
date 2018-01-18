@@ -32,6 +32,7 @@ import General from 'containers/General';
 
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
+
 import IntlHook from 'containers/App/IntlHook';
 import { switchWindow } from 'modules/gui/actions';
 
