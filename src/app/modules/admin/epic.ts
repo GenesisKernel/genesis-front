@@ -322,19 +322,6 @@ export const getParameterEpic: Epic<Action, IRootState> =
                 );
         });
 
-// export const getTabListEpic: Epic<Action, IRootState> =
-//     (action$, store) => action$.ofAction(actions.getTabList.started)
-//         .flatMap(action => {
-//             const state = store.getState();
-//             let tabList: any = state.storage.tabList;
-//
-//             return Observable.of(actions.getTabList.done({
-//                 params: action.payload,
-//                 result: { tabList: tabList }
-//             }));
-//
-//         });
-
 export const addTabListEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(storageActions.addTabList)
         .flatMap(action => {
