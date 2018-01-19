@@ -128,7 +128,7 @@ export const ecosystemInitEpic: Epic<Action, IRootState> =
                     ])
                 )
                 .catch((e: IAPIError) => {
-                    if ('E_SERVER' === e.error || 'E_TOKENEXPIRED' === e.error) {
+                    if ('E_OFFLINE' === e.error || 'E_SERVER' === e.error || 'E_TOKENEXPIRED' === e.error) {
                         const account = store.getState().auth.account;
 
                         return Observable.concat([
