@@ -17,15 +17,23 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { IStoredAccount } from 'apla/storage';
 import * as actions from './actions';
+import * as _ from 'lodash';
 
 export type State = {
     accounts: IStoredAccount[];
     navigationSize: number;
+    tabList: {
+        id: string,
+        name: string,
+        type: string,
+        vde: boolean
+    }[]
 };
 
 export const initialState: State = {
     accounts: [],
-    navigationSize: 230
+    navigationSize: 230,
+    tabList: []
 };
 
 export default reducerWithInitialState<State>(initialState)
@@ -47,4 +55,47 @@ export default reducerWithInitialState<State>(initialState)
             navigationSize,
             200
         )
-    }));
+    }))
+
+    .case(actions.addTabList, (state, data) => {
+        let tabList = _.cloneDeep(state.tabList || []);
+        if (typeof data.addID === 'string') {
+            let index = tabList.findIndex((item: any) => item.id === data.addID && item.type === data.addType && !!item.vde === !!data.addVDE);
+            // delete existing tab and add to the end. update name
+            if (index >= 0 && index < tabList.length) {
+                tabList = [
+                    ...tabList.slice(0, index),
+                    ...tabList.slice(index + 1)
+                ];
+            }
+            let item = {
+                id: data.addID,
+                name: data.addName,
+                type: data.addType,
+                vde: data.addVDE
+            };
+            tabList = tabList.concat(item);
+        }
+
+        return {
+            ...state,
+            tabList: tabList
+        };
+    })
+    .case(actions.removeTabList, (state, data) => {
+        let tabList = _.cloneDeep(state.tabList || []);
+        let tabListStorage = tabList;
+
+        let index = tabList.findIndex((item: any) => item.id === data.id && item.type === data.type && !!item.vde === !!data.vde);
+        if (index >= 0 && index < tabList.length) {
+            tabListStorage = [
+                ...tabList.slice(0, index),
+                ...tabList.slice(index + 1)
+            ];
+        }
+
+        return {
+            ...state,
+            tabList: tabListStorage
+        };
+    });

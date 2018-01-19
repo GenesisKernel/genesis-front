@@ -1136,7 +1136,6 @@ export default (state: State = initialState, action: Action): State => {
                 list: tabList
             }
         };
-
     }
 
     return state;
