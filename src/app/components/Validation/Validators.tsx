@@ -108,3 +108,6 @@ export const regex: IValidatorGenerator = (expr: string | RegExp, flags?: string
         }
     });
 };
+
+export const email: Validator =
+    regex(/^((([!#$%&'*+\-/=?^_`{|}~\w])|([!#$%&'*+\-/=?^_`{|}~\w][!#$%&'*+\-/=?^_`{|}~\.\w]{0,}[!#$%&'*+\-/=?^_`{|}~\w]))[@]\w+([-.]\w+)*\.\w+([-.]\w+)*)$/);
