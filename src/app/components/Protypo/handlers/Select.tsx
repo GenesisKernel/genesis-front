@@ -21,7 +21,7 @@ import * as propTypes from 'prop-types';
 import Protypo from '../Protypo';
 import StyledComponent from './StyledComponent';
 import Validation from 'components/Validation';
-import { IValidator } from 'components/Validation/Validators';
+import { Validator } from 'components/Validation/Validators';
 
 export interface ISelectProps {
     'className'?: string;
@@ -41,7 +41,7 @@ interface ISelectContext {
 }
 
 const Select: React.SFC<ISelectProps> = (props, context: ISelectContext) => {
-    const compiledValidators: IValidator[] = [];
+    const compiledValidators: Validator[] = [];
     _.forEach(props.validate, (value, name) => {
         const validator = Validation.validators[name];
         if (validator) {

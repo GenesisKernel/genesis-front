@@ -14,21 +14,32 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
-export interface IValidator {
-    name: string;
-    params?: any;
-    validate: (value: string) => boolean;
+export class Validator {
+    public name: string;
+    public params?: any;
+
+    private _validator: (value: string) => boolean;
+
+    constructor(options: { name: string, validate: (value: string) => boolean, params?: any }) {
+        this.name = options.name;
+        this.params = options.params;
+        this._validator = options.validate;
+    }
+
+    public validate(value: string): boolean {
+        return this._validator(value);
+    }
 }
 
 export interface IValidatorGenerator {
-    (...args: any[]): IValidator;
+    (...args: any[]): Validator;
 }
 
 // Validator name must be lowercase because of how Protypo works on the server side
 // If you will write your validator using different case - it will not work properly
-export const required: IValidator = {
+export const required = new Validator({
     name: 'required',
-    validate: (value: string) => {
+    validate: (value) => {
         const type = typeof value;
 
         if (null === value) {
@@ -41,12 +52,12 @@ export const required: IValidator = {
             default: throw new Error(`Unrecognized value type "${typeof value}"`);
         }
     }
-};
+});
 
 export const minlength: IValidatorGenerator = (count: number | string) => {
-    return {
+    return new Validator({
         name: 'minlength',
-        validate: (value: string) => {
+        validate: (value) => {
             if ('string' !== typeof value) {
                 throw new Error(`Unrecognized value type "${typeof value}"`);
             }
@@ -54,11 +65,11 @@ export const minlength: IValidatorGenerator = (count: number | string) => {
             // Do not affect empty strings. 'required' must do this job
             return value.length === 0 || parseInt(count.toString(), 10) <= value.length;
         }
-    };
+    });
 };
 
 export const maxlength: IValidatorGenerator = (count: number | string) => {
-    return {
+    return new Validator({
         name: 'maxlength',
         validate: (value: string) => {
             if ('string' !== typeof value) {
@@ -67,14 +78,33 @@ export const maxlength: IValidatorGenerator = (count: number | string) => {
 
             return parseInt(count.toString(), 10) >= value.length;
         }
-    };
+    });
 };
 
 export const compare: IValidatorGenerator = (compareValue: any) => {
-    return {
+    return new Validator({
         name: 'compare',
         validate: (value: any) => {
             return compareValue === value;
         }
-    };
+    });
+};
+
+export const regex: IValidatorGenerator = (expr: string | RegExp, flags?: string) => {
+    return new Validator({
+        name: 'regex',
+        validate: (value: string) => {
+            if ('string' !== typeof value) {
+                throw new Error(`Unrecognized value type "${typeof value}"`);
+            }
+
+            try {
+                const regExp = expr instanceof RegExp ? expr : new RegExp(expr, flags);
+                return regExp.test(value);
+            }
+            catch (e) {
+                throw new Error(`Invalid expression "${expr}"`);
+            }
+        }
+    });
 };

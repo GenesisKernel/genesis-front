@@ -20,7 +20,7 @@ import * as classnames from 'classnames';
 
 import StyledComponent from './StyledComponent';
 import Validation from 'components/Validation';
-import { IValidator } from 'components/Validation/Validators';
+import { Validator, IValidatorGenerator } from 'components/Validation/Validators';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 
@@ -59,12 +59,18 @@ export interface IInputProps {
 
 // TODO: type is not handled correctly
 const Input: React.SFC<IInputProps> = (props) => {
-    const compiledValidators: IValidator[] = [];
+    const compiledValidators: Validator[] = [];
     const className = [props.class, props.className].join(' ');
     _.forEach(props.validate, (value, name) => {
         const validator = Validation.validators[name];
         if (validator) {
-            compiledValidators.push(validator(value));
+            if (validator instanceof Validator) {
+                compiledValidators.push(validator);
+            }
+            else {
+                const validatorGenerator: IValidatorGenerator = validator;
+                compiledValidators.push(validatorGenerator(value));
+            }
         }
     });
 
@@ -89,7 +95,7 @@ const Input: React.SFC<IInputProps> = (props) => {
         });
 
         return connectDragPreview(connectDropTarget(
-            <span style={{display: 'inline-block'}}>
+            <span style={{ display: 'inline-block' }}>
                 <TagWrapper
                     display="inline"
                     selected={props.selected}
@@ -99,13 +105,13 @@ const Input: React.SFC<IInputProps> = (props) => {
                     removeTag={removeTag}
                     connectDragSource={connectDragSource}
                 >
-                <input
-                    name={props.name}
-                    className={classes}
-                    disabled={!!props.disabled}
-                    type={props.type}
-                    placeholder={props.placeholder}
-                />
+                    <input
+                        name={props.name}
+                        className={classes}
+                        disabled={!!props.disabled}
+                        type={props.type}
+                        placeholder={props.placeholder}
+                    />
                 </TagWrapper>
             </span>
         ));
