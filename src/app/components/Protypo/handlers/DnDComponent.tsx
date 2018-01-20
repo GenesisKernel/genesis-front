@@ -127,7 +127,7 @@ interface IStyledComponentProps {
 }
 
 export default function dndComponent<T>(Component: TComponentConstructor<T & IStyledComponentProps>) {
-    return DragSource<T>(ItemTypes.SOURCE, Source, collectSource)(
+    return DragSource<T>(ItemTypes.SOURCE, Source, collectSource, { arePropsEqual: () => false })(
         DropTarget<T>(ItemTypes.SOURCE, Target, collectTarget)(Component)
     );
 }
