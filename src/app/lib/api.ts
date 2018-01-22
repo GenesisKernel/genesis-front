@@ -121,6 +121,8 @@ export interface ITableResponse extends IResponse {
     new_column: string;
     update: string;
     conditions: string;
+    read?: string;
+    filter?: string;
     columns: {
         name: string;
         type: string;
