@@ -1,5 +1,11 @@
 [![Throughput Graph](https://graphs.waffle.io/AplaProject/apla-front/throughput.svg)](https://waffle.io/AplaProject/apla-front/metrics/throughput)
 
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![](https://tokei.rs/b1/github/AplaProject/apla-front)](https://github.com/AplaProject/apla-front)
+![](https://reposs.herokuapp.com/?path=AplaProject/apla-front&style=flat)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/go-apla?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
+
 ## Apla-front
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). You will find most of the information of how to use it there.
 
