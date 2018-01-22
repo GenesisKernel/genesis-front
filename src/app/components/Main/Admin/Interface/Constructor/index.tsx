@@ -28,11 +28,14 @@ import Properties from './Properties';
 import Switch from './Switch';
 // import SortableTree from 'react-sortable-tree';
 import { SortableTreeWithoutDndContext as SortableTree } from 'react-sortable-tree';
+// import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
+// import TreeTheme from './Tree/Theme';
 
 import imgGrid from 'images/constructor/grid.png';
 
 interface IConstructorProps {
     pageTree: any;
+    treeData: any;
     page?: any;
     pageTemplate: string;
     changePage?: any;
@@ -107,11 +110,9 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                 <SourceElements/>
             </Panel>
 
-            <div style={{ height: 200 }}>
+            <div style={{ height: 500 }}>
                 <SortableTree
-                    treeData={
-                        [{ title: 'Chicken', children: [ { title: 'Egg' } ] }, { title: 'Fish', children: [ { title: 'Fish Egg' } ] }]
-                    }
+                    treeData={props.treeData}
                     onChange={(treeData: any) => {}}
                 />
             </div>

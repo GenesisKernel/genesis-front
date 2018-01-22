@@ -38,6 +38,7 @@ interface IConstructorTabbedContainerState {
         [key: string]: {
             type: string,
             data: any,
+            treeData?: any,
             pageTemplate?: string,
             selectedTag?: IProtypoElement
         }
@@ -178,11 +179,14 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     }
 
     render() {
-        const pageTree = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')] && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')].data || null;
-        const pageTemplate = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')] && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')].pageTemplate || null;
-        const selectedTag = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')] && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')].selectedTag || null;
-        const canUndo = this.props.tabHistory && this.props.tabHistory['page' + this.props.pageID + (this.props.vde ? '-vde' : '')] && this.props.tabHistory['page' + this.props.pageID + (this.props.vde ? '-vde' : '')].canUndo || false;
-        const canRedo = this.props.tabHistory && this.props.tabHistory['page' + this.props.pageID + (this.props.vde ? '-vde' : '')] && this.props.tabHistory['page' + this.props.pageID + (this.props.vde ? '-vde' : '')].canRedo || false;
+        const tabData = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')];
+        const pageTree = tabData && tabData.data || null;
+        const treeData = tabData && tabData.treeData || null;
+        const pageTemplate = tabData && tabData.pageTemplate || null;
+        const selectedTag = tabData && tabData.selectedTag || null;
+        const tabHistory = this.props.tabHistory && this.props.tabHistory['page' + this.props.pageID + (this.props.vde ? '-vde' : '')];
+        const canUndo = tabHistory && tabHistory.canUndo || false;
+        const canRedo = tabHistory && tabHistory.canRedo || false;
 
         const pageTab = this.props.tabData && this.props.tabData['interfacePage' + this.props.pageID + (this.props.vde ? '-vde' : '')] || null;
         let page = null;
@@ -193,6 +197,7 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
         return (
             <Constructor
                 pageTree={pageTree}
+                treeData={treeData}
                 changePage={this.changePage.bind(this)}
                 setTagCanDropPosition={this.setTagCanDropPosition.bind(this)}
                 selectTag={this.selectTag.bind(this)}

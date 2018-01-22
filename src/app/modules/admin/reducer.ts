@@ -19,7 +19,7 @@ import * as _ from 'lodash';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse, IHistoryResponse } from 'lib/api';
-import { findTagById, resolveTagHandler, Properties, generateId, setIds, CodeGenerator } from 'lib/constructor';
+import { findTagById, resolveTagHandler, Properties, generateId, setIds, CodeGenerator, convertToTreeData } from 'lib/constructor';
 import { IProtypoElement } from 'components/Protypo/Protypo';
 
 export type State = {
@@ -41,6 +41,7 @@ export type State = {
             [key: string]: {
                 type: string,
                 data: any,
+                treeData?: any,
                 pageTemplate?: string,
                 selectedTag?: IProtypoElement
             }
@@ -201,7 +202,8 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.tabs.data,
                     ['interfaceConstructor' + action.payload.params.id + (action.payload.params.vde ? '-vde' : '')]: {
                         type: 'interfaceConstructor',
-                        data: action.payload.result.page.tree
+                        data: action.payload.result.page.tree,
+                        treeData: convertToTreeData(action.payload.result.page.tree)
                     }
                 }
             }
@@ -297,6 +299,7 @@ export default (state: State = initialState, action: Action): State => {
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                         type: 'interfaceConstructor',
                         data: pageTree,
+                        treeData: convertToTreeData(pageTree),
                         selectedTag: selectedTag
                     }
                 }
@@ -318,6 +321,7 @@ export default (state: State = initialState, action: Action): State => {
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                         type: 'interfaceConstructor',
                         data: pageTree,
+                        treeData: convertToTreeData(pageTree, action.payload.tag),
                         selectedTag: action.payload.tag
                     }
                 }
@@ -348,7 +352,8 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.tabs.data,
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                         type: 'interfaceConstructor',
-                        data: pageTree
+                        data: pageTree,
+                        treeData: convertToTreeData(pageTree)
                     }
                 }
             }
@@ -418,7 +423,8 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.tabs.data,
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                         type: 'interfaceConstructor',
-                        data: pageTree
+                        data: pageTree,
+                        treeData: convertToTreeData(pageTree)
                     }
                 }
             }
@@ -495,7 +501,8 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.tabs.data,
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                         type: 'interfaceConstructor',
-                        data: pageTree
+                        data: pageTree,
+                        treeData: convertToTreeData(pageTree)
                     }
                 }
             }
@@ -569,7 +576,8 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.tabs.data,
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                         type: 'interfaceConstructor',
-                        data: pageTree
+                        data: pageTree,
+                        treeData: convertToTreeData(pageTree)
                     }
                 }
             }
@@ -602,7 +610,8 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.tabs.data,
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                         type: 'interfaceConstructor',
-                        data: pageTree
+                        data: pageTree,
+                        treeData: convertToTreeData(pageTree)
                     }
                 }
             }
@@ -678,7 +687,8 @@ export default (state: State = initialState, action: Action): State => {
                         ...state.tabs.data,
                         ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                             type: 'interfaceConstructor',
-                            data: data[position - 1]
+                            data: data[position - 1],
+                            treeData: convertToTreeData(data[position - 1])
                         }
                     }
                 }
@@ -706,7 +716,8 @@ export default (state: State = initialState, action: Action): State => {
                         ...state.tabs.data,
                         ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                             type: 'interfaceConstructor',
-                            data: data[position - 1]
+                            data: data[position - 1],
+                            treeData: convertToTreeData(data[position - 1])
                         }
                     }
                 }

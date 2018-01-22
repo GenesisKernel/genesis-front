@@ -16,6 +16,7 @@
 
 import { IProtypoElement } from 'components/Protypo/Protypo';
 import { findDOMNode } from 'react-dom';
+import * as _ from 'lodash';
 
 let findTagByIdResult: {
     el: any;
@@ -97,6 +98,42 @@ export function OnPasteStripFormatting(elem: any, e: any) {
         }
         onPasteStripFormattingIEPaste = false;
     }
+}
+
+export function convertToTreeData(data: any, selectedTag?: any): any {
+    let result = [];
+    if (data instanceof Array) {
+        for (const item of data) {
+            let children = null;
+            let subtitle = item.text;
+            if (item.children) {
+                if (item.children.length === 1 && item.children[0] && item.children[0].tag === 'text') {
+                    subtitle = _.truncate(item.children[0].text, {
+                        'length': 24,
+                        'separator': /,? +/
+                    });
+                }
+                else {
+                    children = convertToTreeData(item.children, selectedTag);
+                }
+            }
+
+            let selected = false;
+            if (selectedTag && selectedTag.id === item.id) {
+                selected = true;
+            }
+
+            let treeItem = {
+                title: item.tag + (selected ? ' >>>' : ''),
+                subtitle: subtitle,
+                children: children,
+                expanded: true
+            };
+            result.push(treeItem);
+        }
+
+    }
+    return result;
 }
 
 class Tag {
