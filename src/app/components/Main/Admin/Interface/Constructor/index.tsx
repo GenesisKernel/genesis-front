@@ -26,10 +26,10 @@ import Panel from './Panel';
 import SourceElements from './SourceElements';
 import Properties from './Properties';
 import Switch from './Switch';
-// import SortableTree from 'react-sortable-tree';
-import { SortableTreeWithoutDndContext as SortableTree } from 'react-sortable-tree';
+import Tree from './Tree';
+
 // import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
-// import TreeTheme from './Tree/Theme';
+import FileExplorerTheme from './Tree/Theme';
 
 import imgGrid from 'images/constructor/grid.png';
 
@@ -111,9 +111,11 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
             </Panel>
 
             <div style={{ height: 500 }}>
-                <SortableTree
+                <Tree
                     treeData={props.treeData}
                     onChange={(treeData: any) => {}}
+                    scaffoldBlockPxWidth={15}
+                    theme={FileExplorerTheme}
                 />
             </div>
 

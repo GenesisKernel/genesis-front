@@ -34,51 +34,81 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import styles from './node-content-renderer.scss';
+import React from 'react';
+// import PropTypes from 'prop-types';
+// import styles from './node-content-renderer.scss';
 
-function isDescendant(older, younger) {
+function isDescendant(older: any, younger: any) {
     return (
         !!older.children &&
         typeof older.children !== 'function' &&
         older.children.some(
-            child => child === younger || isDescendant(child, younger)
+            (child: any) => child === younger || isDescendant(child, younger)
     )
-);
+    );
+}
+
+interface IFileThemeNodeContentRendererProps {
+    scaffoldBlockPxWidth: any;
+    toggleChildrenVisibility: any;
+    connectDragPreview: any;
+    connectDragSource: any;
+    isDragging: any;
+    canDrop: any;
+    canDrag: any;
+    node: any;
+    title: any;
+    draggedNode: any;
+    path: any;
+    treeIndex: any;
+    isSearchMatch: any;
+    isSearchFocus: any;
+    icons: any;
+    buttons: any;
+    className: any;
+    style: any;
+    didDrop: any;
+    lowerSiblingCounts: any;
+    listIndex: any;
+    swapFrom: any;
+    swapLength: any;
+    swapDepth: any;
+    treeId: any;
+    isOver: any;
+    parentNode: any;
 }
 
 // eslint-disable-next-line react/prefer-stateless-function
-class FileThemeNodeContentRenderer extends Component {
+class FileThemeNodeContentRenderer extends React.Component<IFileThemeNodeContentRendererProps> {
     render() {
         const {
             scaffoldBlockPxWidth,
-            toggleChildrenVisibility,
+            toggleChildrenVisibility = null,
             connectDragPreview,
             connectDragSource,
             isDragging,
-            canDrop,
-            canDrag,
+            canDrop = false,
+            canDrag = false,
             node,
-            title,
-            draggedNode,
+            title = null,
+            draggedNode = null,
             path,
             treeIndex,
-            isSearchMatch,
-            isSearchFocus,
-            icons,
-            buttons,
-            className,
-            style,
+            isSearchMatch = false,
+            isSearchFocus = false,
+            icons = [],
+            buttons = [],
+            className = '',
+            style = {},
             didDrop,
             lowerSiblingCounts,
             listIndex,
-            swapFrom,
-            swapLength,
-            swapDepth,
+            swapFrom = null,
+            swapLength = null,
+            swapDepth = null,
             treeId, // Not needed, but preserved for other renderers
             isOver, // Not needed, but preserved for other renderers
-            parentNode, // Needed for dndManager
+            parentNode = null, // Needed for dndManager
     ...otherProps
     } = this.props;
         const nodeTitle = title || node.title;
@@ -87,14 +117,14 @@ class FileThemeNodeContentRenderer extends Component {
         const isLandingPadActive = !didDrop && isDragging;
 
         // Construct the scaffold representing the structure of the tree
-        const scaffold = [];
-        lowerSiblingCounts.forEach((lowerSiblingCount, i) => {
+        const scaffold: any = [];
+        lowerSiblingCounts.forEach((lowerSiblingCount: any, i: number) => {
             scaffold.push(
         <div
-        key={`pre_${1 + i}`}
-        style={{ width: scaffoldBlockPxWidth }}
-        className={styles.lineBlock}
-    />
+            key={`pre_${1 + i}`}
+            style={{ width: scaffoldBlockPxWidth }}
+            className="tree-lineBlock"
+        />
     );
 
         if (treeIndex !== listIndex && i === swapDepth) {
@@ -105,24 +135,24 @@ class FileThemeNodeContentRenderer extends Component {
             if (listIndex === swapFrom + swapLength - 1) {
                 // This block is on the bottom (target) line
                 // This block points at the target block (where the row will go when released)
-                highlightLineClass = styles.highlightBottomLeftCorner;
+                highlightLineClass = 'tree-highlightBottomLeftCorner';
             } else if (treeIndex === swapFrom) {
                 // This block is on the top (source) line
-                highlightLineClass = styles.highlightTopLeftCorner;
+                highlightLineClass = 'tree-highlightTopLeftCorner';
             } else {
                 // This block is between the bottom and top
-                highlightLineClass = styles.highlightLineVertical;
+                highlightLineClass = 'tree-highlightLineVertical';
             }
 
             scaffold.push(
             <div
-            key={`highlight_${1 + i}`}
-            style={{
-                width: scaffoldBlockPxWidth,
+                key={`highlight_${1 + i}`}
+                style={{
+                    width: scaffoldBlockPxWidth,
                     left: scaffoldBlockPxWidth * i,
-            }}
-            className={`${styles.absoluteLineBlock} ${highlightLineClass}`}
-        />
+                }}
+                className={`tree-absoluteLineBlock ${highlightLineClass}`}
+            />
         );
         }
     });
@@ -136,7 +166,7 @@ class FileThemeNodeContentRenderer extends Component {
             type="button"
             aria-label={node.expanded ? 'Collapse' : 'Expand'}
             className={
-                node.expanded ? styles.collapseButton : styles.expandButton
+                node.expanded ? 'tree-collapseButton' : 'tree-expandButton'
         }
             style={{
             left: (lowerSiblingCounts.length - 0.7) * scaffoldBlockPxWidth,
@@ -152,8 +182,8 @@ class FileThemeNodeContentRenderer extends Component {
 
     <div
         className={
-                styles.rowWrapper +
-            (!canDrag ? ` ${styles.rowWrapperDragDisabled}` : '')
+                'tree-rowWrapper' +
+            (!canDrag ? ' tree-rowWrapperDragDisabled' : '')
     }
     >
         {/* Set the row preview to be used during drag and drop */}
@@ -162,13 +192,13 @@ class FileThemeNodeContentRenderer extends Component {
             {scaffold}
         <div
             className={
-                    styles.row +
-                (isLandingPadActive ? ` ${styles.rowLandingPad}` : '') +
+                    'tree-row' +
+                (isLandingPadActive ? ' tree-rowLandingPad' : '') +
                 (isLandingPadActive && !canDrop
-                    ? ` ${styles.rowCancelPad}`
+                    ? ' tree-rowCancelPad'
                     : '') +
-                (isSearchMatch ? ` ${styles.rowSearchMatch}` : '') +
-                (isSearchFocus ? ` ${styles.rowSearchFocus}` : '') +
+                (isSearchMatch ? ' tree-rowSearchMatch' : '') +
+                (isSearchFocus ? ' tree-rowSearchFocus' : '') +
                 (className ? ` ${className}` : '')
         }
             style={{
@@ -178,22 +208,22 @@ class FileThemeNodeContentRenderer extends Component {
         >
         <div
             className={
-                    styles.rowContents +
-                (!canDrag ? ` ${styles.rowContentsDragDisabled}` : '')
+                    'tree-rowContents' +
+                (!canDrag ? ' tree-rowContentsDragDisabled' : '')
         }
         >
-        <div className={styles.rowToolbar}>
-            {icons.map((icon, index) => (
+        <div className="tree-rowToolbar">
+            {icons.map((icon: any, index: number) => (
             <div
-                key={index} // eslint-disable-line react/no-array-index-key
-                className={styles.toolbarButton}
+                key={index}
+                className="tree-toolbarButton"
             >
                 {icon}
             </div>
             ))}
         </div>
-        <div className={styles.rowLabel}>
-        <span className={styles.rowTitle}>
+        <div className="tree-rowLabel">
+        <span className="tree-rowTitle">
             {typeof nodeTitle === 'function'
                 ? nodeTitle({
                 node,
@@ -204,11 +234,11 @@ class FileThemeNodeContentRenderer extends Component {
         </span>
         </div>
 
-        <div className={styles.rowToolbar}>
-            {buttons.map((btn, index) => (
+        <div className="tree-rowToolbar">
+            {buttons.map((btn: any, index: number) => (
             <div
-                key={index} // eslint-disable-line react/no-array-index-key
-                className={styles.toolbarButton}
+                key={index}
+                className="tree-toolbarButton"
             >
                 {btn}
             </div>
@@ -228,58 +258,58 @@ class FileThemeNodeContentRenderer extends Component {
     }
 }
 
-FileThemeNodeContentRenderer.defaultProps = {
-    buttons: [],
-    canDrag: false,
-    canDrop: false,
-    className: '',
-    draggedNode: null,
-    icons: [],
-    isSearchFocus: false,
-    isSearchMatch: false,
-    parentNode: null,
-    style: {},
-    swapDepth: null,
-    swapFrom: null,
-    swapLength: null,
-    title: null,
-    toggleChildrenVisibility: null,
-};
+// FileThemeNodeContentRenderer.defaultProps = {
+//     buttons: [],
+//     canDrag: false,
+//     canDrop: false,
+//     className: '',
+//     draggedNode: null,
+//     icons: [],
+//     isSearchFocus: false,
+//     isSearchMatch: false,
+//     parentNode: null,
+//     style: {},
+//     swapDepth: null,
+//     swapFrom: null,
+//     swapLength: null,
+//     title: null,
+//     toggleChildrenVisibility: null,
+// };
 
-FileThemeNodeContentRenderer.propTypes = {
-    buttons: PropTypes.arrayOf(PropTypes.node),
-    canDrag: PropTypes.bool,
-    className: PropTypes.string,
-    icons: PropTypes.arrayOf(PropTypes.node),
-    isSearchFocus: PropTypes.bool,
-    isSearchMatch: PropTypes.bool,
-    listIndex: PropTypes.number.isRequired,
-    lowerSiblingCounts: PropTypes.arrayOf(PropTypes.number).isRequired,
-    node: PropTypes.shape({}).isRequired,
-    path: PropTypes.arrayOf(
-        PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-    ).isRequired,
-    scaffoldBlockPxWidth: PropTypes.number.isRequired,
-    style: PropTypes.shape({}),
-    swapDepth: PropTypes.number,
-    swapFrom: PropTypes.number,
-    swapLength: PropTypes.number,
-    title: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
-    toggleChildrenVisibility: PropTypes.func,
-    treeIndex: PropTypes.number.isRequired,
-    treeId: PropTypes.string.isRequired,
-
-    // Drag and drop API functions
-    // Drag source
-    connectDragPreview: PropTypes.func.isRequired,
-    connectDragSource: PropTypes.func.isRequired,
-    didDrop: PropTypes.bool.isRequired,
-    draggedNode: PropTypes.shape({}),
-    isDragging: PropTypes.bool.isRequired,
-    parentNode: PropTypes.shape({}), // Needed for dndManager
-    // Drop target
-    canDrop: PropTypes.bool,
-    isOver: PropTypes.bool.isRequired,
-};
+// FileThemeNodeContentRenderer.propTypes = {
+//     buttons: PropTypes.arrayOf(PropTypes.node),
+//     canDrag: PropTypes.bool,
+//     className: PropTypes.string,
+//     icons: PropTypes.arrayOf(PropTypes.node),
+//     isSearchFocus: PropTypes.bool,
+//     isSearchMatch: PropTypes.bool,
+//     listIndex: PropTypes.number.isRequired,
+//     lowerSiblingCounts: PropTypes.arrayOf(PropTypes.number).isRequired,
+//     node: PropTypes.shape({}).isRequired,
+//     path: PropTypes.arrayOf(
+//         PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+//     ).isRequired,
+//     scaffoldBlockPxWidth: PropTypes.number.isRequired,
+//     style: PropTypes.shape({}),
+//     swapDepth: PropTypes.number,
+//     swapFrom: PropTypes.number,
+//     swapLength: PropTypes.number,
+//     title: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
+//     toggleChildrenVisibility: PropTypes.func,
+//     treeIndex: PropTypes.number.isRequired,
+//     treeId: PropTypes.string.isRequired,
+//
+//     // Drag and drop API functions
+//     // Drag source
+//     connectDragPreview: PropTypes.func.isRequired,
+//     connectDragSource: PropTypes.func.isRequired,
+//     didDrop: PropTypes.bool.isRequired,
+//     draggedNode: PropTypes.shape({}),
+//     isDragging: PropTypes.bool.isRequired,
+//     parentNode: PropTypes.shape({}), // Needed for dndManager
+//     // Drop target
+//     canDrop: PropTypes.bool,
+//     isOver: PropTypes.bool.isRequired,
+// };
 
 export default FileThemeNodeContentRenderer;
