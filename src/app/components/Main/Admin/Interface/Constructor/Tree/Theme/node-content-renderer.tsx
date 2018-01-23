@@ -111,7 +111,7 @@ class FileThemeNodeContentRenderer extends React.Component<IFileThemeNodeContent
             parentNode = null, // Needed for dndManager
     ...otherProps
     } = this.props;
-        const nodeTitle = title || node.title;
+        const nodeTitle = title || node.title + (node.subtitle ? (' ' + node.subtitle) : '');
 
         const isDraggedDescendant = draggedNode && isDescendant(draggedNode, node);
         const isLandingPadActive = !didDrop && isDragging;
