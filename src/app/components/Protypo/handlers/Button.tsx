@@ -24,7 +24,6 @@ import ValidatedForm from 'components/Validation/ValidatedForm';
 import TxButton from 'containers/Widgets/TxButton';
 
 import TagWrapper from '../components/TagWrapper';
-import DnDComponent from './DnDComponent';
 
 export interface IButtonProps {
     'class'?: string;
@@ -185,4 +184,4 @@ Button.contextTypes = {
     vde: propTypes.bool
 };
 
-export default DnDComponent(injectIntl(Button));
+export default injectIntl(Button);

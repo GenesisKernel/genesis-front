@@ -60,7 +60,7 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.addTabList, (state, data) => {
         let tabList = _.cloneDeep(state.tabList || []);
         if (typeof data.addID === 'string') {
-            let index = tabList.findIndex((item: any) => item.id === data.addID && item.type === data.addType && !!item.vde === !!data.addVDE);
+            let index = tabList.findIndex(l => l.id === data.addID && l.type === data.addType && !!l.vde === !!data.addVDE);
             // delete existing tab and add to the end. update name
             if (index >= 0 && index < tabList.length) {
                 tabList = [

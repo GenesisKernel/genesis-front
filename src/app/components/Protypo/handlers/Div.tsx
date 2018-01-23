@@ -17,7 +17,6 @@
 import * as React from 'react';
 import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
-import DnDComponent from './DnDComponent';
 import TagWrapper from '../components/TagWrapper';
 import * as classnames from 'classnames';
 
@@ -115,11 +114,4 @@ class Div extends React.Component<IDivProps, IDivState> {
     }
 }
 
-// export default
-// DragSource(ItemTypes.SOURCE, Source, collectSource)(
-//     DropTarget(ItemTypes.SOURCE, Target, collectTarget)(
-//         StyledComponent(Div)
-//     )
-// );
-
-export default DnDComponent(StyledComponent(Div));
+export default StyledComponent(Div);

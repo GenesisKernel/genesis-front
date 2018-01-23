@@ -121,6 +121,8 @@ export interface ITableResponse extends IResponse {
     new_column: string;
     update: string;
     conditions: string;
+    read?: string;
+    filter?: string;
     columns: {
         name: string;
         type: string;
@@ -276,7 +278,13 @@ const request = async (endpoint: string, body: { [key: string]: any }, options?:
         json = response.body;
     }
     catch (e) {
-        json = { error: e };
+        // TODO: Not possible to catch with any other way
+        if (e.message && ('Failed to fetch' === e.message || -1 !== e.message.indexOf('ECONNREFUSED'))) {
+            json = { error: 'E_OFFLINE' };
+        }
+        else {
+            json = { error: e };
+        }
     }
 
     if (json.error) {

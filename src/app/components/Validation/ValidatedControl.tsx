@@ -16,13 +16,13 @@
 
 import * as React from 'react';
 import { FormControl, FormControlProps } from 'react-bootstrap';
-import { IValidator } from './Validators';
+import { Validator } from './Validators';
 import * as propTypes from 'prop-types';
 
 import ValidatedForm, { IValidatedControl } from './ValidatedForm';
 
 export interface IValidatedControlProps extends FormControlProps {
-    validators?: IValidator[];
+    validators?: Validator[];
 }
 
 interface IValidatedControlState {

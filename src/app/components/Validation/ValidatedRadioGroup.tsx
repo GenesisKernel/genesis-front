@@ -15,13 +15,13 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { IValidator } from './Validators';
+import { Validator } from './Validators';
 import * as propTypes from 'prop-types';
 
 import ValidatedForm, { IValidatedControl } from './ValidatedForm';
 
 export interface IValidatedRadioProps {
-    validators?: IValidator[];
+    validators?: Validator[];
     name: string;
     values: {
         title: string;

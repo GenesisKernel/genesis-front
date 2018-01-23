@@ -18,7 +18,6 @@ import * as React from 'react';
 import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
-import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
 
 export interface IStrongProps {
@@ -114,4 +113,4 @@ class Strong extends React.Component<IStrongProps, IStrongState> {
     }
 }
 
-export default DnDComponent(StyledComponent(Strong));
+export default StyledComponent(Strong);

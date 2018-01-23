@@ -16,7 +16,7 @@
 
 import * as React from 'react';
 import { FormControl } from 'react-bootstrap';
-import { IValidator } from './Validators';
+import { Validator } from './Validators';
 import * as propTypes from 'prop-types';
 import { readBinaryFile } from 'lib/fs';
 
@@ -27,7 +27,7 @@ export interface IValidatedFileProps {
     value?: string;
     disabled?: boolean;
     placeholder?: string;
-    validators?: IValidator[];
+    validators?: Validator[];
 }
 
 interface IValidatedFileState {

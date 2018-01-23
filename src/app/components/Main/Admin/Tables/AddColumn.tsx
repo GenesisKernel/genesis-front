@@ -31,14 +31,34 @@ export interface IAddColumnProps {
 
 interface IAddColumnState {
     type: string;
+    readPermissions: string;
+    updatePermissions: string;
 }
 
 class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
     constructor(props: IAddColumnProps) {
         super(props);
         this.state = {
-            type: columnTypes[0].name
+            type: columnTypes[0].name,
+            readPermissions: '',
+            updatePermissions: ''
         };
+    }
+
+    mapColumnPermissions(plain: string) {
+        try {
+            const json = JSON.parse(plain);
+            return {
+                updatePermissions: json.update,
+                readPermissions: json.read
+            };
+        }
+        catch {
+            return {
+                updatePermissions: plain,
+                readPermissions: null
+            };
+        }
     }
 
     mapContractParams(values: { [key: string]: any }) {
@@ -46,13 +66,28 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
             TableName: this.props.table,
             Name: values.name,
             Type: this.state.type,
-            Permissions: values.permissions
+            Permissions: this.props.vde ? JSON.stringify({
+                ...(this.state.updatePermissions && { update: this.state.updatePermissions }),
+                ...(this.state.readPermissions && { read: this.state.readPermissions })
+            }) : this.state.updatePermissions
         };
     }
 
     onTypeChange(e: React.ChangeEvent<HTMLSelectElement>) {
         this.setState({
             type: e.target.value
+        });
+    }
+
+    onReadPermissionsChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+        this.setState({
+            readPermissions: e.target.value
+        });
+    }
+
+    onUpdatePermissionsChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+        this.setState({
+            updatePermissions: e.target.value
         });
     }
 
@@ -105,11 +140,19 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
                                             ))}
                                         </Validation.components.ValidatedSelect>
                                     </Validation.components.ValidatedFormGroup>
-                                    <Validation.components.ValidatedFormGroup for="permissions">
-                                        <label htmlFor="permissions">
-                                            <FormattedMessage id="admin.tables.permissions" defaultMessage="Permissions" />
+                                    {this.props.vde && (
+                                        <Validation.components.ValidatedFormGroup for="readperm">
+                                            <label htmlFor="readperm">
+                                                <FormattedMessage id="admin.tables.permissions.read" defaultMessage="Read permissions" />
+                                            </label>
+                                            <Validation.components.ValidatedTextarea name="readperm" value={this.state.readPermissions} onChange={this.onReadPermissionsChange.bind(this)} />
+                                        </Validation.components.ValidatedFormGroup>
+                                    )}
+                                    <Validation.components.ValidatedFormGroup for="updateperm" className="mb0">
+                                        <label htmlFor="updateperm">
+                                            <FormattedMessage id="admin.tables.permissions.update" defaultMessage="Update permissions" />
                                         </label>
-                                        <Validation.components.ValidatedTextarea name="permissions" validators={[Validation.validators.required]} />
+                                        <Validation.components.ValidatedTextarea name="updateperm" validators={[Validation.validators.required]} value={this.state.updatePermissions} onChange={this.onUpdatePermissionsChange.bind(this)} />
                                     </Validation.components.ValidatedFormGroup>
                                 </div>
                                 <div className="panel-footer">
