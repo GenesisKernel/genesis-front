@@ -29,7 +29,7 @@ import Switch from './Switch';
 import Tree from './Tree';
 
 // import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
-import FileExplorerTheme from './Tree/Theme';
+import TreeTheme from './Tree/Theme';
 
 import imgGrid from 'images/constructor/grid.png';
 
@@ -56,6 +56,10 @@ interface IConstructorProps {
     navigatePage?: (params: { name: string, params?: any }) => void;
     menus?: { id: string, name: string, conditions: string, value: string }[];
     onSave?: (block: string, error?: { type: string, error: string }) => void;
+}
+
+interface IConstructorState {
+    treeData: any;
 }
 
 const ConstructorDiv = styled.div`
@@ -103,133 +107,168 @@ const ConstructorDiv = styled.div`
 
 `;
 
-const Constructor: React.SFC<IConstructorProps> = (props) => (
-    <ConstructorDiv>
-        <div className="left-panel">
-            <Panel title="Objects">
-                <SourceElements/>
-            </Panel>
+class Constructor extends React.Component<IConstructorProps, IConstructorState> {
+    constructor(props: IConstructorProps) {
+        super(props);
+        this.state = {
+            treeData: props.treeData
+        };
+    }
+    componentWillReceiveProps(props: IConstructorProps) {
+        if (this.state.treeData !== props.treeData) {
+            this.setState({
+                treeData: props.treeData
+            });
+        }
+    }
+    render() {
+        return (
+            <ConstructorDiv>
+                <div className="left-panel">
+                    <Panel title="Objects">
+                        <SourceElements/>
+                    </Panel>
 
-            <div style={{ height: 500 }}>
-                <Tree
-                    treeData={props.treeData}
-                    onChange={(treeData: any) => {}}
-                    scaffoldBlockPxWidth={15}
-                    theme={FileExplorerTheme}
-                />
-            </div>
-
-            {/*<Panel title="Structure">
-                <ul className="b-tree">
-                    <li>
-                        <i className="fa fa-caret-down" />
-                        HTML
-                    </li>
-                    <li>
-                        <span className="b-tree-indent" />
-                        <i className="fa fa-caret-right" />
-                        Header
-                    </li>
-                    <li>
-                        <span className="b-tree-indent" />
-                        <i className="fa fa-caret-down" />
-                        Body
-                    </li>
-                    <li>
-                        <span className="b-tree-indent" />
-                        <span className="b-tree-indent" />
-                        <i className="fa fa-caret-down" />
-                        Header
-                    </li>
-                    <li className="selected">
-                        <i className="fa fa-close b-tree-delete" />
-                        <span className="b-tree-indent" />
-                        <span className="b-tree-indent" />
-                        <span className="b-tree-indent" />
-                        <i className="fa fa-caret-down" />
-                        Paragraph
-                    </li>
-                    <li>
-                        <span className="b-tree-indent" />
-                        <span className="b-tree-indent" />
-                        <span className="b-tree-indent" />
-                        <i />
-                        Strong
-                    </li>
-                </ul>
-            </Panel>
-            */}
-        </div>
-        <div className="center-panel">
-            <div className="b-instrument-panel b-panel-light">
-                <div className="b-instrument-panel__inner pull-left">
-                    <button className={props.canUndo ? 'btn-container btn-container_active' : 'btn-container btn-container_disabled'} onClick={props.undo}>
-                        <i className="apla-icon-undo apla-icon_big"/>
-                    </button>
-                    <button className={props.canRedo ? 'btn-container btn-container_active' : 'btn-container btn-container_disabled'} onClick={props.redo}>
-                        <i className="apla-icon-redo apla-icon_big"/>
-                    </button>
-                </div>
-                <div className="b-instrument-panel__inner pull-right">
-                    {/*
-                    <div className="b-icon-group pull-left">
-                        <div className="b-icon pull-left">
-                            <img src={imgViewMobile} />
-                        </div>
-                        <div className="b-icon pull-left">
-                            <img src={imgViewTablet} />
-                        </div>
-                        <div className="b-icon pull-left">
-                            <img src={imgViewLaptop} />
-                        </div>
-                        <div className="b-icon pull-left">
-                            <img src={imgViewDesktop} />
-                        </div>
-                    </div>
-                    */}
-                    <div className="b-icon-group pull-left">
-                        <div className="b-switch">
-                            <span>GRID</span>
-                            <Switch initialValue={props.grid ? 'grid' : ''} onValue="grid" offValue="" onChange={props.toggleGrid} />
-                        </div>
-                        {/*
-                         <div className="b-switch">
-                         <span>SNAP</span>
-                         <Switch initialValue="snap" onValue="snap" offValue="" />
-                         </div>
-                         */
-                        }
+                    <div style={{ height: 500 }}>
+                        <Tree
+                            treeData={this.state.treeData}
+                            onChange={(treeData: any) => { this.setState({treeData}); }}
+                            scaffoldBlockPxWidth={15}
+                            theme={TreeTheme}
+                        />
                     </div>
 
+                    {/*<Panel title="Structure">
+                     <ul className="b-tree">
+                     <li>
+                     <i className="fa fa-caret-down" />
+                     HTML
+                     </li>
+                     <li>
+                     <span className="b-tree-indent" />
+                     <i className="fa fa-caret-right" />
+                     Header
+                     </li>
+                     <li>
+                     <span className="b-tree-indent" />
+                     <i className="fa fa-caret-down" />
+                     Body
+                     </li>
+                     <li>
+                     <span className="b-tree-indent" />
+                     <span className="b-tree-indent" />
+                     <i className="fa fa-caret-down" />
+                     Header
+                     </li>
+                     <li className="selected">
+                     <i className="fa fa-close b-tree-delete" />
+                     <span className="b-tree-indent" />
+                     <span className="b-tree-indent" />
+                     <span className="b-tree-indent" />
+                     <i className="fa fa-caret-down" />
+                     Paragraph
+                     </li>
+                     <li>
+                     <span className="b-tree-indent" />
+                     <span className="b-tree-indent" />
+                     <span className="b-tree-indent" />
+                     <i />
+                     Strong
+                     </li>
+                     </ul>
+                     </Panel>
+                     */}
                 </div>
-            </div>
+                <div className="center-panel">
+                    <div className="b-instrument-panel b-panel-light">
+                        <div className="b-instrument-panel__inner pull-left">
+                            <button
+                                className={this.props.canUndo ? 'btn-container btn-container_active' : 'btn-container btn-container_disabled'}
+                                onClick={this.props.undo}
+                            >
+                                <i className="apla-icon-undo apla-icon_big"/>
+                            </button>
+                            <button
+                                className={this.props.canRedo ? 'btn-container btn-container_active' : 'btn-container btn-container_disabled'}
+                                onClick={this.props.redo}
+                            >
+                                <i className="apla-icon-redo apla-icon_big"/>
+                            </button>
+                        </div>
+                        <div className="b-instrument-panel__inner pull-right">
+                            {/*
+                             <div className="b-icon-group pull-left">
+                             <div className="b-icon pull-left">
+                             <img src={imgViewMobile} />
+                             </div>
+                             <div className="b-icon pull-left">
+                             <img src={imgViewTablet} />
+                             </div>
+                             <div className="b-icon pull-left">
+                             <img src={imgViewLaptop} />
+                             </div>
+                             <div className="b-icon pull-left">
+                             <img src={imgViewDesktop} />
+                             </div>
+                             </div>
+                             */}
+                            <div className="b-icon-group pull-left">
+                                <div className="b-switch">
+                                    <span>GRID</span>
+                                    <Switch
+                                        initialValue={this.props.grid ? 'grid' : ''}
+                                        onValue="grid"
+                                        offValue=""
+                                        onChange={this.props.toggleGrid}
+                                    />
+                                </div>
+                                {/*
+                                 <div className="b-switch">
+                                 <span>SNAP</span>
+                                 <Switch initialValue="snap" onValue="snap" offValue="" />
+                                 </div>
+                                 */
+                                }
+                            </div>
 
-            <Layout grid={props.grid} addTag={props.addTag} moveTag={props.moveTag} copyTag={props.copyTag}>
-                <Protypo
-                    context="page"
-                    payload={props.pageTree}
-                    editable={true}
-                    changePage={props.changePage}
-                    setTagCanDropPosition={props.setTagCanDropPosition}
-                    selectTag={props.selectTag}
-                    addTag={props.addTag}
-                    moveTag={props.moveTag}
-                    copyTag={props.copyTag}
-                    removeTag={props.removeTag}
-                    selectedTag={props.selectedTag}
-                />
-            </Layout>
+                        </div>
+                    </div>
 
-        </div>
-        <div className="right-panel">
-            <Properties
-                tag={props.selectedTag}
-                changePage={props.changePage}
-            />
-            <EditPage page={props.page} pageTemplate={props.pageTemplate} menus={props.menus} tabView={true} saveButton={true} navigatePage={props.navigatePage} onExec={props.onSave}/>
-        </div>
-    </ConstructorDiv>
+                    <Layout grid={this.props.grid} addTag={this.props.addTag} moveTag={this.props.moveTag} copyTag={this.props.copyTag}>
+                        <Protypo
+                            context="page"
+                            payload={this.props.pageTree}
+                            editable={true}
+                            changePage={this.props.changePage}
+                            setTagCanDropPosition={this.props.setTagCanDropPosition}
+                            selectTag={this.props.selectTag}
+                            addTag={this.props.addTag}
+                            moveTag={this.props.moveTag}
+                            copyTag={this.props.copyTag}
+                            removeTag={this.props.removeTag}
+                            selectedTag={this.props.selectedTag}
+                        />
+                    </Layout>
 
-);
+                </div>
+                <div className="right-panel">
+                    <Properties
+                        tag={this.props.selectedTag}
+                        changePage={this.props.changePage}
+                    />
+                    <EditPage
+                        page={this.props.page}
+                        pageTemplate={this.props.pageTemplate}
+                        menus={this.props.menus}
+                        tabView={true}
+                        saveButton={true}
+                        navigatePage={this.props.navigatePage}
+                        onExec={this.props.onSave}
+                    />
+                </div>
+            </ConstructorDiv>
+        );
+    }
+}
 
 export default Constructor;

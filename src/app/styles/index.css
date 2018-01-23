@@ -650,6 +650,11 @@ input[type="number"] {
 .tree-node {
     min-width: 100%;
     position: relative;
+    padding-left: 20px;
+}
+
+.tree-node.selected {
+    background-color: #61b2fe;
 }
 
 .tree-rowWrapper {
@@ -748,13 +753,20 @@ input[type="number"] {
     padding-right: 20px;
 }
 
+.tree-rowTitle {
+    color: #FFF;
+}
+
+.tree-rowSubtitle {
+    color: #CCC;
+}
+
 .tree-rowToolbar {
     display: inline-block;
     vertical-align: middle;
     flex: 0 1 auto;
     display: flex;
 }
-
 
 .tree-toolbarButton {
     display: inline-block;
@@ -767,6 +779,7 @@ input[type="number"] {
     border: none;
     background: transparent;
     padding: 0;
+    padding-left: 30px;
     z-index: 2;
     position: absolute;
     top: 45%;
@@ -782,26 +795,20 @@ input[type="number"] {
     position: absolute;
     transform-origin: 7px 4px;
     transform: translate3d(-50%, -20%, 0);
-    border: solid transparent 10px;
-    border-left-width: 7px;
-    border-right-width: 7px;
-    border-top-color: gray;
+    border: solid transparent 7px;
+    border-left-width: 5px;
+    border-right-width: 5px;
+    border-top-color: #8399b0;
 }
 
 .tree-collapseButton:hover::after,
 .tree-expandButton:hover::after {
-    border-top-color: black;
+    border-top-color: #FFF;
 }
 
 .tree-collapseButton:focus,
 .tree-expandButton:focus {
     outline: none;
-}
-
-.tree-collapseButton:focus::after,
-.tree-expandButton:focus::after {
-    filter: drop-shadow(0 0 1px #83bef9) drop-shadow(0 0 1px #83bef9)
-    drop-shadow(0 0 1px #83bef9);
 }
 
 .tree-expandButton::after {

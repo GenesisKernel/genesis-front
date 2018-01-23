@@ -24,7 +24,7 @@ export interface IMySortableTreeProps extends ReactSortableTreeProps {
 const MySortableTree: React.SFC<IMySortableTreeProps> = props => (
     <SortableTree
         {...props}
-        innerStyle={{padding: '10px', backgroundColor: '#465669', color: '#FFFFFF' }}
+        innerStyle={{padding: '10px 0', backgroundColor: '#465669', color: '#FFFFFF' }}
     />
 );
 

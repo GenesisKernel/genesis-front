@@ -111,7 +111,8 @@ class FileThemeNodeContentRenderer extends React.Component<IFileThemeNodeContent
             parentNode = null, // Needed for dndManager
     ...otherProps
     } = this.props;
-        const nodeTitle = title || node.title + (node.subtitle ? (' ' + node.subtitle) : '');
+        const nodeTitle = title || node.title;
+        const nodeSubtitle = node.subtitle ? (' ' + node.subtitle) : '';
 
         const isDraggedDescendant = draggedNode && isDescendant(draggedNode, node);
         const isLandingPadActive = !didDrop && isDragging;
@@ -223,17 +224,19 @@ class FileThemeNodeContentRenderer extends React.Component<IFileThemeNodeContent
             ))}
         </div>
         <div className="tree-rowLabel">
-        <span className="tree-rowTitle">
-            {typeof nodeTitle === 'function'
-                ? nodeTitle({
-                node,
-                path,
-                treeIndex,
-            })
-                : nodeTitle}
-        </span>
+            <span className="tree-rowTitle">
+                {typeof nodeTitle === 'function'
+                    ? nodeTitle({
+                    node,
+                    path,
+                    treeIndex,
+                })
+                    : nodeTitle}
+            </span>
+            <span className="tree-rowSubtitle">
+                {nodeSubtitle}
+            </span>
         </div>
-
         <div className="tree-rowToolbar">
             {buttons.map((btn: any, index: number) => (
             <div

@@ -1,6 +1,7 @@
 import React, { Children, cloneElement } from 'react';
 // import PropTypes from 'prop-types';
 // import styles from './tree-node-renderer.scss';
+import * as classnames from 'classnames';
 
 interface IFileThemeTreeNodeRendererProps {
   children: any;
@@ -43,8 +44,13 @@ class FileThemeTreeNodeRenderer extends React.Component<IFileThemeTreeNodeRender
       ...otherProps
     } = this.props;
 
+    const classes = classnames({
+      'tree-node': true,
+      'selected': node.selected
+    });
+
     return connectDropTarget(
-      <div {...otherProps} className="tree-node">
+      <div {...otherProps} className={classes}>
         {Children.map(children, (child: any) =>
           cloneElement(child, {
             isOver,

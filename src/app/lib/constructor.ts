@@ -79,7 +79,7 @@ let onPasteStripFormattingIEPaste: boolean = false;
 
 export function OnPasteStripFormatting(elem: any, e: any) {
     let text: string;
-    if (e.originalEvent && e.originalEvent.clipboardData && e.originalEvent.clipboardData.getData) {
+    if (e.originalEvent &&  e.originalEvent.clipboardData && e.originalEvent.clipboardData.getData) {
         e.preventDefault();
         text = e.originalEvent.clipboardData.getData('text/plain');
         window.document.execCommand('insertText', false, text);
@@ -124,10 +124,12 @@ export function convertToTreeData(data: any, selectedTag?: any): any {
             }
 
             let treeItem = {
-                title: item.tag + (selected ? ' >>>' : ''),
+                title: (item.tag !== 'text') ? item.tag : '',
                 subtitle: subtitle,
                 children: children,
-                expanded: true
+                expanded: true,
+                id: item.id,
+                selected: selected
             };
             result.push(treeItem);
         }
