@@ -17,7 +17,6 @@
 import * as React from 'react';
 import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
-import DnDComponent from './DnDComponent';
 import TagWrapper from '../components/TagWrapper';
 import * as classnames from 'classnames';
 
@@ -118,4 +117,4 @@ class P extends React.Component<IPProps, IPState> {
     }
 }
 
-export default DnDComponent(StyledComponent(P));
+export default StyledComponent(P);
