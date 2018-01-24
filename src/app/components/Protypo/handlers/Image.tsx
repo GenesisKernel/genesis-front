@@ -21,7 +21,6 @@ import Protypo from '../Protypo';
 import StyledComponent from './StyledComponent';
 import * as classnames from 'classnames';
 import TagWrapper from '../components/TagWrapper';
-import DnDComponent from './DnDComponent';
 
 export interface IImageProps {
     'className'?: string;
@@ -103,4 +102,4 @@ Image.contextTypes = {
     protypo: propTypes.object.isRequired
 };
 
-export default DnDComponent(StyledComponent(Image));
+export default StyledComponent(Image);
