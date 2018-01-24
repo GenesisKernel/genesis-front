@@ -789,6 +789,10 @@ input[type="number"] {
     cursor: pointer;
 }
 
+.tree-expandButton {
+    top: 30%;
+}
+
 .tree-collapseButton::after,
 .tree-expandButton::after {
     content: '';
