@@ -76,31 +76,29 @@ class Offline extends React.Component<IOfflineProps, IOfflineState> {
     render() {
         return (
             <General>
-                <div className="abs-center">
-                    <div className="text-center mv-lg">
-                        <h1 className="mb-lg">
-                            <sup>
-                                <em className="fa fa-cog fa-2x text-muted fa-spin text-info" />
-                            </sup>
-                            <em className="fa fa-cog fa-5x text-muted fa-spin text-purple" />
-                            <em className="fa fa-cog fa-lg text-muted fa-spin text-success" />
-                        </h1>
-                        <div className="text-bold text-lg mb-lg">
-                            <FormattedMessage id="general.service.offline" defaultMessage="Service offline" />
-                        </div>
-                        <p className="lead">
-                            {this.props.isConnecting && (
-                                <FormattedMessage id="general.service.connecting" defaultMessage="Connecting..." />
-                            )}
-                            {!this.props.isConnecting && (
-                                <FormattedMessage id="general.service.connecting.retry.in" defaultMessage="Retrying in {seconds} sec" values={{ seconds: this.state.seconds }} />
-                            )}
-                        </p>
-                        <div>
-                            <Button bsStyle="link" onClick={this.props.isConnecting ? null : this.props.checkOnline.bind(this)}>
-                                <FormattedMessage id="general.service.retry" defaultMessage="Retry now" />
-                            </Button>
-                        </div>
+                <div className="text-center mv-lg">
+                    <h1 className="mb-lg">
+                        <sup>
+                            <em className="fa fa-cog fa-2x text-muted fa-spin text-info" />
+                        </sup>
+                        <em className="fa fa-cog fa-5x text-muted fa-spin text-purple" />
+                        <em className="fa fa-cog fa-lg text-muted fa-spin text-success" />
+                    </h1>
+                    <div className="text-bold text-lg mb-lg">
+                        <FormattedMessage id="general.service.offline" defaultMessage="Service offline" />
+                    </div>
+                    <p className="lead">
+                        {this.props.isConnecting && (
+                            <FormattedMessage id="general.service.connecting" defaultMessage="Connecting..." />
+                        )}
+                        {!this.props.isConnecting && (
+                            <FormattedMessage id="general.service.connecting.retry.in" defaultMessage="Retrying in {seconds} sec" values={{ seconds: this.state.seconds }} />
+                        )}
+                    </p>
+                    <div>
+                        <Button bsStyle="link" onClick={this.props.isConnecting ? null : this.props.checkOnline.bind(this)}>
+                            <FormattedMessage id="general.service.retry" defaultMessage="Retry now" />
+                        </Button>
                     </div>
                 </div>
             </General>

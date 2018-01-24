@@ -19,7 +19,6 @@ import * as React from 'react';
 import Validation from 'components/Validation';
 import * as classnames from 'classnames';
 import TagWrapper from '../components/TagWrapper';
-import DnDComponent from './DnDComponent';
 
 export interface IInputProps {
     'format'?: string;
@@ -127,4 +126,4 @@ const ImageInput: React.SFC<IInputProps> = (props) => {
     );
 };
 
-export default DnDComponent(ImageInput);
+export default ImageInput;

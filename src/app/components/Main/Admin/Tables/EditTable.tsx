@@ -48,7 +48,11 @@ class EditTable extends React.Component<IEditTableProps> {
             Permissions: JSON.stringify({
                 insert: values.insert,
                 update: values.update,
-                new_column: values.newColumn
+                new_column: values.newColumn,
+                ...(this.props.vde && {
+                    read: values.read,
+                    filter: values.filter
+                })
             })
         };
     }
@@ -148,7 +152,7 @@ class EditTable extends React.Component<IEditTableProps> {
                                 <Row>
                                     <Col md={6}>
                                         <Panel
-                                            header={<FormattedMessage id="admin.tables.permissions" defaultMessage="Permissions" />}
+                                            header={<FormattedMessage id="admin.tables.permissions.write" defaultMessage="Write permissions" />}
                                             footer={<div className="text-right"><Button type="submit" bsStyle="primary"><FormattedMessage id="admin.tables.save" defaultMessage="Save" /></Button></div>}
                                         >
                                             <Validation.components.ValidatedFormGroup for="insert">
@@ -172,6 +176,22 @@ class EditTable extends React.Component<IEditTableProps> {
                                         </Panel>
                                     </Col>
                                     <Col md={6}>
+                                        {this.props.vde && (
+                                            <Panel header={<FormattedMessage id="admin.tables.permissions.read" defaultMessage="Read permissions" />}>
+                                                <Validation.components.ValidatedFormGroup for="read">
+                                                    <label>
+                                                        <FormattedMessage id="admin.tables.permissions.read" defaultMessage="Read" />
+                                                    </label>
+                                                    <Validation.components.ValidatedControl type="text" name="read" defaultValue={this.props.table.read} />
+                                                </Validation.components.ValidatedFormGroup>
+                                                <Validation.components.ValidatedFormGroup for="filter">
+                                                    <label>
+                                                        <FormattedMessage id="admin.tables.permissions.filter" defaultMessage="Filter" />
+                                                    </label>
+                                                    <Validation.components.ValidatedControl type="text" name="filter" defaultValue={this.props.table.filter} />
+                                                </Validation.components.ValidatedFormGroup>
+                                            </Panel>
+                                        )}
                                         <Panel
                                             header={<FormattedMessage id="admin.tables.permissions.conditions" defaultMessage="Conditions for changing permissions" />}
                                         >

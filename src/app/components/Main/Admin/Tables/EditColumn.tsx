@@ -32,25 +32,41 @@ export interface IEditColumnProps {
 }
 
 interface IEditColumnState {
-    permissions: string;
+    readPermissions: string;
+    updatePermissions: string;
 }
 
 export default class EditColumn extends React.Component<IEditColumnProps, IEditColumnState> {
     constructor(props: IEditColumnProps) {
         super(props);
         this.state = props.column ?
-            {
-                permissions: props.column.permissions
-            } : {
-                permissions: ''
-            };
+            this.mapColumnPermissions(props.column.permissions) :
+            this.mapColumnPermissions('');
     }
 
     componentWillReceiveProps(props: IEditColumnProps) {
         if (!this.props.column && props.column) {
-            this.setState({
-                permissions: props.column.permissions
-            });
+            this.setState(this.mapColumnPermissions(props.column.permissions));
+        }
+    }
+
+    mapColumnPermissions(plain: string) {
+        try {
+            const json = JSON.parse(plain);
+            if ('object' !== typeof json) {
+                throw 'E_OLD_CONDITIONS';
+            }
+
+            return {
+                updatePermissions: json.update,
+                readPermissions: json.read
+            };
+        }
+        catch {
+            return {
+                updatePermissions: plain,
+                readPermissions: null
+            };
         }
     }
 
@@ -58,13 +74,22 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
         return {
             TableName: this.props.table.name,
             Name: this.props.column.name,
-            Permissions: this.state.permissions
+            Permissions: this.props.vde ? JSON.stringify({
+                ...(this.state.updatePermissions && { update: this.state.updatePermissions }),
+                ...(this.state.readPermissions && { read: this.state.readPermissions })
+            }) : this.state.updatePermissions
         };
     }
 
-    onPermissionsChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    onReadPermissionsChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
         this.setState({
-            permissions: e.target.value
+            readPermissions: e.target.value
+        });
+    }
+
+    onUpdatePermissionsChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+        this.setState({
+            updatePermissions: e.target.value
         });
     }
 
@@ -126,11 +151,19 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
                                             )}
                                         </p>
                                     </div>
-                                    <Validation.components.ValidatedFormGroup for="permissions" className="mb0">
-                                        <label htmlFor="permissions">
-                                            <FormattedMessage id="admin.tables.permissions" defaultMessage="Permissions" />
+                                    {this.props.vde && (
+                                        <Validation.components.ValidatedFormGroup for="readperm">
+                                            <label htmlFor="readperm">
+                                                <FormattedMessage id="admin.tables.permissions.read" defaultMessage="Read permissions" />
+                                            </label>
+                                            <Validation.components.ValidatedTextarea name="readperm" value={this.state.readPermissions} onChange={this.onReadPermissionsChange.bind(this)} />
+                                        </Validation.components.ValidatedFormGroup>
+                                    )}
+                                    <Validation.components.ValidatedFormGroup for="updateperm" className="mb0">
+                                        <label htmlFor="updateperm">
+                                            <FormattedMessage id="admin.tables.permissions.update" defaultMessage="Update permissions" />
                                         </label>
-                                        <Validation.components.ValidatedTextarea name="permissions" validators={[Validation.validators.required]} value={this.state.permissions} onChange={this.onPermissionsChange.bind(this)} />
+                                        <Validation.components.ValidatedTextarea name="updateperm" validators={[Validation.validators.required]} value={this.state.updatePermissions} onChange={this.onUpdatePermissionsChange.bind(this)} />
                                     </Validation.components.ValidatedFormGroup>
                                 </div>
                                 <div className="panel-footer">

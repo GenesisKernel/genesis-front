@@ -106,7 +106,7 @@ const store = platform.select({
     desktop: () => {
         const Electron = require('electron');
         const storedState = Electron.ipcRenderer.sendSync('getState');
-        const storeInstance = Object.keys(storedState).length ? configureStore(storedState) : configureStore();
+        const storeInstance = (storedState && Object.keys(storedState).length) ? configureStore(storedState) : configureStore();
 
         storeInstance.subscribe(() => {
             const state = storeInstance.getState();

@@ -16,7 +16,7 @@
 
 import * as React from 'react';
 import { Form, FormProps } from 'react-bootstrap';
-import { IValidator } from './Validators';
+import { Validator } from './Validators';
 import * as propTypes from 'prop-types';
 
 export interface IValidatedFormProps extends FormProps {
@@ -37,19 +37,19 @@ export interface IValidatedFormState {
 export interface IValidationResult {
     name: string;
     error: boolean;
-    validator?: IValidator;
+    validator?: Validator;
     value?: any;
 }
 
 export interface IValidatedControl {
     getValue: () => any;
-    props: { validators?: IValidator[] };
+    props: { validators?: Validator[] };
 }
 
 interface IValidationElement {
     name: string;
     node: React.ReactNode & IValidatedControl;
-    validators: IValidator[];
+    validators: Validator[];
 }
 
 export default class ValidatedForm extends React.Component<IValidatedFormProps, IValidatedFormState> {

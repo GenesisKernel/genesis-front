@@ -19,6 +19,7 @@ import { resolveHandler, resolveFunction } from 'components/Protypo';
 import * as propTypes from 'prop-types';
 import api from 'lib/api';
 import contextDefinitions from './contexts';
+import DnDComponent from './handlers/DnDComponent';
 
 import Heading from 'components/Heading';
 import { IValidationResult } from 'components/Validation/ValidatedForm';
@@ -144,9 +145,12 @@ class Protypo extends React.Component<IProtypoProps> {
                 return element.text;
 
             default:
-                const Handler = resolveHandler(element.tag);
+                let Handler = resolveHandler(element.tag);
                 const func = resolveFunction(element.tag);
                 if (Handler) {
+                    if (this.props.editable) {
+                        Handler = DnDComponent(Handler);
+                    }
                     const selected = this.props.selectedTag && this.props.selectedTag.id === element.id;
 
                     if (-1 !== contextDefinitions[this.props.context].disabledHandlers.indexOf(element.tag)) {

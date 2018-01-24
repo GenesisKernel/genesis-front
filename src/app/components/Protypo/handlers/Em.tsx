@@ -17,7 +17,6 @@
 import * as React from 'react';
 import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
-import DnDComponent from './DnDComponent';
 import TagWrapper from '../components/TagWrapper';
 import * as classnames from 'classnames';
 
@@ -116,4 +115,4 @@ class Em extends React.Component<IEmProps, IEmState> {
     }
 }
 
-export default DnDComponent(StyledComponent(Em));
+export default StyledComponent(Em);
