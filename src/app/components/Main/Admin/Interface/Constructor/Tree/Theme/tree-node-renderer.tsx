@@ -1,6 +1,20 @@
+// Copyright 2017 The apla-front Authors
+// This file is part of the apla-front library.
+//
+// The apla-front library is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// The apla-front library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
+
 import React, { Children, cloneElement } from 'react';
-// import PropTypes from 'prop-types';
-// import styles from './tree-node-renderer.scss';
 import * as classnames from 'classnames';
 
 interface IFileThemeTreeNodeRendererProps {
@@ -67,39 +81,5 @@ class FileThemeTreeNodeRenderer extends React.Component<IFileThemeTreeNodeRender
     );
   }
 }
-
-// FileThemeTreeNodeRenderer.defaultProps = {
-//   swapFrom: null,
-//   swapDepth: null,
-//   swapLength: null,
-//   canDrop: false,
-//   draggedNode: null,
-// };
-
-// FileThemeTreeNodeRenderer.propTypes = {
-//   treeIndex: PropTypes.number.isRequired,
-//   treeId: PropTypes.string.isRequired,
-//   swapFrom: PropTypes.number,
-//   swapDepth: PropTypes.number,
-//   swapLength: PropTypes.number,
-//   scaffoldBlockPxWidth: PropTypes.number.isRequired,
-//   lowerSiblingCounts: PropTypes.arrayOf(PropTypes.number).isRequired,
-//
-//   listIndex: PropTypes.number.isRequired,
-//   children: PropTypes.node.isRequired,
-//
-//   // Drop target
-//   connectDropTarget: PropTypes.func.isRequired,
-//   isOver: PropTypes.bool.isRequired,
-//   canDrop: PropTypes.bool,
-//   draggedNode: PropTypes.shape({}),
-//
-//   // used in dndManager
-//   getPrevRow: PropTypes.func.isRequired,
-//   node: PropTypes.shape({}).isRequired,
-//   path: PropTypes.arrayOf(
-//     PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-//   ).isRequired,
-// };
 
 export default FileThemeTreeNodeRenderer;
