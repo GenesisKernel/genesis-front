@@ -46,9 +46,9 @@ export const socketConnectEpic: Epic<Action, IRootState> =
                             result: centrifuge
                         }));
 
-                        observer.next(actions.watchNotifications({
-                            accounts: _.uniqBy(state.storage.accounts, 'id')
-                        }));
+                        _.uniqBy(state.storage.accounts, 'id').forEach(account =>
+                            observer.next(actions.subscribe.started({ account }))
+                        );
 
                         observer.complete();
                     });
@@ -72,16 +72,28 @@ export const socketConnectEpic: Epic<Action, IRootState> =
             }
         });
 
-export const watchNotificationsEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(actions.watchNotifications)
+export const subscribeEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.subscribe.started)
         .flatMap(action => {
             const state = store.getState();
-            const watchers = action.payload.accounts.map(account =>
-                Observable.create((observer: Observer<Action>) => {
-                    state.socket.socket.subscribe('client#' + account.id, (message: { data: { role_id: number, ecosystem: number, count: number }[] }) => {
+            if (state.socket.subscriptions.find(l => l.account.id === action.payload.account.id)) {
+                return Observable.of(actions.subscribe.failed({
+                    params: action.payload,
+                    error: 'E_ALREADY_SUBSCRIBED'
+                }));
+            }
+            else if (!state.socket.socket) {
+                return Observable.of(actions.subscribe.failed({
+                    params: action.payload,
+                    error: 'E_SOCKET_OFFLINE'
+                }));
+            }
+            else {
+                return Observable.create((observer: Observer<Action>) => {
+                    const sub = state.socket.socket.subscribe('client#' + action.payload.account.id, (message: { data: { role_id: number, ecosystem: number, count: number }[] }) => {
                         message.data.forEach(n =>
                             observer.next(actions.setNotificationsCount({
-                                id: account.id,
+                                id: action.payload.account.id,
                                 ecosystem: n.ecosystem.toString(),
                                 role: n.role_id,
                                 count: n.count
@@ -89,20 +101,43 @@ export const watchNotificationsEpic: Epic<Action, IRootState> =
                         );
                     });
 
-                    observer.next(
-                        actions.getNotificationsCount({
-                            ids: action.payload.accounts.map(l => ({
-                                id: l.id,
-                                ecosystem: l.ecosystem
-                            }))
-                        })
-                    );
-                }) as Observable<Action>
-            );
+                    sub.on('subscribe', () => {
+                        observer.next(
+                            actions.getNotificationsCount({
+                                ids: [{
+                                    id: action.payload.account.id,
+                                    ecosystem: action.payload.account.ecosystem
+                                }]
+                            })
+                        );
+                    });
 
-            return Observable.concat(watchers);
-        })
-        .flatMap(actions$ => actions$);
+                    observer.next(actions.subscribe.done({
+                        params: action.payload,
+                        result: sub
+                    }));
+                });
+            }
+        });
+
+export const unsubscribeEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.unsubscribe.started)
+        .map(action => {
+            const sub = store.getState().socket.subscriptions.find(l => l.account.id === action.payload.account.id);
+            if (sub) {
+                sub.instance.unsubscribe();
+                return actions.unsubscribe.done({
+                    params: action.payload,
+                    result: null
+                });
+            }
+            else {
+                return actions.unsubscribe.failed({
+                    params: action.payload,
+                    error: null
+                });
+            }
+        });
 
 export const getNotificationsCountEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getNotificationsCount)
@@ -113,6 +148,7 @@ export const getNotificationsCountEpic: Epic<Action, IRootState> =
 
 export default combineEpics(
     socketConnectEpic,
-    watchNotificationsEpic,
+    subscribeEpic,
+    unsubscribeEpic,
     getNotificationsCountEpic
 );

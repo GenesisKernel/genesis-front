@@ -17,15 +17,23 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import * as actions from './actions';
 import { INotificationsMessage } from 'apla/socket';
+import { IStoredAccount } from 'apla/storage';
 
 export type State = {
-    socket: any;
-    notifications: INotificationsMessage[];
+    readonly socket: any;
+    readonly notifications: INotificationsMessage[];
+    readonly subscriptions: {
+        account: IStoredAccount;
+        instance: {
+            unsubscribe: () => void;
+        };
+    }[];
 };
 
 export const initialState: State = {
     socket: null,
-    notifications: []
+    notifications: [],
+    subscriptions: []
 };
 
 export default reducerWithInitialState<State>(initialState)
@@ -35,7 +43,7 @@ export default reducerWithInitialState<State>(initialState)
         socket: payload.result
     }))
 
-    // SetNotificationsCoun
+    // SetNotificationsCount
     .case(actions.setNotificationsCount, (state, payload) => ({
         ...state,
         notifications: [
@@ -46,4 +54,22 @@ export default reducerWithInitialState<State>(initialState)
             ),
             payload
         ]
+    }))
+
+    // Subscribe
+    .case(actions.subscribe.done, (state, payload) => ({
+        ...state,
+        subscriptions: [
+            ...state.subscriptions,
+            {
+                account: payload.params.account,
+                instance: payload.result
+            }
+        ]
+    }))
+
+    // Unsubscribe
+    .case(actions.unsubscribe.done, (state, payload) => ({
+        ...state,
+        subscriptions: state.subscriptions.filter(l => l.account.id !== payload.params.account.id)
     }));

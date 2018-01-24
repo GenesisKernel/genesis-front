@@ -48,6 +48,7 @@ export const rootEpic = combineEpics(
     engine.epic,
     tx.epic,
     gui.epic,
+    storage.epic,
     socket.epic
 );
 
