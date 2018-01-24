@@ -585,8 +585,8 @@ input[type="number"] {
     /*transform: translateY(-5px);*/
 }
 
-[class^="apla-icon-"]:before, [class*=" apla-icon-"]:before {
-    font-family: "Apla Icons";
+[class^="site-icon-"]:before, [class*=" site-icon-"]:before {
+    font-family: "Site Icons";
     font-style: normal;
     font-weight: normal;
     speak: none;
@@ -620,14 +620,12 @@ input[type="number"] {
     /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
-.apla-icon_big {
+.site-icon_big {
     font-size: 120%;
 }
 
-
-
-.apla-icon-undo:before { content: '\e800'; } /* 'о Ђ' */
-.apla-icon-redo:before { content: '\e801'; } /* 'о Ѓ' */
+.site-icon-undo:before { content: '\e800'; } /* 'о Ђ' */
+.site-icon-redo:before { content: '\e801'; } /* 'о Ѓ' */
 
 .btn-container, .btn-container:hover, .btn-container:active {
     background: transparent;

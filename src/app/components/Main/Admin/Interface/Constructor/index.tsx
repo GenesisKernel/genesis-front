@@ -186,13 +186,13 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                                 className={this.props.canUndo ? 'btn-container btn-container_active' : 'btn-container btn-container_disabled'}
                                 onClick={this.props.undo}
                             >
-                                <i className="apla-icon-undo apla-icon_big"/>
+                                <i className="site-icon-undo site-icon_big"/>
                             </button>
                             <button
                                 className={this.props.canRedo ? 'btn-container btn-container_active' : 'btn-container btn-container_disabled'}
                                 onClick={this.props.redo}
                             >
-                                <i className="apla-icon-redo apla-icon_big"/>
+                                <i className="site-icon-redo site-icon_big"/>
                             </button>
                         </div>
                         <div className="b-instrument-panel__inner pull-right">

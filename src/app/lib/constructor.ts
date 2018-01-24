@@ -446,7 +446,7 @@ class Image extends Tag {
             id: generateId(),
             attr: {
                 alt: 'Image',
-                src: 'http://apla.readthedocs.io/en/latest/_images/logo.png'
+                src: 'https://i0.wp.com/richtopia.com/wp-content/uploads/2016/12/Women-Business-CEOs-Executives-in-the-Workplace-Statistics-Infographic-female-entrepreneurs.jpg?fit=990%2C606&ssl=1'
             }
         };
     }
