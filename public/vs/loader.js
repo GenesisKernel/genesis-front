@@ -25,7 +25,7 @@ var AMDLoader;
 (function (AMDLoader) {
     AMDLoader.global = _amdLoaderGlobal;
 
-    // [apla-front:saurer] We don't use node, nor electron-specific loading, so
+    // [genesis-front:saurer] We don't use node, nor electron-specific loading, so
     // these lines are only causing false-positives
     // AMDLoader.isNode = (typeof module !== 'undefined' && !!module.exports);
     // AMDLoader.isElectronRenderer = (typeof process !== 'undefined' && typeof process.versions !== 'undefined' && typeof process.versions.electron !== 'undefined' && process.type === 'renderer');

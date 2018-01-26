@@ -1,6 +1,6 @@
 {
-    "productName": "Apla",
-    "appId": "io.apla.molis",
+    "productName": "Genesis",
+    "appId": "space.genesis.molis",
     "files": [
         "app/",
         "electron/"

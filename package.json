@@ -1,8 +1,8 @@
 {
-    "name": "apla",
+    "name": "genesis-front",
     "version": "0.3.5",
     "author": {
-        "name": "apla-front"
+        "name": "genesis-front"
     },
     "license": "LGPLv3",
     "repository": {
@@ -69,13 +69,13 @@
         "build-css": "node-sass-chokidar --include-path ./src/app/styles/scss --include-path ./node_modules src/app/styles/scss/sass.scss -o src/app/styles/built",
         "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src/app/styles/scss --include-path ./node_modules src/app/styles/scss/sass.scss -o src/app/styles/built --watch --recursive",
         "start-js": "react-scripts-ts start",
-        "start": "npm-run-all -p watch-css start-js",
-        "build": "npm run build-css && react-scripts-ts build",
+        "start": "cross-env REACT_APP_VERSION=$npm_package_version npm-run-all -p watch-css start-js",
+        "build": "npm run build-css && cross-env REACT_APP_VERSION=$npm_package_version react-scripts-ts build",
         "test": "react-scripts-ts test --env=jsdom",
         "eject": "react-scripts-ts eject",
-        "start-desktop": "npm-run-all -p watch-css start-js-desktop",
+        "start-desktop": "cross-env REACT_APP_VERSION=$npm_package_version npm-run-all -p watch-css start-js-desktop",
         "start-js-desktop": "react-scripts-ts-electron start",
-        "build-desktop": "npm run build-css && PUBLIC_URL=./ react-scripts-ts-electron build",
+        "build-desktop": "npm run build-css && cross-env PUBLIC_URL=./ REACT_APP_VERSION=$npm_package_version react-scripts-ts-electron build",
         "package": "electron-builder --config electron-builder.json --dir",
         "release": "electron-builder --config electron-builder.json"
     },
@@ -112,6 +112,7 @@
         "@types/rx": "^4.1.1",
         "@types/sockjs-client": "^1.0.32",
         "@types/uuid": "^3.4.3",
+        "cross-env": "^5.1.3",
         "electron": "^1.7.9",
         "electron-builder": "^19.48.2",
         "node-sass-chokidar": "^0.0.3",
