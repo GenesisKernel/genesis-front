@@ -235,7 +235,7 @@ export default (state: State = initialState, action: Action): State => {
 
         let tag = findTagById(pageTree, action.payload.tagID).el;
         if (tag) {
-            if (action.payload.text) {
+            if (typeof (action.payload.text) !== 'undefined') {
                 // todo: parse contentEditable tags and create children array
 
                 const regex = /(<[^\/>]+>[^<]*<\/[^>]+>)/ig; // remove tags
@@ -321,7 +321,7 @@ export default (state: State = initialState, action: Action): State => {
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                         type: 'interfaceConstructor',
                         data: pageTree,
-                        treeData: convertToTreeData(pageTree, null, action.payload.tag),
+                        treeData: convertToTreeData(pageTree, action.payload.tag),
                         selectedTag: action.payload.tag
                     }
                 }

@@ -100,21 +100,33 @@ export function OnPasteStripFormatting(elem: any, e: any) {
     }
 }
 
-export function convertToTreeData(data: any, parent?: any, selectedTag?: any): any {
+export function convertToTreeData(data: any, selectedTag?: any): any {
     let result = [];
     if (data instanceof Array) {
         for (const item of data) {
             let children = null;
             let subtitle = item.text;
             if (item.children) {
-                if (item.children.length === 1 && item.children[0] && item.children[0].tag === 'text') {
+                // if (item.children.length === 1 && item.children[0] && item.children[0].tag === 'text') {
+                //     subtitle = _.truncate(item.children[0].text, {
+                //         'length': 24,
+                //         'separator': /,? +/
+                //     });
+                // }
+                // else {
+                //     children = convertToTreeData(item.children, item, selectedTag);
+                // }
+                if (item.children.length && item.children[0] && item.children[0].tag === 'text') {
                     subtitle = _.truncate(item.children[0].text, {
                         'length': 24,
                         'separator': /,? +/
                     });
+                    if (item.children.length > 1) {
+                        children = convertToTreeData([...item.children.slice(1)], selectedTag);
+                    }
                 }
                 else {
-                    children = convertToTreeData(item.children, item, selectedTag);
+                    children = convertToTreeData(item.children, selectedTag);
                 }
             }
 
@@ -124,14 +136,14 @@ export function convertToTreeData(data: any, parent?: any, selectedTag?: any): a
             }
 
             let treeItem = {
-                title: ((item.tag !== 'text') ? item.tag : '') + ' ' + (subtitle ? subtitle : ''),
+                // title: ((item.tag !== 'text') ? item.tag : '') + ' ' + (subtitle ? subtitle : ''),
+                title: item.tag  + (subtitle ? (': ' + subtitle) : ''),
                 // subtitle: subtitle,
                 children: children,
                 expanded: true,
                 id: item.id,
                 selected: selected,
-                tag: item,
-                parentTag: parent
+                tag: item
             };
             result.push(treeItem);
         }

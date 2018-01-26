@@ -133,8 +133,19 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                         <Tree
                             treeData={this.state.treeData}
                             onChange={(treeData: any) => { this.setState({treeData}); }}
+                            onMoveNode={(args) => {
+
+                                alert(JSON.stringify(args.node));
+                                alert(JSON.stringify(args.treeData));
+                                // alert(JSON.stringify(args['nextTreeIndex']));
+                                // this.props.moveTag({
+                                //    tag: args.node.tag,
+                                //    destinationTagID: props.tag.id,
+                                //    position: getDropPosition(monitor, component, props.tag)
+                                // });
+                            }}
                             scaffoldBlockPxWidth={10}
-                            canDrag={(node: any) => { return false; }}
+                            canDrag={(node: any) => { return true; }}
                             innerStyle={{padding: '15px 0', backgroundColor: '#465669', color: '#FFFFFF' }}
                             theme={TreeTheme}
                             generateNodeProps={({ node, path }) => ({
@@ -142,11 +153,7 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                                     <span
                                         onClick={
                                             () => {
-                                                let tag = node.tag;
-                                                if (node.tag.tag === 'text' && node.parentTag) {
-                                                    tag = node.parentTag;
-                                                }
-                                                this.props.selectTag({ tag: tag });
+                                                this.props.selectTag({ tag: node.tag });
                                             }
                                         }
                                     >
@@ -156,7 +163,7 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                                 buttons: [
                                     <button
                                         key={node.tag.id}
-                                        className='tree-button-remove'
+                                        className="tree-button-remove"
                                         onClick={
                                             () => {
                                                 this.props.removeTag({ tag: node.tag });
