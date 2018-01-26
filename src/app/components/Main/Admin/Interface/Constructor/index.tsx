@@ -28,8 +28,8 @@ import Properties from './Properties';
 import Switch from './Switch';
 import Tree from './Tree';
 
-// import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
 import TreeTheme from './Tree/Theme';
+// import nodeContentRenderer from './Tree/Theme/node-content-renderer';
 
 import imgGrid from 'images/constructor/grid.png';
 
@@ -134,7 +134,26 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                             treeData={this.state.treeData}
                             onChange={(treeData: any) => { this.setState({treeData}); }}
                             scaffoldBlockPxWidth={15}
+                            canDrag={(node: any) => { return false; }}
+                            innerStyle={{padding: '10px 0', backgroundColor: '#465669', color: '#FFFFFF' }}
                             theme={TreeTheme}
+                            generateNodeProps={({ node, path }) => ({
+                                title:  (
+                                    <span
+                                        onClick={
+                                            () => {
+                                                let tag = node.tag;
+                                                if (node.tag.tag === 'text' && node.parentTag) {
+                                                    tag = node.parentTag;
+                                                }
+                                                this.props.selectTag({ tag: tag });
+                                            }
+                                        }
+                                    >
+                                        {node.title}
+                                    </span>
+                                )
+                            })}
                         />
                     </div>
 

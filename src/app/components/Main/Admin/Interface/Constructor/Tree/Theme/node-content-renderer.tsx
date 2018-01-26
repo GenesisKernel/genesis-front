@@ -29,6 +29,7 @@ function isDescendant(older: any, younger: any) {
 interface IFileThemeNodeContentRendererProps {
     scaffoldBlockPxWidth: any;
     toggleChildrenVisibility: any;
+    onSelect?: any;
     connectDragPreview: any;
     connectDragSource: any;
     isDragging: any;
@@ -62,6 +63,7 @@ class FileThemeNodeContentRenderer extends React.Component<IFileThemeNodeContent
         const {
             scaffoldBlockPxWidth,
             toggleChildrenVisibility = null,
+            onSelect = null,
             connectDragPreview,
             connectDragSource,
             isDragging,

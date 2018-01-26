@@ -15,17 +15,46 @@
 // along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+// import PropTypes from 'prop-types';
 import { SortableTreeWithoutDndContext as SortableTree, ReactSortableTreeProps } from 'react-sortable-tree';
 
-export interface IMySortableTreeProps extends ReactSortableTreeProps {
-    theme: any;
+interface IMySortableTreeProps extends ReactSortableTreeProps {
+    theme?: any;
+    // onSelect: any;
 }
 
-const MySortableTree: React.SFC<IMySortableTreeProps> = props => (
+const SortableTree2: React.SFC<IMySortableTreeProps> = props => (
     <SortableTree
         {...props}
-        innerStyle={{padding: '10px 0', backgroundColor: '#465669', color: '#FFFFFF' }}
     />
 );
 
-export default MySortableTree;
+// interface IMySortableTreeProps {
+//     theme: any;
+//     // onSelect: any;
+// }
+
+// SortableTree.propTypes = {
+//     ...SortableTree.propTypes,
+//     onSelect: PropTypes.func
+// };
+
+export default SortableTree2;
+
+// export class MySortableTree extends SortableTree2<ReactSortableTreeProps> {
+//     constructor(props: any) {
+//         super(props);
+//         alert(1);
+//     }
+//     // render() {
+//     //     return (<span>tree</span>);
+//     // }
+// }
+
+// export default SortableTree2;
+
+// type TComponentConstructor<T> = React.ComponentClass<T & IMySortableTreeProps> | React.SFC<T & IMySortableTreeProps>;
+//
+// export default function styledComponent<T>(Component: TComponentConstructor<T & IMySortableTreeProps>) {
+//     return styled(Component) `${props => props.style}`;
+// }

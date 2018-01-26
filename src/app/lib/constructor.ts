@@ -100,7 +100,7 @@ export function OnPasteStripFormatting(elem: any, e: any) {
     }
 }
 
-export function convertToTreeData(data: any, selectedTag?: any): any {
+export function convertToTreeData(data: any, parent?: any, selectedTag?: any): any {
     let result = [];
     if (data instanceof Array) {
         for (const item of data) {
@@ -114,7 +114,7 @@ export function convertToTreeData(data: any, selectedTag?: any): any {
                     });
                 }
                 else {
-                    children = convertToTreeData(item.children, selectedTag);
+                    children = convertToTreeData(item.children, item, selectedTag);
                 }
             }
 
@@ -124,16 +124,17 @@ export function convertToTreeData(data: any, selectedTag?: any): any {
             }
 
             let treeItem = {
-                title: (item.tag !== 'text') ? item.tag : '',
-                subtitle: subtitle,
+                title: ((item.tag !== 'text') ? item.tag : '') + ' ' + (subtitle ? subtitle : ''),
+                // subtitle: subtitle,
                 children: children,
                 expanded: true,
                 id: item.id,
-                selected: selected
+                selected: selected,
+                tag: item,
+                parentTag: parent
             };
             result.push(treeItem);
         }
-
     }
     return result;
 }

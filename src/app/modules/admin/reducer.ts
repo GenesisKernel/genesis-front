@@ -321,7 +321,7 @@ export default (state: State = initialState, action: Action): State => {
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                         type: 'interfaceConstructor',
                         data: pageTree,
-                        treeData: convertToTreeData(pageTree, action.payload.tag),
+                        treeData: convertToTreeData(pageTree, null, action.payload.tag),
                         selectedTag: action.payload.tag
                     }
                 }
