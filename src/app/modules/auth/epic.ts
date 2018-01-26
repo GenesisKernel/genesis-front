@@ -108,10 +108,10 @@ export const selectAccountEpic: Epic<Action, IRootState> =
         .flatMap(action => {
             const promise = api.refresh(action.payload.account.sessionToken, action.payload.account.refreshToken)
                 .then(tokens =>
-                    api.row(tokens.token, 'member', action.payload.account.id, 'avatar,username')
+                    api.row(tokens.token, 'member', action.payload.account.id, 'avatar,member_name')
                         .then(memberResult => ({
                             avatar: memberResult.value.avatar,
-                            username: memberResult.value.username,
+                            username: memberResult.value.member_name,
                             ...tokens
                         }))
                 );
