@@ -37,10 +37,17 @@ export const initialState: State = {
 };
 
 export default reducerWithInitialState<State>(initialState)
-    // SocketConnect
+    // Connect
     .case(actions.connect.done, (state, payload) => ({
         ...state,
         socket: payload.result
+    }))
+
+    // Disconnect
+    .case(actions.disconnect.done, (state, payload) => ({
+        ...state,
+        socket: null,
+        subscriptions: []
     }))
 
     // SetNotificationsCount

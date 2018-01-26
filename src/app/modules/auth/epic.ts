@@ -29,6 +29,7 @@ import * as contentActions from 'modules/content/actions';
 import { readTextFile } from 'lib/fs';
 import keyring from 'lib/keyring';
 import { IStoredAccount } from 'genesis/storage';
+import { connect } from 'modules/socket/actions';
 
 export const loginEpic = (actions$: Observable<Action>) =>
     actions$.filter(actions.login.started.match)
@@ -77,6 +78,11 @@ export const loginEpic = (actions$: Observable<Action>) =>
                                 publicKey,
                                 account
                             }
+                        }),
+                        connect.started({
+                            socketToken: payload.notify_key,
+                            timestamp: payload.timestamp,
+                            userID: payload.key_id
                         }),
                         guiActions.switchWindow.started({
                             window: 'main'

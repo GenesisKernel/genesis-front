@@ -25,28 +25,28 @@ import * as Centrifuge from 'centrifuge';
 import * as SockJS from 'sockjs-client';
 import { Observer } from 'rxjs';
 
-export const socketConnectEpic: Epic<Action, IRootState> =
+export const connectEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.connect.started)
         .flatMap(action => {
             if (action.payload.userID && action.payload.timestamp && action.payload.socketToken) {
-                const centrifuge = new Centrifuge({
-                    url: socketUrl,
-                    user: action.payload.userID,
-                    timestamp: action.payload.timestamp,
-                    token: action.payload.socketToken,
-                    sockJS: SockJS
-                });
-
                 return Observable.create((observer: Observer<Action>) => {
-                    centrifuge.on('connect', (context: any) => {
-                        const state = store.getState();
+                    observer.next(actions.disconnect.started(null));
 
+                    const centrifuge = new Centrifuge({
+                        url: socketUrl,
+                        user: action.payload.userID,
+                        timestamp: action.payload.timestamp,
+                        token: action.payload.socketToken,
+                        sockJS: SockJS
+                    });
+
+                    centrifuge.on('connect', (context: any) => {
                         observer.next(actions.connect.done({
                             params: action.payload,
                             result: centrifuge
                         }));
 
-                        _.uniqBy(state.storage.accounts, 'id').forEach(account =>
+                        _.uniqBy(store.getState().storage.accounts, 'id').forEach(account =>
                             observer.next(actions.subscribe.started({ account }))
                         );
 
@@ -69,6 +69,26 @@ export const socketConnectEpic: Epic<Action, IRootState> =
                     params: action.payload,
                     error: null
                 }));
+            }
+        });
+
+export const disconnectEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.disconnect.started)
+        .map(action => {
+            const socket = store.getState().socket.socket;
+
+            if (socket) {
+                socket.disconnect();
+                return actions.disconnect.done({
+                    params: null,
+                    result: null
+                });
+            }
+            else {
+                return actions.disconnect.failed({
+                    params: null,
+                    error: null
+                });
             }
         });
 
@@ -147,7 +167,8 @@ export const getNotificationsCountEpic: Epic<Action, IRootState> =
         });
 
 export default combineEpics(
-    socketConnectEpic,
+    connectEpic,
+    disconnectEpic,
     subscribeEpic,
     unsubscribeEpic,
     getNotificationsCountEpic

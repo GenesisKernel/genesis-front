@@ -20,6 +20,7 @@ import { INotificationsMessage } from 'genesis/socket';
 
 const actionCreator = actionCreatorFactory('socket');
 export const connect = actionCreator.async<{ userID: string, socketToken: string, timestamp: string }, object, void>('CONNECT');
+export const disconnect = actionCreator.async('DISCONNECT');
 export const subscribe = actionCreator.async<{ account: IStoredAccount }, any, string>('SUBSCRIBE');
 export const unsubscribe = actionCreator.async<{ account: IStoredAccount }, void, void>('UNSUBSCRIBE');
 export const setNotificationsCount = actionCreator<INotificationsMessage>('SET_NOTIFICATIONS_COUNT');
