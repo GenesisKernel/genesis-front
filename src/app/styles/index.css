@@ -648,7 +648,7 @@ input[type="number"] {
 .tree-node {
     min-width: 100%;
     position: relative;
-    padding-left: 20px;
+    padding-left: 30px;
 }
 
 .tree-node.selected {
@@ -777,7 +777,7 @@ input[type="number"] {
     border: none;
     background: transparent;
     padding: 0;
-    padding-left: 30px;
+    padding-left: 55px;
     z-index: 2;
     position: absolute;
     top: 45%;
@@ -800,7 +800,8 @@ input[type="number"] {
     border: solid transparent 7px;
     border-left-width: 5px;
     border-right-width: 5px;
-    border-top-color: #8399b0;
+    /* border-top-color: #8399b0; */
+    border-top-color: #FFF;
 }
 
 .tree-collapseButton:hover::after,
@@ -823,6 +824,14 @@ input[type="number"] {
 .tree-lineChildren {
     height: 100%;
     display: inline-block;
+}
+
+.tree-button-remove {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 20px;
+    line-height: 23px;
 }
 
 /* ==========================================================================

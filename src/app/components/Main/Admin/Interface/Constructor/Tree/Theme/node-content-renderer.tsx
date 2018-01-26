@@ -140,6 +140,17 @@ class FileThemeNodeContentRenderer extends React.Component<IFileThemeNodeContent
 
         const nodeContent = (
             <div style={{ height: '100%' }} {...otherProps}>
+                {node.selected && (
+                    <div style={{ position: 'absolute', left: '10px', zIndex: 100 }}>
+                        {buttons.map((btn: any, index: number) => (
+                            <div
+                                key={index}
+                            >
+                                {btn}
+                            </div>
+                        ))}
+                    </div>
+                )}
         {toggleChildrenVisibility &&
         node.children &&
         node.children.length > 0 && (
@@ -167,68 +178,70 @@ class FileThemeNodeContentRenderer extends React.Component<IFileThemeNodeContent
             (!canDrag ? ' tree-rowWrapperDragDisabled' : '')
     }
     >
+
         {/* Set the row preview to be used during drag and drop */}
         {connectDragPreview(
         <div style={{ display: 'flex' }}>
             {scaffold}
-        <div
-            className={
-                    'tree-row' +
-                (isLandingPadActive ? ' tree-rowLandingPad' : '') +
-                (isLandingPadActive && !canDrop
-                    ? ' tree-rowCancelPad'
-                    : '') +
-                (isSearchMatch ? ' tree-rowSearchMatch' : '') +
-                (isSearchFocus ? ' tree-rowSearchFocus' : '') +
-                (className ? ` ${className}` : '')
-        }
-            style={{
-            opacity: isDraggedDescendant ? 0.5 : 1,
-        ...style,
-        }}
-        >
-        <div
-            className={
-                    'tree-rowContents' +
-                (!canDrag ? ' tree-rowContentsDragDisabled' : '')
-        }
-        >
-        <div className="tree-rowToolbar">
-            {icons.map((icon: any, index: number) => (
             <div
-                key={index}
-                className="tree-toolbarButton"
+                className={
+                        'tree-row' +
+                    (isLandingPadActive ? ' tree-rowLandingPad' : '') +
+                    (isLandingPadActive && !canDrop
+                        ? ' tree-rowCancelPad'
+                        : '') +
+                    (isSearchMatch ? ' tree-rowSearchMatch' : '') +
+                    (isSearchFocus ? ' tree-rowSearchFocus' : '') +
+                    (className ? ` ${className}` : '')
+            }
+                style={{
+                opacity: isDraggedDescendant ? 0.5 : 1,
+            ...style,
+            }}
             >
-                {icon}
+                <div
+                    className={
+                            'tree-rowContents' +
+                        (!canDrag ? ' tree-rowContentsDragDisabled' : '')
+                }
+                >
+                    <div className="tree-rowToolbar">
+                        {icons.map((icon: any, index: number) => (
+                        <div
+                            key={index}
+                            className="tree-toolbarButton"
+                        >
+                            {icon}
+                        </div>
+                        ))}
+                    </div>
+                    <div className="tree-rowLabel">
+                        <span className="tree-rowTitle">
+                            {typeof nodeTitle === 'function'
+                                ? nodeTitle({
+                                node,
+                                path,
+                                treeIndex,
+                            })
+                                : nodeTitle}
+                        </span>
+                        <span className="tree-rowSubtitle">
+                            {nodeSubtitle}
+                        </span>
+                    </div>
+                    {/*<div className="tree-rowToolbar">
+                        {buttons.map((btn: any, index: number) => (
+                        <div
+                            key={index}
+                            className="tree-toolbarButton"
+                        >
+                            {btn}
+                        </div>
+                        ))}
+                    </div>
+                    */}
+                </div>
             </div>
-            ))}
-        </div>
-        <div className="tree-rowLabel">
-            <span className="tree-rowTitle">
-                {typeof nodeTitle === 'function'
-                    ? nodeTitle({
-                    node,
-                    path,
-                    treeIndex,
-                })
-                    : nodeTitle}
-            </span>
-            <span className="tree-rowSubtitle">
-                {nodeSubtitle}
-            </span>
-        </div>
-        <div className="tree-rowToolbar">
-            {buttons.map((btn: any, index: number) => (
-            <div
-                key={index}
-                className="tree-toolbarButton"
-            >
-                {btn}
-            </div>
-            ))}
-        </div>
-        </div>
-        </div>
         </div>
         )}
     </div>

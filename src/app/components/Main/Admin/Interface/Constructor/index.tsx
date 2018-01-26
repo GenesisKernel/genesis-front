@@ -133,9 +133,9 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                         <Tree
                             treeData={this.state.treeData}
                             onChange={(treeData: any) => { this.setState({treeData}); }}
-                            scaffoldBlockPxWidth={15}
+                            scaffoldBlockPxWidth={10}
                             canDrag={(node: any) => { return false; }}
-                            innerStyle={{padding: '10px 0', backgroundColor: '#465669', color: '#FFFFFF' }}
+                            innerStyle={{padding: '15px 0', backgroundColor: '#465669', color: '#FFFFFF' }}
                             theme={TreeTheme}
                             generateNodeProps={({ node, path }) => ({
                                 title:  (
@@ -152,7 +152,20 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                                     >
                                         {node.title}
                                     </span>
-                                )
+                                ),
+                                buttons: [
+                                    <button
+                                        key={node.tag.id}
+                                        className='tree-button-remove'
+                                        onClick={
+                                            () => {
+                                                this.props.removeTag({ tag: node.tag });
+                                            }
+                                        }
+                                    >
+                                        &times;
+                                    </button>
+                                ]
                             })}
                         />
                     </div>
