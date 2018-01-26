@@ -20,7 +20,7 @@ import { INotificationsMessage } from 'genesis/socket';
 import { IStoredAccount } from 'genesis/storage';
 
 export type State = {
-    readonly socket: any;
+    readonly socket: ICentrifuge;
     readonly notifications: INotificationsMessage[];
     readonly subscriptions: {
         account: IStoredAccount;

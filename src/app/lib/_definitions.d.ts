@@ -15,7 +15,6 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 declare module 'react-dom';
-declare module 'centrifuge';
 declare module 'jsrsasign';
 declare module 'react-router-transition';
 

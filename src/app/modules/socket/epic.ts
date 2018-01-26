@@ -40,7 +40,7 @@ export const connectEpic: Epic<Action, IRootState> =
                         sockJS: SockJS
                     });
 
-                    centrifuge.on('connect', (context: any) => {
+                    centrifuge.on('connect', context => {
                         observer.next(actions.connect.done({
                             params: action.payload,
                             result: centrifuge
@@ -53,10 +53,10 @@ export const connectEpic: Epic<Action, IRootState> =
                         observer.complete();
                     });
 
-                    centrifuge.on('error', (error: any) => {
+                    centrifuge.on('error', error => {
                         observer.next(actions.connect.failed({
                             params: action.payload,
-                            error: null
+                            error: error.message.error
                         }));
                         observer.complete();
                     });
@@ -110,7 +110,7 @@ export const subscribeEpic: Epic<Action, IRootState> =
             }
             else {
                 return Observable.create((observer: Observer<Action>) => {
-                    const sub = state.socket.socket.subscribe('client' + action.payload.account.id, (message: { data: { role_id: number, ecosystem: number, count: number }[] }) => {
+                    const sub = state.socket.socket.subscribe<{ role_id: number, ecosystem: number, count: number }[]>('client' + action.payload.account.id, message => {
                         message.data.forEach(n =>
                             observer.next(actions.setNotificationsCount({
                                 id: action.payload.account.id,
