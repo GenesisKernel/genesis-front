@@ -42,7 +42,7 @@ export const columnTypes = [
         title: 'Character'
     },
     {
-        name: 'jsonb',
+        name: 'json',
         title: 'JSON'
     },
     {
