@@ -41,7 +41,7 @@ const BackupContainer: React.SFC<IBackupProps> = (props) => (
 
 const mapStateToProps = (state: IRootState) => ({
     account: state.auth.account,
-    ecosystems: state.storage.accounts
+    ecosystems: state.auth.account && state.storage.accounts
         .filter(l => l.id === state.auth.account.id && '1' !== l.ecosystem)
         .map(l => l.ecosystem)
         .sort((a, b) => parseInt(a, 10) - parseInt(b, 10)),

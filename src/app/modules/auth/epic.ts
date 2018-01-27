@@ -203,16 +203,16 @@ export const importSeedEpic = (actions$: Observable<Action>) =>
 
 export const importAccountEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.importAccount.started)
+        // We need to delay the response to make reducer think
+        // as this is an async call to properly catch errors
+        .delay(1)
         .flatMap(action => {
             const backup = keyring.restore(action.payload.backup);
             if (!backup || backup.privateKey.length !== keyring.KEY_LENGTH) {
                 return Observable.of(actions.importAccount.failed({
                     params: null,
                     error: 'E_INVALID_KEY'
-
-                    // We need to delay the response to make reducer think
-                    // as this is an async call
-                })).delay(1);
+                }));
             }
 
             const ecosystems = ['1', ...backup.ecosystems];
@@ -245,17 +245,27 @@ export const importAccountEpic: Epic<Action, IRootState> =
                         timestamp: response.timestamp
                     }));
 
-                    return Observable.concat([
-                        ...accounts.map(l =>
-                            storageActions.saveAccount(l)
-                        ),
-                        actions.importAccount.done({
-                            params: action.payload,
-                            result: accounts
-                        })
-                    ]);
+                    if (accounts.length) {
+                        return Observable.concat([
+                            ...accounts.map(l =>
+                                storageActions.saveAccount(l)
+                            ),
+                            actions.importAccount.done({
+                                params: action.payload,
+                                result: accounts
+                            })
+                        ]);
+                    }
+                    else {
+                        return Observable.of(actions.importAccount.failed({
+                            params: null,
+                            error: 'E_IMPORT_FAILED'
+                        }));
+                    }
+
                 });
-        }).catch(e => {
+        })
+        .catch(e => {
             return Observable.of(actions.importAccount.failed({
                 params: null,
                 error: null

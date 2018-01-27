@@ -82,8 +82,7 @@ class Import extends React.Component<IImportProps, IImportState> {
                 seed: props.loadedSeed
             });
         }
-
-        if (this.props.isImportingAccount && !props.isImportingAccount && !props.importAccountError) {
+        if (this.props.isImportingAccount && !props.isImportingAccount) {
             if (props.importAccountError) {
                 this.onInvalidKey();
             }
