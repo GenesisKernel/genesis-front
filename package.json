@@ -1,6 +1,6 @@
 {
     "name": "genesis-front",
-    "version": "0.3.6",
+    "version": "0.3.7",
     "author": {
         "name": "genesis-front"
     },
@@ -30,6 +30,7 @@
         "lodash": "^4.17.4",
         "needle": "^2.1.0",
         "prop-types": "^15.6.0",
+        "qrcode.react": "^0.7.2",
         "random-js": "^1.0.8",
         "react-bootstrap": "^0.31.2",
         "react-copy-to-clipboard": "^5.0.1",
@@ -89,6 +90,7 @@
         "@types/needle": "^2.0.2",
         "@types/node": "^8.0.57",
         "@types/prop-types": "^15.5.2",
+        "@types/qrcode.react": "^0.6.2",
         "@types/random-js": "^1.0.30",
         "@types/react-bootstrap": "^0.0.52",
         "@types/react-copy-to-clipboard": "^4.2.3",

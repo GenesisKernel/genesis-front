@@ -20,8 +20,9 @@ import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import keyring from 'lib/keyring';
 import { sendAttachment } from 'lib/fs';
 import { alertShow } from 'modules/content/actions';
-import * as CopyToClipboard from 'react-copy-to-clipboard';
 import { IStoredAccount } from 'genesis/storage';
+import * as CopyToClipboard from 'react-copy-to-clipboard';
+import * as QRCode from 'qrcode.react';
 
 import Wrapper from 'components/Wrapper';
 import Validation from 'components/Validation';
@@ -139,36 +140,45 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
                     </div>
                 )}
             >
-                <div className="table-responsive">
-                    <table className="table table-striped table-bordered table-hover preline">
-                        <tbody>
-                            <tr>
-                                <td style={{ minWidth: 100 }}>
-                                    <FormattedMessage id="general.key.private" defaultMessage="Private key" />
-                                </td>
-                                <td>{this.formatKey(this.state.privateKey)}</td>
-                            </tr>
-                            <tr>
-                                <td style={{ minWidth: 100 }}>
-                                    <FormattedMessage id="general.key.public" defaultMessage="Public key" />
-                                </td>
-                                <td>{this.formatKey(this.state.publicKey)}</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <FormattedMessage id="general.address" defaultMessage="Address" />
-                                </td>
-                                <td>{this.props.account.address}</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <FormattedMessage id="general.ecosystems" defaultMessage="Ecosystems" />
-                                </td>
-                                <td>{this.props.ecosystems.join(',')}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <table className="table table-striped table-bordered table-hover preline">
+                    <tbody>
+                        <tr>
+                            <td style={{ minWidth: 100 }}>
+                                <FormattedMessage id="general.key.private" defaultMessage="Private key" />
+                            </td>
+                            <td>{this.formatKey(this.state.privateKey)}</td>
+                        </tr>
+                        <tr>
+                            <td style={{ minWidth: 100 }}>
+                                <FormattedMessage id="general.key.public" defaultMessage="Public key" />
+                            </td>
+                            <td>{this.formatKey(this.state.publicKey)}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <FormattedMessage id="general.address" defaultMessage="Address" />
+                            </td>
+                            <td>{this.props.account.address}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <FormattedMessage id="general.ecosystems" defaultMessage="Ecosystems" />
+                            </td>
+                            <td>{this.props.ecosystems.join(',')}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <FormattedMessage id="general.qrcode" defaultMessage="QR-Code" />
+                            </td>
+                            <td>
+                                <div className="text-center">
+                                    <QRCode value={this.generatePayload()} />
+                                    <div className="text-muted">Use this code to import the account on your mobile device</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </Panel>
         );
     }

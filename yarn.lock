@@ -84,6 +84,12 @@
   version "15.5.2"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.5.2.tgz#3c6b8dceb2906cc87fe4358e809f9d20c8d59be1"
 
+"@types/qrcode.react@^0.6.2":
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/@types/qrcode.react/-/qrcode.react-0.6.2.tgz#c3c09a1f01c8f1378b2dc9cde27a15cc1529cf19"
+  dependencies:
+    "@types/react" "*"
+
 "@types/random-js@^1.0.30":
   version "1.0.30"
   resolved "https://registry.yarnpkg.com/@types/random-js/-/random-js-1.0.30.tgz#33fd57ae4fdbdc1aed3f76a875bd1da5a9428808"
@@ -5648,6 +5654,17 @@ punycode@^1.2.4, punycode@^1.4.1:
 q@^1.1.2:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/q/-/q-1.5.0.tgz#dd01bac9d06d30e6f219aecb8253ee9ebdc308f1"
+
+qr.js@0.0.0:
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/qr.js/-/qr.js-0.0.0.tgz#cace86386f59a0db8050fa90d9b6b0e88a1e364f"
+
+qrcode.react@^0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/qrcode.react/-/qrcode.react-0.7.2.tgz#72a5718fd56baafe15c2c153fe436628d83aa286"
+  dependencies:
+    prop-types "^15.5.8"
+    qr.js "0.0.0"
 
 qs@6.5.0:
   version "6.5.0"
