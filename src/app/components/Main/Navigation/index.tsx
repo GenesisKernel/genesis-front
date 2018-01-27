@@ -93,6 +93,12 @@ const StyledMenuContent = styled.div`
     left: 0;
     right: 0;
     top: 0;
+
+    .title-wrap {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
 `;
 
 const StyledDevButton = styled.div`
@@ -308,7 +314,7 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
                             items={this.props.menus.map((menu, index) => (
                                 <StyledMenuContent>
                                     <StyledBackButton onClick={() => this.props.menuPop()} disabled={1 >= this.props.menus.length} className={index === 0 ? 'disabled' : ''}>
-                                        <div>
+                                        <div className="title-wrap">
                                             {index > 0 && (
                                                 <span className="icon">
                                                     <em className="icon-arrow-left" />
