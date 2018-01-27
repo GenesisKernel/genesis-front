@@ -168,12 +168,14 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
                         </tr>
                         <tr>
                             <td>
-                                <FormattedMessage id="general.qrcode" defaultMessage="QR-Code" />
+                                <FormattedMessage id="auth.qrcode" defaultMessage="QR-Code" />
                             </td>
                             <td>
                                 <div className="text-center">
                                     <QRCode value={this.generatePayload()} />
-                                    <div className="text-muted">Use this code to import the account on your mobile device</div>
+                                    <div className="text-muted">
+                                        <FormattedMessage id="auth.qrcode.desc" defaultMessage="Use this code to import the account on your mobile device" />
+                                    </div>
                                 </div>
                             </td>
                         </tr>
