@@ -43,6 +43,7 @@ interface IConstructorProps {
     selectTag?: any;
     addTag?: any;
     moveTag?: any;
+    moveTreeTag?: any;
     copyTag?: any;
     removeTag?: any;
     selectedTag?: any;
@@ -134,9 +135,14 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                             treeData={this.state.treeData}
                             onChange={(treeData: any) => { this.setState({treeData}); }}
                             onMoveNode={(args) => {
-
-                                alert(JSON.stringify(args.node));
-                                alert(JSON.stringify(args.treeData));
+                                this.props.moveTreeTag({
+                                    treeData: this.state.treeData,
+                                    tagID: args.node.id
+                                });
+                                // alert(JSON.stringify(args.node));
+                                // alert(JSON.stringify(this.state.treeData));
+                                // alert(args['prevPath']);
+                                // alert(args['nextPath']);
                                 // alert(JSON.stringify(args['nextTreeIndex']));
                                 // this.props.moveTag({
                                 //    tag: args.node.tag,
