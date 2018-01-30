@@ -86,7 +86,7 @@ const Image: React.SFC<IImageProps> = (props, context: IImageContext) => {
                 >
                     <img
                         className={classes}
-                        src={context.protypo.resolveData(props.src)}
+                        src={props.src}
                         alt={props.alt}
                     />
                 </TagWrapper>

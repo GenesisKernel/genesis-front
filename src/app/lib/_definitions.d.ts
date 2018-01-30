@@ -18,8 +18,6 @@ declare module 'react-dom';
 declare module 'centrifuge';
 declare module 'jsrsasign';
 declare module 'react-router-transition';
-// declare module 'react-sortable-tree';
-// declare module 'react-sortable-tree-theme-file-explorer';
 
 declare module '*.svg' {
     const content: string;

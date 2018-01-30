@@ -1,18 +1,18 @@
-// Copyright 2017 The apla-front Authors
-// This file is part of the apla-front library.
+// Copyright 2017 The genesis-front Authors
+// This file is part of the genesis-front library.
 //
-// The apla-front library is free software: you can redistribute it and/or modify
+// The genesis-front library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The apla-front library is distributed in the hope that it will be useful,
+// The genesis-front library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
+// along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
 // import PropTypes from 'prop-types';
@@ -20,41 +20,12 @@ import { SortableTreeWithoutDndContext as SortableTree, ReactSortableTreeProps }
 
 interface IMySortableTreeProps extends ReactSortableTreeProps {
     theme?: any;
-    // onSelect: any;
 }
 
-const SortableTree2: React.SFC<IMySortableTreeProps> = props => (
+const MySortableTree: React.SFC<IMySortableTreeProps> = props => (
     <SortableTree
         {...props}
     />
 );
 
-// interface IMySortableTreeProps {
-//     theme: any;
-//     // onSelect: any;
-// }
-
-// SortableTree.propTypes = {
-//     ...SortableTree.propTypes,
-//     onSelect: PropTypes.func
-// };
-
-export default SortableTree2;
-
-// export class MySortableTree extends SortableTree2<ReactSortableTreeProps> {
-//     constructor(props: any) {
-//         super(props);
-//         alert(1);
-//     }
-//     // render() {
-//     //     return (<span>tree</span>);
-//     // }
-// }
-
-// export default SortableTree2;
-
-// type TComponentConstructor<T> = React.ComponentClass<T & IMySortableTreeProps> | React.SFC<T & IMySortableTreeProps>;
-//
-// export default function styledComponent<T>(Component: TComponentConstructor<T & IMySortableTreeProps>) {
-//     return styled(Component) `${props => props.style}`;
-// }
+export default MySortableTree;

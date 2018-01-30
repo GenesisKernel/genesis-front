@@ -1,18 +1,18 @@
-// Copyright 2017 The apla-front Authors
-// This file is part of the apla-front library.
+// Copyright 2017 The genesis-front Authors
+// This file is part of the genesis-front library.
 //
-// The apla-front library is free software: you can redistribute it and/or modify
+// The genesis-front library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The apla-front library is distributed in the hope that it will be useful,
+// The genesis-front library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the apla-front library. If not, see <http://www.gnu.org/licenses/>.
+// along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import React from 'react';
 
@@ -57,56 +57,56 @@ interface IFileThemeNodeContentRendererProps {
     parentNode: any;
 }
 
-// eslint-disable-next-line react/prefer-stateless-function
-class FileThemeNodeContentRenderer extends React.Component<IFileThemeNodeContentRendererProps> {
-    render() {
-        const {
-            scaffoldBlockPxWidth,
-            toggleChildrenVisibility = null,
-            onSelect = null,
-            connectDragPreview,
-            connectDragSource,
-            isDragging,
-            canDrop = false,
-            canDrag = false,
-            node,
-            title = null,
-            draggedNode = null,
-            path,
-            treeIndex,
-            isSearchMatch = false,
-            isSearchFocus = false,
-            icons = [],
-            buttons = [],
-            className = '',
-            style = {},
-            didDrop,
-            lowerSiblingCounts,
-            listIndex,
-            swapFrom = null,
-            swapLength = null,
-            swapDepth = null,
-            treeId, // Not needed, but preserved for other renderers
-            isOver, // Not needed, but preserved for other renderers
-            parentNode = null, // Needed for dndManager
+const FileThemeNodeContentRenderer: React.SFC<IFileThemeNodeContentRendererProps> = props => {
+    const {
+        scaffoldBlockPxWidth,
+        toggleChildrenVisibility = null,
+        onSelect = null,
+        connectDragPreview,
+        connectDragSource,
+        isDragging,
+        canDrop = false,
+        canDrag = false,
+        node,
+        title = null,
+        draggedNode = null,
+        path,
+        treeIndex,
+        isSearchMatch = false,
+        isSearchFocus = false,
+        icons = [],
+        buttons = [],
+        className = '',
+        style = {},
+        didDrop,
+        lowerSiblingCounts,
+        listIndex,
+        swapFrom = null,
+        swapLength = null,
+        swapDepth = null,
+        treeId, // Not needed, but preserved for other renderers
+        isOver, // Not needed, but preserved for other renderers
+        parentNode = null, // Needed for dndManager
     ...otherProps
-    } = this.props;
-        const nodeTitle = title || node.title;
-        const nodeSubtitle = node.subtitle ? (' ' + node.subtitle) : '';
+    } = props;
 
-        const isDraggedDescendant = draggedNode && isDescendant(draggedNode, node);
-        const isLandingPadActive = !didDrop && isDragging;
+    const nodeTitle = title || node.title;
+    const nodeSubtitle = node.subtitle ? (' ' + node.subtitle) : '';
 
-        // Construct the scaffold representing the structure of the tree
-        const scaffold: any = [];
-        lowerSiblingCounts.forEach((lowerSiblingCount: any, i: number) => {
-            scaffold.push(
-        <div
-            key={`pre_${1 + i}`}
-            style={{ width: scaffoldBlockPxWidth }}
-            className="tree-lineBlock"
-        />
-    );
+    const isDraggedDescendant = draggedNode && isDescendant(draggedNode, node);
+    const isLandingPadActive = !didDrop && isDragging;
+
+    // Construct the scaffold representing the structure of the tree
+    const scaffold: any = [];
+
+    lowerSiblingCounts.forEach((lowerSiblingCount: any, i: number) => {
+        scaffold.push(
+            <div
+                key={`pre_${1 + i}`}
+                style={{ width: scaffoldBlockPxWidth }}
+                className="tree-lineBlock"
+            />
+        );
 
         if (treeIndex !== listIndex && i === swapDepth) {
             // This row has been shifted, and is at the depth of
@@ -126,132 +126,118 @@ class FileThemeNodeContentRenderer extends React.Component<IFileThemeNodeContent
             }
 
             scaffold.push(
-            <div
-                key={`highlight_${1 + i}`}
-                style={{
-                    width: scaffoldBlockPxWidth,
-                    left: scaffoldBlockPxWidth * i,
-                }}
-                className={`tree-absoluteLineBlock ${highlightLineClass}`}
-            />
-        );
+                <div
+                    key={`highlight_${1 + i}`}
+                    style={{
+                        width: scaffoldBlockPxWidth,
+                        left: scaffoldBlockPxWidth * i,
+                    }}
+                    className={`tree-absoluteLineBlock ${highlightLineClass}`}
+                />
+            );
         }
     });
 
-        const nodeContent = (
-            <div style={{ height: '100%' }} {...otherProps}>
-                {node.selected && (
-                    <div style={{ position: 'absolute', left: '10px', zIndex: 100 }}>
-                        {buttons.map((btn: any, index: number) => (
-                            <div
-                                key={index}
-                            >
-                                {btn}
-                            </div>
-                        ))}
-                    </div>
-                )}
-        {toggleChildrenVisibility &&
-        node.children &&
-        node.children.length > 0 && (
-        <button
-            type="button"
-            aria-label={node.expanded ? 'Collapse' : 'Expand'}
-            className={
-                node.expanded ? 'tree-collapseButton' : 'tree-expandButton'
-        }
-            style={{
-            left: (lowerSiblingCounts.length - 0.7) * scaffoldBlockPxWidth,
-        }}
-            onClick={() =>
-            toggleChildrenVisibility({
-                node,
-                path,
-                treeIndex,
-            })}
-        />
-        )}
-
-    <div
-        className={
-                'tree-rowWrapper' +
-            (!canDrag ? ' tree-rowWrapperDragDisabled' : '')
-    }
-    >
-
-        {/* Set the row preview to be used during drag and drop */}
-        {connectDragPreview(
-        <div style={{ display: 'flex' }}>
-            {scaffold}
-            <div
-                className={
-                        'tree-row' +
-                    (isLandingPadActive ? ' tree-rowLandingPad' : '') +
-                    (isLandingPadActive && !canDrop
-                        ? ' tree-rowCancelPad'
-                        : '') +
-                    (isSearchMatch ? ' tree-rowSearchMatch' : '') +
-                    (isSearchFocus ? ' tree-rowSearchFocus' : '') +
-                    (className ? ` ${className}` : '')
-            }
-                style={{
-                opacity: isDraggedDescendant ? 0.5 : 1,
-            ...style,
-            }}
-            >
-                <div
-                    className={
-                            'tree-rowContents' +
-                        (!canDrag ? ' tree-rowContentsDragDisabled' : '')
-                }
-                >
-                    <div className="tree-rowToolbar">
-                        {icons.map((icon: any, index: number) => (
+    const nodeContent = (
+        <div style={{ height: '100%' }} {...otherProps}>
+            {node.selected && (
+                <div style={{ position: 'absolute', left: '10px', zIndex: 100 }}>
+                    {buttons.map((btn: any, index: number) => (
                         <div
                             key={index}
-                            className="tree-toolbarButton"
-                        >
-                            {icon}
-                        </div>
-                        ))}
-                    </div>
-                    <div className="tree-rowLabel">
-                        <span className="tree-rowTitle">
-                            {typeof nodeTitle === 'function'
-                                ? nodeTitle({
-                                node,
-                                path,
-                                treeIndex,
-                            })
-                                : nodeTitle}
-                        </span>
-                        <span className="tree-rowSubtitle">
-                            {nodeSubtitle}
-                        </span>
-                    </div>
-                    {/*<div className="tree-rowToolbar">
-                        {buttons.map((btn: any, index: number) => (
-                        <div
-                            key={index}
-                            className="tree-toolbarButton"
                         >
                             {btn}
                         </div>
-                        ))}
-                    </div>
-                    */}
+                    ))}
                 </div>
+            )}
+            {toggleChildrenVisibility &&
+                node.children &&
+                node.children.length > 0 && (
+                    <button
+                        type="button"
+                        aria-label={node.expanded ? 'Collapse' : 'Expand'}
+                        className={
+                            node.expanded ? 'tree-collapseButton' : 'tree-expandButton'
+                    }
+                        style={{
+                        left: (lowerSiblingCounts.length - 0.7) * scaffoldBlockPxWidth,
+                    }}
+                        onClick={() =>
+                        toggleChildrenVisibility({
+                            node,
+                            path,
+                            treeIndex,
+                        })}
+                    />
+                )
+            }
+            <div
+                className={'tree-rowWrapper' + (!canDrag ? ' tree-rowWrapperDragDisabled' : '')}
+            >
+
+                {/* Set the row preview to be used during drag and drop */}
+                {connectDragPreview(
+                    <div style={{ display: 'flex' }}>
+                        {scaffold}
+                        <div
+                            className={
+                                    'tree-row' +
+                                (isLandingPadActive ? ' tree-rowLandingPad' : '') +
+                                (isLandingPadActive && !canDrop
+                                    ? ' tree-rowCancelPad'
+                                    : '') +
+                                (isSearchMatch ? ' tree-rowSearchMatch' : '') +
+                                (isSearchFocus ? ' tree-rowSearchFocus' : '') +
+                                (className ? ` ${className}` : '')
+                        }
+                            style={{
+                            opacity: isDraggedDescendant ? 0.5 : 1,
+                        ...style,
+                        }}
+                        >
+                            <div
+                                className={
+                                        'tree-rowContents' +
+                                    (!canDrag ? ' tree-rowContentsDragDisabled' : '')
+                            }
+                            >
+                                <div className="tree-rowToolbar">
+                                    {icons.map((icon: any, index: number) => (
+                                    <div
+                                        key={index}
+                                        className="tree-toolbarButton"
+                                    >
+                                        {icon}
+                                    </div>
+                                    ))}
+                                </div>
+                                <div className="tree-rowLabel">
+                                    <span className="tree-rowTitle">
+                                        {typeof nodeTitle === 'function'
+                                            ? nodeTitle({
+                                            node,
+                                            path,
+                                            treeIndex,
+                                        })
+                                            : nodeTitle}
+                                    </span>
+                                    <span className="tree-rowSubtitle">
+                                        {nodeSubtitle}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
-        </div>
-        )}
-    </div>
         </div>
     );
 
-        return canDrag
-            ? connectDragSource(nodeContent, { dropEffect: 'copy' })
-            : nodeContent;
-    }
-}
+    return canDrag
+        ? connectDragSource(nodeContent, { dropEffect: 'copy' })
+        : nodeContent;
+
+};
 
 export default FileThemeNodeContentRenderer;

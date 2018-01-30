@@ -330,9 +330,8 @@ export const moveTreeTagEpic: Epic<Action, IRootState> =
 
             let movedTag = _.cloneDeep(findTagById(pageTree, action.payload.tagID));
             let tagTreeNewPosition = _.cloneDeep(findTagById(action.payload.treeData, action.payload.tagID));
-            // alert(JSON.stringify(tagTreeNewPosition));
 
-            let destinationTagID = '1';
+            let destinationTagID = null;
             let position = 'inside';
 
             if (tagTreeNewPosition.parent === null) {
