@@ -442,6 +442,8 @@ export default (state: State = initialState, action: Action): State => {
         // generate new id for inserted tag
         tagCopy.id = generateId();
 
+        let moved = false;
+
         if ('string' === typeof action.payload.destinationTagID &&
             'string' === typeof action.payload.position) {
             let tag = findTagById(pageTree, action.payload.destinationTagID);
@@ -449,7 +451,14 @@ export default (state: State = initialState, action: Action): State => {
             if (tag.el) {
                 switch (action.payload.position) {
                     case 'inside':
-                        tag.el.children.push(tagCopy);
+                        const Handler = resolveTagHandler(tag.el.tag);
+                        if (Handler) {
+                            const Tag = new Handler();
+                            if (Tag.canHaveChildren) {
+                                tag.el.children.push(tagCopy);
+                                moved = true;
+                            }
+                        }
                         break;
                     case 'before':
                         // tag.el.children.push(Tag.generateTreeJSON(action.payload.tag.text));
@@ -459,6 +468,7 @@ export default (state: State = initialState, action: Action): State => {
                         else {
                             pageTree.splice(tag.parentPosition, 0, tagCopy);
                         }
+                        moved = true;
                         break;
                     case 'after':
                         if (tag.parent && tag.parent.id && tag.parent.children) {
@@ -467,12 +477,11 @@ export default (state: State = initialState, action: Action): State => {
                         else {
                             pageTree.splice(tag.parentPosition + 1, 0, tagCopy);
                         }
-                        // tag.el.children.push(Tag.generateTreeJSON(action.payload.tag.text));
+                        moved = true;
                         break;
                     default:
                         break;
                 }
-
             }
             // alert(tag.el.id + ' parent ' + (tag.parent && tag.parent.id || 'root') + " pos " + tag.parentPosition);
         }
@@ -483,13 +492,15 @@ export default (state: State = initialState, action: Action): State => {
         }
 
         // delete moved element, skip for copying, todo: check ids
-        let sourceTag = findTagById(pageTree.concat(), action.payload.tag.id);
-        if (sourceTag.parent) {
-            sourceTag.parent.children.splice(sourceTag.parentPosition, 1);
-        }
-        else {
-            // root
-            pageTree.splice(sourceTag.parentPosition, 1);
+        if (moved) {
+            let sourceTag = findTagById(pageTree.concat(), action.payload.tag.id);
+            if (sourceTag.parent) {
+                sourceTag.parent.children.splice(sourceTag.parentPosition, 1);
+            }
+            else {
+                // root
+                pageTree.splice(sourceTag.parentPosition, 1);
+            }
         }
 
         return {
