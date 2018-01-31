@@ -489,6 +489,7 @@ export default (state: State = initialState, action: Action): State => {
             pageTree = pageTree.concat(
                 tagCopy
             );
+            moved = true;
         }
 
         // delete moved element, skip for copying, todo: check ids
