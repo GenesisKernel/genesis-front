@@ -21,6 +21,7 @@ import * as classnames from 'classnames';
 import Protypo from '../';
 import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
+import DnDComponent from './DnDComponent';
 import LongText from 'components/Protypo/components/LongText';
 import BlobData from 'components/Protypo/components/BlobData';
 
@@ -223,3 +224,4 @@ Table.contextTypes = {
 };
 
 export default StyledComponent(Table);
+export const TableDnD = DnDComponent(StyledComponent(Table));

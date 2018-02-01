@@ -19,6 +19,7 @@ import * as classnames from 'classnames';
 import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
+import DnDComponent from './DnDComponent';
 
 export interface ILabelProps {
     'className'?: string;
@@ -107,3 +108,4 @@ class Label extends React.Component<ILabelProps> {
 }
 
 export default StyledComponent(Label);
+export const LabelDnD = DnDComponent(StyledComponent(Label));

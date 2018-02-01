@@ -59,8 +59,8 @@
 }
 
 @font-face {
-    font-family: 'Apla Icons';
+    font-family: 'Site Icons';
     font-style: normal;
     font-weight: normal;
-    src: url(./apla-icons.otf) format('opentype');
+    src: url(./site-icons.otf) format('opentype');
 }

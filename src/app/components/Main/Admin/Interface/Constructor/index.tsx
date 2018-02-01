@@ -20,21 +20,22 @@ import styled from 'styled-components';
 import Protypo from 'containers/Widgets/Protypo';
 import Layout from './Layout';
 import EditPage from 'components/Main/Admin/Interface/EditPage';
-import CollapsedListItem from './CollapsedListItem';
+
 import Panel from './Panel';
-import SourceElement from './SourceElement';
+
+import SourceElements from './SourceElements';
 import Properties from './Properties';
 import Switch from './Switch';
+import Tree from './Tree';
 
-import imgGroup11 from 'images/constructor/group-11.svg';
-import imgGroup12 from 'images/constructor/group-12.svg';
-import imgGroup13 from 'images/constructor/group-13.svg';
-import imgGroup34 from 'images/constructor/group-34.svg';
-import imgGroup35 from 'images/constructor/group-35.svg';
+import TreeTheme from './Tree/Theme';
+// import nodeContentRenderer from './Tree/Theme/node-content-renderer';
+
 import imgGrid from 'images/constructor/grid.png';
 
 interface IConstructorProps {
     pageTree: any;
+    treeData: any;
     page?: any;
     pageTemplate: string;
     changePage?: any;
@@ -42,6 +43,7 @@ interface IConstructorProps {
     selectTag?: any;
     addTag?: any;
     moveTag?: any;
+    moveTreeTag?: any;
     copyTag?: any;
     removeTag?: any;
     selectedTag?: any;
@@ -55,6 +57,10 @@ interface IConstructorProps {
     navigatePage?: (params: { name: string, params?: any }) => void;
     menus?: { id: string, name: string, conditions: string, value: string }[];
     onSave?: (block: string, error?: { type: string, error: string }) => void;
+}
+
+interface IConstructorState {
+    treeData: any;
 }
 
 const ConstructorDiv = styled.div`
@@ -102,178 +108,212 @@ const ConstructorDiv = styled.div`
 
 `;
 
-const Constructor: React.SFC<IConstructorProps> = (props) => (
-    <ConstructorDiv>
-        <div className="left-panel">
-            <Panel title="Objects">
-                <ul className="b-category-list">
-                    <CollapsedListItem text="Structure" icon={imgGroup11}>
-                        <ul className="b-category-sublist">
-                            <SourceElement text="Panel" element="div" />
-                            <SourceElement text="Block" element="div" />
-                        </ul>
-                    </CollapsedListItem>
-                    <CollapsedListItem text="Text" icon={imgGroup12}>
-                        <ul className="b-category-sublist">
-                            <SourceElement text="Paragraph" element="p" />
-                            <SourceElement text="Span" element="span" />
-                            <SourceElement text="Strong" element="strong" />
-                            <SourceElement text="Emphasize" element="em" />
-                        </ul>
-                    </CollapsedListItem>
-                    {/*
-                    <CollapsedListItem text="Lists" icon={imgGroup37}>
-                        <ul className="b-category-sublist">
-                            <li>Ordered</li>
-                            <li>Unordered</li>
-                        </ul>
-                    </CollapsedListItem>
-                    < CollapsedListItem text="Containers" icon={imgGroup36}>
-                        <ul className="b-category-sublist">
-                            <li>Wrapper</li>
-                            <li>Block</li>
-                        </ul>
-                    </CollapsedListItem>
-                    */}
-                    <CollapsedListItem text="Forms" icon={imgGroup34}>
-                        <ul className="b-category-sublist">
-                            <SourceElement text="Form" element="form" />
-                            <SourceElement text="Input" element="input" />
-                            <SourceElement text="Label" element="label" />
-                            <SourceElement text="Button" element="button" />
-                            <SourceElement text="Image input" element="imageinput" />
-                        </ul>
-                    </CollapsedListItem>
-                    <CollapsedListItem text="Image" icon={imgGroup35}>
-                        <ul className="b-category-sublist">
-                            <SourceElement text="Picture" element="image" />
-                        </ul>
-                    </CollapsedListItem>
-                    {/*<CollapsedListItem text="Navigation" icon={imgStroke75}>
-                        <ul className="b-category-sublist">
-                            <li>Breadcrumps</li>
-                            <li>Link</li>
-                        </ul>
-                    </CollapsedListItem>*/}
-                    <CollapsedListItem text="Tables" icon={imgGroup13}>
-                        <ul className="b-category-sublist">
-                            <SourceElement text="Table" element="table" />
-                        </ul>
-                    </CollapsedListItem>
-                    <li />
-                </ul>
-            </Panel>
-            {/*<Panel title="Structure">
-                <ul className="b-tree">
-                    <li>
-                        <i className="fa fa-caret-down" />
-                        HTML
-                    </li>
-                    <li>
-                        <span className="b-tree-indent" />
-                        <i className="fa fa-caret-right" />
-                        Header
-                    </li>
-                    <li>
-                        <span className="b-tree-indent" />
-                        <i className="fa fa-caret-down" />
-                        Body
-                    </li>
-                    <li>
-                        <span className="b-tree-indent" />
-                        <span className="b-tree-indent" />
-                        <i className="fa fa-caret-down" />
-                        Header
-                    </li>
-                    <li className="selected">
-                        <i className="fa fa-close b-tree-delete" />
-                        <span className="b-tree-indent" />
-                        <span className="b-tree-indent" />
-                        <span className="b-tree-indent" />
-                        <i className="fa fa-caret-down" />
-                        Paragraph
-                    </li>
-                    <li>
-                        <span className="b-tree-indent" />
-                        <span className="b-tree-indent" />
-                        <span className="b-tree-indent" />
-                        <i />
-                        Strong
-                    </li>
-                </ul>
-            </Panel>
-            */}
-        </div>
-        <div className="center-panel">
-            <div className="b-instrument-panel b-panel-light">
-                <div className="b-instrument-panel__inner pull-left">
-                    <button className={props.canUndo ? 'btn-container btn-container_active' : 'btn-container btn-container_disabled'} onClick={props.undo}>
-                        <i className="apla-icon-undo apla-icon_big"/>
-                    </button>
-                    <button className={props.canRedo ? 'btn-container btn-container_active' : 'btn-container btn-container_disabled'} onClick={props.redo}>
-                        <i className="apla-icon-redo apla-icon_big"/>
-                    </button>
-                </div>
-                <div className="b-instrument-panel__inner pull-right">
-                    {/*
-                    <div className="b-icon-group pull-left">
-                        <div className="b-icon pull-left">
-                            <img src={imgViewMobile} />
-                        </div>
-                        <div className="b-icon pull-left">
-                            <img src={imgViewTablet} />
-                        </div>
-                        <div className="b-icon pull-left">
-                            <img src={imgViewLaptop} />
-                        </div>
-                        <div className="b-icon pull-left">
-                            <img src={imgViewDesktop} />
-                        </div>
-                    </div>
-                    */}
-                    <div className="b-icon-group pull-left">
-                        <div className="b-switch">
-                            <span>GRID</span>
-                            <Switch initialValue={props.grid ? 'grid' : ''} onValue="grid" offValue="" onChange={props.toggleGrid} />
-                        </div>
-                        {/*
-                         <div className="b-switch">
-                         <span>SNAP</span>
-                         <Switch initialValue="snap" onValue="snap" offValue="" />
-                         </div>
-                         */
-                        }
+class Constructor extends React.Component<IConstructorProps, IConstructorState> {
+    constructor(props: IConstructorProps) {
+        super(props);
+        this.state = {
+            treeData: props.treeData
+        };
+    }
+    componentWillReceiveProps(props: IConstructorProps) {
+        if (this.state.treeData !== props.treeData) {
+            this.setState({
+                treeData: props.treeData
+            });
+        }
+    }
+    render() {
+        return (
+            <ConstructorDiv>
+                <div className="left-panel">
+                    <Panel title="Objects">
+                        <SourceElements/>
+                    </Panel>
+
+                    <div style={{ height: 500 }}>
+                        <Tree
+                            treeData={this.state.treeData}
+                            onChange={(treeData: any) => { this.setState({treeData}); }}
+                            onMoveNode={(args) => {
+                                this.props.moveTreeTag({
+                                    treeData: this.state.treeData,
+                                    tagID: args.node.id
+                                });
+                                // alert(JSON.stringify(args.node));
+                                // alert(JSON.stringify(this.state.treeData));
+                                // alert(args['prevPath']);
+                                // alert(args['nextPath']);
+                                // alert(JSON.stringify(args['nextTreeIndex']));
+                                // this.props.moveTag({
+                                //    tag: args.node.tag,
+                                //    destinationTagID: props.tag.id,
+                                //    position: getDropPosition(monitor, component, props.tag)
+                                // });
+                            }}
+                            scaffoldBlockPxWidth={10}
+                            canDrag={(node: any) => { return true; }}
+                            innerStyle={{padding: '15px 0', backgroundColor: '#465669', color: '#FFFFFF' }}
+                            theme={TreeTheme}
+                            generateNodeProps={({ node, path }) => ({
+                                title:  (
+                                    <span
+                                        onClick={
+                                            () => {
+                                                this.props.selectTag({ tag: node.tag });
+                                            }
+                                        }
+                                    >
+                                        {node.title}
+                                    </span>
+                                ),
+                                buttons: [
+                                    <button
+                                        key={node.tag.id}
+                                        className="tree-button-remove"
+                                        onClick={
+                                            () => {
+                                                this.props.removeTag({ tag: node.tag });
+                                            }
+                                        }
+                                    >
+                                        &times;
+                                    </button>
+                                ]
+                            })}
+                        />
                     </div>
 
+                    {/*<Panel title="Structure">
+                     <ul className="b-tree">
+                     <li>
+                     <i className="fa fa-caret-down" />
+                     HTML
+                     </li>
+                     <li>
+                     <span className="b-tree-indent" />
+                     <i className="fa fa-caret-right" />
+                     Header
+                     </li>
+                     <li>
+                     <span className="b-tree-indent" />
+                     <i className="fa fa-caret-down" />
+                     Body
+                     </li>
+                     <li>
+                     <span className="b-tree-indent" />
+                     <span className="b-tree-indent" />
+                     <i className="fa fa-caret-down" />
+                     Header
+                     </li>
+                     <li className="selected">
+                     <i className="fa fa-close b-tree-delete" />
+                     <span className="b-tree-indent" />
+                     <span className="b-tree-indent" />
+                     <span className="b-tree-indent" />
+                     <i className="fa fa-caret-down" />
+                     Paragraph
+                     </li>
+                     <li>
+                     <span className="b-tree-indent" />
+                     <span className="b-tree-indent" />
+                     <span className="b-tree-indent" />
+                     <i />
+                     Strong
+                     </li>
+                     </ul>
+                     </Panel>
+                     */}
                 </div>
-            </div>
+                <div className="center-panel">
+                    <div className="b-instrument-panel b-panel-light">
+                        <div className="b-instrument-panel__inner pull-left">
+                            <button
+                                className={this.props.canUndo ? 'btn-container btn-container_active' : 'btn-container btn-container_disabled'}
+                                onClick={this.props.undo}
+                            >
+                                <i className="site-icon-undo site-icon_big"/>
+                            </button>
+                            <button
+                                className={this.props.canRedo ? 'btn-container btn-container_active' : 'btn-container btn-container_disabled'}
+                                onClick={this.props.redo}
+                            >
+                                <i className="site-icon-redo site-icon_big"/>
+                            </button>
+                        </div>
+                        <div className="b-instrument-panel__inner pull-right">
+                            {/*
+                             <div className="b-icon-group pull-left">
+                             <div className="b-icon pull-left">
+                             <img src={imgViewMobile} />
+                             </div>
+                             <div className="b-icon pull-left">
+                             <img src={imgViewTablet} />
+                             </div>
+                             <div className="b-icon pull-left">
+                             <img src={imgViewLaptop} />
+                             </div>
+                             <div className="b-icon pull-left">
+                             <img src={imgViewDesktop} />
+                             </div>
+                             </div>
+                             */}
+                            <div className="b-icon-group pull-left">
+                                <div className="b-switch">
+                                    <span>GRID</span>
+                                    <Switch
+                                        initialValue={this.props.grid ? 'grid' : ''}
+                                        onValue="grid"
+                                        offValue=""
+                                        onChange={this.props.toggleGrid}
+                                    />
+                                </div>
+                                {/*
+                                 <div className="b-switch">
+                                 <span>SNAP</span>
+                                 <Switch initialValue="snap" onValue="snap" offValue="" />
+                                 </div>
+                                 */
+                                }
+                            </div>
 
-            <Layout grid={props.grid} addTag={props.addTag} moveTag={props.moveTag} copyTag={props.copyTag}>
-                <Protypo
-                    context="page"
-                    payload={props.pageTree}
-                    editable={true}
-                    changePage={props.changePage}
-                    setTagCanDropPosition={props.setTagCanDropPosition}
-                    selectTag={props.selectTag}
-                    addTag={props.addTag}
-                    moveTag={props.moveTag}
-                    copyTag={props.copyTag}
-                    removeTag={props.removeTag}
-                    selectedTag={props.selectedTag}
-                />
-            </Layout>
+                        </div>
+                    </div>
 
-        </div>
-        <div className="right-panel">
-            <Properties
-                tag={props.selectedTag}
-                changePage={props.changePage}
-            />
-            <EditPage page={props.page} pageTemplate={props.pageTemplate} menus={props.menus} tabView={true} saveButton={true} navigatePage={props.navigatePage} onExec={props.onSave}/>
-        </div>
-    </ConstructorDiv>
+                    <Layout grid={this.props.grid} addTag={this.props.addTag} moveTag={this.props.moveTag} copyTag={this.props.copyTag}>
+                        <Protypo
+                            context="page"
+                            payload={this.props.pageTree}
+                            editable={true}
+                            changePage={this.props.changePage}
+                            setTagCanDropPosition={this.props.setTagCanDropPosition}
+                            selectTag={this.props.selectTag}
+                            addTag={this.props.addTag}
+                            moveTag={this.props.moveTag}
+                            copyTag={this.props.copyTag}
+                            removeTag={this.props.removeTag}
+                            selectedTag={this.props.selectedTag}
+                        />
+                    </Layout>
 
-);
+                </div>
+                <div className="right-panel">
+                    <Properties
+                        tag={this.props.selectedTag}
+                        changePage={this.props.changePage}
+                    />
+                    <EditPage
+                        page={this.props.page}
+                        pageTemplate={this.props.pageTemplate}
+                        menus={this.props.menus}
+                        tabView={true}
+                        saveButton={true}
+                        navigatePage={this.props.navigatePage}
+                        onExec={this.props.onSave}
+                    />
+                </div>
+            </ConstructorDiv>
+        );
+    }
+}
 
 export default Constructor;

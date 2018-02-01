@@ -19,6 +19,7 @@ import * as propTypes from 'prop-types';
 
 import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
+import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
 import ValidatedForm from 'components/Validation/ValidatedForm';
 
@@ -132,3 +133,4 @@ class Form extends React.Component<IFormProps, IFormState> {
 };
 
 export default StyledComponent(Form);
+export const FormDnD = DnDComponent(StyledComponent(Form));

@@ -19,7 +19,7 @@ import * as _ from 'lodash';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse, IHistoryResponse } from 'lib/api';
-import { findTagById, resolveTagHandler, Properties, generateId, setIds, CodeGenerator } from 'lib/constructor';
+import { findTagById, resolveTagHandler, Properties, generateId, setIds, CodeGenerator, convertToTreeData } from 'lib/constructor';
 import { IProtypoElement } from 'components/Protypo/Protypo';
 
 export type State = {
@@ -41,6 +41,7 @@ export type State = {
             [key: string]: {
                 type: string,
                 data: any,
+                treeData?: any,
                 pageTemplate?: string,
                 selectedTag?: IProtypoElement
             }
@@ -201,7 +202,8 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.tabs.data,
                     ['interfaceConstructor' + action.payload.params.id + (action.payload.params.vde ? '-vde' : '')]: {
                         type: 'interfaceConstructor',
-                        data: action.payload.result.page.tree
+                        data: action.payload.result.page.tree,
+                        treeData: convertToTreeData(action.payload.result.page.tree)
                     }
                 }
             }
@@ -233,7 +235,7 @@ export default (state: State = initialState, action: Action): State => {
 
         let tag = findTagById(pageTree, action.payload.tagID).el;
         if (tag) {
-            if (action.payload.text) {
+            if (typeof (action.payload.text) !== 'undefined') {
                 // todo: parse contentEditable tags and create children array
 
                 const regex = /(<[^\/>]+>[^<]*<\/[^>]+>)/ig; // remove tags
@@ -297,6 +299,7 @@ export default (state: State = initialState, action: Action): State => {
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                         type: 'interfaceConstructor',
                         data: pageTree,
+                        treeData: convertToTreeData(pageTree),
                         selectedTag: selectedTag
                     }
                 }
@@ -318,6 +321,7 @@ export default (state: State = initialState, action: Action): State => {
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                         type: 'interfaceConstructor',
                         data: pageTree,
+                        treeData: convertToTreeData(pageTree, action.payload.tag),
                         selectedTag: action.payload.tag
                     }
                 }
@@ -348,7 +352,8 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.tabs.data,
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                         type: 'interfaceConstructor',
-                        data: pageTree
+                        data: pageTree,
+                        treeData: convertToTreeData(pageTree)
                     }
                 }
             }
@@ -418,7 +423,8 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.tabs.data,
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                         type: 'interfaceConstructor',
-                        data: pageTree
+                        data: pageTree,
+                        treeData: convertToTreeData(pageTree)
                     }
                 }
             }
@@ -436,6 +442,8 @@ export default (state: State = initialState, action: Action): State => {
         // generate new id for inserted tag
         tagCopy.id = generateId();
 
+        let moved = false;
+
         if ('string' === typeof action.payload.destinationTagID &&
             'string' === typeof action.payload.position) {
             let tag = findTagById(pageTree, action.payload.destinationTagID);
@@ -443,7 +451,14 @@ export default (state: State = initialState, action: Action): State => {
             if (tag.el) {
                 switch (action.payload.position) {
                     case 'inside':
-                        tag.el.children.push(tagCopy);
+                        const Handler = resolveTagHandler(tag.el.tag);
+                        if (Handler) {
+                            const Tag = new Handler();
+                            if (Tag.canHaveChildren) {
+                                tag.el.children.push(tagCopy);
+                                moved = true;
+                            }
+                        }
                         break;
                     case 'before':
                         // tag.el.children.push(Tag.generateTreeJSON(action.payload.tag.text));
@@ -453,6 +468,7 @@ export default (state: State = initialState, action: Action): State => {
                         else {
                             pageTree.splice(tag.parentPosition, 0, tagCopy);
                         }
+                        moved = true;
                         break;
                     case 'after':
                         if (tag.parent && tag.parent.id && tag.parent.children) {
@@ -461,12 +477,11 @@ export default (state: State = initialState, action: Action): State => {
                         else {
                             pageTree.splice(tag.parentPosition + 1, 0, tagCopy);
                         }
-                        // tag.el.children.push(Tag.generateTreeJSON(action.payload.tag.text));
+                        moved = true;
                         break;
                     default:
                         break;
                 }
-
             }
             // alert(tag.el.id + ' parent ' + (tag.parent && tag.parent.id || 'root') + " pos " + tag.parentPosition);
         }
@@ -474,16 +489,19 @@ export default (state: State = initialState, action: Action): State => {
             pageTree = pageTree.concat(
                 tagCopy
             );
+            moved = true;
         }
 
         // delete moved element, skip for copying, todo: check ids
-        let sourceTag = findTagById(pageTree.concat(), action.payload.tag.id);
-        if (sourceTag.parent) {
-            sourceTag.parent.children.splice(sourceTag.parentPosition, 1);
-        }
-        else {
-            // root
-            pageTree.splice(sourceTag.parentPosition, 1);
+        if (moved) {
+            let sourceTag = findTagById(pageTree.concat(), action.payload.tag.id);
+            if (sourceTag.parent) {
+                sourceTag.parent.children.splice(sourceTag.parentPosition, 1);
+            }
+            else {
+                // root
+                pageTree.splice(sourceTag.parentPosition, 1);
+            }
         }
 
         return {
@@ -495,7 +513,8 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.tabs.data,
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                         type: 'interfaceConstructor',
-                        data: pageTree
+                        data: pageTree,
+                        treeData: convertToTreeData(pageTree)
                     }
                 }
             }
@@ -569,7 +588,8 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.tabs.data,
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                         type: 'interfaceConstructor',
-                        data: pageTree
+                        data: pageTree,
+                        treeData: convertToTreeData(pageTree)
                     }
                 }
             }
@@ -602,7 +622,8 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.tabs.data,
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                         type: 'interfaceConstructor',
-                        data: pageTree
+                        data: pageTree,
+                        treeData: convertToTreeData(pageTree)
                     }
                 }
             }
@@ -678,7 +699,8 @@ export default (state: State = initialState, action: Action): State => {
                         ...state.tabs.data,
                         ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                             type: 'interfaceConstructor',
-                            data: data[position - 1]
+                            data: data[position - 1],
+                            treeData: convertToTreeData(data[position - 1])
                         }
                     }
                 }
@@ -706,7 +728,8 @@ export default (state: State = initialState, action: Action): State => {
                         ...state.tabs.data,
                         ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
                             type: 'interfaceConstructor',
-                            data: data[position - 1]
+                            data: data[position - 1],
+                            treeData: convertToTreeData(data[position - 1])
                         }
                     }
                 }

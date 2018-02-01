@@ -16,6 +16,7 @@
 
 import { IProtypoElement } from 'components/Protypo/Protypo';
 import { findDOMNode } from 'react-dom';
+import * as _ from 'lodash';
 
 let findTagByIdResult: {
     el: any;
@@ -78,7 +79,7 @@ let onPasteStripFormattingIEPaste: boolean = false;
 
 export function OnPasteStripFormatting(elem: any, e: any) {
     let text: string;
-    if (e.originalEvent && e.originalEvent.clipboardData && e.originalEvent.clipboardData.getData) {
+    if (e.originalEvent &&  e.originalEvent.clipboardData && e.originalEvent.clipboardData.getData) {
         e.preventDefault();
         text = e.originalEvent.clipboardData.getData('text/plain');
         window.document.execCommand('insertText', false, text);
@@ -97,6 +98,57 @@ export function OnPasteStripFormatting(elem: any, e: any) {
         }
         onPasteStripFormattingIEPaste = false;
     }
+}
+
+export function convertToTreeData(data: any, selectedTag?: any): any {
+    let result = [];
+    if (data instanceof Array) {
+        for (const item of data) {
+            let children = null;
+            let subtitle = item.text;
+            if (item.children) {
+                // if (item.children.length === 1 && item.children[0] && item.children[0].tag === 'text') {
+                //     subtitle = _.truncate(item.children[0].text, {
+                //         'length': 24,
+                //         'separator': /,? +/
+                //     });
+                // }
+                // else {
+                //     children = convertToTreeData(item.children, item, selectedTag);
+                // }
+                if (item.children.length && item.children[0] && item.children[0].tag === 'text') {
+                    subtitle = _.truncate(item.children[0].text, {
+                        'length': 24,
+                        'separator': /,? +/
+                    });
+                    if (item.children.length > 1) {
+                        children = convertToTreeData([...item.children.slice(1)], selectedTag);
+                    }
+                }
+                else {
+                    children = convertToTreeData(item.children, selectedTag);
+                }
+            }
+
+            let selected = false;
+            if (selectedTag && selectedTag.id === item.id) {
+                selected = true;
+            }
+
+            let treeItem = {
+                // title: ((item.tag !== 'text') ? item.tag : '') + ' ' + (subtitle ? subtitle : ''),
+                title: item.tag  + (subtitle ? (': ' + subtitle) : ''),
+                // subtitle: subtitle,
+                children: children,
+                expanded: true,
+                id: item.id,
+                selected: selected,
+                tag: item
+            };
+            result.push(treeItem);
+        }
+    }
+    return result;
 }
 
 class Tag {
@@ -407,7 +459,7 @@ class Image extends Tag {
             id: generateId(),
             attr: {
                 alt: 'Image',
-                src: 'http://apla.readthedocs.io/en/latest/_images/logo.png'
+                src: '/img/dummy.png'
             }
         };
     }

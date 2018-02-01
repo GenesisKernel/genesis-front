@@ -90,13 +90,11 @@ const Target = {
         if (!startHoverTimer()) {
             return;
         }
-
         const droppedItem = monitor.getItem();
 
         if (droppedItem.tag && droppedItem.tag.id && props.tag.id === droppedItem.tag.id) {
             return;
         }
-
         props.setTagCanDropPosition({ position: getDropPosition(monitor, component, props.tag), tagID: props.tag.id });
     }
 };
