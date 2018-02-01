@@ -34,7 +34,9 @@ class SourceElements extends React.Component<ISourceElementsProps, ISourceElemen
             <ul className="b-category-list">
                 <CollapsedListItem text="Structure" icon={imgGroup11}>
                     <ul className="b-category-sublist">
-                        <SourceElement text="Panel" element="div" />
+                        <SourceElement text="Form with header" template="formWithHeader" />
+                        <SourceElement text="Table with header" template="tableWithHeader" />
+                        <SourceElement text="Search form" template="searchForm" />
                         <SourceElement text="Block" element="div" />
                     </ul>
                 </CollapsedListItem>

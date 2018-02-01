@@ -19,7 +19,7 @@ import * as _ from 'lodash';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse, IHistoryResponse } from 'lib/api';
-import { findTagById, resolveTagHandler, Properties, generateId, setIds, CodeGenerator, convertToTreeData } from 'lib/constructor';
+import { findTagById, resolveTagHandler, Properties, generateId, setIds, CodeGenerator, convertToTreeData, getConstructorTemplate } from 'lib/constructor';
 import { IProtypoElement } from 'components/Protypo/Protypo';
 
 export type State = {
@@ -369,10 +369,19 @@ export default (state: State = initialState, action: Action): State => {
         }
 
         let Tag: any = null;
+        let treeJSON: any = null;
 
-        const Handler = resolveTagHandler(action.payload.tag.element);
-        if (Handler) {
-            Tag = new Handler();
+        if (action.payload.tag.element) {
+            const Handler = resolveTagHandler(action.payload.tag.element);
+            if (Handler) {
+                Tag = new Handler();
+                treeJSON = Tag.generateTreeJSON(action.payload.tag.text);
+            }
+        }
+        else {
+            if (action.payload.tag.template) {
+                treeJSON = getConstructorTemplate(action.payload.tag.template);
+            }
         }
 
         if ('string' === typeof action.payload.destinationTagID &&
@@ -381,25 +390,23 @@ export default (state: State = initialState, action: Action): State => {
             if (tag.el) {
                 switch (action.payload.position) {
                     case 'inside':
-                        tag.el.children.push(Tag.generateTreeJSON(action.payload.tag.text));
+                        tag.el.children.push(treeJSON);
                         break;
                     case 'before':
-                        // tag.el.children.push(Tag.generateTreeJSON(action.payload.tag.text));
                         if (tag.parent && tag.parent.id && tag.parent.children) {
-                            tag.parent.children.splice(tag.parentPosition, 0, Tag.generateTreeJSON(action.payload.tag.text));
+                            tag.parent.children.splice(tag.parentPosition, 0, treeJSON);
                         }
                         else {
-                            pageTree.splice(tag.parentPosition, 0, Tag.generateTreeJSON(action.payload.tag.text));
+                            pageTree.splice(tag.parentPosition, 0, treeJSON);
                         }
                         break;
                     case 'after':
                         if (tag.parent && tag.parent.id && tag.parent.children) {
-                            tag.parent.children.splice(tag.parentPosition + 1, 0, Tag.generateTreeJSON(action.payload.tag.text));
+                            tag.parent.children.splice(tag.parentPosition + 1, 0, treeJSON);
                         }
                         else {
-                            pageTree.splice(tag.parentPosition + 1, 0, Tag.generateTreeJSON(action.payload.tag.text));
+                            pageTree.splice(tag.parentPosition + 1, 0, treeJSON);
                         }
-                        // tag.el.children.push(Tag.generateTreeJSON(action.payload.tag.text));
                         break;
                     default:
                         break;
@@ -410,7 +417,7 @@ export default (state: State = initialState, action: Action): State => {
         }
         else {
             pageTree = pageTree.concat(
-                Tag.generateTreeJSON(action.payload.tag.text)
+                treeJSON
             );
         }
 
@@ -461,7 +468,6 @@ export default (state: State = initialState, action: Action): State => {
                         }
                         break;
                     case 'before':
-                        // tag.el.children.push(Tag.generateTreeJSON(action.payload.tag.text));
                         if (tag.parent && tag.parent.id && tag.parent.children) {
                             tag.parent.children.splice(tag.parentPosition, 0, tagCopy);
                         }
@@ -549,7 +555,6 @@ export default (state: State = initialState, action: Action): State => {
                         tag.el.children.push(tagCopy);
                         break;
                     case 'before':
-                        // tag.el.children.push(Tag.generateTreeJSON(action.payload.tag.text));
                         if (tag.parent && tag.parent.id && tag.parent.children) {
                             tag.parent.children.splice(tag.parentPosition, 0, tagCopy);
                         }
@@ -564,7 +569,6 @@ export default (state: State = initialState, action: Action): State => {
                         else {
                             pageTree.splice(tag.parentPosition + 1, 0, tagCopy);
                         }
-                        // tag.el.children.push(Tag.generateTreeJSON(action.payload.tag.text));
                         break;
                     default:
                         break;

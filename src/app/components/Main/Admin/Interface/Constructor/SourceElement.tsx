@@ -26,6 +26,7 @@ const Source = {
         return {
             new: true,
             element: props.element,
+            template: props.template,
             text: props.text
         };
     }
@@ -41,7 +42,8 @@ function collect(connect: any, monitor: any) {
 
 interface ISourceElementProps {
     text: string;
-    element: string;
+    element?: string;
+    template?: string;
     connectDragSource?: any;
     connectDragPreview?: any;
     isDragging?: boolean;
