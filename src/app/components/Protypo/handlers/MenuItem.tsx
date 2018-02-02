@@ -20,6 +20,7 @@ import styled from 'styled-components';
 import * as propTypes from 'prop-types';
 
 import Protypo, { IParamsSpec } from '../Protypo';
+import PageLink from 'containers/Routing/PageLink';
 
 export interface IMenuItemProps {
     'title'?: string;
@@ -32,13 +33,10 @@ export interface IMenuItemProps {
     '_systemPageHook'?: string;
 }
 
-export const StyledLinkButton = styled.button`
-    outline: none;
-    border: none;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    background: 0;
+export const StyledMenuItem = styled.div`
+    > a, > a:hover {
+        text-decoration: none !important;
+    }
 
     &.active {
         > .link-active-decorator {
@@ -47,6 +45,7 @@ export const StyledLinkButton = styled.button`
     }
 
     > .link-active-decorator {
+        display: block;
         opacity: 0;
         background: #4c7dbd;
         float: left;
@@ -83,52 +82,36 @@ export const StyledLinkButton = styled.button`
     }
 `;
 
-interface ILinkButtonContext {
+interface IMenuItemContext {
     vde?: boolean;
     protypo: Protypo;
     navigatePage: (params: { name: string, params: any, force?: boolean, vde?: boolean }) => void;
 }
 
-// TODO: Missing page params
-const LinkButton: React.SFC<IMenuItemProps> = (props, context: ILinkButtonContext) => {
+const MenuItem: React.SFC<IMenuItemProps> = (props, context: IMenuItemContext) => {
+    const isVDE = props.vde === 'true' ? true : props.vde === 'false' ? false : context.vde;
     const isActive = context.protypo.getCurrentPage() === props.page;
     const classes = classnames({
         active: isActive
     });
 
-    const linkBody = (
-        <div className="link-body">
-            {props.icon && (<em className={`icon ${props.icon}`} />)}
-            <span>{props.title}</span>
-        </div>
-    );
-
-    const onNavigate = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        context.navigatePage({
-            name: props.page,
-            params: context.protypo.resolveParams(props.params),
-            force: true,
-            vde:
-                props.vde === 'true' ? true :
-                    props.vde === 'false' ? false :
-                        context.vde
-        });
-        return false;
-    };
-
     return (
-        <StyledLinkButton className={classes} onClick={onNavigate}>
-            <div className="link-active-decorator" />
-            {linkBody}
-        </StyledLinkButton>
+        <StyledMenuItem className={classes}>
+            <PageLink page={props.page} params={context.protypo.resolveParams(props.params)} vde={isVDE}>
+                <span className="link-active-decorator" />
+                <span className="link-body">
+                    {props.icon && (<em className={`icon ${props.icon}`} />)}
+                    <span>{props.title}</span>
+                </span>
+            </PageLink>
+        </StyledMenuItem>
     );
 };
 
-LinkButton.contextTypes = {
+MenuItem.contextTypes = {
     protypo: propTypes.object.isRequired,
     navigatePage: propTypes.func.isRequired,
     vde: propTypes.bool
 };
 
-export default LinkButton;
+export default MenuItem;

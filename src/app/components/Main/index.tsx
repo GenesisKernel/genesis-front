@@ -239,7 +239,7 @@ class Main extends React.Component<IMainProps> {
                         <MenuItem onClick={this.props.onNavigationToggle}>
                             <em className="icon-menu" />
                         </MenuItem>
-                        {_.map(this.props.sections, l => (
+                        {_.map(this.props.sections, l => l.visible ? (
                             <MenuItem
                                 key={l.name}
                                 active={this.props.section === l.name}
@@ -247,7 +247,7 @@ class Main extends React.Component<IMainProps> {
                             >
                                 {l.title}
                             </MenuItem>
-                        ))}
+                        ) : null)}
                         <li className="user-menu">
                             <NotificationsMenu />
                             {/*<TransactionsMenu />*/}

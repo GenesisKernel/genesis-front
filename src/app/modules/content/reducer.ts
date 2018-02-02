@@ -46,6 +46,7 @@ export const initialState: State = {
         home: {
             name: 'home',
             title: 'Home',
+            visible: true,
             pending: false,
             force: false,
             vde: false,
@@ -53,9 +54,21 @@ export const initialState: State = {
             menus: [],
             page: null
         },
+        vde: {
+            name: 'vde',
+            title: 'VDE',
+            visible: false,
+            pending: false,
+            force: false,
+            vde: true,
+            defaultPage: 'default_page',
+            menus: [],
+            page: null
+        },
         admin: {
             name: 'admin',
             title: 'Admin',
+            visible: true,
             defaultPage: 'admin_index',
             pending: false,
             force: false,
@@ -66,6 +79,7 @@ export const initialState: State = {
         vdeadmin: {
             name: 'vdeadmin',
             title: 'VDE Admin',
+            visible: true,
             defaultPage: 'admin_index',
             pending: false,
             force: false,
@@ -118,7 +132,8 @@ export default (state: State = initialState, action: Action): State => {
                 [action.payload.section]: {
                     ...state.sections[action.payload.section],
                     force: false,
-                    pending: true
+                    pending: true,
+                    visible: true
                 }
             }
         };

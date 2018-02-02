@@ -31,8 +31,8 @@ export interface IPageLinkProps {
 
 const PageLink: React.SFC<IPageLinkProps> = props => {
     const sectionName = (props.vde ?
-        (VDE_LEGACY_PAGES[props.page] && VDE_LEGACY_PAGES[props.page].section) :
-        (LEGACY_PAGES[props.page] && LEGACY_PAGES[props.page].section)) || props.section || props.currentSection;
+        ((VDE_LEGACY_PAGES[props.page] && VDE_LEGACY_PAGES[props.page].section) || 'vde') :
+        ((LEGACY_PAGES[props.page] && LEGACY_PAGES[props.page].section)) || props.section || props.currentSection);
 
     const navigateUrl = `/${sectionName}/${props.page}`;
     const navigatePage = (e: React.MouseEvent<HTMLAnchorElement>) => {
