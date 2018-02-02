@@ -17,11 +17,11 @@
 import * as React from 'react';
 import { Panel } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
 import { ITableResponse, IListResponse } from 'lib/api';
 
 import DocumentTitle from 'components/DocumentTitle';
 import Heading from 'components/Heading';
+import PageLink from 'containers/Routing/PageLink';
 import Money from 'components/Money';
 
 export interface IColumnDisplayRule {
@@ -73,9 +73,9 @@ const View: React.SFC<IViewProps> = (props) => (
             <div className="content-wrapper">
                 <ol className="breadcrumb">
                     <li>
-                        <Link to={props.vde ? '/vde/tables' : '/admin/tables'}>
+                        <PageLink page="tables" section="admin" vde={props.vde}>
                             <FormattedMessage id="admin.tables" defaultMessage="Tables" />
-                        </Link>
+                        </PageLink>
                     </li>
                     <li>
                         {props.tableName}
@@ -109,9 +109,9 @@ const View: React.SFC<IViewProps> = (props) => (
                                             ))}
                                             {!props.vde && (
                                                 <td>
-                                                    <Link className="btn btn-primary" to={`/admin/tables/${props.table.name}/${row.id}/history`}>
+                                                    <PageLink className="btn btn-primary" page="history" section="admin" params={{ table: props.table.name, id: row.id }} vde={props.vde}>
                                                         <FormattedMessage id="admin.tables.history" defaultMessage="History" />
-                                                    </Link>
+                                                    </PageLink>
                                                 </td>
                                             )}
                                         </tr>

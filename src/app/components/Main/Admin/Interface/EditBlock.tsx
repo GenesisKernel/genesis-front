@@ -16,10 +16,10 @@
 
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
 
 import DocumentTitle from 'components/DocumentTitle';
 import Heading from 'components/Heading';
+import PageLink from 'containers/Routing/PageLink';
 import BlockEditor from './BlockEditor';
 import BlockOnlyEditor from './BlockOnlyEditor';
 
@@ -95,9 +95,9 @@ class EditBlock extends React.Component<IEditBlockProps, IEditBlockState> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <Link to={this.props.vde ? '/vde/interface' : '/admin/interface'}>
+                                <PageLink page="interface" section="admin" vde={this.props.vde}>
                                     <FormattedMessage id="admin.interface" defaultMessage="Interface" />
-                                </Link>
+                                </PageLink>
                             </li>
                             <li>
                                 <FormattedMessage id="admin.interface.blocks" defaultMessage="Blocks" />

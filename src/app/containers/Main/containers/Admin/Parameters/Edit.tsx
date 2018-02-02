@@ -25,7 +25,7 @@ import Edit from 'components/Main/Admin/Parameters/Edit';
 
 export interface IEditContainerProps {
     vde?: boolean;
-    match: { params: { parameterName: string } };
+    parameterName: string;
 }
 
 interface IEditContainerState {
@@ -39,7 +39,7 @@ interface IEditContainerDispatch {
 class EditContainer extends React.Component<IEditContainerProps & IEditContainerState & IEditContainerDispatch> {
     componentDidMount() {
         this.props.getParameter({
-            name: this.props.match.params.parameterName,
+            name: this.props.parameterName,
             vde: this.props.vde
         });
     }

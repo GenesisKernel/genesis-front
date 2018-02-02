@@ -20,7 +20,7 @@ import { IRootState } from 'modules';
 import { getPageTree, getPage, changePage, setTagCanDropPosition, addTag, moveTag, copyTag, removeTag, selectTag, constructorUndo, constructorRedo, saveConstructorHistory, generatePageTemplate } from 'modules/admin/actions';
 import { navigatePage } from 'modules/content/actions';
 import Constructor from 'components/Main/Admin/Interface/Constructor';
-import { IProtypoElement } from 'components/Protypo/Protypo';
+import { TProtypoElement } from 'genesis/protypo';
 
 export interface IConstructorTabbedContainerProps {
     pageID: string;
@@ -39,7 +39,7 @@ interface IConstructorTabbedContainerState {
             type: string,
             data: any,
             pageTemplate?: string,
-            selectedTag?: IProtypoElement
+            selectedTag?: TProtypoElement
         }
     };
     tabHistory: {
@@ -106,40 +106,40 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
         payload.pageID = this.props.pageID;
         payload.vde = this.props.vde;
         this.props.changePage(payload);
-        this.props.saveConstructorHistory({pageID: this.props.pageID, vde: this.props.vde});
-        this.props.generatePageTemplate({pageID: this.props.pageID, vde: this.props.vde});
+        this.props.saveConstructorHistory({ pageID: this.props.pageID, vde: this.props.vde });
+        this.props.generatePageTemplate({ pageID: this.props.pageID, vde: this.props.vde });
     }
 
     addTag(payload?: any) {
         payload.pageID = this.props.pageID;
         payload.vde = this.props.vde;
         this.props.addTag(payload);
-        this.props.saveConstructorHistory({pageID: this.props.pageID, vde: this.props.vde});
-        this.props.generatePageTemplate({pageID: this.props.pageID, vde: this.props.vde});
+        this.props.saveConstructorHistory({ pageID: this.props.pageID, vde: this.props.vde });
+        this.props.generatePageTemplate({ pageID: this.props.pageID, vde: this.props.vde });
     }
 
     moveTag(payload?: any) {
         payload.pageID = this.props.pageID;
         payload.vde = this.props.vde;
         this.props.moveTag(payload);
-        this.props.saveConstructorHistory({pageID: this.props.pageID, vde: this.props.vde});
-        this.props.generatePageTemplate({pageID: this.props.pageID, vde: this.props.vde});
+        this.props.saveConstructorHistory({ pageID: this.props.pageID, vde: this.props.vde });
+        this.props.generatePageTemplate({ pageID: this.props.pageID, vde: this.props.vde });
     }
 
     copyTag(payload?: any) {
         payload.pageID = this.props.pageID;
         payload.vde = this.props.vde;
         this.props.copyTag(payload);
-        this.props.saveConstructorHistory({pageID: this.props.pageID, vde: this.props.vde});
-        this.props.generatePageTemplate({pageID: this.props.pageID, vde: this.props.vde});
+        this.props.saveConstructorHistory({ pageID: this.props.pageID, vde: this.props.vde });
+        this.props.generatePageTemplate({ pageID: this.props.pageID, vde: this.props.vde });
     }
 
     removeTag(payload?: any) {
         payload.pageID = this.props.pageID;
         payload.vde = this.props.vde;
         this.props.removeTag(payload);
-        this.props.saveConstructorHistory({pageID: this.props.pageID, vde: this.props.vde});
-        this.props.generatePageTemplate({pageID: this.props.pageID, vde: this.props.vde});
+        this.props.saveConstructorHistory({ pageID: this.props.pageID, vde: this.props.vde });
+        this.props.generatePageTemplate({ pageID: this.props.pageID, vde: this.props.vde });
     }
 
     setTagCanDropPosition(payload?: any) {
@@ -164,11 +164,11 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     }
 
     undo() {
-        this.props.constructorUndo({pageID: this.props.pageID});
+        this.props.constructorUndo({ pageID: this.props.pageID });
     }
 
     redo() {
-        this.props.constructorRedo({pageID: this.props.pageID});
+        this.props.constructorRedo({ pageID: this.props.pageID });
     }
 
     onSave(block: string, error?: { type: string, error: string }) {

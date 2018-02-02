@@ -16,10 +16,10 @@
 
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
 
 import DocumentTitle from 'components/DocumentTitle';
 import Heading from 'components/Heading';
+import PageLink from 'containers/Routing/PageLink';
 import PageEditor from './PageEditor';
 import PageOnlyEditor from './PageOnlyEditor';
 import PageEditorSaveButton from './PageEditorSaveButton';
@@ -30,7 +30,7 @@ export interface IEditPageProps {
     saveButton?: boolean;
     page: { id: string, name: string, menu: string, conditions: string, value: string };
     menus: { id: string, name: string, conditions: string, value: string }[];
-    navigatePage: (params: { name: string, params?: any, vde?: boolean }) => void;
+    navigatePage: (params: { name?: string, params?: any, vde?: boolean }) => void;
     pageTemplate?: string;
     onExec?: (block: string, error?: { type: string, error: string }) => void;
 }
@@ -154,9 +154,9 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <Link to={this.props.vde ? '/vde/interface' : '/admin/interface'}>
+                                <PageLink page="interface" section="admin" vde={this.props.vde}>
                                     <FormattedMessage id="admin.interface" defaultMessage="Interface" />
-                                </Link>
+                                </PageLink>
                             </li>
                             <li>
                                 <FormattedMessage id="admin.interface.pages" defaultMessage="Pages" />

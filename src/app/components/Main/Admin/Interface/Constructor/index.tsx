@@ -251,7 +251,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
             <Layout grid={props.grid} addTag={props.addTag} moveTag={props.moveTag} copyTag={props.copyTag}>
                 <Protypo
                     context="page"
-                    payload={props.pageTree}
+                    content={props.pageTree}
                     editable={true}
                     changePage={props.changePage}
                     setTagCanDropPosition={props.setTagCanDropPosition}

@@ -25,6 +25,17 @@ import * as authActions from 'modules/auth/actions';
 import { connect } from 'modules/socket/actions';
 import platform from 'lib/platform';
 
+export const initializeEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.intialize)
+        .map(action => {
+            const state = store.getState();
+            return connect.started({
+                socketToken: state.auth.socketToken,
+                timestamp: state.auth.timestamp,
+                userID: state.auth.id
+            });
+        });
+
 export const checkOnlineEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.checkOnline.started)
         .flatMap(action =>
@@ -57,16 +68,10 @@ export const checkOnlineEpic: Epic<Action, IRootState> =
                                 ]);
                             }
                             else {
-                                const state = store.getState();
                                 return Observable.concat([
                                     actions.checkOnline.done({
                                         params: null,
                                         result: true
-                                    }),
-                                    connect.started({
-                                        socketToken: state.auth.socketToken,
-                                        timestamp: state.auth.timestamp,
-                                        userID: state.auth.id
                                     })
                                 ]);
                             }
@@ -135,4 +140,4 @@ export const createVDEEpic: Epic<Action, IRootState> =
                 );
         });
 
-export default combineEpics(checkOnlineEpic, installEpic, createVDEEpic);
+export default combineEpics(initializeEpic, checkOnlineEpic, installEpic, createVDEEpic);

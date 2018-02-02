@@ -15,12 +15,12 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { Button, Col, Panel, Row } from 'react-bootstrap';
+import { Col, Panel, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
 import DocumentTitle from 'components/DocumentTitle';
 import Heading from 'components/Heading';
+import PageLink from 'containers/Routing/PageLink';
 
 export interface IInterfaceProps {
     vde?: boolean;
@@ -35,24 +35,24 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
             <Heading>
                 <FormattedMessage id="admin.interface" defaultMessage="Interface" />
                 <div className="pull-right">
-                    <Link to={props.vde ? '/vde/interface/create-page' : '/admin/interface/create-page'} className="ml btn-tool">
+                    <PageLink className="ml btn-tool" page="create-page" section="admin" vde={props.vde}>
                         <em className="icon icon-plus" />
                         <span>
                             <FormattedMessage id="admin.interface.page.create" defaultMessage="Create page" />
                         </span>
-                    </Link>
-                    <Link to={props.vde ? '/vde/interface/create-block' : '/admin/interface/create-block'} className="ml btn-tool">
+                    </PageLink>
+                    <PageLink className="ml btn-tool" page="create-block" section="admin" vde={props.vde}>
                         <em className="icon icon-plus" />
                         <span>
                             <FormattedMessage id="admin.interface.block.create" defaultMessage="Create block" />
                         </span>
-                    </Link>
-                    <Link to={props.vde ? '/vde/interface/create-menu' : '/admin/interface/create-menu'} className="ml btn-tool">
+                    </PageLink>
+                    <PageLink className="ml btn-tool" page="create-menu" section="admin" vde={props.vde}>
                         <em className="icon icon-plus" />
                         <span>
                             <FormattedMessage id="admin.interface.menu.create" defaultMessage="Create menu" />
                         </span>
-                    </Link>
+                    </PageLink>
                 </div>
             </Heading>
             <div className="content-wrapper">
@@ -76,19 +76,18 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                                     <td>
                                                         <div>{page.name}</div>
                                                         {!props.vde && (
-                                                            <Link to={`/admin/interface/page/history/${page.id}-${page.name}`} className="btn btn-link p0">
+                                                            <PageLink className="btn btn-link p0" page="page-history" params={{ id: page.id }} section="admin">
                                                                 <FormattedMessage id="admin.interface.page.history" defaultMessage="View history" />
-                                                            </Link>
+                                                            </PageLink>
                                                         )}
                                                     </td>
                                                     <td style={{ width: 1 }}>
-                                                        <Link to={`/${props.vde ? 'vde' : 'admin'}/interface/page/${page.id}-${page.name}`}>
-                                                            <Button bsStyle="default" className="btn-labeled btn-icon">
-                                                                <span className="btn-label">
-                                                                    <em className="fa fa-edit" />
-                                                                </span>
-                                                            </Button>
-                                                        </Link>
+                                                        <PageLink className="btn btn-labeled btn-icon btn-default" page="edit-page" section="admin" params={{ id: page.id }} vde={props.vde}>
+                                                            <span className="btn-label">
+                                                                <em className="fa fa-edit" />
+                                                            </span>
+                                                        </PageLink>
+                                                        {/* FIXME
                                                         <Link to={`/${props.vde ? 'vde' : 'admin'}/tabs/interfacePage-${page.id}-${page.name}`}>
                                                             <Button bsStyle="default" className="btn-labeled btn-icon">
                                                                 <span className="btn-label">
@@ -96,6 +95,7 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                                                 </span>
                                                             </Button>
                                                         </Link>
+                                                        */}
                                                     </td>
                                                 </tr>
                                             ))}
@@ -125,26 +125,25 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                                     <td>
                                                         <div>{menu.name}</div>
                                                         {!props.vde && (
-                                                            <Link to={`/admin/interface/menu/history/${menu.id}-${menu.name}`} className="btn btn-link p0">
+                                                            <PageLink className="btn btn-link p0" page="menu-history" params={{ id: menu.id }} section="admin">
                                                                 <FormattedMessage id="admin.interface.menu.history" defaultMessage="View history" />
-                                                            </Link>
+                                                            </PageLink>
                                                         )}
                                                     </td>
                                                     <td style={{ width: 1 }}>
-                                                        <Link to={`/${props.vde ? 'vde' : 'admin'}/interface/menu/${menu.id}-${menu.name}`}>
-                                                            <Button bsStyle="default" className="btn-labeled btn-icon">
-                                                                <span className="btn-label">
-                                                                    <em className="fa fa-edit" />
-                                                                </span>
-                                                            </Button>
-                                                        </Link>
+                                                        <PageLink className="btn btn-labeled btn-icon btn-default" page="edit-menu" section="admin" params={{ id: menu.id }} vde={props.vde}>
+                                                            <span className="btn-label">
+                                                                <em className="fa fa-edit" />
+                                                            </span>
+                                                        </PageLink>
+                                                        {/* FIXME
                                                         <Link to={`/${props.vde ? 'vde' : 'admin'}/tabs/interfaceMenu-${menu.id}-${menu.name}`}>
                                                             <Button bsStyle="default" className="btn-labeled btn-icon">
                                                                 <span className="btn-label">
                                                                     <em className="fa fa-files-o" />
                                                                 </span>
                                                             </Button>
-                                                        </Link>
+                                                        </Link>*/}
                                                     </td>
                                                 </tr>
                                             ))}
@@ -171,20 +170,19 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                                 <tr key={block.id}>
                                                     <td>{block.name}</td>
                                                     <td style={{ width: 1 }}>
-                                                        <Link to={`/${props.vde ? 'vde' : 'admin'}/interface/block/${block.id}-${block.name}`}>
-                                                            <Button bsStyle="default" className="btn-labeled btn-icon">
-                                                                <span className="btn-label">
-                                                                    <em className="fa fa-edit" />
-                                                                </span>
-                                                            </Button>
-                                                        </Link>
+                                                        <PageLink className="btn btn-labeled btn-icon btn-default" page="edit-block" section="admin" params={{ id: block.id }} vde={props.vde}>
+                                                            <span className="btn-label">
+                                                                <em className="fa fa-edit" />
+                                                            </span>
+                                                        </PageLink>
+                                                        {/* FIXME
                                                         <Link to={`/${props.vde ? 'vde' : 'admin'}/tabs/interfaceBlock-${block.id}-${block.name}`}>
                                                             <Button bsStyle="default" className="btn-labeled btn-icon">
                                                                 <span className="btn-label">
                                                                     <em className="fa fa-files-o" />
                                                                 </span>
                                                             </Button>
-                                                        </Link>
+                                                        </Link>*/}
                                                     </td>
                                                 </tr>
                                             ))}

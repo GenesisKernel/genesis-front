@@ -17,8 +17,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { IProtypoElement } from 'components/Protypo/Protypo';
 import { fetchNotifications } from 'modules/content/actions';
+import { TProtypoElement } from 'genesis/protypo';
 
 import NotificationsMenu from 'components/Main/NotificationsMenu';
 
@@ -28,7 +28,7 @@ export interface INotificationsMenuContainerProps {
 
 interface INotificationsMenuContainerState {
     count: number;
-    notificationsBody: IProtypoElement[];
+    notificationsBody: TProtypoElement[];
 }
 
 interface INotificationsMenuContainerDispatch {

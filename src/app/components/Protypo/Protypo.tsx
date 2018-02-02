@@ -20,6 +20,7 @@ import * as propTypes from 'prop-types';
 import api from 'lib/api';
 import contextDefinitions from './contexts';
 import DnDComponent from './handlers/DnDComponent';
+import { TProtypoElement } from 'genesis/protypo';
 
 import Heading from 'components/Heading';
 import { IValidationResult } from 'components/Validation/ValidatedForm';
@@ -31,9 +32,9 @@ export interface IProtypoProps {
     wrapper?: JSX.Element;
     context: string;
     page: string;
-    payload: IProtypoElement[];
-    menuPush: (params: { name: string, content: IProtypoElement[] }) => void;
-    navigatePage: (params: { name: string, params: any, vde?: boolean }) => void;
+    content: TProtypoElement[];
+    menuPush: (params: { name: string, content: TProtypoElement[] }) => void;
+    navigatePage: (params: { name: string, params: any, force?: boolean, vde?: boolean }) => void;
     navigate: (url: string) => void;
     displayData: (link: string) => void;
     changePage?: any;
@@ -44,15 +45,6 @@ export interface IProtypoProps {
     setTagCanDropPosition?: any;
     selectTag?: any;
     selectedTag?: any;
-}
-
-export interface IProtypoElement {
-    tag: string;
-    id?: string;
-    text?: string;
-    // attr?: { [key: string]: string };
-    attr?: { [key: string]: any };  // attr can be structured
-    children?: IProtypoElement[];
 }
 
 export interface IParamsSpec {
@@ -139,7 +131,7 @@ class Protypo extends React.Component<IProtypoProps> {
         return result;
     }
 
-    renderElement(element: IProtypoElement, optionalKey?: string): React.ReactNode {
+    renderElement(element: TProtypoElement, optionalKey?: string): React.ReactNode {
         switch (element.tag) {
             case 'text':
                 return element.text;
@@ -199,7 +191,7 @@ class Protypo extends React.Component<IProtypoProps> {
         }
     }
 
-    renderElements(elements: IProtypoElement[], keyPrefix?: string): React.ReactNode[] {
+    renderElements(elements: TProtypoElement[], keyPrefix?: string): React.ReactNode[] {
         if (!elements) {
             return null;
         }
@@ -229,7 +221,7 @@ class Protypo extends React.Component<IProtypoProps> {
         this._title = null;
         this._errors = [];
 
-        const body = this.renderElements(this.props.payload);
+        const body = this.renderElements(this.props.content);
         const head = this.renderHeading();
         const children = [
             this._errors.length ? (

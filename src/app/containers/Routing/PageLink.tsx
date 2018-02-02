@@ -17,39 +17,38 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { alertShow } from 'modules/content/actions';
+import { navigatePage } from 'modules/content/actions';
 
-import Backup from 'components/Main/Backup';
-import { IStoredAccount } from 'genesis/storage';
+import PageLink from 'components/Routing/PageLink';
 
-export interface IBackupProps {
+export interface IPageLinkContainerProps {
+    section: string;
+    page: string;
+    vde?: boolean;
+    className?: string;
+    params?: {
+        [key: string]: string;
+    };
 }
 
-interface IBackupState {
-    account: IStoredAccount;
-    ecosystems: string[];
-    privateKey: string;
+interface IPageLinkContainerState {
+
 }
 
-interface IBackupDispatch {
-    alertShow: typeof alertShow;
+interface IPageLinkContainerDispatch {
+    navigatePage: typeof navigatePage.started;
 }
 
-const BackupContainer: React.SFC<IBackupProps & IBackupState & IBackupDispatch> = (props) => (
-    <Backup {...props} />
+const PageLinkContainer: React.SFC<IPageLinkContainerProps & IPageLinkContainerState & IPageLinkContainerDispatch> = (props) => (
+    <PageLink {...props} />
 );
 
 const mapStateToProps = (state: IRootState) => ({
-    account: state.auth.account,
-    ecosystems: state.auth.account && state.storage.accounts
-        .filter(l => l.id === state.auth.account.id && '1' !== l.ecosystem)
-        .map(l => l.ecosystem)
-        .sort((a, b) => parseInt(a, 10) - parseInt(b, 10)),
-    privateKey: state.auth.privateKey
+
 });
 
 const mapDispatchToProps = {
-    alertShow
+    navigatePage: navigatePage.started
 };
 
-export default connect<IBackupState, IBackupDispatch, IBackupProps>(mapStateToProps, mapDispatchToProps)(BackupContainer);
+export default connect<IPageLinkContainerState, IPageLinkContainerDispatch, IPageLinkContainerProps>(mapStateToProps, mapDispatchToProps)(PageLinkContainer);

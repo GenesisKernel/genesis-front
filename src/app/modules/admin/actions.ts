@@ -16,7 +16,7 @@
 
 import actionCreatorFactory from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IPageResponse, IContractsResponse, IParameterResponse, IHistoryResponse, ITabListResponse } from 'lib/api';
-import { IProtypoElement } from 'lib/api';
+import { TProtypoElement } from 'genesis/protypo';
 
 const actionCreator = actionCreatorFactory('admin');
 
@@ -35,9 +35,8 @@ export const getPage = actionCreator.async<{ id: string, vde?: boolean }, IPageR
 export const getInterface = actionCreator.async<{ vde?: boolean }, IInterfacesResponse, string>('GET_INTERFACE');
 
 // Constructor
-
 export const getPageTreeCode = actionCreator.async<{ code: string, vde?: boolean }, { pageTreeCode: any }, string>('GET_PAGE_TREE_CODE');
-export const getPageTree = actionCreator.async<{ id: string, name: string, vde?: boolean }, { page: { name: string, tree: IProtypoElement[], error?: string } }, string>('GET_PAGE_TREE');
+export const getPageTree = actionCreator.async<{ id: string, name: string, vde?: boolean }, { page: { name: string, tree: TProtypoElement[], error?: string } }, string>('GET_PAGE_TREE');
 export const changePage = actionCreator<{ text?: string, class?: string; align?: string; transform?: string; wrap?: string, color?: string; canDropPosition?: string; tagID: string, pageID: string, vde?: boolean }>('CHANGE_PAGE');
 export const setTagCanDropPosition = actionCreator<{ tagID: string, pageID: string, vde?: boolean, position: string }>('SET_TAG_CAN_DROP_POSITION');
 export const addTag = actionCreator<{ tag: any, pageID: string, vde?: boolean, destinationTagID?: string, position?: string }>('ADD_TAG');

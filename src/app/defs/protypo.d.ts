@@ -14,32 +14,12 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import * as React from 'react';
-import Protypo from 'containers/Widgets/Protypo';
-import { TPage } from 'genesis/content';
-
-import DocumentTitle from 'components/DocumentTitle';
-import Error from './Error';
-import Timeout from './Timeout';
-
-export interface IPageProps extends TPage {
-
+declare module 'genesis/protypo' {
+    type TProtypoElement = {
+        readonly tag: string;
+        readonly id?: string;
+        readonly text?: string;
+        readonly attr?: { [key: string]: any };
+        readonly children?: TProtypoElement[];
+    };
 }
-
-const Page: React.SFC<IPageProps> = (props) => {
-    if (props.error) {
-        switch (props.error) {
-            case 'E_HEAVYPAGE': return (<Timeout />);
-            default: return (<Error error={props.error} />);
-        }
-    }
-    else {
-        return (
-            <DocumentTitle title={props.name}>
-                <Protypo context="page" {...props} vde={props.vde} />
-            </DocumentTitle >
-        );
-    }
-};
-
-export default Page;

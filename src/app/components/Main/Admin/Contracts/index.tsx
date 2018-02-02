@@ -15,11 +15,11 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { IContract } from 'lib/api';
 
 import Wrapper from 'components/Wrapper';
+import PageLink from 'containers/Routing/PageLink';
 import Table, { ICellRenderer } from 'components/Table';
 
 export interface IContractsProps {
@@ -49,13 +49,13 @@ const renderCell: ICellRenderer = (data, rowData) => {
 
         case 4: return (
             <div>
-                <Link to={`/${rowData.rowData[4] ? 'vde' : 'admin'}/contracts/${rowData.rowData[0]}-${rowData.rowData[1]}`} className="btn btn-link">
+                <PageLink className="btn btn-link" page="edit-contract" section="admin" params={{ contractID: rowData.rowData[0] }} vde={!!rowData.rowData[2]}>
                     <FormattedMessage id="admin.contracts.edit" defaultMessage="Edit" />
-                </Link>
+                </PageLink>
                 {!rowData.rowData[4] && (
-                    <Link to={`/admin/contracts/history/${rowData.rowData[0]}-${rowData.rowData[1]}`} className="btn btn-link">
+                    <PageLink className="btn btn-link" page="history" section="admin" params={{ table: 'contracts', id: rowData.rowData[0] }}>
                         <FormattedMessage id="admin.contracts.edit" defaultMessage="History" />
-                    </Link>
+                    </PageLink>
                 )}
             </div>
         );
@@ -77,7 +77,7 @@ const Contracts: React.SFC<IContractsProps & InjectedIntlProps> = (props) => (
             ),
             toolButtons: [
                 {
-                    url: props.vde ? '/vde/contracts/create' : '/admin/contracts/create',
+                    url: props.vde ? '/vde/create-contract' : '/admin/create-contract',
                     icon: 'icon-plus',
                     title: (
                         <FormattedMessage id="admin.contracts.create" defaultMessage="Create contract" />

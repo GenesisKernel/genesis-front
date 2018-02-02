@@ -132,7 +132,7 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
         });
 
         return connectDragPreview(connectDropTarget(
-            <span style={{display: 'inline-block'}}>
+            <span style={{ display: 'inline-block' }}>
                 <TagWrapper
                     display="inline"
                     selected={props.selected}
@@ -142,16 +142,16 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
                     removeTag={removeTag}
                     connectDragSource={connectDragSource}
                 >
-                <button
-                    className={classes}
-                >
-                    <span
-                        contentEditable={props.selected}
-                        onBlur={onBlur}
+                    <button
+                        className={classes}
                     >
-                        {props.children}
-                    </span>
-                </button>
+                        <span
+                            contentEditable={props.selected}
+                            onBlur={onBlur}
+                        >
+                            {props.children}
+                        </span>
+                    </button>
                 </TagWrapper>
             </span>
         ));

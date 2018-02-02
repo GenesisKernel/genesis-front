@@ -24,11 +24,12 @@ import EditColumn from 'components/Main/Admin/Tables/EditColumn';
 
 export interface IEditColumnContainerProps {
     vde?: boolean;
-    match: { params: { tableName: string, columnName: string } };
+    table: string;
+    column: string;
 }
 
 interface IEditColumnContainerState {
-    table: ITableResponse;
+    tableStruct: ITableResponse;
 }
 
 interface IEditColumnContainerDispatch {
@@ -38,13 +39,13 @@ interface IEditColumnContainerDispatch {
 class EditColumnContainer extends React.Component<IEditColumnContainerProps & IEditColumnContainerState & IEditColumnContainerDispatch> {
     componentWillMount() {
         this.props.getTableStruct({
-            name: this.props.match.params.tableName,
+            name: this.props.table,
             vde: this.props.vde
         });
     }
 
     render() {
-        const column = this.props.table && this.props.table.columns.find(l => l.name === this.props.match.params.columnName);
+        const column = this.props.tableStruct && this.props.tableStruct.columns.find(l => l.name === this.props.column);
         return (
             <EditColumn
                 {...this.props}
@@ -60,7 +61,7 @@ class EditColumnContainer extends React.Component<IEditColumnContainerProps & IE
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    table: state.admin.table
+    tableStruct: state.admin.table
 });
 
 const mapDispatchToProps = {

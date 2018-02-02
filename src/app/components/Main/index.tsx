@@ -28,6 +28,8 @@ import UserMenu from 'containers/Widgets/UserMenu';
 import Navigation from 'containers/Main/Navigation';
 import { apiUrl } from 'lib/api';
 import NotificationsMenu from 'containers/Widgets/NotificationsMenu';
+import { TSection } from 'genesis/content';
+import * as _ from 'lodash';
 // import TransactionsMenu from './TransactionsMenu';
 
 export const styles = {
@@ -46,6 +48,8 @@ export interface IMainProps {
     isAuthorized: boolean;
     isEcosystemOwner: boolean;
     pending: boolean;
+    section: string;
+    sections: { [name: string]: TSection };
     stylesheet: string;
     navigationSize: number;
     navigationVisible: boolean;
@@ -54,6 +58,7 @@ export interface IMainProps {
     onRefresh: () => void;
     onNavigateHome: () => void;
     onNavigationToggle: () => void;
+    onSwitchSection: (section: string) => void;
 }
 
 const StyledControls = styled.div`
@@ -234,7 +239,15 @@ class Main extends React.Component<IMainProps> {
                         <MenuItem onClick={this.props.onNavigationToggle}>
                             <em className="icon-menu" />
                         </MenuItem>
-                        <MenuItem active>Home</MenuItem>
+                        {_.map(this.props.sections, l => (
+                            <MenuItem
+                                key={l.name}
+                                active={this.props.section === l.name}
+                                onClick={this.props.onSwitchSection.bind(this, l.name)}
+                            >
+                                {l.title}
+                            </MenuItem>
+                        ))}
                         <li className="user-menu">
                             <NotificationsMenu />
                             {/*<TransactionsMenu />*/}

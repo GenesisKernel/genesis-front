@@ -137,6 +137,7 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
             this.props.navigatePage({
                 name: page,
                 params: pageParams,
+                force: true,
                 vde: this.props.vde
             });
         }

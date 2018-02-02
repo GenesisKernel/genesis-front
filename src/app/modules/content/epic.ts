@@ -24,14 +24,21 @@ import * as actions from './actions';
 import { logout, selectAccount } from 'modules/auth/actions';
 import * as storageActions from 'modules/storage/actions';
 import { history } from 'store';
+import { navigate } from 'modules/engine/actions';
+import LEGACY_PAGES from 'lib/legacyPages';
 
 export const navigatePageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.navigatePage.started)
         .map(action => {
-            history.push(`/${action.payload.vde ? 'vde/page' : 'page'}/${action.payload.name}`, { params: action.payload.params });
+            const state = store.getState();
+            const sectionName = (LEGACY_PAGES[action.payload.name] && LEGACY_PAGES[action.payload.name].section) || action.payload.section || state.content.section;
+            const section = state.content.sections[sectionName];
+            history.push(`/${sectionName}/${action.payload.name || section.defaultPage}`, { params: action.payload.params });
             return actions.navigatePage.done({
                 params: action.payload,
-                result: null
+                result: {
+                    section: sectionName
+                }
             });
         });
 
@@ -50,6 +57,7 @@ export const renderPageEpic: Epic<Action, IRootState> =
                                 content: payload.menutree
                             },
                             page: {
+                                params: action.payload.params,
                                 name: action.payload.name,
                                 content: payload.tree
                             }
@@ -64,24 +72,57 @@ export const renderPageEpic: Epic<Action, IRootState> =
                 );
         });
 
+export const renderLegacyPageEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.renderLegacyPage.started)
+        .flatMap(action => {
+            const state = store.getState();
+            return Observable.fromPromise(api.contentMenu(state.auth.sessionToken, action.payload.menu, action.payload.vde))
+                .map(payload =>
+                    actions.renderLegacyPage.done({
+                        params: action.payload,
+                        result: {
+                            menu: {
+                                name: action.payload.menu,
+                                vde: action.payload.vde,
+                                content: payload.tree
+                            }
+                        }
+                    })
+                )
+                .catch(error =>
+                    Observable.of(actions.renderLegacyPage.done({
+                        params: action.payload,
+                        result: {
+                            menu: {
+                                name: action.payload.menu,
+                                vde: action.payload.vde,
+                                content: []
+                            }
+                        }
+                    })));
+        });
+
 export const reloadPageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.reloadPage.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, state.content.page.name, state.content.page, state.content.page.vde))
+            const section = state.content.sections[state.content.section];
+
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, section.page.name, section.page, section.page.vde))
                 .map(payload =>
                     actions.reloadPage.done({
                         params: action.payload,
                         result: {
-                            vde: state.content.page.vde,
-                            params: state.content.page.params,
+                            vde: section.page.vde,
+                            params: section.page.params,
                             menu: {
                                 name: payload.menu,
-                                vde: state.content.page.vde,
+                                vde: section.page.vde,
                                 content: payload.menutree
                             },
                             page: {
-                                name: state.content.page.name,
+                                params: section.page.params,
+                                name: section.page.name,
                                 content: payload.tree
                             }
                         }
@@ -101,7 +142,6 @@ export const ecosystemInitEpic: Epic<Action, IRootState> =
             const state = store.getState();
 
             const promise = Promise.all([
-                api.contentMenu(state.auth.sessionToken, 'default_menu'),
                 api.parameter(state.auth.sessionToken, 'stylesheet'),
                 api.parameter(state.auth.sessionToken, 'ecosystem_name')
             ]);
@@ -111,18 +151,13 @@ export const ecosystemInitEpic: Epic<Action, IRootState> =
                     Observable.concat([
                         storageActions.saveAccount({
                             ...state.auth.account,
-                            ecosystemName: payload[2].value
+                            ecosystemName: payload[1].value
                         }),
                         actions.fetchNotifications.started(null),
                         actions.ecosystemInit.done({
                             params: action.payload,
                             result: {
-                                stylesheet: payload[1].value || null,
-                                defaultMenu: {
-                                    name: 'default_menu',
-                                    vde: false,
-                                    content: payload[0].tree
-                                }
+                                stylesheet: payload[0].value || null
                             }
                         })
                     ])
@@ -175,7 +210,9 @@ export const resetEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.reset.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, 'default_page', {}))
+            const section = state.content.sections[state.content.section];
+
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, section.defaultPage, {}))
                 .map(payload => actions.reset.done({
                     params: action.payload,
                     result: {
@@ -185,7 +222,8 @@ export const resetEpic: Epic<Action, IRootState> =
                             content: payload.menutree
                         },
                         page: {
-                            name: 'default_page',
+                            params: {},
+                            name: section.defaultPage,
                             content: payload.tree
                         }
                     }
@@ -244,13 +282,23 @@ export const displayDataEpic: Epic<Action, IRootState> =
                 );
         });
 
+export const switchSectionEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.switchSection)
+        .map(action => {
+            const state = store.getState();
+            const section = state.content.sections[action.payload];
+            return navigate(`/${section.name}/${section.page ? section.page.name : ''}`);
+        });
+
 export default combineEpics(
     renderPageEpic,
+    renderLegacyPageEpic,
     reloadPageEpic,
     ecosystemInitEpic,
     resetEpic,
     alertEpic,
     navigatePageEpic,
     fetchNotificationsEpic,
-    displayDataEpic
+    displayDataEpic,
+    switchSectionEpic
 );

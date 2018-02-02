@@ -14,18 +14,18 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { IProtypoElement } from 'components/Protypo/Protypo';
 import { findDOMNode } from 'react-dom';
+import { TProtypoElement } from 'genesis/protypo';
 
 let findTagByIdResult: {
     el: any;
     parent: any,
     parentPosition: number
 } = {
-    el: null,
-    parent: null,
-    parentPosition: 0
-};
+        el: null,
+        parent: null,
+        parentPosition: 0
+    };
 
 export const findTagById = (el: any, id: string): any => {
     findTagByIdResult.el = null;
@@ -100,7 +100,7 @@ export function OnPasteStripFormatting(elem: any, e: any) {
 }
 
 class Tag {
-    protected element: IProtypoElement;
+    protected element: TProtypoElement;
     protected tagName: string = 'Tag';
     protected canHaveChildren: boolean = true;
 
@@ -108,7 +108,7 @@ class Tag {
         'class': 'Class'
     };
 
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         this.element = element;
     }
     renderCode(): string {
@@ -122,7 +122,7 @@ class Tag {
 
         let body = this.renderChildren();
         if (body.length > 0) {
-           params.push('Body: ' + body);
+            params.push('Body: ' + body);
         }
         result += params.join(', ');
         result += ')';
@@ -189,8 +189,8 @@ class Tag {
 
     getValidationParams(obj: Object) {
         const params = {
-           'minlength': 'minLength',
-           'maxlength': 'maxLength'
+            'minlength': 'minLength',
+            'maxlength': 'maxLength'
         };
         let paramsArr = [];
         for (let param in obj) {
@@ -220,7 +220,7 @@ class Tag {
 }
 
 class Button extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Button';
         this.canHaveChildren = true;
@@ -283,56 +283,56 @@ class Button extends Tag {
 }
 
 class P extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'P';
     }
 }
 
 class Div extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Div';
     }
 }
 
 class Span extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Span';
     }
 }
 
 class Strong extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Strong';
     }
 }
 
 class Em extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Em';
     }
 }
 
 class Form extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Form';
     }
 }
 
 class Label extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Label';
     }
 }
 
 class Table extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Table';
         this.canHaveChildren = false;
@@ -390,7 +390,7 @@ class Table extends Tag {
 }
 
 class Image extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Image';
         this.canHaveChildren = false;
@@ -436,7 +436,7 @@ class Image extends Tag {
 }
 
 class ImageInput extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'ImageInput';
         this.canHaveChildren = false;
@@ -487,7 +487,7 @@ class ImageInput extends Tag {
 }
 
 class Input extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Input';
         this.canHaveChildren = false;
@@ -541,8 +541,8 @@ class Input extends Tag {
 }
 
 export class CodeGenerator {
-    private elements: IProtypoElement[];
-    constructor(elements: IProtypoElement[]) {
+    private elements: TProtypoElement[];
+    constructor(elements: TProtypoElement[]) {
         this.elements = elements;
     }
     render(): string {
@@ -567,23 +567,23 @@ export class CodeGenerator {
 
 const tagHandlers = {
     'button': Button,
-//     'data': Data,
-//     'dbfind': DBFind,
+    //     'data': Data,
+    //     'dbfind': DBFind,
     'div': Div,
     'em': Em,
-//     'forlist': ForList,
+    //     'forlist': ForList,
     'form': Form,
     'image': Image,
     'imageinput': ImageInput,
     'input': Input,
-//     'inputerr': InputErr,
+    //     'inputerr': InputErr,
     'label': Label,
-//     'linkpage': LinkPage,
-//     'menuitem': MenuItem,
-//     'menugroup': MenuGroup,
+    //     'linkpage': LinkPage,
+    //     'menuitem': MenuItem,
+    //     'menugroup': MenuGroup,
     'p': P,
-//     'radiogroup': RadioGroup,
-//     'select': Select,
+    //     'radiogroup': RadioGroup,
+    //     'select': Select,
     'span': Span,
     'strong': Strong,
     'table': Table

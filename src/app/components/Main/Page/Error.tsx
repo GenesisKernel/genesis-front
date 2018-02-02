@@ -33,10 +33,10 @@ const Error: React.SFC<IErrorProps> = (props) => (
                     <p className="lead m0">
                         <FormattedMessage id="general.error.timeout" defaultMessage="Internal server error" />
                     </p>
-                    <p>
+                    <div>
                         <div><FormattedMessage id="general.error.timeout.desc" defaultMessage="The page you are looking for could not be processed" /></div>
                         <div>{props.error}</div>
-                    </p>
+                    </div>
                 </div>
             </div>
         </Center>

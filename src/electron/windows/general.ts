@@ -15,14 +15,14 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { BrowserWindow } from 'electron';
+import calcScreenOffset from '../util/calcScreenOffset';
 
-export default () => new BrowserWindow({
-    width: 640,
-    height: 524,
-    minWidth: 640,
-    minHeight: 524,
-    frame: false,
-    backgroundColor: '#17437b',
-    resizable: false,
-    show: false
-});
+export default () => {
+    return new BrowserWindow({
+        frame: false,
+        backgroundColor: '#17437b',
+        resizable: false,
+        show: false,
+        ...calcScreenOffset({ width: 640, height: 524 })
+    });
+};

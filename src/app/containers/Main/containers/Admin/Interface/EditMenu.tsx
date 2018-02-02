@@ -23,7 +23,7 @@ import EditMenu from 'components/Main/Admin/Interface/EditMenu';
 
 export interface IEditMenuContainerProps {
     vde?: boolean;
-    match?: { params: { menuID: string } };
+    menuID: string;
 }
 
 interface IEditMenuContainerState {
@@ -37,7 +37,7 @@ interface IEditMenuContainerDispatch {
 class EditMenuContainer extends React.Component<IEditMenuContainerProps & IEditMenuContainerState & IEditMenuContainerDispatch> {
     componentWillMount() {
         this.props.getMenu({
-            id: this.props.match.params.menuID,
+            id: this.props.menuID,
             vde: this.props.vde
         });
     }

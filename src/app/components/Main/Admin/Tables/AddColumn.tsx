@@ -16,10 +16,10 @@
 
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
 import { columnTypes } from './Create';
 
 import DocumentTitle from 'components/DocumentTitle';
+import PageLink from 'containers/Routing/PageLink';
 import Heading from 'components/Heading';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
@@ -101,19 +101,19 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
                     <div className="content-wrapper" >
                         <ol className="breadcrumb">
                             <li>
-                                <Link to={this.props.vde ? '/vde/tables' : '/admin/tables'}>
+                                <PageLink page="tables" section="admin" vde={this.props.vde}>
                                     <FormattedMessage id="admin.tables" defaultMessage="Tables" />
-                                </Link>
+                                </PageLink>
                             </li>
                             <li>
-                                <Link to={`/${this.props.vde ? 'vde' : 'admin'}/tables/${this.props.table}`}>
+                                <PageLink page="table" section="admin" params={{ table: this.props.table }} vde={this.props.vde}>
                                     {this.props.table}
-                                </Link>
+                                </PageLink>
                             </li>
                             <li>
-                                <Link to={`/${this.props.vde ? 'vde' : 'admin'}/tables/${this.props.table}/edit`}>
+                                <PageLink page="edit-table" section="admin" params={{ table: this.props.table }} vde={this.props.vde}>
                                     <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
-                                </Link>
+                                </PageLink>
                             </li>
                             <li>
                                 <FormattedMessage id="admin.tables.column.add" defaultMessage="Add column" />

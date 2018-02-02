@@ -15,12 +15,12 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { Button, Col, FormGroup, Panel, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import Editor from 'components/Editor';
 
+import Editor from 'components/Editor';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
+import PageLink from 'containers/Routing/PageLink';
 import Validation from 'components/Validation';
 
 interface IPageEditorProps {
@@ -96,12 +96,12 @@ const PageEditor: React.SFC<IPageEditorProps> = (props) => (
                     </div>
                     <div className="panel-footer">
                         <div className="text-right">
+                            {/* FIXME 
                             {props.page ? (
-                                    <Link to={`/${props.vde ? 'vde' : 'admin'}/tabs/interfaceConstructor-${props.page.id}-${props.page.name}`} className="btn btn-primary pull-left">
-                                        Open in Constructor
-                                    </Link>
-                                ) : ('')
+                            <Link to={`/${props.vde ? 'vde' : 'admin'}/tabs/interfaceConstructor-${props.page.id}-${props.page.name}`} className="btn btn-primary pull-left">Open in Constructor</Link>
+                            ) : ('')
                             }
+                            */}
 
                             <Validation.components.ValidatedSubmit bsStyle="primary">
                                 <FormattedMessage id="admin.save" defaultMessage="Save" />
@@ -117,18 +117,20 @@ const PageEditor: React.SFC<IPageEditorProps> = (props) => (
                 header={<FormattedMessage id="admin.interface.menu" defaultMessage="Menu" />}
                 footer={props.menu && (
                     <span>
-                        <Link to={`/${props.vde ? 'vde' : 'admin'}/interface/menu/${props.menu.id}-${props.menu.name}`}>
+                        <PageLink page="edit-menu" section="admin" params={{ id: props.menu.id }} vde={props.vde}>
                             <Button bsStyle="primary">
                                 <FormattedMessage id="admin.edit" defaultMessage="Edit" />
                             </Button>
-                        </Link>
+                        </PageLink>
+
+                        {/* FIXME
                         <Link to={`/${props.vde ? 'vde' : 'admin'}/tabs/interfaceMenu-${props.menu.id}-${props.menu.name}`}>
                             <Button bsStyle="default" className="btn-labeled btn-icon">
                                 <span className="btn-label">
                                     <em className="fa fa-files-o" />
                                 </span>
                             </Button>
-                        </Link>
+                        </Link>*/}
                     </span>
                 )}
             >

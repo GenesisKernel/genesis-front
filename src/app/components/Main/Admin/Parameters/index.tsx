@@ -17,10 +17,10 @@
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
-import { Link } from 'react-router-dom';
 import { IParameterResponse } from 'lib/api';
 
 import Wrapper from 'components/Wrapper';
+import PageLink from 'containers/Routing/PageLink';
 import Table, { ICellRenderer } from 'components/Table';
 
 export interface IParametersProps {
@@ -43,13 +43,13 @@ const renderParameter: ICellRenderer = (value, rowData) => {
         );
 
         case 3: return (
-            <Link to={`/${rowData.rowData[3] ? 'vde' : 'admin'}/parameters/${rowData.rowData[0]}`}>
+            <PageLink page="edit-parameter" section="admin" params={{ name: rowData.rowData[0] }} vde={!!rowData.rowData[3]}>
                 <Button bsStyle="default" className="btn-labeled btn-icon">
                     <span className="btn-label">
                         <em className="icon-pencil" />
                     </span>
                 </Button>
-            </Link>
+            </PageLink>
         );
 
         default: return value;
@@ -69,14 +69,14 @@ const Parameters: React.SFC<IParametersProps & InjectedIntlProps> = (props) => (
             ),
             toolButtons: [
                 {
-                    url: props.vde ? '/vde/parameters/stylesheet' : '/admin/parameters/stylesheet',
+                    url: props.vde ? '/vde/stylesheet' : '/admin/stylesheet',
                     icon: 'icon-picture',
                     title: (
                         <FormattedMessage id="admin.parameters.stylesheet" defaultMessage="Manage stylesheet" />
                     )
                 },
                 {
-                    url: props.vde ? '/vde/parameters/create' : '/admin/parameters/create',
+                    url: props.vde ? '/vde/create-parameter' : '/admin/create-parameter',
                     icon: 'icon-picture',
                     title: (
                         <FormattedMessage id="admin.parameters.create" defaultMessage="Create" />

@@ -16,12 +16,12 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import imgAvatar from 'images/avatar.svg';
 import { FormattedMessage } from 'react-intl';
 import { IStoredAccount } from 'genesis/storage';
 
 import DropdownButton, { CloseDropdownButton } from 'components/DropdownButton';
+import PageLink from 'containers/Routing/PageLink';
 
 const StyledUserMenu = styled.div`
     -webkit-app-region: no-drag;
@@ -99,14 +99,14 @@ class UserMenu extends React.Component<IUserMenuProps> {
                                 </CloseDropdownButton>
                             </li>
                             <li>
-                                <Link to="/backup">
+                                <PageLink page="backup" section="home">
                                     <CloseDropdownButton>
                                         <em className="icon icon-shield text-muted" />
                                         <span>
                                             <FormattedMessage id="general.account.backup" defaultMessage="Backup account" />
                                         </span>
                                     </CloseDropdownButton>
-                                </Link>
+                                </PageLink>
                             </li>
                             <li>
                                 <CloseDropdownButton onClick={this.props.logout}>

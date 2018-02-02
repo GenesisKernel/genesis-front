@@ -15,47 +15,36 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import * as propTypes from 'prop-types';
 
-import Protypo, { IParamsSpec } from '../Protypo';
-import StyledComponent from './StyledComponent';
-
-export interface ILinkPageProps {
-    'class'?: string;
-    'className'?: string;
-    'page'?: string;
-    'pageparams'?: IParamsSpec;
-}
-
-interface ILinkPageContext {
+export interface IPageLinkProps {
+    section?: string;
+    page: string;
+    params?: {
+        [key: string]: string
+    };
+    className?: string;
     vde?: boolean;
-    protypo: Protypo;
-    navigatePage: (params: { name: string, params: any, force?: boolean, vde?: boolean }) => void;
+    navigatePage: (params: { name: string, section: string, params: { [key: string]: string }, vde?: boolean }) => void;
 }
 
-const LinkPage: React.SFC<ILinkPageProps> = (props, context: ILinkPageContext) => {
-    const onNavigate = (e: React.MouseEvent<HTMLAnchorElement>) => {
+const PageLink: React.SFC<IPageLinkProps> = props => {
+    const navigateUrl = `/${props.section}/${props.page}`;
+    const navigatePage = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
-        context.navigatePage({
+        props.navigatePage({
             name: props.page,
-            params: context.protypo.resolveParams(props.pageparams),
-            force: true,
-            vde: context.vde
+            section: props.section,
+            params: props.params,
+            vde: props.vde
         });
         return false;
     };
 
     return (
-        <a href="#" className={[props.class, props.className].join(' ')} onClick={onNavigate}>
+        <a href={navigateUrl} className={props.className} onClick={navigatePage}>
             {props.children}
         </a>
     );
 };
 
-LinkPage.contextTypes = {
-    protypo: propTypes.object.isRequired,
-    navigatePage: propTypes.func.isRequired,
-    vde: propTypes.bool
-};
-
-export default StyledComponent(LinkPage);
+export default PageLink;

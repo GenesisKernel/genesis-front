@@ -15,70 +15,128 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import * as _ from 'lodash';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { renderPage } from 'modules/content/actions';
+import { renderPage, ecosystemInit, renderLegacyPage } from 'modules/content/actions';
+import { TSection } from 'genesis/content';
+import LEGACY_PAGES from 'lib/legacyPages';
 
-import { IProtypoElement } from 'components/Protypo/Protypo';
 import Page from 'components/Main/Page';
 
 export interface IPageContainerProps {
-    match?: { params: { [key: string]: string, pageName: string } };
+    match?: { params: { [key: string]: string } };
     location?: {
         state: { params?: { [key: string]: any } };
     };
 }
 
 interface IPageContainerState {
-    page: { name: string, content: IProtypoElement[], error?: string };
-    pending: boolean;
+    section: string;
+    sections: {
+        [name: string]: TSection;
+    };
 }
 
 interface IPageContainerDispatch {
     renderPage: typeof renderPage.started;
+    renderLegacyPage: typeof renderLegacyPage.started;
+    ecosystemInit: typeof ecosystemInit.started;
 }
 
 class PageContainer extends React.Component<IPageContainerProps & IPageContainerState & IPageContainerDispatch> {
     componentDidMount() {
-        this.renderPage(this.props);
+        this.props.ecosystemInit({
+            section: this.props.match.params.section
+        });
     }
 
     componentWillReceiveProps(props: IPageContainerProps & IPageContainerState & IPageContainerDispatch) {
+        if (this.props.match.params.section !== props.match.params.section) {
+            //console.log('Section change detected::', props.match.params.section);
+        }
         this.renderPage(props);
     }
 
     renderPage(props: IPageContainerProps & IPageContainerState & IPageContainerDispatch) {
-        const isVDE = props.match.params && props.match.params['0'] === 'vde';
-        if (!props.pending && (!props.page || props.page.name !== props.match.params.pageName)) {
-            props.renderPage({
-                name: props.match.params.pageName,
-                params: props.location.state && props.location.state.params,
-                vde: isVDE
-            });
+        //const isVDE = props.match.params && props.match.params['0'] === 'vde';
+        const section = props.sections[props.match.params.section];
+        const isPending = section.pending;
+        const requestPage = (props.match.params.pageName || section.defaultPage);
+
+        if (!isPending) {
+            if (!section.page) {
+                props.renderPage({
+                    section: section.name,
+                    name: section.defaultPage,
+                    params: {},
+                    vde: false
+                });
+            }
+            else if (section.page.name !== requestPage || section.force) {
+                const legacyPage = LEGACY_PAGES[requestPage];
+
+                if (legacyPage && section.name === legacyPage.section) {
+                    props.renderLegacyPage({
+                        section: legacyPage.section || section.name,
+                        name: requestPage,
+                        menu: legacyPage.menu,
+                        params: props.location && props.location.state && props.location.state.params,
+                        vde: false
+                    });
+                }
+                else {
+                    props.renderPage({
+                        section: section.name,
+                        name: requestPage,
+                        params: props.location && props.location.state && props.location.state.params,
+                        vde: false
+                    });
+                }
+            }
         }
     }
 
     render() {
-        const isVDE = this.props.match.params && this.props.match.params['0'] === 'vde';
-
         return (
-            <Page
-                vde={isVDE}
-                error={this.props.page && this.props.page.error}
-                name={this.props.page && this.props.page.name}
-                payload={this.props.page && this.props.page.content}
-            />
+            <div className="flex-col flex-stretch">
+                {_.map(this.props.sections, section => {
+                    const isVDE = this.props.match.params && this.props.match.params['0'] === 'vde';
+                    const isLegacy = section.page && section.page.legacy;
+                    const legacyPage = isLegacy ? LEGACY_PAGES[section.page.name] : null;
+
+                    return (
+                        <div key={section.name} className="flex-col flex-stretch" style={{ display: this.props.section === section.name ? null : 'none', overflowX: 'hidden', overflowY: 'auto' }}>
+                            {isLegacy ?
+                                (
+                                    legacyPage.render(section.page.params)
+                                ) :
+                                (
+                                    <Page
+                                        vde={isVDE}
+                                        error={section.page && section.page.error}
+                                        name={section.page && section.page.name}
+                                        params={section.page && section.page.params}
+                                        content={section.page && section.page.content}
+                                    />
+                                )}
+                        </div>
+                    );
+                })}
+            </div>
         );
     }
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    page: state.content.page,
-    pending: state.content.pending
+    section: state.content.section,
+    sections: state.content.sections
 });
 
 const mapDispatchToProps = {
-    renderPage: renderPage.started
+    renderPage: renderPage.started,
+    renderLegacyPage: renderLegacyPage.started,
+    ecosystemInit: ecosystemInit.started
 };
 
 export default connect<IPageContainerState, IPageContainerDispatch, IPageContainerProps>(mapStateToProps, mapDispatchToProps)(PageContainer);

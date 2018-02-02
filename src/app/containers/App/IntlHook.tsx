@@ -18,7 +18,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { InjectedIntlProps, injectIntl } from 'react-intl';
 import { IRootState } from 'modules';
-import { registerIntl } from 'modules/engine/actions';
+import { intialize } from 'modules/engine/actions';
 
 export interface IIntlHookProps {
 
@@ -29,12 +29,12 @@ interface IIntlHookState {
 }
 
 interface IIntlHookDispatch {
-    registerIntl: typeof registerIntl;
+    intialize: typeof intialize;
 }
 
 class IntlHook extends React.Component<IIntlHookProps & IIntlHookState & IIntlHookDispatch & InjectedIntlProps> {
     componentDidMount() {
-        this.props.registerIntl(this.props.intl);
+        this.props.intialize(this.props.intl);
     }
 
     render() {
@@ -47,7 +47,7 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    registerIntl
+    intialize
 };
 
 export default injectIntl(connect<IIntlHookState, IIntlHookDispatch, IIntlHookProps>(mapStateToProps, mapDispatchToProps)(IntlHook));

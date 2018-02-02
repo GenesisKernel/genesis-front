@@ -16,6 +16,7 @@
 
 import needle, { NeedleOptions } from 'needle';
 import platform from 'lib/platform';
+import { TProtypoElement } from 'genesis/protypo';
 
 export let apiUrl = platform.args().API_URL || process.env.REACT_APP_API_URL || 'http://127.0.0.1:7079/api/v2';
 export let socketUrl = platform.args().SOCKET_URL || process.env.REACT_APP_SOCKET_URL || 'ws://127.0.0.1:8000';
@@ -44,13 +45,6 @@ export interface IResponse extends IAPIError {
 export interface IAPIError {
     error: string;
     msg: string;
-}
-
-export interface IProtypoElement {
-    tag: string;
-    text?: string;
-    attr?: { [key: string]: string };
-    children?: IProtypoElement[];
 }
 
 export interface IInstallParams {
@@ -101,18 +95,10 @@ export interface ISignTestResponse extends IResponse {
     pubkey: string;
 }
 
-export interface IProtypoElement {
-    tag: string;
-    id?: string;
-    text?: string;
-    attr?: { [key: string]: string };
-    children?: IProtypoElement[];
-}
-
 export interface IContentResponse extends IResponse {
     menu: string;
-    tree: IProtypoElement[];
-    menutree?: IProtypoElement[];
+    tree: TProtypoElement[];
+    menutree?: TProtypoElement[];
 }
 
 export interface ITableResponse extends IResponse {
@@ -337,7 +323,7 @@ const api = {
 
     // Level 2
     row: (session: string, table: string, id: string, columns?: string, vde = false) => securedRequest(`row/${table}/${id}?columns=${columns || ''}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<IRowResponse>,
-    contentMenu: (session: string, name: string) => securedRequest(`content/menu/${name}`, session, null)
+    contentMenu: (session: string, name: string, vde = false) => securedRequest(`content/menu/${name}`, session, { vde })
         .then(transformContent),
     contentPage: (session: string, name: string, params: { [key: string]: any }, vde = false) => securedRequest(`content/page/${name}`, session, { ...params, vde })
         .then(transformContent),

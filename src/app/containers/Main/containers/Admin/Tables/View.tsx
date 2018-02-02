@@ -24,12 +24,12 @@ import View, { columnDisplayRules } from 'components/Main/Admin/Tables/View';
 
 export interface IViewContainerProps {
     vde?: boolean;
-    match?: { params: { tableName: string } };
+    table: string;
 }
 
 interface IViewContainerState {
     tableData: IListResponse;
-    table: ITableResponse;
+    tableStruct: ITableResponse;
 }
 
 interface IViewContainerDispatch {
@@ -48,7 +48,7 @@ class ViewContainer extends React.Component<IViewContainerProps & IViewContainer
             }
         }
         this.props.getTable({
-            table: this.props.match.params.tableName,
+            table: this.props.table,
             columnTypes,
             vde: this.props.vde
         });
@@ -56,13 +56,13 @@ class ViewContainer extends React.Component<IViewContainerProps & IViewContainer
 
     render() {
         return (
-            <View vde={this.props.vde} tableName={this.props.match.params.tableName} table={this.props.table} tableData={this.props.tableData} />
+            <View vde={this.props.vde} tableName={this.props.table} table={this.props.tableStruct} tableData={this.props.tableData} />
         );
     }
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    table: state.admin.table,
+    tableStruct: state.admin.table,
     tableData: state.admin.tableData
 });
 

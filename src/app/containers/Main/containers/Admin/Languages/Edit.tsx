@@ -24,7 +24,7 @@ import Edit from 'components/Main/Admin/Languages/Edit';
 
 export interface IEditContainerProps {
     vde?: boolean;
-    match: { params: { translationID: string } };
+    translationID: string;
 }
 
 interface IEditContainerState {
@@ -38,7 +38,7 @@ interface IEditContainerDispatch {
 class EditContainer extends React.Component<IEditContainerProps & IEditContainerState & IEditContainerDispatch> {
     componentWillMount() {
         this.props.getLanguage({
-            id: this.props.match.params.translationID,
+            id: this.props.translationID,
             vde: this.props.vde
         });
     }

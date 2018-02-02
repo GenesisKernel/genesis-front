@@ -20,7 +20,7 @@ import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse, IHistoryResponse } from 'lib/api';
 import { findTagById, resolveTagHandler, Properties, generateId, setIds, CodeGenerator } from 'lib/constructor';
-import { IProtypoElement } from 'components/Protypo/Protypo';
+import { TProtypoElement } from 'genesis/protypo';
 
 export type State = {
     readonly pending: boolean;
@@ -42,7 +42,7 @@ export type State = {
                 type: string,
                 data: any,
                 pageTemplate?: string,
-                selectedTag?: IProtypoElement
+                selectedTag?: TProtypoElement
             }
         },
         history: {
@@ -53,7 +53,8 @@ export type State = {
                 canRedo?: boolean
             }
         },
-        list: { id: string, type: string, name?: string, visible?: boolean, vde?: boolean }[] };
+        list: { id: string, type: string, name?: string, visible?: boolean, vde?: boolean }[]
+    };
     readonly language: { id: string, res: any, name: string, conditions: string };
     readonly languages: { id: string, res: any, name: string, conditions: string }[];
     readonly parameter: IParameterResponse;

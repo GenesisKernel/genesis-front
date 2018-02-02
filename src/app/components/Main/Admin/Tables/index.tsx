@@ -17,11 +17,11 @@
 import * as React from 'react';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import { ITablesResponse } from 'lib/api';
 
 import Wrapper from 'components/Wrapper';
 import Table, { ICellRenderer } from 'components/Table';
+import PageLink from 'containers/Routing/PageLink';
 
 export interface ITablesProps {
     vde?: boolean;
@@ -42,19 +42,19 @@ const renderTable: ICellRenderer = (value, rowData) => {
                     <FormattedMessage id="admin.tables.show" defaultMessage="Show" />
                 </Button>
             ) : (
-                <Link to={`/${rowData.rowData[2] ? 'vde' : 'admin'}/tables/${rowData.rowData[0]}`}>
+                <PageLink page="table" section="admin" params={{ table: rowData.rowData[0] }} vde={!!rowData.rowData[2]}>
                     <Button bsStyle="primary">
                         <FormattedMessage id="admin.tables.show" defaultMessage="Show" />
                     </Button>
-                </Link>
+                </PageLink>
             );
 
         case 3: return (
-            <Link to={`/${rowData.rowData[2] ? 'vde' : 'admin'}/tables/${rowData.rowData[0]}/edit`}>
+            <PageLink page="edit-table" section="admin" params={{ table: rowData.rowData[0] }} vde={!!rowData.rowData[2]}>
                 <Button bsStyle="primary" type="button">
                     <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
                 </Button>
-            </Link>
+            </PageLink>
         );
 
         default: return value;
@@ -74,7 +74,7 @@ const Tables: React.SFC<ITablesProps & InjectedIntlProps> = (props) => (
             ),
             toolButtons: [
                 {
-                    url: props.vde ? '/vde/tables/create' : '/admin/tables/create',
+                    url: props.vde ? '/vde/create-table' : '/admin/create-table',
                     icon: 'icon-plus',
                     title: (
                         <FormattedMessage id="admin.tables.create" defaultMessage="Create" />

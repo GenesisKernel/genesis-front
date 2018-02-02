@@ -157,7 +157,7 @@ export default (state: State = initialState, action: Action): State => {
         };
     }
 
-    if (isType(action, actions.registerIntl)) {
+    if (isType(action, actions.intialize)) {
         return {
             ...state,
             intl: action.payload

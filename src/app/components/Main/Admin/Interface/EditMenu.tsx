@@ -16,10 +16,10 @@
 
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
 
 import DocumentTitle from 'components/DocumentTitle';
 import Heading from 'components/Heading';
+import PageLink from 'containers/Routing/PageLink';
 import MenuEditor from './MenuEditor';
 import MenuOnlyEditor from './MenuOnlyEditor';
 
@@ -95,9 +95,9 @@ class EditMenu extends React.Component<IEditMenuProps, IEditMenuState> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <Link to={this.props.vde ? '/vde/interface' : '/admin/interface'}>
+                                <PageLink page="interface" section="admin" vde={this.props.vde}>
                                     <FormattedMessage id="admin.interface" defaultMessage="Interface" />
-                                </Link>
+                                </PageLink>
                             </li>
                             <li>
                                 <FormattedMessage id="admin.interface.menu" defaultMessage="Menu" />

@@ -14,32 +14,31 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import * as React from 'react';
-import Protypo from 'containers/Widgets/Protypo';
-import { TPage } from 'genesis/content';
+declare module 'genesis/content' {
+    import { TProtypoElement } from 'genesis/protypo';
 
-import DocumentTitle from 'components/DocumentTitle';
-import Error from './Error';
-import Timeout from './Timeout';
+    type TMenu = {
+        readonly name: string;
+        readonly vde?: boolean;
+        readonly content: TProtypoElement[];
+    };
 
-export interface IPageProps extends TPage {
+    type TPage = {
+        readonly name: string;
+        readonly vde?: boolean;
+        readonly legacy?: boolean;
+        readonly content: TProtypoElement[];
+        readonly params: { [key: string]: any };
+        readonly error?: string;
+    };
 
+    type TSection = {
+        readonly pending: boolean;
+        readonly name: string;
+        readonly title: string;
+        readonly force: boolean;
+        readonly defaultPage: string;
+        readonly menus: TMenu[];
+        readonly page: TPage;
+    }
 }
-
-const Page: React.SFC<IPageProps> = (props) => {
-    if (props.error) {
-        switch (props.error) {
-            case 'E_HEAVYPAGE': return (<Timeout />);
-            default: return (<Error error={props.error} />);
-        }
-    }
-    else {
-        return (
-            <DocumentTitle title={props.name}>
-                <Protypo context="page" {...props} vde={props.vde} />
-            </DocumentTitle >
-        );
-    }
-};
-
-export default Page;

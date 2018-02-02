@@ -45,8 +45,7 @@ const History: React.SFC<IHistoryProps> = (props) => (
                 url: '/admin/tables'
             },
             {
-                title: props.table,
-                url: `/admin/tables/${props.table}`
+                title: props.table
             },
             {
                 title: props.id

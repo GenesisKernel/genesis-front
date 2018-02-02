@@ -16,18 +16,18 @@
 
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
 import { columnTypes } from './Create';
 import { ITableResponse } from 'lib/api';
 
 import DocumentTitle from 'components/DocumentTitle';
 import Heading from 'components/Heading';
+import PageLink from 'containers/Routing/PageLink';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 
 export interface IEditColumnProps {
     vde?: boolean;
-    table: ITableResponse;
+    tableStruct: ITableResponse;
     column: { name: string, type: string, index: boolean, permissions: string };
 }
 
@@ -72,7 +72,7 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
 
     mapContractParams(values: { [key: string]: any }) {
         return {
-            TableName: this.props.table.name,
+            TableName: this.props.tableStruct.name,
             Name: this.props.column.name,
             Permissions: this.props.vde ? JSON.stringify({
                 ...(this.state.updatePermissions && { update: this.state.updatePermissions }),
@@ -106,22 +106,22 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <Link to={this.props.vde ? '/vde/tables' : '/admin/tables'}>
+                                <PageLink page="tables" section="admin" vde={this.props.vde}>
                                     <FormattedMessage id="admin.tables" defaultMessage="Tables" />
-                                </Link>
+                                </PageLink>
                             </li>
-                            {this.props.table && (
+                            {this.props.tableStruct && (
                                 <li>
-                                    <Link to={`/${this.props.vde ? 'vde' : 'admin'}/tables/${this.props.table.name}`}>
-                                        {this.props.table.name}
-                                    </Link>
+                                    <PageLink page="table" section="admin" params={{ table: this.props.tableStruct.name }} vde={this.props.vde}>
+                                        {this.props.tableStruct.name}
+                                    </PageLink>
                                 </li>
                             )}
-                            {this.props.table && (
+                            {this.props.tableStruct && (
                                 <li>
-                                    <Link to={`/${this.props.vde ? 'vde' : 'admin'}/tables/${this.props.table.name}/edit`}>
+                                    <PageLink page="edit-table" section="admin" params={{ table: this.props.tableStruct.name }} vde={this.props.vde}>
                                         <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
-                                    </Link>
+                                    </PageLink>
                                 </li>
                             )}
                             <li>

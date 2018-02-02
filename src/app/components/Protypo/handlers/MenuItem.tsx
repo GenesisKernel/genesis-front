@@ -32,7 +32,14 @@ export interface IMenuItemProps {
     '_systemPageHook'?: string;
 }
 
-export const StyledLinkButton = styled.div`
+export const StyledLinkButton = styled.button`
+    outline: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    background: 0;
+
     &.active {
         > .link-active-decorator {
             opacity: 1;
@@ -48,27 +55,23 @@ export const StyledLinkButton = styled.div`
         transition: opacity .2s ease-in-out;
     }
 
-    > a {
-        display: block;
-        height: 50px;
-        line-height: 50px;
-        padding: 0 20px;
-        color: #0a1d33;
-        font-size: 14px;
-        font-weight: 200;
-        text-decoration: none;
-
-        &:hover {
-            background: #ececec;
-        }
+    &:hover {
+        background: #ececec;
     }
 
     .link-body {
         display: block;
-        margin: 0 5px;
+        height: 50px;
+        line-height: 50px;
+        padding: 0 25px;
+        color: #0a1d33;
+        font-size: 14px;
+        font-weight: 200;
+        text-align: left;
+        text-decoration: none;
+        overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        overflow: hidden;
 
         .icon {
             margin-right: 14px;
@@ -83,8 +86,7 @@ export const StyledLinkButton = styled.div`
 interface ILinkButtonContext {
     vde?: boolean;
     protypo: Protypo;
-    navigate: (url: string) => void;
-    navigatePage: (params: { name: string, params: any, vde?: boolean }) => void;
+    navigatePage: (params: { name: string, params: any, force?: boolean, vde?: boolean }) => void;
 }
 
 // TODO: Missing page params
@@ -101,43 +103,24 @@ const LinkButton: React.SFC<IMenuItemProps> = (props, context: ILinkButtonContex
         </div>
     );
 
-    const onNavigate = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const onNavigate = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        if (props._systemPageHook) {
-            context.navigate(props._systemPageHook);
-        }
-        else {
-            context.navigatePage({
-                name: props.page,
-                params: context.protypo.resolveParams(props.params),
-                vde:
-                    props.vde === 'true' ? true :
-                        props.vde === 'false' ? false :
-                            context.vde
-            });
-        }
+        context.navigatePage({
+            name: props.page,
+            params: context.protypo.resolveParams(props.params),
+            force: true,
+            vde:
+                props.vde === 'true' ? true :
+                    props.vde === 'false' ? false :
+                        context.vde
+        });
         return false;
     };
 
-    const navigateUrl =
-        !props.page ? '' :
-            props.vde === 'true' ? `/vde/page/${props.page}` :
-                props.vde === 'false' ? `/page/${props.page}` :
-                    `/${context.vde ? 'vde/page' : 'page'}/${props.page}`;
-
     return (
-        <StyledLinkButton className={classes}>
+        <StyledLinkButton className={classes} onClick={onNavigate}>
             <div className="link-active-decorator" />
-            {props._systemPageHook || props.page ?
-                (
-                    <a href={props._systemPageHook ? props._systemPageHook : navigateUrl} onClick={onNavigate}>
-                        {linkBody}
-                    </a>
-                ) : (
-                    <a href="#">
-                        {linkBody}
-                    </a>
-                )}
+            {linkBody}
         </StyledLinkButton>
     );
 };
@@ -145,7 +128,6 @@ const LinkButton: React.SFC<IMenuItemProps> = (props, context: ILinkButtonContex
 LinkButton.contextTypes = {
     protypo: propTypes.object.isRequired,
     navigatePage: propTypes.func.isRequired,
-    navigate: propTypes.func.isRequired,
     vde: propTypes.bool
 };
 

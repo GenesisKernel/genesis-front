@@ -17,13 +17,13 @@
 import * as React from 'react';
 import Protypo from 'containers/Widgets/Protypo';
 import { FormattedMessage } from 'react-intl';
-import { IProtypoElement } from 'components/Protypo/Protypo';
+import { TProtypoElement } from 'genesis/protypo';
 
 import DropdownButton from 'components/DropdownButton';
 
 export interface INotificationsMenuProps {
     count: number;
-    notificationsBody: IProtypoElement[];
+    notificationsBody: TProtypoElement[];
 }
 
 const NotificationsMenu: React.SFC<INotificationsMenuProps> = props => (
@@ -37,7 +37,7 @@ const NotificationsMenu: React.SFC<INotificationsMenuProps> = props => (
                     <FormattedMessage id="notifications" defaultMessage="Notifications" />
                 </div>
                 <div>
-                    <Protypo context="menu" payload={props.notificationsBody} />
+                    <Protypo context="menu" content={props.notificationsBody} />
                 </div>
             </div>
         )}

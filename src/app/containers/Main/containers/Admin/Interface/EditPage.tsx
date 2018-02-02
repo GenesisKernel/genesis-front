@@ -24,7 +24,7 @@ import EditPage from 'components/Main/Admin/Interface/EditPage';
 
 export interface IEditPageContainerProps {
     vde?: boolean;
-    match?: { params: { pageID: string } };
+    pageID: string;
 }
 
 interface IEditPageContainerState {
@@ -40,7 +40,7 @@ interface IEditPageContainerDispatch {
 class EditPageContainer extends React.Component<IEditPageContainerProps & IEditPageContainerState & IEditPageContainerDispatch> {
     componentWillMount() {
         this.props.getPage({
-            id: this.props.match.params.pageID,
+            id: this.props.pageID,
             vde: this.props.vde
         });
     }
