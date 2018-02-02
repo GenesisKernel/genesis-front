@@ -116,60 +116,60 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
                     tabsContent.push(
                         <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
                             <Title>Interface Page</Title>
-                            <InterfacePageEditTabbed pageID={tabListItem.id} vde={tabListItem.vde} onSave={this.onTabSave.bind(this)} random={this.state.random && this.state.random['page' + tabListItem.id + (tabListItem.vde ? 'vde' : '')]}/>
+                            <InterfacePageEditTabbed pageID={tabListItem.id} vde={tabListItem.vde} onSave={this.onTabSave.bind(this)} random={this.state.random && this.state.random['page' + tabListItem.id + (tabListItem.vde ? 'vde' : '')]} />
                         </div>
                     );
                 }
                 else
-                if (tabListItem.type === 'interfaceBlock') {
-                    tabsContent.push(
-                        <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
-                            <Title>Interface Block</Title>
-                            <InterfaceBlockEditTabbed blockID={tabListItem.id} vde={tabListItem.vde}/>
-                        </div>
-                    );
-                }
-                else
-                if (tabListItem.type === 'interfaceMenu') {
-                    tabsContent.push(
-                        <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
-                            <Title>Interface Menu</Title>
-                            <InterfaceMenuEditTabbed menuID={tabListItem.id} vde={tabListItem.vde}/>
-                        </div>
-                    );
-                }
-                else
-                if (tabListItem.type === 'interfaceConstructor') {
-                    tabsContent.push(
-                        <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
-                            <Title>Interface Constructor</Title>
-                            <InterfaceConstructorTabbed pageID={tabListItem.id} pageName={tabListItem.name} vde={tabListItem.vde} onSave={this.onTabSave.bind(this)} random={this.state.random && this.state.random['page' + tabListItem.id + (tabListItem.vde ? 'vde' : '')]}/>
-                        </div>
-                    );
-                }
-                else
-                if (tabListItem.type === 'contract') {
-                    tabsContent.push(
-                        <div className="fullscreen animated fadeIn" key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
-                            <Title>Smart Contract</Title>
-                            <ContractEditTabbed contractID={tabListItem.id} vde={tabListItem.vde}/>
-                        </div>
-                    );
-                }
-                else
-                if (tabListItem.type === 'parameter') {
-                    tabsContent.push(
-                        <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
-                            <Title>Ecosystem Parameter</Title>
-                            <ParameterEditTabbed parameterName={tabListItem.id} vde={tabListItem.vde}/>
-                        </div>
-                    );
-                }
-                else {
-                    tabsContent.push(
-                        <div key={tabListItem.type + tabListItem.id}/>
-                    );
-                }
+                    if (tabListItem.type === 'interfaceBlock') {
+                        tabsContent.push(
+                            <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
+                                <Title>Interface Block</Title>
+                                <InterfaceBlockEditTabbed blockID={tabListItem.id} vde={tabListItem.vde} />
+                            </div>
+                        );
+                    }
+                    else
+                        if (tabListItem.type === 'interfaceMenu') {
+                            tabsContent.push(
+                                <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
+                                    <Title>Interface Menu</Title>
+                                    <InterfaceMenuEditTabbed menuID={tabListItem.id} vde={tabListItem.vde} />
+                                </div>
+                            );
+                        }
+                        else
+                            if (tabListItem.type === 'interfaceConstructor') {
+                                tabsContent.push(
+                                    <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
+                                        <Title>Interface Constructor</Title>
+                                        <InterfaceConstructorTabbed pageID={tabListItem.id} pageName={tabListItem.name} vde={tabListItem.vde} onSave={this.onTabSave.bind(this)} random={this.state.random && this.state.random['page' + tabListItem.id + (tabListItem.vde ? 'vde' : '')]} />
+                                    </div>
+                                );
+                            }
+                            else
+                                if (tabListItem.type === 'contract') {
+                                    tabsContent.push(
+                                        <div className="fullscreen animated fadeIn" key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
+                                            <Title>Smart Contract</Title>
+                                            <ContractEditTabbed name={tabListItem.name} vde={tabListItem.vde} />
+                                        </div>
+                                    );
+                                }
+                                else
+                                    if (tabListItem.type === 'parameter') {
+                                        tabsContent.push(
+                                            <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
+                                                <Title>Ecosystem Parameter</Title>
+                                                <ParameterEditTabbed parameterName={tabListItem.id} vde={tabListItem.vde} />
+                                            </div>
+                                        );
+                                    }
+                                    else {
+                                        tabsContent.push(
+                                            <div key={tabListItem.type + tabListItem.id} />
+                                        );
+                                    }
             }
 
         }

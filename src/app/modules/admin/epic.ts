@@ -199,11 +199,14 @@ export const getContractEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getContract.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.row(state.auth.sessionToken, 'contracts', action.payload.id, undefined, action.payload.vde))
+            return Observable.fromPromise(
+                api.contract(state.auth.sessionToken, action.payload.name).then(l =>
+                    api.row(state.auth.sessionToken, 'contracts', l.tableid.toString(), undefined, action.payload.vde)
+                ))
                 .map(payload => actions.getContract.done({
                     params: action.payload,
                     result: {
-                        id: action.payload.id,
+                        id: payload.value.id,
                         active: payload.value.active,
                         name: payload.value.name,
                         conditions: payload.value.conditions,
@@ -414,9 +417,9 @@ export const getPageTreeEpic: Epic<Action, IRootState> =
         });
 
 export const getPageTreeDoneEpic: Epic<Action, IRootState> = (action$, store) => action$.ofAction(actions.getPageTree.done)
-     .flatMap(action => {
-         return Observable.of(actions.saveConstructorHistory({pageID: action.payload.params.id}));
-     });
+    .flatMap(action => {
+        return Observable.of(actions.saveConstructorHistory({ pageID: action.payload.params.id }));
+    });
 
 export const exportDataEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.exportData.started)

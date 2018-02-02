@@ -23,7 +23,7 @@ import Edit from 'components/Main/Admin/Contracts/Edit';
 
 export interface IEditProps {
     vde?: boolean;
-    contractID: string;
+    name: string;
     tabData: any;
     contract?: {
         id: string;
@@ -39,13 +39,13 @@ export interface IEditProps {
 class EditContainer extends React.Component<IEditProps> {
     componentWillMount() {
         this.props.getContract({
-            id: this.props.contractID,
+            name: this.props.name,
             vde: this.props.vde
         });
     }
 
     render() {
-        const contractTab = this.props.tabData && this.props.tabData['contract' + this.props.contractID + (this.props.vde ? '-vde' : '')] || null;
+        const contractTab = this.props.tabData && this.props.tabData['contract' + this.props.name + (this.props.vde ? '-vde' : '')] || null;
         let contract = null;
         if (contractTab) {
             contract = contractTab.data;

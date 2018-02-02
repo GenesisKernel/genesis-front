@@ -75,7 +75,7 @@ const LEGACY_PAGES: {
 
         'contracts': { section: 'admin', menu: 'admin_menu', render: () => <Contracts /> },
         'create-contract': { section: 'admin', menu: 'admin_menu', render: () => <CreateContract /> },
-        'edit-contract': { section: 'admin', menu: 'admin_menu', render: (props: { id: string }) => <EditContract contractID={props.id} /> },
+        'edit-contract': { section: 'admin', menu: 'admin_menu', render: (props: { name: string }) => <EditContract name={props.name} /> },
 
         'parameters': { section: 'admin', menu: 'admin_menu', render: () => <Parameters /> },
         'create-parameter': { section: 'admin', menu: 'admin_menu', render: () => <CreateParameter /> },

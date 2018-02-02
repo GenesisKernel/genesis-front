@@ -24,7 +24,7 @@ import Edit from 'components/Main/Admin/Contracts/Edit';
 
 export interface IEditContainerProps {
     vde?: boolean;
-    contractID: string;
+    name: string;
 }
 
 interface IEditContainerState {
@@ -38,7 +38,7 @@ interface IEditContainerDispatch {
 class EditContainer extends React.Component<IEditContainerProps & IEditContainerState & IEditContainerDispatch> {
     componentWillMount() {
         this.props.getContract({
-            id: this.props.contractID,
+            name: this.props.name,
             vde: this.props.vde
         });
     }
