@@ -44,6 +44,15 @@ class EditContainer extends React.Component<IEditContainerProps & IEditContainer
         });
     }
 
+    componentWillReceiveProps(props: IEditContainerProps & IEditContainerState & IEditContainerDispatch) {
+        if (this.props.parameterName !== props.parameterName || this.props.vde !== props.vde) {
+            props.getParameter({
+                name: props.parameterName,
+                vde: props.vde
+            });
+        }
+    }
+
     render() {
         return (
             <DataPreloader data={[this.props.parameter]}>

@@ -38,11 +38,20 @@ interface IEditPageContainerDispatch {
 }
 
 class EditPageContainer extends React.Component<IEditPageContainerProps & IEditPageContainerState & IEditPageContainerDispatch> {
-    componentWillMount() {
+    componentDidMount() {
         this.props.getPage({
             id: this.props.pageID,
             vde: this.props.vde
         });
+    }
+
+    componentWillReceiveProps(props: IEditPageContainerProps & IEditPageContainerState & IEditPageContainerDispatch) {
+        if (this.props.pageID !== props.pageID || this.props.vde !== props.vde) {
+            props.getPage({
+                id: props.pageID,
+                vde: props.vde
+            });
+        }
     }
 
     render() {

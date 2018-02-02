@@ -35,7 +35,7 @@ interface IInterfaceContainerDispatch {
 }
 
 class InterfaceContainer extends React.Component<IInterfaceContainerProps & IInterfaceContainerState & IInterfaceContainerDispatch> {
-    componentWillMount() {
+    componentDidMount() {
         this.props.getInterface({
             vde: this.props.vde
         });

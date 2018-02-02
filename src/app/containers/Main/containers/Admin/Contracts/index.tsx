@@ -40,9 +40,9 @@ class ContractsContainer extends React.Component<IContractsContainerProps & ICon
         this.props.getContracts({ vde: this.props.vde });
     }
 
-    componentWillReceiveProps(props: IContractsContainerProps) {
+    componentWillReceiveProps(props: IContractsContainerProps & IContractsContainerState & IContractsContainerDispatch) {
         if (this.props.vde !== props.vde) {
-            this.props.getContracts({ vde: props.vde });
+            props.getContracts({ vde: props.vde });
         }
     }
 

@@ -83,7 +83,6 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.navigatePage.done)) {
-        console.log('NavigatePagedone::', action.payload);
         return {
             ...state,
             section: action.payload.result.section,

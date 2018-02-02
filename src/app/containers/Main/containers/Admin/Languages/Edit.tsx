@@ -36,11 +36,20 @@ interface IEditContainerDispatch {
 }
 
 class EditContainer extends React.Component<IEditContainerProps & IEditContainerState & IEditContainerDispatch> {
-    componentWillMount() {
+    componentDidMount() {
         this.props.getLanguage({
             id: this.props.translationID,
             vde: this.props.vde
         });
+    }
+
+    componentWillReceiveProps(props: IEditContainerProps & IEditContainerState & IEditContainerDispatch) {
+        if (this.props.translationID !== props.translationID || this.props.vde !== props.vde) {
+            props.getLanguage({
+                id: props.translationID,
+                vde: props.vde
+            });
+        }
     }
 
     render() {

@@ -35,11 +35,20 @@ interface IEditBlockContainerDispatch {
 }
 
 class EditBlockContainer extends React.Component<IEditBlockContainerProps & IEditBlockContainerState & IEditBlockContainerDispatch> {
-    componentWillMount() {
+    componentDidMount() {
         this.props.getBlock({
             id: this.props.blockID,
             vde: this.props.vde
         });
+    }
+
+    componentWillReceiveProps(props: IEditBlockContainerProps & IEditBlockContainerState & IEditBlockContainerDispatch) {
+        if (this.props.blockID !== props.blockID || this.props.vde !== props.vde) {
+            props.getBlock({
+                id: props.blockID,
+                vde: props.vde
+            });
+        }
     }
 
     render() {

@@ -37,10 +37,18 @@ interface ITablesContainerDispatch {
 }
 
 class TablesContainer extends React.Component<ITablesContainerProps & ITablesContainerState & ITablesContainerDispatch> {
-    componentWillMount() {
+    componentDidMount() {
         this.props.getTables({
             vde: this.props.vde
         });
+    }
+
+    componentWillReceiveProps(props: ITablesContainerProps & ITablesContainerState & ITablesContainerDispatch) {
+        if (this.props.vde !== props.vde) {
+            props.getTables({
+                vde: props.vde
+            });
+        }
     }
 
     render() {

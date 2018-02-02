@@ -76,6 +76,7 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
             else if (section.page.name !== requestPage || section.force) {
                 const legacyPage = LEGACY_PAGES[requestPage];
 
+                console.log('Must render::', requestPage, section.force, props);
                 if (legacyPage && section.name === legacyPage.section) {
                     props.renderLegacyPage({
                         section: legacyPage.section || section.name,

@@ -36,11 +36,20 @@ interface IEditContainerDispatch {
 }
 
 class EditContainer extends React.Component<IEditContainerProps & IEditContainerState & IEditContainerDispatch> {
-    componentWillMount() {
+    componentDidMount() {
         this.props.getContract({
             name: this.props.name,
             vde: this.props.vde
         });
+    }
+
+    componentWillReceiveProps(props: IEditContainerProps & IEditContainerState & IEditContainerDispatch) {
+        if (this.props.name !== props.name) {
+            props.getContract({
+                name: props.name,
+                vde: props.vde
+            });
+        }
     }
 
     render() {

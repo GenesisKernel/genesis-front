@@ -38,6 +38,16 @@ interface IViewContainerDispatch {
 
 class ViewContainer extends React.Component<IViewContainerProps & IViewContainerState & IViewContainerDispatch> {
     componentDidMount() {
+        this.getTable(this.props);
+    }
+
+    componentWillReceiveProps(props: IViewContainerProps & IViewContainerState & IViewContainerDispatch) {
+        if (this.props.table !== props.table || this.props.vde !== props.vde) {
+            this.getTable(props);
+        }
+    }
+
+    getTable(props: IViewContainerProps & IViewContainerState & IViewContainerDispatch) {
         const columnTypes = [];
         for (let itr in columnDisplayRules) {
             if (columnDisplayRules.hasOwnProperty(itr)) {
@@ -47,10 +57,10 @@ class ViewContainer extends React.Component<IViewContainerProps & IViewContainer
                 }
             }
         }
-        this.props.getTable({
-            table: this.props.table,
+        props.getTable({
+            table: props.table,
             columnTypes,
-            vde: this.props.vde
+            vde: props.vde
         });
     }
 

@@ -46,12 +46,21 @@ interface IExportContainerDispatch {
 
 class ExportContainer extends React.Component<IExportContainerProps & IExportContainerState & IExportContainerDispatch> {
     componentDidMount() {
-        // TODO: Move to a separate action
         this.props.getInterface({ vde: this.props.vde });
         this.props.getParameters({ vde: this.props.vde });
         this.props.getLanguages({ vde: this.props.vde });
         this.props.getContracts({ vde: this.props.vde });
         this.props.getTables({ vde: this.props.vde });
+    }
+
+    componentWillReceiveProps(props: IExportContainerProps & IExportContainerState & IExportContainerDispatch) {
+        if (this.props.vde !== props.vde) {
+            props.getInterface({ vde: props.vde });
+            props.getParameters({ vde: props.vde });
+            props.getLanguages({ vde: props.vde });
+            props.getContracts({ vde: props.vde });
+            props.getTables({ vde: props.vde });
+        }
     }
 
     render() {

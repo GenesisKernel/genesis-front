@@ -41,10 +41,18 @@ interface ICreatePageContainerDispatch {
 }
 
 class CreatePageContainer extends React.Component<ICreatePageContainerProps & ICreatePageContainerState & ICreatePageContainerDispatch> {
-    componentWillMount() {
+    componentDidMount() {
         this.props.getMenus({
             vde: this.props.vde
         });
+    }
+
+    componentWillReceiveProps(props: ICreatePageContainerProps & ICreatePageContainerState & ICreatePageContainerDispatch) {
+        if (this.props.vde !== props.vde) {
+            props.getMenus({
+                vde: this.props.vde
+            });
+        }
     }
 
     render() {

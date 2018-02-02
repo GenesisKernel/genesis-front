@@ -35,7 +35,7 @@ interface ILanguagesContainerDispatch {
 }
 
 class LanguagesContainer extends React.Component<ILanguagesContainerProps & ILanguagesContainerState & ILanguagesContainerDispatch> {
-    componentWillMount() {
+    componentDidMount() {
         this.props.getLanguages({
             vde: this.props.vde
         });

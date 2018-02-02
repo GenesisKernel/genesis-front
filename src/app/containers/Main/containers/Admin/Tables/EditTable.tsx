@@ -36,11 +36,20 @@ interface IEditTableContainerDispatch {
 }
 
 class EditTableContainer extends React.Component<IEditTableContainerProps & IEditTableContainerState & IEditTableContainerDispatch> {
-    componentWillMount() {
+    componentDidMount() {
         this.props.getTableStruct({
             name: this.props.table,
             vde: this.props.vde
         });
+    }
+
+    componentWillReceiveProps(props: IEditTableContainerProps & IEditTableContainerState & IEditTableContainerDispatch) {
+        if (this.props.table !== props.table || this.props.vde !== props.vde) {
+            props.getTableStruct({
+                name: props.table,
+                vde: props.vde
+            });
+        }
     }
 
     render() {

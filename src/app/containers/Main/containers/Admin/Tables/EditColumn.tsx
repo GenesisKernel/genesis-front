@@ -37,11 +37,20 @@ interface IEditColumnContainerDispatch {
 }
 
 class EditColumnContainer extends React.Component<IEditColumnContainerProps & IEditColumnContainerState & IEditColumnContainerDispatch> {
-    componentWillMount() {
+    componentDidMount() {
         this.props.getTableStruct({
             name: this.props.table,
             vde: this.props.vde
         });
+    }
+
+    componentWillReceiveProps(props: IEditColumnContainerProps & IEditColumnContainerState & IEditColumnContainerDispatch) {
+        if (this.props.table !== props.table || this.props.vde !== props.vde) {
+            props.getTableStruct({
+                name: props.table,
+                vde: props.vde
+            });
+        }
     }
 
     render() {

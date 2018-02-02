@@ -35,11 +35,20 @@ interface IEditMenuContainerDispatch {
 }
 
 class EditMenuContainer extends React.Component<IEditMenuContainerProps & IEditMenuContainerState & IEditMenuContainerDispatch> {
-    componentWillMount() {
+    componentDidMount() {
         this.props.getMenu({
             id: this.props.menuID,
             vde: this.props.vde
         });
+    }
+
+    componentWillReceiveProps(props: IEditMenuContainerProps & IEditMenuContainerState & IEditMenuContainerDispatch) {
+        if (this.props.menuID !== props.menuID || this.props.vde !== props.vde) {
+            props.getMenu({
+                id: props.menuID,
+                vde: props.vde
+            });
+        }
     }
 
     render() {
