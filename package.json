@@ -7,7 +7,7 @@
     "license": "LGPLv3",
     "repository": {
         "type": "git",
-        "url": "https://github.com/AplaProject/apla-front.git"
+        "url": "https://github.com/GenesisKernel/genesis-front"
     },
     "private": true,
     "main": "./electron/index.js",
