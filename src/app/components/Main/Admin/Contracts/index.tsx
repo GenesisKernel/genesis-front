@@ -49,7 +49,7 @@ const renderCell: ICellRenderer = (data, rowData) => {
 
         case 4: return (
             <div>
-                <PageLink className="btn btn-link" page="edit-contract" params={{ id: rowData.rowData[0] }} vde={!!rowData.rowData[2]}>
+                <PageLink className="btn btn-link" page="edit-contract" params={{ id: rowData.rowData[0] }} vde={!!rowData.rowData[4]}>
                     <FormattedMessage id="admin.contracts.edit" defaultMessage="Edit" />
                 </PageLink>
                 {!rowData.rowData[2] && (
