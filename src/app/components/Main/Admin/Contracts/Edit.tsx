@@ -88,7 +88,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
     onContractActivation(block: string, error: string) {
         if (block) {
             this.props.getContract({
-                name: this.props.contract.name,
+                id: this.props.contract.id,
                 vde: this.props.vde
             });
         }

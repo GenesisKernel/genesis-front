@@ -107,7 +107,7 @@ const VDE_LEGACY_PAGES: { [page: string]: ILegacyPage } = {
 
     'contracts': { section: 'vdeadmin', menu: 'admin_menu', render: () => <Contracts vde /> },
     'create-contract': { section: 'vdeadmin', menu: 'admin_menu', render: () => <CreateContract vde /> },
-    'edit-contract': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { name: string }) => <EditContract vde name={props.name} /> },
+    'edit-contract': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { id: string, name: string }) => <EditContract vde id={props.id} name={props.name} /> },
 
     'parameters': { section: 'vdeadmin', menu: 'admin_menu', render: () => <Parameters vde /> },
     'create-parameter': { section: 'vdeadmin', menu: 'admin_menu', render: () => <CreateParameter vde /> },

@@ -21,7 +21,7 @@ import { TProtypoElement } from 'genesis/protypo';
 const actionCreator = actionCreatorFactory('admin');
 
 // Contracts
-export const getContract = actionCreator.async<{ name: string, vde?: boolean }, { id: string, active: string, name: string, conditions: string, address: string, value: string }, string>('GET_CONTRACT');
+export const getContract = actionCreator.async<{ id?: string, name?: string, vde?: boolean }, { id: string, active: string, name: string, conditions: string, address: string, value: string }, string>('GET_CONTRACT');
 export const getContracts = actionCreator.async<{ vde?: boolean, offset?: number, limit?: number }, IContractsResponse, string>('GET_CONTRACTS');
 
 // Tables

@@ -39,7 +39,8 @@ export interface IEditProps {
 class EditContainer extends React.Component<IEditProps> {
     componentWillMount() {
         this.props.getContract({
-            name: this.props.name,
+            id: this.props.contract.id,
+            name: this.props.contract.name,
             vde: this.props.vde
         });
     }
@@ -47,7 +48,8 @@ class EditContainer extends React.Component<IEditProps> {
     componentWillReceiveProps(props: IEditProps) {
         if (this.props.name !== props.name) {
             props.getContract({
-                name: props.name,
+                id: props.contract.id,
+                name: props.contract.name,
                 vde: props.vde
             });
         }
