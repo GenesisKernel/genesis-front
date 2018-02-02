@@ -65,7 +65,7 @@ export const columnTypes = [
 
 export interface ICreateProps {
     vde?: boolean;
-    navigate: (url: string) => void;
+    navigatePage: (params: { name?: string, section?: string, force?: boolean, params: { [key: string]: any }, vde?: boolean }) => void;
 }
 
 interface ICreateState {
@@ -106,9 +106,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
 
     onExec(block: string, error: string) {
         if (block) {
-            this.props.vde ?
-                this.props.navigate('/vde/tables') :
-                this.props.navigate('/admin/tables');
+            this.props.navigatePage({ name: 'tables', vde: this.props.vde, params: {} });
         }
     }
 
@@ -177,7 +175,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <PageLink page="tables" section="admin" vde={this.props.vde}>
+                                <PageLink page="tables" vde={this.props.vde}>
                                     <FormattedMessage id="admin.tables" defaultMessage="Tables" />
                                 </PageLink>
                             </li>

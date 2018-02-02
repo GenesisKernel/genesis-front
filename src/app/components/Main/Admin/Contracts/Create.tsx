@@ -23,7 +23,7 @@ import ContractEditor from './ContractEditor';
 
 export interface ICreateProps {
     vde?: boolean;
-    navigate: (url: string) => void;
+    navigatePage: (params: { name?: string, section?: string, force?: boolean, params: { [key: string]: any }, vde?: boolean }) => void;
 }
 
 interface ICreateState {
@@ -67,9 +67,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
 
     onExec(block: string, error: string) {
         if (block) {
-            this.props.vde ?
-                this.props.navigate('/vde/contracts') :
-                this.props.navigate('/admin/contracts');
+            this.props.navigatePage({ name: 'contracts', vde: this.props.vde, params: {} });
         }
     }
 
@@ -104,7 +102,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                 }}
                 breadcrumbs={[
                     {
-                        url: this.props.vde ? '/vde/contracts' : '/admin/contracts',
+                        url: this.props.vde ? '/vdeadmin/contracts' : '/admin/contracts',
                         title: (
                             <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
                         )

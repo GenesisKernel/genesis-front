@@ -25,13 +25,15 @@ import { logout, selectAccount } from 'modules/auth/actions';
 import * as storageActions from 'modules/storage/actions';
 import { history } from 'store';
 import { navigate } from 'modules/engine/actions';
-import LEGACY_PAGES from 'lib/legacyPages';
+import { LEGACY_PAGES, VDE_LEGACY_PAGES } from 'lib/legacyPages';
 
 export const navigatePageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.navigatePage.started)
         .map(action => {
             const state = store.getState();
-            const sectionName = (LEGACY_PAGES[action.payload.name] && LEGACY_PAGES[action.payload.name].section) || action.payload.section || state.content.section;
+            const sectionName = (action.payload.vde ?
+                (VDE_LEGACY_PAGES[action.payload.name] && VDE_LEGACY_PAGES[action.payload.name].section) :
+                (LEGACY_PAGES[action.payload.name] && LEGACY_PAGES[action.payload.name].section)) || action.payload.section || state.content.section;
             const section = state.content.sections[sectionName];
             history.push(`/${sectionName}/${action.payload.name || section.defaultPage}`, { params: action.payload.params });
             return actions.navigatePage.done({

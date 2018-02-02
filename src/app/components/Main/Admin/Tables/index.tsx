@@ -42,7 +42,7 @@ const renderTable: ICellRenderer = (value, rowData) => {
                     <FormattedMessage id="admin.tables.show" defaultMessage="Show" />
                 </Button>
             ) : (
-                <PageLink page="table" section="admin" params={{ table: rowData.rowData[0] }} vde={!!rowData.rowData[2]}>
+                <PageLink page="table" params={{ table: rowData.rowData[0] }} vde={!!rowData.rowData[2]}>
                     <Button bsStyle="primary">
                         <FormattedMessage id="admin.tables.show" defaultMessage="Show" />
                     </Button>
@@ -50,7 +50,7 @@ const renderTable: ICellRenderer = (value, rowData) => {
             );
 
         case 3: return (
-            <PageLink page="edit-table" section="admin" params={{ table: rowData.rowData[0] }} vde={!!rowData.rowData[2]}>
+            <PageLink page="edit-table" params={{ table: rowData.rowData[0] }} vde={!!rowData.rowData[2]}>
                 <Button bsStyle="primary" type="button">
                     <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
                 </Button>
@@ -74,7 +74,7 @@ const Tables: React.SFC<ITablesProps & InjectedIntlProps> = (props) => (
             ),
             toolButtons: [
                 {
-                    url: props.vde ? '/vde/create-table' : '/admin/create-table',
+                    url: props.vde ? '/vdeadmin/create-table' : '/admin/create-table',
                     icon: 'icon-plus',
                     title: (
                         <FormattedMessage id="admin.tables.create" defaultMessage="Create" />

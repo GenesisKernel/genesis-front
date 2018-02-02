@@ -18,7 +18,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getMenus } from 'modules/admin/actions';
-import { navigate } from 'modules/engine/actions';
+import { navigatePage } from 'modules/content/actions';
 
 import CreatePage from 'components/Main/Admin/Interface/CreatePage';
 
@@ -37,7 +37,7 @@ interface ICreatePageContainerState {
 
 interface ICreatePageContainerDispatch {
     getMenus: typeof getMenus.started;
-    navigate: typeof navigate;
+    navigatePage: typeof navigatePage.started;
 }
 
 class CreatePageContainer extends React.Component<ICreatePageContainerProps & ICreatePageContainerState & ICreatePageContainerDispatch> {
@@ -62,13 +62,15 @@ class CreatePageContainer extends React.Component<ICreatePageContainerProps & IC
     }
 }
 
-const mapStateToProps = (state: IRootState) => ({
+const mapStateToProps = (state: IRootState, ownProps: ICreatePageContainerProps) => ownProps.vde ? ({
+    menus: state.admin.vde_menus
+}) : ({
     menus: state.admin.menus
 });
 
 const mapDispatchToProps = {
     getMenus: getMenus.started,
-    navigate: navigate
+    navigatePage: navigatePage.started
 };
 
 export default connect<ICreatePageContainerState, ICreatePageContainerDispatch, ICreatePageContainerProps>(mapStateToProps, mapDispatchToProps)(CreatePageContainer);

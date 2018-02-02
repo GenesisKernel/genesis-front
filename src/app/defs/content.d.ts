@@ -40,5 +40,6 @@ declare module 'genesis/content' {
         readonly defaultPage: string;
         readonly menus: TMenu[];
         readonly page: TPage;
+        readonly vde: boolean;
     }
 }

@@ -49,46 +49,80 @@ export interface ILegacyPage {
     render: (props?: { [key: string]: any }) => React.ReactNode;
 }
 
-const LEGACY_PAGES: {
-    [page: string]: ILegacyPage
-} = {
-        'backup': { section: 'home', menu: null, render: () => <Backup /> },
-        'interface': { section: 'admin', menu: 'admin_menu', render: () => <Interface /> },
-        'create-page': { section: 'admin', menu: 'admin_menu', render: () => <CreatePage /> },
-        'create-menu': { section: 'admin', menu: 'admin_menu', render: () => <CreateMenu /> },
-        'create-block': { section: 'admin', menu: 'admin_menu', render: () => <CreateBlock /> },
-        'edit-page': { section: 'admin', menu: 'admin_menu', render: (props: { id: string }) => <EditPage pageID={props.id} /> },
-        'edit-menu': { section: 'admin', menu: 'admin_menu', render: (props: { id: string }) => <EditMenu menuID={props.id} /> },
-        'edit-block': { section: 'admin', menu: 'admin_menu', render: (props: { id: string }) => <EditBlock blockID={props.id} /> },
-        /*
-        <Route exact path="/admin/interface/page/history/:pageID-:pageName" render={routeProps => <PageHistory id={routeProps.match.params.pageID} name={routeProps.match.params.pageName} />} />
-        <Route exact path="/admin/interface/menu/history/:menuID-:menuName" render={routeProps => <MenuHistory id={routeProps.match.params.menuID} name={routeProps.match.params.menuName} />} />
-        >*/
+const LEGACY_PAGES: { [page: string]: ILegacyPage } = {
+    'backup': { section: 'home', menu: null, render: () => <Backup /> },
+    'interface': { section: 'admin', menu: 'admin_menu', render: () => <Interface /> },
+    'create-page': { section: 'admin', menu: 'admin_menu', render: () => <CreatePage /> },
+    'create-menu': { section: 'admin', menu: 'admin_menu', render: () => <CreateMenu /> },
+    'create-block': { section: 'admin', menu: 'admin_menu', render: () => <CreateBlock /> },
+    'edit-page': { section: 'admin', menu: 'admin_menu', render: (props: { id: string }) => <EditPage pageID={props.id} /> },
+    'edit-menu': { section: 'admin', menu: 'admin_menu', render: (props: { id: string }) => <EditMenu menuID={props.id} /> },
+    'edit-block': { section: 'admin', menu: 'admin_menu', render: (props: { id: string }) => <EditBlock blockID={props.id} /> },
+    /*
+    <Route exact path="/admin/interface/page/history/:pageID-:pageName" render={routeProps => <PageHistory id={routeProps.match.params.pageID} name={routeProps.match.params.pageName} />} />
+    <Route exact path="/admin/interface/menu/history/:menuID-:menuName" render={routeProps => <MenuHistory id={routeProps.match.params.menuID} name={routeProps.match.params.menuName} />} />
+    >*/
 
-        'tables': { section: 'admin', menu: 'admin_menu', render: () => <Tables /> },
-        'table': { section: 'admin', menu: 'admin_menu', render: (props: { table: string }) => <Table table={props.table} /> },
-        'create-table': { section: 'admin', menu: 'admin_menu', render: () => <CreateTable /> },
-        'edit-table': { section: 'admin', menu: 'admin_menu', render: (props: { table: string }) => <EditTable table={props.table} /> },
-        'add-column': { section: 'admin', menu: 'admin_menu', render: (props: { table: string }) => <AddColumn table={props.table} /> },
-        'edit-column': { section: 'admin', menu: 'admin_menu', render: (props: { table: string, column: string }) => <EditColumn table={props.table} column={props.column} /> },
-        'history': { section: 'admin', menu: 'admin_menu', render: (props: { table: string, id: string }) => <History table={props.table} id={props.id} /> },
+    'tables': { section: 'admin', menu: 'admin_menu', render: () => <Tables /> },
+    'table': { section: 'admin', menu: 'admin_menu', render: (props: { table: string }) => <Table table={props.table} /> },
+    'create-table': { section: 'admin', menu: 'admin_menu', render: () => <CreateTable /> },
+    'edit-table': { section: 'admin', menu: 'admin_menu', render: (props: { table: string }) => <EditTable table={props.table} /> },
+    'add-column': { section: 'admin', menu: 'admin_menu', render: (props: { table: string }) => <AddColumn table={props.table} /> },
+    'edit-column': { section: 'admin', menu: 'admin_menu', render: (props: { table: string, column: string }) => <EditColumn table={props.table} column={props.column} /> },
+    'history': { section: 'admin', menu: 'admin_menu', render: (props: { table: string, id: string }) => <History table={props.table} id={props.id} /> },
 
-        'contracts': { section: 'admin', menu: 'admin_menu', render: () => <Contracts /> },
-        'create-contract': { section: 'admin', menu: 'admin_menu', render: () => <CreateContract /> },
-        'edit-contract': { section: 'admin', menu: 'admin_menu', render: (props: { name: string }) => <EditContract name={props.name} /> },
+    'contracts': { section: 'admin', menu: 'admin_menu', render: () => <Contracts /> },
+    'create-contract': { section: 'admin', menu: 'admin_menu', render: () => <CreateContract /> },
+    'edit-contract': { section: 'admin', menu: 'admin_menu', render: (props: { name: string }) => <EditContract name={props.name} /> },
 
-        'parameters': { section: 'admin', menu: 'admin_menu', render: () => <Parameters /> },
-        'create-parameter': { section: 'admin', menu: 'admin_menu', render: () => <CreateParameter /> },
-        'edit-parameter': { section: 'admin', menu: 'admin_menu', render: (props: { name: string }) => <EditParameter parameterName={props.name} /> },
-        'stylesheet': { section: 'admin', menu: 'admin_menu', render: () => <EditParameter parameterName="stylesheet" /> },
+    'parameters': { section: 'admin', menu: 'admin_menu', render: () => <Parameters /> },
+    'create-parameter': { section: 'admin', menu: 'admin_menu', render: () => <CreateParameter /> },
+    'edit-parameter': { section: 'admin', menu: 'admin_menu', render: (props: { name: string }) => <EditParameter parameterName={props.name} /> },
+    'stylesheet': { section: 'admin', menu: 'admin_menu', render: () => <EditParameter parameterName="stylesheet" /> },
 
-        'languages': { section: 'admin', menu: 'admin_menu', render: () => <Languages /> },
-        'create-lang': { section: 'admin', menu: 'admin_menu', render: () => <CreateLang /> },
-        'edit-lang': { section: 'admin', menu: 'admin_menu', render: (props: { id: string }) => <EditLang translationID={props.id} /> },
+    'languages': { section: 'admin', menu: 'admin_menu', render: () => <Languages /> },
+    'create-lang': { section: 'admin', menu: 'admin_menu', render: () => <CreateLang /> },
+    'edit-lang': { section: 'admin', menu: 'admin_menu', render: (props: { id: string }) => <EditLang translationID={props.id} /> },
 
-        'import': { section: 'admin', menu: 'admin_menu', render: () => <Import /> },
-        'export': { section: 'admin', menu: 'admin_menu', render: () => <Export /> },
-        'vde': { section: 'admin', menu: 'admin_menu', render: () => <VDE /> },
-    };
+    'import': { section: 'admin', menu: 'admin_menu', render: () => <Import /> },
+    'export': { section: 'admin', menu: 'admin_menu', render: () => <Export /> },
+    'vde': { section: 'admin', menu: 'admin_menu', render: () => <VDE /> },
+};
 
-export default LEGACY_PAGES;
+const VDE_LEGACY_PAGES: { [page: string]: ILegacyPage } = {
+    'interface': { section: 'vdeadmin', menu: 'admin_menu', render: () => <Interface vde /> },
+    'create-page': { section: 'vdeadmin', menu: 'admin_menu', render: () => <CreatePage vde /> },
+    'create-menu': { section: 'vdeadmin', menu: 'admin_menu', render: () => <CreateMenu vde /> },
+    'create-block': { section: 'vdeadmin', menu: 'admin_menu', render: () => <CreateBlock vde /> },
+    'edit-page': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { id: string }) => <EditPage vde pageID={props.id} /> },
+    'edit-menu': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { id: string }) => <EditMenu vde menuID={props.id} /> },
+    'edit-block': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { id: string }) => <EditBlock vde blockID={props.id} /> },
+
+    'tables': { section: 'vdeadmin', menu: 'admin_menu', render: () => <Tables vde /> },
+    'table': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { table: string }) => <Table vde table={props.table} /> },
+    'create-table': { section: 'vdeadmin', menu: 'admin_menu', render: () => <CreateTable vde /> },
+    'edit-table': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { table: string }) => <EditTable vde table={props.table} /> },
+    'add-column': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { table: string }) => <AddColumn vde table={props.table} /> },
+    'edit-column': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { table: string, column: string }) => <EditColumn vde table={props.table} column={props.column} /> },
+
+    'contracts': { section: 'vdeadmin', menu: 'admin_menu', render: () => <Contracts vde /> },
+    'create-contract': { section: 'vdeadmin', menu: 'admin_menu', render: () => <CreateContract vde /> },
+    'edit-contract': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { name: string }) => <EditContract vde name={props.name} /> },
+
+    'parameters': { section: 'vdeadmin', menu: 'admin_menu', render: () => <Parameters vde /> },
+    'create-parameter': { section: 'vdeadmin', menu: 'admin_menu', render: () => <CreateParameter vde /> },
+    'edit-parameter': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { name: string }) => <EditParameter vde parameterName={props.name} /> },
+    'stylesheet': { section: 'vdeadmin', menu: 'admin_menu', render: () => <EditParameter vde parameterName="stylesheet" /> },
+
+    'languages': { section: 'vdeadmin', menu: 'admin_menu', render: () => <Languages vde /> },
+    'create-lang': { section: 'vdeadmin', menu: 'admin_menu', render: () => <CreateLang vde /> },
+    'edit-lang': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { id: string }) => <EditLang vde translationID={props.id} /> },
+
+    'import': { section: 'vdeadmin', menu: 'admin_menu', render: () => <Import vde /> },
+    'export': { section: 'vdeadmin', menu: 'admin_menu', render: () => <Export vde /> }
+};
+
+export {
+    LEGACY_PAGES,
+    VDE_LEGACY_PAGES
+};

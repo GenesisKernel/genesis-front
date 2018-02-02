@@ -58,7 +58,9 @@ class LanguagesContainer extends React.Component<ILanguagesContainerProps & ILan
     }
 }
 
-const mapStateToProps = (state: IRootState) => ({
+const mapStateToProps = (state: IRootState, ownProps: ILanguagesContainerProps) => ownProps.vde ? ({
+    resources: state.admin.vde_languages
+}) : ({
     resources: state.admin.languages
 });
 

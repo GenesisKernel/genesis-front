@@ -25,7 +25,7 @@ import PageEditor from './PageEditor';
 export interface ICreatePageProps {
     vde?: boolean;
     menus: { id: string, name: string, conditions: string, value: string }[];
-    navigate: (url: string) => void;
+    navigatePage: (params: { name?: string, section?: string, force?: boolean, params: { [key: string]: any }, vde?: boolean }) => void;
 }
 
 interface ICreatePageState {
@@ -62,9 +62,7 @@ class CreatePage extends React.Component<ICreatePageProps, ICreatePageState> {
 
     onExec(block: string, error: string) {
         if (block) {
-            this.props.vde ?
-                this.props.navigate('/vde/interface') :
-                this.props.navigate('/admin/interface');
+            this.props.navigatePage({ name: 'interface', vde: this.props.vde, params: {} });
         }
     }
 
@@ -95,7 +93,7 @@ class CreatePage extends React.Component<ICreatePageProps, ICreatePageState> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <PageLink page="interface" section="admin" vde={this.props.vde}>
+                                <PageLink page="interface" vde={this.props.vde}>
                                     <FormattedMessage id="admin.interface" defaultMessage="Interface" />
                                 </PageLink>
                             </li>

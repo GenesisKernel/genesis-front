@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { renderPage, ecosystemInit, renderLegacyPage } from 'modules/content/actions';
 import { TSection } from 'genesis/content';
-import LEGACY_PAGES from 'lib/legacyPages';
+import { LEGACY_PAGES, VDE_LEGACY_PAGES } from 'lib/legacyPages';
 
 import Page from 'components/Main/Page';
 
@@ -59,7 +59,6 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
     }
 
     renderPage(props: IPageContainerProps & IPageContainerState & IPageContainerDispatch) {
-        //const isVDE = props.match.params && props.match.params['0'] === 'vde';
         const section = props.sections[props.match.params.section];
         const isPending = section.pending;
         const requestPage = (props.match.params.pageName || section.defaultPage);
@@ -70,20 +69,29 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
                     section: section.name,
                     name: section.defaultPage,
                     params: {},
-                    vde: false
+                    vde: section.vde
                 });
             }
             else if (section.page.name !== requestPage || section.force) {
                 const legacyPage = LEGACY_PAGES[requestPage];
+                const vdeLegacyPage = VDE_LEGACY_PAGES[requestPage];
 
-                console.log('Must render::', requestPage, section.force, props);
-                if (legacyPage && section.name === legacyPage.section) {
+                if (section.vde && vdeLegacyPage && section.name === vdeLegacyPage.section) {
+                    props.renderLegacyPage({
+                        section: vdeLegacyPage.section || section.name,
+                        name: requestPage,
+                        menu: vdeLegacyPage.menu,
+                        params: props.location && props.location.state && props.location.state.params,
+                        vde: section.vde
+                    });
+                }
+                else if (legacyPage && section.name === legacyPage.section) {
                     props.renderLegacyPage({
                         section: legacyPage.section || section.name,
                         name: requestPage,
                         menu: legacyPage.menu,
                         params: props.location && props.location.state && props.location.state.params,
-                        vde: false
+                        vde: section.vde
                     });
                 }
                 else {
@@ -91,7 +99,7 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
                         section: section.name,
                         name: requestPage,
                         params: props.location && props.location.state && props.location.state.params,
-                        vde: false
+                        vde: section.vde
                     });
                 }
             }
@@ -102,19 +110,19 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
         return (
             <div className="flex-col flex-stretch">
                 {_.map(this.props.sections, section => {
-                    const isVDE = this.props.match.params && this.props.match.params['0'] === 'vde';
                     const isLegacy = section.page && section.page.legacy;
                     const legacyPage = isLegacy ? LEGACY_PAGES[section.page.name] : null;
+                    const vdeLegacyPage = isLegacy && section.vde ? VDE_LEGACY_PAGES[section.page.name] : null;
 
                     return (
                         <div key={section.name} className="flex-col flex-stretch" style={{ display: this.props.section === section.name ? null : 'none', overflowX: 'hidden', overflowY: 'auto' }}>
                             {isLegacy ?
                                 (
-                                    legacyPage.render(section.page.params)
+                                    (section.vde ? vdeLegacyPage : legacyPage).render(section.page.params)
                                 ) :
                                 (
                                     <Page
-                                        vde={isVDE}
+                                        vde={section.vde}
                                         error={section.page && section.page.error}
                                         name={section.page && section.page.name}
                                         params={section.page && section.page.params}

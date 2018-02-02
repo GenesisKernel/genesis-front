@@ -147,7 +147,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
                 }}
                 breadcrumbs={[
                     {
-                        url: this.props.vde ? '/vde/contracts' : '/admin/contracts',
+                        url: this.props.vde ? '/vdeadmin/contracts' : '/admin/contracts',
                         title: (
                             <FormattedMessage id="admin.contracts" defaultMessage="Smart contracts" />
                         )

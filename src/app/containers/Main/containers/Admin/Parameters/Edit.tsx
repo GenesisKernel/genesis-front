@@ -62,7 +62,9 @@ class EditContainer extends React.Component<IEditContainerProps & IEditContainer
     }
 }
 
-const mapStateToProps = (state: IRootState) => ({
+const mapStateToProps = (state: IRootState, ownProps: IEditContainerProps) => ownProps.vde ? ({
+    parameter: state.admin.vde_parameter
+}) : ({
     parameter: state.admin.parameter
 });
 

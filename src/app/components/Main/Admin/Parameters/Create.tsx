@@ -22,7 +22,7 @@ import ParameterEditor from './ParameterEditor';
 
 export interface ICreateProps {
     vde?: boolean;
-    navigate: (url: string) => void;
+    navigatePage: (params: { name?: string, section?: string, force?: boolean, params: { [key: string]: any }, vde?: boolean }) => void;
 }
 
 interface ICreateState {
@@ -49,9 +49,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
 
     onExec(block: string, error: string) {
         if (block) {
-            this.props.vde ?
-                this.props.navigate('/vde/parameters') :
-                this.props.navigate('/admin/parameters');
+            this.props.navigatePage({ name: 'parameters', vde: this.props.vde, params: {} });
         }
     }
 
@@ -82,7 +80,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                 }}
                 breadcrumbs={[
                     {
-                        url: this.props.vde ? '/vde/parameters' : '/admin/parameters',
+                        url: this.props.vde ? '/vdeadmin/parameters' : '/admin/parameters',
                         title: (
                             <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
                         )

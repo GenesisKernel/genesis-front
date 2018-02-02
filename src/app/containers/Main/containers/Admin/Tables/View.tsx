@@ -71,7 +71,10 @@ class ViewContainer extends React.Component<IViewContainerProps & IViewContainer
     }
 }
 
-const mapStateToProps = (state: IRootState) => ({
+const mapStateToProps = (state: IRootState, ownProps: IViewContainerProps) => ownProps.vde ? ({
+    tableStruct: state.admin.vde_table,
+    tableData: state.admin.vde_tableData
+}) : ({
     tableStruct: state.admin.table,
     tableData: state.admin.tableData
 });

@@ -66,8 +66,8 @@ export const getLanguages = actionCreator.async<{ vde?: boolean, offset?: number
 
 // Import/export
 export const exportData = actionCreator.async<{ vde?: boolean, pages: string[], blocks: string[], menus: string[], parameters: string[], languages: string[], contracts: { id: string, name: string }[], tables: string[], data: string[] }, object, string>('EXPORT_DATA');
-export const importData = actionCreator.async<File, any, undefined>('IMPORT_DATA');
-export const importDataPrune = actionCreator<{ name: string, key: string, index?: number }>('IMPORT_DATA_PRUNE');
+export const importData = actionCreator.async<{ file: File, vde?: boolean }, any, undefined>('IMPORT_DATA');
+export const importDataPrune = actionCreator<{ name: string, key: string, index?: number, vde?: boolean }>('IMPORT_DATA_PRUNE');
 
 // Tabs
 export const getTabList = actionCreator.async<{ addID?: string, addName?: string, addType?: string, addVDE?: boolean }, ITabListResponse, string>('GET_TAB_LIST');

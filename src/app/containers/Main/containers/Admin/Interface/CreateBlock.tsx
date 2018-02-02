@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { navigate } from 'modules/engine/actions';
+import { navigatePage } from 'modules/content/actions';
 
 import CreateBlock from 'components/Main/Admin/Interface/CreateBlock';
 
@@ -30,7 +30,7 @@ interface ICreateBlockContainerState {
 }
 
 interface ICreateBlockContainerDispatch {
-    navigate: typeof navigate;
+    navigatePage: typeof navigatePage.started;
 }
 
 const CreateBlockContainer: React.SFC<ICreateBlockContainerProps & ICreateBlockContainerState & ICreateBlockContainerDispatch> = (props) => (
@@ -42,7 +42,7 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    navigate: navigate
+    navigatePage: navigatePage.started
 };
 
 export default connect<ICreateBlockContainerState, ICreateBlockContainerDispatch, ICreateBlockContainerProps>(mapStateToProps, mapDispatchToProps)(CreateBlockContainer);

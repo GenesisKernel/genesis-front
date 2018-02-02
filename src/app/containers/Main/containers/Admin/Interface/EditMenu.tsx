@@ -58,7 +58,9 @@ class EditMenuContainer extends React.Component<IEditMenuContainerProps & IEditM
     }
 }
 
-const mapStateToProps = (state: IRootState) => ({
+const mapStateToProps = (state: IRootState, ownProps: IEditMenuContainerProps) => ownProps.vde ? ({
+    menu: state.admin.vde_menu
+}) : ({
     menu: state.admin.menu
 });
 

@@ -67,13 +67,13 @@ class EditTable extends React.Component<IEditTableProps> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <PageLink page="tables" section="admin" vde={this.props.vde}>
+                                <PageLink page="tables" vde={this.props.vde}>
                                     <FormattedMessage id="admin.tables" defaultMessage="Tables" />
                                 </PageLink>
                             </li>
                             {this.props.tableStruct && (
                                 <li>
-                                    <PageLink page="table" section="admin" params={{ table: this.props.tableStruct.name }} vde={this.props.vde}>
+                                    <PageLink page="table" params={{ table: this.props.tableStruct.name }} vde={this.props.vde}>
                                         {this.props.tableStruct.name}
                                     </PageLink>
                                 </li>
@@ -90,7 +90,7 @@ class EditTable extends React.Component<IEditTableProps> {
                                         <div className="clearfix">
                                             <div className="pull-left">
                                                 {this.props.tableStruct && (
-                                                    <PageLink page="add-column" section="admin" params={{ table: this.props.tableStruct.name }} vde={this.props.vde}>
+                                                    <PageLink page="add-column" params={{ table: this.props.tableStruct.name }} vde={this.props.vde}>
                                                         <Button bsStyle="primary">
                                                             <FormattedMessage id="admin.tables.column.add" defaultMessage="Add column" />
                                                         </Button>
@@ -132,7 +132,7 @@ class EditTable extends React.Component<IEditTableProps> {
                                                         <td>{col.perm}</td>
                                                         <td>
                                                             {this.props.tableStruct && (
-                                                                <PageLink page="edit-column" section="admin" params={{ table: this.props.tableStruct.name, column: col.name }} vde={this.props.vde}>
+                                                                <PageLink page="edit-column" params={{ table: this.props.tableStruct.name, column: col.name }} vde={this.props.vde}>
                                                                     <Button bsStyle="primary">
                                                                         <FormattedMessage id="admin.tables.column.edit" defaultMessage="Edit" />
                                                                     </Button>

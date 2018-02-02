@@ -61,7 +61,10 @@ class EditPageContainer extends React.Component<IEditPageContainerProps & IEditP
     }
 }
 
-const mapStateToProps = (state: IRootState) => ({
+const mapStateToProps = (state: IRootState, ownProps: IEditPageContainerProps) => ownProps.vde ? ({
+    page: state.admin.vde_page,
+    menus: state.admin.vde_menus
+}) : ({
     page: state.admin.page,
     menus: state.admin.menus
 });

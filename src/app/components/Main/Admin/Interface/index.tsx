@@ -35,19 +35,19 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
             <Heading>
                 <FormattedMessage id="admin.interface" defaultMessage="Interface" />
                 <div className="pull-right">
-                    <PageLink className="ml btn-tool" page="create-page" section="admin" vde={props.vde}>
+                    <PageLink className="ml btn-tool" page="create-page" vde={props.vde}>
                         <em className="icon icon-plus" />
                         <span>
                             <FormattedMessage id="admin.interface.page.create" defaultMessage="Create page" />
                         </span>
                     </PageLink>
-                    <PageLink className="ml btn-tool" page="create-block" section="admin" vde={props.vde}>
+                    <PageLink className="ml btn-tool" page="create-block" vde={props.vde}>
                         <em className="icon icon-plus" />
                         <span>
                             <FormattedMessage id="admin.interface.block.create" defaultMessage="Create block" />
                         </span>
                     </PageLink>
-                    <PageLink className="ml btn-tool" page="create-menu" section="admin" vde={props.vde}>
+                    <PageLink className="ml btn-tool" page="create-menu" vde={props.vde}>
                         <em className="icon icon-plus" />
                         <span>
                             <FormattedMessage id="admin.interface.menu.create" defaultMessage="Create menu" />
@@ -76,13 +76,13 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                                     <td>
                                                         <div>{page.name}</div>
                                                         {!props.vde && (
-                                                            <PageLink className="btn btn-link p0" page="page-history" params={{ id: page.id }} section="admin">
+                                                            <PageLink className="btn btn-link p0" page="page-history" params={{ id: page.id }}>
                                                                 <FormattedMessage id="admin.interface.page.history" defaultMessage="View history" />
                                                             </PageLink>
                                                         )}
                                                     </td>
                                                     <td style={{ width: 1 }}>
-                                                        <PageLink className="btn btn-labeled btn-icon btn-default" page="edit-page" section="admin" params={{ id: page.id }} vde={props.vde}>
+                                                        <PageLink className="btn btn-labeled btn-icon btn-default" page="edit-page" params={{ id: page.id }} vde={props.vde}>
                                                             <span className="btn-label">
                                                                 <em className="fa fa-edit" />
                                                             </span>
@@ -125,13 +125,13 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                                     <td>
                                                         <div>{menu.name}</div>
                                                         {!props.vde && (
-                                                            <PageLink className="btn btn-link p0" page="menu-history" params={{ id: menu.id }} section="admin">
+                                                            <PageLink className="btn btn-link p0" page="menu-history" params={{ id: menu.id }}>
                                                                 <FormattedMessage id="admin.interface.menu.history" defaultMessage="View history" />
                                                             </PageLink>
                                                         )}
                                                     </td>
                                                     <td style={{ width: 1 }}>
-                                                        <PageLink className="btn btn-labeled btn-icon btn-default" page="edit-menu" section="admin" params={{ id: menu.id }} vde={props.vde}>
+                                                        <PageLink className="btn btn-labeled btn-icon btn-default" page="edit-menu" params={{ id: menu.id }} vde={props.vde}>
                                                             <span className="btn-label">
                                                                 <em className="fa fa-edit" />
                                                             </span>
@@ -170,7 +170,7 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                                 <tr key={block.id}>
                                                     <td>{block.name}</td>
                                                     <td style={{ width: 1 }}>
-                                                        <PageLink className="btn btn-labeled btn-icon btn-default" page="edit-block" section="admin" params={{ id: block.id }} vde={props.vde}>
+                                                        <PageLink className="btn btn-labeled btn-icon btn-default" page="edit-block" params={{ id: block.id }} vde={props.vde}>
                                                             <span className="btn-label">
                                                                 <em className="fa fa-edit" />
                                                             </span>

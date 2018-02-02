@@ -73,7 +73,7 @@ const View: React.SFC<IViewProps> = (props) => (
             <div className="content-wrapper">
                 <ol className="breadcrumb">
                     <li>
-                        <PageLink page="tables" section="admin" vde={props.vde}>
+                        <PageLink page="tables" vde={props.vde}>
                             <FormattedMessage id="admin.tables" defaultMessage="Tables" />
                         </PageLink>
                     </li>
@@ -109,7 +109,7 @@ const View: React.SFC<IViewProps> = (props) => (
                                             ))}
                                             {!props.vde && (
                                                 <td>
-                                                    <PageLink className="btn btn-primary" page="history" section="admin" params={{ table: props.table.name, id: row.id }} vde={props.vde}>
+                                                    <PageLink className="btn btn-primary" page="history" params={{ table: props.table.name, id: row.id }} vde={props.vde}>
                                                         <FormattedMessage id="admin.tables.history" defaultMessage="History" />
                                                     </PageLink>
                                                 </td>

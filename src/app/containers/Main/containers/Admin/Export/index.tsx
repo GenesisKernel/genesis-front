@@ -81,7 +81,14 @@ class ExportContainer extends React.Component<IExportContainerProps & IExportCon
     }
 }
 
-const mapStateToProps = (state: IRootState) => ({
+const mapStateToProps = (state: IRootState, ownProps: IExportContainerProps) => ownProps.vde ? ({
+    interfaces: state.admin.vde_interfaces,
+    parameters: state.admin.vde_parameters,
+    languages: state.admin.vde_languages,
+    contracts: state.admin.vde_contracts,
+    tables: state.admin.vde_tables,
+    exportPayload: state.admin.vde_exportPayload
+}) : ({
     interfaces: state.admin.interfaces,
     parameters: state.admin.parameters,
     languages: state.admin.languages,

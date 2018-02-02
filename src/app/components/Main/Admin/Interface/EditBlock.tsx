@@ -95,7 +95,7 @@ class EditBlock extends React.Component<IEditBlockProps, IEditBlockState> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <PageLink page="interface" section="admin" vde={this.props.vde}>
+                                <PageLink page="interface" vde={this.props.vde}>
                                     <FormattedMessage id="admin.interface" defaultMessage="Interface" />
                                 </PageLink>
                             </li>

@@ -59,7 +59,9 @@ class ParametersContainer extends React.Component<IParametersContainerProps & IP
     }
 }
 
-const mapStateToProps = (state: IRootState) => ({
+const mapStateToProps = (state: IRootState, ownProps: IParametersContainerProps) => ownProps.vde ? ({
+    parameters: state.admin.vde_parameters
+}) : ({
     parameters: state.admin.parameters
 });
 

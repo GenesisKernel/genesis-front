@@ -106,20 +106,20 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <PageLink page="tables" section="admin" vde={this.props.vde}>
+                                <PageLink page="tables" vde={this.props.vde}>
                                     <FormattedMessage id="admin.tables" defaultMessage="Tables" />
                                 </PageLink>
                             </li>
                             {this.props.tableStruct && (
                                 <li>
-                                    <PageLink page="table" section="admin" params={{ table: this.props.tableStruct.name }} vde={this.props.vde}>
+                                    <PageLink page="table" params={{ table: this.props.tableStruct.name }} vde={this.props.vde}>
                                         {this.props.tableStruct.name}
                                     </PageLink>
                                 </li>
                             )}
                             {this.props.tableStruct && (
                                 <li>
-                                    <PageLink page="edit-table" section="admin" params={{ table: this.props.tableStruct.name }} vde={this.props.vde}>
+                                    <PageLink page="edit-table" params={{ table: this.props.tableStruct.name }} vde={this.props.vde}>
                                         <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
                                     </PageLink>
                                 </li>

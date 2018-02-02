@@ -22,7 +22,7 @@ import LocaleEditor from './LocaleEditor';
 
 export interface ICreateProps {
     vde?: boolean;
-    navigate: (url: string) => void;
+    navigatePage: (params: { name?: string, section?: string, force?: boolean, params: { [key: string]: any }, vde?: boolean }) => void;
 }
 
 interface ICreateState {
@@ -56,9 +56,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
 
     onExec(block: string, error: string) {
         if (block) {
-            this.props.vde ?
-                this.props.navigate('/vde/languages') :
-                this.props.navigate('/admin/languages');
+            this.props.navigatePage({ name: 'languages', vde: this.props.vde, params: {} });
         }
     }
 
@@ -132,7 +130,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                 }}
                 breadcrumbs={[
                     {
-                        url: this.props.vde ? '/vde/languages' : '/admin/languages',
+                        url: this.props.vde ? '/vdeadmin/languages' : '/admin/languages',
                         title: (
                             <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
                         )

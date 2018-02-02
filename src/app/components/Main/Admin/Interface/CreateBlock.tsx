@@ -24,7 +24,7 @@ import BlockEditor from './BlockEditor';
 
 export interface ICreateBlockProps {
     vde?: boolean;
-    navigate: (url: string) => void;
+    navigatePage: (params: { name?: string, section?: string, force?: boolean, params: { [key: string]: any }, vde?: boolean }) => void;
 }
 
 interface ICreateBlockState {
@@ -51,9 +51,7 @@ class CreateBlock extends React.Component<ICreateBlockProps, ICreateBlockState> 
 
     onExec(block: string, error: string) {
         if (block) {
-            this.props.vde ?
-                this.props.navigate('/vde/interface') :
-                this.props.navigate('/admin/interface');
+            this.props.navigatePage({ name: 'interface', vde: this.props.vde, params: {} });
         }
     }
 
@@ -77,7 +75,7 @@ class CreateBlock extends React.Component<ICreateBlockProps, ICreateBlockState> 
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <PageLink page="interface" section="admin" vde={this.props.vde}>
+                                <PageLink page="interface" vde={this.props.vde}>
                                     <FormattedMessage id="admin.interface" defaultMessage="Interface" />
                                 </PageLink>
                             </li>

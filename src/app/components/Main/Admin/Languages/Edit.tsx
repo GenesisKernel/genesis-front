@@ -148,7 +148,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
                 }}
                 breadcrumbs={[
                     {
-                        url: this.props.vde ? '/vde/languages' : '/admin/languages',
+                        url: this.props.vde ? '/vdeadmin/languages' : '/admin/languages',
                         title: (
                             <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
                         )

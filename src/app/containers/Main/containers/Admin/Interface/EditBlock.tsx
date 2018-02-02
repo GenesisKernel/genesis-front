@@ -58,7 +58,9 @@ class EditBlockContainer extends React.Component<IEditBlockContainerProps & IEdi
     }
 }
 
-const mapStateToProps = (state: IRootState) => ({
+const mapStateToProps = (state: IRootState, ownProps: IEditBlockContainerProps) => ownProps ? ({
+    block: state.admin.vde_block
+}) : ({
     block: state.admin.block
 });
 

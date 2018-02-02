@@ -44,7 +44,7 @@ class EditContainer extends React.Component<IEditContainerProps & IEditContainer
     }
 
     componentWillReceiveProps(props: IEditContainerProps & IEditContainerState & IEditContainerDispatch) {
-        if (this.props.name !== props.name) {
+        if (this.props.name !== props.name || this.props.vde !== props.vde) {
             props.getContract({
                 name: props.name,
                 vde: props.vde
@@ -61,7 +61,9 @@ class EditContainer extends React.Component<IEditContainerProps & IEditContainer
     }
 }
 
-const mapStateToProps = (state: IRootState) => ({
+const mapStateToProps = (state: IRootState, ownProps: IEditContainerProps) => ownProps.vde ? ({
+    contract: state.admin.vde_contract
+}) : ({
     contract: state.admin.contract
 });
 

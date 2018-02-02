@@ -22,8 +22,8 @@ import { navigatePage } from 'modules/content/actions';
 import PageLink from 'components/Routing/PageLink';
 
 export interface IPageLinkContainerProps {
-    section: string;
     page: string;
+    section?: string;
     vde?: boolean;
     className?: string;
     params?: {
@@ -32,7 +32,7 @@ export interface IPageLinkContainerProps {
 }
 
 interface IPageLinkContainerState {
-
+    currentSection: string;
 }
 
 interface IPageLinkContainerDispatch {
@@ -44,7 +44,7 @@ const PageLinkContainer: React.SFC<IPageLinkContainerProps & IPageLinkContainerS
 );
 
 const mapStateToProps = (state: IRootState) => ({
-
+    currentSection: state.content.section
 });
 
 const mapDispatchToProps = {

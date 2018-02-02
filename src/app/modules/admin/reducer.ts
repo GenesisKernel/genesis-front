@@ -74,6 +74,36 @@ export type State = {
             Data: any[][];
         }[];
     };
+
+    readonly vde_block: { id: string, name: string, value: string, conditions: string };
+    readonly vde_menu: { id: string, name: string, value: string, conditions: string };
+    readonly vde_menus: { id: string, name: string, value: string, conditions: string }[];
+    readonly vde_tables: ITablesResponse;
+    readonly vde_table: ITableResponse;
+    readonly vde_tableData: IListResponse;
+    readonly vde_page: { id: string, name: string, menu: string, conditions: string, value: string };
+    readonly vde_interfaces: IInterfacesResponse;
+    readonly vde_contract: { id: string, active: string, name: string, conditions: string, address: string, value: string };
+    readonly vde_contracts: IContract[];
+    readonly vde_language: { id: string, res: any, name: string, conditions: string };
+    readonly vde_languages: { id: string, res: any, name: string, conditions: string }[];
+    readonly vde_parameter: IParameterResponse;
+    readonly vde_parameters: IParameterResponse[];
+    readonly vde_exportPayload: Object;
+    readonly vde_importPayload: {
+        pages: { Name: string }[];
+        blocks: { Name: string }[];
+        menus: { Name: string }[];
+        parameters: { Name: string }[];
+        languages: { Name: string }[];
+        contracts: { Name: string }[];
+        tables: { Name: string }[];
+        data: {
+            Table: string;
+            Columns: string[];
+            Data: any[][];
+        }[];
+    };
 };
 
 export const initialState: State = {
@@ -96,7 +126,24 @@ export const initialState: State = {
     parameter: null,
     parameters: null,
     exportPayload: null,
-    importPayload: null
+    importPayload: null,
+
+    vde_block: null,
+    vde_menu: null,
+    vde_menus: null,
+    vde_tables: null,
+    vde_table: null,
+    vde_tableData: null,
+    vde_page: null,
+    vde_interfaces: null,
+    vde_contract: null,
+    vde_contracts: null,
+    vde_language: null,
+    vde_languages: null,
+    vde_parameter: null,
+    vde_parameters: null,
+    vde_exportPayload: null,
+    vde_importPayload: null
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -104,21 +151,21 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            interfaces: null
+            [action.payload.vde ? 'vde_interfaces' : 'interfaces']: null
         };
     }
     else if (isType(action, actions.getInterface.done)) {
         return {
             ...state,
             pending: false,
-            interfaces: action.payload.result
+            [action.payload.params.vde ? 'vde_interfaces' : 'interfaces']: action.payload.result
         };
     }
     else if (isType(action, actions.getInterface.failed)) {
         return {
             ...state,
             pending: false,
-            interfaces: null
+            [action.payload.params.vde ? 'vde_interfaces' : 'interfaces']: null
         };
     }
 
@@ -126,15 +173,15 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            page: null
+            [action.payload.vde ? 'vde_page' : 'page']: null
         };
     }
     else if (isType(action, actions.getPage.done)) {
         return {
             ...state,
             pending: false,
-            page: action.payload.result.page as { id: string, name: string, menu: string, conditions: string, value: string },
-            menus: action.payload.result.menus,
+            [action.payload.params.vde ? 'vde_page' : 'page']: action.payload.result.page as { id: string, name: string, menu: string, conditions: string, value: string },
+            [action.payload.params.vde ? 'vde_menus' : 'menus']: action.payload.result.menus,
             tabs: {
                 ...state.tabs,
                 data: {
@@ -151,8 +198,8 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            page: null,
-            menus: null
+            [action.payload.params.vde ? 'vde_page' : 'page']: null,
+            [action.payload.params.vde ? 'vde_menus' : 'menus']: null
         };
     }
 
@@ -719,14 +766,14 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            menu: null
+            [action.payload.vde ? 'vde_menu' : 'menu']: null
         };
     }
     else if (isType(action, actions.getMenu.done)) {
         return {
             ...state,
             pending: false,
-            menu: action.payload.result,
+            [action.payload.params.vde ? 'vde_menu' : 'menu']: action.payload.result,
             tabs: {
                 ...state.tabs,
                 data: {
@@ -743,7 +790,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            menu: null
+            [action.payload.params.vde ? 'vde_menu' : 'menu']: null
         };
     }
 
@@ -751,21 +798,21 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            tables: null
+            [action.payload.vde ? 'vde_tables' : 'tables']: null
         };
     }
     else if (isType(action, actions.getTables.done)) {
         return {
             ...state,
             pending: false,
-            tables: action.payload.result
+            [action.payload.params.vde ? 'vde_tables' : 'tables']: action.payload.result
         };
     }
     else if (isType(action, actions.getTables.failed)) {
         return {
             ...state,
             pending: false,
-            tables: null
+            [action.payload.params.vde ? 'vde_tables' : 'tables']: null
         };
     }
 
@@ -795,24 +842,24 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            table: null,
-            tableData: null
+            [action.payload.vde ? 'vde_table' : 'table']: null,
+            [action.payload.vde ? 'vde_tableData' : 'tableData']: null
         };
     }
     else if (isType(action, actions.getTable.done)) {
         return {
             ...state,
             pending: false,
-            table: action.payload.result.table,
-            tableData: action.payload.result.data
+            [action.payload.params.vde ? 'vde_table' : 'table']: action.payload.result.table,
+            [action.payload.params.vde ? 'vde_tableData' : 'tableData']: action.payload.result.data
         };
     }
     else if (isType(action, actions.getTable.failed)) {
         return {
             ...state,
             pending: false,
-            table: null,
-            tableData: null
+            [action.payload.params.vde ? 'vde_table' : 'table']: null,
+            [action.payload.params.vde ? 'vde_tableData' : 'tableData']: null
         };
     }
 
@@ -820,21 +867,21 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            table: null
+            [action.payload.vde ? 'vde_table' : 'table']: null
         };
     }
     else if (isType(action, actions.getTableStruct.done)) {
         return {
             ...state,
             pending: false,
-            table: action.payload.result
+            [action.payload.params.vde ? 'vde_table' : 'table']: action.payload.result
         };
     }
     else if (isType(action, actions.getTableStruct.failed)) {
         return {
             ...state,
             pending: false,
-            table: null
+            [action.payload.params.vde ? 'vde_table' : 'table']: null
         };
     }
 
@@ -842,21 +889,21 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            menus: null
+            [action.payload.vde ? 'vde_menus' : 'menus']: null
         };
     }
     else if (isType(action, actions.getMenus.done)) {
         return {
             ...state,
             pending: false,
-            menus: action.payload.result
+            [action.payload.params.vde ? 'vde_menus' : 'menus']: action.payload.result
         };
     }
     else if (isType(action, actions.getMenus.failed)) {
         return {
             ...state,
             pending: false,
-            menus: null
+            [action.payload.params.vde ? 'vde_menus' : 'menus']: null
         };
     }
 
@@ -864,14 +911,14 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            contract: null
+            [action.payload.vde ? 'vde_contract' : 'contract']: null
         };
     }
     else if (isType(action, actions.getContract.done)) {
         return {
             ...state,
             pending: false,
-            contract: action.payload.result,
+            [action.payload.params.vde ? 'vde_contract' : 'contract']: action.payload.result,
             tabs: {
                 ...state.tabs,
                 data: {
@@ -888,7 +935,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            contract: null
+            [action.payload.params.vde ? 'vde_contract' : 'contract']: null
         };
     }
 
@@ -896,21 +943,21 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            contracts: null
+            [action.payload.vde ? 'vde_contracts' : 'contracts']: null
         };
     }
     else if (isType(action, actions.getContracts.done)) {
         return {
             ...state,
             pending: false,
-            contracts: action.payload.result.list
+            [action.payload.params.vde ? 'vde_contracts' : 'contracts']: action.payload.result.list
         };
     }
     else if (isType(action, actions.getContracts.failed)) {
         return {
             ...state,
             pending: false,
-            contracts: null
+            [action.payload.params.vde ? 'vde_contracts' : 'contracts']: null
         };
     }
 
@@ -918,14 +965,14 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            block: null
+            [action.payload.vde ? 'vde_block' : 'block']: null
         };
     }
     else if (isType(action, actions.getBlock.done)) {
         return {
             ...state,
             pending: false,
-            block: action.payload.result,
+            [action.payload.params.vde ? 'vde_block' : 'block']: action.payload.result,
             tabs: {
                 ...state.tabs,
                 data: {
@@ -942,7 +989,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            block: null
+            [action.payload.params.vde ? 'vde_block' : 'block']: null
         };
     }
 
@@ -950,21 +997,21 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            languages: null
+            [action.payload.vde ? 'vde_languages' : 'languages']: null
         };
     }
     else if (isType(action, actions.getLanguages.done)) {
         return {
             ...state,
             pending: false,
-            languages: action.payload.result
+            [action.payload.params.vde ? 'vde_languages' : 'languages']: action.payload.result
         };
     }
     else if (isType(action, actions.getLanguages.failed)) {
         return {
             ...state,
             pending: false,
-            languages: null
+            [action.payload.params.vde ? 'vde_languages' : 'languages']: null
         };
     }
 
@@ -972,21 +1019,21 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            language: null
+            [action.payload.vde ? 'vde_language' : 'language']: null
         };
     }
     else if (isType(action, actions.getLanguage.done)) {
         return {
             ...state,
             pending: false,
-            language: action.payload.result
+            [action.payload.params.vde ? 'vde_language' : 'language']: action.payload.result
         };
     }
     else if (isType(action, actions.getLanguage.failed)) {
         return {
             ...state,
             pending: false,
-            language: null
+            [action.payload.params.vde ? 'vde_language' : 'language']: null
         };
     }
 
@@ -994,21 +1041,21 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            parameters: null
+            [action.payload.vde ? 'vde_parameters' : 'parameters']: null
         };
     }
     else if (isType(action, actions.getParameters.done)) {
         return {
             ...state,
             pending: false,
-            parameters: action.payload.result
+            [action.payload.params.vde ? 'vde_parameters' : 'parameters']: action.payload.result
         };
     }
     else if (isType(action, actions.getParameters.failed)) {
         return {
             ...state,
             pending: false,
-            parameters: null
+            [action.payload.params.vde ? 'vde_parameters' : 'parameters']: null
         };
     }
 
@@ -1016,14 +1063,14 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            parameter: null
+            [action.payload.vde ? 'vde_parameter' : 'parameter']: null
         };
     }
     else if (isType(action, actions.getParameter.done)) {
         return {
             ...state,
             pending: false,
-            parameter: action.payload.result,
+            [action.payload.params.vde ? 'vde_parameter' : 'parameter']: action.payload.result,
             tabs: {
                 ...state.tabs,
                 data: {
@@ -1040,7 +1087,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            parameter: null
+            [action.payload.params.vde ? 'vde_parameter' : 'parameter']: null
         };
     }
 
@@ -1048,21 +1095,21 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            exportPayload: null
+            [action.payload.vde ? 'vde_exportPayload' : 'exportPayload']: null
         };
     }
     else if (isType(action, actions.exportData.done)) {
         return {
             ...state,
             pending: false,
-            exportPayload: action.payload.result
+            [action.payload.params.vde ? 'vde_exportPayload' : 'exportPayload']: action.payload.result
         };
     }
     else if (isType(action, actions.exportData.failed)) {
         return {
             ...state,
             pending: false,
-            exportPayload: null
+            [action.payload.params.vde ? 'vde_exportPayload' : 'exportPayload']: null
         };
     }
 
@@ -1070,29 +1117,30 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            importPayload: null
+            [action.payload.vde ? 'vde_importPayload' : 'importPayload']: null
         };
     }
     else if (isType(action, actions.importData.done)) {
         return {
             ...state,
             pending: false,
-            importPayload: action.payload.result
+            [action.payload.params.vde ? 'vde_importPayload' : 'importPayload']: action.payload.result
         };
     }
     else if (isType(action, actions.importData.failed)) {
         return {
             ...state,
             pending: false,
-            importPayload: null
+            [action.payload.params.vde ? 'vde_importPayload' : 'importPayload']: null
         };
     }
 
     if (isType(action, actions.importDataPrune)) {
+        const statePayload = state[action.payload.vde ? 'vde_importPayload' : 'importPayload'];
         let payload: any = null;
         if ('number' === typeof action.payload.index) {
-            const table = state.importPayload[action.payload.name].find((l: any) => l.Table === action.payload.key);
-            const otherTables = state.importPayload[action.payload.name].filter((l: any) => l.Table !== action.payload.key);
+            const table = statePayload[action.payload.name].find((l: any) => l.Table === action.payload.key);
+            const otherTables = statePayload[action.payload.name].filter((l: any) => l.Table !== action.payload.key);
 
             payload = [
                 ...otherTables,
@@ -1104,14 +1152,14 @@ export default (state: State = initialState, action: Action): State => {
             ];
         }
         else {
-            payload = state.importPayload[action.payload.name].filter((l: any) => l.Name !== action.payload.key);
+            payload = statePayload[action.payload.name].filter((l: any) => l.Name !== action.payload.key);
         }
 
         return {
             ...state,
             pending: true,
-            importPayload: {
-                ...state.importPayload,
+            [action.payload.vde ? 'vde_importPayload' : 'importPayload']: {
+                ...statePayload,
                 [action.payload.name]: payload
             }
         };

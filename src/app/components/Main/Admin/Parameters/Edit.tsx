@@ -101,7 +101,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
                 }}
                 breadcrumbs={[
                     {
-                        url: this.props.vde ? '/vde/parameters' : '/admin/parameters',
+                        url: this.props.vde ? '/vdeadmin/parameters' : '/admin/parameters',
                         title: (
                             <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
                         )

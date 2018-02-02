@@ -60,7 +60,9 @@ class TablesContainer extends React.Component<ITablesContainerProps & ITablesCon
     }
 }
 
-const mapStateToProps = (state: IRootState) => ({
+const mapStateToProps = (state: IRootState, ownProps: ITablesContainerProps) => ownProps.vde ? ({
+    tables: state.admin.vde_tables
+}) : ({
     tables: state.admin.tables
 });
 

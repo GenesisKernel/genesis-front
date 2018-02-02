@@ -59,7 +59,9 @@ class EditTableContainer extends React.Component<IEditTableContainerProps & IEdi
     }
 }
 
-const mapStateToProps = (state: IRootState) => ({
+const mapStateToProps = (state: IRootState, ownProps: IEditTableContainerProps) => ownProps.vde ? ({
+    tableStruct: state.admin.vde_table
+}) : ({
     tableStruct: state.admin.table
 });
 

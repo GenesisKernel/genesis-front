@@ -52,7 +52,8 @@ const ImportContainer: React.SFC<IImportContainerProps & IImportContainerState &
         props.importDataPrune({
             name,
             key,
-            index
+            index,
+            vde: props.vde
         });
     };
 
@@ -73,7 +74,9 @@ const ImportContainer: React.SFC<IImportContainerProps & IImportContainerState &
     );
 };
 
-const mapStateToProps = (state: IRootState) => ({
+const mapStateToProps = (state: IRootState, ownProps: IImportContainerProps) => ownProps.vde ? ({
+    payload: state.admin.vde_importPayload
+}) : ({
     payload: state.admin.importPayload
 });
 

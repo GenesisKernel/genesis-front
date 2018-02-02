@@ -61,7 +61,9 @@ class InterfaceContainer extends React.Component<IInterfaceContainerProps & IInt
     }
 }
 
-const mapStateToProps = (state: IRootState) => ({
+const mapStateToProps = (state: IRootState, ownProps: IInterfaceContainerProps) => ownProps.vde ? ({
+    pages: state.admin.vde_interfaces
+}) : ({
     pages: state.admin.interfaces
 });
 

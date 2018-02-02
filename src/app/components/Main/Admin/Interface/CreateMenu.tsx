@@ -24,7 +24,7 @@ import MenuEditor from './MenuEditor';
 
 export interface ICreateMenuProps {
     vde?: boolean;
-    navigate: (url: string) => void;
+    navigatePage: (params: { name?: string, section?: string, force?: boolean, params: { [key: string]: any }, vde?: boolean }) => void;
 }
 
 interface ICreateMenuState {
@@ -51,9 +51,7 @@ class CreateMenu extends React.Component<ICreateMenuProps, ICreateMenuState> {
 
     onExec(block: string, error: string) {
         if (block) {
-            this.props.vde ?
-                this.props.navigate('/vde/interface') :
-                this.props.navigate('/admin/interface');
+            this.props.navigatePage({ name: 'interface', vde: this.props.vde, params: {} });
         }
     }
 
@@ -77,7 +75,7 @@ class CreateMenu extends React.Component<ICreateMenuProps, ICreateMenuState> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <PageLink page="interface" section="admin" vde={this.props.vde}>
+                                <PageLink page="interface" vde={this.props.vde}>
                                     <FormattedMessage id="admin.interface" defaultMessage="Interface" />
                                 </PageLink>
                             </li>

@@ -93,15 +93,6 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
         });
     }
 
-    onPreview(e: React.MouseEvent<HTMLAnchorElement>) {
-        e.preventDefault();
-        this.props.navigatePage({
-            name: this.props.page.name,
-            vde: this.props.vde
-        });
-        return false;
-    }
-
     render() {
         if (this.props.saveButton) {
             return (
@@ -143,18 +134,18 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
                     <Heading>
                         <FormattedMessage id="admin.interface" defaultMessage="Interface" />
                         <div className="pull-right">
-                            <a href={`/${this.props.vde ? 'vde/page' : 'page'}/${this.props.page && this.props.page.name}`} className="ml btn-tool" onClick={this.onPreview.bind(this)}>
+                            <PageLink page={this.props.page && this.props.page.name} section={this.props.vde ? 'vde' : 'home'} vde={this.props.vde} className="ml btn-tool">
                                 <em className="icon icon-eye" />
                                 <span>
                                     <FormattedMessage id="admin.interface.page.preview" defaultMessage="Preview page" />
                                 </span>
-                            </a>
+                            </PageLink>
                         </div>
                     </Heading>
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <PageLink page="interface" section="admin" vde={this.props.vde}>
+                                <PageLink page="interface" vde={this.props.vde}>
                                     <FormattedMessage id="admin.interface" defaultMessage="Interface" />
                                 </PageLink>
                             </li>

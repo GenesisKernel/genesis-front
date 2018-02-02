@@ -41,7 +41,7 @@ const renderLocale: ICellRenderer = (value, rowData) => {
         );
 
         case 3: return (
-            <PageLink page="edit-lang" section="admin" params={{ id: rowData.rowData[0] }} vde={!!rowData.rowData[4]}>
+            <PageLink page="edit-lang" params={{ id: rowData.rowData[0] }} vde={!!rowData.rowData[4]}>
                 <Button bsStyle="default" className="btn-labeled btn-icon">
                     <span className="btn-label">
                         <em className="icon-pencil" />
@@ -67,7 +67,7 @@ const Languages: React.SFC<ILanguagesProps & InjectedIntlProps> = (props) => (
             ),
             toolButtons: [
                 {
-                    url: props.vde ? '/vde/create-lang' : '/admin/create-lang',
+                    url: props.vde ? '/vdeadmin/create-lang' : '/admin/create-lang',
                     icon: 'icon-plus',
                     title: (
                         <FormattedMessage id="admin.languages.create" defaultMessage="Create localization" />

@@ -55,7 +55,9 @@ class ContractsContainer extends React.Component<IContractsContainerProps & ICon
     }
 }
 
-const mapStateToProps = (state: IRootState) => ({
+const mapStateToProps = (state: IRootState, ownProps: IContractsContainerProps) => ownProps.vde ? ({
+    contracts: state.admin.vde_contracts
+}) : ({
     contracts: state.admin.contracts
 });
 

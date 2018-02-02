@@ -41,7 +41,7 @@ export interface IImportProps {
             Data: any[][];
         }[];
     };
-    importData: (payload: File) => void;
+    importData: (payload: { file: File, vde?: boolean }) => void;
     onPrunePage: (name: string) => void;
     onPruneBlock: (name: string) => void;
     onPruneMenu: (name: string) => void;
@@ -56,7 +56,10 @@ class Import extends React.Component<IImportProps & InjectedIntlProps> {
     onFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
         // TODO: Set backup max size
         if (e.target.files && e.target.files[0]) {
-            this.props.importData(e.target.files[0]);
+            this.props.importData({
+                file: e.target.files[0],
+                vde: this.props.vde
+            });
         }
     }
 

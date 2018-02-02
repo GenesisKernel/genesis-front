@@ -48,6 +48,7 @@ export const initialState: State = {
             title: 'Home',
             pending: false,
             force: false,
+            vde: false,
             defaultPage: 'default_page',
             menus: [],
             page: null
@@ -58,6 +59,17 @@ export const initialState: State = {
             defaultPage: 'admin_index',
             pending: false,
             force: false,
+            vde: false,
+            menus: [],
+            page: null
+        },
+        vdeadmin: {
+            name: 'vdeadmin',
+            title: 'VDE Admin',
+            defaultPage: 'admin_index',
+            pending: false,
+            force: false,
+            vde: true,
             menus: [],
             page: null
         }

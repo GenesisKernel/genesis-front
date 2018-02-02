@@ -43,7 +43,7 @@ const renderParameter: ICellRenderer = (value, rowData) => {
         );
 
         case 3: return (
-            <PageLink page="edit-parameter" section="admin" params={{ name: rowData.rowData[0] }} vde={!!rowData.rowData[3]}>
+            <PageLink page="edit-parameter" params={{ name: rowData.rowData[0] }} vde={!!rowData.rowData[3]}>
                 <Button bsStyle="default" className="btn-labeled btn-icon">
                     <span className="btn-label">
                         <em className="icon-pencil" />
@@ -69,14 +69,14 @@ const Parameters: React.SFC<IParametersProps & InjectedIntlProps> = (props) => (
             ),
             toolButtons: [
                 {
-                    url: props.vde ? '/vde/stylesheet' : '/admin/stylesheet',
+                    url: props.vde ? '/vdeadmin/stylesheet' : '/admin/stylesheet',
                     icon: 'icon-picture',
                     title: (
                         <FormattedMessage id="admin.parameters.stylesheet" defaultMessage="Manage stylesheet" />
                     )
                 },
                 {
-                    url: props.vde ? '/vde/create-parameter' : '/admin/create-parameter',
+                    url: props.vde ? '/vdeadmin/create-parameter' : '/admin/create-parameter',
                     icon: 'icon-picture',
                     title: (
                         <FormattedMessage id="admin.parameters.create" defaultMessage="Create" />

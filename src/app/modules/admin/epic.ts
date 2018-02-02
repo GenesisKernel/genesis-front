@@ -543,7 +543,7 @@ export const exportDataEpic: Epic<Action, IRootState> =
 export const importDataEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.importData.started)
         .flatMap(action => {
-            return Observable.from(readTextFile(action.payload)).map(payload => {
+            return Observable.from(readTextFile(action.payload.file)).map(payload => {
                 const result = JSON.parse(payload);
 
                 if (Array.isArray(result.pages) &&
@@ -554,7 +554,7 @@ export const importDataEpic: Epic<Action, IRootState> =
                     Array.isArray(result.contracts)) {
 
                     return actions.importData.done({
-                        params: null,
+                        params: action.payload,
                         result
                     });
                 }
@@ -563,7 +563,7 @@ export const importDataEpic: Epic<Action, IRootState> =
                 }
             }).catch(e => {
                 return Observable.of(actions.importData.failed({
-                    params: null,
+                    params: action.payload,
                     error: null
                 }));
             });
