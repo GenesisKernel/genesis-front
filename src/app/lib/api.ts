@@ -349,7 +349,7 @@ const api = {
         menus: results[1].list,
         blocks: results[2].list,
     })) as Promise<IInterfacesResponse>,
-    contract: (session: string, name: string) => securedRequest(`contract/${name}`, session, null, { method: 'GET' }) as Promise<IContractResponse>,
+    contract: (session: string, name: string, vde = false) => securedRequest(`contract/${name}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<IContractResponse>,
     contracts: (session: string, vde = false, offset?: number, limit?: number) => securedRequest(`contracts?offset=${offset || 0}&limit=${limit || 1000}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<IContractsResponse>,
     parameter: (session: string, name: string, vde = false) => securedRequest(`ecosystemparam/${name}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<IParameterResponse>,
     parameters: (session: string, params: string[], vde = false) => securedRequest(`ecosystemparams?names=${(params || []).join(',')}&vde=${vde}`, session, null, { method: 'GET' }).then(r => r.list) as Promise<IParameterResponse[]>,

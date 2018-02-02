@@ -203,7 +203,7 @@ export const getContractEpic: Epic<Action, IRootState> =
                 action.payload.id ?
                     api.row(state.auth.sessionToken, 'contracts', action.payload.id, undefined, action.payload.vde)
                     :
-                    api.contract(state.auth.sessionToken, action.payload.name).then(l =>
+                    api.contract(state.auth.sessionToken, action.payload.name, action.payload.vde).then(l =>
                         api.row(state.auth.sessionToken, 'contracts', l.tableid.toString(), undefined, action.payload.vde)
                     ))
 
