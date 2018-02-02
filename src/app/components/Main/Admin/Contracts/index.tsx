@@ -77,7 +77,7 @@ const Contracts: React.SFC<IContractsProps & InjectedIntlProps> = (props) => (
             ),
             toolButtons: [
                 {
-                    url: props.vde ? '/vde/create-contract' : '/admin/create-contract',
+                    url: props.vde ? '/vdeadmin/create-contract' : '/admin/create-contract',
                     icon: 'icon-plus',
                     title: (
                         <FormattedMessage id="admin.contracts.create" defaultMessage="Create contract" />
