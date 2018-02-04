@@ -13,7 +13,6 @@
     "main": "./electron/index.js",
     "dependencies": {
         "@types/electron-store": "^1.2.0",
-        "animate.css": "^3.5.2",
         "bluebird": "^3.5.1",
         "centrifuge": "^1.4.6",
         "classnames": "^2.2.5",

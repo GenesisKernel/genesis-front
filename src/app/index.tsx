@@ -29,7 +29,6 @@ import 'simple-line-icons/css/simple-line-icons.css';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import 'styles/built/sass.css';
 import 'styles/index.css';
-import 'animate.css/animate.min.css';
 // import { addLocaleData } from 'react-intl';
 // import * as locale_enUS from './lib/locales/en-US';
 
