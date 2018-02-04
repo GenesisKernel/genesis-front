@@ -17,38 +17,41 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { imageEditorOpen } from 'modules/content/actions';
+import { modalClose } from 'modules/content/actions';
+import { IModal } from 'genesis/modal';
+import ModalProvider from 'components/Modal/ModalProvider';
 
-import ImageEditor from 'components/ImageEditor';
+interface IModalProviderContainerProps {
 
-interface IImageEditorContainerProps {
-    mime: string;
-    data: string;
-    aspectRatio?: number;
-    width?: number;
-    onResult: (data: string) => void;
 }
 
-interface IImageEditorState {
-    active: boolean;
-    result: string;
+interface IModalProviderContainerState {
+    modal: IModal;
 }
 
-interface IImageEditorDispatch {
-    openEditor: typeof imageEditorOpen;
+interface IModalProviderContainerDispatch {
+    modalClose: typeof modalClose;
 }
 
-const ImageEditorContainer: React.SFC<IImageEditorContainerProps & IImageEditorState & IImageEditorDispatch> = props => (
-    <ImageEditor {...props} />
-);
+class ModalProviderContainer extends React.Component<IModalProviderContainerProps & IModalProviderContainerState & IModalProviderContainerDispatch> {
+    render() {
+        return (
+            <ModalProvider
+                modal={this.props.modal}
+                onResult={this.props.modalClose}
+            >
+                {this.props.children}
+            </ModalProvider>
+        );
+    }
+}
 
 const mapStateToProps = (state: IRootState) => ({
-    active: !!state.content.imageEditor.data,
-    result: state.content.imageEditor.result
+    modal: state.content.modal
 });
 
 const mapDispatchToProps = {
-    openEditor: imageEditorOpen
+    modalClose: modalClose
 };
 
-export default connect<IImageEditorState, IImageEditorDispatch, IImageEditorContainerProps>(mapStateToProps, mapDispatchToProps)(ImageEditorContainer);
+export default connect<IModalProviderContainerState, IModalProviderContainerDispatch, IModalProviderContainerProps>(mapStateToProps, mapDispatchToProps)(ModalProviderContainer);

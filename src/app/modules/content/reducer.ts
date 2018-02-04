@@ -19,6 +19,7 @@ import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { TProtypoElement } from 'genesis/protypo';
 import { TSection } from 'genesis/content';
+import { IModal } from 'genesis/modal';
 
 export type State = {
     readonly preloading: boolean;
@@ -32,7 +33,7 @@ export type State = {
     };
     readonly notifications: TProtypoElement[];
     readonly alert: { id: string, success: string, error: string };
-    readonly imageEditor: { mime: string, data: string, aspectRatio: number, minWidth: number, result: string };
+    readonly modal: IModal;
 };
 
 export const initialState: State = {
@@ -90,7 +91,7 @@ export const initialState: State = {
     },
     notifications: null,
     alert: null,
-    imageEditor: { mime: null, data: null, aspectRatio: null, minWidth: null, result: null }
+    modal: null
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -457,26 +458,24 @@ export default (state: State = initialState, action: Action): State => {
         };
     }
 
-    if (isType(action, actions.imageEditorOpen)) {
+    if (isType(action, actions.modalShow)) {
         return {
             ...state,
-            imageEditor: {
-                mime: action.payload.mime,
-                data: action.payload.data,
-                aspectRatio: action.payload.aspectRatio,
-                minWidth: action.payload.width,
+            modal: {
+                id: action.payload.id,
+                type: action.payload.type,
+                params: {
+                    ...action.payload.params
+                },
                 result: null
             }
         };
     }
-    else if (isType(action, actions.imageEditorClose)) {
+    else if (isType(action, actions.modalClose)) {
         return {
             ...state,
-            imageEditor: {
-                mime: null,
-                data: null,
-                aspectRatio: null,
-                minWidth: null,
+            modal: {
+                ...state.modal,
                 result: action.payload
             }
         };

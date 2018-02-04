@@ -77,7 +77,7 @@ const bodyClasses = {
 
 const Wrapper: React.SFC<IWrapperProps> = props => (
     <DocumentTitle title={props.title.title} defaultTitle={props.title.defaultTitle}>
-        <div className="fullscreen animated fadeIn">
+        <div className="fullscreen">
             <Heading>
                 <div className="pull-right">
                     {props.heading.toolButtons && props.heading.toolButtons.map((button, index) => (

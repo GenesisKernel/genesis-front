@@ -17,6 +17,7 @@
 import actionCreatorFactory from 'typescript-fsa';
 import { TMenu, TPage } from 'genesis/content';
 import { TProtypoElement } from 'genesis/protypo';
+import { TModalResultReason } from 'genesis/modal';
 
 const actionCreator = actionCreatorFactory('content');
 
@@ -38,9 +39,9 @@ export const reset = actionCreator.async<undefined, { menu: TMenu, page: TPage }
 // Protypo-specific
 export const displayData = actionCreator.async<string, string, string>('DISPLAY_DATA');
 
-// Image editor modal window
-export const imageEditorOpen = actionCreator<{ mime: string, data: string, width?: number, aspectRatio?: number }>('IMAGE_EDITOR_OPEN');
-export const imageEditorClose = actionCreator<string>('IMAGE_EDITOR_CLOSE');
+// Modal windows
+export const modalShow = actionCreator<{ id: string, type: string, params: { [key: string]: any } }>('MODAL_SHOW');
+export const modalClose = actionCreator<{ reason: TModalResultReason, data: any }>('MODAL_CLOSE');
 
 // Notifications
 export const fetchNotifications = actionCreator.async<undefined, TProtypoElement[], undefined>('FETCH_NOTIFICATIONS');

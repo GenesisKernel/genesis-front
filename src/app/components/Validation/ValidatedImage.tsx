@@ -20,8 +20,8 @@ import { Validator } from './Validators';
 import * as propTypes from 'prop-types';
 import { readBinaryFile } from 'lib/fs';
 
-import ImageEditor from 'containers/Widgets/ImageEditor';
 import ValidatedForm, { IValidatedControl } from './ValidatedForm';
+import ImageEditorModal from 'components/Modal/ImageEditorModal';
 
 export interface IValidatedImageProps {
     format: 'png' | 'jpg' | 'jpeg';
@@ -33,6 +33,7 @@ export interface IValidatedImageProps {
 }
 
 interface IValidatedImageState {
+    active: boolean;
     value: string;
     filename: string;
 }
@@ -44,6 +45,7 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
     constructor(props: IValidatedImageProps) {
         super(props);
         this.state = {
+            active: false,
             value: '',
             filename: ''
         };
@@ -80,6 +82,7 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
             const file = e.target.files[0];
             readBinaryFile(file).then(r => {
                 this.setState({
+                    active: true,
                     value: r,
                     filename: file.name
                 });
@@ -98,6 +101,11 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
 
     onResult(data: string) {
         this._value = data;
+        this.setState({
+            active: false,
+            value: data ? this.state.value : null,
+            filename: data ? this.state.filename : ''
+        });
     }
 
     resolveMIME() {
@@ -114,12 +122,16 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
     render() {
         return (
             <div className="input-group">
-                <ImageEditor
-                    mime={this.resolveMIME()}
-                    data={this.state.value}
-                    aspectRatio={this.props.aspectRatio}
-                    width={this.props.width}
+                <ImageEditorModal
+                    active={this.state.active}
+                    params={{
+                        mime: this.resolveMIME(),
+                        data: this.state.value,
+                        aspectRatio: this.props.aspectRatio,
+                        width: this.props.width
+                    }}
                     onResult={this.onResult.bind(this)}
+                    onCancel={this.onResult.bind(this, null)}
                 />
                 <FormControl
                     className="hidden"

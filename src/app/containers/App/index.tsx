@@ -26,7 +26,6 @@ import * as classnames from 'classnames';
 
 import { AnimatedSwitch } from 'components/Animation';
 import Splash from 'components/Splash';
-import ModalDispatcher from 'containers/Widgets/ModalDispatcher';
 import Main from 'containers/Main';
 import General from 'containers/General';
 
@@ -34,6 +33,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 import IntlHook from 'containers/App/IntlHook';
 import { switchWindow } from 'modules/gui/actions';
+import ModalProvider from 'containers/Modal/ModalProvider';
 
 interface IAppProps {
     locale: string;
@@ -107,16 +107,17 @@ class App extends React.Component<IAppProps> {
             <IntlProvider locale={this.props.locale} defaultLocale={this.props.locale}>
                 <div className={classes}>
                     <IntlHook />
-                    <ModalDispatcher />
-                    <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
-                        {this.props.isLoading && (
-                            <Route path="/" component={Splash} />
-                        )}
-                        {!this.props.isAuthenticated && (
-                            <Route path="/" component={General} />
-                        )}
-                        <Route path="/" component={Main} />
-                    </AnimatedSwitch>
+                    <ModalProvider>
+                        <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
+                            {this.props.isLoading && (
+                                <Route path="/" component={Splash} />
+                            )}
+                            {!this.props.isAuthenticated && (
+                                <Route path="/" component={General} />
+                            )}
+                            <Route path="/" component={Main} />
+                        </AnimatedSwitch>
+                    </ModalProvider>
                 </div>
             </IntlProvider>
         );
