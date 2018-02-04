@@ -6113,20 +6113,9 @@ react-side-effect@^1.0.2:
     exenv "^1.2.1"
     shallowequal "^1.0.1"
 
-react-sortable-tree-theme-file-explorer@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/react-sortable-tree-theme-file-explorer/-/react-sortable-tree-theme-file-explorer-1.1.2.tgz#513f1371524af0707486db4a1d9368e576109b31"
-  dependencies:
-    lodash.isequal "^4.4.0"
-    prop-types "^15.6.0"
-    react-dnd "2.5.4"
-    react-dnd-html5-backend "2.5.4"
-    react-dnd-scrollzone "^4.0.0"
-    react-virtualized "^9.13.0"
-
-react-sortable-tree@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/react-sortable-tree/-/react-sortable-tree-1.7.0.tgz#5f1ad55e5ff2122e60e770c560050891e98f2d6f"
+react-sortable-tree@^1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/react-sortable-tree/-/react-sortable-tree-1.8.1.tgz#648f72eff758e029a1458ce9a1dc4de1783534e2"
   dependencies:
     lodash.isequal "^4.4.0"
     prop-types "^15.6.0"
@@ -6153,25 +6142,15 @@ react-transition-group@^2.2.1:
     prop-types "^15.5.8"
     warning "^3.0.0"
 
-react-virtualized@^9.13.0:
-  version "9.18.0"
-  resolved "https://registry.yarnpkg.com/react-virtualized/-/react-virtualized-9.18.0.tgz#d95ccdcfe82c7791da661be3ebc59f4bbc224f07"
-  dependencies:
-    babel-runtime "^6.26.0"
-    classnames "^2.2.3"
-    dom-helpers "^2.4.0 || ^3.0.0"
-    loose-envify "^1.3.0"
-    prop-types "^15.5.4"
-
 react-virtualized@^9.16.1:
-  version "9.17.3"
-  resolved "https://registry.yarnpkg.com/react-virtualized/-/react-virtualized-9.17.3.tgz#3854588f067235c00ae5cd134d96508956630033"
+  version "9.18.5"
+  resolved "https://registry.yarnpkg.com/react-virtualized/-/react-virtualized-9.18.5.tgz#42dd390ebaa7ea809bfcaf775d39872641679b89"
   dependencies:
     babel-runtime "^6.26.0"
     classnames "^2.2.3"
     dom-helpers "^2.4.0 || ^3.0.0"
     loose-envify "^1.3.0"
-    prop-types "^15.5.4"
+    prop-types "^15.6.0"
 
 react@^15.6.1:
   version "15.6.1"
