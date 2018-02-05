@@ -32,7 +32,7 @@ import LinkPage from './handlers/LinkPage';
 import MenuItem from './handlers/MenuItem';
 import MenuGroup from './handlers/MenuGroup';
 import P, { PDnD } from './handlers/P';
-import RadioGroup from './handlers/RadioGroup';
+import RadioGroup, { RadioGroupDnD } from './handlers/RadioGroup';
 import Select from './handlers/Select';
 import Span, { SpanDnD } from './handlers/Span';
 import Strong, { StrongDnD } from './handlers/Strong';
@@ -76,6 +76,7 @@ const handlersDnD = {
     'input': InputDnD,
     'label': LabelDnD,
     'p': PDnD,
+    'radiogroup': RadioGroupDnD,
     'span': SpanDnD,
     'strong': StrongDnD,
     'table': TableDnD

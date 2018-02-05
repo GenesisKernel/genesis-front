@@ -577,6 +577,107 @@ const constructorTemplates: any = {
                 ]
             }
         ]
+    },
+    'radioPanel': {
+        tag: 'form',
+        attr: {
+            'class': 'panel panel-primary'
+        },
+        children: [
+            {
+                tag: 'div',
+                attr: {
+                    'class': 'panel-heading'
+                },
+                children: [
+                    {
+                        tag: 'div',
+                        attr: {
+                            'class': 'panel-title'
+                        },
+                        children: [
+                            {
+                                tag: 'text',
+                                text: 'Payment'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                tag: 'div',
+                attr: {
+                    'class': 'panel-body'
+                },
+                children: [
+                    {
+                        tag: 'div',
+                        attr: {
+                            'class': 'form-group'
+                        },
+                        children: [
+                            {
+                                tag: 'label',
+                                children: [
+                                    {
+                                        tag: 'text',
+                                        text: 'Payment methods'
+                                    }
+                                ]
+                            },
+                            {
+                                tag: 'radiogroup',
+                                attr: {
+                                    name: 'Payments',
+                                    namecolumn: 'type',
+                                    source: 'payment',
+                                    value: '#value_payment_method#',
+                                    valuecolumn: 'id'
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                tag: 'div',
+                attr: {
+                    'class': 'panel-footer text-center'
+                },
+                children: [
+                    {
+                        tag: 'button',
+                        attr: {
+                            alert: {
+                                text: 'Select the payment method'
+                            },
+                            'class': 'btn btn-default mr-lg',
+                            contract: 'ContractName'
+                        },
+                        children: [
+                            {
+                                tag: 'text',
+                                text: 'Cancel'
+                            }
+                        ]
+                    },
+                    {
+                        tag: 'button',
+                        attr: {
+                            'class': 'btn btn-primary',
+                            contract: 'ContractName',
+                            page: 'proof_payment'
+                        },
+                        children: [
+                            {
+                                tag: 'text',
+                                text: 'Payment'
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
     }
 };
 
@@ -1030,6 +1131,60 @@ class Input extends Tag {
     }
 }
 
+class RadioGroup extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'RadioGroup';
+        this.canHaveChildren = false;
+        this.attr = {
+            'name': 'Name',
+            'source': 'Source',
+            'namecolumn': 'NameColumn',
+            'valuecolumn': 'ValueColumn',
+            'value': 'Value',
+            'class': 'Class'
+        };
+    }
+
+    generateTreeJSON(text: string): any {
+        return {
+            tag: this.tagName.toLowerCase(),
+            id: generateId(),
+            attr: {
+                name: 'sample radio'
+            }
+        };
+    }
+
+    renderCode(): string {
+        let result: string = this.tagName + '(';
+        let params = [];
+        let body = this.renderChildren();
+        if (body.length > 0) {
+            params.push('Body: ' + body);
+        }
+        for (let attr in this.attr) {
+            if (this.attr.hasOwnProperty(attr)) {
+                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
+            }
+        }
+
+        result += params.join(', ');
+        result += ')';
+
+        if (this.element && this.element.attr && this.element.attr.validate) {
+            result += this.getValidationParams(this.element.attr.validate);
+        }
+
+        if (this.element && this.element.attr) {
+            if (this.element.attr.style) {
+                result += '.Style(' + this.element.attr.style + ')';
+            }
+        }
+        return result + ' ';
+    }
+}
+
 export class CodeGenerator {
     private elements: IProtypoElement[];
     constructor(elements: IProtypoElement[]) {
@@ -1072,7 +1227,7 @@ const tagHandlers = {
 //     'menuitem': MenuItem,
 //     'menugroup': MenuGroup,
     'p': P,
-//     'radiogroup': RadioGroup,
+    'radiogroup': RadioGroup,
 //     'select': Select,
     'span': Span,
     'strong': Strong,

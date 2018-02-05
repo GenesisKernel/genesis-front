@@ -37,6 +37,7 @@ class SourceElements extends React.Component<ISourceElementsProps, ISourceElemen
                         <SourceElement text="Form with header" template="formWithHeader" />
                         <SourceElement text="Table with header" template="tableWithHeader" />
                         <SourceElement text="Search form" template="searchForm" />
+                        <SourceElement text="Radio panel" template="radioPanel" />
                         <SourceElement text="Block" element="div" />
                     </ul>
                 </CollapsedListItem>
@@ -66,6 +67,7 @@ class SourceElements extends React.Component<ISourceElementsProps, ISourceElemen
                     <ul className="b-category-sublist">
                         <SourceElement text="Form" element="form" />
                         <SourceElement text="Input" element="input" />
+                        <SourceElement text="RadioGroup" element="radiogroup" />
                         <SourceElement text="Label" element="label" />
                         <SourceElement text="Button" element="button" />
                         <SourceElement text="Image input" element="imageinput" />
