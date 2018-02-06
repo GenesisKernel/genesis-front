@@ -40,6 +40,8 @@ const containerAnimationDef = {
 
     exited: {
         height: 0,
+        padding: 0,
+        margin: 0,
         opacity: 0
     }
 };
