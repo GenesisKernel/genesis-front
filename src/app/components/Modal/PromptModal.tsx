@@ -48,6 +48,7 @@ class PromptModal extends Modal<IPromptModalProps, string> {
                         <Validation.components.ValidatedControl
                             type={this.props.params.type || 'text'}
                             name="value"
+                            noValidate
                             validators={[Validation.validators.required]}
                         />
                     </Validation.components.ValidatedFormGroup>
