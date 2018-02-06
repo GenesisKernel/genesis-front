@@ -21,21 +21,21 @@ import * as propTypes from 'prop-types';
 import { readBinaryFile } from 'lib/fs';
 
 import ValidatedForm, { IValidatedControl } from './ValidatedForm';
-import ImageEditorModal from 'components/Modal/ImageEditorModal';
 
 export interface IValidatedImageProps {
     format: 'png' | 'jpg' | 'jpeg';
     name: string;
-    value?: string;
+    value: string;
     aspectRatio?: number;
     width?: number;
     validators?: Validator[];
+    openEditor: (params: { mime: string, data: string, aspectRatio: number, width: number }) => void;
 }
 
 interface IValidatedImageState {
-    active: boolean;
     value: string;
     filename: string;
+    resultFilename: string;
 }
 
 export default class ValidatedImage extends React.Component<IValidatedImageProps, IValidatedImageState> implements IValidatedControl {
@@ -45,9 +45,9 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
     constructor(props: IValidatedImageProps) {
         super(props);
         this.state = {
-            active: false,
             value: '',
-            filename: ''
+            filename: '',
+            resultFilename: ''
         };
     }
 
@@ -67,7 +67,7 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
         if (this.props.value !== props.value) {
             this.setState({
                 value: props.value as string,
-                filename: props.value ? this.state.filename : ''
+                resultFilename: props.value ? this.state.filename : ''
             });
             (this.context.form as ValidatedForm).updateState(props.name, props.value);
         }
@@ -82,9 +82,14 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
             const file = e.target.files[0];
             readBinaryFile(file).then(r => {
                 this.setState({
-                    active: true,
                     value: r,
                     filename: file.name
+                });
+                this.props.openEditor({
+                    mime: this.resolveMIME(),
+                    data: r,
+                    aspectRatio: this.props.aspectRatio,
+                    width: this.props.width
                 });
             });
         }
@@ -102,7 +107,6 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
     onResult(data: string) {
         this._value = data;
         this.setState({
-            active: false,
             value: data ? this.state.value : null,
             filename: data ? this.state.filename : ''
         });
@@ -122,17 +126,6 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
     render() {
         return (
             <div className="input-group">
-                <ImageEditorModal
-                    active={this.state.active}
-                    params={{
-                        mime: this.resolveMIME(),
-                        data: this.state.value,
-                        aspectRatio: this.props.aspectRatio,
-                        width: this.props.width
-                    }}
-                    onResult={this.onResult.bind(this)}
-                    onCancel={this.onResult.bind(this, null)}
-                />
                 <FormControl
                     className="hidden"
                     onChange={this.onChange.bind(this)}
@@ -141,7 +134,7 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
                     type="file"
                     noValidate
                 />
-                <input type="text" className="form-control" readOnly value={this.state.filename} />
+                <input type="text" className="form-control" readOnly value={this.state.resultFilename} />
                 <div className="group-span-filestyle input-group-btn">
                     <button className="btn btn-default" style={{ border: 'solid 1px #dde6e9' }} type="button" onClick={this.onBrowse.bind(this)}>
                         <span className="text-muted icon-span-filestyle glyphicon glyphicon-folder-open" />

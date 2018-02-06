@@ -26,56 +26,74 @@ import * as authActions from 'modules/auth/actions';
 import * as storageActions from 'modules/storage/actions';
 import keyring from 'lib/keyring';
 import api, { IAPIError, ITxStatusResponse } from 'lib/api';
+import { modalShow, modalClose } from 'modules/content/actions';
+import { isType } from 'typescript-fsa';
 
 export const txCallEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.txCall)
-        .map(action => {
+        .flatMap(action => {
             const state = store.getState();
             if (keyring.validatePrivateKey(state.auth.privateKey)) {
-                return actions.txExec.started({
+                return Observable.of(actions.txExec.started({
                     tx: action.payload,
                     privateKey: state.auth.privateKey
-                });
+                }));
             }
             else {
-                return actions.txAuthorize(action.payload);
+                return Observable.merge(
+                    Observable.of(actions.txAuthorize.started({ contract: action.payload.name })),
+                    action$.filter(l => actions.txAuthorize.done.match(l) || actions.txAuthorize.failed.match(l))
+                        .take(1)
+                        .flatMap(result => {
+                            if (isType(result, actions.txAuthorize.done)) {
+                                return Observable.of(actions.txExec.started({
+                                    tx: action.payload,
+                                    privateKey: keyring.decryptAES(store.getState().auth.account.encKey, result.payload.result)
+                                }));
+                            }
+                            else {
+                                return Observable.empty<never>();
+                            }
+                        })
+                );
             }
         });
 
 export const txAuthorizeEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(actions.txAuthorize)
-        .flatMap(action => {
-            const state = store.getState();
-
-            return Observable.fromPromise(swal({
-                title: state.engine.intl.formatMessage({
-                    id: 'tx',
-                    defaultMessage: 'Transaction'
-                }),
-                text: state.engine.intl.formatMessage({
-                    id: 'tx.password',
-                    defaultMessage: 'Enter your password to sign contract \'{contract}\''
-                }, { contract: action.payload.name }),
-                input: 'password',
-                showCancelButton: true
-            })
-                .then(result => ({ success: result, error: null }))
-                .catch(error => ({ success: null, error }))
-            )
-                .flatMap(payload => {
-                    if (payload.success) {
-                        const privateKey = keyring.decryptAES(store.getState().auth.account.encKey, payload.success);
-
-                        return Observable.of(actions.txExec.started({
-                            tx: action.payload,
-                            privateKey
-                        }));
+    (action$, store) => action$.ofAction(actions.txAuthorize.started)
+        .flatMap(action =>
+            Observable.merge(
+                Observable.of(modalShow({
+                    id: 'TX_CONFIRM_PASSWORD',
+                    type: 'PROMPT',
+                    params: {
+                        type: 'password',
+                        title: store.getState().engine.intl.formatMessage({
+                            id: 'tx',
+                            defaultMessage: 'Transaction'
+                        }),
+                        description: store.getState().engine.intl.formatMessage({
+                            id: 'tx.password',
+                            defaultMessage: 'Enter your password to sign contract \'{contract}\''
+                        }, { contract: action.payload.contract })
+                    }
+                })),
+                action$.ofAction(modalClose).map(result => {
+                    if (result.payload.data) {
+                        return actions.txAuthorize.done({
+                            params: action.payload,
+                            result: result.payload.data
+                        });
                     }
                     else {
-                        return Observable.empty();
+                        return actions.txAuthorize.failed({
+                            params: action.payload,
+                            error: null
+                        });
                     }
-                });
-        });
+                })
+            )
+        );
 
 export const txExecEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.txExec.started)

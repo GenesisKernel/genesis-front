@@ -15,10 +15,16 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import * as propTypes from 'prop-types';
-import { TModalComponentClass } from 'components/Modal';
 import { IModal, TModalResultReason } from 'genesis/modal';
-import { Map } from 'immutable';
+
+import Wrapper from 'components/Modal/Wrapper';
+import PromptModal from 'components/Modal/PromptModal';
+import ImageEditorModal from 'components/Modal/ImageEditorModal';
+
+const MODAL_COMPONENTS = {
+    'IMAGE_EDITOR': ImageEditorModal,
+    'PROMPT': PromptModal
+};
 
 export interface IModalProviderProps {
     modal: IModal;
@@ -26,28 +32,6 @@ export interface IModalProviderProps {
 }
 
 class ModalProvider extends React.Component<IModalProviderProps> {
-    static childContextTypes = {
-        bindModal: propTypes.func.isRequired,
-        unbindModal: propTypes.func.isRequired
-    };
-
-    private _bindings: Map<string, TModalComponentClass<any, any>> = Map();
-
-    getChildContext() {
-        return {
-            bindModal: this.bindModal.bind(this),
-            unbindModal: this.unbindModal.bind(this),
-        };
-    }
-
-    bindModal(id: string, component: TModalComponentClass<any, any>) {
-        this._bindings = this._bindings.set(id, component);
-    }
-
-    unbindModal(id: string) {
-        this._bindings = this._bindings.remove(id);
-    }
-
     onResult(data: any) {
         this.props.onResult({
             reason: 'RESULT',
@@ -62,20 +46,21 @@ class ModalProvider extends React.Component<IModalProviderProps> {
         });
     }
 
-    render(): any {
-        const Modal = this.props.modal && !this.props.modal.result && this._bindings.get(this.props.modal.id);
-        return [
-            Modal ? (
-                <Modal
-                    key={this.props.modal.id}
-                    active
-                    onResult={this.onResult.bind(this)}
-                    onCancel={this.onCancel.bind(this)}
-                    {...this.props.modal}
-                />
-            ) : null,
-            this.props.children
-        ];
+    render() {
+        const Modal = this.props.modal && !this.props.modal.result && MODAL_COMPONENTS[this.props.modal.type] || null;
+        return (
+            <Wrapper>
+                {Modal && (
+                    <Modal
+                        key={this.props.modal.id}
+                        active
+                        onResult={this.onResult.bind(this)}
+                        onCancel={this.onCancel.bind(this)}
+                        {...this.props.modal}
+                    />
+                )}
+            </Wrapper>
+        );
     }
 }
 

@@ -16,11 +16,11 @@
 
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Button, Modal, Well } from 'react-bootstrap';
+import { Button, Well } from 'react-bootstrap';
 import Cropper from 'react-cropper';
-import { IModalProps } from 'components/Modal';
-import createModal from './';
 import 'cropperjs/dist/cropper.css';
+
+import Modal from './';
 
 export interface IImageEditorModalProps {
     mime: string;
@@ -29,7 +29,7 @@ export interface IImageEditorModalProps {
     width: number;
 }
 
-class ImageEditorModal extends React.Component<IModalProps<IImageEditorModalProps, string>> {
+class ImageEditorModal extends Modal<IImageEditorModalProps, string> {
     private _cropper: Cropper = null;
 
     onSuccess() {
@@ -72,11 +72,9 @@ class ImageEditorModal extends React.Component<IModalProps<IImageEditorModalProp
 
     render() {
         return (
-            <Modal show onHide={() => undefined as any}>
+            <div>
                 <Modal.Header>
-                    <Modal.Title>
-                        <FormattedMessage id="modal.imageeditor.title" defaultMessage="Image editor" />
-                    </Modal.Title>
+                    <FormattedMessage id="modal.imageeditor.title" defaultMessage="Image editor" />
                 </Modal.Header>
                 <Modal.Body>
                     <Well>
@@ -98,9 +96,9 @@ class ImageEditorModal extends React.Component<IModalProps<IImageEditorModalProp
                         <FormattedMessage id="modal.imageeditor.confirm" defaultMessage="Confirm" />
                     </Button>
                 </Modal.Footer>
-            </Modal>
+            </div>
         );
     }
 }
 
-export default createModal('imageEditor', ImageEditorModal);
+export default ImageEditorModal;

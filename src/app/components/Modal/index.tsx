@@ -15,27 +15,41 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import ModalContainer from 'containers/Modal';
+import styled from 'styled-components';
+import { ReactNode } from 'react';
 
 export interface IModalProps<P, R> {
-    active: boolean;
     params: P;
     onResult: (data: R) => void;
     onCancel: () => void;
+    children: ReactNode[];
 }
 
 export type TModalComponentClass<P, R> =
     React.ComponentType<IModalProps<P, R>> |
     React.SFC<IModalProps<P, R>>;
 
-function createModal<P, R>(type: string, component: TModalComponentClass<P, R>): React.SFC<IModalProps<P, R>> {
-    return (props: IModalProps<P, R>) => (
-        <ModalContainer
-            {...props}
-            type={type}
-            component={component} 
-        />
-    );
-}
+const StyledHeader = styled.div`
+    background: #4b7dbd;
+    color: #fff;
+    margin: -1px -1px 0 -1px;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 15px;
+`;
 
-export default createModal;
+const StyledBody = styled.div`
+    padding: 15px;
+`;
+
+const StyledFooter = styled.div`
+    padding: 15px;
+    background: #efefef;
+    border-top: solid 1px #d0dff3;
+`;
+
+export default abstract class Modal<P, R, S = {}> extends React.Component<IModalProps<P, R>, S> {
+    public static Header = StyledHeader;
+    public static Body = StyledBody;
+    public static Footer = StyledFooter;
+}

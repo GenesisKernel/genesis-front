@@ -107,17 +107,16 @@ class App extends React.Component<IAppProps> {
             <IntlProvider locale={this.props.locale} defaultLocale={this.props.locale}>
                 <div className={classes}>
                     <IntlHook />
-                    <ModalProvider>
-                        <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
-                            {this.props.isLoading && (
-                                <Route path="/" component={Splash} />
-                            )}
-                            {!this.props.isAuthenticated && (
-                                <Route path="/" component={General} />
-                            )}
-                            <Route path="/" component={Main} />
-                        </AnimatedSwitch>
-                    </ModalProvider>
+                    <ModalProvider />
+                    <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
+                        {this.props.isLoading && (
+                            <Route path="/" component={Splash} />
+                        )}
+                        {!this.props.isAuthenticated && (
+                            <Route path="/" component={General} />
+                        )}
+                        <Route path="/" component={Main} />
+                    </AnimatedSwitch>
                 </div>
             </IntlProvider>
         );
