@@ -151,6 +151,545 @@ export function convertToTreeData(data: any, selectedTag?: any): any {
     return result;
 }
 
+const constructorTemplates: any = {
+    'formWithHeader': {
+        tag: 'div',
+        attr: {
+            'class': 'panel panel-primary'
+        },
+        children: [
+            {
+                tag: 'div',
+                attr: {
+                    'class': 'panel-heading'
+                },
+                children: [
+                    {
+                        tag: 'text',
+                        text: 'Money transfer'
+                    }
+                ]
+            },
+            {
+                tag: 'form',
+                children: [
+                    {
+                        tag: 'div',
+                        attr: {
+                            'class': 'list-group-item'
+                        },
+                        children: [
+                            {
+                                tag: 'div',
+                                attr: {
+                                    'class': 'row df f-valign'
+                                },
+                                children: [
+                                    {
+                                        tag: 'div',
+                                        attr: {
+                                            'class': 'col-md-3 mt-sm text-right'
+                                        },
+                                        children: [
+                                            {
+                                                tag: 'label',
+                                                children: [
+                                                    {
+                                                        tag: 'text',
+                                                        text: 'Input1'
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        tag: 'div',
+                                        attr: {
+                                            'class': 'col-md-9 mc-sm text-left'
+                                        },
+                                        children: [
+                                            {
+                                                tag: 'input',
+                                                attr: {
+                                                    name: 'Input3',
+                                                    type: 'text'
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        tag: 'div',
+                        attr: {
+                            'class': 'list-group-item'
+                        },
+                        children: [
+                            {
+                                tag: 'div',
+                                attr: {
+                                    'class': 'row df f-valign'
+                                },
+                                children: [
+                                    {
+                                        tag: 'div',
+                                        attr: {
+                                            'class': 'col-md-3 mt-sm text-right'
+                                        },
+                                        children: [
+                                            {
+                                                tag: 'label',
+                                                children: [
+                                                    {
+                                                        tag: 'text',
+                                                        text: 'Input2'
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        tag: 'div',
+                                        attr: {
+                                            'class': 'col-md-9 mc-sm text-left'
+                                        },
+                                        children: [
+                                            {
+                                                tag: 'input',
+                                                attr: {
+                                                    name: 'Input3',
+                                                    type: 'text'
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        tag: 'div',
+                        attr: {
+                            'class': 'list-group-item'
+                        },
+                        children: [
+                            {
+                                tag: 'div',
+                                attr: {
+                                    'class': 'row df f-valign'
+                                },
+                                children: [
+                                    {
+                                        tag: 'div',
+                                        attr: {
+                                            'class': 'col-md-3 mt-sm text-right'
+                                        },
+                                        children: [
+                                            {
+                                                tag: 'label',
+                                                children: [
+                                                    {
+                                                        tag: 'text',
+                                                        text: 'Input3'
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        tag: 'div',
+                                        attr: {
+                                            'class': 'col-md-9 mc-sm text-left'
+                                        },
+                                        children: [
+                                            {
+                                                tag: 'input',
+                                                attr: {
+                                                    name: 'Input3',
+                                                    type: 'text'
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        tag: 'div',
+                        attr: {
+                            'class': 'panel-footer text-right'
+                        },
+                        children: [
+                            {
+                                tag: 'button',
+                                attr: {
+                                    'class': 'btn btn-primary',
+                                    contract: 'ContractName'
+                                },
+                                children: [
+                                    {
+                                        tag: 'text',
+                                        text: 'Send'
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+    ,
+    'tableWithHeader': {
+        tag: 'div',
+        attr: {
+            'class': 'panel panel-primary'
+        },
+        children: [
+            {
+                tag: 'div',
+                attr: {
+                    'class': 'panel-heading'
+                },
+                children: [
+                    {
+                        tag: 'text',
+                        text: 'Table block'
+                    }
+                ]
+            },
+            {
+                tag: 'table',
+                attr: {
+                    source: 'test_key'
+                }
+            },
+            {
+                tag: 'div',
+                attr: {
+                    'class': 'panel-footer text-right'
+                },
+                children: [
+                    {
+                        tag: 'button',
+                        attr: {
+                            'class': 'btn btn-primary',
+                            contract: 'ContractName'
+                        },
+                        children: [
+                            {
+                                tag: 'text',
+                                text: 'More'
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+    ,
+    'searchForm': {
+        tag: 'div',
+        attr: {
+            'class': 'panel panel-primary'
+        },
+        children: [
+            {
+                tag: 'form',
+                children: [
+                    {
+                        tag: 'div',
+                        attr: {
+                            'class': 'list-group-item'
+                        },
+                        children: [
+                            {
+                                tag: 'div',
+                                attr: {
+                                    'class': 'row df f-valign'
+                                },
+                                children: [
+                                    {
+                                        tag: 'div',
+                                        attr: {
+                                            'class': 'col-md-1 mt-sm text-right'
+                                        },
+                                        children: [
+                                            {
+                                                tag: 'label',
+                                                attr: {
+                                                    'for': 'Search'
+                                                },
+                                                children: [
+                                                    {
+                                                        tag: 'span',
+                                                        children: [
+                                                            {
+                                                                tag: 'text',
+                                                                text: 'name'
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        tag: 'div',
+                                        attr: {
+                                            'class': 'col-md-11 mc-sm'
+                                        },
+                                        children: [
+                                            {
+                                                tag: 'div',
+                                                attr: {
+                                                    'class': 'input-group'
+                                                },
+                                                children: [
+                                                    {
+                                                        tag: 'input',
+                                                        attr: {
+                                                            'class': 'form-control',
+                                                            name: 'Search',
+                                                            type: 'text',
+                                                            value: '#v_Search#'
+                                                        }
+                                                    },
+                                                    {
+                                                        tag: 'div',
+                                                        attr: {
+                                                            'class': 'input-group-btn'
+                                                        },
+                                                        children: [
+                                                            {
+                                                                tag: 'button',
+                                                                attr: {
+                                                                    'class': 'btn btn-default',
+                                                                    page: 'roles_list',
+                                                                    pageparams: {
+                                                                        isSearch: {
+                                                                            text: '1',
+                                                                            type: 'text'
+                                                                        },
+                                                                        v_Search: {
+                                                                            params: [
+                                                                                'Search'
+                                                                            ],
+                                                                            type: 'Val'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                children: [
+                                                                    {
+                                                                        tag: 'em',
+                                                                        attr: {
+                                                                            'class': 'fa fa-search'
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        tag: 'div',
+                        attr: {
+                            'class': 'list-group-item'
+                        },
+                        children: [
+                            {
+                                tag: 'table',
+                                attr: {
+                                    columns: [
+                                        {
+                                            Name: 'custom_id',
+                                            Title: '$id$'
+                                        },
+                                        {
+                                            Name: 'custom_name',
+                                            Title: '$name$'
+                                        },
+                                        {
+                                            Name: 'custom_type',
+                                            Title: '$type$'
+                                        },
+                                        {
+                                            Name: 'custom_date',
+                                            Title: '$created$ / $deleted$'
+                                        },
+                                        {
+                                            Name: 'custom_status',
+                                            Title: '$status$'
+                                        },
+                                        {
+                                            Name: 'custom_creator',
+                                            Title: '$creator$'
+                                        },
+                                        {
+                                            Name: 'actions',
+                                            Title: '$actions$'
+                                        }
+                                    ],
+                                    source: 'src_roles_list'
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        tag: 'div',
+                        attr: {
+                            'class': 'panel-footer clearfix'
+                        },
+                        children: [
+                            {
+                                tag: 'div',
+                                attr: {
+                                    'class': 'pull-right'
+                                },
+                                children: [
+                                    {
+                                        tag: 'button',
+                                        attr: {
+                                            'class': 'btn btn-primary',
+                                            page: 'roles_create'
+                                        },
+                                        children: [
+                                            {
+                                                tag: 'text',
+                                                text: 'create'
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    'radioPanel': {
+        tag: 'form',
+        attr: {
+            'class': 'panel panel-primary'
+        },
+        children: [
+            {
+                tag: 'div',
+                attr: {
+                    'class': 'panel-heading'
+                },
+                children: [
+                    {
+                        tag: 'div',
+                        attr: {
+                            'class': 'panel-title'
+                        },
+                        children: [
+                            {
+                                tag: 'text',
+                                text: 'Payment'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                tag: 'div',
+                attr: {
+                    'class': 'panel-body'
+                },
+                children: [
+                    {
+                        tag: 'div',
+                        attr: {
+                            'class': 'form-group'
+                        },
+                        children: [
+                            {
+                                tag: 'label',
+                                children: [
+                                    {
+                                        tag: 'text',
+                                        text: 'Payment methods'
+                                    }
+                                ]
+                            },
+                            {
+                                tag: 'radiogroup',
+                                attr: {
+                                    name: 'Payments',
+                                    namecolumn: 'type',
+                                    source: 'payment',
+                                    value: '#value_payment_method#',
+                                    valuecolumn: 'id'
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                tag: 'div',
+                attr: {
+                    'class': 'panel-footer text-center'
+                },
+                children: [
+                    {
+                        tag: 'button',
+                        attr: {
+                            alert: {
+                                text: 'Select the payment method'
+                            },
+                            'class': 'btn btn-default mr-lg',
+                            contract: 'ContractName'
+                        },
+                        children: [
+                            {
+                                tag: 'text',
+                                text: 'Cancel'
+                            }
+                        ]
+                    },
+                    {
+                        tag: 'button',
+                        attr: {
+                            'class': 'btn btn-primary',
+                            contract: 'ContractName',
+                            page: 'proof_payment'
+                        },
+                        children: [
+                            {
+                                tag: 'text',
+                                text: 'Payment'
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+};
+
+export function getConstructorTemplate(name: string) {
+    let template = _.cloneDeep(constructorTemplates[name]);
+    template.id = generateId();
+    if (template.children) {
+        setIds(template.children, true);
+    }
+    return template;
+}
+
 class Tag {
     protected element: IProtypoElement;
     protected tagName: string = 'Tag';
@@ -592,6 +1131,60 @@ class Input extends Tag {
     }
 }
 
+class RadioGroup extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'RadioGroup';
+        this.canHaveChildren = false;
+        this.attr = {
+            'name': 'Name',
+            'source': 'Source',
+            'namecolumn': 'NameColumn',
+            'valuecolumn': 'ValueColumn',
+            'value': 'Value',
+            'class': 'Class'
+        };
+    }
+
+    generateTreeJSON(text: string): any {
+        return {
+            tag: this.tagName.toLowerCase(),
+            id: generateId(),
+            attr: {
+                name: 'sample radio'
+            }
+        };
+    }
+
+    renderCode(): string {
+        let result: string = this.tagName + '(';
+        let params = [];
+        let body = this.renderChildren();
+        if (body.length > 0) {
+            params.push('Body: ' + body);
+        }
+        for (let attr in this.attr) {
+            if (this.attr.hasOwnProperty(attr)) {
+                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
+            }
+        }
+
+        result += params.join(', ');
+        result += ')';
+
+        if (this.element && this.element.attr && this.element.attr.validate) {
+            result += this.getValidationParams(this.element.attr.validate);
+        }
+
+        if (this.element && this.element.attr) {
+            if (this.element.attr.style) {
+                result += '.Style(' + this.element.attr.style + ')';
+            }
+        }
+        return result + ' ';
+    }
+}
+
 export class CodeGenerator {
     private elements: IProtypoElement[];
     constructor(elements: IProtypoElement[]) {
@@ -634,7 +1227,7 @@ const tagHandlers = {
 //     'menuitem': MenuItem,
 //     'menugroup': MenuGroup,
     'p': P,
-//     'radiogroup': RadioGroup,
+    'radiogroup': RadioGroup,
 //     'select': Select,
     'span': Span,
     'strong': Strong,
