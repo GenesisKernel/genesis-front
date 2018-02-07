@@ -45,3 +45,6 @@ export const modalClose = actionCreator<{ reason: TModalResultReason, data: any 
 
 // Notifications
 export const fetchNotifications = actionCreator.async<undefined, TProtypoElement[], undefined>('FETCH_NOTIFICATIONS');
+
+// Data-setters
+export const setVDEAvailable = actionCreator<boolean>('SET_VDE_AVAILABLE');

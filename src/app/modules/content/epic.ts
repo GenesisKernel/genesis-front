@@ -145,7 +145,12 @@ export const ecosystemInitEpic: Epic<Action, IRootState> =
 
             const promise = Promise.all([
                 api.parameter(state.auth.sessionToken, 'stylesheet'),
-                api.parameter(state.auth.sessionToken, 'ecosystem_name')
+                api.parameter(state.auth.sessionToken, 'ecosystem_name'),
+
+                // FIXME: Check if VDE exists
+                api.row(state.auth.sessionToken, 'contracts', '1', undefined, true)
+                    .then(l => true)
+                    .catch(e => false)
             ]);
 
             return Observable.fromPromise(promise)
@@ -156,6 +161,7 @@ export const ecosystemInitEpic: Epic<Action, IRootState> =
                             ecosystemName: payload[1].value
                         }),
                         actions.fetchNotifications.started(null),
+                        actions.setVDEAvailable(payload[2]),
                         actions.ecosystemInit.done({
                             params: action.payload,
                             result: {

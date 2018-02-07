@@ -80,7 +80,7 @@ export const initialState: State = {
         vdeadmin: {
             name: 'vdeadmin',
             title: 'VDE Admin',
-            visible: true,
+            visible: false,
             defaultPage: 'admin_index',
             pending: false,
             force: false,
@@ -361,18 +361,24 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.ecosystemInit.started)) {
+        const sections: { [key: string]: TSection } = {};
+        for (let itr in state.sections) {
+            if (state.sections.hasOwnProperty(itr)) {
+                sections[itr] = {
+                    ...state.sections[itr],
+                    pending: action.payload.section === itr ? true : false,
+                    page: null,
+                    menus: []
+                };
+            }
+        }
+
         return {
             ...state,
             preloading: true,
             preloadingError: null,
             section: action.payload.section,
-            sections: {
-                ...state.sections,
-                [action.payload.section]: {
-                    ...state.sections[action.payload.section],
-                    pending: true
-                }
-            }
+            sections
         };
     }
     else if (isType(action, actions.ecosystemInit.done)) {
@@ -493,6 +499,19 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             section: action.payload
         } : state;
+    }
+
+    if (isType(action, actions.setVDEAvailable)) {
+        return {
+            ...state,
+            sections: {
+                ...state.sections,
+                vdeadmin: {
+                    ...state.sections.vdeadmin,
+                    visible: action.payload
+                }
+            }
+        };
     }
 
     return state;

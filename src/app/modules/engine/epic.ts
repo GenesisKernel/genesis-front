@@ -24,6 +24,7 @@ import * as actions from './actions';
 import * as authActions from 'modules/auth/actions';
 import { connect } from 'modules/socket/actions';
 import platform from 'lib/platform';
+import { setVDEAvailable } from 'modules/content/actions';
 
 export const initializeEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.intialize)
@@ -126,11 +127,14 @@ export const createVDEEpic: Epic<Action, IRootState> =
         .flatMap(action => {
             const state = store.getState();
             return Observable.fromPromise(api.createVDE(state.auth.sessionToken))
-                .map(payload =>
-                    actions.createVDE.done({
-                        params: action.payload,
-                        result: payload.result
-                    })
+                .flatMap(payload =>
+                    Observable.concat(
+                        Observable.of(setVDEAvailable(true)),
+                        Observable.of(actions.createVDE.done({
+                            params: action.payload,
+                            result: payload.result
+                        }))
+                    )
                 )
                 .catch(error =>
                     Observable.of(actions.createVDE.failed({
