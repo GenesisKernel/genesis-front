@@ -28,6 +28,7 @@ export interface IEditPageProps {
     vde?: boolean;
     tabView?: boolean;
     saveButton?: boolean;
+    canSave?: boolean;
     page: { id: string, name: string, menu: string, conditions: string, value: string };
     menus: { id: string, name: string, conditions: string, value: string }[];
     navigatePage: (params: { name: string, params?: any, vde?: boolean }) => void;
@@ -117,6 +118,7 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
                     onSourceEdit={this.onSourceEdit.bind(this)}
                     onMenuSelect={this.onMenuSelect.bind(this)}
                     onExec={this.props.onExec && this.props.onExec}
+                    canSave={this.props.canSave}
                 />
             );
         }

@@ -72,13 +72,15 @@ interface IConstructorTabbedContainerDispatch {
 
 interface IConstructorTabbedState {
     grid: boolean;
+    canSave: boolean;
 }
 
 class ConstructorTabbedContainer extends React.Component<IConstructorTabbedContainerProps & IConstructorTabbedContainerState & IConstructorTabbedContainerDispatch, IConstructorTabbedState> {
     constructor(props: IConstructorTabbedContainerProps & IConstructorTabbedContainerState & IConstructorTabbedContainerDispatch) {
         super(props);
         this.state = {
-            grid: true
+            grid: true,
+            canSave: false
         };
     }
 
@@ -90,6 +92,18 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
         if (props.random && this.props.random !== props.random) {
             this.getPage();
         }
+
+        let canSave = true;
+        const tabData = props.tabData && props.tabData['interfaceConstructor' + props.pageID + (props.vde ? '-vde' : '')];
+        const pageTree = tabData && tabData.data || null;
+        if (!pageTree || pageTree && pageTree.length === 0) {
+            canSave = false;
+        }
+
+        this.setState({
+            ...this.state,
+            canSave
+        });
     }
 
     getPage() {
@@ -225,6 +239,7 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
                 menus={this.props.menus}
                 navigatePage={this.props.navigatePage}
                 onSave={this.onSave.bind(this)}
+                canSave={this.state.canSave}
             />
         );
     }

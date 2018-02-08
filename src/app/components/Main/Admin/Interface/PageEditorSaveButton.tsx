@@ -34,6 +34,7 @@ interface IPageEditorProps {
     onMenuSelect: React.ChangeEventHandler<HTMLSelectElement>;
     onExec?: (block: string, error?: { type: string, error: string }) => void;
     mapContractParams: (values: { [key: string]: any }) => { values: { [key: string]: any } };
+    canSave: boolean;
 }
 
 const PageEditor: React.SFC<IPageEditorProps> = (props) => (
@@ -73,9 +74,12 @@ const PageEditor: React.SFC<IPageEditorProps> = (props) => (
             </Validation.components.ValidatedFormGroup>
         </div>
         <div className="panel-footer">
-            <Validation.components.ValidatedSubmit bsStyle="primary">
+            <Validation.components.ValidatedSubmit bsStyle="primary" disabled={!props.canSave}>
                 <FormattedMessage id="admin.save" defaultMessage="Save" />
             </Validation.components.ValidatedSubmit>
+            { !props.canSave && (
+                <p className="text-muted">Page can not be empty</p>
+            )}
         </div>
     </ValidatedContractForm>
 );
