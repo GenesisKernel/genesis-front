@@ -120,6 +120,13 @@ export default (state: State = initialState, action: Action): State => {
                     page: state.sections[action.payload.result.section].page,
                     force: action.payload.params.force,
                     pending: false
+                },
+                vde: {
+                    ...state.sections.vde,
+                    visible: action.payload.result.leftVDE ?
+                        false :
+                        action.payload.result.enteredVDE ? true :
+                            state.sections.vde.visible
                 }
             }
         };

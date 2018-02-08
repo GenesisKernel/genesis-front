@@ -35,11 +35,14 @@ export const navigatePageEpic: Epic<Action, IRootState> =
                 (VDE_LEGACY_PAGES[action.payload.name] && VDE_LEGACY_PAGES[action.payload.name].section) :
                 (LEGACY_PAGES[action.payload.name] && LEGACY_PAGES[action.payload.name].section)) || action.payload.section || state.content.section;
             const section = state.content.sections[sectionName];
+
             history.push(`/${sectionName}/${action.payload.name || section.defaultPage}`, { params: action.payload.params });
             return actions.navigatePage.done({
                 params: action.payload,
                 result: {
-                    section: sectionName
+                    section: sectionName,
+                    leftVDE: 'vde' === state.content.section && 'vde' !== sectionName,
+                    enteredVDE: 'vde' !== state.content.section && 'vde' === sectionName
                 }
             });
         });

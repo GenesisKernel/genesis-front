@@ -97,7 +97,7 @@ const MenuItem: React.SFC<IMenuItemProps> = (props, context: IMenuItemContext) =
 
     return (
         <StyledMenuItem className={classes}>
-            <PageLink page={props.page} params={context.protypo.resolveParams(props.params)} vde={isVDE}>
+            <PageLink page={props.page} params={context.protypo.resolveParams(props.params)} vde={isVDE} section={isVDE ? 'vde' : 'home'}>
                 <span className="link-active-decorator" />
                 <span className="link-body">
                     {props.icon && (<em className={`icon ${props.icon}`} />)}
