@@ -99,6 +99,8 @@ const StyledModalWrapper = styled.div`
         background: #fff;
         vertical-align: middle;
         text-align: initial;
+        max-width: 95%;
+        overflow: hidden;
     }
 `;
 
