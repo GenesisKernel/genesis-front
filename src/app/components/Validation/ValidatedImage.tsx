@@ -69,6 +69,7 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
                 value: props.value as string,
                 resultFilename: props.value ? this.state.filename : ''
             });
+            this.onResult(props.value);
             (this.context.form as ValidatedForm).updateState(props.name, props.value);
         }
     }
@@ -108,7 +109,7 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
         this._value = data;
         this.setState({
             value: data ? this.state.value : null,
-            filename: data ? this.state.filename : ''
+            resultFilename: data ? this.state.filename : ''
         });
     }
 
