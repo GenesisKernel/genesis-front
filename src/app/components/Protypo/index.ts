@@ -30,6 +30,7 @@ import InputErr from './handlers/InputErr';
 import InputMap from './handlers/InputMap';
 import Label from './handlers/Label';
 import LinkPage from './handlers/LinkPage';
+import Map from './handlers/Map';
 import MenuItem from './handlers/MenuItem';
 import MenuGroup from './handlers/MenuGroup';
 import P from './handlers/P';
@@ -58,6 +59,7 @@ const handlers = {
     'inputMap': InputMap,
     'label': Label,
     'linkpage': LinkPage,
+    'map': Map,
     'menuitem': MenuItem,
     'menugroup': MenuGroup,
     'p': P,

@@ -15,7 +15,8 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { TMapType, TMapEditorType, IMapEditorEvent } from 'genesis/geo';
+import { TMapType, TMapEditorType } from 'genesis/geo';
+import { IMapValue, parseData } from 'components/Protypo/handlers/Map';
 
 import Validation from 'components/Validation';
 
@@ -23,65 +24,11 @@ export interface IInputMapProps {
     name: string;
     value: string;
     type: TMapEditorType;
-    mapType: TMapType;
+    maptype: TMapType;
 }
-
-export interface IInputMapValue extends IMapEditorEvent {
-    zoom?: number;
-    center?: { lat: number, lng: number };
-}
-
-const parseData = (plain: string): IInputMapValue => {
-    const result: IInputMapValue = {
-        coords: [],
-        area: 0,
-        address: ''
-    };
-
-    try {
-        const value = JSON.parse(plain);
-        if (Array.isArray(value.coords)) {
-            value.coords.forEach((l: any) => {
-                if ('number' === typeof l.lng && 'number' === typeof l.lat) {
-                    result.coords.push({
-                        lng: l.lng,
-                        lat: l.lat
-                    });
-                }
-            });
-        }
-
-        if (value.center) {
-            if ('number' === typeof value.center.lng && 'number' === typeof value.center.lat) {
-                result.center = {
-                    lng: value.center.lng,
-                    lat: value.center.lat
-                };
-            }
-        }
-
-        if ('number' === typeof value.area) {
-            result.area = value.area;
-        }
-
-        if ('number' === typeof value.zoom) {
-            result.zoom = value.zoom;
-        }
-
-        if ('string' === typeof value.address) {
-            result.address = value.address;
-        }
-
-    }
-    catch (e) {
-        // Suppress errors silently
-    }
-
-    return result;
-};
 
 const InputMap: React.SFC<IInputMapProps> = (props) => {
-    const value: IInputMapValue = parseData(props.value) || {
+    const value: IMapValue = parseData(props.value) || {
         coords: [],
         area: 0,
         address: ''
@@ -94,7 +41,7 @@ const InputMap: React.SFC<IInputMapProps> = (props) => {
             zoom={value.zoom}
             center={value.center}
             type={props.type || 'polygon'}
-            mapType={props.mapType}
+            mapType={props.maptype}
         />
     );
 };

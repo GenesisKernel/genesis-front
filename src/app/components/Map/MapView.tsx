@@ -69,6 +69,7 @@ class Map extends React.Component<IMapProps> {
                 defaultMapTypeId={this.props.mapType}
                 defaultZoom={this.props.zoom || 1}
                 defaultCenter={this.props.center || { lat: 36.07574221562708, lng: 5.0921630859375 }}
+                mapTypeId={this.props.mapType}
                 options={{
                     disableDefaultUI: true,
                     draggableCursor: 'default'
