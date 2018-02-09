@@ -27,6 +27,7 @@ import Image from './handlers/Image';
 import ImageInput from './handlers/ImageInput';
 import Input from './handlers/Input';
 import InputErr from './handlers/InputErr';
+import InputMap from './handlers/InputMap';
 import Label from './handlers/Label';
 import LinkPage from './handlers/LinkPage';
 import MenuItem from './handlers/MenuItem';
@@ -54,6 +55,7 @@ const handlers = {
     'imageinput': ImageInput,
     'input': Input,
     'inputerr': InputErr,
+    'inputMap': InputMap,
     'label': Label,
     'linkpage': LinkPage,
     'menuitem': MenuItem,

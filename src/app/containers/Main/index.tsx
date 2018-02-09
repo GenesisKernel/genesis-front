@@ -35,6 +35,7 @@ const MainContainer: React.SFC<IMainProps> = props => (
     <Main {...props}>
         <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
             <Route exact path="/" component={DefaultPage} />
+            <Route exact path="/debug" component={Debug} />
             <Route exact path="/:section/:pageName?" component={Page} />
 
             <Route exact path="/admin/interface/page/history/:pageID-:pageName" render={routeProps => <PageHistory id={routeProps.match.params.pageID} name={routeProps.match.params.pageName} />} />
@@ -47,7 +48,6 @@ const MainContainer: React.SFC<IMainProps> = props => (
             <Route exact path="/vde/tabs/:type-:id-:name/" render={routeProps => <Tabs match={routeProps.match} vde />} />
             <Route exact path="/vde/tabs/:type-:id/" render={routeProps => <Tabs match={routeProps.match} vde />} />
 
-            <Route exact path="/debug" component={Debug} />
             <Route exact path="/backup" component={Backup} />
             <Route path="*" render={() => <NotFound main />} />
         </AnimatedSwitch>

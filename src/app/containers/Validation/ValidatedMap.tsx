@@ -19,28 +19,31 @@ import * as uuid from 'uuid';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { modalShow } from 'modules/content/actions';
+import { IMapEditorEvent, TMapEditorType, TMapType } from 'genesis/geo';
 import { IModal } from 'genesis/modal';
 
 import { Validator } from 'components/Validation/Validators';
-import ValidatedImage from 'components/Validation/ValidatedImage';
+import ValidatedMap from 'components/Validation/ValidatedMap';
 
-export interface IValidatedImageContainerProps {
-    format: 'png' | 'jpg' | 'jpeg';
+export interface IValidatedMapContainerProps {
     name: string;
-    aspectRatio?: number;
-    width?: number;
+    type: TMapEditorType;
+    mapType?: TMapType;
+    value?: IMapEditorEvent;
+    center?: { lat: number, lng: number };
+    zoom?: number;
     validators?: Validator[];
 }
 
-interface IValidatedImageContainerState {
+interface IValidatedMapContainerState {
     modal: IModal;
 }
 
-interface IValidatedImageContainerDispatch {
+interface IValidatedMapContainerDispatch {
     modalShow: typeof modalShow;
 }
 
-class ValidatedImageContainer extends React.Component<IValidatedImageContainerProps & IValidatedImageContainerState & IValidatedImageContainerDispatch, { result: string }> {
+class ValidatedMapContainer extends React.Component<IValidatedMapContainerProps & IValidatedMapContainerState & IValidatedMapContainerDispatch, { result: IMapEditorEvent }> {
     private _id: string = uuid.v4();
 
     constructor(props: any) {
@@ -53,12 +56,12 @@ class ValidatedImageContainer extends React.Component<IValidatedImageContainerPr
     openEditor(params: { mime: string, data: string, aspectRatio: number, width: number }) {
         this.props.modalShow({
             id: this._id,
-            type: 'IMAGE_EDITOR',
+            type: 'MAP_EDITOR',
             params
         });
     }
 
-    componentWillReceiveProps(props: IValidatedImageContainerProps & IValidatedImageContainerState & IValidatedImageContainerDispatch) {
+    componentWillReceiveProps(props: IValidatedMapContainerProps & IValidatedMapContainerState & IValidatedMapContainerDispatch) {
         const result = props.modal && this._id === props.modal.id && props.modal.result;
         if (result && 'RESULT' === result.reason) {
             this.setState({
@@ -69,13 +72,14 @@ class ValidatedImageContainer extends React.Component<IValidatedImageContainerPr
 
     render() {
         return (
-            <ValidatedImage
-                format={this.props.format}
+            <ValidatedMap
                 name={this.props.name}
-                aspectRatio={this.props.aspectRatio}
-                width={this.props.width}
+                type={this.props.type}
+                mapType={this.props.mapType}
                 validators={this.props.validators}
-                value={this.state.result}
+                value={this.state.result || this.props.value}
+                center={this.props.center}
+                zoom={this.props.zoom}
                 openEditor={this.openEditor.bind(this)}
             />
         );
@@ -90,4 +94,4 @@ const mapDispatchToProps = {
     modalShow: modalShow
 };
 
-export default connect<IValidatedImageContainerState, IValidatedImageContainerDispatch, IValidatedImageContainerProps>(mapStateToProps, mapDispatchToProps)(ValidatedImageContainer);
+export default connect<IValidatedMapContainerState, IValidatedMapContainerDispatch, IValidatedMapContainerProps>(mapStateToProps, mapDispatchToProps)(ValidatedMapContainer);

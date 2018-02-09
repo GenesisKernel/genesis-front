@@ -363,6 +363,39 @@ const register = (editor: typeof monaco) => {
                 }
             ]
         },
+        InputMap: {
+            label: 'InputMap',
+            documentation: 'Form element to work with map coords',
+            kind: monaco.languages.CompletionItemKind.Method,
+            insertText: 'InputMap(',
+            params: [
+                staticParamTypes.Class,
+                {
+                    label: 'Name',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Unique input name to bind the value to',
+                    insertText: 'Name: '
+                },
+                {
+                    label: 'Value',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Default input value',
+                    insertText: 'Value: '
+                },
+                {
+                    label: 'Type',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: '',
+                    insertText: 'Type: '
+                },
+                {
+                    label: 'MapType',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Identifier for common map types',
+                    insertText: 'MapType: '
+                }
+            ]
+        },
         Label: {
             label: 'Label',
             documentation: 'Form input label. Will set focus to bound input on click',
