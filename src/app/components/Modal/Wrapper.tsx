@@ -123,7 +123,7 @@ class ModalWrapper extends React.Component {
                 {(state: string) => (
                     <StyledModalWrapper style={{ ...containerAnimationDef.defaultStyle, ...containerAnimationDef[state] }}>
                         <Transition in={state === 'entered'} timeout={childAnimationDuration}>
-                            {(childState: string) => (
+                            {(childState: string) => 'exited' === childState ? null : (
                                 <div className="modal-wnd" style={{ ...childAnimationDef.defaultStyle, ...childAnimationDef[childState] }}>
                                     {this._children}
                                 </div>
