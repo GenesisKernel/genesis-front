@@ -20,9 +20,11 @@ import { IModal, TModalResultReason } from 'genesis/modal';
 import Wrapper from 'components/Modal/Wrapper';
 import PromptModal from 'components/Modal/PromptModal';
 import ImageEditorModal from 'components/Modal/ImageEditorModal';
+import MapEditorModal from 'components/Modal/MapEditorModal';
 
 const MODAL_COMPONENTS = {
     'IMAGE_EDITOR': ImageEditorModal,
+    'MAP_EDITOR': MapEditorModal,
     'PROMPT': PromptModal
 };
 
