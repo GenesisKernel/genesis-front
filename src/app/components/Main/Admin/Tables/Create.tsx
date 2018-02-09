@@ -15,7 +15,7 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Row, Col, Panel } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
 import DocumentTitle from 'components/DocumentTitle';
@@ -97,9 +97,13 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                 conditions: 'true'
             }))),
             Permissions: JSON.stringify({
-                insert: 'true',
-                update: 'true',
-                new_column: 'true'
+                insert: values.insert,
+                update: values.update,
+                new_column: values.newColumn,
+                ...(this.props.vde && {
+                    read: values.read,
+                    filter: values.filter
+                })
             })
         };
     }
@@ -270,14 +274,54 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                                                 <FormattedMessage id="admin.tables.column.add" defaultMessage="Add column" />
                                             </Button>
                                         </div>
-                                        <div className="pull-right">
-                                            <Validation.components.ValidatedSubmit bsStyle="primary">
-                                                <FormattedMessage id="admin.save" defaultMessage="Save" />
-                                            </Validation.components.ValidatedSubmit>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <Row>
+                                <Col md={6}>
+                                    <Panel
+                                        header={<FormattedMessage id="admin.tables.permissions.write" defaultMessage="Write permissions" />}
+                                        footer={<div className="text-right"><Button type="submit" bsStyle="primary"><FormattedMessage id="admin.tables.save" defaultMessage="Save" /></Button></div>}
+                                    >
+                                        <Validation.components.ValidatedFormGroup for="insert">
+                                            <label>
+                                                <FormattedMessage id="admin.tables.permissions.insert" defaultMessage="Insert" />
+                                            </label>
+                                            <Validation.components.ValidatedControl type="text" name="insert" defaultValue={'ContractConditions("MainCondition")'} validators={[Validation.validators.required]} />
+                                        </Validation.components.ValidatedFormGroup>
+                                        <Validation.components.ValidatedFormGroup for="update">
+                                            <label>
+                                                <FormattedMessage id="admin.tables.permissions.update" defaultMessage="Update" />
+                                            </label>
+                                            <Validation.components.ValidatedControl type="text" name="update" defaultValue={'ContractConditions("MainCondition")'} validators={[Validation.validators.required]} />
+                                        </Validation.components.ValidatedFormGroup>
+                                        <Validation.components.ValidatedFormGroup for="newColumn">
+                                            <label>
+                                                <FormattedMessage id="admin.tables.permissions.newcolumn" defaultMessage="New column" />
+                                            </label>
+                                            <Validation.components.ValidatedControl type="text" name="newColumn" defaultValue={'ContractConditions("MainCondition")'} validators={[Validation.validators.required]} />
+                                        </Validation.components.ValidatedFormGroup>
+                                    </Panel>
+                                </Col>
+                                {this.props.vde && (
+                                    <Col md={6}>
+                                        <Panel header={<FormattedMessage id="admin.tables.permissions.read" defaultMessage="Read permissions" />}>
+                                            <Validation.components.ValidatedFormGroup for="read">
+                                                <label>
+                                                    <FormattedMessage id="admin.tables.permissions.read" defaultMessage="Read" />
+                                                </label>
+                                                <Validation.components.ValidatedControl type="text" name="read" />
+                                            </Validation.components.ValidatedFormGroup>
+                                            <Validation.components.ValidatedFormGroup for="filter">
+                                                <label>
+                                                    <FormattedMessage id="admin.tables.permissions.filter" defaultMessage="Filter" />
+                                                </label>
+                                                <Validation.components.ValidatedControl type="text" name="filter" />
+                                            </Validation.components.ValidatedFormGroup>
+                                        </Panel>
+                                    </Col>
+                                )}
+                            </Row>
                         </ValidatedContractForm>
                     </div>
                 </div>
