@@ -62,6 +62,8 @@ class Protypo extends React.Component<IProtypoProps> {
     private _menuPushBind: Function;
     private _navigatePageBind: Function;
     private _navigateBind: Function;
+    private _resolveSourceBind: Function;
+    private _renderElementsBind: Function;
     private _title: string;
     private _toolButtons: IToolButtonProps[];
     private _sources: { [key: string]: { columns: string[], types: string[], data: string[][] } };
@@ -72,6 +74,8 @@ class Protypo extends React.Component<IProtypoProps> {
         this._menuPushBind = props.menuPush.bind(this);
         this._navigatePageBind = props.navigatePage.bind(this);
         this._navigateBind = props.navigate.bind(this);
+        this._resolveSourceBind = this.resolveSource.bind(this);
+        this._renderElementsBind = this.renderElements.bind(this);
     }
 
     getChildContext() {
@@ -80,6 +84,8 @@ class Protypo extends React.Component<IProtypoProps> {
             menuPush: this._menuPushBind,
             navigatePage: this._navigatePageBind,
             navigate: this._navigateBind,
+            resolveSource: this._resolveSourceBind,
+            renderElements: this._renderElementsBind,
             vde: this.props.vde
         };
     }
@@ -264,6 +270,8 @@ class Protypo extends React.Component<IProtypoProps> {
     navigatePage: propTypes.func.isRequired,
     navigate: propTypes.func.isRequired,
     menuPush: propTypes.func.isRequired,
+    resolveSource: propTypes.func.isRequired,
+    renderElements: propTypes.func.isRequired,
     vde: propTypes.bool
 };
 
