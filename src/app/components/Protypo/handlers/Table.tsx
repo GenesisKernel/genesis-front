@@ -191,9 +191,9 @@ class Table extends React.Component<ITableProps> {
                 case 'long_text':
                     try {
                         const payload: { title: string, link: string } = JSON.parse(value);
-                        return (
+                        return payload.link ? (
                             <LongText link={payload.link}>{payload.title}</LongText>
-                        );
+                        ) : payload.title;
                     }
                     catch {
                         return null;
