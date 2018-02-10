@@ -266,7 +266,7 @@ class Main extends React.Component<IMainProps> {
                     <StyledLoadingBar
                         showFastActions
                         style={{
-                            backgroundColor: '#c6d2da',
+                            backgroundColor: '#b2c5dc',
                             width: 'auto',
                             height: 2
                         }}
