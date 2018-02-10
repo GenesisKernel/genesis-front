@@ -110,6 +110,7 @@ export interface IModalWrapperProps {
 
 class ModalWrapper extends React.Component<IModalWrapperProps> {
     private _children: React.ReactNode;
+    private _lastChildState: string;
 
     componentDidMount() {
         this._children = this.props.children;
@@ -121,17 +122,29 @@ class ModalWrapper extends React.Component<IModalWrapperProps> {
         }
     }
 
+    renderChild(state: string) {
+        // Unmount hidden modal window
+        if ('exiting' === this._lastChildState && 'exited' === state) {
+            this._children = null;
+        }
+
+        // We must remember last state to correctly destroy the modal window
+        // when disappear animation has done it's work
+        this._lastChildState = state;
+        return (
+            <div className="modal-wnd" style={{ ...childAnimationDef.defaultStyle, ...childAnimationDef[state] }}>
+                {this._children}
+            </div>
+        );
+    }
+
     render() {
         return (
             <Transition in={!!this.props.children} timeout={containerAnimationDuration}>
                 {(state: string) => (
                     <StyledModalWrapper style={{ ...containerAnimationDef.defaultStyle, ...containerAnimationDef[state], marginTop: this.props.topOffset }}>
                         <Transition in={state === 'entered'} timeout={childAnimationDuration}>
-                            {(childState: string) => 'exited' === childState ? null : (
-                                <div className="modal-wnd" style={{ ...childAnimationDef.defaultStyle, ...childAnimationDef[childState] }}>
-                                    {this._children}
-                                </div>
-                            )}
+                            {this.renderChild.bind(this)}
                         </Transition>
                     </StyledModalWrapper>
                 )}
