@@ -39,7 +39,7 @@ export const columnDisplayRules: { [key: string]: IColumnDisplayRule } = {
     text: {
         render: data => (<span>{data}</span>)
     },
-    jsonb: {
+    json: {
         render: data => (<span>{data}</span>)
     },
     double: {
