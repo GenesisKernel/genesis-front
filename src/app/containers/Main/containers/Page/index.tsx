@@ -16,9 +16,10 @@
 
 import * as React from 'react';
 import * as _ from 'lodash';
+import * as queryString from 'query-string';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { renderPage, ecosystemInit, renderLegacyPage } from 'modules/content/actions';
+import { renderPage, ecosystemInit, renderLegacyPage, navigatePage } from 'modules/content/actions';
 import { TSection } from 'genesis/content';
 import { LEGACY_PAGES, VDE_LEGACY_PAGES } from 'lib/legacyPages';
 
@@ -27,7 +28,7 @@ import Page from 'components/Main/Page';
 export interface IPageContainerProps {
     match?: { params: { [key: string]: string } };
     location?: {
-        state: { params?: { [key: string]: any } };
+        search: string;
     };
 }
 
@@ -39,6 +40,7 @@ interface IPageContainerState {
 }
 
 interface IPageContainerDispatch {
+    navigatePage: typeof navigatePage.started;
     renderPage: typeof renderPage.started;
     renderLegacyPage: typeof renderLegacyPage.started;
     ecosystemInit: typeof ecosystemInit.started;
@@ -60,11 +62,19 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
 
     renderPage(props: IPageContainerProps & IPageContainerState & IPageContainerDispatch) {
         const section = props.sections[props.match.params.section];
-        const isPending = section.pending;
+        const isPending = section ? section.pending : false;
         const requestPage = (props.match.params.pageName || section.defaultPage);
+        const params = queryString.parse(props.location.search);
 
         if (!isPending) {
-            if (!section.page) {
+            if (!section) {
+                props.navigatePage({
+                    section: 'home',
+                    params: {},
+                    vde: false
+                });
+            }
+            else if (!section.page) {
                 props.renderPage({
                     section: section.name,
                     name: section.defaultPage,
@@ -72,7 +82,7 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
                     vde: section.vde
                 });
             }
-            else if (section.page.name !== requestPage || section.force) {
+            else if (section.page.name !== requestPage || section.force || this.props.location.search !== props.location.search) {
                 const legacyPage = LEGACY_PAGES[requestPage];
                 const vdeLegacyPage = VDE_LEGACY_PAGES[requestPage];
 
@@ -81,7 +91,7 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
                         section: vdeLegacyPage.section || section.name,
                         name: requestPage,
                         menu: vdeLegacyPage.menu,
-                        params: props.location && props.location.state && props.location.state.params,
+                        params,
                         vde: section.vde
                     });
                 }
@@ -90,7 +100,7 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
                         section: legacyPage.section || section.name,
                         name: requestPage,
                         menu: legacyPage.menu,
-                        params: props.location && props.location.state && props.location.state.params,
+                        params,
                         vde: section.vde
                     });
                 }
@@ -98,7 +108,7 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
                     props.renderPage({
                         section: section.name,
                         name: requestPage,
-                        params: props.location && props.location.state && props.location.state.params,
+                        params,
                         vde: section.vde
                     });
                 }
@@ -115,7 +125,7 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
                     const vdeLegacyPage = isLegacy && section.vde ? VDE_LEGACY_PAGES[section.page.name] : null;
 
                     return (
-                        <div key={section.name} className="flex-col flex-stretch" style={{ display: this.props.section === section.name ? null : 'none', overflowX: 'hidden', overflowY: 'auto' }}>
+                        <div key={section.name || 'error'} className="flex-col flex-stretch" style={{ display: this.props.section === section.name ? null : 'none', overflowX: 'hidden', overflowY: 'auto' }}>
                             {isLegacy ?
                                 (
                                     (section.vde ? vdeLegacyPage : legacyPage).render(section.page.params)
@@ -143,6 +153,7 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
+    navigatePage: navigatePage.started,
     renderPage: renderPage.started,
     renderLegacyPage: renderLegacyPage.started,
     ecosystemInit: ecosystemInit.started

@@ -46,7 +46,7 @@ const NavigationContainer: React.SFC<INavigationContainerProps & INavigationCont
 );
 
 const mapStateToProps = (state: IRootState) => {
-    const section = state.content.sections[state.content.section];
+    const section = state.content.sections[state.content.section] || state.content.sections.home;
     return {
         isEcosystemOwner: state.auth.isEcosystemOwner,
         preloading: state.content.preloading,

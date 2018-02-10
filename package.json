@@ -13,6 +13,7 @@
     "main": "./electron/index.js",
     "dependencies": {
         "@types/electron-store": "^1.2.0",
+        "@types/query-string": "^5.0.1",
         "bluebird": "^3.5.1",
         "centrifuge": "^1.4.6",
         "classnames": "^2.2.5",
@@ -30,6 +31,7 @@
         "needle": "^2.1.0",
         "prop-types": "^15.6.0",
         "qrcode.react": "^0.7.2",
+        "query-string": "^5.1.0",
         "random-js": "^1.0.8",
         "react-bootstrap": "^0.31.2",
         "react-copy-to-clipboard": "^5.0.1",

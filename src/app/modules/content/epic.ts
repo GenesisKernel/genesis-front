@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
+import * as queryString from 'query-string';
 import api, { IAPIError } from 'lib/api';
 import { Action } from 'redux';
 import { Observable } from 'rxjs';
@@ -36,7 +37,8 @@ export const navigatePageEpic: Epic<Action, IRootState> =
                 (LEGACY_PAGES[action.payload.name] && LEGACY_PAGES[action.payload.name].section)) || action.payload.section || state.content.section;
             const section = state.content.sections[sectionName];
 
-            history.push(`/${sectionName}/${action.payload.name || section.defaultPage}`, { params: action.payload.params });
+            const params = queryString.stringify(action.payload.params);
+            history.push(`/${sectionName}/${action.payload.name || section.defaultPage}${params ? '?' + params : ''}`);
             return actions.navigatePage.done({
                 params: action.payload,
                 result: {
