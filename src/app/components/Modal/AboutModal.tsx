@@ -17,7 +17,6 @@
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
 import imgLogo from 'images/logoInverse.svg';
-import { shell } from 'electron';
 
 import Modal from './';
 import { FormattedMessage } from 'react-intl';
@@ -26,7 +25,8 @@ const MAIN_WEBSITE = 'http://genesis.space';
 
 class PromptModal extends Modal<void, void> {
     openWebsite() {
-        shell.openExternal(MAIN_WEBSITE);
+        const electron = require('electron');
+        electron.shell.openExternal(MAIN_WEBSITE);
     }
 
     render() {

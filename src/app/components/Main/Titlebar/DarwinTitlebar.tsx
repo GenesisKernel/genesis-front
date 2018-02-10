@@ -64,21 +64,21 @@ const StyledControls = styled.div`
         }
     }
 
-    &.window-blur .window-systemmenu button {
+    &.window-blur .window-controls button {
         &.quit, &.minimize, &.zoom {
             background-position: -42px 0;
         }
     }
 
-    .window-controls:hover .window-systemmenu button {
+    .window-controls:hover button {
         background-position-x: -14px;
     }
 
-    .window-controls:active .window-systemmenu button {
+    .window-controls:active button {
         background-position-x: -14px;
     }
 
-    &.window-alt .window-systemmenu button.zoom {
+    &.window-alt button.zoom {
         background-position-y: -42px;
     }
 `;

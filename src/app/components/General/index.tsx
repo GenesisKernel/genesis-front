@@ -19,7 +19,6 @@ import { Link } from 'react-router-dom';
 import imgLogo from 'images/logo.svg';
 import styled from 'styled-components';
 import platform from 'lib/platform';
-import { styles } from 'components/Main';
 
 import Titlebar from 'components/Main/Titlebar';
 import { FormattedMessage } from 'react-intl';
@@ -48,19 +47,19 @@ const StyledAuth = styled.div`
                 > .panel-heading {
                     position: relative;
                     background: #4c7dbd;
-                    height: ${styles.headerHeight}px;
+                    height: 28px;
 
                     .auth-logo {
-                        margin-top: 6px;
-                        height: 21px;
+                        margin-top: 3px;
+                        height: 22px;
                     }
 
                     .auth-back {
                         -webkit-app-region: no-drag;
                         position: absolute;
                         left: 10px;
-                        top: 5px;
-                        line-height: 30px;
+                        top: 0;
+                        line-height: 28px;
 
                         .icon {
                             position: relative;
@@ -72,13 +71,7 @@ const StyledAuth = styled.div`
 
                         &.auth-back-darwin {
                             left: auto;
-                            right: 10px;
-                            top: 5px;
-                        }
-
-                        &.auth-back-linux {
-                            left: 30px;
-                            top: 5px;
+                            right: 30px;
                         }
                     }
                 }
@@ -107,7 +100,7 @@ const General: React.SFC<IGeneralProps> = props => (
                             desktop: (
                                 <Titlebar>
                                     {props.return && (
-                                        <div className={`auth-back ${platform.select({ linux: 'auth-back-linux', darwin: 'auth-back-darwin' })}`}>
+                                        <div className={`auth-back ${platform.select({ darwin: 'auth-back-darwin' })}`}>
                                             {typeof props.return === 'function' ?
                                                 (
                                                     <a className="text-white" href="#" onClick={props.return}>
@@ -146,7 +139,7 @@ const General: React.SFC<IGeneralProps> = props => (
                                         </div>
                                     )}
                                     <Link to="/">
-                                        <img src={imgLogo} className="auth-logo block-center" style={{ height: 25 }} />
+                                        <img src={imgLogo} className="auth-logo block-center" />
                                     </Link>
                                 </div>
                             )
