@@ -57,6 +57,7 @@ const StyledDropdown = styled.div`
         box-shadow: 0 0 25px rgba(0,0,0,.15);
         border: solid 1px #add1ff;
         border-top: none;
+        text-align: left;
 
         &.dropdown-leftmost {
             border-left: none;
@@ -91,8 +92,12 @@ const StyledDropdown = styled.div`
                 }
 
                 button {
+                    border-radius: 0;
+                    outline: 0;
+                    border: 0;
+                    background: 0;
+                    transition: background .15s;
                     width: 100%;
-                    display: block;
                     padding: 0 15px !important;
                     margin: 0;
                     height: 40px;
@@ -114,6 +119,10 @@ const StyledDropdown = styled.div`
 
                     &[disabled] {
                         color: #ccc;
+                    }
+
+                    &:hover {
+                        background: rgba(0,0,0,0.1);
                     }
 
                     &:focus {

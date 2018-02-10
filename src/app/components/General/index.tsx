@@ -19,6 +19,7 @@ import { Link } from 'react-router-dom';
 import imgLogo from 'images/logo.svg';
 import styled from 'styled-components';
 import platform from 'lib/platform';
+import { styles } from 'components/Main';
 
 import Titlebar from 'components/Main/Titlebar';
 import { FormattedMessage } from 'react-intl';
@@ -47,11 +48,11 @@ const StyledAuth = styled.div`
                 > .panel-heading {
                     position: relative;
                     background: #4c7dbd;
-                    height: 40px;
+                    height: ${styles.headerHeight}px;
 
                     .auth-logo {
-                        margin-top: 8px;
-                        height: 25px;
+                        margin-top: 6px;
+                        height: 21px;
                     }
 
                     .auth-back {

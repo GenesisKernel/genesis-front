@@ -17,57 +17,69 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 import styled from 'styled-components';
-import imgControls from './wndControls.svg';
 import { remote } from 'electron';
+import imgControls from './wndControls.svg';
+
+import SystemMenu from 'containers/Main/Titlebar/SystemMenu';
 
 const StyledControls = styled.div`
     -webkit-app-region: no-drag;
-    position: absolute;
-    left: 6px;
-    top: 4px;
 
-    &.window-blur button {
+    .window-systemmenu {
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 10000;
+    }
+
+    .window-controls {
+        position: absolute;
+        left: 6px;
+        top: 5px;
+
+        button {
+            background: url(${imgControls}) 0 0 no-repeat;
+            border: 0;
+            outline: 0;
+            padding: 0;
+            margin: 3px;
+            width: 14px;
+            height: 14px;
+
+            &:active {
+                background-position-x: -28px;
+            }
+
+            &.quit {
+                background-position-y: 0;
+            }
+
+            &.minimize {
+                background-position-y: -14px;
+            }
+
+            &.zoom {
+                background-position-y: -28px;
+            }
+        }
+    }
+
+    &.window-blur .window-systemmenu button {
         &.quit, &.minimize, &.zoom {
             background-position: -42px 0;
         }
     }
 
-    &:hover button {
+    .window-controls:hover .window-systemmenu button {
         background-position-x: -14px;
     }
 
-    &:active button {
+    .window-controls:active .window-systemmenu button {
         background-position-x: -14px;
     }
 
-    &.window-alt button.zoom {
+    &.window-alt .window-systemmenu button.zoom {
         background-position-y: -42px;
-    }
-
-    button {
-        background: url(${imgControls}) 0 0 no-repeat;
-        border: 0;
-        outline: 0;
-        padding: 0;
-        margin: 3px;
-        width: 14px;
-        height: 14px;
-
-        &:active {
-            background-position-x: -28px;
-        }
-
-        &.quit {
-            background-position-y: 0;
-        }
-
-        &.minimize {
-            background-position-y: -14px;
-        }
-
-        &.zoom {
-            background-position-y: -28px;
-        }
     }
 `;
 
@@ -136,14 +148,17 @@ class DarwinTitlebar extends React.Component<{}, ITitlebarState> {
     }
 
     render() {
-        const controlClasses = classNames({
+        const controlClasses = classNames('drag', {
             'window-alt': this.state.isAltDown,
             'window-blur': !this.state.isFocused
         });
 
         return (
             <StyledControls className={controlClasses}>
-                <div className="window-controls">
+                <div className="window-systemmenu">
+                    <SystemMenu align="right" />
+                </div>
+                <div className="window-controls no-drag">
                     <button className="quit" onClick={this.onClose} />
                     <button className="minimize" onClick={this.onMinimize} />
                     <button className="zoom" onClick={this.state.isAltDown ? this.onZoom : this.onFullscreen} />

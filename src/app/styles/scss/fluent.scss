@@ -28,6 +28,12 @@
         user-select: none;
         cursor: default;
     }
+    
+    .no-drag {
+        -webkit-user-select: initial;
+        user-select: initial;
+        -webkit-app-region: no-drag;
+    }
 
     .desktop-flex-col {
         display: flex;

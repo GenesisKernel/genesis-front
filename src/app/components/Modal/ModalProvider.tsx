@@ -16,16 +16,19 @@
 
 import * as React from 'react';
 import { IModal, TModalResultReason } from 'genesis/modal';
+import { styles } from 'components/Main';
 
 import Wrapper from 'components/Modal/Wrapper';
 import PromptModal from 'components/Modal/PromptModal';
 import ImageEditorModal from 'components/Modal/ImageEditorModal';
 import MapEditorModal from 'components/Modal/MapEditorModal';
+import AboutModal from 'components/Modal/AboutModal';
 
 const MODAL_COMPONENTS = {
     'IMAGE_EDITOR': ImageEditorModal,
     'MAP_EDITOR': MapEditorModal,
-    'PROMPT': PromptModal
+    'PROMPT': PromptModal,
+    'ABOUT': AboutModal
 };
 
 export interface IModalProviderProps {
@@ -51,7 +54,7 @@ class ModalProvider extends React.Component<IModalProviderProps> {
     render() {
         const Modal = this.props.modal && !this.props.modal.result && MODAL_COMPONENTS[this.props.modal.type] || null;
         return (
-            <Wrapper>
+            <Wrapper topOffset={styles.headerHeight - 1}>
                 {Modal && (
                     <Modal
                         key={this.props.modal.id}

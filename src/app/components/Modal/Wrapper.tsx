@@ -81,8 +81,8 @@ const StyledModalWrapper = styled.div`
     text-align: center;
     overflow-x: hidden;
     overflow-y: auto;
-    margin-top: 80px;
     padding: 50px;
+    margin-top: ${props => props.style.marginTop}px;
 
     &::before {
         content: ' ';
@@ -104,14 +104,18 @@ const StyledModalWrapper = styled.div`
     }
 `;
 
-class ModalWrapper extends React.Component {
+export interface IModalWrapperProps {
+    topOffset?: number;
+}
+
+class ModalWrapper extends React.Component<IModalWrapperProps> {
     private _children: React.ReactNode;
 
     componentDidMount() {
         this._children = this.props.children;
     }
 
-    componentWillReceiveProps(props: { children: React.ReactNode }) {
+    componentWillReceiveProps(props: IModalWrapperProps & { children: React.ReactNode }) {
         if (null !== props.children) {
             this._children = props.children;
         }
@@ -121,7 +125,7 @@ class ModalWrapper extends React.Component {
         return (
             <Transition in={!!this.props.children} timeout={containerAnimationDuration}>
                 {(state: string) => (
-                    <StyledModalWrapper style={{ ...containerAnimationDef.defaultStyle, ...containerAnimationDef[state] }}>
+                    <StyledModalWrapper style={{ ...containerAnimationDef.defaultStyle, ...containerAnimationDef[state], marginTop: this.props.topOffset }}>
                         <Transition in={state === 'entered'} timeout={childAnimationDuration}>
                             {(childState: string) => 'exited' === childState ? null : (
                                 <div className="modal-wnd" style={{ ...childAnimationDef.defaultStyle, ...childAnimationDef[childState] }}>
