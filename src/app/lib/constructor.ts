@@ -694,6 +694,7 @@ class Tag {
     protected element: IProtypoElement;
     protected tagName: string = 'Tag';
     protected canHaveChildren: boolean = true;
+    protected offset: number = 0;
 
     protected attr: any = {
         'class': 'Class'
@@ -702,27 +703,36 @@ class Tag {
     constructor(element: IProtypoElement) {
         this.element = element;
     }
+    setOffset(offset: number): void {
+        this.offset = offset;
+    }
+    renderOffset(): string {
+        return Array(this.offset + 1).join(' ');
+    }
     renderCode(): string {
         let result: string = this.tagName + '(';
         let params = [];
         for (let attr in this.attr) {
             if (this.attr.hasOwnProperty(attr)) {
-                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
+                let value = this.element && this.element.attr && this.element.attr[attr] || '';
+                if (value) {
+                    params.push(this.attr[attr] + ': ' + value);
+                }
             }
         }
 
         let body = this.renderChildren();
         if (body.length > 0) {
-           params.push('Body: ' + body);
+           params.push('Body:\n' + body);
         }
         result += params.join(', ');
-        result += ')';
+        result += (body.length ? ('\n' + this.renderOffset()) : '') + ')';
         if (this.element && this.element.attr) {
             if (this.element.attr.style) {
                 result += '.Style(' + this.element.attr.style + ')';
             }
         }
-        return result + ' ';
+        return this.renderOffset() + result;
     }
     renderChildren(): string {
         if (!this.element.children) {
@@ -731,11 +741,12 @@ class Tag {
         let result = this.element.children.map((element, index) => {
             switch (element.tag) {
                 case 'text':
-                    return element.text;
+                    return this.renderOffset() + ' ' + element.text;
                 default:
                     const Handler = resolveTagHandler(element.tag);
                     if (Handler) {
                         let tag = new Handler(element);
+                        tag.setOffset(this.offset + 1);
                         return tag.renderCode();
                     }
                     return '';
@@ -827,12 +838,15 @@ class Button extends Tag {
         let params = [];
         for (let attr in this.attr) {
             if (this.attr.hasOwnProperty(attr)) {
-                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
+                let value = this.element && this.element.attr && this.element.attr[attr] || '';
+                if (value) {
+                    params.push(this.attr[attr] + ': ' + value);
+                }
             }
         }
         let body = this.renderChildren();
         if (body.length > 0) {
-            params.push('Body: ' + body);
+            params.push('Body:\n' + body);
         }
         if (this.element && this.element.attr) {
             if (this.element.attr.params) {
@@ -869,7 +883,7 @@ class Button extends Tag {
             }
         }
 
-        return result + ' ';
+        return this.renderOffset() + result + '\n';
     }
 }
 
@@ -958,7 +972,10 @@ class Table extends Tag {
 
         for (let attr in this.attr) {
             if (this.attr.hasOwnProperty(attr)) {
-                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
+                let value = this.element && this.element.attr && this.element.attr[attr] || '';
+                if (value) {
+                    params.push(this.attr[attr] + ': ' + value);
+                }
             }
         }
 
@@ -976,7 +993,7 @@ class Table extends Tag {
             }
         }
 
-        return result + ' ';
+        return this.renderOffset() + result + '\n';
     }
 }
 
@@ -1008,12 +1025,15 @@ class Image extends Tag {
         let params = [];
         for (let attr in this.attr) {
             if (this.attr.hasOwnProperty(attr)) {
-                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
+                let value = this.element && this.element.attr && this.element.attr[attr] || '';
+                if (value) {
+                    params.push(this.attr[attr] + ': ' + value);
+                }
             }
         }
         let body = this.renderChildren();
         if (body.length > 0) {
-            params.push('Body: ' + body);
+            params.push('Body:\n' + body);
         }
         result += params.join(', ');
         result += ')';
@@ -1022,7 +1042,7 @@ class Image extends Tag {
                 result += '.Style(' + this.element.attr.style + ')';
             }
         }
-        return result + ' ';
+        return this.renderOffset() + result + '\n';
     }
 }
 
@@ -1058,12 +1078,15 @@ class ImageInput extends Tag {
         let params = [];
         for (let attr in this.attr) {
             if (this.attr.hasOwnProperty(attr)) {
-                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
+                let value = this.element && this.element.attr && this.element.attr[attr] || '';
+                if (value) {
+                    params.push(this.attr[attr] + ': ' + value);
+                }
             }
         }
         let body = this.renderChildren();
         if (body.length > 0) {
-            params.push('Body: ' + body);
+            params.push('Body:\n' + body);
         }
 
         result += params.join(', ');
@@ -1073,7 +1096,7 @@ class ImageInput extends Tag {
                 result += '.Style(' + this.element.attr.style + ')';
             }
         }
-        return result + ' ';
+        return this.renderOffset() + result + '\n';
     }
 }
 
@@ -1107,11 +1130,14 @@ class Input extends Tag {
         let params = [];
         let body = this.renderChildren();
         if (body.length > 0) {
-            params.push('Body: ' + body);
+            params.push('Body:\n' + body);
         }
         for (let attr in this.attr) {
             if (this.attr.hasOwnProperty(attr)) {
-                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
+                let value = this.element && this.element.attr && this.element.attr[attr] || '';
+                if (value) {
+                    params.push(this.attr[attr] + ': ' + value);
+                }
             }
         }
 
@@ -1127,7 +1153,7 @@ class Input extends Tag {
                 result += '.Style(' + this.element.attr.style + ')';
             }
         }
-        return result + ' ';
+        return this.renderOffset() + result + '\n';
     }
 }
 
@@ -1161,11 +1187,14 @@ class RadioGroup extends Tag {
         let params = [];
         let body = this.renderChildren();
         if (body.length > 0) {
-            params.push('Body: ' + body);
+            params.push('Body:\n' + body);
         }
         for (let attr in this.attr) {
             if (this.attr.hasOwnProperty(attr)) {
-                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
+                let value = this.element && this.element.attr && this.element.attr[attr] || '';
+                if (value) {
+                    params.push(this.attr[attr] + ': ' + value);
+                }
             }
         }
 
@@ -1181,7 +1210,7 @@ class RadioGroup extends Tag {
                 result += '.Style(' + this.element.attr.style + ')';
             }
         }
-        return result + ' ';
+        return this.renderOffset() + result + '\n';
     }
 }
 
