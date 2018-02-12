@@ -88,7 +88,7 @@ const BoundMap = withScriptjs(withGoogleMap(Map));
 
 const MapView: React.SFC<IMapViewProps> = props => (
     <BoundMap
-        googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
+        googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyATHGb9H5fXlOMp4azLLFmX2KIr6o0jH9M&libraries=geometry,drawing,places"
         loadingElement={<div style={{ height: props.height }} />}
         containerElement={<div style={{ height: props.height }} />}
         mapElement={<div style={{ height: props.height }} />}
