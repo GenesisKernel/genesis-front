@@ -141,9 +141,11 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
                 else
                 if (tabListItem.type === 'interfaceConstructor') {
                     tabsContent.push(
-                        <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
+                        <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')} className="fullscreen">
                             <Title>Interface Constructor</Title>
-                            <InterfaceConstructorTabbed pageID={tabListItem.id} pageName={tabListItem.name} vde={tabListItem.vde} onSave={this.onTabSave.bind(this)} random={this.state.random && this.state.random['page' + tabListItem.id + (tabListItem.vde ? 'vde' : '')]}/>
+                            <div className="flex-col flex-stretch">
+                                <InterfaceConstructorTabbed pageID={tabListItem.id} pageName={tabListItem.name} vde={tabListItem.vde} onSave={this.onTabSave.bind(this)} random={this.state.random && this.state.random['page' + tabListItem.id + (tabListItem.vde ? 'vde' : '')]}/>
+                            </div>
                         </div>
                     );
                 }

@@ -73,7 +73,8 @@ const ConstructorDiv = styled.div`
         top: 0px;
         left: 0px;
         width: 286px;
-        min-height: 100px;
+        height: 100%;
+        overflow-y: auto;
     }
     
     .right-panel {
@@ -81,21 +82,24 @@ const ConstructorDiv = styled.div`
         top: 0px;
         right: 0px;
         width: 286px;
-        min-height: 100px;
+        height: 100%;
+        overflow-y: auto;
     }
     
     .center-panel {
         margin: 0 286px 0 286px;
-        min-height: 400px;
+        height: 100%;
     }
     
     .b-constructor-layout {
-        margin: 0 20px;
-        min-height: 600px;
+        padding: 0 20px;
+        -min-height: 500px;
+        flex: 1 1;
+        overflow-y: auto;
+        overflow-x: hidden;
         border-left: 1px solid #b1b1b1;
         border-right: 1px solid #b1b1b1;
-        background-repeat: repeat;
-        
+        background-repeat: repeat;        
     }
     
     .b-constructor-layout_grid {
@@ -183,48 +187,8 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                         />
                     </div>
 
-                    {/*<Panel title="Structure">
-                     <ul className="b-tree">
-                     <li>
-                     <i className="fa fa-caret-down" />
-                     HTML
-                     </li>
-                     <li>
-                     <span className="b-tree-indent" />
-                     <i className="fa fa-caret-right" />
-                     Header
-                     </li>
-                     <li>
-                     <span className="b-tree-indent" />
-                     <i className="fa fa-caret-down" />
-                     Body
-                     </li>
-                     <li>
-                     <span className="b-tree-indent" />
-                     <span className="b-tree-indent" />
-                     <i className="fa fa-caret-down" />
-                     Header
-                     </li>
-                     <li className="selected">
-                     <i className="fa fa-close b-tree-delete" />
-                     <span className="b-tree-indent" />
-                     <span className="b-tree-indent" />
-                     <span className="b-tree-indent" />
-                     <i className="fa fa-caret-down" />
-                     Paragraph
-                     </li>
-                     <li>
-                     <span className="b-tree-indent" />
-                     <span className="b-tree-indent" />
-                     <span className="b-tree-indent" />
-                     <i />
-                     Strong
-                     </li>
-                     </ul>
-                     </Panel>
-                     */}
                 </div>
-                <div className="center-panel">
+                <div className="center-panel flex-col">
                     <div className="b-instrument-panel b-panel-light">
                         <div className="b-instrument-panel__inner pull-left">
                             <button
