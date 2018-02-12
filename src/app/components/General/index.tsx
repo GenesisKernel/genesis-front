@@ -57,7 +57,8 @@ const StyledAuth = styled.div`
                     .auth-back {
                         -webkit-app-region: no-drag;
                         position: absolute;
-                        left: 10px;
+                        right: auto;
+                        left: 30px;
                         top: 0;
                         line-height: 28px;
 

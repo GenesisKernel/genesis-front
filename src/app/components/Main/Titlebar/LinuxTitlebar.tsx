@@ -40,7 +40,6 @@ const StyledControls = styled.div`
         top: 0;
 
         button {
-            -webkit-app-region: no-drag;
             cursor: default;
             background: 0;
             border: 0;
@@ -119,10 +118,10 @@ class LinuxTitlebar extends React.Component<{}, ILinuxTitlebarState> {
     render() {
         return (
             <StyledControls>
-                <div className="window-systemmenu">
+                <div className="window-systemmenu no-drag">
                     <SystemMenu align="left" />
                 </div>
-                <div className="window-controls">
+                <div className="window-controls no-drag">
                     <button className="minimize" onClick={this.onMinimize}><i /></button>
                     <button className={this.state.maximized ? 'restore' : 'maximize'} onClick={this.onMaximize}><i /></button>
                     <button className="quit" onClick={this.onClose}><i /></button>

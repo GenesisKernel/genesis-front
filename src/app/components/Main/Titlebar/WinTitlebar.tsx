@@ -21,7 +21,6 @@ import { remote } from 'electron';
 import SystemMenu from 'containers/Main/Titlebar/SystemMenu';
 
 const StyledControls = styled.div`
-    -webkit-app-region: no-drag;
     position: absolute;
     right: 1px;
     left: 0;
@@ -123,10 +122,10 @@ class WinTitlebar extends React.Component<{}, IWinTitlebarState> {
     render() {
         return (
             <StyledControls>
-                <div className="window-systemmenu">
+                <div className="window-systemmenu no-drag">
                     <SystemMenu align="left" />
                 </div>
-                <div className="window-controls">
+                <div className="window-controls no-drag">
                     <button className="minimize" onClick={this.onMinimize}><i /></button>
                     <button className={this.state.maximized ? 'restore' : 'maximize'} onClick={this.onMaximize}><i /></button>
                     <button className="quit" onClick={this.onClose}><i /></button>
