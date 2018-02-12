@@ -37,7 +37,7 @@ const StyledResizeHandle = styled.button`
     position: absolute;
     top: 0;
     bottom: 0;
-    right: 0;
+    right: ${styles.initialWidth / 2}px;
     text-align: center;
     width: ${styles.hoverWidth}px;
     outline: 0;
