@@ -19,7 +19,7 @@ import * as _ from 'lodash';
 import * as queryString from 'query-string';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { renderPage, ecosystemInit, renderLegacyPage, navigatePage } from 'modules/content/actions';
+import { renderPage, ecosystemInit, renderLegacyPage, navigatePage, switchSection } from 'modules/content/actions';
 import { TSection } from 'genesis/content';
 import { LEGACY_PAGES, VDE_LEGACY_PAGES } from 'lib/legacyPages';
 
@@ -43,6 +43,7 @@ interface IPageContainerDispatch {
     navigatePage: typeof navigatePage.started;
     renderPage: typeof renderPage.started;
     renderLegacyPage: typeof renderLegacyPage.started;
+    switchSection: typeof switchSection;
     ecosystemInit: typeof ecosystemInit.started;
 }
 
@@ -54,10 +55,12 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
     }
 
     componentWillReceiveProps(props: IPageContainerProps & IPageContainerState & IPageContainerDispatch) {
-        if (this.props.match.params.section !== props.match.params.section) {
-            //console.log('Section change detected::', props.match.params.section);
+        if (props.section !== props.match.params.section && this.props.match.params.section !== props.match.params.section) {
+            this.props.switchSection(props.match.params.section);
         }
-        this.renderPage(props);
+        else {
+            this.renderPage(props);
+        }
     }
 
     renderPage(props: IPageContainerProps & IPageContainerState & IPageContainerDispatch) {
@@ -156,7 +159,8 @@ const mapDispatchToProps = {
     navigatePage: navigatePage.started,
     renderPage: renderPage.started,
     renderLegacyPage: renderLegacyPage.started,
-    ecosystemInit: ecosystemInit.started
+    ecosystemInit: ecosystemInit.started,
+    switchSection
 };
 
 export default connect<IPageContainerState, IPageContainerDispatch, IPageContainerProps>(mapStateToProps, mapDispatchToProps)(PageContainer);

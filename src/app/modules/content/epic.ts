@@ -115,7 +115,7 @@ export const reloadPageEpic: Epic<Action, IRootState> =
             const state = store.getState();
             const section = state.content.sections[state.content.section];
 
-            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, section.page.name, section.page, section.page.vde))
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, section.page.name, section.page.params, section.page.vde))
                 .map(payload =>
                     actions.reloadPage.done({
                         params: action.payload,
@@ -296,11 +296,12 @@ export const displayDataEpic: Epic<Action, IRootState> =
         });
 
 export const switchSectionEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(actions.switchSection)
+    (action$, store) => action$.ofAction(actions.renderSection)
         .map(action => {
             const state = store.getState();
             const section = state.content.sections[action.payload];
-            return navigate(`/${section.name}/${section.page ? section.page.name : ''}`);
+            const params = section.page ? queryString.stringify(section.page.params) : '';
+            return navigate(`/${section.name}/${section.page ? section.page.name : ''}${params ? '?' + params : ''}`);
         });
 
 export default combineEpics(

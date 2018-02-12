@@ -161,7 +161,7 @@ export default (state: State = initialState, action: Action): State => {
                         menus: [...state.sections[section].menus, action.payload.result.menu],
                         page: {
                             ...action.payload.result.page,
-                            params: action.payload.params
+                            params: action.payload.params.params
                         },
                         pending: false
                     }
@@ -178,7 +178,7 @@ export default (state: State = initialState, action: Action): State => {
                         menus: state.sections[section].menus.slice(0, menuIndex + 1),
                         page: {
                             ...action.payload.result.page,
-                            params: action.payload.params
+                            params: action.payload.params.params
                         },
                         pending: false
                     }
@@ -194,7 +194,7 @@ export default (state: State = initialState, action: Action): State => {
                 [action.payload.params.section]: {
                     ...state.sections[action.payload.params.section],
                     page: {
-                        params: action.payload.params,
+                        params: action.payload.params.params,
                         vde: action.payload.params.vde,
                         name: action.payload.params.name,
                         content: null,
@@ -293,7 +293,7 @@ export default (state: State = initialState, action: Action): State => {
                         menus: [...state.sections[state.section].menus, action.payload.result.menu],
                         page: {
                             ...action.payload.result.page,
-                            params: action.payload.params
+                            params: action.payload.result.params
                         },
                         pending: false
                     }
@@ -310,7 +310,7 @@ export default (state: State = initialState, action: Action): State => {
                         menus: state.sections[state.section].menus.slice(0, menuIndex + 1),
                         page: {
                             ...action.payload.result.page,
-                            params: action.payload.params
+                            params: action.payload.result.params
                         },
                         pending: false
                     }
@@ -499,6 +499,13 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             notifications: action.payload.result
         };
+    }
+
+    if (isType(action, actions.renderSection)) {
+        return state.sections[action.payload] ? {
+            ...state,
+            section: action.payload
+        } : state;
     }
 
     if (isType(action, actions.switchSection)) {

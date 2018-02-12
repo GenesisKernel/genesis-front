@@ -33,6 +33,7 @@ export const navigatePage = actionCreator.async<{ name?: string, section?: strin
 export const renderPage = actionCreator.async<{ section: string, name: string, params?: { [key: string]: any }, vde?: boolean }, { menu: TMenu, page: TPage }, string>('RENDER_PAGE');
 export const renderLegacyPage = actionCreator.async<{ section: string, name: string, menu: string, params?: { [key: string]: any }, vde?: boolean }, { menu: TMenu }>('RENDER_LEGACY_PAGE');
 export const reloadPage = actionCreator.async<{}, { vde: boolean, params: { [key: string]: any }, menu: TMenu, page: TPage }, string>('RELOAD_PAGE');
+export const renderSection = actionCreator<string>('RENDER_SECTION');
 export const switchSection = actionCreator<string>('SWITCH_SECTION');
 export const reset = actionCreator.async<undefined, { menu: TMenu, page: TPage }, string>('RESET');
 

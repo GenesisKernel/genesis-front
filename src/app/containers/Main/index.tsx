@@ -18,7 +18,7 @@ import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Route } from 'react-router-dom';
 import { IRootState } from 'modules';
-import { reloadPage, navigationToggle, switchSection, navigatePage } from 'modules/content/actions';
+import { reloadPage, navigationToggle, renderSection, navigatePage } from 'modules/content/actions';
 
 import Main, { IMainProps } from 'components/Main';
 import DefaultPage from 'containers/Main/containers/DefaultPage';
@@ -77,7 +77,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
         dispatch(reloadPage.started(section));
     },
     onSwitchSection: (section: string) => {
-        dispatch(switchSection(section));
+        dispatch(renderSection(section));
     }
 });
 
