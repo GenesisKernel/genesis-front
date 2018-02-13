@@ -30,13 +30,15 @@ import { apiUrl } from 'lib/api';
 import NotificationsMenu from 'containers/Widgets/NotificationsMenu';
 import { TSection } from 'genesis/content';
 import * as _ from 'lodash';
+import { FormattedMessage } from 'react-intl';
 // import TransactionsMenu from './TransactionsMenu';
 
 export const styles = {
     headerHeight: platform.select({ desktop: 28, web: 0 }),
     menuHeight: 40,
     toolbarHeight: 40,
-    mainColor: '#4c7dbd'
+    mainColor: '#4c7dbd',
+    toolColor: '#f3f3f3'
 };
 
 const StyledWrapper = styled.div`
@@ -125,8 +127,8 @@ const StyledMenu = styled.ul`
 
         &.active {
             > button {
-                background: #eeeeee;
-                color: #000;
+                background: ${styles.toolColor};
+                color: #194a8a;
             }
         }
     }
@@ -153,7 +155,7 @@ const MenuItem: React.SFC<{ active?: boolean, onClick?: () => void }> = props =>
 );
 
 const StyledToolbar = styled.ul`
-    background: #eeeeee;
+    background: ${styles.toolColor};
     height: ${styles.toolbarHeight}px;
     border-bottom: solid 2px #e5e5e5;
     list-style-type: none;
@@ -174,21 +176,27 @@ const StyledToolbar = styled.ul`
         > button {
             text-align: center;
             border-radius: 0;
-            min-width: 30px;
-            height: 30px;
+            min-width: ${styles.toolbarHeight}px;
+            height: ${styles.toolbarHeight}px;
             outline: 0;
             border: 0;
             background: 0;
-            margin: 5px;
-            padding: 0;
-            color: #757e8a;
+            padding: 0 12px;
             font-size: 14px;
             font-weight: 300;
-            line-height: 30px;
+            line-height: ${styles.toolbarHeight}px;
             transition: background .15s;
 
-            > span {
-                margin-left: 10px;
+            > em.icon {
+                color: #5b97e4;
+                vertical-align: middle;
+                height: 18px;
+                display: inline-block;
+            }
+
+            > span.button-label {
+                margin-left: 8px;
+                color: #194a8a;
             }
 
             &:hover {
@@ -202,7 +210,7 @@ const ToolButton: React.SFC<{ icon: string, right?: boolean, onClick?: (e: React
     <li style={{ float: props.right ? 'right' : null }}>
         <button onClick={props.onClick}>
             <em className={`icon ${props.icon}`} />
-            {props.children && (<span>{props.children}</span>)}
+            {props.children && (<span className="button-label">{props.children}</span>)}
         </button>
     </li>
 );
@@ -255,10 +263,18 @@ class Main extends React.Component<IMainProps> {
                         </li>
                     </StyledMenu>
                     <StyledToolbar>
-                        <ToolButton icon="icon-arrow-left" onClick={this.onBack} />
-                        <ToolButton icon="icon-arrow-right" onClick={this.onForward} />
-                        <ToolButton icon="icon-refresh" onClick={this.props.onRefresh} />
-                        <ToolButton icon="icon-home" onClick={this.props.onNavigateHome} />
+                        <ToolButton icon="icon-arrow-left" onClick={this.onBack}>
+                            <FormattedMessage id="navigation.back" defaultMessage="Back" />
+                        </ToolButton>
+                        <ToolButton icon="icon-arrow-right" onClick={this.onForward}>
+                            <FormattedMessage id="navigation.forward" defaultMessage="Forward" />
+                        </ToolButton>
+                        <ToolButton icon="icon-home" onClick={this.props.onNavigateHome}>
+                            <FormattedMessage id="navigation.home" defaultMessage="Home" />
+                        </ToolButton>
+                        <ToolButton icon="icon-refresh" onClick={this.props.onRefresh}>
+                            <FormattedMessage id="navigation.refresh" defaultMessage="Refresh" />
+                        </ToolButton>
                         {this.props.isAuthorized && (
                             <ToolButton right icon="icon-key" />
                         )}
