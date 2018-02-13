@@ -36,7 +36,7 @@ const InputMap: React.SFC<IInputMapProps> = (props) => {
 
     return (
         <Validation.components.ValidatedMap
-            name="myMap"
+            name={props.name}
             value={value}
             zoom={value.zoom}
             center={value.center}
