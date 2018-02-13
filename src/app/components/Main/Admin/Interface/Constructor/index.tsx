@@ -21,7 +21,7 @@ import Protypo from 'containers/Widgets/Protypo';
 import Layout from './Layout';
 import EditPage from 'components/Main/Admin/Interface/EditPage';
 
-import Panel from './Panel';
+import TabView from 'components/TabView';
 
 import SourceElements from './SourceElements';
 import Properties from './Properties';
@@ -73,7 +73,11 @@ const ConstructorDiv = styled.div`
         top: 0px;
         left: 0px;
         width: 286px;
-        height: 100%;
+        height: 100%;        
+    }
+    
+    .left-panel__tab {
+        flex: 1 1;
         overflow-y: auto;
     }
     
@@ -82,6 +86,10 @@ const ConstructorDiv = styled.div`
         top: 0px;
         right: 0px;
         width: 286px;
+        height: 100%;        
+    }
+    
+    .right-panel__scrollable {
         height: 100%;
         overflow-y: auto;
     }
@@ -130,35 +138,29 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
         return (
             <ConstructorDiv>
                 <div className="left-panel">
-                    <Panel title="Objects">
-                        <SourceElements/>
-                    </Panel>
+                    <TabView
+                        className="p0 flex-stretch g-scrollable"
+                        wrapperClassName="g-fullheight flex-col"
+                        paneClassName="g-fullheight"
+                        tabsClassName="nav-tabs-dark nav-justified"
+                        tabs={[ 'Objects', 'Tree' ]}
+                    >
 
-                    <div style={{ height: 500 }}>
-                        <Tree
-                            treeData={this.state.treeData}
-                            onChange={(treeData: any) => { this.setState({treeData}); }}
-                            onMoveNode={(args) => {
+                            <SourceElements/>
+                            <Tree
+                                treeData={this.state.treeData}
+                                onChange={(treeData: any) => { this.setState({treeData}); }}
+                                onMoveNode={(args) => {
                                 this.props.moveTreeTag({
                                     treeData: this.state.treeData,
                                     tagID: args.node.id
                                 });
-                                // alert(JSON.stringify(args.node));
-                                // alert(JSON.stringify(this.state.treeData));
-                                // alert(args['prevPath']);
-                                // alert(args['nextPath']);
-                                // alert(JSON.stringify(args['nextTreeIndex']));
-                                // this.props.moveTag({
-                                //    tag: args.node.tag,
-                                //    destinationTagID: props.tag.id,
-                                //    position: getDropPosition(monitor, component, props.tag)
-                                // });
                             }}
-                            scaffoldBlockPxWidth={10}
-                            canDrag={(node: any) => { return true; }}
-                            innerStyle={{padding: '15px 0', backgroundColor: '#465669', color: '#FFFFFF' }}
-                            theme={TreeTheme}
-                            generateNodeProps={({ node, path }) => ({
+                                scaffoldBlockPxWidth={10}
+                                canDrag={(node: any) => { return true; }}
+                                innerStyle={{padding: '15px 0', backgroundColor: '#465669', color: '#FFFFFF' }}
+                                theme={TreeTheme}
+                                generateNodeProps={({ node, path }) => ({
                                 title:  (
                                     <span
                                         onClick={
@@ -184,9 +186,9 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                                     </button>
                                 ]
                             })}
-                        />
-                    </div>
+                            />
 
+                    </TabView>
                 </div>
                 <div className="center-panel flex-col">
                     <div className="b-instrument-panel b-panel-light">
@@ -260,11 +262,13 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                     </Layout>
 
                 </div>
-                <div className="right-panel">
-                    <Properties
-                        tag={this.props.selectedTag}
-                        changePage={this.props.changePage}
-                    />
+                <div className="right-panel flex-col">
+                    <div className="flex-stretch right-panel__scrollable">
+                        <Properties
+                            tag={this.props.selectedTag}
+                            changePage={this.props.changePage}
+                        />
+                    </div>
                     <EditPage
                         page={this.props.page}
                         pageTemplate={this.props.pageTemplate}

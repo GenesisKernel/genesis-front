@@ -20,6 +20,9 @@ export interface ITabViewProps {
     tabs: string[];
     children: JSX.Element[];
     className?: string;
+    tabsClassName?: string;
+    wrapperClassName?: string;
+    paneClassName?: string;
 }
 
 interface ITabViewState {
@@ -42,8 +45,8 @@ export default class TabView extends React.Component<ITabViewProps, ITabViewStat
 
     render() {
         return (
-            <div>
-                <ul className="nav nav-tabs">
+            <div className={`${this.props.wrapperClassName || ''}`}>
+                <ul className={`nav nav-tabs ${this.props.tabsClassName || ''}`}>
                     {this.props.tabs.map((tab, index) => (
                         <li key={index} className={`uib-tab ${index === this.state.tabIndex ? 'active' : ''}`}>
                             <a href="javascript:void(0)" onClick={this.onTabSwitch.bind(this, index)}>{tab}</a>
@@ -52,7 +55,7 @@ export default class TabView extends React.Component<ITabViewProps, ITabViewStat
                 </ul>
                 <div className={`tab-content ${this.props.className || ''}`}>
                     {this.props.children.map((element, index) => (
-                        <div key={index} className={`tab-pane ${this.state.tabIndex === index ? 'active' : ''}`}>
+                        <div key={index} className={`tab-pane ${this.props.paneClassName || ''} ${this.state.tabIndex === index ? 'active' : ''}`}>
                             {element}
                         </div>
                     ))}
