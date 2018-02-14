@@ -23,6 +23,7 @@ const Wrapper = styled.div`
     padding: 0px;
     border: 2px solid transparent;
     position: relative;
+    min-height: 10px;
     
     &.b-display-inline {
         display: inline-block;
