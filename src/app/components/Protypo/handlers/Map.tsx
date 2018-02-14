@@ -86,8 +86,6 @@ const InputMap: React.SFC<IMapProps> = (props) => {
         address: ''
     };
 
-    console.log('Params::', props);
-
     let height = parseInt(props.hmap, 10);
     if (!height) {
         height = 100;
@@ -97,7 +95,7 @@ const InputMap: React.SFC<IMapProps> = (props) => {
         <MapView
             height={height}
             mapType={props.maptype}
-            polygon={value.coords.map(l => new google.maps.LatLng(l.lat, l.lng))}
+            polygon={value.coords}
             center={value.center}
             zoom={value.zoom}
         />

@@ -24,7 +24,7 @@ export interface IMapViewProps extends IMapProps {
 
 export interface IMapProps {
     mapType?: 'hybrid' | 'roadmap' | 'satellite' | 'terrain';
-    polygon?: google.maps.LatLng[];
+    polygon?: { lat: number, lng: number }[];
     center?: { lat: number, lng: number };
     zoom?: number;
     onClick?: (e: google.maps.MouseEvent) => void;
@@ -37,7 +37,7 @@ class Map extends React.Component<IMapProps> {
     componentDidMount() {
         this.processEvents(this.props);
         if (this.props.polygon && this.props.polygon.length) {
-            this._map.fitBounds(this.calcBounds(this.props.polygon));
+            this._map.fitBounds(this.calcBounds(this.getPolygon(this.props.polygon)));
         }
     }
 
@@ -45,6 +45,10 @@ class Map extends React.Component<IMapProps> {
         if (!_.isEqual(this.props.polygon, props.polygon)) {
             this.processEvents(props);
         }
+    }
+
+    getPolygon(coords: { lat: number, lng: number }[]) {
+        return coords.map(l => new google.maps.LatLng(l.lat, l.lng));
     }
 
     calcBounds(coords: google.maps.LatLng[]) {
@@ -57,7 +61,7 @@ class Map extends React.Component<IMapProps> {
 
     processEvents(props: IMapProps) {
         if (props.onAreaChange && props.polygon) {
-            const area = google.maps.geometry.spherical.computeArea(new google.maps.MVCArray(props.polygon));
+            const area = google.maps.geometry.spherical.computeArea(new google.maps.MVCArray(this.getPolygon(props.polygon)));
             props.onAreaChange(area);
         }
     }
@@ -77,7 +81,7 @@ class Map extends React.Component<IMapProps> {
                 onClick={this.props.onClick}
             >
                 {this.props.polygon ? (
-                    <Polygon paths={new google.maps.MVCArray(this.props.polygon)} />
+                    <Polygon paths={new google.maps.MVCArray(this.getPolygon(this.props.polygon))} />
                 ) : null}
             </GoogleMap>
         );
