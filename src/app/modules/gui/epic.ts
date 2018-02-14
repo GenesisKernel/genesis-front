@@ -15,6 +15,7 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { Action } from 'redux';
+import { Observable } from 'rxjs/Observable';
 import { combineEpics, Epic } from 'redux-observable';
 import { IRootState } from 'modules';
 import * as actions from './actions';
@@ -34,6 +35,18 @@ export const switchWindowEpic: Epic<Action, IRootState> =
             });
         });
 
+export const setBadgeCountEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.setBadgeCount)
+        .flatMap(action => {
+            platform.on('desktop', () => {
+                const Electron = require('electron');
+                Electron.remote.app.setBadgeCount(action.payload);
+            });
+
+            return Observable.empty();
+        });
+
 export default combineEpics(
-    switchWindowEpic
+    switchWindowEpic,
+    setBadgeCountEpic
 );

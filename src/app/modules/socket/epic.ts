@@ -24,6 +24,7 @@ import * as actions from './actions';
 import * as Centrifuge from 'centrifuge';
 import * as SockJS from 'sockjs-client';
 import { Observer } from 'rxjs';
+import { setBadgeCount } from 'modules/gui/actions';
 
 export const connectEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.connect.started)
@@ -111,14 +112,27 @@ export const subscribeEpic: Epic<Action, IRootState> =
             else {
                 return Observable.create((observer: Observer<Action>) => {
                     const sub = state.socket.socket.subscribe<{ role_id: number, ecosystem: number, count: number }[]>('client' + action.payload.account.id, message => {
-                        message.data.forEach(n =>
+                        let count = 0;
+
+                        message.data.forEach(n => {
+                            const subState = store.getState();
+                            if (subState.auth.isAuthenticated &&
+                                subState.auth.account &&
+                                subState.auth.account.id === action.payload.account.id &&
+                                subState.auth.account.ecosystem === action.payload.account.ecosystem
+                            ) {
+                                count += n.count;
+                            }
+
                             observer.next(actions.setNotificationsCount({
                                 id: action.payload.account.id,
                                 ecosystem: n.ecosystem.toString(),
                                 role: n.role_id,
                                 count: n.count
-                            }))
-                        );
+                            }));
+                        });
+
+                        observer.next(setBadgeCount(count));
                     });
 
                     sub.on('subscribe', () => {

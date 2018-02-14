@@ -105,7 +105,8 @@ export const logoutEpic: Epic<Action, IRootState> =
                 actions.logout.done({
                     params: action.payload,
                     result: null
-                })
+                }),
+                guiActions.setBadgeCount(0)
             ])
         );
 
