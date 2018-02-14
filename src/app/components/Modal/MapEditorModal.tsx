@@ -32,7 +32,7 @@ export interface IMapEditorModalProps {
 }
 
 interface IMapEditorModalState {
-    points: List<google.maps.LatLng>;
+    points: List<{ lat: number, lng: number }>;
     area: number;
     pending: boolean;
 }
@@ -63,16 +63,12 @@ class MapEditorModal extends Modal<IMapEditorModalProps, IMapEditorEvent, IMapEd
     }
 
     initialize(props: IModalProps<IMapEditorModalProps, IMapEditorEvent>) {
-        const points = (props.params.coords || []).map(l =>
-            new google.maps.LatLng(l.lat, l.lng)
-        );
-
         this.setState({
-            points: List(points)
+            points: List(props.params.coords || [])
         });
     }
 
-    calcResult(coords: google.maps.LatLng[], onResult: (result: google.maps.GeocoderResult) => void) {
+    calcResult(coords: { lat: number, lng: number }[], onResult: (result: google.maps.GeocoderResult) => void) {
         const geocoder = new google.maps.Geocoder();
         const bounds = new google.maps.LatLngBounds();
         for (let i = 0; i < coords.length; i++) {
@@ -96,10 +92,7 @@ class MapEditorModal extends Modal<IMapEditorModalProps, IMapEditorEvent, IMapEd
         this.calcResult(points, result => {
             if (this._isMounted) {
                 this.props.onResult({
-                    coords: this.state.points.map(l => ({
-                        lat: l.lat(),
-                        lng: l.lng()
-                    })).toArray(),
+                    coords: this.state.points.toArray(),
                     area: this.state.area,
                     address: result ? result.formatted_address : ''
                 });
@@ -111,9 +104,7 @@ class MapEditorModal extends Modal<IMapEditorModalProps, IMapEditorEvent, IMapEd
     }
 
     onClick(e: google.maps.MouseEvent) {
-        const points = this.state.points.push(
-            new google.maps.LatLng(e.latLng.lat(), e.latLng.lng())
-        );
+        const points = this.state.points.push({ lat: e.latLng.lat(), lng: e.latLng.lng() });
 
         this.setState({
             points
@@ -130,7 +121,7 @@ class MapEditorModal extends Modal<IMapEditorModalProps, IMapEditorEvent, IMapEd
 
     onClear() {
         this.setState({
-            points: List<google.maps.LatLng>()
+            points: List<{ lat: number, lng: number }>()
         });
     }
 
