@@ -52,7 +52,7 @@ export interface IImageProps {
 interface IImageContext {
     protypo: Protypo;
 }
-    
+
 const Image: React.SFC<IImageProps> = (props, context: IImageContext) => {
     const onClick = (e: any) => {
         e.stopPropagation();
@@ -73,7 +73,7 @@ const Image: React.SFC<IImageProps> = (props, context: IImageContext) => {
         });
 
         return connectDragPreview(connectDropTarget(
-            <span style={{display: 'inline-block'}}>
+            <span style={{ display: 'inline-block' }}>
                 <TagWrapper
                     display="inline"
                     selected={props.selected}
@@ -93,9 +93,9 @@ const Image: React.SFC<IImageProps> = (props, context: IImageContext) => {
         ));
     }
 
-    return (
+    return props.src ? (
         <img className={[props.class, props.className].join(' ')} src={context.protypo.resolveData(props.src)} alt={props.alt} />
-    );
+    ) : null;
 };
 
 Image.contextTypes = {
