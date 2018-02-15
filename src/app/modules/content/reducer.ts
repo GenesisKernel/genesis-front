@@ -175,7 +175,11 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.sections,
                     [section]: {
                         ...state.sections[section],
-                        menus: state.sections[section].menus.slice(0, menuIndex + 1),
+                        menus: [
+                            ...state.sections[section].menus.slice(0, menuIndex),
+                            action.payload.result.menu,
+                            ...state.sections[section].menus.slice(menuIndex + 1),
+                        ],
                         page: {
                             ...action.payload.result.page,
                             params: action.payload.params.params
@@ -253,7 +257,11 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.sections,
                     [section]: {
                         ...state.sections[section],
-                        menus: state.sections[section].menus.slice(0, menuIndex + 1),
+                        menus: [
+                            ...state.sections[section].menus.slice(0, menuIndex),
+                            action.payload.result.menu,
+                            ...state.sections[section].menus.slice(menuIndex + 1),
+                        ],
                         page: {
                             name: action.payload.params.name,
                             content: [],
@@ -307,7 +315,11 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.sections,
                     [state.section]: {
                         ...state.sections[state.section],
-                        menus: state.sections[state.section].menus.slice(0, menuIndex + 1),
+                        menus: [
+                            ...state.sections[state.section].menus.slice(0, menuIndex),
+                            action.payload.result.menu,
+                            ...state.sections[state.section].menus.slice(menuIndex + 1),
+                        ],
                         page: {
                             ...action.payload.result.page,
                             params: action.payload.result.params
@@ -360,7 +372,11 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.sections,
                     [state.section]: {
                         ...state.sections[state.section],
-                        menus: state.sections[state.section].menus.slice(0, menuIndex + 1)
+                        menus: [
+                            ...state.sections[state.section].menus.slice(0, menuIndex),
+                            action.payload,
+                            ...state.sections[state.section].menus.slice(menuIndex + 1),
+                        ]
                     }
                 }
             };
