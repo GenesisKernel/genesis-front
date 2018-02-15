@@ -93,9 +93,9 @@ const Image: React.SFC<IImageProps> = (props, context: IImageContext) => {
         ));
     }
 
-    return props.src ? (
+    return (
         <img className={[props.class, props.className].join(' ')} src={context.protypo.resolveData(props.src)} alt={props.alt} />
-    ) : null;
+    );
 };
 
 Image.contextTypes = {
