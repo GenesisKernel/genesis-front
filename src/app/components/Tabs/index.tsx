@@ -29,7 +29,6 @@ const TabsContainer = styled.div`
     flex-direction: column;
 
     .tab-pane {
-        height: 100%;
         display: none; 
         flex: 1 1;
         -ms-flex-direction: column;
@@ -42,7 +41,9 @@ const TabsContainer = styled.div`
 `;
 
 const TabContent = styled.div`
-    height: 100%;
+    display: flex;
+    flex: 1 1;
+    flex-direction: column;
 `;
 
 const TabItem = styled.div`
