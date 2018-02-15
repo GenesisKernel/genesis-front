@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
+// tslint:disable
 import { findDOMNode } from 'react-dom';
 import { TProtypoElement } from 'genesis/protypo';
 

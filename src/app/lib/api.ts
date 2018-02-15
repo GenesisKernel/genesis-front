@@ -38,13 +38,17 @@ export const overrideSettings = (settings: { apiUrl?: string, socketUrl?: string
     }
 };
 
+export interface IAPIError {
+    error: string;
+    msg: string;
+}
+
 export interface IResponse extends IAPIError {
 
 }
 
-export interface IAPIError {
-    error: string;
-    msg: string;
+export interface IDBValue {
+    id: string;
 }
 
 export interface IInstallParams {
@@ -231,10 +235,6 @@ export interface ITabListResponse {
 
 export interface ICreateVDEResponse extends IResponse {
     result: boolean;
-}
-
-export interface IDBValue {
-    id: string;
 }
 
 // Woodleg to support old versions that were returning plain-string object

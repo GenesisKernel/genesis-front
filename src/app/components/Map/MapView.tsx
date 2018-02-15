@@ -18,10 +18,6 @@ import * as React from 'react';
 import * as _ from 'lodash';
 import { withGoogleMap, GoogleMap, withScriptjs, Polygon } from 'react-google-maps';
 
-export interface IMapViewProps extends IMapProps {
-    height: number;
-}
-
 export interface IMapProps {
     mapType?: 'hybrid' | 'roadmap' | 'satellite' | 'terrain';
     polygon?: { lat: number, lng: number }[];
@@ -29,6 +25,10 @@ export interface IMapProps {
     zoom?: number;
     onClick?: (e: google.maps.MouseEvent) => void;
     onAreaChange?: (area: number) => void;
+}
+
+export interface IMapViewProps extends IMapProps {
+    height: number;
 }
 
 class Map extends React.Component<IMapProps> {
