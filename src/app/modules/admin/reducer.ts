@@ -390,6 +390,9 @@ export default (state: State = initialState, action: Action): State => {
             if (tag.el) {
                 switch (action.payload.position) {
                     case 'inside':
+                        if (!tag.el.children) {
+                            tag.el.children = [];
+                        }
                         tag.el.children.push(treeJSON);
                         break;
                     case 'before':
@@ -462,6 +465,9 @@ export default (state: State = initialState, action: Action): State => {
                         if (Handler) {
                             const Tag = new Handler();
                             if (Tag.canHaveChildren) {
+                                if (!tag.el.children) {
+                                    tag.el.children = [];
+                                }
                                 tag.el.children.push(tagCopy);
                                 moved = true;
                             }
@@ -552,6 +558,9 @@ export default (state: State = initialState, action: Action): State => {
 
                 switch (action.payload.position) {
                     case 'inside':
+                        if (tag.el.children) {
+                            tag.el.children = [];
+                        }
                         tag.el.children.push(tagCopy);
                         break;
                     case 'before':

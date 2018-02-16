@@ -695,6 +695,7 @@ class Tag {
     protected tagName: string = 'Tag';
     protected canHaveChildren: boolean = true;
     protected offset: number = 0;
+    protected generateTextElement = true;
 
     protected attr: any = {
         'class': 'Class'
@@ -722,16 +723,55 @@ class Tag {
         }
 
         let body = this.renderChildren();
-        if (body.length > 0) {
+        if (this.element.children && this.element.children.length === 1) {
            params.push('Body:\n' + body);
         }
+
+        if (this.element && this.element.attr) {
+            if (this.element.attr.params) {
+                params.push(this.getParamsStr('Params', this.element.attr.params));
+            }
+            if (this.element.attr.pageparams) {
+                params.push(this.getParamsStr('PageParams', this.element.attr.pageparams));
+            }
+            if (this.element.attr.columns) {
+                params.push(this.getParamsArrStr('Columns', this.element.attr.columns));
+            }
+        }
+
         result += params.join(', ');
-        result += (body.length ? ('\n' + this.renderOffset()) : '') + ')';
+        result += ((this.element.children && this.element.children.length === 1) ? ('\n' + this.renderOffset()) : '') + ')';
+
+        if (this.element && this.element.attr && this.element.attr.validate) {
+            result += this.getValidationParams(this.element.attr.validate);
+        }
+
         if (this.element && this.element.attr) {
             if (this.element.attr.style) {
                 result += '.Style(' + this.element.attr.style + ')';
             }
+            if (this.element.attr.alert && typeof this.element.attr.alert === 'object') {
+                let alertParamsArr = [];
+                if (this.element.attr.alert.text) {
+                    alertParamsArr.push('Text: ' + this.element.attr.alert.text);
+                }
+                if (this.element.attr.alert.confirmbutton) {
+                    alertParamsArr.push('ConfirmButton: ' + this.element.attr.alert.confirmbutton);
+                }
+                if (this.element.attr.alert.cancelbutton) {
+                    alertParamsArr.push('CancelButton: ' + this.element.attr.alert.cancelbutton);
+                }
+                if (this.element.attr.alert.icon) {
+                    alertParamsArr.push('Icon: ' + this.element.attr.alert.icon);
+                }
+                result += '.Alert(' + alertParamsArr.join(', ') + ')';
+            }
         }
+
+        if (this.element.children && this.element.children.length > 1) {
+            result += ' {\n' + body + '\n' + this.renderOffset() + '}';
+        }
+
         return this.renderOffset() + result;
     }
     renderChildren(): string {
@@ -763,11 +803,11 @@ class Tag {
         return {
             tag: this.tagName.toLowerCase(),
             id: generateId(),
-            children: [{
+            children: this.generateTextElement ? [{
                 tag: 'text',
                 text: text,
                 id: generateId()
-            }]
+            }] : []
         };
     }
 
@@ -832,59 +872,6 @@ class Button extends Tag {
             'contract': 'Contract'
         };
     }
-
-    renderCode(): string {
-        let result: string = this.tagName + '(';
-        let params = [];
-        for (let attr in this.attr) {
-            if (this.attr.hasOwnProperty(attr)) {
-                let value = this.element && this.element.attr && this.element.attr[attr] || '';
-                if (value) {
-                    params.push(this.attr[attr] + ': ' + value);
-                }
-            }
-        }
-        let body = this.renderChildren();
-        if (body.length > 0) {
-            params.push('Body:\n' + body);
-        }
-        if (this.element && this.element.attr) {
-            if (this.element.attr.params) {
-                params.push(this.getParamsStr('Params', this.element.attr.params));
-            }
-            if (this.element.attr.pageparams) {
-
-                params.push(this.getParamsStr('PageParams', this.element.attr.pageparams));
-
-            }
-        }
-
-        result += params.join(', ');
-        result += ')';
-        if (this.element && this.element.attr) {
-            if (this.element.attr.style) {
-                result += '.Style(' + this.element.attr.style + ')';
-            }
-            if (this.element.attr.alert && typeof this.element.attr.alert === 'object') {
-                let alertParamsArr = [];
-                if (this.element.attr.alert.text) {
-                    alertParamsArr.push('Text: ' + this.element.attr.alert.text);
-                }
-                if (this.element.attr.alert.confirmbutton) {
-                    alertParamsArr.push('ConfirmButton: ' + this.element.attr.alert.confirmbutton);
-                }
-                if (this.element.attr.alert.cancelbutton) {
-                    alertParamsArr.push('CancelButton: ' + this.element.attr.alert.cancelbutton);
-                }
-                if (this.element.attr.alert.icon) {
-                    alertParamsArr.push('Icon: ' + this.element.attr.alert.icon);
-                }
-                result += '.Alert(' + alertParamsArr.join(', ') + ')';
-            }
-        }
-
-        return this.renderOffset() + result + '\n';
-    }
 }
 
 class P extends Tag {
@@ -898,6 +885,7 @@ class Div extends Tag {
     constructor(element: IProtypoElement) {
         super(element);
         this.tagName = 'Div';
+        this.generateTextElement = false;
     }
 }
 
@@ -926,6 +914,7 @@ class Form extends Tag {
     constructor(element: IProtypoElement) {
         super(element);
         this.tagName = 'Form';
+        this.generateTextElement = false;
     }
 }
 
@@ -965,36 +954,6 @@ class Table extends Tag {
             }
         };
     }
-
-    renderCode(): string {
-        let result: string = this.tagName + '(';
-        let params = [];
-
-        for (let attr in this.attr) {
-            if (this.attr.hasOwnProperty(attr)) {
-                let value = this.element && this.element.attr && this.element.attr[attr] || '';
-                if (value) {
-                    params.push(this.attr[attr] + ': ' + value);
-                }
-            }
-        }
-
-        if (this.element && this.element.attr) {
-            if (this.element.attr.columns) {
-                params.push(this.getParamsArrStr('Columns', this.element.attr.columns));
-            }
-        }
-
-        result += params.join(', ');
-        result += ')';
-        if (this.element && this.element.attr) {
-            if (this.element.attr.style) {
-                result += '.Style(' + this.element.attr.style + ')';
-            }
-        }
-
-        return this.renderOffset() + result + '\n';
-    }
 }
 
 class Image extends Tag {
@@ -1018,31 +977,6 @@ class Image extends Tag {
                 src: '/img/dummy.png'
             }
         };
-    }
-
-    renderCode(): string {
-        let result: string = this.tagName + '(';
-        let params = [];
-        for (let attr in this.attr) {
-            if (this.attr.hasOwnProperty(attr)) {
-                let value = this.element && this.element.attr && this.element.attr[attr] || '';
-                if (value) {
-                    params.push(this.attr[attr] + ': ' + value);
-                }
-            }
-        }
-        let body = this.renderChildren();
-        if (body.length > 0) {
-            params.push('Body:\n' + body);
-        }
-        result += params.join(', ');
-        result += ')';
-        if (this.element && this.element.attr) {
-            if (this.element.attr.style) {
-                result += '.Style(' + this.element.attr.style + ')';
-            }
-        }
-        return this.renderOffset() + result + '\n';
     }
 }
 
@@ -1072,32 +1006,6 @@ class ImageInput extends Tag {
             }
         };
     }
-
-    renderCode(): string {
-        let result: string = this.tagName + '(';
-        let params = [];
-        for (let attr in this.attr) {
-            if (this.attr.hasOwnProperty(attr)) {
-                let value = this.element && this.element.attr && this.element.attr[attr] || '';
-                if (value) {
-                    params.push(this.attr[attr] + ': ' + value);
-                }
-            }
-        }
-        let body = this.renderChildren();
-        if (body.length > 0) {
-            params.push('Body:\n' + body);
-        }
-
-        result += params.join(', ');
-        result += ')';
-        if (this.element && this.element.attr) {
-            if (this.element.attr.style) {
-                result += '.Style(' + this.element.attr.style + ')';
-            }
-        }
-        return this.renderOffset() + result + '\n';
-    }
 }
 
 class Input extends Tag {
@@ -1124,37 +1032,6 @@ class Input extends Tag {
             }
         };
     }
-
-    renderCode(): string {
-        let result: string = this.tagName + '(';
-        let params = [];
-        let body = this.renderChildren();
-        if (body.length > 0) {
-            params.push('Body:\n' + body);
-        }
-        for (let attr in this.attr) {
-            if (this.attr.hasOwnProperty(attr)) {
-                let value = this.element && this.element.attr && this.element.attr[attr] || '';
-                if (value) {
-                    params.push(this.attr[attr] + ': ' + value);
-                }
-            }
-        }
-
-        result += params.join(', ');
-        result += ')';
-
-        if (this.element && this.element.attr && this.element.attr.validate) {
-            result += this.getValidationParams(this.element.attr.validate);
-        }
-
-        if (this.element && this.element.attr) {
-            if (this.element.attr.style) {
-                result += '.Style(' + this.element.attr.style + ')';
-            }
-        }
-        return this.renderOffset() + result + '\n';
-    }
 }
 
 class RadioGroup extends Tag {
@@ -1180,37 +1057,6 @@ class RadioGroup extends Tag {
                 name: 'sample radio'
             }
         };
-    }
-
-    renderCode(): string {
-        let result: string = this.tagName + '(';
-        let params = [];
-        let body = this.renderChildren();
-        if (body.length > 0) {
-            params.push('Body:\n' + body);
-        }
-        for (let attr in this.attr) {
-            if (this.attr.hasOwnProperty(attr)) {
-                let value = this.element && this.element.attr && this.element.attr[attr] || '';
-                if (value) {
-                    params.push(this.attr[attr] + ': ' + value);
-                }
-            }
-        }
-
-        result += params.join(', ');
-        result += ')';
-
-        if (this.element && this.element.attr && this.element.attr.validate) {
-            result += this.getValidationParams(this.element.attr.validate);
-        }
-
-        if (this.element && this.element.attr) {
-            if (this.element.attr.style) {
-                result += '.Style(' + this.element.attr.style + ')';
-            }
-        }
-        return this.renderOffset() + result + '\n';
     }
 }
 
