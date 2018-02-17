@@ -34,6 +34,7 @@ declare module 'genesis/content' {
 
     type TSection = {
         readonly visible: boolean;
+        readonly menuVisible: boolean;
         readonly pending: boolean;
         readonly name: string;
         readonly title: string;

@@ -61,7 +61,7 @@ const mapStateToProps = (state: IRootState) => ({
     section: state.content.section,
     sections: state.content.sections,
     navigationSize: state.storage.navigationSize,
-    navigationVisible: state.content.navigationVisible,
+    navigationVisible: state.content.sections[state.content.section].menuVisible,
     transactionsCount: state.tx.transactions.count(),
     pendingTransactions: state.tx.transactions.takeLast(5)
 });

@@ -26,7 +26,6 @@ export type State = {
     readonly preloadingError: string;
     readonly stylesheet: string;
     readonly navigationResizing: boolean;
-    readonly navigationVisible: boolean;
     readonly section: string;
     readonly sections: {
         readonly [name: string]: TSection;
@@ -41,7 +40,6 @@ export const initialState: State = {
     preloadingError: null,
     stylesheet: null,
     navigationResizing: false,
-    navigationVisible: true,
     section: 'home',
     sections: {
         home: {
@@ -53,6 +51,7 @@ export const initialState: State = {
             vde: false,
             defaultPage: 'default_page',
             menus: [],
+            menuVisible: true,
             page: null
         },
         vde: {
@@ -64,6 +63,7 @@ export const initialState: State = {
             vde: true,
             defaultPage: 'default_page',
             menus: [],
+            menuVisible: true,
             page: null
         },
         admin: {
@@ -75,6 +75,7 @@ export const initialState: State = {
             force: false,
             vde: false,
             menus: [],
+            menuVisible: true,
             page: null
         },
         vdeadmin: {
@@ -86,6 +87,7 @@ export const initialState: State = {
             force: false,
             vde: true,
             menus: [],
+            menuVisible: true,
             page: null
         }
     },
@@ -105,7 +107,13 @@ export default (state: State = initialState, action: Action): State => {
     if (isType(action, actions.navigationToggle)) {
         return {
             ...state,
-            navigationVisible: !state.navigationVisible
+            sections: {
+                ...state.sections,
+                [state.section]: {
+                    ...state.sections[state.section],
+                    menuVisible: !state.sections[state.section].menuVisible
+                }
+            }
         };
     }
 
