@@ -15,6 +15,7 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import * as _ from 'lodash';
 import SourceElement from './SourceElement';
 import CollapsedListItem from './CollapsedListItem';
 
@@ -24,74 +25,187 @@ import imgGroup13 from 'images/constructor/group-13.svg';
 import imgGroup34 from 'images/constructor/group-34.svg';
 import imgGroup35 from 'images/constructor/group-35.svg';
 
-interface ISourceElementsProps {}
+interface ISourceElementsProps {
+    search?: boolean;
+}
 
 interface ISourceElementsState {}
 
+interface IItem {
+    text: string;
+    element?: string;
+    template?: string;
+}
+
 class SourceElements extends React.Component<ISourceElementsProps, ISourceElementsState> {
+    private groups: {
+        text: string,
+        icon: string,
+        items: IItem []
+    }[];
+    constructor(props: ISourceElementsProps) {
+        super(props);
+
+        this.groups = [
+            {
+                text: 'Structure',
+                icon: imgGroup11,
+                items: [
+                    {
+                        text: 'Form with header',
+                        template: 'formWithHeader'
+                    },
+                    {
+                        text: 'Table with header',
+                        template: 'tableWithHeader'
+                    },
+                    {
+                        text: 'Search form',
+                        template: 'searchForm'
+                    },
+                    {
+                        text: 'Radio panel',
+                        template: 'radioPanel'
+                    },
+                    {
+                        text: 'Div',
+                        element: 'div'
+                    }
+                ]
+            },
+            {
+                text: 'Text',
+                icon: imgGroup12,
+                items: [
+                    {
+                        text: 'Paragraph',
+                        element: 'p'
+                    },
+                    {
+                        text: 'Span',
+                        element: 'span'
+                    },
+                    {
+                        text: 'Strong',
+                        element: 'strong'
+                    },
+                    {
+                        text: 'Emphasize',
+                        element: 'em'
+                    }
+                ]
+            },
+            {
+                text: 'Forms',
+                icon: imgGroup34,
+                items: [
+                    {
+                        text: 'Form',
+                        element: 'form'
+                    },
+                    {
+                        text: 'Input',
+                        element: 'input'
+                    },
+                    {
+                        text: 'RadioGroup',
+                        element: 'radiogroup'
+                    },
+                    {
+                        text: 'Label',
+                        element: 'label'
+                    },
+                    {
+                        text: 'Button',
+                        element: 'button'
+                    },
+                    {
+                        text: 'Image input',
+                        element: 'imageinput'
+                    }
+                ]
+            },
+            {
+                text: 'Image',
+                icon: imgGroup35,
+                items: [
+                    {
+                        text: 'Picture',
+                        element: 'image'
+                    }
+                ]
+            },
+            {
+                text: 'Tables',
+                icon: imgGroup13,
+                items: [
+                    {
+                        text: 'Table',
+                        element: 'table'
+                    }
+                ]
+            }
+        ];
+    }
     render() {
+        if (this.props.search) {
+            let items: IItem [] = [];
+
+            for (const group of this.groups) {
+                items = items.concat(group.items);
+            }
+
+            items = _.sortBy(items, ['text']);
+
+            return (
+                <ul className="b-category-sublist">
+                    { items.map(item =>
+                        item.element ?
+                            (<SourceElement text={item.text} element={item.element} />)
+                            :
+                            (<SourceElement text={item.text} template={item.template} />)
+                    ) }
+                </ul>
+            );
+        }
+
         return (
             <ul className="b-category-list">
-                <CollapsedListItem text="Structure" icon={imgGroup11}>
-                    <ul className="b-category-sublist">
-                        <SourceElement text="Form with header" template="formWithHeader" />
-                        <SourceElement text="Table with header" template="tableWithHeader" />
-                        <SourceElement text="Search form" template="searchForm" />
-                        <SourceElement text="Radio panel" template="radioPanel" />
-                        <SourceElement text="Block" element="div" />
-                    </ul>
-                </CollapsedListItem>
-                <CollapsedListItem text="Text" icon={imgGroup12}>
-                    <ul className="b-category-sublist">
-                        <SourceElement text="Paragraph" element="p" />
-                        <SourceElement text="Span" element="span" />
-                        <SourceElement text="Strong" element="strong" />
-                        <SourceElement text="Emphasize" element="em" />
-                    </ul>
-                </CollapsedListItem>
-                {/*
-                 <CollapsedListItem text="Lists" icon={imgGroup37}>
-                 <ul className="b-category-sublist">
-                 <li>Ordered</li>
-                 <li>Unordered</li>
-                 </ul>
-                 </CollapsedListItem>
-                 < CollapsedListItem text="Containers" icon={imgGroup36}>
-                 <ul className="b-category-sublist">
-                 <li>Wrapper</li>
-                 <li>Block</li>
-                 </ul>
-                 </CollapsedListItem>
-                 */}
-                <CollapsedListItem text="Forms" icon={imgGroup34}>
-                    <ul className="b-category-sublist">
-                        <SourceElement text="Form" element="form" />
-                        <SourceElement text="Input" element="input" />
-                        <SourceElement text="RadioGroup" element="radiogroup" />
-                        <SourceElement text="Label" element="label" />
-                        <SourceElement text="Button" element="button" />
-                        <SourceElement text="Image input" element="imageinput" />
-                    </ul>
-                </CollapsedListItem>
-                <CollapsedListItem text="Image" icon={imgGroup35}>
-                    <ul className="b-category-sublist">
-                        <SourceElement text="Picture" element="image" />
-                    </ul>
-                </CollapsedListItem>
-                {/*<CollapsedListItem text="Navigation" icon={imgStroke75}>
-                 <ul className="b-category-sublist">
-                 <li>Breadcrumps</li>
-                 <li>Link</li>
-                 </ul>
-                 </CollapsedListItem>*/}
-                <CollapsedListItem text="Tables" icon={imgGroup13}>
-                    <ul className="b-category-sublist">
-                        <SourceElement text="Table" element="table" />
-                    </ul>
-                </CollapsedListItem>
-                <li />
+                { this.groups.map(group => (
+                        <CollapsedListItem text={group.text} icon={group.icon}>
+                            <ul className="b-category-sublist">
+                            { group.items.map(item =>
+                                item.element ?
+                                    (<SourceElement text={item.text} element={item.element} />)
+                                    :
+                                    (<SourceElement text={item.text} template={item.template} />)
+                            ) }
+                            </ul>
+                        </CollapsedListItem>
+                    )
+                )}
             </ul>
         );
+
+        // <CollapsedListItem text="Lists" icon={imgGroup37}>
+        // <ul className="b-category-sublist">
+        // <li>Ordered</li>
+        // <li>Unordered</li>
+        // </ul>
+        // </CollapsedListItem>
+        // < CollapsedListItem text="Containers" icon={imgGroup36}>
+        // <ul className="b-category-sublist">
+        // <li>Wrapper</li>
+        // <li>Block</li>
+        // </ul>
+        // </CollapsedListItem>
+        //
+        // <CollapsedListItem text="Navigation" icon={imgStroke75}>
+        // <ul className="b-category-sublist">
+        // <li>Breadcrumps</li>
+        // <li>Link</li>
+        // </ul>
+        // </CollapsedListItem>
     }
 }
 

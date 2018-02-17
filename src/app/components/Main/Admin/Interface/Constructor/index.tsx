@@ -139,14 +139,14 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
             <ConstructorDiv>
                 <div className="left-panel">
                     <TabView
-                        className="p0 flex-stretch g-scrollable"
+                        className="p0 b0 flex-stretch g-scrollable"
                         wrapperClassName="g-fullheight flex-col"
                         paneClassName="g-fullheight"
                         tabsClassName="nav-tabs-dark nav-justified"
-                        tabs={[ 'Objects', 'Tree' ]}
+                        tabs={[ 'Objects', 'Search', 'Tree' ]}
                     >
-
-                            <SourceElements/>
+                            <SourceElements search={false}/>
+                            <SourceElements search={true}/>
                             <Tree
                                 treeData={this.state.treeData}
                                 onChange={(treeData: any) => { this.setState({treeData}); }}
