@@ -29,7 +29,9 @@ interface ISourceElementsProps {
     search?: boolean;
 }
 
-interface ISourceElementsState {}
+interface ISourceElementsState {
+    searchText: string;
+}
 
 interface IItem {
     text: string;
@@ -45,6 +47,9 @@ class SourceElements extends React.Component<ISourceElementsProps, ISourceElemen
     }[];
     constructor(props: ISourceElementsProps) {
         super(props);
+        this.state = {
+            searchText: ''
+        };
 
         this.groups = [
             {
@@ -147,6 +152,11 @@ class SourceElements extends React.Component<ISourceElementsProps, ISourceElemen
             }
         ];
     }
+    onSearchTextChange(e: React.ChangeEvent<HTMLInputElement>) {
+        this.setState({
+            searchText: e.target.value
+        });
+    }
     render() {
         if (this.props.search) {
             let items: IItem [] = [];
@@ -157,15 +167,25 @@ class SourceElements extends React.Component<ISourceElementsProps, ISourceElemen
 
             items = _.sortBy(items, ['text']);
 
+            if (this.state.searchText !== '') {
+                items = _.filter(items, item => new RegExp('^' + this.state.searchText + '| ' + this.state.searchText, 'ig').test(item.text));
+            }
+
             return (
-                <ul className="b-category-sublist">
-                    { items.map(item =>
-                        item.element ?
-                            (<SourceElement text={item.text} element={item.element} />)
-                            :
-                            (<SourceElement text={item.text} template={item.template} />)
-                    ) }
-                </ul>
+                <div>
+                    <form className="form-horizontal b-panel-light">
+                        <input type="text" className="form-control input-sm " placeholder="Search..." value={this.state.searchText} onChange={this.onSearchTextChange.bind(this)}/>
+                    </form>
+                    <ul className="b-category-sublist">
+                        { items.map(item =>
+                            item.element ?
+                                (<SourceElement text={item.text} element={item.element} />)
+                                :
+                                (<SourceElement text={item.text} template={item.template} />)
+                        ) }
+                    </ul>
+                </div>
+
             );
         }
 
