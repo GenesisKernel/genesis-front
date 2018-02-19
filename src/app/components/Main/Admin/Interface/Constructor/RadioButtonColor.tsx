@@ -40,6 +40,14 @@ const BulletColor = styled.div`
     margin-right: 1px;
     cursor: pointer;
     
+    &.basic {
+        background-color: #DDD;
+    }
+    
+    &.default {
+        background-color: #FFF;
+    }
+    
     &.muted {
         background-color: #777;
     }
@@ -62,6 +70,10 @@ const BulletColor = styled.div`
     
     &.danger {
         background-color: #a94442;
+    }
+    
+    &.link {
+        background-color: #23527c;
     }
     
     &.selected {

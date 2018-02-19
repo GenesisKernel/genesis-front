@@ -701,6 +701,8 @@ class Tag {
         'class': 'Class'
     };
 
+    protected editProps = ['class', 'align', 'transform', 'wrap', 'color'];
+
     constructor(element: IProtypoElement) {
         this.element = element;
     }
@@ -859,6 +861,10 @@ class Tag {
     getCanHaveChildren() {
         return this.canHaveChildren;
     }
+
+    hasEditProp(prop: string): boolean {
+        return this.editProps.indexOf(prop) !== -1;
+    }
 }
 
 class Button extends Tag {
@@ -871,6 +877,7 @@ class Button extends Tag {
             'page': 'Page',
             'contract': 'Contract'
         };
+        this.editProps = ['class', 'btn', 'align', 'transform', 'wrap', 'color'];
     }
 }
 
@@ -933,6 +940,7 @@ class Table extends Tag {
         this.attr = {
             'source': 'Source'
         };
+        this.editProps = ['class'];
     }
 
     generateTreeJSON(text: string): any {
@@ -966,6 +974,7 @@ class Image extends Tag {
             'src': 'Src',
             'alt': 'Alt'
         };
+        this.editProps = ['class', 'src', 'alt'];
     }
 
     generateTreeJSON(text: string): any {
@@ -992,6 +1001,7 @@ class ImageInput extends Tag {
             'ratio': 'Ratio',
             'width': 'Width'
         };
+        this.editProps = ['class', 'ratio', 'width'];
     }
 
     generateTreeJSON(text: string): any {
@@ -1130,16 +1140,28 @@ export class Properties {
             'info': 'text-info',
             'warning': 'text-warning',
             'danger': 'text-danger'
+        },
+        'btn': {
+            'default': 'btn btn-default',
+            'primary': 'btn btn-primary',
+            'success': 'btn btn-success',
+            'info': 'btn btn-info',
+            'warning': 'btn btn-warning',
+            'danger': 'btn btn-danger',
+            'link': 'btn btn-link',
+            'basic': 'btn'
         }
     };
 
     public getInitial(property: string, tag: any) {
         // alert('getInitial ' + property + (tag && tag.attr && tag.attr.class));
+
         if (tag && tag.attr && tag.attr.class) {
+            const classes = ' ' + tag.attr.class + ' ';
             if (this.propertiesClasses[property]) {
                 for (let value in this.propertiesClasses[property]) {
                     if (this.propertiesClasses[property].hasOwnProperty(value)) {
-                        if (tag.attr.class.indexOf(this.propertiesClasses[property][value]) >= 0) {
+                        if (classes.indexOf(' ' + this.propertiesClasses[property][value] + ' ') >= 0) {
                             return value;
                         }
                     }
@@ -1157,6 +1179,7 @@ export class Properties {
             case 'transform':
             case 'wrap':
             case 'color':
+            case 'btn':
                 for (let prop in this.propertiesClasses[property]) {
                     if (this.propertiesClasses[property].hasOwnProperty(prop)) {
                         classes = classes.replace(this.propertiesClasses[property][prop], '');
@@ -1166,6 +1189,19 @@ export class Properties {
                     classes += ' ' + this.propertiesClasses[property][value];
                 }
                 break;
+            /*
+            case 'btn':
+                for (let prop in this.propertiesClasses[property]) {
+                    if (this.propertiesClasses[property].hasOwnProperty(prop)) {
+                        classes = classes.replace(this.propertiesClasses[property][prop], '');
+                    }
+                }
+                classes = classes.replace('btn', '');
+                if (this.propertiesClasses[property][value]) {
+                    classes += ' btn ' + this.propertiesClasses[property][value];
+                }
+                break;
+                */
             default:
                 break;
         }
