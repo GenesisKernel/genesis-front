@@ -29,12 +29,12 @@ const defaultOptions: NeedleOptions = {
     }
 };
 
-export const overrideSettings = (settings: { apiUrl?: string, socketUrl?: string }) => {
+export const overrideSettings = (settings: { apiUrl?: string, msgUrl?: string }) => {
     if (settings.apiUrl) {
         apiUrl = settings.apiUrl;
     }
-    if (settings.socketUrl) {
-        socketUrl = settings.socketUrl;
+    if (settings.msgUrl) {
+        socketUrl = settings.msgUrl;
     }
 };
 
