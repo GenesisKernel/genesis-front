@@ -877,7 +877,7 @@ class Button extends Tag {
             'page': 'Page',
             'contract': 'Contract'
         };
-        this.editProps = ['class', 'btn', 'align', 'transform', 'wrap', 'color'];
+        this.editProps = ['class', 'btn', 'align', 'transform', 'wrap'];
     }
 }
 

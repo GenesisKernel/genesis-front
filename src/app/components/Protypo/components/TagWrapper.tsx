@@ -111,7 +111,7 @@ const Wrapper = styled.div`
     }
     
     .b-selected {
-        background-color: #E9ECFF;        
+        /* background-color: #E9ECFF; */        
     }
     
     .b-controls {

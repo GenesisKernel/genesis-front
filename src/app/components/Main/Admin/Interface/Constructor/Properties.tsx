@@ -145,7 +145,7 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
                             { Tag.hasEditProp('ratio') && (
                                 <div className="form-group">
                                     <label className="col-xs-3 control-label g-no-padding">
-                                        <small>Height</small>
+                                        <small>Height / ratio</small>
                                     </label>
                                     <Col xs={9}>
                                         <input

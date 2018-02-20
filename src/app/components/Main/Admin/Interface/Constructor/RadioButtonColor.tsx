@@ -109,7 +109,7 @@ export default class RadioButtonColor extends React.Component<IRadioButtonColorP
             'selected': this.props.value === this.props.selectedValue
         });
         return (
-            <BulletColor className={classes} onClick={this.props.onClick.bind(this, this.props.value)}>
+            <BulletColor className={classes} onClick={this.props.onClick.bind(this, this.props.value)} title={this.props.value}>
                 {this.props.children}
             </BulletColor>
         );
