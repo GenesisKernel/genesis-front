@@ -168,7 +168,13 @@ class SourceElements extends React.Component<ISourceElementsProps, ISourceElemen
             items = _.sortBy(items, ['text']);
 
             if (this.state.searchText !== '') {
-                items = _.filter(items, item => new RegExp('^' + this.state.searchText + '| ' + this.state.searchText, 'ig').test(item.text));
+                const searchText = this.state.searchText.replace(/[^0-9a-zA-Z ]/g, '');
+                if (searchText !== this.state.searchText) {
+                    this.setState({
+                        searchText: searchText
+                    });
+                }
+                items = _.filter(items, item => new RegExp('^' + searchText + '| ' + searchText, 'ig').test(item.text));
             }
 
             return (
