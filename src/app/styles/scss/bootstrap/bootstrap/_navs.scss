@@ -215,6 +215,41 @@
   }
 }
 
+.nav-tabs-dark.nav-tabs-justified {
+  background-color: #828c9e;
+}
+
+.nav-tabs-dark.nav-tabs-justified > li > a {
+  border-radius: 0;
+  border-width: 0;
+  color: #eaeff8;
+  background-color: #96a2b7;
+  padding: 0 20px;
+  line-height: 34px;
+  margin-right: 1px;
+}
+
+.nav-tabs-dark.nav-tabs-justified > li:last-child > a {
+  margin-right: 0;
+}
+
+.nav-tabs-dark.nav-tabs-justified > li > a:hover {
+  background-color: #8e99ad;
+}
+
+.nav-tabs-dark.nav-tabs-justified > li > a:focus {
+  color: #707c91;
+}
+
+.nav-tabs-dark.nav-tabs-justified > li.active > a {
+  color: #707c91;
+  border-width: 0;
+  background-color: #3a4653;
+}
+
+.nav-tabs-dark.nav-tabs-justified > li.active > a:hover {
+  border-width: 0;
+}
 
 // Tabbable tabs
 // -------------------------
@@ -228,7 +263,6 @@
     display: block;
   }
 }
-
 
 // Dropdowns
 // -------------------------

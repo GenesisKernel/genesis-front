@@ -397,6 +397,7 @@ input[type="number"] {
     font-size: 12px;
     font-weight: 500;
     font-family: "Avenir", "Source Sans Pro", sans-serif;
+    line-height: 30px;
     padding-left: 45px;
     cursor: move;
 }
