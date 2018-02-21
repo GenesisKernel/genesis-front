@@ -1030,6 +1030,7 @@ class Input extends Tag {
             'type': 'Type',
             'value': 'Value'
         };
+        this.editProps = ['class', 'align', 'transform', 'wrap'];
     }
 
     generateTreeJSON(text: string): any {
