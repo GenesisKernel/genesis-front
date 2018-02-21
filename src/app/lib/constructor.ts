@@ -1071,6 +1071,30 @@ class RadioGroup extends Tag {
     }
 }
 
+class DBFind extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'DBFind';
+        this.canHaveChildren = false;
+        this.attr = {
+            'name': 'Name',
+            'source': 'Source'
+        };
+        this.editProps = ['name', 'source'];
+    }
+
+    generateTreeJSON(text: string): any {
+        return {
+            tag: this.tagName.toLowerCase(),
+            id: generateId(),
+            attr: {
+                name: 'sample image',
+
+            }
+        };
+    }
+}
+
 export class CodeGenerator {
     private elements: IProtypoElement[];
     constructor(elements: IProtypoElement[]) {
@@ -1099,7 +1123,7 @@ export class CodeGenerator {
 const tagHandlers = {
     'button': Button,
 //     'data': Data,
-//     'dbfind': DBFind,
+    'dbfind': DBFind,
     'div': Div,
     'em': Em,
 //     'forlist': ForList,

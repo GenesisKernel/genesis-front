@@ -270,6 +270,14 @@ export default (state: State = initialState, action: Action): State => {
                 tag.attr.ratio = action.payload.ratio;
             }
 
+            if ('string' === typeof action.payload.name) {
+                tag.attr.name = action.payload.name;
+            }
+
+            if ('string' === typeof action.payload.source) {
+                tag.attr.source = action.payload.source;
+            }
+
             if ('string' === typeof action.payload.class) {
                 tag.attr.class = action.payload.class || '';
             }

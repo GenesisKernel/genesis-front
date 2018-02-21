@@ -452,7 +452,7 @@ export const getPageTreeEpic: Epic<Action, IRootState> =
         .flatMap(action => {
             const state = store.getState();
 
-            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, action.payload.name, {}))
+            return Observable.fromPromise(api.contentSource(state.auth.sessionToken, action.payload.name, {}, action.payload.vde))
                 .map(payload => {
                     let pageTree = payload.tree;
                     setIds(pageTree);

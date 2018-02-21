@@ -341,6 +341,8 @@ const api = {
         .then(transformContent),
     contentPage: (session: string, name: string, params: { [key: string]: any }, vde = false) => securedRequest(`content/page/${name}`, session, { ...params, vde })
         .then(transformContent),
+    contentSource: (session: string, name: string, params: { [key: string]: any }, vde = false) => securedRequest(`content/source/${name}`, session, { ...params, vde })
+        .then(transformContent),
     contentTest: (session: string, template: string) => securedRequest('content', session, { template })
         .then(transformContent),
     table: (session: string, name: string, vde?: boolean) => securedRequest(`table/${name}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITableResponse>,
