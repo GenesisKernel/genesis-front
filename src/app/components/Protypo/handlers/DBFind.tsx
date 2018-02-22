@@ -16,6 +16,7 @@
 
 import * as React from 'react';
 import * as propTypes from 'prop-types';
+import StyledComponent from './StyledComponent';
 
 import Protypo from '../';
 import TagWrapper from '../components/TagWrapper';
@@ -99,4 +100,4 @@ DBFind.contextTypes = {
 };
 
 export default DBFind;
-export const DBFindDnD = DnDComponent(DBFind);
+export const DBFindDnD = DnDComponent(StyledComponent(DBFind));
