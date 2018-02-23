@@ -40,6 +40,14 @@ const BulletColor = styled.div`
     margin-right: 1px;
     cursor: pointer;
     
+    &.basic {
+        background-color: #DDD;
+    }
+    
+    &.default {
+        background-color: #FFF;
+    }
+    
     &.muted {
         background-color: #777;
     }
@@ -62,6 +70,10 @@ const BulletColor = styled.div`
     
     &.danger {
         background-color: #a94442;
+    }
+    
+    &.link {
+        background-color: #23527c;
     }
     
     &.selected {
@@ -97,7 +109,7 @@ export default class RadioButtonColor extends React.Component<IRadioButtonColorP
             'selected': this.props.value === this.props.selectedValue
         });
         return (
-            <BulletColor className={classes} onClick={this.props.onClick.bind(this, this.props.value)}>
+            <BulletColor className={classes} onClick={this.props.onClick.bind(this, this.props.value)} title={this.props.value}>
                 {this.props.children}
             </BulletColor>
         );

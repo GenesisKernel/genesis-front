@@ -262,6 +262,14 @@ export default (state: State = initialState, action: Action): State => {
                 tag.attr = {};
             }
 
+            if ('string' === typeof action.payload.width) {
+                tag.attr.width = action.payload.width;
+            }
+
+            if ('string' === typeof action.payload.ratio) {
+                tag.attr.ratio = action.payload.ratio;
+            }
+
             if ('string' === typeof action.payload.class) {
                 tag.attr.class = action.payload.class || '';
             }
@@ -282,6 +290,10 @@ export default (state: State = initialState, action: Action): State => {
 
             if ('string' === typeof action.payload.color) {
                 tag.attr.class = properties.updateClassList(tag.attr.class || '', 'color', action.payload.color);
+            }
+
+            if ('string' === typeof action.payload.btn) {
+                tag.attr.class = properties.updateClassList(tag.attr.class || '', 'btn', action.payload.btn);
             }
         }
 
