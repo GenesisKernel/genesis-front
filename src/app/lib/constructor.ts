@@ -510,7 +510,7 @@ const constructorTemplates: any = {
                             {
                                 tag: 'table',
                                 attr: {
-                                    columns: [
+                                    /*columns: [
                                         {
                                             Name: 'custom_id',
                                             Title: '$id$'
@@ -539,7 +539,8 @@ const constructorTemplates: any = {
                                             Name: 'actions',
                                             Title: '$actions$'
                                         }
-                                    ],
+                                    ],*/
+                                    columns: '$id$=custom_id,$name$=custom_name,$type$=custom_type,$created$ / $deleted$=custom_date,$status$=custom_status,$creator$=custom_creator,$actions$=actions',
                                     source: 'src_roles_list'
                                 }
                             }
@@ -737,7 +738,7 @@ class Tag {
                 params.push(this.getParamsStr('PageParams', this.element.attr.pageparams));
             }
             if (this.element.attr.columns) {
-                params.push(this.getParamsArrStr('Columns', this.element.attr.columns));
+                params.push('Columns: "' + this.element.attr.columns + '"');
             }
         }
 
@@ -827,8 +828,8 @@ class Tag {
         let paramsArr = [];
         if (name && obj) {
             for (let param of obj) {
-                if (param && param.Name) {
-                    paramsArr.push(param.Name + '=' + param.Title);
+                if (param && param.Title) {
+                    paramsArr.push(param.Title + '=' + param.Name);
                 }
             }
             return name + ': ' + '"' + paramsArr.join(',') + '"';
@@ -954,16 +955,7 @@ class Table extends Tag {
             id: generateId(),
             attr: {
                 source: 'keysStr',
-                columns: [
-                    {
-                        Name: 'id',
-                        Title: 'KEY_ID'
-                    },
-                    {
-                        Name: 'amount',
-                        Title: 'MONEY'
-                    }
-                ]
+                columns: 'KEY_ID=id,MONEY=amount'
             }
         };
     }

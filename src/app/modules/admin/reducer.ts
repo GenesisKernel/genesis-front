@@ -317,6 +317,7 @@ export default (state: State = initialState, action: Action): State => {
                 data: {
                     ...state.tabs.data,
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                        ...state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')],
                         type: 'interfaceConstructor',
                         data: pageTree,
                         treeData: convertToTreeData(pageTree),
@@ -339,6 +340,7 @@ export default (state: State = initialState, action: Action): State => {
                 data: {
                     ...state.tabs.data,
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                        ...state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')],
                         type: 'interfaceConstructor',
                         data: pageTree,
                         treeData: convertToTreeData(pageTree, action.payload.tag),
@@ -350,7 +352,8 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.setTagCanDropPosition)) {
-        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')].data || null;
+        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')];
+        let pageTree = tabData && tabData.data || null;
         pageTree = _.cloneDeep(pageTree);
 
         let tag = findTagById(pageTree, action.payload.tagID).el;
@@ -371,6 +374,7 @@ export default (state: State = initialState, action: Action): State => {
                 data: {
                     ...state.tabs.data,
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                        ...state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')],
                         type: 'interfaceConstructor',
                         data: pageTree,
                         treeData: convertToTreeData(pageTree)
@@ -381,7 +385,8 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.addTag)) {
-        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')].data || null;
+        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')];
+        let pageTree = tabData && tabData.data || null;
         pageTree = _.cloneDeep(pageTree);
         // destinationTagID
         if (!pageTree) {
@@ -452,6 +457,7 @@ export default (state: State = initialState, action: Action): State => {
                 data: {
                     ...state.tabs.data,
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                        ...state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')],
                         type: 'interfaceConstructor',
                         data: pageTree,
                         treeData: convertToTreeData(pageTree)
@@ -462,7 +468,8 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.moveTag)) {
-        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
+        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')];
+        let pageTree = tabData && tabData.data || null;
         pageTree = _.cloneDeep(pageTree);
         if (!pageTree) {
             pageTree = [];
@@ -544,6 +551,7 @@ export default (state: State = initialState, action: Action): State => {
                 data: {
                     ...state.tabs.data,
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                        ...state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')],
                         type: 'interfaceConstructor',
                         data: pageTree,
                         treeData: convertToTreeData(pageTree)
@@ -554,8 +562,8 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.copyTag)) {
-        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
-        pageTree = _.cloneDeep(pageTree);
+        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')];
+        let pageTree = tabData && tabData.data || null;
         if (!pageTree) {
             pageTree = [];
         }
@@ -620,6 +628,7 @@ export default (state: State = initialState, action: Action): State => {
                 data: {
                     ...state.tabs.data,
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                        ...state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')],
                         type: 'interfaceConstructor',
                         data: pageTree,
                         treeData: convertToTreeData(pageTree)
@@ -630,7 +639,8 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.removeTag)) {
-        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
+        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')];
+        let pageTree = tabData && tabData.data || null;
         pageTree = _.cloneDeep(pageTree);
         if (!pageTree) {
             pageTree = [];
@@ -654,6 +664,7 @@ export default (state: State = initialState, action: Action): State => {
                 data: {
                     ...state.tabs.data,
                     ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                        ...state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')],
                         type: 'interfaceConstructor',
                         data: pageTree,
                         treeData: convertToTreeData(pageTree)
@@ -664,7 +675,8 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.saveConstructorHistory)) {
-        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')].data || null;
+        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')];
+        let pageTree = tabData && tabData.data || null;
         pageTree = _.cloneDeep(pageTree);
         let data = state.tabs.history['page' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.history['page' + action.payload.pageID + (action.payload.vde ? '-vde' : '')].data || [];
         data = _.cloneDeep(data);
@@ -691,7 +703,8 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.generatePageTemplate)) {
-        const pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')].data || null;
+        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')];
+        let pageTree = tabData && tabData.data || null;
         const codeGenerator = new CodeGenerator(pageTree);
         const pageTemplate = codeGenerator.render();
 
@@ -731,6 +744,7 @@ export default (state: State = initialState, action: Action): State => {
                     data: {
                         ...state.tabs.data,
                         ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                            ...state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')],
                             type: 'interfaceConstructor',
                             data: data[position - 1],
                             treeData: convertToTreeData(data[position - 1])
@@ -760,6 +774,7 @@ export default (state: State = initialState, action: Action): State => {
                     data: {
                         ...state.tabs.data,
                         ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                            ...state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')],
                             type: 'interfaceConstructor',
                             data: data[position - 1],
                             treeData: convertToTreeData(data[position - 1])

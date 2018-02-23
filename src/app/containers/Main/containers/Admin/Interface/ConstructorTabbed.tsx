@@ -159,10 +159,9 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     removeTag(payload?: any) {
         payload.pageID = this.props.pageID;
         payload.vde = this.props.vde;
-            this.props.removeTag(payload);
+        this.props.removeTag(payload);
         this.props.saveConstructorHistory({pageID: this.props.pageID, vde: this.props.vde});
-        // remove code generator error
-        setTimeout(() => { this.props.generatePageTemplate({pageID: this.props.pageID, vde: this.props.vde}); }, 100);
+        this.props.generatePageTemplate({pageID: this.props.pageID, vde: this.props.vde});
     }
 
     setTagCanDropPosition(payload?: any) {
