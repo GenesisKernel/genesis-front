@@ -39,7 +39,7 @@ interface IPageEditorProps {
 
 const PageEditor: React.SFC<IPageEditorProps> = (props) => (
     <ValidatedContractForm vde={props.vde} contractName={props.contractName} mapContractParams={props.mapContractParams} onExec={props.onExec && props.onExec}>
-        <div className="-hidden">
+        <div className="hidden">
             <Validation.components.ValidatedFormGroup for="name">
                 {props.page ?
                     (
