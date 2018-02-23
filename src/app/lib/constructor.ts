@@ -825,10 +825,15 @@ class Tag {
 
     getParamsArrStr(name: string, obj: { Name: string, Title: string }[]) {
         let paramsArr = [];
-        for (let param of obj) {
-            paramsArr.push(param.Name + '=' + param.Title);
+        if (name && obj) {
+            for (let param of obj) {
+                if (param && param.Name) {
+                    paramsArr.push(param.Name + '=' + param.Title);
+                }
+            }
+            return name + ': ' + '"' + paramsArr.join(',') + '"';
         }
-        return name + ': ' + '"' + paramsArr.join(',') + '"';
+        return '';
     }
 
     getValidationParams(obj: Object) {
