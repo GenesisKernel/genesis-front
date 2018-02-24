@@ -59,7 +59,7 @@ export default class Editor extends React.Component<IEditorProps> {
                     ref={l => this.editor = l && l.editor}
                     language={this.props.language}
                     value={this.props.value}
-                    onChange={this.props.onChange.bind(this)}
+                    onChange={this.props.onChange && this.props.onChange.bind(this)}
                     editorWillMount={this.editorWillMount.bind(this)}
                     options={{
                         automaticLayout: true,

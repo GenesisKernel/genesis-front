@@ -21,7 +21,7 @@ import { getHistory, getTableStruct } from 'modules/admin/actions';
 import { IHistoryResponse, ITableResponse } from 'lib/api';
 
 import DataPreloader from 'components/Animation/DataPreloader';
-import HistoryViewer from 'components/Main/Admin/HistoryViewer';
+import History from 'components/Main/Admin/History';
 
 export interface IHistoryContainerProps {
     id: string;
@@ -64,7 +64,7 @@ class ParametersContainer extends React.Component<IHistoryContainerProps & IHist
     render() {
         return (
             <DataPreloader data={[this.props.data, this.props.struct && this.props.struct.columns]}>
-                <HistoryViewer
+                <History
                     id={this.props.id}
                     table={this.props.table}
                     columns={this.props.struct && this.props.struct.columns}
