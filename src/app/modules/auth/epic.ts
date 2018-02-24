@@ -47,7 +47,20 @@ export const loginEpic = (actions$: Observable<Action>) =>
 
             const promise = api.getUid().then(uid => {
                 const signature = keyring.sign(uid.uid, privateKey);
-                return api.login(uid.token, publicKey, signature, undefined, action.payload.ecosystem);
+                return api.login(uid.token, publicKey, signature, undefined, action.payload.ecosystem)
+                    .then(loginResult =>
+                        api.row(loginResult.token, 'members', loginResult.key_id, 'avatar,member_name')
+                            .then(memberResult => ({
+                                ...loginResult,
+                                avatar: memberResult.value.avatar,
+                                username: memberResult.value.member_name
+                            }))
+                            .catch(e => ({
+                                ...loginResult,
+                                avatar: null,
+                                username: null
+                            }))
+                    );
             });
 
             return Observable.from(promise)
@@ -58,8 +71,8 @@ export const loginEpic = (actions$: Observable<Action>) =>
                         address: payload.address,
                         ecosystem: action.payload.ecosystem,
                         ecosystemName: null,
-                        avatar: null,
-                        username: payload.key_id,
+                        avatar: payload.avatar,
+                        username: payload.username,
                         sessionToken: payload.token,
                         refreshToken: payload.refresh,
                         socketToken: payload.notify_key,
@@ -71,7 +84,18 @@ export const loginEpic = (actions$: Observable<Action>) =>
                         actions.login.done({
                             params: action.payload,
                             result: {
-                                ...payload,
+                                error: payload.error,
+                                msg: payload.msg,
+                                token: payload.token,
+                                refresh: payload.refresh,
+                                notify_key: payload.notify_key,
+                                timestamp: payload.timestamp,
+                                key_id: payload.key_id,
+                                ecosystem_id: payload.ecosystem_id,
+                                address: payload.address,
+                                expiry: payload.expiry,
+                                isnode: payload.isnode,
+                                isowner: payload.isowner,
                                 privateKey: privateKey,
                                 publicKey,
                                 account
