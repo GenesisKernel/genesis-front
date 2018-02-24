@@ -100,8 +100,7 @@ const ConstructorDiv = styled.div`
     }
     
     .b-constructor-layout {
-        padding: 0 20px;
-        -min-height: 500px;
+        padding: 12px 20px;
         flex: 1 1;
         overflow-y: auto;
         overflow-x: hidden;

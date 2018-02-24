@@ -510,7 +510,7 @@ const constructorTemplates: any = {
                             {
                                 tag: 'table',
                                 attr: {
-                                    columns: [
+                                    /*columns: [
                                         {
                                             Name: 'custom_id',
                                             Title: '$id$'
@@ -539,7 +539,8 @@ const constructorTemplates: any = {
                                             Name: 'actions',
                                             Title: '$actions$'
                                         }
-                                    ],
+                                    ],*/
+                                    columns: '$id$=custom_id,$name$=custom_name,$type$=custom_type,$created$ / $deleted$=custom_date,$status$=custom_status,$creator$=custom_creator,$actions$=actions',
                                     source: 'src_roles_list'
                                 }
                             }
@@ -737,7 +738,7 @@ class Tag {
                 params.push(this.getParamsStr('PageParams', this.element.attr.pageparams));
             }
             if (this.element.attr.columns) {
-                params.push(this.getParamsArrStr('Columns', this.element.attr.columns));
+                params.push('Columns: "' + this.element.attr.columns + '"');
             }
         }
 
@@ -825,10 +826,15 @@ class Tag {
 
     getParamsArrStr(name: string, obj: { Name: string, Title: string }[]) {
         let paramsArr = [];
-        for (let param of obj) {
-            paramsArr.push(param.Name + '=' + param.Title);
+        if (name && obj) {
+            for (let param of obj) {
+                if (param && param.Title) {
+                    paramsArr.push(param.Title + '=' + param.Name);
+                }
+            }
+            return name + ': ' + '"' + paramsArr.join(',') + '"';
         }
-        return name + ': ' + '"' + paramsArr.join(',') + '"';
+        return '';
     }
 
     getValidationParams(obj: Object) {
@@ -949,16 +955,7 @@ class Table extends Tag {
             id: generateId(),
             attr: {
                 source: 'keysStr',
-                columns: [
-                    {
-                        Name: 'id',
-                        Title: 'KEY_ID'
-                    },
-                    {
-                        Name: 'amount',
-                        Title: 'MONEY'
-                    }
-                ]
+                columns: 'KEY_ID=id,MONEY=amount'
             }
         };
     }
@@ -1071,6 +1068,30 @@ class RadioGroup extends Tag {
     }
 }
 
+class DBFind extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'DBFind';
+        this.canHaveChildren = false;
+        this.attr = {
+            'name': 'Name',
+            'source': 'Source'
+        };
+        this.editProps = ['name', 'source'];
+    }
+
+    generateTreeJSON(text: string): any {
+        return {
+            tag: this.tagName.toLowerCase(),
+            id: generateId(),
+            attr: {
+                name: 'sample image',
+
+            }
+        };
+    }
+}
+
 export class CodeGenerator {
     private elements: IProtypoElement[];
     constructor(elements: IProtypoElement[]) {
@@ -1099,7 +1120,7 @@ export class CodeGenerator {
 const tagHandlers = {
     'button': Button,
 //     'data': Data,
-//     'dbfind': DBFind,
+    'dbfind': DBFind,
     'div': Div,
     'em': Em,
 //     'forlist': ForList,

@@ -18,7 +18,7 @@ import Protypo from './Protypo';
 import Button, { ButtonDnD } from './handlers/Button';
 import Code from 'components/Protypo/handlers/Code';
 import Data from './handlers/Data';
-import DBFind from './handlers/DBFind';
+import DBFind, { DBFindDnD } from './handlers/DBFind';
 import Div, { DivDnD } from './handlers/Div';
 import Em, { EmDnD } from './handlers/Em';
 import ForList from './handlers/ForList';
@@ -68,6 +68,7 @@ const handlers = {
 
 const handlersDnD = {
     'button': ButtonDnD,
+    'dbfind': DBFindDnD,
     'div': DivDnD,
     'em': EmDnD,
     'form': FormDnD,

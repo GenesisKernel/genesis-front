@@ -187,10 +187,12 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
 
     undo() {
         this.props.constructorUndo({pageID: this.props.pageID});
+        this.props.generatePageTemplate({pageID: this.props.pageID, vde: this.props.vde});
     }
 
     redo() {
         this.props.constructorRedo({pageID: this.props.pageID});
+        this.props.generatePageTemplate({pageID: this.props.pageID, vde: this.props.vde});
     }
 
     onSave(block: string, error?: { type: string, error: string }) {
