@@ -18,6 +18,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 import imgControls from './wndControls.svg';
 import { remote } from 'electron';
+import { ITitlebarProps } from './';
+
 import SystemMenu from 'containers/Main/Titlebar/SystemMenu';
 
 const StyledControls = styled.div`
@@ -77,7 +79,7 @@ interface IWinTitlebarState {
     maximized: boolean;
 }
 
-class WinTitlebar extends React.Component<{}, IWinTitlebarState> {
+class WinTitlebar extends React.Component<ITitlebarProps, IWinTitlebarState> {
     _stateListener = this.onStateChange.bind(this);
 
     constructor(props: {}) {
@@ -127,7 +129,9 @@ class WinTitlebar extends React.Component<{}, IWinTitlebarState> {
                 </div>
                 <div className="window-controls no-drag">
                     <button className="minimize" onClick={this.onMinimize}><i /></button>
-                    <button className={this.state.maximized ? 'restore' : 'maximize'} onClick={this.onMaximize}><i /></button>
+                    {false !== this.props.maximizable && (
+                        <button className={this.state.maximized ? 'restore' : 'maximize'} onClick={this.onMaximize}><i /></button>
+                    )}
                     <button className="quit" onClick={this.onClose}><i /></button>
                 </div>
             </StyledControls>

@@ -19,6 +19,7 @@ import * as classNames from 'classnames';
 import styled from 'styled-components';
 import { remote } from 'electron';
 import imgControls from './wndControls.svg';
+import { ITitlebarProps } from './';
 
 import SystemMenu from 'containers/Main/Titlebar/SystemMenu';
 
@@ -61,6 +62,10 @@ const StyledControls = styled.div`
             &.zoom {
                 background-position-y: -28px;
             }
+
+            &.zoom:disabled {
+                background-position: -42px 0;
+            }
         }
     }
 
@@ -88,7 +93,7 @@ interface ITitlebarState {
     isFocused: boolean;
 }
 
-class DarwinTitlebar extends React.Component<{}, ITitlebarState> {
+class DarwinTitlebar extends React.Component<ITitlebarProps, ITitlebarState> {
     private _keyListener = this.onKeyEvent.bind(this);
     private _focusListener = this.onFocusEvent.bind(this);
 
@@ -161,7 +166,7 @@ class DarwinTitlebar extends React.Component<{}, ITitlebarState> {
                 <div className="window-controls no-drag">
                     <button className="quit" onClick={this.onClose} />
                     <button className="minimize" onClick={this.onMinimize} />
-                    <button className="zoom" onClick={this.state.isAltDown ? this.onZoom : this.onFullscreen} />
+                    <button className="zoom" disabled={false === this.props.maximizable} onClick={this.state.isAltDown ? this.onZoom : this.onFullscreen} />
                 </div>
             </StyledControls>
         );

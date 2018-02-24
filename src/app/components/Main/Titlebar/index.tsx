@@ -18,6 +18,10 @@ import * as React from 'react';
 import styled from 'styled-components';
 import platform from 'lib/platform';
 
+export interface ITitlebarProps {
+    maximizable?: boolean;
+}
+
 const StyledControls = styled.div`
     position: relative;
 
@@ -31,7 +35,7 @@ const StyledControls = styled.div`
     }
 `;
 
-const Titlebar = platform.select<React.SFC>({
+const Titlebar = platform.select<React.SFC<ITitlebarProps>>({
     web: () => null,
     desktop: props => {
         const DarwinTitlebar = require('./DarwinTitlebar').default;
@@ -41,12 +45,12 @@ const Titlebar = platform.select<React.SFC>({
         return (
             <StyledControls>
                 {platform.select({
-                    darwin: (<DarwinTitlebar />),
-                    linux: (<LinuxTitlebar />),
-                    win32: (<WinTitlebar />),
+                    darwin: (<DarwinTitlebar {...props} />),
+                    linux: (<LinuxTitlebar {...props} />),
+                    win32: (<WinTitlebar {...props} />),
 
                     // Fallback for unsupported platforms
-                    desktop: (<LinuxTitlebar />)
+                    desktop: (<LinuxTitlebar {...props} />)
                 })}
                 <div className="window-title">{props.children}</div>
             </StyledControls>

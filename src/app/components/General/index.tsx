@@ -99,7 +99,7 @@ const General: React.SFC<IGeneralProps> = props => (
                     <div className="panel-heading text-center clearfix drag p0">
                         {platform.select({
                             desktop: (
-                                <Titlebar>
+                                <Titlebar maximizable={false}>
                                     {props.return && (
                                         <div className={`auth-back ${platform.select({ darwin: 'auth-back-darwin' })}`}>
                                             {typeof props.return === 'function' ?
