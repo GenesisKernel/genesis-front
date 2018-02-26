@@ -211,6 +211,7 @@ const constructorTemplates: any = {
                                             {
                                                 tag: 'input',
                                                 attr: {
+                                                    class: 'form-control',
                                                     name: 'Input3',
                                                     type: 'text'
                                                 }
@@ -259,6 +260,7 @@ const constructorTemplates: any = {
                                             {
                                                 tag: 'input',
                                                 attr: {
+                                                    class: 'form-control',
                                                     name: 'Input3',
                                                     type: 'text'
                                                 }
@@ -307,6 +309,7 @@ const constructorTemplates: any = {
                                             {
                                                 tag: 'input',
                                                 attr: {
+                                                    class: 'form-control',
                                                     name: 'Input3',
                                                     type: 'text'
                                                 }
@@ -452,7 +455,7 @@ const constructorTemplates: any = {
                                                     {
                                                         tag: 'input',
                                                         attr: {
-                                                            'class': 'form-control',
+                                                            class: 'form-control',
                                                             name: 'Search',
                                                             type: 'text',
                                                             value: '#v_Search#'
@@ -1036,7 +1039,7 @@ class Input extends Tag {
             id: generateId(),
             attr: {
                 name: 'sample image',
-
+                class: 'form-control'
             }
         };
     }
