@@ -47,7 +47,9 @@ interface IConstructorProps {
     removeTag?: any;
     selectedTag?: any;
     grid: boolean;
+    logic: boolean;
     toggleGrid: any;
+    toggleLogic: any;
     undo?: any;
     redo?: any;
     canUndo: boolean;
@@ -232,6 +234,15 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                                         onChange={this.props.toggleGrid}
                                     />
                                 </div>
+                                <div className="b-switch">
+                                    <span>LOGIC</span>
+                                    <Switch
+                                        initialValue={this.props.logic ? 'logic' : ''}
+                                        onValue="logic"
+                                        offValue=""
+                                        onChange={this.props.toggleLogic}
+                                    />
+                                </div>
                                 {/*
                                  <div className="b-switch">
                                  <span>SNAP</span>
@@ -257,6 +268,7 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                             copyTag={this.props.copyTag}
                             removeTag={this.props.removeTag}
                             selectedTag={this.props.selectedTag}
+                            logic={this.props.logic}
                         />
                     </Layout>
 
