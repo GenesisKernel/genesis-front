@@ -213,7 +213,7 @@ const FileThemeNodeContentRenderer: React.SFC<IFileThemeNodeContentRendererProps
                                     ))}
                                 </div>
                                 <div className="tree-rowLabel">
-                                    <span className="tree-rowTitle">
+                                    <span className="tree-rowTitle" style={{color: node.logic ? '#FC6' : '#FFF'}}>
                                         {typeof nodeTitle === 'function'
                                             ? nodeTitle({
                                             node,

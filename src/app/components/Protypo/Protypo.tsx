@@ -43,6 +43,7 @@ export interface IProtypoProps {
     setTagCanDropPosition?: any;
     selectTag?: any;
     selectedTag?: any;
+    logic?: boolean;
 }
 
 export interface IProtypoElement {
@@ -170,6 +171,7 @@ class Protypo extends React.Component<IProtypoProps> {
                                 removeTag={this.props.removeTag}
                                 selectTag={this.props.selectTag}
                                 selected={selected}
+                                logic={this.props.logic}
                             >
                                 {this.renderElements(element.children)}
                             </Handler>

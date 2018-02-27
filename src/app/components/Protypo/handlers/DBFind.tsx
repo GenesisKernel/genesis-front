@@ -48,6 +48,8 @@ export interface IDBFindProps {
     connectDragSource?: any;
     connectDragPreview?: any;
     isDragging?: boolean;
+
+    logic?: boolean;
 }
 
 interface IDBFindContext {
@@ -57,6 +59,9 @@ interface IDBFindContext {
 const DBFind: React.SFC<IDBFindProps> = (props, context: IDBFindContext) => {
 
     if (props.editable) {
+        if (!props.logic) {
+            return null;
+        }
         const onClick = (e: any) => {
             e.stopPropagation();
             props.selectTag({tag: props.tag});
