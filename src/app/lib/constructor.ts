@@ -142,8 +142,6 @@ export function convertToTreeData(data: any, selectedTag?: any): any {
                 };
                 result.push(treeItem);
             }
-
-
         }
     }
     return result;
@@ -1099,6 +1097,29 @@ class DBFind extends Tag {
     }
 }
 
+class If extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'If';
+        this.canHaveChildren = true;
+        this.logic = true;
+        this.attr = {
+            'condition': 'Condition'
+        };
+        this.editProps = ['condition'];
+    }
+
+    generateTreeJSON(text: string): any {
+        return {
+            tag: this.tagName.toLowerCase(),
+            id: generateId(),
+            attr: {
+                condition: '#value#'
+            }
+        };
+    }
+}
+
 export class CodeGenerator {
     private elements: IProtypoElement[];
     constructor(elements: IProtypoElement[]) {
@@ -1145,7 +1166,8 @@ const tagHandlers = {
 //     'select': Select,
     'span': Span,
     'strong': Strong,
-    'table': Table
+    'table': Table,
+    'if': If
 };
 
 export class Properties {
