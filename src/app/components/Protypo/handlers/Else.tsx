@@ -19,9 +19,8 @@ import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
-import Switch from 'components/Main/Admin/Interface/Constructor/Switch';
 
-export interface IIfProps {
+export interface IElseProps {
     'className'?: string;
     'class'?: string;
     'children': any;
@@ -45,21 +44,13 @@ export interface IIfProps {
     connectDragPreview?: any;
     isDragging?: boolean;
     logic?: boolean;
-    tail?: any;
 }
 
-interface IIfState {
+interface IElseState {
     condition: boolean;
 }
 
-class If extends React.Component<IIfProps, IIfState> {
-    constructor(props: IIfProps) {
-        super(props);
-        this.state = {
-            condition: true
-        };
-    }
-
+class Else extends React.Component<IElseProps, IElseState> {
     onClick(e: any) {
         e.stopPropagation();
         this.props.selectTag({ tag: this.props.tag });
@@ -67,12 +58,6 @@ class If extends React.Component<IIfProps, IIfState> {
 
     removeTag() {
         this.props.removeTag({ tag: this.props.tag });
-    }
-
-    toggleCondition() {
-        this.setState({
-            condition: !this.state.condition
-        });
     }
 
     render() {
@@ -99,18 +84,12 @@ class If extends React.Component<IIfProps, IIfState> {
                 <div
                     className={classes}
                 >
-                    <span style={{'backgroundColor': '#FFCC66'}}>IF
-                        <Switch
-                            initialValue={this.state.condition}
-                            onValue={true}
-                            offValue={false}
-                            onChange={this.toggleCondition.bind(this)}
-                        /> &#123;</span>
+                    <span style={{'backgroundColor': '#FFCC66'}}>Else &#123;</span>
                     <div>
-                        {this.state.condition && this.props.children}
+                        {this.props.children}
                     </div>
                     <span style={{'backgroundColor': '#FFCC66'}}>&#125;</span>
-                    {!this.state.condition && this.props.tail}
+
                 </div>
                 </TagWrapper>
             </span>
@@ -118,4 +97,4 @@ class If extends React.Component<IIfProps, IIfState> {
     }
 }
 
-export default DnDComponent(StyledComponent(If));
+export default DnDComponent(StyledComponent(Else));

@@ -53,6 +53,7 @@ export interface IProtypoElement {
     // attr?: { [key: string]: string };
     attr?: { [key: string]: any };  // attr can be structured
     children?: IProtypoElement[];
+    tail?: IProtypoElement[];
 }
 
 export interface IParamsSpec {
@@ -155,6 +156,33 @@ class Protypo extends React.Component<IProtypoProps> {
                     }
                     else {
                         const key = optionalKey || (this._lastID++).toString();
+
+                        if (element.tag === 'if') {
+                            return (
+                                <Handler
+                                    {...element.attr}
+                                    key={key}
+                                    id={key}
+                                    tag={element}
+                                    childrenTree={element.children}
+                                    editable={this.props.editable}
+                                    changePage={this.props.changePage}
+                                    setTagCanDropPosition={this.props.setTagCanDropPosition}
+                                    addTag={this.props.addTag}
+                                    moveTag={this.props.moveTag}
+                                    copyTag={this.props.copyTag}
+                                    removeTag={this.props.removeTag}
+                                    selectTag={this.props.selectTag}
+                                    selected={selected}
+                                    logic={this.props.logic}
+                                    tail={this.renderElements(element.tail)}
+                                >
+
+                                    {this.renderElements(element.children)}
+                                </Handler>
+                            );
+                        }
+
                         return (
                             <Handler
                                 {...element.attr}

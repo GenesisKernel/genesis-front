@@ -21,11 +21,13 @@ import * as _ from 'lodash';
 let findTagByIdResult: {
     el: any;
     parent: any,
-    parentPosition: number
+    parentPosition: number,
+    tail: boolean
 } = {
     el: null,
     parent: null,
-    parentPosition: 0
+    parentPosition: 0,
+    tail: false
 };
 
 export const findTagById = (el: any, id: string): any => {
@@ -53,7 +55,12 @@ const findNextTagById = (el: any, id: string, parent: any): any => {
         return;
     }
     if (el.children) {
+        findTagByIdResult.tail = false;
         findNextTagById(el.children, id, el);
+    }
+    if (el.tail) {
+        findTagByIdResult.tail = true;
+        findNextTagById(el.tail, id, el);
     }
 };
 
@@ -71,6 +78,9 @@ export function setIds(children: any[], force: boolean = false) {
         }
         if (tag.children) {
             setIds(tag.children, force);
+        }
+        if (tag.tail) {
+            setIds(tag.tail, force);
         }
     }
 }
@@ -1120,6 +1130,25 @@ class If extends Tag {
     }
 }
 
+class Else extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'Else';
+        this.canHaveChildren = true;
+        this.logic = true;
+        this.attr = {
+        };
+        this.editProps = [];
+    }
+
+    generateTreeJSON(text: string): any {
+        return {
+            tag: this.tagName.toLowerCase(),
+            id: generateId()
+        };
+    }
+}
+
 export class CodeGenerator {
     private elements: IProtypoElement[];
     constructor(elements: IProtypoElement[]) {
@@ -1167,7 +1196,8 @@ const tagHandlers = {
     'span': Span,
     'strong': Strong,
     'table': Table,
-    'if': If
+    'if': If,
+    'else': Else
 };
 
 export class Properties {

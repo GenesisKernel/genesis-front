@@ -21,9 +21,9 @@ import imgSwitchOff from 'images/constructor/group-29.svg';
 
 interface ISwitchProps {
     onChange?: any;
-    initialValue?: string;
-    onValue: string;
-    offValue: string;
+    initialValue?: any;
+    onValue: any;
+    offValue: any;
 }
 
 interface ISwitchState {
