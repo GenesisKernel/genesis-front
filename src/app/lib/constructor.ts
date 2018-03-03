@@ -32,11 +32,11 @@ let findTagByIdResult: {
 
 export const findTagById = (el: any, id: string): any => {
     findTagByIdResult.el = null;
-    findNextTagById(el, id, null);
+    findNextTagById(el, id, null, false);
     return findTagByIdResult;
 };
 
-const findNextTagById = (el: any, id: string, parent: any): any => {
+const findNextTagById = (el: any, id: string, parent: any, tail: boolean): any => {
     if (el.id === id) {
         findTagByIdResult.el = el;
         return;
@@ -48,19 +48,18 @@ const findNextTagById = (el: any, id: string, parent: any): any => {
             }
             findTagByIdResult.parent = parent;
             findTagByIdResult.parentPosition = i;
-            findNextTagById(el[i], id, parent);
+            findTagByIdResult.tail = tail;
+            findNextTagById(el[i], id, parent, false);
         }
     }
     if (findTagByIdResult.el) {
         return;
     }
     if (el.children) {
-        findTagByIdResult.tail = false;
-        findNextTagById(el.children, id, el);
+        findNextTagById(el.children, id, el, false);
     }
     if (el.tail) {
-        findTagByIdResult.tail = true;
-        findNextTagById(el.tail, id, el);
+        findNextTagById(el.tail, id, el, true);
     }
 };
 
@@ -703,7 +702,10 @@ export function getConstructorTemplate(name: string) {
 class Tag {
     protected element: IProtypoElement;
     protected tagName: string = 'Tag';
-    protected canHaveChildren: boolean = true;
+    public canHaveChildren: boolean = true;
+    protected canMove: boolean = true;
+    protected canCopy: boolean = true;
+    public canChangePosition: boolean = true;
     protected offset: number = 0;
     protected generateTextElement = true;
     protected logic = false;
@@ -1130,11 +1132,40 @@ class If extends Tag {
     }
 }
 
+class ElseIf extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'ElseIf';
+        this.canHaveChildren = true;
+        this.canMove = false;
+        this.canCopy = false;
+        this.canChangePosition = false;
+        this.logic = true;
+        this.attr = {
+            'condition': 'Condition'
+        };
+        this.editProps = ['condition'];
+    }
+
+    generateTreeJSON(text: string): any {
+        return {
+            tag: this.tagName.toLowerCase(),
+            id: generateId(),
+            attr: {
+                condition: '#value#'
+            }
+        };
+    }
+}
+
 class Else extends Tag {
     constructor(element: IProtypoElement) {
         super(element);
         this.tagName = 'Else';
         this.canHaveChildren = true;
+        this.canMove = false;
+        this.canCopy = false;
+        this.canChangePosition = false;
         this.logic = true;
         this.attr = {
         };
@@ -1197,6 +1228,7 @@ const tagHandlers = {
     'strong': Strong,
     'table': Table,
     'if': If,
+    'elseif': ElseIf,
     'else': Else
 };
 
@@ -1329,6 +1361,10 @@ export function getDropPosition(monitor: any, component: any, tag: any) {
     const Handler = resolveTagHandler(tag.tag);
     if (Handler) {
         tagObj = new Handler();
+    }
+
+    if (!tagObj.canChangePosition && tagObj.canHaveChildren) {
+        return 'inside';
     }
 
     if (hoverClientY < gapY || hoverClientX < gapX) {

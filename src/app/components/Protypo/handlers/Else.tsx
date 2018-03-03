@@ -80,6 +80,7 @@ class Else extends React.Component<IElseProps, IElseState> {
                     onClick={this.onClick.bind(this)}
                     removeTag={this.removeTag.bind(this)}
                     connectDragSource={connectDragSource}
+                    canMove={false}
                 >
                 <div
                     className={classes}
@@ -89,7 +90,6 @@ class Else extends React.Component<IElseProps, IElseState> {
                         {this.props.children}
                     </div>
                     <span style={{'backgroundColor': '#FFCC66'}}>&#125;</span>
-
                 </div>
                 </TagWrapper>
             </span>

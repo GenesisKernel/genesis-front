@@ -21,7 +21,7 @@ import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
 import Switch from 'components/Main/Admin/Interface/Constructor/Switch';
 
-export interface IIfProps {
+export interface IElseIfProps {
     'className'?: string;
     'class'?: string;
     'children': any;
@@ -45,15 +45,14 @@ export interface IIfProps {
     connectDragPreview?: any;
     isDragging?: boolean;
     logic?: boolean;
-    tail?: any;
 }
 
-interface IIfState {
+interface IElseIfState {
     condition: boolean;
 }
 
-class If extends React.Component<IIfProps, IIfState> {
-    constructor(props: IIfProps) {
+class ElseIf extends React.Component<IElseIfProps, IElseIfState> {
+    constructor(props: IElseIfProps) {
         super(props);
         this.state = {
             condition: true
@@ -95,12 +94,12 @@ class If extends React.Component<IIfProps, IIfState> {
                     onClick={this.onClick.bind(this)}
                     removeTag={this.removeTag.bind(this)}
                     connectDragSource={connectDragSource}
-                    canMove={true}
+                    canMove={false}
                 >
                 <div
                     className={classes}
                 >
-                    <span style={{'backgroundColor': '#FFCC66'}}>If
+                    <span style={{'backgroundColor': '#FFCC66'}}>ElseIf
                         <Switch
                             initialValue={this.state.condition}
                             onValue={true}
@@ -112,7 +111,6 @@ class If extends React.Component<IIfProps, IIfState> {
                         {this.state.condition && this.props.children}
                     </div>
                     <span style={{'backgroundColor': '#FFCC66'}}>&#125;</span>
-                    {!this.state.condition && this.props.tail}
                 </div>
                 </TagWrapper>
             </span>
@@ -120,4 +118,4 @@ class If extends React.Component<IIfProps, IIfState> {
     }
 }
 
-export default DnDComponent(StyledComponent(If));
+export default DnDComponent(StyledComponent(ElseIf));

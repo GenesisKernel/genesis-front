@@ -108,6 +108,7 @@ class Form extends React.Component<IFormProps, IFormState> {
                         onClick={this.onClick.bind(this)}
                         removeTag={this.removeTag.bind(this)}
                         connectDragSource={connectDragSource}
+                        canMove={true}
                     >
                         <form
                             className={classes}

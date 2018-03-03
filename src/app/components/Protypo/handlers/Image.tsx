@@ -83,6 +83,7 @@ const Image: React.SFC<IImageProps> = (props, context: IImageContext) => {
                     onClick={onClick}
                     removeTag={removeTag}
                     connectDragSource={connectDragSource}
+                    canMove={true}
                 >
                     <img
                         className={classes}

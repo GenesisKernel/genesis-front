@@ -649,7 +649,12 @@ export default (state: State = initialState, action: Action): State => {
         // delete moved element
         let sourceTag = findTagById(pageTree.concat(), action.payload.tag.id);
         if (sourceTag.parent) {
-            sourceTag.parent.children.splice(sourceTag.parentPosition, 1);
+            if (sourceTag.tail) {
+                sourceTag.parent.tail.splice(sourceTag.parentPosition, 1);
+            }
+            else {
+                sourceTag.parent.children.splice(sourceTag.parentPosition, 1);
+            }
         }
         else {
             // root

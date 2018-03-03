@@ -92,6 +92,7 @@ class Div extends React.Component<IDivProps, IDivState> {
                         onClick={this.onClick.bind(this)}
                         removeTag={this.removeTag.bind(this)}
                         connectDragSource={connectDragSource}
+                        canMove={true}
                     >
                     <div
                         className={classes}

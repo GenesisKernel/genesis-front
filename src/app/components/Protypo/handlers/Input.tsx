@@ -104,6 +104,7 @@ const Input: React.SFC<IInputProps> = (props) => {
                     onClick={onClick}
                     removeTag={removeTag}
                     connectDragSource={connectDragSource}
+                    canMove={true}
                 >
                     <input
                         name={props.name}
