@@ -299,7 +299,7 @@ class Import extends React.Component<IImportProps & InjectedIntlProps> {
                                     </Button>
 
                                     <div className="pull-right">
-                                        <TxButton className="btn btn-primary" vde={this.props.vde} contractName="@1Import" contractParams={{ Data: JSON.stringify(this.props.payload) }} disabled={this.isPristine()}>
+                                        <TxButton className="btn btn-primary" vde={this.props.vde} contractName={this.props.vde ? 'Import' : '@1Import'} contractParams={{ Data: JSON.stringify(this.props.payload) }} disabled={this.isPristine()}>
                                             <FormattedMessage id="admin.import.confirm" defaultMessage="Import" />
                                         </TxButton>
                                     </div>
