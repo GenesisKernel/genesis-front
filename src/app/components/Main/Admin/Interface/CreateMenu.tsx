@@ -84,7 +84,7 @@ class CreateMenu extends React.Component<ICreateMenuProps, ICreateMenuState> {
                             </li>
                         </ol>
                         <MenuEditor
-                            contractName="@1NewMenu"
+                            contractName={this.props.vde ? 'NewMenu' : '@1NewMenu'}
                             mapContractParams={this.mapContractParams.bind(this)}
 
                             vde={this.props.vde}

@@ -96,7 +96,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                     vde={this.props.vde}
                     value={this.state.value}
                     conditions={this.state.conditions}
-                    contractName="@1NewParameter"
+                    contractName={this.props.vde ? 'NewParameter' : '@1NewParameter'}
                     mapContractParams={this.mapContractParams.bind(this)}
                     onExec={this.onExec.bind(this)}
                     onValueEdit={this.onValueEdit.bind(this)}

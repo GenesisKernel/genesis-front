@@ -158,7 +158,7 @@ class EditPage extends React.Component<IEditPageProps, IEditPageState> {
                         </ol>
                         <PageEditor
                             vde={this.props.vde}
-                            contractName="@1EditPage"
+                            contractName={this.props.vde ? 'EditPage' : '@1EditPage'}
                             mapContractParams={this.mapContractParams.bind(this)}
                             template={this.state.template}
                             conditions={this.state.conditions}

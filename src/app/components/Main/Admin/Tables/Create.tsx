@@ -187,7 +187,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                                 <FormattedMessage id="admin.create" defaultMessage="Create" />
                             </li>
                         </ol>
-                        <ValidatedContractForm vde={this.props.vde} contractName="@1NewTable" mapContractParams={this.mapContractParams.bind(this)} onExec={this.onExec.bind(this)}>
+                        <ValidatedContractForm vde={this.props.vde} contractName={this.props.vde ? 'NewTable' : '@1NewTable'} mapContractParams={this.mapContractParams.bind(this)} onExec={this.onExec.bind(this)}>
                             <div className="panel panel-default">
                                 <div className="panel-body">
                                     <Validation.components.ValidatedFormGroup for="name">

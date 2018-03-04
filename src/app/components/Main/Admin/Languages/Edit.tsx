@@ -160,7 +160,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
             >
                 <LocaleEditor
                     vde={this.props.vde}
-                    contractName="@1EditLang"
+                    contractName={this.props.vde ? 'EditLang' : '@1EditLang'}
                     translation={this.props.translation.name}
                     translations={this.state.translations}
                     onNewLocale={this.onNewLocale.bind(this)}

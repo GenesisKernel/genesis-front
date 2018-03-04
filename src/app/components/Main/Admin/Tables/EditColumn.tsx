@@ -128,7 +128,7 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
                                 <FormattedMessage id="admin.tables.column.edit" defaultMessage="Edit column" />
                             </li>
                         </ol>
-                        <ValidatedContractForm vde={this.props.vde} contractName="@1EditColumn" mapContractParams={this.mapContractParams.bind(this)}>
+                        <ValidatedContractForm vde={this.props.vde} contractName={this.props.vde ? 'EditColumn' : '@1EditColumn'} mapContractParams={this.mapContractParams.bind(this)}>
                             <div className="panel panel-default">
                                 <div className="panel-body">
                                     <div className="form-group">

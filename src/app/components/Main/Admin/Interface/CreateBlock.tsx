@@ -84,7 +84,7 @@ class CreateBlock extends React.Component<ICreateBlockProps, ICreateBlockState> 
                             </li>
                         </ol>
                         <BlockEditor
-                            contractName="@1NewBlock"
+                            contractName={this.props.vde ? 'NewBlock' : '@1NewBlock'}
                             mapContractParams={this.mapContractParams.bind(this)}
 
                             vde={this.props.vde}

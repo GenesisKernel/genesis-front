@@ -162,7 +162,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
                 <ContractEditor
                     bound={this.state.bound}
                     vde={this.props.vde}
-                    contractName="@1EditContract"
+                    contractName={this.props.vde ? 'EditContract' : '@1EditContract'}
                     mapContractParams={this.mapContractParams.bind(this)}
 
                     code={this.state.code}
