@@ -180,7 +180,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_page' : 'page']: action.payload.result.page as { id: string, name: string, menu: string, conditions: string, value: string },
+            [action.payload.params.vde ? 'vde_page' : 'page']: action.payload.result.page,
             [action.payload.params.vde ? 'vde_menus' : 'menus']: action.payload.result.menus,
             tabs: {
                 ...state.tabs,

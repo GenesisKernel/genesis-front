@@ -117,7 +117,7 @@ const PageEditor: React.SFC<IPageEditorProps> = (props) => (
                 header={<FormattedMessage id="admin.interface.menu" defaultMessage="Menu" />}
                 footer={props.menu && (
                     <span>
-                        <PageLink page="edit-menu" params={{ id: props.menu.id }} vde={props.vde}>
+                        <PageLink page="edit-menu" params={{ name: props.menu.name }} vde={props.vde}>
                             <Button bsStyle="primary">
                                 <FormattedMessage id="admin.edit" defaultMessage="Edit" />
                             </Button>

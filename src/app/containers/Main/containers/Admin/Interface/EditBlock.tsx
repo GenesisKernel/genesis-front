@@ -23,7 +23,7 @@ import EditBlock from 'components/Main/Admin/Interface/EditBlock';
 
 export interface IEditBlockContainerProps {
     vde?: boolean;
-    blockID: string;
+    name: string;
 }
 
 interface IEditBlockContainerState {
@@ -37,15 +37,15 @@ interface IEditBlockContainerDispatch {
 class EditBlockContainer extends React.Component<IEditBlockContainerProps & IEditBlockContainerState & IEditBlockContainerDispatch> {
     componentDidMount() {
         this.props.getBlock({
-            id: this.props.blockID,
+            name: this.props.name,
             vde: this.props.vde
         });
     }
 
     componentWillReceiveProps(props: IEditBlockContainerProps & IEditBlockContainerState & IEditBlockContainerDispatch) {
-        if (this.props.blockID !== props.blockID || this.props.vde !== props.vde) {
+        if (this.props.name !== props.name || this.props.vde !== props.vde) {
             props.getBlock({
-                id: props.blockID,
+                name: props.name,
                 vde: props.vde
             });
         }

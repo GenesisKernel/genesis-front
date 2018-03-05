@@ -12,6 +12,10 @@
     }
 }
 
+.monaco-editor .wrapper {
+    background: transparent;
+}
+
 .layout-fixed .wrapper > .aside {
     background: #fefefe !important;
     padding-right: 1px;

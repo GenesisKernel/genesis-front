@@ -15,7 +15,7 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IPageResponse, IContractsResponse, IParameterResponse, IHistoryResponse, ITabListResponse } from 'lib/api';
+import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContractsResponse, IParameterResponse, IHistoryResponse, ITabListResponse, IInterfacePageResponse, IInterfaceMenuResponse, IInterfaceBlockResponse } from 'lib/api';
 import { TProtypoElement } from 'genesis/protypo';
 
 const actionCreator = actionCreatorFactory('admin');
@@ -31,7 +31,7 @@ export const getTables = actionCreator.async<{ offset?: number, limit?: number, 
 export const getHistory = actionCreator.async<{ id: string, table: string }, IHistoryResponse, string>('GET_HISTORY');
 
 // Pages
-export const getPage = actionCreator.async<{ id: string, vde?: boolean }, IPageResponse, string>('GET_PAGE');
+export const getPage = actionCreator.async<{ name: string, vde?: boolean }, { page: IInterfacePageResponse, menus: IInterfaceMenuResponse[] }, string>('GET_PAGE');
 export const getInterface = actionCreator.async<{ vde?: boolean }, IInterfacesResponse, string>('GET_INTERFACE');
 
 // Constructor
@@ -50,11 +50,11 @@ export const constructorRedo = actionCreator<{ pageID: string, vde?: boolean }>(
 export const generatePageTemplate = actionCreator<{ pageID: string, vde?: boolean }>('GENERATE_PAGE_TEMPLATE');
 
 // Menus
-export const getMenu = actionCreator.async<{ id: string, vde?: boolean }, { id: string, name: string, value: string, conditions: string }, string>('GET_MENU');
+export const getMenu = actionCreator.async<{ name: string, vde?: boolean }, IInterfaceMenuResponse, string>('GET_MENU');
 export const getMenus = actionCreator.async<{ vde?: boolean }, { id: string, name: string, conditions: string, value: string }[], string>('GET_MENUS');
 
 // Blocks
-export const getBlock = actionCreator.async<{ id: string, vde?: boolean; }, { id: string, name: string, value: string, conditions: string }, string>('GET_BLOCK');
+export const getBlock = actionCreator.async<{ name: string, vde?: boolean; }, IInterfaceBlockResponse, string>('GET_BLOCK');
 
 // Parameters
 export const getParameter = actionCreator.async<{ name: string, vde?: boolean }, IParameterResponse, string>('GET_PARAMETER');

@@ -82,7 +82,7 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                                         )}
                                                     </td>
                                                     <td style={{ width: 1 }}>
-                                                        <PageLink className="btn btn-labeled btn-icon btn-default" page="edit-page" params={{ id: page.id }} vde={props.vde}>
+                                                        <PageLink className="btn btn-labeled btn-icon btn-default" page="edit-page" params={{ name: page.name }} vde={props.vde}>
                                                             <span className="btn-label">
                                                                 <em className="fa fa-edit" />
                                                             </span>
@@ -131,7 +131,7 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                                         )}
                                                     </td>
                                                     <td style={{ width: 1 }}>
-                                                        <PageLink className="btn btn-labeled btn-icon btn-default" page="edit-menu" params={{ id: menu.id }} vde={props.vde}>
+                                                        <PageLink className="btn btn-labeled btn-icon btn-default" page="edit-menu" params={{ name: menu.name }} vde={props.vde}>
                                                             <span className="btn-label">
                                                                 <em className="fa fa-edit" />
                                                             </span>

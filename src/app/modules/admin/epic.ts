@@ -161,13 +161,18 @@ export const getPageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getPage.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.page(state.auth.sessionToken, action.payload.id, action.payload.vde))
-                .map(payload =>
-                    actions.getPage.done({
-                        params: action.payload,
-                        result: payload
-                    })
-                )
+            return Observable.fromPromise(Promise.all([
+                api.findPage(state.auth.sessionToken, action.payload.name, action.payload.vde),
+                api.list(state.auth.sessionToken, 'menu', 0, 0, [], action.payload.vde)
+            ])).map(payload =>
+                actions.getPage.done({
+                    params: action.payload,
+                    result: {
+                        page: payload[0],
+                        menus: payload[1].list as any
+                    }
+                })
+            )
                 .catch((e: IAPIError) =>
                     Observable.of(actions.getPage.failed({
                         params: action.payload,
@@ -180,11 +185,11 @@ export const getMenuEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getMenu.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.row(state.auth.sessionToken, 'menu', action.payload.id, undefined, action.payload.vde))
+            return Observable.fromPromise(api.findMenu(state.auth.sessionToken, action.payload.name, action.payload.vde))
                 .map(payload =>
                     actions.getMenu.done({
                         params: action.payload,
-                        result: payload.value as any
+                        result: payload
                     })
                 )
                 .catch((e: IAPIError) =>
@@ -246,10 +251,10 @@ export const getBlockEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getBlock.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.row(state.auth.sessionToken, 'blocks', action.payload.id, undefined, action.payload.vde))
+            return Observable.fromPromise(api.findBlock(state.auth.sessionToken, action.payload.name, action.payload.vde))
                 .map(payload => actions.getBlock.done({
                     params: action.payload,
-                    result: payload.value as any
+                    result: payload
                 }))
                 .catch((e: IAPIError) =>
                     Observable.of(actions.getBlock.failed({

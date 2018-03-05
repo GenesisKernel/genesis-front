@@ -97,7 +97,7 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
             vde: this.props.vde
         });
         this.props.getPage({
-            id: this.props.pageID,
+            name: this.props.pageName,
             vde: this.props.vde
         });
     }

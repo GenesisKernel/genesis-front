@@ -142,15 +142,33 @@ export interface IListResponse extends IResponse {
     }];
 }
 
+export interface IInterfacePageResponse {
+    id: number;
+    name: string;
+    menu: string;
+    value: string;
+    conditions: string;
+}
+
+export interface IInterfaceBlockResponse {
+    id: number;
+    name: string;
+    value: string;
+    conditions: string;
+}
+
+export interface IInterfaceMenuResponse {
+    id: number;
+    name: string;
+    menu: string;
+    value: string;
+    conditions: string;
+}
+
 export interface IInterfacesResponse extends IResponse {
     menus: [IDBValue & { name: string }];
     pages: [IDBValue & { name: string }];
     blocks: [IDBValue & { name: string }];
-}
-
-export interface IPageResponse extends IResponse {
-    page: IDBValue & { name: string };
-    menus: [IDBValue & { name: string, value: string, conditions: string }];
 }
 
 export interface IContractResponse extends IResponse {
@@ -323,6 +341,9 @@ const api = {
 
     // Level 2
     row: (session: string, table: string, id: string, columns?: string, vde = false) => securedRequest(`row/${table}/${id}?columns=${columns || ''}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<IRowResponse>,
+    findPage: (session: string, name: string, vde = false) => securedRequest(`interface/page/${name}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<IInterfacePageResponse>,
+    findBlock: (session: string, name: string, vde = false) => securedRequest(`interface/block/${name}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<IInterfaceBlockResponse>,
+    findMenu: (session: string, name: string, vde = false) => securedRequest(`interface/menu/${name}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<IInterfaceMenuResponse>,
     contentMenu: (session: string, name: string, vde = false) => securedRequest(`content/menu/${name}`, session, { vde })
         .then(transformContent),
     contentPage: (session: string, name: string, params: { [key: string]: any }, vde = false) => securedRequest(`content/page/${name}`, session, { ...params, vde })
@@ -333,13 +354,6 @@ const api = {
     tables: (session: string, offset?: number, limit?: number, vde = false) => securedRequest(`tables?offset=${offset || 0}&limit=${limit || 1000}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITablesResponse>,
     history: (session: string, table: string, id: string) => securedRequest(`history/${table}/${id}`, session, null, { method: 'GET' }) as Promise<IHistoryResponse>,
     list: (session: string, name: string, offset?: number, limit?: number, columns?: string[], vde = false) => securedRequest(`list/${name}?offset=${offset || 0}&limit=${limit || 1000}&columns=${columns ? columns.join(',') : ''}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<IListResponse>,
-    page: (session: string, id: string, vde = false) => Promise.all([
-        api.row(session, 'pages', id, undefined, vde),
-        api.list(session, 'menu', 0, 0, undefined, vde),
-    ]).then(results => ({
-        page: results[0].value,
-        menus: results[1].list
-    })) as Promise<IPageResponse>,
     pages: (session: string, vde = false) => Promise.all([
         api.list(session, 'pages', 0, 0, ['name'], vde),
         api.list(session, 'menu', 0, 0, ['name'], vde),

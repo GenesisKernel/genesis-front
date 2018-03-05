@@ -116,7 +116,7 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
                     tabsContent.push(
                         <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
                             <Title>Interface Page</Title>
-                            <InterfacePageEditTabbed pageID={tabListItem.id} vde={tabListItem.vde} onSave={this.onTabSave.bind(this)} random={this.state.random && this.state.random['page' + tabListItem.id + (tabListItem.vde ? 'vde' : '')]} />
+                            <InterfacePageEditTabbed name={tabListItem.id} vde={tabListItem.vde} onSave={this.onTabSave.bind(this)} random={this.state.random && this.state.random['page' + tabListItem.id + (tabListItem.vde ? 'vde' : '')]} />
                         </div>
                     );
                 }
@@ -125,7 +125,7 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
                         tabsContent.push(
                             <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
                                 <Title>Interface Block</Title>
-                                <InterfaceBlockEditTabbed blockID={tabListItem.id} vde={tabListItem.vde} />
+                                <InterfaceBlockEditTabbed name={tabListItem.id} vde={tabListItem.vde} />
                             </div>
                         );
                     }
@@ -134,7 +134,7 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
                             tabsContent.push(
                                 <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
                                     <Title>Interface Menu</Title>
-                                    <InterfaceMenuEditTabbed menuID={tabListItem.id} vde={tabListItem.vde} />
+                                    <InterfaceMenuEditTabbed name={tabListItem.id} vde={tabListItem.vde} />
                                 </div>
                             );
                         }

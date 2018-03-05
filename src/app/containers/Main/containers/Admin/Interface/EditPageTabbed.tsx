@@ -24,7 +24,7 @@ import EditPage from 'components/Main/Admin/Interface/EditPage';
 
 interface IEditPageProps {
     vde?: boolean;
-    pageID: string;
+    name: string;
     tabData: any;
     // page: { id: string, name: string, menu: string, conditions: string, value: string };
     menus: { id: string, name: string, conditions: string, value: string }[];
@@ -40,7 +40,7 @@ class EditPageContainer extends React.Component<IEditPageProps> {
     }
 
     getPage() {
-        this.props.getPage({ id: this.props.pageID, vde: this.props.vde });
+        this.props.getPage({ name: this.props.name, vde: this.props.vde });
     }
 
     componentWillReceiveProps(props: IEditPageProps) {
@@ -51,19 +51,19 @@ class EditPageContainer extends React.Component<IEditPageProps> {
 
     onSave(block: string, error?: { type: string, error: string }) {
         if (this.props.onSave) {
-            this.props.onSave(this.props.pageID, this.props.vde);
+            this.props.onSave(this.props.name, this.props.vde);
         }
     }
 
     render() {
-        const pageTab = this.props.tabData && this.props.tabData['interfacePage' + this.props.pageID + (this.props.vde ? '-vde' : '')] || null;
+        const pageTab = this.props.tabData && this.props.tabData['interfacePage' + this.props.name + (this.props.vde ? '-vde' : '')] || null;
         let page = null;
         if (pageTab) {
             page = pageTab.data;
         }
 
         return (
-            <EditPage page={page} menus={this.props.menus} tabView={true} navigatePage={this.props.navigatePage} onExec={this.onSave.bind(this)}/>
+            <EditPage page={page} menus={this.props.menus} tabView={true} navigatePage={this.props.navigatePage} onExec={this.onSave.bind(this)} />
         );
     }
 }

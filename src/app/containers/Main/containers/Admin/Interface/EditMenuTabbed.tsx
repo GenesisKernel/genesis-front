@@ -23,8 +23,7 @@ import EditMenu from 'components/Main/Admin/Interface/EditMenu';
 
 export interface IEditMenuContainerProps {
     vde?: boolean;
-    // match?: { params: { menuID: string } };
-    menuID: string;
+    name: string;
 }
 
 interface IEditMenuContainerState {
@@ -39,20 +38,20 @@ interface IEditMenuContainerDispatch {
 class EditMenuContainer extends React.Component<IEditMenuContainerProps & IEditMenuContainerState & IEditMenuContainerDispatch> {
     componentWillMount() {
         this.props.getMenu({
-            id: this.props.menuID,
+            name: this.props.name,
             vde: this.props.vde
         });
     }
 
     render() {
-        const menuTab = this.props.tabData && this.props.tabData['interfaceMenu' + this.props.menuID + (this.props.vde ? '-vde' : '')] || null;
+        const menuTab = this.props.tabData && this.props.tabData['interfaceMenu' + this.props.name + (this.props.vde ? '-vde' : '')] || null;
         let menu = null;
         if (menuTab) {
             menu = menuTab.data;
         }
 
         return (
-            <EditMenu menu={menu} tabView={true}  />
+            <EditMenu menu={menu} tabView={true} />
         );
     }
 }
