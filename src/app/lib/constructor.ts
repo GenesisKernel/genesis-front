@@ -1121,13 +1121,50 @@ class If extends Tag {
         this.editProps = ['condition'];
     }
 
+    renderCode(): string {
+        let result: string = this.tagName + '(';
+
+        if (this.element && this.element.attr && this.element.attr.condition) {
+            result += this.element.attr.condition;
+        }
+        result += ')';
+
+        let body = this.renderChildren();
+
+        if (this.element.children && this.element.children.length) {
+            result += ' {\n' + body + '\n' + this.renderOffset() + '}';
+        }
+
+        if (this.element.tail && this.element.tail.length) {
+            result += this.element.tail.map((element, index) => {
+                const TailHandler = resolveTagHandler(element.tag);
+                if (TailHandler) {
+                    let tag = new TailHandler(element);
+                    // tag.setOffset(this.offset + 1);
+                    return tag.renderCode();
+                }
+                return '';
+            }).join('');
+        }
+
+        return this.renderOffset() + result;
+    }
+
     generateTreeJSON(text: string): any {
         return {
             tag: this.tagName.toLowerCase(),
             id: generateId(),
             attr: {
                 condition: '#value#'
-            }
+            },
+            children: [],
+            tail: [
+                {
+                    tag: 'else',
+                    id: generateId(),
+                    children: []
+                }
+            ]
         };
     }
 }
@@ -1145,6 +1182,23 @@ class ElseIf extends Tag {
             'condition': 'Condition'
         };
         this.editProps = ['condition'];
+    }
+
+    renderCode(): string {
+        let result: string = '.' + this.tagName + '(';
+
+        if (this.element && this.element.attr && this.element.attr.condition) {
+            result += this.element.attr.condition;
+        }
+
+        result += ')';
+
+        let body = this.renderChildren();
+
+        if (this.element.children && this.element.children.length) {
+            result += '{\n' + body + '\n' + this.renderOffset() + '}';
+        }
+        return this.renderOffset() + result;
     }
 
     generateTreeJSON(text: string): any {
@@ -1170,6 +1224,17 @@ class Else extends Tag {
         this.attr = {
         };
         this.editProps = [];
+    }
+
+    renderCode(): string {
+        let result: string = '.' + this.tagName;
+
+        let body = this.renderChildren();
+
+        if (this.element.children && this.element.children.length) {
+            result += '{\n' + body + '\n' + this.renderOffset() + '}';
+        }
+        return this.renderOffset() + result;
     }
 
     generateTreeJSON(text: string): any {

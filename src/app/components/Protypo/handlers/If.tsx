@@ -108,9 +108,7 @@ class If extends React.Component<IIfProps, IIfState> {
                             onChange={this.toggleCondition.bind(this)}
                         /> &#123;
                     </span>
-                    <div>
-                        {this.state.condition && this.props.children}
-                    </div>
+                    {this.state.condition && (<div>{this.props.children} </div>) || (<span>...</span>)}
                     <span style={{'backgroundColor': '#FFCC66'}}>&#125;</span>
                     {!this.state.condition && this.props.tail}
                 </div>
