@@ -474,7 +474,7 @@ export default (state: State = initialState, action: Action): State => {
             pageTree = [];
         }
 
-        let tagCopy = Object.assign({}, action.payload.tag);
+        let tagCopy = _.cloneDeep(action.payload.tag);
         // generate new id for inserted tag
         tagCopy.id = generateId();
 
@@ -567,7 +567,7 @@ export default (state: State = initialState, action: Action): State => {
             pageTree = [];
         }
 
-        let tagCopy = Object.assign({}, action.payload.tag);
+        let tagCopy = _.cloneDeep(action.payload.tag);
         // generate new id for inserted tag
         tagCopy.id = generateId();
         // generate subtags ids for copy function
