@@ -574,6 +574,9 @@ export default (state: State = initialState, action: Action): State => {
         if (tagCopy.children) {
             setIds(tagCopy.children, true);
         }
+        if (tagCopy.tail) {
+            setIds(tagCopy.tail, true);
+        }
 
         if ('string' === typeof action.payload.destinationTagID &&
             'string' === typeof action.payload.position) {
