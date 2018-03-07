@@ -85,6 +85,7 @@ const Table: React.SFC<ITableProps> = (props, context: ITableContext) => {
                     onClick={onClick}
                     removeTag={removeTag}
                     connectDragSource={connectDragSource}
+                    canMove={true}
                 >
                     <table
                         className={classes}

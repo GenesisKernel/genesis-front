@@ -94,6 +94,7 @@ class Span extends React.Component<ISpanProps, ISpanState> {
                         onClick={this.onClick.bind(this)}
                         removeTag={this.removeTag.bind(this)}
                         connectDragSource={connectDragSource}
+                        canMove={true}
                     >
                     <span
                         className={classes}

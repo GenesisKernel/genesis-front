@@ -100,6 +100,7 @@ const ImageInput: React.SFC<IInputProps> = (props) => {
                     onClick={onClick}
                     removeTag={removeTag}
                     connectDragSource={connectDragSource}
+                    canMove={true}
                 >
                     <div
                         className={classes}

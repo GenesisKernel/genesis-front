@@ -139,6 +139,14 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
                                     onChange={this.onChange.bind(this, 'source')}
                                 />
                             )}
+                            { Tag.hasEditProp('condition') && (
+                                <PropertiesInput
+                                    name="condition"
+                                    title="Condition"
+                                    value={this.props.tag && this.props.tag.attr && this.props.tag.attr.condition || ''}
+                                    onChange={this.onChange.bind(this, 'condition')}
+                                />
+                            )}
                         </form>
                         <Row className="g-padding-bottom">
                             { Tag.hasEditProp('align') && (

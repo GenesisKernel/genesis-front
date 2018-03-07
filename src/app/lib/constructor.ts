@@ -21,20 +21,22 @@ import * as _ from 'lodash';
 let findTagByIdResult: {
     el: any;
     parent: any,
-    parentPosition: number
+    parentPosition: number,
+    tail: boolean
 } = {
     el: null,
     parent: null,
-    parentPosition: 0
+    parentPosition: 0,
+    tail: false
 };
 
 export const findTagById = (el: any, id: string): any => {
     findTagByIdResult.el = null;
-    findNextTagById(el, id, null);
+    findNextTagById(el, id, null, false);
     return findTagByIdResult;
 };
 
-const findNextTagById = (el: any, id: string, parent: any): any => {
+const findNextTagById = (el: any, id: string, parent: any, tail: boolean): any => {
     if (el.id === id) {
         findTagByIdResult.el = el;
         return;
@@ -46,14 +48,18 @@ const findNextTagById = (el: any, id: string, parent: any): any => {
             }
             findTagByIdResult.parent = parent;
             findTagByIdResult.parentPosition = i;
-            findNextTagById(el[i], id, parent);
+            findTagByIdResult.tail = tail;
+            findNextTagById(el[i], id, parent, false);
         }
     }
     if (findTagByIdResult.el) {
         return;
     }
     if (el.children) {
-        findNextTagById(el.children, id, el);
+        findNextTagById(el.children, id, el, false);
+    }
+    if (el.tail) {
+        findNextTagById(el.tail, id, el, true);
     }
 };
 
@@ -71,6 +77,9 @@ export function setIds(children: any[], force: boolean = false) {
         }
         if (tag.children) {
             setIds(tag.children, force);
+        }
+        if (tag.tail) {
+            setIds(tag.tail, force);
         }
     }
 }
@@ -142,8 +151,6 @@ export function convertToTreeData(data: any, selectedTag?: any): any {
                 };
                 result.push(treeItem);
             }
-
-
         }
     }
     return result;
@@ -695,7 +702,10 @@ export function getConstructorTemplate(name: string) {
 class Tag {
     protected element: IProtypoElement;
     protected tagName: string = 'Tag';
-    protected canHaveChildren: boolean = true;
+    public canHaveChildren: boolean = true;
+    protected canMove: boolean = true;
+    protected canCopy: boolean = true;
+    public canChangePosition: boolean = true;
     protected offset: number = 0;
     protected generateTextElement = true;
     protected logic = false;
@@ -1099,6 +1109,149 @@ class DBFind extends Tag {
     }
 }
 
+class If extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'If';
+        this.canHaveChildren = true;
+        this.logic = true;
+        this.attr = {
+            'condition': 'Condition'
+        };
+        this.editProps = ['condition'];
+    }
+
+    renderCode(): string {
+        let result: string = this.tagName + '(';
+
+        if (this.element && this.element.attr && this.element.attr.condition) {
+            result += this.element.attr.condition;
+        }
+        result += ')';
+
+        let body = this.renderChildren();
+        result += '{\n';
+        if (this.element.children && this.element.children.length) {
+            result += body + '\n' + this.renderOffset();
+        }
+        result += '}';
+
+        if (this.element.tail && this.element.tail.length) {
+            result += this.element.tail.map((element, index) => {
+                const TailHandler = resolveTagHandler(element.tag);
+                if (TailHandler) {
+                    let tag = new TailHandler(element);
+                    // tag.setOffset(this.offset + 1);
+                    return tag.renderCode();
+                }
+                return '';
+            }).join('');
+        }
+
+        return this.renderOffset() + result;
+    }
+
+    generateTreeJSON(text: string): any {
+        return {
+            tag: this.tagName.toLowerCase(),
+            id: generateId(),
+            attr: {
+                condition: '#value#'
+            },
+            children: [],
+            tail: [
+                {
+                    tag: 'else',
+                    id: generateId(),
+                    children: []
+                }
+            ]
+        };
+    }
+}
+
+class ElseIf extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'ElseIf';
+        this.canHaveChildren = true;
+        this.canMove = false;
+        this.canCopy = false;
+        this.canChangePosition = false;
+        this.logic = true;
+        this.attr = {
+            'condition': 'Condition'
+        };
+        this.editProps = ['condition'];
+    }
+
+    renderCode(): string {
+        let result: string = '.' + this.tagName + '(';
+
+        if (this.element && this.element.attr && this.element.attr.condition) {
+            result += this.element.attr.condition;
+        }
+
+        result += ')';
+
+        let body = this.renderChildren();
+        result += '{\n';
+        if (this.element.children && this.element.children.length) {
+            result += body + '\n' + this.renderOffset();
+        }
+        result += '}';
+        return this.renderOffset() + result;
+    }
+
+    generateTreeJSON(text: string): any {
+        return {
+            tag: this.tagName.toLowerCase(),
+            id: generateId(),
+            attr: {
+                condition: '#value#'
+            }
+        };
+    }
+}
+
+class Else extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'Else';
+        this.canHaveChildren = true;
+        this.canMove = false;
+        this.canCopy = false;
+        this.canChangePosition = false;
+        this.logic = true;
+        this.attr = {
+        };
+        this.editProps = [];
+    }
+
+    renderCode(): string {
+
+        if(this.element.children && this.element.children.length === 0)
+            return  '';
+
+        let result: string = '.' + this.tagName;
+        result += '{\n';
+        let body = this.renderChildren();
+
+        if (this.element.children && this.element.children.length) {
+            result += body + '\n' + this.renderOffset();
+        }
+        result += '}';
+        return this.renderOffset() + result;
+    }
+
+    generateTreeJSON(text: string): any {
+        return {
+            tag: this.tagName.toLowerCase(),
+            id: generateId()
+        };
+    }
+}
+
 export class CodeGenerator {
     private elements: IProtypoElement[];
     constructor(elements: IProtypoElement[]) {
@@ -1145,7 +1298,10 @@ const tagHandlers = {
 //     'select': Select,
     'span': Span,
     'strong': Strong,
-    'table': Table
+    'table': Table,
+    'if': If,
+    'elseif': ElseIf,
+    'else': Else
 };
 
 export class Properties {
@@ -1277,6 +1433,10 @@ export function getDropPosition(monitor: any, component: any, tag: any) {
     const Handler = resolveTagHandler(tag.tag);
     if (Handler) {
         tagObj = new Handler();
+    }
+
+    if (!tagObj.canChangePosition && tagObj.canHaveChildren) {
+        return 'inside';
     }
 
     if (hoverClientY < gapY || hoverClientX < gapX) {

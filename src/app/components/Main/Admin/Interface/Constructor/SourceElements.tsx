@@ -19,6 +19,7 @@ import * as _ from 'lodash';
 import SourceElement from './SourceElement';
 import CollapsedListItem from './CollapsedListItem';
 
+import imgGroup2 from 'images/constructor/group-36.svg';
 import imgGroup11 from 'images/constructor/group-11.svg';
 import imgGroup12 from 'images/constructor/group-12.svg';
 import imgGroup13 from 'images/constructor/group-13.svg';
@@ -147,6 +148,20 @@ class SourceElements extends React.Component<ISourceElementsProps, ISourceElemen
                     {
                         text: 'Table',
                         element: 'table'
+                    }
+                ]
+            },
+            {
+                text: 'Logic',
+                icon: imgGroup2,
+                items: [
+                    {
+                        text: 'DBFind',
+                        element: 'dbfind'
+                    },
+                    {
+                        text: 'If .. Else',
+                        element: 'if'
                     }
                 ]
             }

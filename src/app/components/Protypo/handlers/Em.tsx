@@ -94,6 +94,7 @@ class Em extends React.Component<IEmProps, IEmState> {
                         onClick={this.onClick.bind(this)}
                         removeTag={this.removeTag.bind(this)}
                         connectDragSource={connectDragSource}
+                        canMove={true}
                     >
                     <em
                         className={classes}

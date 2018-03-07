@@ -250,11 +250,6 @@ export default (state: State = initialState, action: Action): State => {
                             break;
                         }
                     }
-                    // let child = tag.children[0];
-                    // if (child.text) {
-                    //     child.text = action.payload.text + '';
-                    // }
-                    // tag.children = [child];
                 }
             }
 
@@ -276,6 +271,10 @@ export default (state: State = initialState, action: Action): State => {
 
             if ('string' === typeof action.payload.source) {
                 tag.attr.source = action.payload.source;
+            }
+
+            if ('string' === typeof action.payload.condition) {
+                tag.attr.condition = action.payload.condition;
             }
 
             if ('string' === typeof action.payload.class) {
@@ -475,7 +474,7 @@ export default (state: State = initialState, action: Action): State => {
             pageTree = [];
         }
 
-        let tagCopy = Object.assign({}, action.payload.tag);
+        let tagCopy = _.cloneDeep(action.payload.tag);
         // generate new id for inserted tag
         tagCopy.id = generateId();
 
@@ -568,12 +567,15 @@ export default (state: State = initialState, action: Action): State => {
             pageTree = [];
         }
 
-        let tagCopy = Object.assign({}, action.payload.tag);
+        let tagCopy = _.cloneDeep(action.payload.tag);
         // generate new id for inserted tag
         tagCopy.id = generateId();
         // generate subtags ids for copy function
         if (tagCopy.children) {
             setIds(tagCopy.children, true);
+        }
+        if (tagCopy.tail) {
+            setIds(tagCopy.tail, true);
         }
 
         if ('string' === typeof action.payload.destinationTagID &&
@@ -649,7 +651,12 @@ export default (state: State = initialState, action: Action): State => {
         // delete moved element
         let sourceTag = findTagById(pageTree.concat(), action.payload.tag.id);
         if (sourceTag.parent) {
-            sourceTag.parent.children.splice(sourceTag.parentPosition, 1);
+            if (sourceTag.tail) {
+                sourceTag.parent.tail.splice(sourceTag.parentPosition, 1);
+            }
+            else {
+                sourceTag.parent.children.splice(sourceTag.parentPosition, 1);
+            }
         }
         else {
             // root

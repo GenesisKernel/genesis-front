@@ -142,6 +142,7 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
                     onClick={onClick}
                     removeTag={removeTag}
                     connectDragSource={connectDragSource}
+                    canMove={true}
                 >
                 <button
                     className={classes}

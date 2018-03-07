@@ -38,7 +38,7 @@ export const getInterface = actionCreator.async<{ vde?: boolean }, IInterfacesRe
 
 export const getPageTreeCode = actionCreator.async<{ code: string, vde?: boolean }, { pageTreeCode: any }, string>('GET_PAGE_TREE_CODE');
 export const getPageTree = actionCreator.async<{ id: string, name: string, vde?: boolean }, { page: { name: string, tree: IProtypoElement[], error?: string } }, string>('GET_PAGE_TREE');
-export const changePage = actionCreator<{ text?: string, class?: string; name?: string; source?: string; align?: string; transform?: string; wrap?: string, color?: string; btn?: string; width?: string; ratio?: string; canDropPosition?: string; tagID: string, pageID: string, vde?: boolean }>('CHANGE_PAGE');
+export const changePage = actionCreator<{ text?: string, class?: string; name?: string; source?: string; align?: string; transform?: string; wrap?: string, color?: string; btn?: string; width?: string; ratio?: string; condition?: string; canDropPosition?: string; tagID: string, pageID: string, vde?: boolean }>('CHANGE_PAGE');
 export const setTagCanDropPosition = actionCreator<{ tagID: string, pageID: string, vde?: boolean, position: string }>('SET_TAG_CAN_DROP_POSITION');
 export const addTag = actionCreator<{ tag: any, pageID: string, vde?: boolean, destinationTagID?: string, position?: string }>('ADD_TAG');
 export const moveTag = actionCreator<{ tag: any, pageID: string, vde?: boolean, destinationTagID?: string, position?: string }>('MOVE_TAG');

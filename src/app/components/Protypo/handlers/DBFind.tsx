@@ -83,6 +83,7 @@ const DBFind: React.SFC<IDBFindProps> = (props, context: IDBFindContext) => {
                     onClick={onClick}
                     removeTag={removeTag}
                     connectDragSource={connectDragSource}
+                    canMove={true}
                 >
                     <span style={{'backgroundColor': '#FFCC66'}}>
                         DBFind
