@@ -130,6 +130,29 @@ export function convertToTreeData(data: any, selectedTag?: any): any {
                 }
             }
 
+            if (item.tail) {
+                if (!children) {
+                    children = [];
+                }
+
+                const tail = convertToTreeData(item.tail, selectedTag);
+
+                let tailTreeItem = {
+                    // title: ((item.tag !== 'text') ? item.tag : '') + ' ' + (subtitle ? subtitle : ''),
+                    title: '...',
+                    children: tail,
+                    expanded: true,
+                    id: '',
+                    selected: false,
+                    logic: true,
+                    tag: '',
+                    canMove: false,
+                    canDrop: false
+                };
+
+                children.push(tailTreeItem);
+            }
+
             let selected = false;
             if (selectedTag && selectedTag.id === item.id) {
                 selected = true;
@@ -147,6 +170,8 @@ export function convertToTreeData(data: any, selectedTag?: any): any {
                     id: item.id,
                     selected: selected,
                     logic: tagObj.isLogic(),
+                    canMove: tagObj.canMove,
+                    canDrop: tagObj.canHaveChildren,
                     tag: item
                 };
                 result.push(treeItem);
@@ -703,8 +728,8 @@ class Tag {
     protected element: IProtypoElement;
     protected tagName: string = 'Tag';
     public canHaveChildren: boolean = true;
-    protected canMove: boolean = true;
-    protected canCopy: boolean = true;
+    public canMove: boolean = true;
+    public canCopy: boolean = true;
     public canChangePosition: boolean = true;
     protected offset: number = 0;
     protected generateTextElement = true;
@@ -1230,8 +1255,9 @@ class Else extends Tag {
 
     renderCode(): string {
 
-        if(this.element.children && this.element.children.length === 0)
-            return  '';
+        if (this.element.children && this.element.children.length === 0) {
+            return '';
+        }
 
         let result: string = '.' + this.tagName;
         result += '{\n';
