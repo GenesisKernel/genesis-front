@@ -724,9 +724,59 @@ export function getConstructorTemplate(name: string) {
     return template;
 }
 
+// function parseChildrenText(el: IProtypoElement): any {
+//     let resultText = [];
+//
+//     if (!(el.tag === 'div' || el.tag === 'p' || el.tag === 'span' || el.tag === 'strong' || el.tag === 'em')) {
+//         return null;
+//     }
+//     for (let child of el.children) {
+//         if (child.tag === 'text') {
+//             switch (el.tag) {
+//                 case 'em':
+//                     return '<i>' + child.text + '</i>';
+//                 case 'strong':
+//                     return '<b>' + child.text + '</b>';
+//             }
+//             return child.text;
+//         }
+//         const text = parseChildrenText(child);
+//         if (text === null) {
+//             return null;
+//         }
+//         resultText.push(text);
+//     }
+//     return resultText.join(' ');
+// }
+
+function updateElementChildrenText(el: IProtypoElement) {
+    if (el.children) {
+        // el.childrenText = parseChildrenText(el);
+        el.childrenText = null;
+        const Handler = resolveTagHandler(el.tag);
+        if (Handler) {
+            let tag = new Handler(el);
+            el.childrenText = tag.renderHTML();
+        }
+        for (let child of el.children) {
+            updateElementChildrenText(child);
+        }
+    }
+}
+
+export function updateChildrenText(tree: IProtypoElement[]): IProtypoElement[] {
+    if (tree && tree.length) {
+        for (let el of tree) {
+            updateElementChildrenText(el);
+        }
+    }
+    return tree;
+}
+
 class Tag {
     protected element: IProtypoElement;
     protected tagName: string = 'Tag';
+    protected HTMLTag: string = null;
     public canHaveChildren: boolean = true;
     public canMove: boolean = true;
     public canCopy: boolean = true;
@@ -839,6 +889,56 @@ class Tag {
 
         return '';
     }
+    renderHTML(): string {
+        if (this.HTMLTag) {
+            let result: string = '<' + this.HTMLTag;
+            if (this.element.attr && (this.element.attr.class || this.element.attr.className)) {
+                result += ' class="' + (this.element.attr.class ? this.element.attr.class : '') + ' ' + (this.element.attr.className ? this.element.attr.className : '') + '"';
+            }
+            result += '>';
+            const children = this.renderHTMLChildren();
+            if (children === null) {
+                return null;
+            }
+            result += children;
+            result += '</' + this.HTMLTag + '>';
+            return result;
+        }
+        else {
+            return null;
+        }
+    }
+    renderHTMLChildren(): string {
+        if (!this.element.children) {
+            return '';
+        }
+        let resultArr = this.element.children.map((element, index) => {
+            switch (element.tag) {
+                case 'text':
+                    return element.text;
+                default:
+                    const Handler = resolveTagHandler(element.tag);
+                    if (Handler) {
+                        let tag = new Handler(element);
+                        return tag.renderHTML();
+                    }
+                    return '';
+            }
+        });
+
+        // if any of subtags has null -> result is null
+        if (resultArr.indexOf(null) !== -1) {
+            return null;
+        }
+
+        const result = resultArr.join(' ');
+
+        if (result.length > 0) {
+            return result;
+        }
+
+        return '';
+    }
     generateTreeJSON(text: string): any {
         return {
             tag: this.tagName.toLowerCase(),
@@ -932,6 +1032,7 @@ class P extends Tag {
     constructor(element: IProtypoElement) {
         super(element);
         this.tagName = 'P';
+        this.HTMLTag = 'p';
     }
 }
 
@@ -939,6 +1040,7 @@ class Div extends Tag {
     constructor(element: IProtypoElement) {
         super(element);
         this.tagName = 'Div';
+        this.HTMLTag = 'div';
         this.generateTextElement = false;
     }
 }
@@ -947,6 +1049,7 @@ class Span extends Tag {
     constructor(element: IProtypoElement) {
         super(element);
         this.tagName = 'Span';
+        this.HTMLTag = 'span';
     }
 }
 
@@ -954,6 +1057,7 @@ class Strong extends Tag {
     constructor(element: IProtypoElement) {
         super(element);
         this.tagName = 'Strong';
+        this.HTMLTag = 'b';
     }
 }
 
@@ -961,6 +1065,7 @@ class Em extends Tag {
     constructor(element: IProtypoElement) {
         super(element);
         this.tagName = 'Em';
+        this.HTMLTag = 'i';
     }
 }
 

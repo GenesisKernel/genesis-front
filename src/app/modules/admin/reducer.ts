@@ -19,7 +19,7 @@ import * as _ from 'lodash';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse, IHistoryResponse } from 'lib/api';
-import { findTagById, resolveTagHandler, Properties, generateId, setIds, CodeGenerator, convertToTreeData, getConstructorTemplate } from 'lib/constructor';
+import { findTagById, resolveTagHandler, Properties, generateId, setIds, CodeGenerator, convertToTreeData, getConstructorTemplate, updateChildrenText } from 'lib/constructor';
 import { IProtypoElement } from 'components/Protypo/Protypo';
 
 export type State = {
@@ -308,6 +308,8 @@ export default (state: State = initialState, action: Action): State => {
             selectedTag = _.cloneDeep(tag);
         }
 
+        updateChildrenText(pageTree);
+
         return {
             ...state,
             pending: false,
@@ -330,6 +332,8 @@ export default (state: State = initialState, action: Action): State => {
     if (isType(action, actions.selectTag)) {
         const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')];
         const pageTree = tabData && tabData.data || null;
+
+        updateChildrenText(pageTree);
 
         return {
             ...state,
@@ -448,6 +452,8 @@ export default (state: State = initialState, action: Action): State => {
             );
         }
 
+        updateChildrenText(pageTree);
+
         return {
             ...state,
             pending: false,
@@ -542,6 +548,8 @@ export default (state: State = initialState, action: Action): State => {
             }
         }
 
+        updateChildrenText(pageTree);
+
         return {
             ...state,
             pending: false,
@@ -622,6 +630,8 @@ export default (state: State = initialState, action: Action): State => {
             );
         }
 
+        updateChildrenText(pageTree);
+
         return {
             ...state,
             pending: false,
@@ -662,6 +672,8 @@ export default (state: State = initialState, action: Action): State => {
             // root
             pageTree.splice(sourceTag.parentPosition, 1);
         }
+
+        updateChildrenText(pageTree);
 
         return {
             ...state,

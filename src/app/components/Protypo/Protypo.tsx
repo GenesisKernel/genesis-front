@@ -53,6 +53,7 @@ export interface IProtypoElement {
     // attr?: { [key: string]: string };
     attr?: { [key: string]: any };  // attr can be structured
     children?: IProtypoElement[];
+    childrenText?: string;
     tail?: IProtypoElement[];
 }
 
@@ -165,6 +166,7 @@ class Protypo extends React.Component<IProtypoProps> {
                                     id={key}
                                     tag={element}
                                     childrenTree={element.children}
+                                    childrenText={element.childrenText}
                                     editable={this.props.editable}
                                     changePage={this.props.changePage}
                                     setTagCanDropPosition={this.props.setTagCanDropPosition}
@@ -190,6 +192,7 @@ class Protypo extends React.Component<IProtypoProps> {
                                 id={key}
                                 tag={element}
                                 childrenTree={element.children}
+                                childrenText={element.childrenText}
                                 editable={this.props.editable}
                                 changePage={this.props.changePage}
                                 setTagCanDropPosition={this.props.setTagCanDropPosition}

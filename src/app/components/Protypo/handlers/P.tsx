@@ -20,11 +20,14 @@ import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
+import Parser from 'html-react-parser';
+import { html2json } from 'html2json';
 
 export interface IPProps {
     'className'?: string;
     'class'?: string;
     'children': any;
+    'childrenText'?: string;
 
     'editable'?: boolean;
     'changePage'?: any;
@@ -67,11 +70,17 @@ class P extends React.Component<IPProps, IPState> {
 
     onBlur(e: any) {
         e.stopPropagation();
-        this.props.changePage({ text: e.target.innerHTML, tagID: this.props.tag.id });
+        const html = e.target.innerHTML;
+        alert(JSON.stringify(html2json(html)));
+        this.props.changePage({ text: html, tagID: this.props.tag.id });
     }
 
     removeTag() {
         this.props.removeTag({ tag: this.props.tag });
+    }
+
+    renderChildrenText() {
+        return Parser(this.props.childrenText || '');
     }
 
     render() {
@@ -96,14 +105,22 @@ class P extends React.Component<IPProps, IPState> {
                         connectDragSource={connectDragSource}
                         canMove={true}
                     >
-                    <p
-                        className={classes}
-                        contentEditable={this.props.selected}
-                        onPaste={this.onPaste.bind(this)}
-                        onBlur={this.onBlur.bind(this)}
-                    >
-                        {this.props.children}
-                    </p>
+                    {(this.props.selected && this.props.childrenText && this.props.childrenText.length >= 0) ? (
+                        <p
+                            className={classes}
+                            contentEditable={this.props.selected}
+                            onPaste={this.onPaste.bind(this)}
+                            onBlur={this.onBlur.bind(this)}
+                        >
+                            {this.props.childrenText && this.props.childrenText.length >= 0 && Parser(this.props.childrenText || '')}
+                        </p>
+                    ) : (
+                        <p
+                            className={classes}
+                        >
+                            {this.props.children}
+                        </p>
+                    )}
                     </TagWrapper>
                 </span>
             ));
