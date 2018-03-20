@@ -16,7 +16,6 @@
 
 import * as React from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { toastr } from 'react-redux-toastr';
 
 export interface ITxButtonConfirm {
     icon: string;
@@ -47,11 +46,6 @@ class TxButton extends React.Component<ITxButtonProps & InjectedIntlProps> {
         // Received non-empty transaction status, proceed to actions
         if (!props.pending && props.contractStatus && this.props.contractStatus !== props.contractStatus) {
             if (props.contractStatus.block) {
-                toastr.success(
-                    props.contractName,
-                    this.props.intl.formatMessage({ id: 'tx.imprinted.block', defaultMessage: 'Imprinted in the blockchain (block #{block})' }, { block: props.contractStatus.block }),
-                );
-
                 if (this.props.page) {
                     this.props.navigate(this.props.page, this.props.pageParams);
                 }
@@ -115,10 +109,6 @@ class TxButton extends React.Component<ITxButtonProps & InjectedIntlProps> {
                         ); break;
                     default: break;
                 }
-                toastr.error(
-                    props.contractName,
-                    this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error executing transaction' })
-                );
             }
 
             if (this.props.onExec) {

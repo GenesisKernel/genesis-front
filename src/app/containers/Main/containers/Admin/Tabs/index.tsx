@@ -23,9 +23,6 @@ import { addTabList, removeTabList } from 'modules/storage/actions';
 import styled from 'styled-components';
 import ContractEditTabbed from 'containers/Main/containers/Admin/Contracts/EditTabbed';
 import ParameterEditTabbed from 'containers/Main/containers/Admin/Parameters/EditTabbed';
-import InterfacePageEditTabbed from 'containers/Main/containers/Admin/Interface/EditPageTabbed';
-import InterfaceBlockEditTabbed from 'containers/Main/containers/Admin/Interface/EditBlockTabbed';
-import InterfaceMenuEditTabbed from 'containers/Main/containers/Admin/Interface/EditMenuTabbed';
 import InterfaceConstructorTabbed from 'containers/Main/containers/Admin/Interface/ConstructorTabbed';
 
 const Title = styled.div`
@@ -112,64 +109,37 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
         if (this.props.tabList.length) {
             for (let tabListItem of this.props.tabList) {
                 // switch components depending on tabListItem.type: page, contract, etc
-                if (tabListItem.type === 'interfacePage') {
+                if (tabListItem.type === 'interfaceConstructor') {
                     tabsContent.push(
                         <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
-                            <Title>Interface Page</Title>
-                            <InterfacePageEditTabbed name={tabListItem.id} vde={tabListItem.vde} onSave={this.onTabSave.bind(this)} random={this.state.random && this.state.random['page' + tabListItem.id + (tabListItem.vde ? 'vde' : '')]} />
+                            <Title>Interface Constructor</Title>
+                            <InterfaceConstructorTabbed pageID={tabListItem.id} pageName={tabListItem.name} vde={tabListItem.vde} onSave={this.onTabSave.bind(this)} random={this.state.random && this.state.random['page' + tabListItem.id + (tabListItem.vde ? 'vde' : '')]} />
                         </div>
                     );
                 }
                 else
-                    if (tabListItem.type === 'interfaceBlock') {
+                    if (tabListItem.type === 'contract') {
                         tabsContent.push(
-                            <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
-                                <Title>Interface Block</Title>
-                                <InterfaceBlockEditTabbed name={tabListItem.id} vde={tabListItem.vde} />
+                            <div className="fullscreen animated fadeIn" key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
+                                <Title>Smart Contract</Title>
+                                <ContractEditTabbed name={tabListItem.name} vde={tabListItem.vde} />
                             </div>
                         );
                     }
                     else
-                        if (tabListItem.type === 'interfaceMenu') {
+                        if (tabListItem.type === 'parameter') {
                             tabsContent.push(
                                 <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
-                                    <Title>Interface Menu</Title>
-                                    <InterfaceMenuEditTabbed name={tabListItem.id} vde={tabListItem.vde} />
+                                    <Title>Ecosystem Parameter</Title>
+                                    <ParameterEditTabbed parameterName={tabListItem.id} vde={tabListItem.vde} />
                                 </div>
                             );
                         }
-                        else
-                            if (tabListItem.type === 'interfaceConstructor') {
-                                tabsContent.push(
-                                    <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
-                                        <Title>Interface Constructor</Title>
-                                        <InterfaceConstructorTabbed pageID={tabListItem.id} pageName={tabListItem.name} vde={tabListItem.vde} onSave={this.onTabSave.bind(this)} random={this.state.random && this.state.random['page' + tabListItem.id + (tabListItem.vde ? 'vde' : '')]} />
-                                    </div>
-                                );
-                            }
-                            else
-                                if (tabListItem.type === 'contract') {
-                                    tabsContent.push(
-                                        <div className="fullscreen animated fadeIn" key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
-                                            <Title>Smart Contract</Title>
-                                            <ContractEditTabbed name={tabListItem.name} vde={tabListItem.vde} />
-                                        </div>
-                                    );
-                                }
-                                else
-                                    if (tabListItem.type === 'parameter') {
-                                        tabsContent.push(
-                                            <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
-                                                <Title>Ecosystem Parameter</Title>
-                                                <ParameterEditTabbed parameterName={tabListItem.id} vde={tabListItem.vde} />
-                                            </div>
-                                        );
-                                    }
-                                    else {
-                                        tabsContent.push(
-                                            <div key={tabListItem.type + tabListItem.id} />
-                                        );
-                                    }
+                        else {
+                            tabsContent.push(
+                                <div key={tabListItem.type + tabListItem.id} />
+                            );
+                        }
             }
 
         }

@@ -14,25 +14,32 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-declare module 'genesis/tx' {
-    interface ITransaction {
-        uuid: string;
-        contract: string;
-        block: string;
-        result?: string;
-        error?: {
-            type: string;
-            error: string;
-        }
-    }
+import * as React from 'react';
+import styled from 'styled-components';
 
-    interface ITransactionCall {
-        uuid: string;
-        name: string;
-        vde?: boolean;
-        silent?: boolean;
-        params: {
-            [key: string]: any;
-        };
-    }
+export interface IToolbarButton {
+    icon: string;
+    onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
+
+export interface IToolbarProps {
+    className?: string;
+}
+
+const Toolbar: React.SFC<IToolbarProps> = props => (
+    <ul className={props.className}>
+        {props.children}
+    </ul>
+);
+
+const StyledToolbar = styled(Toolbar) `
+    background: #f3f3f3;
+    height: 40px;
+    border-bottom: solid 2px #e5e5e5;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0;
+`;
+
+export default StyledToolbar;

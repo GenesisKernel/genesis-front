@@ -18,6 +18,7 @@ import * as React from 'react';
 import * as propTypes from 'prop-types';
 
 import Protypo, { IParamsSpec } from '../Protypo';
+import PageLink from 'containers/Routing/PageLink';
 
 export interface IToolButtonProps {
     title?: string;
@@ -29,30 +30,19 @@ export interface IToolButtonProps {
 interface IToolButtonContext {
     protypo: Protypo;
     vde?: boolean;
-    navigatePage: (params: { name: string, params: any, vde?: boolean }) => void;
 }
 
-const ToolButton: React.SFC<IToolButtonProps> = (props, context: IToolButtonContext) => {
-    const onClick = () => {
-        context.navigatePage({
-            name: props.page,
-            params: context.protypo.resolveParams(props.pageparams),
-            vde: context.vde
-        });
-    };
-
-    return (
-        <button className="btn btn-default ml" onClick={onClick}>
-            <em className={`fa fa-fw mr-sm ${props.icon || ''}`} />
+const ToolButton: React.SFC<IToolButtonProps> = (props, context: IToolButtonContext) => (
+    <PageLink className="ml btn-tool" page={props.page} params={context.protypo.resolveParams(props.pageparams)} vde={context.vde}>
+        <em className={`icon ${props.icon}`} />
+        <span>
             <span>{props.title}</span>
-        </button>
-    );
-};
+        </span>
+    </PageLink>
+);
 
 ToolButton.contextTypes = {
-    form: propTypes.object,
     protypo: propTypes.object.isRequired,
-    navigatePage: propTypes.func.isRequired,
     vde: propTypes.bool
 };
 

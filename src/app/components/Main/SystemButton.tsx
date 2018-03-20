@@ -14,25 +14,20 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-declare module 'genesis/tx' {
-    interface ITransaction {
-        uuid: string;
-        contract: string;
-        block: string;
-        result?: string;
-        error?: {
-            type: string;
-            error: string;
-        }
-    }
+import styled from 'styled-components';
 
-    interface ITransactionCall {
-        uuid: string;
-        name: string;
-        vde?: boolean;
-        silent?: boolean;
-        params: {
-            [key: string]: any;
-        };
+import DropdownButton from 'components/DropdownButton';
+
+const StyledSystemButton = styled(DropdownButton) `
+    background: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    transition: background ease-in-out .17s;
+
+    &:hover {
+        background: rgba(0,0,0,0.1);
     }
-}
+`;
+
+export default StyledSystemButton;

@@ -14,25 +14,24 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-declare module 'genesis/tx' {
-    interface ITransaction {
-        uuid: string;
-        contract: string;
-        block: string;
-        result?: string;
-        error?: {
-            type: string;
-            error: string;
-        }
-    }
+import { Action } from 'redux';
+import { Epic } from 'redux-observable';
+import { IRootState } from 'modules';
+import { txExec } from 'modules/tx/actions';
+import { reloadEditorTab } from '../actions';
 
-    interface ITransactionCall {
-        uuid: string;
-        name: string;
-        vde?: boolean;
-        silent?: boolean;
-        params: {
-            [key: string]: any;
-        };
-    }
-}
+const editMenuEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(txExec.done)
+        .filter(l => /^(@1)?EditMenu$/.test(l.payload.params.tx.name) && 'string' === typeof l.payload.params.tx.params.Value)
+        .map(action => {
+            const params = action.payload.params.tx.params as { Id: string, Value?: string };
+            return reloadEditorTab({
+                type: 'menu',
+                id: params.Id,
+                data: {
+                    initialValue: params.Value
+                }
+            });
+        });
+
+export default editMenuEpic;

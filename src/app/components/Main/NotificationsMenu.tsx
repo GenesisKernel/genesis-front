@@ -19,7 +19,7 @@ import Protypo from 'containers/Widgets/Protypo';
 import { FormattedMessage } from 'react-intl';
 import { TProtypoElement } from 'genesis/protypo';
 
-import DropdownButton from 'components/DropdownButton';
+import SystemButton from './SystemButton';
 
 export interface INotificationsMenuProps {
     count: number;
@@ -27,7 +27,7 @@ export interface INotificationsMenuProps {
 }
 
 const NotificationsMenu: React.SFC<INotificationsMenuProps> = props => (
-    <DropdownButton
+    <SystemButton
         align="right"
         width={250}
         badge={props.count}
@@ -43,7 +43,7 @@ const NotificationsMenu: React.SFC<INotificationsMenuProps> = props => (
         )}
     >
         <em className="icon icon-flag" />
-    </DropdownButton>
+    </SystemButton>
 );
 
 export default NotificationsMenu;

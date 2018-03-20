@@ -19,15 +19,23 @@ import { IModal, TModalResultReason } from 'genesis/modal';
 import { styles } from 'components/Main';
 
 import Wrapper from 'components/Modal/Wrapper';
+import DebugContractModal from 'components/Modal/Editor/DebugContractModal';
 import PromptModal from 'components/Modal/PromptModal';
 import ImageEditorModal from 'components/Modal/ImageEditorModal';
 import MapEditorModal from 'components/Modal/MapEditorModal';
 import AboutModal from 'components/Modal/AboutModal';
+import ConfirmModal from './ConfirmModal';
+import CreatePageModal from 'components/Modal/Editor/CreatePageModal';
+import CreateInterfaceModal from 'components/Modal/Editor/CreateInterfaceModal';
 
 const MODAL_COMPONENTS = {
+    'CREATE_PAGE': CreatePageModal,
+    'CREATE_INTERFACE': CreateInterfaceModal,
+    'DEBUG_CONTRACT': DebugContractModal,
     'IMAGE_EDITOR': ImageEditorModal,
     'MAP_EDITOR': MapEditorModal,
     'PROMPT': PromptModal,
+    'CONFIRM': ConfirmModal,
     'ABOUT': AboutModal
 };
 

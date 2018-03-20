@@ -18,6 +18,7 @@ import { IRootState } from 'modules';
 import { combineEpics, Epic } from 'redux-observable';
 import { Action } from 'redux';
 import { Observable } from 'rxjs';
+import { toastr } from 'react-redux-toastr';
 import swal from 'sweetalert2';
 import * as Promise from 'bluebird';
 import * as _ from 'lodash';
@@ -49,7 +50,7 @@ export const txCallEpic: Epic<Action, IRootState> =
                                 return Observable.of(actions.txExec.started({
                                     tx: action.payload,
                                     privateKey: keyring.decryptAES(store.getState().auth.account.encKey, result.payload.result)
-                                }));
+                                }, action.meta));
                             }
                             else {
                                 return Observable.empty<never>();
@@ -163,8 +164,10 @@ export const txExecEpic: Epic<Action, IRootState> =
                     .flatMap(payload => {
                         // We must listen to this transaction or we will never catch
                         // the ID of newly created ecosystem. Contract name is constant
-                        const hooks: Observable<any>[] = [];
-                        switch (action.payload.tx.name) {
+                        const hooks: Observable<Action>[] = [];
+                        const contractName = /^(@[0-9]+)?(.*)$/i.exec(action.payload.tx.name)[2];
+
+                        switch (contractName) {
                             case 'NewEcosystem':
                                 const ecosystemName = (action.payload.tx.params && action.payload.tx.params.Name) || payload.result;
                                 const account = state.auth.account;
@@ -190,6 +193,13 @@ export const txExecEpic: Epic<Action, IRootState> =
                                 break;
                         }
 
+                        if (!action.payload.tx.silent) {
+                            toastr.success(
+                                action.payload.tx.name,
+                                state.engine.intl.formatMessage({ id: 'tx.imprinted.block', defaultMessage: 'Imprinted in the blockchain (block #{block})' }, { block: payload.blockid }),
+                            );
+                        }
+
                         return Observable.concat(
                             ...hooks,
                             Observable.of(authActions.authorize({
@@ -197,16 +207,27 @@ export const txExecEpic: Epic<Action, IRootState> =
                             })),
                             Observable.of(actions.txExec.done({
                                 params: action.payload,
-                                result: payload.blockid
-                            })));
+                                result: {
+                                    block: payload.blockid,
+                                    result: payload.result
+                                }
+                            }, action.meta)));
                     })
-                    .catch((error: IAPIError & ITxStatusResponse) => Observable.of(actions.txExec.failed({
-                        params: action.payload,
-                        error: {
-                            type: error.errmsg ? error.errmsg.type : error.error,
-                            error: error.errmsg ? error.errmsg.error : error.msg
+                    .catch((error: IAPIError & ITxStatusResponse) => {
+                        if (!action.payload.tx.silent) {
+                            toastr.error(
+                                action.payload.tx.name,
+                                state.engine.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error executing transaction' })
+                            );
                         }
-                    })));
+                        return Observable.of(actions.txExec.failed({
+                            params: action.payload,
+                            error: {
+                                type: error.errmsg ? error.errmsg.type : error.error,
+                                error: error.errmsg ? error.errmsg.error : error.msg
+                            }
+                        }));
+                    });
             }
             else {
                 return Observable.of(actions.txExec.failed({

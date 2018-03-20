@@ -35,6 +35,8 @@ const StyledDropdown = styled.div`
         line-height: 40px;
         padding: 0 10px;
         text-align: center;
+        position: relative;
+        z-index: 1000;
 
         .dropdown-badge {
             position: absolute;
@@ -65,6 +67,11 @@ const StyledDropdown = styled.div`
 
         &.dropdown-rightmost {
             border-right: none;
+        }
+
+        &.icon-left .dropdown-group > li button > .icon {
+            float: left;
+            margin-right: 12px;
         }
 
         .dropdown-heading {
@@ -142,6 +149,7 @@ export interface IDropdownButtonProps {
     align?: 'left' | 'right';
     width?: number;
     badge?: number;
+    disabled?: boolean;
     onClick?: React.EventHandler<React.MouseEvent<HTMLButtonElement>>;
 }
 
@@ -187,14 +195,14 @@ class DropdownButton extends React.Component<IDropdownButtonProps & InjectedOnCl
     render() {
         return (
             <StyledDropdown className={this.state.active ? 'dropdown-active' : ''}>
-                <button className={classNames('dropdown-toggle', this.props.className)} onClick={this.onClick.bind(this)}>
+                <button disabled={this.props.disabled} className={classNames('dropdown-toggle', this.props.className)} onClick={this.onClick.bind(this)}>
                     {this.props.children}
                     {this.props.badge ? (
                         <span className="dropdown-badge">{Math.min(this.props.badge, 99)}</span>
                     ) : null}
                 </button>
                 <Dropdown visible={this.state.active} align={this.props.align} width={this.props.width}>
-                    <div className={classNames('dropdown-content', { 'dropdown-leftmost': this.props.leftMost, 'dropdown-rightmost': this.props.rightMost })}>
+                    <div className={classNames('dropdown-content', { 'dropdown-leftmost': this.props.leftMost, 'dropdown-rightmost': this.props.rightMost, 'icon-left': 'left' === this.props.align })}>
                         {this.props.content}
                     </div>
                 </Dropdown>

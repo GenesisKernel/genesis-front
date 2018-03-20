@@ -20,8 +20,9 @@ import imgAvatar from 'images/avatar.svg';
 import { FormattedMessage } from 'react-intl';
 import { IStoredAccount } from 'genesis/storage';
 
-import DropdownButton, { CloseDropdownButton } from 'components/DropdownButton';
+import { CloseDropdownButton } from 'components/DropdownButton';
 import PageLink from 'containers/Routing/PageLink';
+import SystemButton from './SystemButton';
 
 const StyledUserMenu = styled.div`
     -webkit-app-region: no-drag;
@@ -82,7 +83,7 @@ export interface IUserMenuProps {
 class UserMenu extends React.Component<IUserMenuProps> {
     render() {
         return this.props.account ? (
-            <DropdownButton
+            <SystemButton
                 className="p0"
                 width={225}
                 align="right"
@@ -157,7 +158,7 @@ class UserMenu extends React.Component<IUserMenuProps> {
                     </div>
                     <img className="user-avatar" src={this.props.account.avatar || imgAvatar} />
                 </StyledUserMenu>
-            </DropdownButton>
+            </SystemButton>
         ) : null;
     }
 }

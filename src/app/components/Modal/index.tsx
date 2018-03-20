@@ -40,6 +40,7 @@ const StyledHeader = styled.div`
 
 const StyledBody = styled.div`
     padding: 15px;
+    min-width: 300px;
 `;
 
 const StyledFooter = styled.div`

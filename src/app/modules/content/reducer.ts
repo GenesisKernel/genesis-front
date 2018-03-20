@@ -18,7 +18,7 @@ import * as actions from './actions';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { TProtypoElement } from 'genesis/protypo';
-import { TSection } from 'genesis/content';
+import { TSection, TEditorTab } from 'genesis/content';
 import { IModal } from 'genesis/modal';
 
 export type State = {
@@ -29,6 +29,11 @@ export type State = {
     readonly section: string;
     readonly sections: {
         readonly [name: string]: TSection;
+    };
+    readonly editor: {
+        pending: boolean;
+        tabIndex: number;
+        tabs: TEditorTab[];
     };
     readonly notifications: TProtypoElement[];
     readonly alert: { id: string, success: string, error: string };
@@ -89,7 +94,26 @@ export const initialState: State = {
             menus: [],
             menuVisible: true,
             page: null
+        },
+        editor: {
+            name: 'editor',
+            title: 'Editor',
+            visible: false,
+            closeable: true,
+            defaultPage: 'editor',
+            pending: false,
+            force: false,
+            vde: false,
+            menus: [],
+            menuDisabled: true,
+            menuVisible: true,
+            page: null
         }
+    },
+    editor: {
+        pending: false,
+        tabIndex: 0,
+        tabs: []
     },
     notifications: null,
     alert: null,
@@ -539,6 +563,19 @@ export default (state: State = initialState, action: Action): State => {
         } : state;
     }
 
+    if (isType(action, actions.closeSection)) {
+        return state.sections[action.payload] ? {
+            ...state,
+            sections: {
+                ...state.sections,
+                [action.payload]: {
+                    ...state.sections[action.payload],
+                    visible: false
+                }
+            }
+        } : state;
+    }
+
     if (isType(action, actions.setVDEAvailable)) {
         return {
             ...state,
@@ -548,6 +585,209 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.sections.vdeadmin,
                     visible: action.payload
                 }
+            }
+        };
+    }
+
+    if (isType(action, actions.changeEditorTab)) {
+        return {
+            ...state,
+            editor: {
+                ...state.editor,
+                tabIndex: action.payload
+            }
+        };
+    }
+
+    if (isType(action, actions.closeEditorTab)) {
+        return {
+            ...state,
+            sections: {
+                ...state.sections,
+                editor: {
+                    ...state.sections.editor,
+                    visible: 1 < state.editor.tabs.length
+                }
+            },
+            editor: {
+                ...state.editor,
+                tabIndex: state.editor.tabIndex >= state.editor.tabs.length - 1 ? state.editor.tabs.length - 2 : state.editor.tabIndex,
+                tabs: [
+                    ...state.editor.tabs.slice(0, action.payload),
+                    ...state.editor.tabs.slice(action.payload + 1),
+                ]
+            }
+        };
+    }
+
+    if (isType(action, actions.updateEditorTab)) {
+        return {
+            ...state,
+            editor: {
+                ...state.editor,
+                tabs: [
+                    ...state.editor.tabs.slice(0, state.editor.tabIndex),
+                    {
+                        ...state.editor.tabs[state.editor.tabIndex],
+                        value: action.payload,
+                        dirty: state.editor.tabs[state.editor.tabIndex].initialValue !== action.payload
+                    },
+                    ...state.editor.tabs.slice(state.editor.tabIndex + 1),
+                ]
+            }
+        };
+    }
+
+    if (isType(action, actions.revertEditorTab)) {
+        return {
+            ...state,
+            editor: {
+                ...state.editor,
+                tabs: [
+                    ...state.editor.tabs.slice(0, action.payload),
+                    {
+                        ...state.editor.tabs[action.payload],
+                        value: state.editor.tabs[action.payload].initialValue,
+                        dirty: false
+                    },
+                    ...state.editor.tabs.slice(action.payload + 1),
+                ]
+            }
+        };
+    }
+
+    if (isType(action, actions.createEditorTab.done)) {
+        return {
+            ...state,
+            sections: {
+                ...state.sections,
+                editor: {
+                    ...state.sections.editor,
+                    visible: true
+                }
+            },
+            editor: {
+                ...state.editor,
+                tabs: [
+                    ...state.editor.tabs,
+                    {
+                        type: action.payload.params,
+                        id: action.payload.result.id,
+                        new: true,
+                        name: action.payload.result.name,
+                        tool: 'editor',
+                        value: action.payload.result.value,
+                        initialValue: action.payload.result.value,
+                        vde: false,
+                        dirty: false
+                    }
+                ],
+                tabIndex: state.editor.tabs.length
+            }
+        };
+    }
+
+    if (isType(action, actions.loadEditorTab.done)) {
+        const tabIndex = state.editor.tabs.findIndex(l =>
+            l.name === action.payload.result.name &&
+            l.type === action.payload.result.type &&
+            l.vde === action.payload.result.vde
+        );
+
+        const tabs = -1 === tabIndex ?
+            [
+                ...state.editor.tabs,
+                {
+                    ...action.payload.result
+                }
+            ] : [
+                ...state.editor.tabs.slice(0, tabIndex),
+                {
+                    ...state.editor.tabs[tabIndex],
+                    initialValue: action.payload.result.initialValue,
+                    dirty: action.payload.result.initialValue !== state.editor.tabs[tabIndex].value
+                },
+                ...state.editor.tabs.slice(tabIndex + 1)
+            ];
+
+        return {
+            ...state,
+            sections: {
+                ...state.sections,
+                editor: {
+                    ...state.sections.editor,
+                    visible: true
+                }
+            },
+            editor: {
+                ...state.editor,
+                tabIndex: -1 === tabIndex ? tabs.length - 1 : tabIndex,
+                tabs
+            }
+        };
+    }
+
+    if (isType(action, actions.reloadEditorTab)) {
+        const index = state.editor.tabs.findIndex(l =>
+            l.type === action.payload.type &&
+            l.id === action.payload.id
+        );
+        const value = state.editor.tabs[index];
+
+        if (-1 === index) {
+            return state;
+        }
+        else {
+            return {
+                ...state,
+                editor: {
+                    ...state.editor,
+                    tabs: [
+                        ...state.editor.tabs.slice(0, index),
+                        {
+                            ...value,
+                            ...action.payload.data,
+                            dirty: 'boolean' === typeof action.payload.data.dirty ?
+                                action.payload.data.dirty :
+                                (value.value !== (action.payload.data.initialValue || value.initialValue))
+                        },
+                        ...state.editor.tabs.slice(index + 1)
+                    ]
+                }
+            };
+        }
+    }
+
+    if (isType(action, actions.changeEditorTool.started)) {
+        return {
+            ...state,
+            editor: {
+                ...state.editor,
+                tabs: [
+                    ...state.editor.tabs.slice(0, state.editor.tabIndex),
+                    {
+                        ...state.editor.tabs[state.editor.tabIndex],
+                        tool: action.payload,
+                        preview: null
+                    },
+                    ...state.editor.tabs.slice(state.editor.tabIndex + 1),
+                ]
+            }
+        };
+    }
+    else if (isType(action, actions.changeEditorTool.done)) {
+        return {
+            ...state,
+            editor: {
+                ...state.editor,
+                tabs: [
+                    ...state.editor.tabs.slice(0, state.editor.tabIndex),
+                    {
+                        ...state.editor.tabs[state.editor.tabIndex],
+                        preview: action.payload.result
+                    },
+                    ...state.editor.tabs.slice(state.editor.tabIndex + 1),
+                ]
             }
         };
     }

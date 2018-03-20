@@ -17,7 +17,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { toastr } from 'react-redux-toastr';
 import { Map } from 'immutable';
 import { IRootState } from 'modules';
 import { txCall } from 'modules/tx/actions';
@@ -28,6 +27,7 @@ import Validation from 'components/Validation';
 
 interface IValidatedContractFormProps {
     vde?: boolean;
+    silent?: boolean;
     className?: string;
     contractName: string;
     mapContractParams: (values: { [key: string]: any }) => { [key: string]: any };
@@ -56,20 +56,7 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
         if (this._pending && transaction && (transaction.block || transaction.error)) {
             this._pending = false;
 
-            if (transaction.block) {
-                toastr.success(
-                    props.contractName,
-                    this.props.intl.formatMessage(
-                        {
-                            id: 'tx.imprinted.block',
-                            defaultMessage: 'Imprinted in the blockchain (block #{block})'
-                        }, {
-                            block: transaction.block
-                        }
-                    ),
-                );
-            }
-            else if (transaction.error) {
+            if (!props.silent && transaction.error) {
                 switch (transaction.error.type) {
                     case 'E_INVALID_PASSWORD':
                         this.alert(
@@ -128,10 +115,6 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
                         ); break;
                     default: break;
                 }
-                toastr.error(
-                    props.contractName,
-                    this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error executing transaction' })
-                );
                 this._uuid = uuid.v4();
             }
 
@@ -158,6 +141,7 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
             vde: this.props.vde,
             uuid: this._uuid,
             name: this.props.contractName,
+            silent: this.props.silent,
             params
         });
     }

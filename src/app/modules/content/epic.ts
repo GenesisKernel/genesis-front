@@ -15,7 +15,7 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as queryString from 'query-string';
-import api, { IAPIError } from 'lib/api';
+import api, { IAPIError, IContract } from 'lib/api';
 import { Action } from 'redux';
 import { Observable } from 'rxjs';
 import { combineEpics, Epic } from 'redux-observable';
@@ -27,6 +27,15 @@ import * as storageActions from 'modules/storage/actions';
 import { history } from 'store';
 import { navigate } from 'modules/engine/actions';
 import { LEGACY_PAGES, VDE_LEGACY_PAGES } from 'lib/legacyPages';
+import editContractEpic from './epics/editContractEpic';
+import newContractEpic from './epics/newContractEpic';
+import editPageEpic from './epics/editPageEpic';
+import editorSaveEpic from './epics/editorSaveEpic';
+import newPageEpic from './epics/newPageEpic';
+import editMenuEpic from './epics/editMenuEpic';
+import editBlockEpic from './epics/editBlockEpic';
+import newMenuEpic from './epics/newMenuEpic';
+import newBlockEpic from './epics/newBlockEpic';
 
 export const navigatePageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.navigatePage.started)
@@ -82,31 +91,41 @@ export const renderPageEpic: Epic<Action, IRootState> =
 export const renderLegacyPageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.renderLegacyPage.started)
         .flatMap(action => {
-            const state = store.getState();
-            return Observable.fromPromise(api.contentMenu(state.auth.sessionToken, action.payload.menu, action.payload.vde))
-                .map(payload =>
-                    actions.renderLegacyPage.done({
-                        params: action.payload,
-                        result: {
-                            menu: {
-                                name: action.payload.menu,
-                                vde: action.payload.vde,
-                                content: payload.tree
+            if (action.payload.menu) {
+                const state = store.getState();
+                return Observable.fromPromise(api.contentMenu(state.auth.sessionToken, action.payload.menu, action.payload.vde))
+                    .map(payload =>
+                        actions.renderLegacyPage.done({
+                            params: action.payload,
+                            result: {
+                                menu: {
+                                    name: action.payload.menu,
+                                    vde: action.payload.vde,
+                                    content: payload.tree
+                                }
                             }
-                        }
-                    })
-                )
-                .catch(error =>
-                    Observable.of(actions.renderLegacyPage.done({
-                        params: action.payload,
-                        result: {
-                            menu: {
-                                name: action.payload.menu,
-                                vde: action.payload.vde,
-                                content: []
+                        })
+                    )
+                    .catch(error =>
+                        Observable.of(actions.renderLegacyPage.done({
+                            params: action.payload,
+                            result: {
+                                menu: {
+                                    name: action.payload.menu,
+                                    vde: action.payload.vde,
+                                    content: []
+                                }
                             }
-                        }
-                    })));
+                        })));
+            }
+            else {
+                return Observable.of(actions.renderLegacyPage.done({
+                    params: action.payload,
+                    result: {
+                        menu: null
+                    }
+                }));
+            }
         });
 
 export const reloadPageEpic: Epic<Action, IRootState> =
@@ -295,13 +314,206 @@ export const displayDataEpic: Epic<Action, IRootState> =
                 );
         });
 
-export const switchSectionEpic: Epic<Action, IRootState> =
+export const renderSectionEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.renderSection)
         .map(action => {
             const state = store.getState();
             const section = state.content.sections[action.payload];
             const params = section.page ? queryString.stringify(section.page.params) : '';
             return navigate(`/${section.name}/${section.page ? section.page.name : ''}${params ? '?' + params : ''}`);
+        });
+
+export const closeSectionEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.closeSection)
+        .flatMap(action => {
+            const state = store.getState();
+            if (action.payload === state.content.section) {
+                return Observable.of(actions.renderSection('home'));
+            }
+            else {
+                return Observable.empty<never>();
+            }
+        });
+
+export const createEditorTabEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.createEditorTab.started)
+        .delay(0)
+        .map(action => {
+            const state = store.getState();
+
+            const ids = state.content.editor.tabs
+                .filter(l => l.new)
+                .map(l => l.id)
+                .sort();
+
+            const id = (ids.length ? parseInt(ids[ids.length - 1], 10) + 1 : 1).toString();
+            const name = state.engine.intl.formatMessage({
+                id: 'editor.untitled',
+                defaultMessage: 'Untitled-{id}'
+            }, { id });
+
+            switch (action.payload) {
+                case 'contract':
+                    return actions.createEditorTab.done({
+                        params: action.payload,
+                        result: {
+                            id,
+                            name,
+                            value: `contract ${name} {\n    data {\n\n    }\n    conditions {\n\n    }\n    action {\n\n    }\n}`
+                        }
+                    });
+
+                case 'page':
+                case 'block':
+                case 'menu':
+                    return actions.createEditorTab.done({
+                        params: action.payload,
+                        result: {
+                            id,
+                            name,
+                            value: ''
+                        }
+                    });
+
+                default: return actions.createEditorTab.failed({
+                    params: action.payload,
+                    error: null
+                });
+            }
+        });
+
+export const loadEditorTabEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.loadEditorTab.started)
+        .flatMap(action => {
+            const state = store.getState();
+            const nameParser = /^(@[0-9]+)?(.*)$/i;
+
+            history.replace('/editor');
+
+            switch (action.payload.type) {
+                case 'contract':
+                    return Observable.from(
+                        api.contract(state.auth.sessionToken, action.payload.name, action.payload.vde)
+                            .then(contract =>
+                                api.row(state.auth.sessionToken, 'contracts', contract.tableid.toString(), undefined, action.payload.vde)
+                                    .then(row => ({
+                                        id: contract.tableid.toString(),
+                                        name: nameParser.exec(contract.name)[2],
+                                        contract: row.value as IContract
+                                    }))
+                            ))
+                        .map(data =>
+                            actions.loadEditorTab.done({
+                                params: action.payload,
+                                result: {
+                                    type: 'contract',
+                                    id: data.id,
+                                    new: false,
+                                    name: data.name,
+                                    tool: 'editor',
+                                    value: data.contract.value,
+                                    initialValue: data.contract.value,
+                                    vde: action.payload.vde,
+                                    dirty: false
+                                }
+                            })
+                        );
+
+                case 'page':
+                    return Observable.from(api.findPage(state.auth.sessionToken, action.payload.name, action.payload.vde))
+                        .map(data =>
+                            actions.loadEditorTab.done({
+                                params: action.payload,
+                                result: {
+                                    type: 'page',
+                                    id: data.id.toString(),
+                                    new: false,
+                                    name: data.name,
+                                    tool: 'editor',
+                                    value: data.value,
+                                    initialValue: data.value,
+                                    vde: action.payload.vde,
+                                    dirty: false
+                                }
+                            })
+                        );
+
+                case 'menu':
+                    return Observable.from(api.findMenu(state.auth.sessionToken, action.payload.name, action.payload.vde))
+                        .map(data =>
+                            actions.loadEditorTab.done({
+                                params: action.payload,
+                                result: {
+                                    type: 'menu',
+                                    id: data.id.toString(),
+                                    new: false,
+                                    name: data.name,
+                                    tool: 'editor',
+                                    value: data.value,
+                                    initialValue: data.value,
+                                    vde: action.payload.vde,
+                                    dirty: false
+                                }
+                            })
+                        );
+
+                case 'block':
+                    return Observable.from(api.findBlock(state.auth.sessionToken, action.payload.name, action.payload.vde))
+                        .map(data =>
+                            actions.loadEditorTab.done({
+                                params: action.payload,
+                                result: {
+                                    type: 'block',
+                                    id: data.id.toString(),
+                                    new: false,
+                                    name: data.name,
+                                    tool: 'editor',
+                                    value: data.value,
+                                    initialValue: data.value,
+                                    vde: action.payload.vde,
+                                    dirty: false
+                                }
+                            })
+                        );
+
+                default:
+                    return Observable.of(actions.loadEditorTab.failed({
+                        params: action.payload,
+                        error: null
+                    }));
+            }
+        })
+        .catch((error: IAPIError) =>
+            Observable.of(actions.loadEditorTab.failed({
+                params: null,
+                error
+            }))
+        );
+
+export const changeEditorToolEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.changeEditorTool.started)
+        .flatMap(action => {
+            const state = store.getState();
+
+            switch (action.payload) {
+                case 'preview':
+                    const payload = state.content.editor.tabs[state.content.editor.tabIndex].value;
+                    return Observable.fromPromise(api.contentTest(state.auth.sessionToken, payload))
+                        .map(result => actions.changeEditorTool.done({
+                            params: action.payload,
+                            result: result.tree
+                        }))
+                        .catch(e => Observable.of(actions.changeEditorTool.failed({
+                            params: action.payload,
+                            error: e
+                        })));
+
+                default:
+                    return Observable.of(actions.changeEditorTool.done({
+                        params: action.payload,
+                        result: null
+                    }));
+            }
         });
 
 export default combineEpics(
@@ -314,5 +526,19 @@ export default combineEpics(
     navigatePageEpic,
     fetchNotificationsEpic,
     displayDataEpic,
-    switchSectionEpic
+    renderSectionEpic,
+    closeSectionEpic,
+    createEditorTabEpic,
+    loadEditorTabEpic,
+    editorSaveEpic,
+    changeEditorToolEpic,
+
+    newContractEpic,
+    newPageEpic,
+    newMenuEpic,
+    newBlockEpic,
+    editContractEpic,
+    editPageEpic,
+    editMenuEpic,
+    editBlockEpic
 );

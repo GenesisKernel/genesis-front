@@ -34,6 +34,8 @@ declare module 'genesis/content' {
 
     type TSection = {
         readonly visible: boolean;
+        readonly closeable?: boolean;
+        readonly menuDisabled?: boolean;
         readonly menuVisible: boolean;
         readonly pending: boolean;
         readonly name: string;
@@ -44,4 +46,17 @@ declare module 'genesis/content' {
         readonly page: TPage;
         readonly vde: boolean;
     }
+
+    type TEditorTab = {
+        readonly type: string;
+        readonly id: string;
+        readonly new: boolean;
+        readonly name: string;
+        readonly tool: string;
+        readonly value: string;
+        readonly initialValue: string;
+        readonly preview?: TProtypoElement[];
+        readonly vde: boolean;
+        readonly dirty: boolean;
+    };
 }

@@ -35,19 +35,19 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
             <Heading>
                 <FormattedMessage id="admin.interface" defaultMessage="Interface" />
                 <div className="pull-right">
-                    <PageLink className="ml btn-tool" page="create-page" vde={props.vde}>
+                    <PageLink className="ml btn-tool" page="editor" params={{ create: 'page' }} vde={props.vde}>
                         <em className="icon icon-plus" />
                         <span>
                             <FormattedMessage id="admin.interface.page.create" defaultMessage="Create page" />
                         </span>
                     </PageLink>
-                    <PageLink className="ml btn-tool" page="create-block" vde={props.vde}>
+                    <PageLink className="ml btn-tool" page="editor" params={{ create: 'block' }} vde={props.vde}>
                         <em className="icon icon-plus" />
                         <span>
                             <FormattedMessage id="admin.interface.block.create" defaultMessage="Create block" />
                         </span>
                     </PageLink>
-                    <PageLink className="ml btn-tool" page="create-menu" vde={props.vde}>
+                    <PageLink className="ml btn-tool" page="editor" params={{ create: 'menu' }} vde={props.vde}>
                         <em className="icon icon-plus" />
                         <span>
                             <FormattedMessage id="admin.interface.menu.create" defaultMessage="Create menu" />
@@ -82,7 +82,7 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                                         )}
                                                     </td>
                                                     <td style={{ width: 1 }}>
-                                                        <PageLink className="btn btn-labeled btn-icon btn-default" page="edit-page" params={{ name: page.name }} vde={props.vde}>
+                                                        <PageLink className="btn btn-labeled btn-icon btn-default" page="editor" params={{ open: 'page', name: page.name, vde: Boolean(props.vde).toString() }}>
                                                             <span className="btn-label">
                                                                 <em className="fa fa-edit" />
                                                             </span>
@@ -131,7 +131,7 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                                         )}
                                                     </td>
                                                     <td style={{ width: 1 }}>
-                                                        <PageLink className="btn btn-labeled btn-icon btn-default" page="edit-menu" params={{ name: menu.name }} vde={props.vde}>
+                                                        <PageLink className="btn btn-labeled btn-icon btn-default" page="editor" params={{ open: 'menu', name: menu.name, vde: Boolean(props.vde).toString() }}>
                                                             <span className="btn-label">
                                                                 <em className="fa fa-edit" />
                                                             </span>
@@ -170,7 +170,7 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                                                 <tr key={block.id}>
                                                     <td>{block.name}</td>
                                                     <td style={{ width: 1 }}>
-                                                        <PageLink className="btn btn-labeled btn-icon btn-default" page="edit-block" params={{ id: block.id }} vde={props.vde}>
+                                                        <PageLink className="btn btn-labeled btn-icon btn-default" page="editor" params={{ open: 'block', name: block.name, vde: Boolean(props.vde).toString() }}>
                                                             <span className="btn-label">
                                                                 <em className="fa fa-edit" />
                                                             </span>

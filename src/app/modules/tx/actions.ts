@@ -20,4 +20,4 @@ import { ITransactionCall } from 'genesis/tx';
 const actionCreator = actionCreatorFactory('tx');
 export const txCall = actionCreator<ITransactionCall>('TX_CALL');
 export const txAuthorize = actionCreator.async<{ contract: string }, string, void>('TX_AUTHORIZE');
-export const txExec = actionCreator.async<{ tx: ITransactionCall, privateKey: string }, string, { type: string, error: string }>('TX_EXEC');
+export const txExec = actionCreator.async<{ tx: ITransactionCall, privateKey: string }, { block: string, result: string }, { type: string, error: string }>('TX_EXEC');

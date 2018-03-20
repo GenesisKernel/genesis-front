@@ -18,7 +18,7 @@ import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Route } from 'react-router-dom';
 import { IRootState } from 'modules';
-import { reloadPage, navigationToggle, renderSection, navigatePage } from 'modules/content/actions';
+import { reloadPage, navigationToggle, renderSection, navigatePage, closeSection } from 'modules/content/actions';
 
 import Main, { IMainProps } from 'components/Main';
 import DefaultPage from 'containers/Main/containers/DefaultPage';
@@ -61,7 +61,7 @@ const mapStateToProps = (state: IRootState) => ({
     section: state.content.section,
     sections: state.content.sections,
     navigationSize: state.storage.navigationSize,
-    navigationVisible: state.content.sections[state.content.section].menuVisible,
+    navigationVisible: state.content.sections[state.content.section].menuDisabled ? false : state.content.sections[state.content.section].menuVisible,
     transactionsCount: state.tx.transactions.count(),
     pendingTransactions: state.tx.transactions.takeLast(5)
 });
@@ -78,6 +78,9 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
     },
     onSwitchSection: (section: string) => {
         dispatch(renderSection(section));
+    },
+    onCloseSection: (section: string) => {
+        dispatch(closeSection(section));
     }
 });
 

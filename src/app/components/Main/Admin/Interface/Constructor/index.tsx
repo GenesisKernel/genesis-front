@@ -19,7 +19,6 @@ import styled from 'styled-components';
 
 import Protypo from 'containers/Widgets/Protypo';
 import Layout from './Layout';
-import EditPage from 'components/Main/Admin/Interface/EditPage';
 import CollapsedListItem from './CollapsedListItem';
 import Panel from './Panel';
 import SourceElement from './SourceElement';
@@ -208,10 +207,10 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
             <div className="b-instrument-panel b-panel-light">
                 <div className="b-instrument-panel__inner pull-left">
                     <button className={props.canUndo ? 'btn-container btn-container_active' : 'btn-container btn-container_disabled'} onClick={props.undo}>
-                        <i className="apla-icon-undo apla-icon_big"/>
+                        <i className="apla-icon-undo apla-icon_big" />
                     </button>
                     <button className={props.canRedo ? 'btn-container btn-container_active' : 'btn-container btn-container_disabled'} onClick={props.redo}>
-                        <i className="apla-icon-redo apla-icon_big"/>
+                        <i className="apla-icon-redo apla-icon_big" />
                     </button>
                 </div>
                 <div className="b-instrument-panel__inner pull-right">
@@ -270,7 +269,7 @@ const Constructor: React.SFC<IConstructorProps> = (props) => (
                 tag={props.selectedTag}
                 changePage={props.changePage}
             />
-            <EditPage page={props.page} pageTemplate={props.pageTemplate} menus={props.menus} tabView={true} saveButton={true} navigatePage={props.navigatePage} onExec={props.onSave}/>
+            {/*<EditPage page={props.page} pageTemplate={props.pageTemplate} menus={props.menus} tabView={true} saveButton={true} navigatePage={props.navigatePage} onExec={props.onSave}/>*/}
         </div>
     </ConstructorDiv>
 

@@ -77,15 +77,7 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
                     vde: false
                 });
             }
-            else if (!section.page) {
-                props.renderPage({
-                    section: section.name,
-                    name: section.defaultPage,
-                    params: {},
-                    vde: section.vde
-                });
-            }
-            else if (section.page.name !== requestPage || section.force || this.props.location.search !== props.location.search) {
+            else if (!section.page || section.page.name !== requestPage || section.force || this.props.location.search !== props.location.search) {
                 const legacyPage = LEGACY_PAGES[requestPage];
                 const vdeLegacyPage = VDE_LEGACY_PAGES[requestPage];
 

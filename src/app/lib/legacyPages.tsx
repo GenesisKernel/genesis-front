@@ -16,12 +16,6 @@
 
 import * as React from 'react';
 import Interface from 'containers/Main/containers/Admin/Interface';
-import CreatePage from 'containers/Main/containers/Admin/Interface/CreatePage';
-import CreateMenu from 'containers/Main/containers/Admin/Interface/CreateMenu';
-import CreateBlock from 'containers/Main/containers/Admin/Interface/CreateBlock';
-import EditPage from 'containers/Main/containers/Admin/Interface/EditPage';
-import EditMenu from 'containers/Main/containers/Admin/Interface/EditMenu';
-import EditBlock from 'containers/Main/containers/Admin/Interface/EditBlock';
 import Tables from 'containers/Main/containers/Admin/Tables';
 import Table from 'containers/Main/containers/Admin/Tables/View';
 import CreateTable from 'containers/Main/containers/Admin/Tables/Create';
@@ -42,6 +36,7 @@ import Import from 'containers/Main/containers/Admin/Import';
 import Export from 'containers/Main/containers/Admin/Export';
 import VDE from 'containers/Main/containers/Admin/VDE';
 import Backup from 'containers/Main/containers/Backup';
+import Editor from 'containers/Main/containers/Admin/Editor';
 
 export interface ILegacyPage {
     menu: string;
@@ -52,12 +47,6 @@ export interface ILegacyPage {
 const LEGACY_PAGES: { [page: string]: ILegacyPage } = {
     'backup': { section: 'home', menu: null, render: () => <Backup /> },
     'interface': { section: 'admin', menu: 'admin_menu', render: () => <Interface /> },
-    'create-page': { section: 'admin', menu: 'admin_menu', render: () => <CreatePage /> },
-    'create-menu': { section: 'admin', menu: 'admin_menu', render: () => <CreateMenu /> },
-    'create-block': { section: 'admin', menu: 'admin_menu', render: () => <CreateBlock /> },
-    'edit-page': { section: 'admin', menu: 'admin_menu', render: (props: { name: string }) => <EditPage name={props.name} /> },
-    'edit-menu': { section: 'admin', menu: 'admin_menu', render: (props: { name: string }) => <EditMenu name={props.name} /> },
-    'edit-block': { section: 'admin', menu: 'admin_menu', render: (props: { name: string }) => <EditBlock name={props.name} /> },
     /*
     <Route exact path="/admin/interface/page/history/:pageID-:pageName" render={routeProps => <PageHistory id={routeProps.match.params.pageID} name={routeProps.match.params.pageName} />} />
     <Route exact path="/admin/interface/menu/history/:menuID-:menuName" render={routeProps => <MenuHistory id={routeProps.match.params.menuID} name={routeProps.match.params.menuName} />} />
@@ -87,16 +76,12 @@ const LEGACY_PAGES: { [page: string]: ILegacyPage } = {
     'import': { section: 'admin', menu: 'admin_menu', render: () => <Import /> },
     'export': { section: 'admin', menu: 'admin_menu', render: () => <Export /> },
     'vde': { section: 'admin', menu: 'admin_menu', render: () => <VDE /> },
+
+    'editor': { section: 'editor', menu: null, render: (props: { open?: string, create?: string, name?: string, vde?: string }) => <Editor {...props} /> }
 };
 
 const VDE_LEGACY_PAGES: { [page: string]: ILegacyPage } = {
     'interface': { section: 'vdeadmin', menu: 'admin_menu', render: () => <Interface vde /> },
-    'create-page': { section: 'vdeadmin', menu: 'admin_menu', render: () => <CreatePage vde /> },
-    'create-menu': { section: 'vdeadmin', menu: 'admin_menu', render: () => <CreateMenu vde /> },
-    'create-block': { section: 'vdeadmin', menu: 'admin_menu', render: () => <CreateBlock vde /> },
-    'edit-page': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { name: string }) => <EditPage vde name={props.name} /> },
-    'edit-menu': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { name: string }) => <EditMenu vde name={props.name} /> },
-    'edit-block': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { name: string }) => <EditBlock vde name={props.name} /> },
 
     'tables': { section: 'vdeadmin', menu: 'admin_menu', render: () => <Tables vde /> },
     'table': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { table: string }) => <Table vde table={props.table} /> },
