@@ -17,10 +17,10 @@
 import * as actions from './actions';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
-import { InjectedIntl } from 'react-intl';
+import defaultLocale from 'lib/en-US.json';
 
 export type State = {
-    readonly locale: string;
+    readonly localeMessages: { [key: string]: string };
     readonly isInstalled: boolean;
     readonly isInstalling: boolean;
     readonly isLoading: boolean;
@@ -29,11 +29,10 @@ export type State = {
     readonly isCollapsed: boolean;
     readonly isCreatingVDE: boolean;
     readonly createVDEResult: boolean;
-    readonly intl: InjectedIntl;
 };
 
 export const initialState: State = {
-    locale: 'en-US',
+    localeMessages: defaultLocale,
     isInstalled: null,
     isInstalling: false,
     isLoading: true,
@@ -41,8 +40,7 @@ export const initialState: State = {
     isConnecting: false,
     isCreatingVDE: false,
     createVDEResult: null,
-    isCollapsed: true,
-    intl: null
+    isCollapsed: true
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -157,10 +155,10 @@ export default (state: State = initialState, action: Action): State => {
         };
     }
 
-    if (isType(action, actions.intialize)) {
+    if (isType(action, actions.setLocale.done)) {
         return {
             ...state,
-            intl: action.payload
+            localeMessages: action.payload.result
         };
     }
 

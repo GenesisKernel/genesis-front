@@ -18,7 +18,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import DocumentTitle from 'components/DocumentTitle';
+import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import Heading from 'components/Heading';
 
 type TMixedContent =
@@ -76,7 +76,7 @@ const bodyClasses = {
 };
 
 const Wrapper: React.SFC<IWrapperProps> = props => (
-    <DocumentTitle title={props.title.title} defaultTitle={props.title.defaultTitle}>
+    <LocalizedDocumentTitle title={props.title.title} defaultTitle={props.title.defaultTitle}>
         <div className="fullscreen">
             <Heading>
                 <div className="pull-right">
@@ -108,7 +108,7 @@ const Wrapper: React.SFC<IWrapperProps> = props => (
                 {props.children}
             </div>
         </div>
-    </DocumentTitle>
+    </LocalizedDocumentTitle>
 );
 
 export default Wrapper;

@@ -94,7 +94,7 @@ const Parameters: React.SFC<IParametersProps & InjectedIntlProps> = (props) => (
             columns={[
                 { title: props.intl.formatMessage({ id: 'admin.parameters.name', defaultMessage: 'Name' }), sortable: true, width: 160 },
                 { title: props.intl.formatMessage({ id: 'admin.parameters.value', defaultMessage: 'Value' }), sortable: true },
-                { title: props.intl.formatMessage({ id: 'admin.parameters.conditions', defaultMessage: 'Conditions' }), sortable: true, width: 250 },
+                { title: props.intl.formatMessage({ id: 'admin.conditions.change', defaultMessage: 'Conditions' }), sortable: true, width: 250 },
                 { width: 1 }
             ]}
             data={props.parameters.map(p => [p.name, p.value, p.conditions, props.vde])}

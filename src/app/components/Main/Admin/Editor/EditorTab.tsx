@@ -19,6 +19,7 @@ import classNames from 'classnames';
 import styled from 'styled-components';
 import { TEditorTab } from 'genesis/content';
 import imgClose from 'images/close.svg';
+import { FormattedMessage } from 'react-intl';
 
 export interface IEditorTabProps extends TEditorTab {
     icon: string;
@@ -50,7 +51,13 @@ const EditorTab: React.SFC<IEditorTabProps> = props => {
                     <img className="icon" src={props.icon} />
                 </div>
                 <div className="tab-label">
-                    {props.name}
+                    {props.name ?
+                        (
+                            <span>{props.name}</span>
+                        ) : (
+                            <FormattedMessage id="editor.untitled" defaultMessage="Untitled-{id}" values={{ id: props.id }} />
+                        )
+                    }
                 </div>
                 <div className="tab-badge" />
                 <div className="tab-close" onClick={onClose}>

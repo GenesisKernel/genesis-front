@@ -18,7 +18,7 @@ import * as React from 'react';
 import { Col, Panel, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
-import DocumentTitle from 'components/DocumentTitle';
+import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import Heading from 'components/Heading';
 import PageLink from 'containers/Routing/PageLink';
 
@@ -30,7 +30,7 @@ export interface IInterfaceProps {
 }
 
 const Interface: React.SFC<IInterfaceProps> = (props) => (
-    <DocumentTitle title="admin.interface" defaultTitle="Interface">
+    <LocalizedDocumentTitle title="admin.interface" defaultTitle="Interface">
         <div>
             <Heading>
                 <FormattedMessage id="admin.interface" defaultMessage="Interface" />
@@ -201,7 +201,7 @@ const Interface: React.SFC<IInterfaceProps> = (props) => (
                 </Row>
             </div>
         </div>
-    </DocumentTitle>
+    </LocalizedDocumentTitle>
 );
 
 export default Interface;

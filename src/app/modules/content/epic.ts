@@ -26,7 +26,7 @@ import { logout, selectAccount } from 'modules/auth/actions';
 import * as storageActions from 'modules/storage/actions';
 import { history } from 'store';
 import { navigate } from 'modules/engine/actions';
-import { LEGACY_PAGES, VDE_LEGACY_PAGES } from 'lib/legacyPages';
+import { LEGACY_PAGES } from 'lib/legacyPages';
 import editContractEpic from './epics/editContractEpic';
 import newContractEpic from './epics/newContractEpic';
 import editPageEpic from './epics/editPageEpic';
@@ -36,14 +36,13 @@ import editMenuEpic from './epics/editMenuEpic';
 import editBlockEpic from './epics/editBlockEpic';
 import newMenuEpic from './epics/newMenuEpic';
 import newBlockEpic from './epics/newBlockEpic';
+import { modalShow } from './actions';
 
 export const navigatePageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.navigatePage.started)
         .map(action => {
             const state = store.getState();
-            const sectionName = (action.payload.vde ?
-                (VDE_LEGACY_PAGES[action.payload.name] && VDE_LEGACY_PAGES[action.payload.name].section) :
-                (LEGACY_PAGES[action.payload.name] && LEGACY_PAGES[action.payload.name].section)) || action.payload.section || state.content.section;
+            const sectionName = (LEGACY_PAGES[action.payload.name] && LEGACY_PAGES[action.payload.name].section) || action.payload.section || state.content.section;
             const section = state.content.sections[sectionName];
 
             const params = queryString.stringify(action.payload.params);
@@ -62,7 +61,7 @@ export const renderPageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.renderPage.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, action.payload.name, action.payload.params, action.payload.vde))
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, action.payload.name, action.payload.params, state.storage.locale, action.payload.vde))
                 .map(payload =>
                     actions.renderPage.done({
                         params: action.payload,
@@ -93,7 +92,7 @@ export const renderLegacyPageEpic: Epic<Action, IRootState> =
         .flatMap(action => {
             if (action.payload.menu) {
                 const state = store.getState();
-                return Observable.fromPromise(api.contentMenu(state.auth.sessionToken, action.payload.menu, action.payload.vde))
+                return Observable.fromPromise(api.contentMenu(state.auth.sessionToken, action.payload.menu, state.storage.locale, action.payload.vde))
                     .map(payload =>
                         actions.renderLegacyPage.done({
                             params: action.payload,
@@ -134,7 +133,7 @@ export const reloadPageEpic: Epic<Action, IRootState> =
             const state = store.getState();
             const section = state.content.sections[state.content.section];
 
-            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, section.page.name, section.page.params, section.page.vde))
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, section.page.name, section.page.params, state.storage.locale, section.page.vde))
                 .map(payload =>
                     actions.reloadPage.done({
                         params: action.payload,
@@ -244,7 +243,7 @@ export const resetEpic: Epic<Action, IRootState> =
             const state = store.getState();
             const section = state.content.sections[state.content.section];
 
-            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, section.defaultPage, {}))
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, section.defaultPage, {}, state.storage.locale))
                 .map(payload => actions.reset.done({
                     params: action.payload,
                     result: {
@@ -272,7 +271,7 @@ export const fetchNotificationsEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.fetchNotifications.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, 'notifications', {}))
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, 'notifications', {}, state.storage.locale))
                 .map(payload =>
                     actions.fetchNotifications.done({
                         params: action.payload,
@@ -291,21 +290,21 @@ export const displayDataEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.displayData.started)
         .flatMap(action => {
             return Observable.fromPromise(api.resolveTextData(action.payload))
-                .map(payload => {
-                    const state = store.getState();
-                    swal({
-                        title: state.engine.intl.formatMessage({ id: 'alert.info', defaultMessage: 'Information' }),
-                        html: `
-                            <div style="white-space: pre-wrap;text-align:left;">${payload}</div>
-                        `,
-                        type: 'info'
-                    }).catch(e => null);
-
-                    return actions.displayData.done({
-                        params: action.payload,
-                        result: payload
-                    });
-                })
+                .flatMap(payload =>
+                    Observable.of<Action>(
+                        modalShow({
+                            id: 'DISPLAY_INFO',
+                            type: 'INFO',
+                            params: {
+                                value: payload
+                            }
+                        }),
+                        actions.displayData.done({
+                            params: action.payload,
+                            result: payload
+                        })
+                    )
+                )
                 .catch((e: IAPIError) =>
                     Observable.of(actions.displayData.failed({
                         params: action.payload,
@@ -347,10 +346,6 @@ export const createEditorTabEpic: Epic<Action, IRootState> =
                 .sort();
 
             const id = (ids.length ? parseInt(ids[ids.length - 1], 10) + 1 : 1).toString();
-            const name = state.engine.intl.formatMessage({
-                id: 'editor.untitled',
-                defaultMessage: 'Untitled-{id}'
-            }, { id });
 
             switch (action.payload) {
                 case 'contract':
@@ -358,8 +353,8 @@ export const createEditorTabEpic: Epic<Action, IRootState> =
                         params: action.payload,
                         result: {
                             id,
-                            name,
-                            value: `contract ${name} {\n    data {\n\n    }\n    conditions {\n\n    }\n    action {\n\n    }\n}`
+                            name: null,
+                            value: 'contract ... {\n    data {\n\n    }\n    conditions {\n\n    }\n    action {\n\n    }\n}'
                         }
                     });
 
@@ -498,7 +493,7 @@ export const changeEditorToolEpic: Epic<Action, IRootState> =
             switch (action.payload) {
                 case 'preview':
                     const payload = state.content.editor.tabs[state.content.editor.tabIndex].value;
-                    return Observable.fromPromise(api.contentTest(state.auth.sessionToken, payload))
+                    return Observable.fromPromise(api.contentTest(state.auth.sessionToken, payload, state.storage.locale))
                         .map(result => actions.changeEditorTool.done({
                             params: action.payload,
                             result: result.tree

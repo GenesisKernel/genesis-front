@@ -118,7 +118,9 @@ class UserMenu extends React.Component<IUserMenuProps> {
                                 </CloseDropdownButton>
                             </li>
                         </ul>
-                        <div className="dropdown-heading">Ecosystems</div>
+                        <div className="dropdown-heading">
+                            <FormattedMessage id="general.ecosystems" defaultMessage="Ecosystems" />
+                        </div>
                         <ul className="dropdown-group">
                             {this.props.ecosystemAccounts.map(account => (
                                 <li key={account.ecosystem}>

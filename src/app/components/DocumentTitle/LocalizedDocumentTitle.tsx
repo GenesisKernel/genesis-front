@@ -15,30 +15,28 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { IRootState } from 'modules';
-import { navigatePage } from 'modules/content/actions';
+import { injectIntl, InjectedIntlProps } from 'react-intl';
+import DocumentTitle, { IDocumentTitleProps } from '.';
 
-import Create from 'components/Main/Admin/Contracts/Create';
-
-export interface ICreateContainerProps {
-    vde?: boolean;
+export interface ILocalizedDocumentTitleProps extends IDocumentTitleProps {
+    defaultTitle?: string;
 }
 
-interface ICreateContainerDispatch {
-    navigatePage: typeof navigatePage.started;
-}
-
-const CreateContainer: React.SFC<ICreateContainerProps & ICreateContainerDispatch> = (props) => (
-    <Create {...props} />
+const LocalizedDocumentTitle: React.SFC<ILocalizedDocumentTitleProps & InjectedIntlProps> = props => (
+    <DocumentTitle
+        title={props.intl.formatMessage({
+            id: 'general.title.format',
+            defaultMessage: '{title} | Genesis'
+        }, {
+                title: props.intl.formatMessage({
+                    id: props.title,
+                    defaultMessage: props.defaultTitle || props.title
+                })
+            }
+        )}
+    >
+        {props.children}
+    </DocumentTitle>
 );
 
-const mapStateToProps = (state: IRootState) => ({
-
-});
-
-const mapDispatchToProps = {
-    navigatePage: navigatePage.started
-};
-
-export default connect<{}, ICreateContainerDispatch, {}>(mapStateToProps, mapDispatchToProps)(CreateContainer);
+export default injectIntl(LocalizedDocumentTitle);

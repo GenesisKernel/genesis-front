@@ -344,11 +344,11 @@ const api = {
     findPage: (session: string, name: string, vde = false) => securedRequest(`interface/page/${name}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<IInterfacePageResponse>,
     findBlock: (session: string, name: string, vde = false) => securedRequest(`interface/block/${name}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<IInterfaceBlockResponse>,
     findMenu: (session: string, name: string, vde = false) => securedRequest(`interface/menu/${name}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<IInterfaceMenuResponse>,
-    contentMenu: (session: string, name: string, vde = false) => securedRequest(`content/menu/${name}`, session, { vde })
+    contentMenu: (session: string, name: string, locale: string, vde = false) => securedRequest(`content/menu/${name}`, session, { vde, lang: locale })
         .then(transformContent),
-    contentPage: (session: string, name: string, params: { [key: string]: any }, vde = false) => securedRequest(`content/page/${name}`, session, { ...params, vde })
+    contentPage: (session: string, name: string, params: { [key: string]: any }, locale: string, vde = false) => securedRequest(`content/page/${name}`, session, { vde, lang: locale, ...params })
         .then(transformContent),
-    contentTest: (session: string, template: string) => securedRequest('content', session, { template })
+    contentTest: (session: string, template: string, locale: string, ) => securedRequest('content', session, { template, lang: locale })
         .then(transformContent),
     table: (session: string, name: string, vde?: boolean) => securedRequest(`table/${name}?vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITableResponse>,
     tables: (session: string, offset?: number, limit?: number, vde = false) => securedRequest(`tables?offset=${offset || 0}&limit=${limit || 1000}&vde=${vde}`, session, null, { method: 'GET' }) as Promise<ITablesResponse>,
@@ -410,7 +410,20 @@ const api = {
 
     resolveTextData: (link: string) =>
         needle('get', `${apiUrl}${link}`)
-            .then(response => response.body) as Promise<string>
+            .then(response => response.body) as Promise<string>,
+
+    resolveLocale: (locale: string) =>
+        needle('get', `${location.origin}/locales/${locale}.json`, {}, { json: true, compressed: true })
+            .then(response => {
+                // tslint:disable-next-line:no-console
+                console.log('RESPONSE::', response);
+                if ('object' !== typeof response.body) {
+                    throw 'E_LOCALE_INVALID';
+                }
+                else {
+                    return response.body;
+                }
+            }) as Promise<{ [key: string]: string }>
 };
 
 export default api;

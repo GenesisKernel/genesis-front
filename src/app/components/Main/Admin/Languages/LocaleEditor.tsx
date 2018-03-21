@@ -120,7 +120,7 @@ const LocaleEditor: React.SFC<ILocaleEditorProps & InjectedIntlProps> = (props) 
                     <FormattedMessage id="admin.save" defaultMessage="Save" />
                 </Validation.components.ValidatedSubmit>
                 <Button bsStyle="link" onClick={props.onNewLocale}>
-                    <FormattedMessage id="admin.languages.add" defaultMessage="Add localization" />
+                    <FormattedMessage id="admin.languages.create" defaultMessage="Add localization" />
                 </Button>
             </div>
         </ValidatedContractForm>

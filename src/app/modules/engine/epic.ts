@@ -25,16 +25,21 @@ import * as authActions from 'modules/auth/actions';
 import { connect } from 'modules/socket/actions';
 import platform from 'lib/platform';
 import { setVDEAvailable } from 'modules/content/actions';
+import { setLocale } from './actions';
+import setLocaleEpic from './epics/setLocaleEpic';
 
 export const initializeEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.intialize)
-        .map(action => {
+        .flatMap(action => {
             const state = store.getState();
-            return connect.started({
-                socketToken: state.auth.socketToken,
-                timestamp: state.auth.timestamp,
-                userID: state.auth.id
-            });
+            return Observable.merge(
+                Observable.of(connect.started({
+                    socketToken: state.auth.socketToken,
+                    timestamp: state.auth.timestamp,
+                    userID: state.auth.id
+                })),
+                Observable.of(setLocale.started(state.storage.locale))
+            );
         });
 
 export const checkOnlineEpic: Epic<Action, IRootState> =
@@ -144,4 +149,10 @@ export const createVDEEpic: Epic<Action, IRootState> =
                 );
         });
 
-export default combineEpics(initializeEpic, checkOnlineEpic, installEpic, createVDEEpic);
+export default combineEpics(
+    initializeEpic,
+    checkOnlineEpic,
+    installEpic,
+    createVDEEpic,
+    setLocaleEpic
+);

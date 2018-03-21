@@ -20,6 +20,7 @@ import * as actions from './actions';
 import * as _ from 'lodash';
 
 export type State = {
+    locale: string;
     accounts: IStoredAccount[];
     navigationSize: number;
     tabList: {
@@ -31,12 +32,18 @@ export type State = {
 };
 
 export const initialState: State = {
+    locale: 'en-US',
     accounts: [],
     navigationSize: 230,
     tabList: []
 };
 
 export default reducerWithInitialState<State>(initialState)
+    .case(actions.saveLocale, (state, locale) => ({
+        ...state,
+        locale
+    }))
+
     .case(actions.saveAccount, (state, account) => ({
         ...state,
         accounts: [

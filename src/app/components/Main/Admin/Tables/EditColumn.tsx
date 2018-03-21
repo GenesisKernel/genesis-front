@@ -19,7 +19,7 @@ import { FormattedMessage } from 'react-intl';
 import { columnTypes } from './Create';
 import { ITableResponse } from 'lib/api';
 
-import DocumentTitle from 'components/DocumentTitle';
+import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import Heading from 'components/Heading';
 import PageLink from 'containers/Routing/PageLink';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
@@ -98,7 +98,7 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
         const columnType = columnDef && columnDef.title;
 
         return (
-            <DocumentTitle title="admin.tables.column.edit" defaultTitle="Edit column">
+            <LocalizedDocumentTitle title="admin.tables.column.edit" defaultTitle="Edit column">
                 <div>
                     <Heading>
                         <FormattedMessage id="admin.tables" defaultMessage="Tables" />
@@ -175,7 +175,7 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
                         </ValidatedContractForm>
                     </div>
                 </div>
-            </DocumentTitle>
+            </LocalizedDocumentTitle>
         );
     }
 }

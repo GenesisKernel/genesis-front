@@ -24,8 +24,6 @@ import AddColumn from 'containers/Main/containers/Admin/Tables/AddColumn';
 import EditColumn from 'containers/Main/containers/Admin/Tables/EditColumn';
 import History from 'containers/Main/containers/Admin/HistoryViewer';
 import Contracts from 'containers/Main/containers/Admin/Contracts';
-import CreateContract from 'containers/Main/containers/Admin/Contracts/Create';
-import EditContract from 'containers/Main/containers/Admin/Contracts/Edit';
 import Parameters from 'containers/Main/containers/Admin/Parameters';
 import CreateParameter from 'containers/Main/containers/Admin/Parameters/Create';
 import EditParameter from 'containers/Main/containers/Admin/Parameters/Edit';
@@ -61,8 +59,6 @@ const LEGACY_PAGES: { [page: string]: ILegacyPage } = {
     'history': { section: 'admin', menu: 'admin_menu', render: (props: { table: string, id: string }) => <History table={props.table} id={props.id} /> },
 
     'contracts': { section: 'admin', menu: 'admin_menu', render: () => <Contracts /> },
-    'create-contract': { section: 'admin', menu: 'admin_menu', render: () => <CreateContract /> },
-    'edit-contract': { section: 'admin', menu: 'admin_menu', render: (props: { id: string, name: string }) => <EditContract id={props.id} name={props.name} /> },
 
     'parameters': { section: 'admin', menu: 'admin_menu', render: () => <Parameters /> },
     'create-parameter': { section: 'admin', menu: 'admin_menu', render: () => <CreateParameter /> },
@@ -80,34 +76,6 @@ const LEGACY_PAGES: { [page: string]: ILegacyPage } = {
     'editor': { section: 'editor', menu: null, render: (props: { open?: string, create?: string, name?: string, vde?: string }) => <Editor {...props} /> }
 };
 
-const VDE_LEGACY_PAGES: { [page: string]: ILegacyPage } = {
-    'interface': { section: 'vdeadmin', menu: 'admin_menu', render: () => <Interface vde /> },
-
-    'tables': { section: 'vdeadmin', menu: 'admin_menu', render: () => <Tables vde /> },
-    'table': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { table: string }) => <Table vde table={props.table} /> },
-    'create-table': { section: 'vdeadmin', menu: 'admin_menu', render: () => <CreateTable vde /> },
-    'edit-table': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { table: string }) => <EditTable vde table={props.table} /> },
-    'add-column': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { table: string }) => <AddColumn vde table={props.table} /> },
-    'edit-column': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { table: string, column: string }) => <EditColumn vde table={props.table} column={props.column} /> },
-
-    'contracts': { section: 'vdeadmin', menu: 'admin_menu', render: () => <Contracts vde /> },
-    'create-contract': { section: 'vdeadmin', menu: 'admin_menu', render: () => <CreateContract vde /> },
-    'edit-contract': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { id: string, name: string }) => <EditContract vde id={props.id} name={props.name} /> },
-
-    'parameters': { section: 'vdeadmin', menu: 'admin_menu', render: () => <Parameters vde /> },
-    'create-parameter': { section: 'vdeadmin', menu: 'admin_menu', render: () => <CreateParameter vde /> },
-    'edit-parameter': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { name: string }) => <EditParameter vde parameterName={props.name} /> },
-    'stylesheet': { section: 'vdeadmin', menu: 'admin_menu', render: () => <EditParameter vde parameterName="stylesheet" /> },
-
-    'languages': { section: 'vdeadmin', menu: 'admin_menu', render: () => <Languages vde /> },
-    'create-lang': { section: 'vdeadmin', menu: 'admin_menu', render: () => <CreateLang vde /> },
-    'edit-lang': { section: 'vdeadmin', menu: 'admin_menu', render: (props: { id: string }) => <EditLang vde translationID={props.id} /> },
-
-    'import': { section: 'vdeadmin', menu: 'admin_menu', render: () => <Import vde /> },
-    'export': { section: 'vdeadmin', menu: 'admin_menu', render: () => <Export vde /> }
-};
-
 export {
-    LEGACY_PAGES,
-    VDE_LEGACY_PAGES
+    LEGACY_PAGES
 };

@@ -104,7 +104,16 @@ class ContractHistory extends React.Component<IContractHistoryProps, IContractHi
                 <div>
                     <hr />
                     <PageSwitcher index={this.state.index} count={this.props.contracts.length} onChange={this.onSwitchPage.bind(this)}>
-                        <span>Showing value {this.state.index + 1} of {this.props.contracts.length}</span>
+                        <span>
+                            <FormattedMessage
+                                id="admin.history.indexof"
+                                defaultMessage="Showing value {index} of {count}"
+                                values={{
+                                    index: this.state.index + 1,
+                                    count: this.props.contracts.length
+                                }}
+                            />
+                        </span>
                     </PageSwitcher>
                     <hr />
 

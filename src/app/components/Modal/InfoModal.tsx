@@ -15,33 +15,32 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import Protypo from 'containers/Widgets/Protypo';
-import { TPage } from 'genesis/content';
+import { Button } from 'react-bootstrap';
+import { FormattedMessage } from 'react-intl';
 
-import DocumentTitle from 'components/DocumentTitle';
-import Error from './Error';
-import Timeout from './Timeout';
-import NotFound from './NotFound';
+import Modal from './';
 
-export interface IPageProps extends TPage {
-
+export interface IInfoModalProps {
+    value: string;
 }
 
-const Page: React.SFC<IPageProps> = (props) => {
-    if (props.error) {
-        switch (props.error) {
-            case 'E_HEAVYPAGE': return (<Timeout />);
-            case 'E_NOTFOUND': return (<NotFound />);
-            default: return (<Error error={props.error} />);
-        }
-    }
-    else {
+class InfoModal extends Modal<IInfoModalProps, void> {
+    render() {
         return (
-            <DocumentTitle title={props.name}>
-                <Protypo context="page" {...props} vde={props.vde} />
-            </DocumentTitle>
+            <div>
+                <Modal.Header>
+                    <FormattedMessage id="alert.info" defaultMessage="Information" />
+                </Modal.Header>
+                <Modal.Body>
+                    <div>{this.props.params.value}</div>
+                </Modal.Body>
+                <Modal.Footer className="text-right">
+                    <Button type="button" bsStyle="primary" onClick={this.props.onCancel.bind(this)}>
+                        <FormattedMessage id="close" defaultMessage="Close" />
+                    </Button>
+                </Modal.Footer>
+            </div>
         );
     }
-};
-
-export default Page;
+}
+export default InfoModal;

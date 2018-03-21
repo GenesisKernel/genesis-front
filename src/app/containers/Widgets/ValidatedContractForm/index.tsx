@@ -61,57 +61,57 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
                     case 'E_INVALID_PASSWORD':
                         this.alert(
                             'error',
-                            this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error' }),
+                            this.props.intl.formatMessage({ id: 'alert.error', defaultMessage: 'Error' }),
                             this.props.intl.formatMessage({ id: 'tx.error.invalid_password', defaultMessage: 'Invalid password' }),
-                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
+                            this.props.intl.formatMessage({ id: 'close', defaultMessage: 'Close' })
                         ); break;
 
                     case 'E_CONTRACT':
                         this.alert(
                             'error',
-                            this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error' }),
+                            this.props.intl.formatMessage({ id: 'alert.error', defaultMessage: 'Error' }),
                             this.props.intl.formatMessage({ id: 'tx.error.contract', defaultMessage: 'Contract \'{contract}\' does not exists' }, { contract: props.contractName }),
-                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
+                            this.props.intl.formatMessage({ id: 'close', defaultMessage: 'Close' })
                         ); break;
 
                     case 'E_SERVER':
                         this.alert(
                             'error',
-                            this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error' }),
+                            this.props.intl.formatMessage({ id: 'alert.error', defaultMessage: 'Error' }),
                             transaction.error.error,
-                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
+                            this.props.intl.formatMessage({ id: 'close', defaultMessage: 'Close' })
                         ); break;
 
                     case 'panic':
                         this.alert(
                             'error',
-                            this.props.intl.formatMessage({ id: 'tx.panic', defaultMessage: 'Runtime error' }),
+                            this.props.intl.formatMessage({ id: 'alert.panic', defaultMessage: 'Runtime error' }),
                             transaction.error.error,
-                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
+                            this.props.intl.formatMessage({ id: 'close', defaultMessage: 'Close' })
                         ); break;
 
                     case 'warning':
                         this.alert(
                             'warning',
-                            this.props.intl.formatMessage({ id: 'tx.warning', defaultMessage: 'Warning' }),
+                            this.props.intl.formatMessage({ id: 'alert.warning', defaultMessage: 'Warning' }),
                             transaction.error.error,
-                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
+                            this.props.intl.formatMessage({ id: 'close', defaultMessage: 'Close' })
                         ); break;
 
                     case 'error':
                         this.alert(
                             'error',
-                            this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error' }),
+                            this.props.intl.formatMessage({ id: 'alert.error', defaultMessage: 'Error' }),
                             transaction.error.error,
-                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
+                            this.props.intl.formatMessage({ id: 'close', defaultMessage: 'Close' })
                         ); break;
 
                     case 'info':
                         this.alert(
                             'info',
-                            this.props.intl.formatMessage({ id: 'tx.info', defaultMessage: 'Information' }),
+                            this.props.intl.formatMessage({ id: 'alert.info', defaultMessage: 'Information' }),
                             transaction.error.error,
-                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
+                            this.props.intl.formatMessage({ id: 'close', defaultMessage: 'Close' })
                         ); break;
                     default: break;
                 }

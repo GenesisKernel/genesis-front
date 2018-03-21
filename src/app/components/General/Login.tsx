@@ -24,7 +24,7 @@ import { IStoredAccount } from 'genesis/storage';
 import { INotificationsMessage } from 'genesis/socket';
 import imgAvatar from 'images/avatar.svg';
 
-import DocumentTitle from 'components/DocumentTitle';
+import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import General from 'components/General';
 import Welcome from 'components/General/Welcome';
 import AccountButton from 'components/AccountButton';
@@ -168,11 +168,11 @@ class Login extends React.Component<ILoginProps> {
 
         this.props.alertShow({
             id: 'C_REMOVE_ACCOUNT',
-            title: 'Confirmation',
+            title: this.props.intl.formatMessage({ id: 'alert.confirmation', defaultMessage: 'Confirmation' }),
             type: 'warning',
-            text: 'Do you really want to delete this account? THIS ACTION IS IRREVERSIBLE',
-            confirmButton: this.props.intl.formatMessage({ id: 'alert.confirm', defaultMessage: 'Confirm' }),
-            cancelButton: this.props.intl.formatMessage({ id: 'alert.cancel', defaultMessage: 'Cancel' }),
+            text: this.props.intl.formatMessage({ id: 'auth.remove.desc', defaultMessage: 'Do you really want to delete this account? THIS ACTION IS IRREVERSIBLE' }),
+            confirmButton: this.props.intl.formatMessage({ id: 'confirm', defaultMessage: 'Confirm' }),
+            cancelButton: this.props.intl.formatMessage({ id: 'cancel', defaultMessage: 'Cancel' }),
         });
     }
 
@@ -259,17 +259,17 @@ class Login extends React.Component<ILoginProps> {
         const body = this.props.account && this.props.authenticationError ? this.renderPasswordPrompt() : this.renderAccountList();
         return this.props.accounts.length ?
             (
-                <DocumentTitle title="auth.login" defaultTitle="Login">
+                <LocalizedDocumentTitle title="auth.login" defaultTitle="Login">
                     <General className="p0">
                         <StyledLogin className="desktop-flex-col desktop-flex-stretch">
                             {body}
                         </StyledLogin>
                     </General>
-                </DocumentTitle>
+                </LocalizedDocumentTitle>
             ) : (
-                <DocumentTitle title="auth.welcome" defaultTitle="Welcome">
+                <LocalizedDocumentTitle title="auth.welcome" defaultTitle="Welcome">
                     <Welcome navigate={this.props.navigate} />
-                </DocumentTitle>
+                </LocalizedDocumentTitle>
             );
     }
 }

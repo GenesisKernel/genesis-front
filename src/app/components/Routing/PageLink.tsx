@@ -15,7 +15,7 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { LEGACY_PAGES, VDE_LEGACY_PAGES } from 'lib/legacyPages';
+import { LEGACY_PAGES } from 'lib/legacyPages';
 
 export interface IPageLinkProps {
     section?: string;
@@ -25,14 +25,11 @@ export interface IPageLinkProps {
         [key: string]: string
     };
     className?: string;
-    vde?: boolean;
     navigatePage: (params: { name: string, section: string, params: { [key: string]: string }, vde?: boolean }) => void;
 }
 
 const PageLink: React.SFC<IPageLinkProps> = props => {
-    const sectionName = (props.vde ?
-        ((VDE_LEGACY_PAGES[props.page] && VDE_LEGACY_PAGES[props.page].section) || 'vde') :
-        ((LEGACY_PAGES[props.page] && LEGACY_PAGES[props.page].section)) || props.section || props.currentSection);
+    const sectionName = ((LEGACY_PAGES[props.page] && LEGACY_PAGES[props.page].section)) || props.section || props.currentSection;
 
     const navigateUrl = `/${sectionName}/${props.page}`;
     const navigatePage = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -40,8 +37,7 @@ const PageLink: React.SFC<IPageLinkProps> = props => {
         props.navigatePage({
             name: props.page,
             section: sectionName,
-            params: props.params,
-            vde: props.vde
+            params: props.params
         });
         return false;
     };

@@ -257,8 +257,8 @@ export default (state: State = initialState, action: Action): State => {
     }
     else if (isType(action, actions.renderLegacyPage.done)) {
         const section = action.payload.params.section;
-        const menuIndex = state.sections[section].menus.findIndex(l =>
-            l.name === action.payload.result.menu.name && Boolean(l.vde) === Boolean(action.payload.result.menu.vde));
+        const menuIndex = action.payload.result.menu ? state.sections[section].menus.findIndex(l =>
+            l.name === action.payload.result.menu.name) : -1;
 
         if (-1 === menuIndex) {
             return {

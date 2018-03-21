@@ -52,9 +52,9 @@ const renderCell: ICellRenderer = (data, rowData) => {
                 <PageLink className="btn btn-link" section="editor" page="editor" params={{ open: 'contract', name: rowData.rowData[1] }} vde={!!rowData.rowData[4]}>
                     <FormattedMessage id="admin.contracts.edit" defaultMessage="Edit" />
                 </PageLink>
-                {!rowData.rowData[2] && (
+                {!rowData.rowData[4] && (
                     <PageLink className="btn btn-link" page="history" params={{ table: 'contracts', id: rowData.rowData[0] }}>
-                        <FormattedMessage id="admin.contracts.edit" defaultMessage="History" />
+                        <FormattedMessage id="admin.contracts.history" defaultMessage="History" />
                     </PageLink>
                 )}
             </div>
@@ -77,7 +77,7 @@ const Contracts: React.SFC<IContractsProps & InjectedIntlProps> = (props) => (
             ),
             toolButtons: [
                 {
-                    url: props.vde ? '/vdeadmin/create-contract' : '/admin/create-contract',
+                    url: '/editor/editor?create=contract',
                     icon: 'icon-plus',
                     title: (
                         <FormattedMessage id="admin.contracts.create" defaultMessage="Create contract" />
@@ -97,7 +97,7 @@ const Contracts: React.SFC<IContractsProps & InjectedIntlProps> = (props) => (
                 { title: 'ID', sortable: true, width: 80 },
                 { title: props.intl.formatMessage({ id: 'admin.contracts.name', defaultMessage: 'Name' }), sortable: true },
                 { title: props.intl.formatMessage({ id: 'admin.contracts.wallet', defaultMessage: 'Wallet' }), sortable: true, width: 200 },
-                { title: props.intl.formatMessage({ id: 'admin.contracts.active', defaultMessage: 'Active' }), sortable: true, width: 1 },
+                { title: props.intl.formatMessage({ id: 'admin.contracts.bound', defaultMessage: 'Bound' }), sortable: true, width: 1 },
                 { width: 100 }
             ]}
         />

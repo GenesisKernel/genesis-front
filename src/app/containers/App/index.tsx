@@ -31,7 +31,7 @@ import General from 'containers/General';
 
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
-import IntlHook from 'containers/App/IntlHook';
+import InitHook from 'containers/App/InitHook';
 import { switchWindow } from 'modules/gui/actions';
 import ModalProvider from 'containers/Modal/ModalProvider';
 
@@ -45,6 +45,7 @@ interface IAppProps {
     isInstalled: boolean;
     isConnecting: boolean;
     isImportingAccount: boolean;
+    localeMessages: { [key: string]: string };
     navigate?: typeof navigate;
     setLoading?: typeof setLoading;
     login?: typeof login.started;
@@ -104,9 +105,9 @@ class App extends React.Component<IAppProps> {
         });
 
         return (
-            <IntlProvider locale={this.props.locale} defaultLocale={this.props.locale}>
+            <IntlProvider locale={this.props.locale} defaultLocale="en-US" messages={this.props.localeMessages}>
                 <div className={classes}>
-                    <IntlHook />
+                    <InitHook />
                     <ModalProvider />
                     <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
                         {this.props.isLoading && (
@@ -124,7 +125,8 @@ class App extends React.Component<IAppProps> {
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    locale: state.engine.locale,
+    locale: state.storage.locale,
+    localeMessages: state.engine.localeMessages,
     isAuthenticated: state.auth.isAuthenticated,
     isCollapsed: state.engine.isCollapsed,
     isLoggingIn: state.auth.isLoggingIn,

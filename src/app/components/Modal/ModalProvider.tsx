@@ -24,11 +24,16 @@ import PromptModal from 'components/Modal/PromptModal';
 import ImageEditorModal from 'components/Modal/ImageEditorModal';
 import MapEditorModal from 'components/Modal/MapEditorModal';
 import AboutModal from 'components/Modal/AboutModal';
+import InfoModal from 'components/Modal/InfoModal';
 import ConfirmModal from './ConfirmModal';
 import CreatePageModal from 'components/Modal/Editor/CreatePageModal';
 import CreateInterfaceModal from 'components/Modal/Editor/CreateInterfaceModal';
+import AuthorizeModal from 'components/Modal/AuthorizeModal';
+import SignatureModal from 'components/Modal/Tx/SignatureModal';
 
 const MODAL_COMPONENTS = {
+    'AUTHORIZE': AuthorizeModal,
+    'TX_SIGNATURE': SignatureModal,
     'CREATE_PAGE': CreatePageModal,
     'CREATE_INTERFACE': CreateInterfaceModal,
     'DEBUG_CONTRACT': DebugContractModal,
@@ -36,6 +41,7 @@ const MODAL_COMPONENTS = {
     'MAP_EDITOR': MapEditorModal,
     'PROMPT': PromptModal,
     'CONFIRM': ConfirmModal,
+    'INFO': InfoModal,
     'ABOUT': AboutModal
 };
 

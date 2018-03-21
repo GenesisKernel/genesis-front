@@ -80,7 +80,7 @@ export default class extends React.Component<IDebugProps, IDebugState> {
     }
 
     onSubmit(values: { [key: string]: string }) {
-        api.contentTest(this.props.session, this.state.code).then(r => {
+        api.contentTest(this.props.session, this.state.code, 'en-US').then(r => {
             this.setState({
                 result: r.tree
             });

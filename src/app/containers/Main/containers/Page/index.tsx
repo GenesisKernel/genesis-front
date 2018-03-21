@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { renderPage, ecosystemInit, renderLegacyPage, navigatePage, switchSection } from 'modules/content/actions';
 import { TSection } from 'genesis/content';
-import { LEGACY_PAGES, VDE_LEGACY_PAGES } from 'lib/legacyPages';
+import { LEGACY_PAGES } from 'lib/legacyPages';
 
 import Page from 'components/Main/Page';
 
@@ -79,18 +79,8 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
             }
             else if (!section.page || section.page.name !== requestPage || section.force || this.props.location.search !== props.location.search) {
                 const legacyPage = LEGACY_PAGES[requestPage];
-                const vdeLegacyPage = VDE_LEGACY_PAGES[requestPage];
 
-                if (section.vde && vdeLegacyPage && section.name === vdeLegacyPage.section) {
-                    props.renderLegacyPage({
-                        section: vdeLegacyPage.section || section.name,
-                        name: requestPage,
-                        menu: vdeLegacyPage.menu,
-                        params,
-                        vde: section.vde
-                    });
-                }
-                else if (legacyPage && section.name === legacyPage.section) {
+                if (legacyPage && section.name === legacyPage.section) {
                     props.renderLegacyPage({
                         section: legacyPage.section || section.name,
                         name: requestPage,
@@ -117,13 +107,12 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
                 {_.map(this.props.sections, section => {
                     const isLegacy = section.page && section.page.legacy;
                     const legacyPage = isLegacy ? LEGACY_PAGES[section.page.name] : null;
-                    const vdeLegacyPage = isLegacy && section.vde ? VDE_LEGACY_PAGES[section.page.name] : null;
 
                     return (
                         <div key={section.name || 'error'} className="flex-col flex-stretch" style={{ display: this.props.section === section.name ? null : 'none', overflowX: 'hidden', overflowY: 'auto' }}>
                             {isLegacy ?
                                 (
-                                    (section.vde ? vdeLegacyPage : legacyPage).render(section.page.params)
+                                    legacyPage.render(section.page.params)
                                 ) :
                                 (
                                     <Page

@@ -18,7 +18,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { columnTypes } from './Create';
 
-import DocumentTitle from 'components/DocumentTitle';
+import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import PageLink from 'containers/Routing/PageLink';
 import Heading from 'components/Heading';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
@@ -93,7 +93,7 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
 
     render() {
         return (
-            <DocumentTitle title="admin.tables.column.add" defaultTitle="Add column">
+            <LocalizedDocumentTitle title="admin.tables.column.add" defaultTitle="Add column">
                 <div>
                     <Heading>
                         <FormattedMessage id="admin.tables" defaultMessage="Tables" />
@@ -164,7 +164,7 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
                         </ValidatedContractForm>
                     </div>
                 </div>
-            </DocumentTitle>
+            </LocalizedDocumentTitle>
         );
     }
 }

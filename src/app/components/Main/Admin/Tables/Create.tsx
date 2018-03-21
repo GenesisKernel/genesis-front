@@ -18,7 +18,7 @@ import * as React from 'react';
 import { Button, Row, Col, Panel } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
-import DocumentTitle from 'components/DocumentTitle';
+import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import Heading from 'components/Heading';
 import PageLink from 'containers/Routing/PageLink';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
@@ -171,7 +171,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
 
     render() {
         return (
-            <DocumentTitle title="admin.tables.create" defaultTitle="Create table">
+            <LocalizedDocumentTitle title="admin.tables.create" defaultTitle="Create table">
                 <div>
                     <Heading>
                         <FormattedMessage id="admin.tables" defaultMessage="Tables" />
@@ -325,7 +325,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                         </ValidatedContractForm>
                     </div>
                 </div>
-            </DocumentTitle>
+            </LocalizedDocumentTitle>
         );
     }
 }

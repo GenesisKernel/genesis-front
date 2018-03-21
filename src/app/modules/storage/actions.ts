@@ -18,6 +18,7 @@ import actionCreatorFactory from 'typescript-fsa';
 import { IStoredAccount } from 'genesis/storage';
 
 const actionCreator = actionCreatorFactory('storage');
+export const saveLocale = actionCreator<string>('SAVE_LOCALE');
 export const saveAccount = actionCreator<IStoredAccount>('SAVE_ACCOUNT');
 export const removeAccount = actionCreator<IStoredAccount>('REMOVE_ACCOUNT');
 export const saveNavigationSize = actionCreator<number>('SAVE_NAVIGATION_SIZE');

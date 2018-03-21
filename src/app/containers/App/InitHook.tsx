@@ -16,25 +16,24 @@
 
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { InjectedIntlProps, injectIntl } from 'react-intl';
 import { IRootState } from 'modules';
 import { intialize } from 'modules/engine/actions';
 
-export interface IIntlHookProps {
+export interface IInitHookProps {
 
 }
 
-interface IIntlHookState {
+interface IInitHookState {
 
 }
 
-interface IIntlHookDispatch {
+interface IInitHookDispatch {
     intialize: typeof intialize;
 }
 
-class IntlHook extends React.Component<IIntlHookProps & IIntlHookState & IIntlHookDispatch & InjectedIntlProps> {
+class InitHook extends React.Component<IInitHookProps & IInitHookState & IInitHookDispatch> {
     componentDidMount() {
-        this.props.intialize(this.props.intl);
+        this.props.intialize();
     }
 
     render() {
@@ -50,4 +49,4 @@ const mapDispatchToProps = {
     intialize
 };
 
-export default injectIntl(connect<IIntlHookState, IIntlHookDispatch, IIntlHookProps>(mapStateToProps, mapDispatchToProps)(IntlHook));
+export default connect<IInitHookState, IInitHookDispatch, IInitHookProps>(mapStateToProps, mapDispatchToProps)(InitHook);

@@ -21,7 +21,6 @@ import Tabs from 'components/Tabs';
 // import { removeTabList } from 'modules/admin/actions';
 import { addTabList, removeTabList } from 'modules/storage/actions';
 import styled from 'styled-components';
-import ContractEditTabbed from 'containers/Main/containers/Admin/Contracts/EditTabbed';
 import ParameterEditTabbed from 'containers/Main/containers/Admin/Parameters/EditTabbed';
 import InterfaceConstructorTabbed from 'containers/Main/containers/Admin/Interface/ConstructorTabbed';
 
@@ -118,28 +117,19 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
                     );
                 }
                 else
-                    if (tabListItem.type === 'contract') {
+                    if (tabListItem.type === 'parameter') {
                         tabsContent.push(
-                            <div className="fullscreen animated fadeIn" key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
-                                <Title>Smart Contract</Title>
-                                <ContractEditTabbed name={tabListItem.name} vde={tabListItem.vde} />
+                            <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
+                                <Title>Ecosystem Parameter</Title>
+                                <ParameterEditTabbed parameterName={tabListItem.id} vde={tabListItem.vde} />
                             </div>
                         );
                     }
-                    else
-                        if (tabListItem.type === 'parameter') {
-                            tabsContent.push(
-                                <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
-                                    <Title>Ecosystem Parameter</Title>
-                                    <ParameterEditTabbed parameterName={tabListItem.id} vde={tabListItem.vde} />
-                                </div>
-                            );
-                        }
-                        else {
-                            tabsContent.push(
-                                <div key={tabListItem.type + tabListItem.id} />
-                            );
-                        }
+                    else {
+                        tabsContent.push(
+                            <div key={tabListItem.type + tabListItem.id} />
+                        );
+                    }
             }
 
         }

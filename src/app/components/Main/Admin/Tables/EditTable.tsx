@@ -23,7 +23,7 @@ import { columnTypes } from './Create';
 import Heading from 'components/Heading';
 import PageLink from 'containers/Routing/PageLink';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
-import DocumentTitle from 'components/DocumentTitle';
+import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import Validation from 'components/Validation';
 
 export interface IEditTableProps {
@@ -59,7 +59,7 @@ class EditTable extends React.Component<IEditTableProps> {
 
     render() {
         return (
-            <DocumentTitle title={this.props.tableStruct && this.props.tableStruct.name}>
+            <LocalizedDocumentTitle title={this.props.tableStruct && this.props.tableStruct.name}>
                 <div>
                     <Heading>
                         <FormattedMessage id="admin.tables" defaultMessage="Tables" />
@@ -207,7 +207,7 @@ class EditTable extends React.Component<IEditTableProps> {
                         )}
                     </div>
                 </div>
-            </DocumentTitle>
+            </LocalizedDocumentTitle>
         );
     }
 }
