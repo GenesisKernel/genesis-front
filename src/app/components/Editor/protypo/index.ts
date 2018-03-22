@@ -564,6 +564,38 @@ const register = (editor: typeof monaco) => {
                 staticParamTypes.Class
             ]
         },
+        Range: {
+            label: 'Range',
+            documentation: 'Generate array of numbers. Represents a data-source',
+            kind: monaco.languages.CompletionItemKind.Function,
+            insertText: 'Range(',
+            params: [
+                {
+                    label: 'Source',
+                    documentation: 'Source identificator to bind results',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    insertText: 'Source: '
+                },
+                {
+                    label: 'From',
+                    documentation: 'Initial counter value',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    insertText: 'From: '
+                },
+                {
+                    label: 'To',
+                    documentation: 'Final counter value(exclusive)',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    insertText: 'To: '
+                },
+                {
+                    label: 'Step',
+                    documentation: 'Value that will be added for each step',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    insertText: 'Step: '
+                }
+            ]
+        },
         Select: {
             label: 'Select',
             documentation: 'Element with dropdown menu used to select one value from multiple choices',
