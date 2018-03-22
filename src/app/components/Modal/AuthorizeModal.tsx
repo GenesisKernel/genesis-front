@@ -40,7 +40,7 @@ class AuthorizeModal extends Modal<IAuthorizeModalProps, string> {
                     <div className="pb">
                         <FormattedMessage id="modal.authorization.password" defaultMessage="Enter your password to sign contract {contract}" values={{ contract: this.props.params.contract }} />
                     </div>
-                    <Validation.components.ValidatedFormGroup for="value">
+                    <Validation.components.ValidatedFormGroup for="password">
                         <Validation.components.ValidatedControl
                             type="password"
                             name="password"
