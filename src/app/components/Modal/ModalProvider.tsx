@@ -25,6 +25,7 @@ import ImageEditorModal from 'components/Modal/ImageEditorModal';
 import MapEditorModal from 'components/Modal/MapEditorModal';
 import AboutModal from 'components/Modal/AboutModal';
 import InfoModal from 'components/Modal/InfoModal';
+import ErrorModal from 'components/Modal/ErrorModal';
 import ConfirmModal from './ConfirmModal';
 import CreatePageModal from 'components/Modal/Editor/CreatePageModal';
 import CreateInterfaceModal from 'components/Modal/Editor/CreateInterfaceModal';
@@ -42,6 +43,7 @@ const MODAL_COMPONENTS = {
     'PROMPT': PromptModal,
     'CONFIRM': ConfirmModal,
     'INFO': InfoModal,
+    'ERROR': ErrorModal,
     'ABOUT': AboutModal
 };
 

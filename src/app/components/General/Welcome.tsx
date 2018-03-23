@@ -32,13 +32,12 @@
 
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
-import { navigate } from 'modules/engine/actions';
 import { FormattedMessage } from 'react-intl';
 
 import General from 'components/General';
 
 export interface IWelcomeProps {
-    navigate: typeof navigate;
+    navigate: (url: string) => void;
 }
 
 const Welcome: React.SFC<IWelcomeProps> = (props) => (
