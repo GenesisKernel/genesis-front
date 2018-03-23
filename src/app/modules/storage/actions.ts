@@ -22,5 +22,5 @@ export const saveLocale = actionCreator<string>('SAVE_LOCALE');
 export const saveAccount = actionCreator<IStoredAccount>('SAVE_ACCOUNT');
 export const removeAccount = actionCreator<IStoredAccount>('REMOVE_ACCOUNT');
 export const saveNavigationSize = actionCreator<number>('SAVE_NAVIGATION_SIZE');
-export const addTabList = actionCreator<{ addID?: string, addName?: string, addType?: string, addVDE?: boolean }>('ADD_TAB_LIST');
-export const removeTabList = actionCreator<{ id: string, type: string, vde?: boolean }>('REMOVE_TAB_LIST');
+export const addTabList = actionCreator<{ addID?: string, addName?: string, addType?: string }>('ADD_TAB_LIST');
+export const removeTabList = actionCreator<{ id: string, type: string }>('REMOVE_TAB_LIST');

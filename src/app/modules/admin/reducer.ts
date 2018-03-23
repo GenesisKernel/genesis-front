@@ -24,14 +24,14 @@ import { TProtypoElement } from 'genesis/protypo';
 
 export type State = {
     readonly pending: boolean;
-    readonly block: { id: string, name: string, value: string, conditions: string };
-    readonly menu: { id: string, name: string, value: string, conditions: string };
-    readonly menus: { id: string, name: string, value: string, conditions: string }[];
+    readonly block: { id: number, name: string, value: string, conditions: string };
+    readonly menu: { id: number, name: string, value: string, conditions: string };
+    readonly menus: { id: number, name: string, value: string, conditions: string }[];
     readonly tables: ITablesResponse;
     readonly table: ITableResponse;
     readonly tableData: IListResponse;
     readonly history: IHistoryResponse;
-    readonly page: { id: string, name: string, menu: string, conditions: string, value: string };
+    readonly page: { id: number, name: string, menu: string, conditions: string, value: string };
     readonly pageTreeCode: any;
     readonly interfaces: IInterfacesResponse;
     readonly contract: { id: string, active: string, name: string, conditions: string, address: string, value: string };
@@ -53,7 +53,7 @@ export type State = {
                 canRedo?: boolean
             }
         },
-        list: { id: string, type: string, name?: string, visible?: boolean, vde?: boolean }[]
+        list: { id: string, type: string, name?: string, visible?: boolean }[]
     };
     readonly language: { id: string, res: any, name: string, conditions: string };
     readonly languages: { id: string, res: any, name: string, conditions: string }[];
@@ -61,36 +61,6 @@ export type State = {
     readonly parameters: IParameterResponse[];
     readonly exportPayload: Object;
     readonly importPayload: {
-        pages: { Name: string }[];
-        blocks: { Name: string }[];
-        menus: { Name: string }[];
-        parameters: { Name: string }[];
-        languages: { Name: string }[];
-        contracts: { Name: string }[];
-        tables: { Name: string }[];
-        data: {
-            Table: string;
-            Columns: string[];
-            Data: any[][];
-        }[];
-    };
-
-    readonly vde_block: { id: string, name: string, value: string, conditions: string };
-    readonly vde_menu: { id: string, name: string, value: string, conditions: string };
-    readonly vde_menus: { id: string, name: string, value: string, conditions: string }[];
-    readonly vde_tables: ITablesResponse;
-    readonly vde_table: ITableResponse;
-    readonly vde_tableData: IListResponse;
-    readonly vde_page: { id: string, name: string, menu: string, conditions: string, value: string };
-    readonly vde_interfaces: IInterfacesResponse;
-    readonly vde_contract: { id: string, active: string, name: string, conditions: string, address: string, value: string };
-    readonly vde_contracts: IContract[];
-    readonly vde_language: { id: string, res: any, name: string, conditions: string };
-    readonly vde_languages: { id: string, res: any, name: string, conditions: string }[];
-    readonly vde_parameter: IParameterResponse;
-    readonly vde_parameters: IParameterResponse[];
-    readonly vde_exportPayload: Object;
-    readonly vde_importPayload: {
         pages: { Name: string }[];
         blocks: { Name: string }[];
         menus: { Name: string }[];
@@ -126,24 +96,7 @@ export const initialState: State = {
     parameter: null,
     parameters: null,
     exportPayload: null,
-    importPayload: null,
-
-    vde_block: null,
-    vde_menu: null,
-    vde_menus: null,
-    vde_tables: null,
-    vde_table: null,
-    vde_tableData: null,
-    vde_page: null,
-    vde_interfaces: null,
-    vde_contract: null,
-    vde_contracts: null,
-    vde_language: null,
-    vde_languages: null,
-    vde_parameter: null,
-    vde_parameters: null,
-    vde_exportPayload: null,
-    vde_importPayload: null
+    importPayload: null
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -151,21 +104,21 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            [action.payload.vde ? 'vde_interfaces' : 'interfaces']: null
+            interfaces: null
         };
     }
     else if (isType(action, actions.getInterface.done)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_interfaces' : 'interfaces']: action.payload.result
+            interfaces: action.payload.result
         };
     }
     else if (isType(action, actions.getInterface.failed)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_interfaces' : 'interfaces']: null
+            interfaces: null
         };
     }
 
@@ -173,20 +126,20 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            [action.payload.vde ? 'vde_page' : 'page']: null
+            page: null
         };
     }
     else if (isType(action, actions.getPage.done)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_page' : 'page']: action.payload.result.page,
-            [action.payload.params.vde ? 'vde_menus' : 'menus']: action.payload.result.menus,
+            page: action.payload.result.page,
+            menus: action.payload.result.menus,
             tabs: {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['interfacePage' + action.payload.result.page.id + (action.payload.params.vde ? '-vde' : '')]: {
+                    ['interfacePage' + action.payload.result.page.id]: {
                         type: 'interfacePage',
                         data: action.payload.result.page
                     }
@@ -198,8 +151,8 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_page' : 'page']: null,
-            [action.payload.params.vde ? 'vde_menus' : 'menus']: null
+            ['page']: null,
+            ['menus']: null
         };
     }
 
@@ -234,7 +187,7 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.id + (action.payload.vde ? '-vde' : '')]: null
+                    ['interfaceConstructor' + action.payload.id]: null
                 }
             }
         };
@@ -247,7 +200,7 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.params.id + (action.payload.params.vde ? '-vde' : '')]: {
+                    ['interfaceConstructor' + action.payload.params.id]: {
                         type: 'interfaceConstructor',
                         data: action.payload.result.page.tree
                     }
@@ -263,14 +216,14 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.params.id + (action.payload.params.vde ? '-vde' : '')]: null
+                    ['interfaceConstructor' + action.payload.params.id]: null
                 }
             }
         };
     }
 
     if (isType(action, actions.changePage)) {
-        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')];
+        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID];
         const pageTreeOrig = tabData && tabData.data || null;
         let selectedTag = tabData && tabData.selectedTag || null;
 
@@ -342,7 +295,7 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                    ['interfaceConstructor' + action.payload.pageID]: {
                         type: 'interfaceConstructor',
                         data: pageTree,
                         selectedTag: selectedTag
@@ -353,7 +306,7 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.selectTag)) {
-        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')];
+        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID];
         const pageTree = tabData && tabData.data || null;
 
         return {
@@ -363,7 +316,7 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                    ['interfaceConstructor' + action.payload.pageID]: {
                         type: 'interfaceConstructor',
                         data: pageTree,
                         selectedTag: action.payload.tag
@@ -374,7 +327,7 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.setTagCanDropPosition)) {
-        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')].data || null;
+        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
         pageTree = _.cloneDeep(pageTree);
 
         let tag = findTagById(pageTree, action.payload.tagID).el;
@@ -394,7 +347,7 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                    ['interfaceConstructor' + action.payload.pageID]: {
                         type: 'interfaceConstructor',
                         data: pageTree
                     }
@@ -404,7 +357,7 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.addTag)) {
-        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')].data || null;
+        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
         pageTree = _.cloneDeep(pageTree);
         // destinationTagID
         if (!pageTree) {
@@ -464,7 +417,7 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                    ['interfaceConstructor' + action.payload.pageID]: {
                         type: 'interfaceConstructor',
                         data: pageTree
                     }
@@ -474,7 +427,7 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.moveTag)) {
-        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
+        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
         pageTree = _.cloneDeep(pageTree);
         if (!pageTree) {
             pageTree = [];
@@ -541,7 +494,7 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                    ['interfaceConstructor' + action.payload.pageID]: {
                         type: 'interfaceConstructor',
                         data: pageTree
                     }
@@ -551,7 +504,7 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.copyTag)) {
-        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
+        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
         pageTree = _.cloneDeep(pageTree);
         if (!pageTree) {
             pageTree = [];
@@ -615,7 +568,7 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                    ['interfaceConstructor' + action.payload.pageID]: {
                         type: 'interfaceConstructor',
                         data: pageTree
                     }
@@ -625,7 +578,7 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.removeTag)) {
-        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
+        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
         pageTree = _.cloneDeep(pageTree);
         if (!pageTree) {
             pageTree = [];
@@ -648,7 +601,7 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                    ['interfaceConstructor' + action.payload.pageID]: {
                         type: 'interfaceConstructor',
                         data: pageTree
                     }
@@ -658,11 +611,11 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.saveConstructorHistory)) {
-        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')].data || null;
+        let pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
         pageTree = _.cloneDeep(pageTree);
-        let data = state.tabs.history['page' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.history['page' + action.payload.pageID + (action.payload.vde ? '-vde' : '')].data || [];
+        let data = state.tabs.history['page' + action.payload.pageID] && state.tabs.history['page' + action.payload.pageID].data || [];
         data = _.cloneDeep(data);
-        const position = state.tabs.history['page' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.history['page' + action.payload.pageID + (action.payload.vde ? '-vde' : '')].position || 0;
+        const position = state.tabs.history['page' + action.payload.pageID] && state.tabs.history['page' + action.payload.pageID].position || 0;
 
         // alert(JSON.stringify(data));
         if (position < data.length) {
@@ -678,14 +631,14 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 history: {
                     ...state.tabs.history,
-                    ['page' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: { data: data.concat([pageTree]), position: position + 1, canUndo, canRedo }
+                    ['page' + action.payload.pageID]: { data: data.concat([pageTree]), position: position + 1, canUndo, canRedo }
                 }
             }
         };
     }
 
     if (isType(action, actions.generatePageTemplate)) {
-        const pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')].data || null;
+        const pageTree = state.tabs.data['interfaceConstructor' + action.payload.pageID] && state.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
         const codeGenerator = new CodeGenerator(pageTree);
         const pageTemplate = codeGenerator.render();
 
@@ -696,8 +649,8 @@ export default (state: State = initialState, action: Action): State => {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
-                        ...state.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')],
+                    ['interfaceConstructor' + action.payload.pageID]: {
+                        ...state.tabs.data['interfaceConstructor' + action.payload.pageID],
                         pageTemplate: pageTemplate
                     }
                 }
@@ -707,9 +660,9 @@ export default (state: State = initialState, action: Action): State => {
 
     if (isType(action, actions.constructorUndo)) {
         // alert('undo ' + action.payload.pageID);
-        let data = state.tabs.history['page' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.history['page' + action.payload.pageID + (action.payload.vde ? '-vde' : '')].data || [];
+        let data = state.tabs.history['page' + action.payload.pageID] && state.tabs.history['page' + action.payload.pageID].data || [];
         data = _.cloneDeep(data);
-        let position = state.tabs.history['page' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.history['page' + action.payload.pageID + (action.payload.vde ? '-vde' : '')].position || 0;
+        let position = state.tabs.history['page' + action.payload.pageID] && state.tabs.history['page' + action.payload.pageID].position || 0;
         if (position > 1 && data.length > 1) {
             position--;
             const canUndo = position > 1;
@@ -720,11 +673,11 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.tabs,
                     history: {
                         ...state.tabs.history,
-                        ['page' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: { data: data, position: position, canUndo, canRedo }
+                        ['page' + action.payload.pageID]: { data: data, position: position, canUndo, canRedo }
                     },
                     data: {
                         ...state.tabs.data,
-                        ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                        ['interfaceConstructor' + action.payload.pageID]: {
                             type: 'interfaceConstructor',
                             data: data[position - 1]
                         }
@@ -735,9 +688,9 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.constructorRedo)) {
-        let data = state.tabs.history['page' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.history['page' + action.payload.pageID + (action.payload.vde ? '-vde' : '')].data || [];
+        let data = state.tabs.history['page' + action.payload.pageID] && state.tabs.history['page' + action.payload.pageID].data || [];
         data = _.cloneDeep(data);
-        let position = state.tabs.history['page' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.tabs.history['page' + action.payload.pageID + (action.payload.vde ? '-vde' : '')].position || 0;
+        let position = state.tabs.history['page' + action.payload.pageID] && state.tabs.history['page' + action.payload.pageID].position || 0;
         if (position < data.length && data.length > 0) {
             position++;
             const canUndo = position > 1;
@@ -748,11 +701,11 @@ export default (state: State = initialState, action: Action): State => {
                     ...state.tabs,
                     history: {
                         ...state.tabs.history,
-                        ['page' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: { data: data, position: position, canUndo, canRedo }
+                        ['page' + action.payload.pageID]: { data: data, position: position, canUndo, canRedo }
                     },
                     data: {
                         ...state.tabs.data,
-                        ['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')]: {
+                        ['interfaceConstructor' + action.payload.pageID]: {
                             type: 'interfaceConstructor',
                             data: data[position - 1]
                         }
@@ -766,19 +719,19 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            [action.payload.vde ? 'vde_menu' : 'menu']: null
+            ['menu']: null
         };
     }
     else if (isType(action, actions.getMenu.done)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_menu' : 'menu']: action.payload.result,
+            ['menu']: action.payload.result,
             tabs: {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['interfaceMenu' + action.payload.result.id + (action.payload.params.vde ? '-vde' : '')]: {
+                    ['interfaceMenu' + action.payload.result.id]: {
                         type: 'interfaceMenu',
                         data: action.payload.result
                     }
@@ -790,7 +743,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_menu' : 'menu']: null
+            ['menu']: null
         };
     }
 
@@ -798,21 +751,21 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            [action.payload.vde ? 'vde_tables' : 'tables']: null
+            ['tables']: null
         };
     }
     else if (isType(action, actions.getTables.done)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_tables' : 'tables']: action.payload.result
+            ['tables']: action.payload.result
         };
     }
     else if (isType(action, actions.getTables.failed)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_tables' : 'tables']: null
+            ['tables']: null
         };
     }
 
@@ -842,24 +795,24 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            [action.payload.vde ? 'vde_table' : 'table']: null,
-            [action.payload.vde ? 'vde_tableData' : 'tableData']: null
+            ['table']: null,
+            ['tableData']: null
         };
     }
     else if (isType(action, actions.getTable.done)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_table' : 'table']: action.payload.result.table,
-            [action.payload.params.vde ? 'vde_tableData' : 'tableData']: action.payload.result.data
+            ['table']: action.payload.result.table,
+            ['tableData']: action.payload.result.data
         };
     }
     else if (isType(action, actions.getTable.failed)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_table' : 'table']: null,
-            [action.payload.params.vde ? 'vde_tableData' : 'tableData']: null
+            ['table']: null,
+            ['tableData']: null
         };
     }
 
@@ -867,21 +820,21 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            [action.payload.vde ? 'vde_table' : 'table']: null
+            ['table']: null
         };
     }
     else if (isType(action, actions.getTableStruct.done)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_table' : 'table']: action.payload.result
+            ['table']: action.payload.result
         };
     }
     else if (isType(action, actions.getTableStruct.failed)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_table' : 'table']: null
+            ['table']: null
         };
     }
 
@@ -889,21 +842,26 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            [action.payload.vde ? 'vde_menus' : 'menus']: null
+            ['menus']: null
         };
     }
     else if (isType(action, actions.getMenus.done)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_menus' : 'menus']: action.payload.result
+            menus: {
+                ...action.payload.result.map(l => ({
+                    ...l,
+                    id: parseInt(l.id, 10)
+                }))
+            }
         };
     }
     else if (isType(action, actions.getMenus.failed)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_menus' : 'menus']: null
+            ['menus']: null
         };
     }
 
@@ -911,19 +869,19 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            [action.payload.vde ? 'vde_contract' : 'contract']: null
+            ['contract']: null
         };
     }
     else if (isType(action, actions.getContract.done)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_contract' : 'contract']: action.payload.result,
+            ['contract']: action.payload.result,
             tabs: {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['contract' + action.payload.result.id + (action.payload.params.vde ? '-vde' : '')]: {
+                    ['contract' + action.payload.result.id]: {
                         type: 'contract',
                         data: action.payload.result
                     }
@@ -935,7 +893,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_contract' : 'contract']: null
+            ['contract']: null
         };
     }
 
@@ -943,21 +901,21 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            [action.payload.vde ? 'vde_contracts' : 'contracts']: null
+            ['contracts']: null
         };
     }
     else if (isType(action, actions.getContracts.done)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_contracts' : 'contracts']: action.payload.result.list
+            ['contracts']: action.payload.result.list
         };
     }
     else if (isType(action, actions.getContracts.failed)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_contracts' : 'contracts']: null
+            ['contracts']: null
         };
     }
 
@@ -965,19 +923,19 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            [action.payload.vde ? 'vde_block' : 'block']: null
+            ['block']: null
         };
     }
     else if (isType(action, actions.getBlock.done)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_block' : 'block']: action.payload.result,
+            ['block']: action.payload.result,
             tabs: {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['interfaceBlock' + action.payload.result.id + (action.payload.params.vde ? '-vde' : '')]: {
+                    ['interfaceBlock' + action.payload.result.id]: {
                         type: 'interfaceBlock',
                         data: action.payload.result
                     }
@@ -989,7 +947,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_block' : 'block']: null
+            ['block']: null
         };
     }
 
@@ -997,21 +955,21 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            [action.payload.vde ? 'vde_languages' : 'languages']: null
+            ['languages']: null
         };
     }
     else if (isType(action, actions.getLanguages.done)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_languages' : 'languages']: action.payload.result
+            ['languages']: action.payload.result
         };
     }
     else if (isType(action, actions.getLanguages.failed)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_languages' : 'languages']: null
+            ['languages']: null
         };
     }
 
@@ -1019,21 +977,21 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            [action.payload.vde ? 'vde_language' : 'language']: null
+            ['language']: null
         };
     }
     else if (isType(action, actions.getLanguage.done)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_language' : 'language']: action.payload.result
+            ['language']: action.payload.result
         };
     }
     else if (isType(action, actions.getLanguage.failed)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_language' : 'language']: null
+            ['language']: null
         };
     }
 
@@ -1041,21 +999,21 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            [action.payload.vde ? 'vde_parameters' : 'parameters']: null
+            ['parameters']: null
         };
     }
     else if (isType(action, actions.getParameters.done)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_parameters' : 'parameters']: action.payload.result
+            ['parameters']: action.payload.result
         };
     }
     else if (isType(action, actions.getParameters.failed)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_parameters' : 'parameters']: null
+            ['parameters']: null
         };
     }
 
@@ -1063,19 +1021,19 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            [action.payload.vde ? 'vde_parameter' : 'parameter']: null
+            ['parameter']: null
         };
     }
     else if (isType(action, actions.getParameter.done)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_parameter' : 'parameter']: action.payload.result,
+            ['parameter']: action.payload.result,
             tabs: {
                 ...state.tabs,
                 data: {
                     ...state.tabs.data,
-                    ['parameter' + action.payload.result.name + (action.payload.params.vde ? '-vde' : '')]: {
+                    ['parameter' + action.payload.result.name]: {
                         type: 'parameter',
                         data: action.payload.result
                     }
@@ -1087,7 +1045,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_parameter' : 'parameter']: null
+            ['parameter']: null
         };
     }
 
@@ -1095,21 +1053,21 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            [action.payload.vde ? 'vde_exportPayload' : 'exportPayload']: null
+            ['exportPayload']: null
         };
     }
     else if (isType(action, actions.exportData.done)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_exportPayload' : 'exportPayload']: action.payload.result
+            ['exportPayload']: action.payload.result
         };
     }
     else if (isType(action, actions.exportData.failed)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_exportPayload' : 'exportPayload']: null
+            ['exportPayload']: null
         };
     }
 
@@ -1117,26 +1075,26 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            [action.payload.vde ? 'vde_importPayload' : 'importPayload']: null
+            ['importPayload']: null
         };
     }
     else if (isType(action, actions.importData.done)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_importPayload' : 'importPayload']: action.payload.result
+            ['importPayload']: action.payload.result
         };
     }
     else if (isType(action, actions.importData.failed)) {
         return {
             ...state,
             pending: false,
-            [action.payload.params.vde ? 'vde_importPayload' : 'importPayload']: null
+            ['importPayload']: null
         };
     }
 
     if (isType(action, actions.importDataPrune)) {
-        const statePayload = state[action.payload.vde ? 'vde_importPayload' : 'importPayload'];
+        const statePayload = state.importPayload;
         let payload: any = null;
         if ('number' === typeof action.payload.index) {
             const table = statePayload[action.payload.name].find((l: any) => l.Table === action.payload.key);
@@ -1158,7 +1116,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: true,
-            [action.payload.vde ? 'vde_importPayload' : 'importPayload']: {
+            ['importPayload']: {
                 ...statePayload,
                 [action.payload.name]: payload
             }

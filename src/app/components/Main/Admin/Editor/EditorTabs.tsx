@@ -16,7 +16,7 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
-import { TEditorTab } from 'genesis/content';
+import { TEditorTab } from 'genesis/editor';
 import imgSim from './sim.svg';
 import imgTpl from './tpl.svg';
 

@@ -25,7 +25,6 @@ import { alertShow, navigatePage } from 'modules/content/actions';
 import TxButton, { ITxButtonConfirm } from 'components/TxButton';
 
 interface ITxButtonContainerProps {
-    vde?: boolean;
     className?: string;
     contractName?: string;
     contractParams?: { [name: string]: any } | (() => { [name: string]: any });
@@ -124,8 +123,7 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
             this.props.callContract({
                 uuid: this._uuid,
                 name: this.props.contractName,
-                params: contractParams,
-                vde: this.props.vde
+                params: contractParams
             });
         }
     }
@@ -163,8 +161,7 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
             this.props.navigatePage({
                 name: page,
                 params: pageParams,
-                force: true,
-                vde: this.props.vde
+                force: true
             });
         }
     }

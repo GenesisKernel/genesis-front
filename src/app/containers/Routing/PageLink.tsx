@@ -24,7 +24,6 @@ import PageLink from 'components/Routing/PageLink';
 export interface IPageLinkContainerProps {
     page: string;
     section?: string;
-    vde?: boolean;
     className?: string;
     params?: {
         [key: string]: string;

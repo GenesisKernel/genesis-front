@@ -21,7 +21,6 @@ import { IRootState } from 'modules';
 import AddColumn from 'components/Main/Admin/Tables/AddColumn';
 
 export interface IAddColumnContainerProps {
-    vde?: boolean;
     table: string;
 }
 
@@ -34,7 +33,7 @@ interface IAddColumnContainerDispatch {
 }
 
 const AddColumnContainer: React.SFC<IAddColumnContainerProps & IAddColumnContainerState & IAddColumnContainerDispatch> = (props) => (
-    <AddColumn vde={props.vde} table={props.table} />
+    <AddColumn table={props.table} />
 );
 
 const mapStateToProps = (state: IRootState) => ({

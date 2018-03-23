@@ -38,7 +38,7 @@ const txPrepareEpic: Epic<Action, IRootState> =
                 }));
             }
 
-            return Observable.fromPromise(api.txPrepare(state.auth.sessionToken, action.payload.tx.name, action.payload.tx.params, action.payload.tx.vde))
+            return Observable.fromPromise(api.txPrepare(state.auth.sessionToken, action.payload.tx.name, action.payload.tx.params))
                 .flatMap(prepare => {
                     let forSign = prepare.forsign;
                     const signParams = {};

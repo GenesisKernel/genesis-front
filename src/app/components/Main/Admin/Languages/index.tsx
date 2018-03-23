@@ -23,7 +23,6 @@ import PageLink from 'containers/Routing/PageLink';
 import Table, { ICellRenderer } from 'components/Table';
 
 export interface ILanguagesProps {
-    vde?: boolean;
     resources: {
         id: string;
         res: any;
@@ -41,7 +40,7 @@ const renderLocale: ICellRenderer = (value, rowData) => {
         );
 
         case 3: return (
-            <PageLink page="edit-lang" params={{ id: rowData.rowData[0] }} vde={!!rowData.rowData[4]}>
+            <PageLink page="edit-lang" params={{ id: rowData.rowData[0] }}>
                 <Button bsStyle="default" className="btn-labeled btn-icon">
                     <span className="btn-label">
                         <em className="icon-pencil" />
@@ -67,7 +66,7 @@ const Languages: React.SFC<ILanguagesProps & InjectedIntlProps> = (props) => (
             ),
             toolButtons: [
                 {
-                    url: props.vde ? '/vdeadmin/create-lang' : '/admin/create-lang',
+                    url: '/admin/create-lang',
                     icon: 'icon-plus',
                     title: (
                         <FormattedMessage id="admin.languages.create" defaultMessage="Create localization" />
@@ -88,7 +87,7 @@ const Languages: React.SFC<ILanguagesProps & InjectedIntlProps> = (props) => (
                 { title: props.intl.formatMessage({ id: 'admin.languages.resources', defaultMessage: 'Resources' }) },
                 { width: 1 }
             ]}
-            data={props.resources.map(p => [p.id, p.name, p.res, p.conditions, props.vde])}
+            data={props.resources.map(p => [p.id, p.name, p.res, p.conditions])}
         />
     </Wrapper>
 );

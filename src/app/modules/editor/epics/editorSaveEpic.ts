@@ -29,8 +29,7 @@ const editorSaveEpic: Epic<Action, IRootState> =
                 case 'contract':
                     return Observable.of(txCall({
                         uuid: 'EDITOR_SAVE',
-                        name: action.payload.vde ? 'EditContract' : '@1EditContract',
-                        vde: action.payload.vde,
+                        name: '@1EditContract',
                         params: {
                             Id: action.payload.id,
                             Value: action.payload.value
@@ -40,8 +39,7 @@ const editorSaveEpic: Epic<Action, IRootState> =
                 case 'page':
                     return Observable.of(txCall({
                         uuid: 'EDITOR_SAVE',
-                        name: action.payload.vde ? 'EditPage' : '@1EditPage',
-                        vde: action.payload.vde,
+                        name: '@1EditPage',
                         params: {
                             Id: action.payload.id,
                             Value: action.payload.value
@@ -51,8 +49,7 @@ const editorSaveEpic: Epic<Action, IRootState> =
                 case 'menu':
                     return Observable.of(txCall({
                         uuid: 'EDITOR_SAVE',
-                        name: action.payload.vde ? 'EditMenu' : '@1EditMenu',
-                        vde: action.payload.vde,
+                        name: '@1EditMenu',
                         params: {
                             Id: action.payload.id,
                             Value: action.payload.value
@@ -62,8 +59,7 @@ const editorSaveEpic: Epic<Action, IRootState> =
                 case 'block':
                     return Observable.of(txCall({
                         uuid: 'EDITOR_SAVE',
-                        name: action.payload.vde ? 'EditBlock' : '@1EditBlock',
-                        vde: action.payload.vde,
+                        name: '@1EditBlock',
                         params: {
                             Id: action.payload.id,
                             Value: action.payload.value

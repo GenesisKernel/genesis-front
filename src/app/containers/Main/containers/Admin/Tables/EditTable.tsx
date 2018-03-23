@@ -23,7 +23,6 @@ import { ITableResponse } from 'lib/api';
 import EditTable from 'components/Main/Admin/Tables/EditTable';
 
 export interface IEditTableContainerProps {
-    vde?: boolean;
     table: string;
 }
 
@@ -38,16 +37,14 @@ interface IEditTableContainerDispatch {
 class EditTableContainer extends React.Component<IEditTableContainerProps & IEditTableContainerState & IEditTableContainerDispatch> {
     componentDidMount() {
         this.props.getTableStruct({
-            name: this.props.table,
-            vde: this.props.vde
+            name: this.props.table
         });
     }
 
     componentWillReceiveProps(props: IEditTableContainerProps & IEditTableContainerState & IEditTableContainerDispatch) {
-        if (this.props.table !== props.table || this.props.vde !== props.vde) {
+        if (this.props.table !== props.table) {
             props.getTableStruct({
-                name: props.table,
-                vde: props.vde
+                name: props.table
             });
         }
     }
@@ -59,9 +56,7 @@ class EditTableContainer extends React.Component<IEditTableContainerProps & IEdi
     }
 }
 
-const mapStateToProps = (state: IRootState, ownProps: IEditTableContainerProps) => ownProps.vde ? ({
-    tableStruct: state.admin.vde_table
-}) : ({
+const mapStateToProps = (state: IRootState) => ({
     tableStruct: state.admin.table
 });
 

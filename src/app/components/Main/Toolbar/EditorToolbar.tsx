@@ -16,7 +16,7 @@
 
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { TEditorTab } from 'genesis/content';
+import { TEditorTab } from 'genesis/editor';
 
 import ToolButton from './ToolButton';
 import DropdownToolButton from './DropdownToolButton';

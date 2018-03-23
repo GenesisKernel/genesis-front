@@ -24,7 +24,6 @@ import Table, { ICellRenderer } from 'components/Table';
 import PageLink from 'containers/Routing/PageLink';
 
 export interface ITablesProps {
-    vde?: boolean;
     tables: ITablesResponse;
 }
 
@@ -42,7 +41,7 @@ const renderTable: ICellRenderer = (value, rowData) => {
                     <FormattedMessage id="admin.tables.show" defaultMessage="Show" />
                 </Button>
             ) : (
-                <PageLink page="table" params={{ table: rowData.rowData[0] }} vde={!!rowData.rowData[2]}>
+                <PageLink page="table" params={{ table: rowData.rowData[0] }}>
                     <Button bsStyle="primary">
                         <FormattedMessage id="admin.tables.show" defaultMessage="Show" />
                     </Button>
@@ -50,7 +49,7 @@ const renderTable: ICellRenderer = (value, rowData) => {
             );
 
         case 3: return (
-            <PageLink page="edit-table" params={{ table: rowData.rowData[0] }} vde={!!rowData.rowData[2]}>
+            <PageLink page="edit-table" params={{ table: rowData.rowData[0] }}>
                 <Button bsStyle="primary" type="button">
                     <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
                 </Button>
@@ -74,7 +73,7 @@ const Tables: React.SFC<ITablesProps & InjectedIntlProps> = (props) => (
             ),
             toolButtons: [
                 {
-                    url: props.vde ? '/vdeadmin/create-table' : '/admin/create-table',
+                    url: '/admin/create-table',
                     icon: 'icon-plus',
                     title: (
                         <FormattedMessage id="admin.tables.create" defaultMessage="Create" />
@@ -99,7 +98,7 @@ const Tables: React.SFC<ITablesProps & InjectedIntlProps> = (props) => (
                 { width: 1 },
                 { width: 1 }
             ]}
-            data={props.tables.list.map(p => [p.name, p.count, props.vde])}
+            data={props.tables.list.map(p => [p.name, p.count])}
         />
     </Wrapper>
 );

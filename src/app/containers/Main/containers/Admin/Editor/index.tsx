@@ -20,8 +20,8 @@ import { injectIntl, InjectedIntlProps } from 'react-intl';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { modalShow } from 'modules/modal/actions';
-import { changeEditorTab, closeEditorTab, updateEditorTab, loadEditorTab, createEditorTab } from 'modules/content/actions';
-import { TEditorTab } from 'genesis/content';
+import { changeEditorTab, closeEditorTab, updateEditorTab, loadEditorTab, createEditorTab } from 'modules/editor/actions';
+import { TEditorTab } from 'genesis/editor';
 import { IModalResult } from 'genesis/modal';
 
 import Editor from 'components/Main/Admin/Editor';
@@ -30,7 +30,6 @@ interface IEditorContainerProps {
     open?: string;
     create?: string;
     name?: string;
-    vde?: string;
 }
 
 interface IEditorContainerState {
@@ -66,7 +65,7 @@ class EditorContainer extends React.Component<IEditorContainerProps & InjectedIn
         this.props.onTabCreate(type);
     }
 
-    onTabLoad = (params: { type: string, name: string, vde?: boolean }) => {
+    onTabLoad = (params: { type: string, name: string }) => {
         history.replace('/editor');
         this.props.onTabLoad(params);
     }
@@ -98,7 +97,6 @@ class EditorContainer extends React.Component<IEditorContainerProps & InjectedIn
                 open={this.props.open}
                 create={this.props.create}
                 name={this.props.name}
-                vde={'true' === this.props.vde}
                 tabIndex={this.props.tabIndex}
                 tabs={this.props.tabs}
                 onTabCreate={this.onTabCreate}
@@ -112,8 +110,8 @@ class EditorContainer extends React.Component<IEditorContainerProps & InjectedIn
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    tabIndex: state.content.editor.tabIndex,
-    tabs: state.content.editor.tabs,
+    tabIndex: state.editor.tabIndex,
+    tabs: state.editor.tabs,
     modalResult: state.modal.result
 });
 

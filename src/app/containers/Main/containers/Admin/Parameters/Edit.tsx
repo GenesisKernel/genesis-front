@@ -24,7 +24,6 @@ import DataPreloader from 'components/Animation/DataPreloader';
 import Edit from 'components/Main/Admin/Parameters/Edit';
 
 export interface IEditContainerProps {
-    vde?: boolean;
     parameterName: string;
 }
 
@@ -39,16 +38,14 @@ interface IEditContainerDispatch {
 class EditContainer extends React.Component<IEditContainerProps & IEditContainerState & IEditContainerDispatch> {
     componentDidMount() {
         this.props.getParameter({
-            name: this.props.parameterName,
-            vde: this.props.vde
+            name: this.props.parameterName
         });
     }
 
     componentWillReceiveProps(props: IEditContainerProps & IEditContainerState & IEditContainerDispatch) {
-        if (this.props.parameterName !== props.parameterName || this.props.vde !== props.vde) {
+        if (this.props.parameterName !== props.parameterName) {
             props.getParameter({
-                name: props.parameterName,
-                vde: props.vde
+                name: props.parameterName
             });
         }
     }
@@ -56,15 +53,13 @@ class EditContainer extends React.Component<IEditContainerProps & IEditContainer
     render() {
         return (
             <DataPreloader data={[this.props.parameter]}>
-                <Edit parameter={this.props.parameter} vde={this.props.vde} />
+                <Edit parameter={this.props.parameter} />
             </DataPreloader>
         );
     }
 }
 
-const mapStateToProps = (state: IRootState, ownProps: IEditContainerProps) => ownProps.vde ? ({
-    parameter: state.admin.vde_parameter
-}) : ({
+const mapStateToProps = (state: IRootState) => ({
     parameter: state.admin.parameter
 });
 

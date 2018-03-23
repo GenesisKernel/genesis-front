@@ -24,7 +24,6 @@ import PageLink from 'containers/Routing/PageLink';
 import Table, { ICellRenderer } from 'components/Table';
 
 export interface IParametersProps {
-    vde?: boolean;
     parameters: IParameterResponse[];
 }
 
@@ -43,7 +42,7 @@ const renderParameter: ICellRenderer = (value, rowData) => {
         );
 
         case 3: return (
-            <PageLink page="edit-parameter" params={{ name: rowData.rowData[0] }} vde={!!rowData.rowData[3]}>
+            <PageLink page="edit-parameter" params={{ name: rowData.rowData[0] }}>
                 <Button bsStyle="default" className="btn-labeled btn-icon">
                     <span className="btn-label">
                         <em className="icon-pencil" />
@@ -69,14 +68,14 @@ const Parameters: React.SFC<IParametersProps & InjectedIntlProps> = (props) => (
             ),
             toolButtons: [
                 {
-                    url: props.vde ? '/vdeadmin/stylesheet' : '/admin/stylesheet',
+                    url: '/admin/stylesheet',
                     icon: 'icon-picture',
                     title: (
                         <FormattedMessage id="admin.parameters.stylesheet" defaultMessage="Manage stylesheet" />
                     )
                 },
                 {
-                    url: props.vde ? '/vdeadmin/create-parameter' : '/admin/create-parameter',
+                    url: '/admin/create-parameter',
                     icon: 'icon-picture',
                     title: (
                         <FormattedMessage id="admin.parameters.create" defaultMessage="Create" />
@@ -97,7 +96,7 @@ const Parameters: React.SFC<IParametersProps & InjectedIntlProps> = (props) => (
                 { title: props.intl.formatMessage({ id: 'admin.conditions.change', defaultMessage: 'Conditions' }), sortable: true, width: 250 },
                 { width: 1 }
             ]}
-            data={props.parameters.map(p => [p.name, p.value, p.conditions, props.vde])}
+            data={props.parameters.map(p => [p.name, p.value, p.conditions])}
         />
     </Wrapper>
 );

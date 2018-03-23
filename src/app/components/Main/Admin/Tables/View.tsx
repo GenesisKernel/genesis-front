@@ -58,7 +58,6 @@ export const columnDisplayRules: { [key: string]: IColumnDisplayRule } = {
 };
 
 export interface IViewProps {
-    vde?: boolean;
     tableName: string;
     table: ITableResponse;
     tableData: IListResponse;
@@ -73,7 +72,7 @@ const View: React.SFC<IViewProps> = (props) => (
             <div className="content-wrapper">
                 <ol className="breadcrumb">
                     <li>
-                        <PageLink page="tables" vde={props.vde}>
+                        <PageLink page="tables">
                             <FormattedMessage id="admin.tables" defaultMessage="Tables" />
                         </PageLink>
                     </li>
@@ -91,11 +90,9 @@ const View: React.SFC<IViewProps> = (props) => (
                                         {props.table.columns.map(col => (
                                             <th key={col.name}>{col.name}</th>
                                         ))}
-                                        {!props.vde && (
-                                            <th style={{ width: 1 }}>
-                                                <FormattedMessage id="admin.tables.changes" defaultMessage="Changes" />
-                                            </th>
-                                        )}
+                                        <th style={{ width: 1 }}>
+                                            <FormattedMessage id="admin.tables.changes" defaultMessage="Changes" />
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -107,13 +104,11 @@ const View: React.SFC<IViewProps> = (props) => (
                                                     {columnDisplayRules[col.type] && columnDisplayRules[col.type].render(row[col.name])}
                                                 </td>
                                             ))}
-                                            {!props.vde && (
-                                                <td>
-                                                    <PageLink className="btn btn-primary" page="history" params={{ table: props.table.name, id: row.id }} vde={props.vde}>
-                                                        <FormattedMessage id="admin.tables.history" defaultMessage="History" />
-                                                    </PageLink>
-                                                </td>
-                                            )}
+                                            <td>
+                                                <PageLink className="btn btn-primary" page="history" params={{ table: props.table.name, id: row.id }}>
+                                                    <FormattedMessage id="admin.tables.history" defaultMessage="History" />
+                                                </PageLink>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>

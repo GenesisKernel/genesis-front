@@ -133,7 +133,6 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
                                         </div>
                                     </StyledBackButton>
                                     <Protypo
-                                        vde={menu.vde}
                                         context="menu"
                                         content={menu.content}
                                     />

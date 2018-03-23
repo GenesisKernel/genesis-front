@@ -38,7 +38,7 @@ const Page: React.SFC<IPageProps> = (props) => {
     else {
         return (
             <DocumentTitle title={props.name}>
-                <Protypo context="page" {...props} vde={props.vde} />
+                <Protypo context="page" {...props} />
             </DocumentTitle>
         );
     }

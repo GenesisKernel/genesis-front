@@ -26,7 +26,6 @@ import * as uuid from 'uuid';
 import Validation from 'components/Validation';
 
 interface IValidatedContractFormProps {
-    vde?: boolean;
     silent?: boolean;
     className?: string;
     contractName: string;
@@ -138,7 +137,6 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
         const params = this.props.mapContractParams(values);
         this._pending = true;
         this.props.callContract({
-            vde: this.props.vde,
             uuid: this._uuid,
             name: this.props.contractName,
             silent: this.props.silent,

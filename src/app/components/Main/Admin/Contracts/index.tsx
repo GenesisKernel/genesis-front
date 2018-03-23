@@ -23,7 +23,6 @@ import PageLink from 'containers/Routing/PageLink';
 import Table, { ICellRenderer } from 'components/Table';
 
 export interface IContractsProps {
-    vde?: boolean;
     contracts: IContract[];
 }
 
@@ -49,7 +48,7 @@ const renderCell: ICellRenderer = (data, rowData) => {
 
         case 4: return (
             <div>
-                <PageLink className="btn btn-link" section="editor" page="editor" params={{ open: 'contract', name: rowData.rowData[1] }} vde={!!rowData.rowData[4]}>
+                <PageLink className="btn btn-link" section="editor" page="editor" params={{ open: 'contract', name: rowData.rowData[1] }}>
                     <FormattedMessage id="admin.contracts.edit" defaultMessage="Edit" />
                 </PageLink>
                 {!rowData.rowData[4] && (
@@ -92,7 +91,7 @@ const Contracts: React.SFC<IContractsProps & InjectedIntlProps> = (props) => (
         <Table
             striped
             renderCell={renderCell}
-            data={props.contracts.map(contract => [contract.id, contract.name, contract.address, contract.active, props.vde])}
+            data={props.contracts.map(contract => [contract.id, contract.name, contract.address, contract.active])}
             columns={[
                 { title: 'ID', sortable: true, width: 80 },
                 { title: props.intl.formatMessage({ id: 'admin.contracts.name', defaultMessage: 'Name' }), sortable: true },

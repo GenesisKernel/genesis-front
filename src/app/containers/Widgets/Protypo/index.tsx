@@ -24,7 +24,6 @@ import { TProtypoElement } from 'genesis/protypo';
 import Protypo from 'components/Protypo';
 
 export interface IProtypoContainerProps {
-    vde?: boolean;
     editable?: boolean;
     wrapper?: JSX.Element;
     context: string;

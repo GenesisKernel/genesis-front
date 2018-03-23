@@ -64,8 +64,7 @@ export const columnTypes = [
 ];
 
 export interface ICreateProps {
-    vde?: boolean;
-    navigatePage: (params: { name?: string, section?: string, force?: boolean, params: { [key: string]: any }, vde?: boolean }) => void;
+    navigatePage: (params: { name?: string, section?: string, force?: boolean, params: { [key: string]: any } }) => void;
 }
 
 interface ICreateState {
@@ -100,17 +99,17 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                 insert: values.insert,
                 update: values.update,
                 new_column: values.newColumn,
-                ...(this.props.vde && {
+                ...(false ? {
                     read: values.read,
                     filter: values.filter
-                })
+                } : {})
             })
         };
     }
 
     onExec(block: string, error: string) {
         if (block) {
-            this.props.navigatePage({ name: 'tables', vde: this.props.vde, params: {} });
+            this.props.navigatePage({ name: 'tables', params: {} });
         }
     }
 
@@ -179,7 +178,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <PageLink page="tables" vde={this.props.vde}>
+                                <PageLink page="tables">
                                     <FormattedMessage id="admin.tables" defaultMessage="Tables" />
                                 </PageLink>
                             </li>
@@ -187,7 +186,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                                 <FormattedMessage id="admin.create" defaultMessage="Create" />
                             </li>
                         </ol>
-                        <ValidatedContractForm vde={this.props.vde} contractName={this.props.vde ? 'NewTable' : '@1NewTable'} mapContractParams={this.mapContractParams.bind(this)} onExec={this.onExec.bind(this)}>
+                        <ValidatedContractForm contractName="@1NewTable" mapContractParams={this.mapContractParams.bind(this)} onExec={this.onExec.bind(this)}>
                             <div className="panel panel-default">
                                 <div className="panel-body">
                                     <Validation.components.ValidatedFormGroup for="name">
@@ -303,7 +302,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                                         </Validation.components.ValidatedFormGroup>
                                     </Panel>
                                 </Col>
-                                {this.props.vde && (
+                                {false && (
                                     <Col md={6}>
                                         <Panel header={<FormattedMessage id="admin.tables.permissions.read" defaultMessage="Read permissions" />}>
                                             <Validation.components.ValidatedFormGroup for="read">

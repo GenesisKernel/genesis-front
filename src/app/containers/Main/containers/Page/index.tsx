@@ -73,8 +73,7 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
             if (!section) {
                 props.navigatePage({
                     section: 'home',
-                    params: {},
-                    vde: false
+                    params: {}
                 });
             }
             else if (!section.page || section.page.name !== requestPage || section.force || this.props.location.search !== props.location.search) {
@@ -85,16 +84,14 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
                         section: legacyPage.section || section.name,
                         name: requestPage,
                         menu: legacyPage.menu,
-                        params,
-                        vde: section.vde
+                        params
                     });
                 }
                 else {
                     props.renderPage({
                         section: section.name,
                         name: requestPage,
-                        params,
-                        vde: section.vde
+                        params
                     });
                 }
             }
@@ -116,7 +113,6 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
                                 ) :
                                 (
                                     <Page
-                                        vde={section.vde}
                                         error={section.page && section.page.error}
                                         name={section.page && section.page.name}
                                         params={section.page && section.page.params}

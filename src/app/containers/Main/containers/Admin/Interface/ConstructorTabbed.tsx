@@ -25,10 +25,9 @@ import { TProtypoElement } from 'genesis/protypo';
 export interface IConstructorTabbedContainerProps {
     pageID: string;
     pageName: string;
-    vde?: boolean;
     navigatePage?: (params: { name: string, params?: any }) => void;
     menus?: { id: string, name: string, conditions: string, value: string }[];
-    onSave?: (pageID: string, vde?: boolean) => void;
+    onSave?: (pageID: string) => void;
     random?: number;
 }
 
@@ -93,65 +92,56 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     getPage() {
         this.props.getPageTree({
             id: this.props.pageID,
-            name: this.props.pageName,
-            vde: this.props.vde
+            name: this.props.pageName
         });
         this.props.getPage({
-            name: this.props.pageName,
-            vde: this.props.vde
+            name: this.props.pageName
         });
     }
 
     changePage(payload?: any) {
         payload.pageID = this.props.pageID;
-        payload.vde = this.props.vde;
         this.props.changePage(payload);
-        this.props.saveConstructorHistory({ pageID: this.props.pageID, vde: this.props.vde });
-        this.props.generatePageTemplate({ pageID: this.props.pageID, vde: this.props.vde });
+        this.props.saveConstructorHistory({ pageID: this.props.pageID });
+        this.props.generatePageTemplate({ pageID: this.props.pageID });
     }
 
     addTag(payload?: any) {
         payload.pageID = this.props.pageID;
-        payload.vde = this.props.vde;
         this.props.addTag(payload);
-        this.props.saveConstructorHistory({ pageID: this.props.pageID, vde: this.props.vde });
-        this.props.generatePageTemplate({ pageID: this.props.pageID, vde: this.props.vde });
+        this.props.saveConstructorHistory({ pageID: this.props.pageID });
+        this.props.generatePageTemplate({ pageID: this.props.pageID });
     }
 
     moveTag(payload?: any) {
         payload.pageID = this.props.pageID;
-        payload.vde = this.props.vde;
         this.props.moveTag(payload);
-        this.props.saveConstructorHistory({ pageID: this.props.pageID, vde: this.props.vde });
-        this.props.generatePageTemplate({ pageID: this.props.pageID, vde: this.props.vde });
+        this.props.saveConstructorHistory({ pageID: this.props.pageID });
+        this.props.generatePageTemplate({ pageID: this.props.pageID });
     }
 
     copyTag(payload?: any) {
         payload.pageID = this.props.pageID;
-        payload.vde = this.props.vde;
         this.props.copyTag(payload);
-        this.props.saveConstructorHistory({ pageID: this.props.pageID, vde: this.props.vde });
-        this.props.generatePageTemplate({ pageID: this.props.pageID, vde: this.props.vde });
+        this.props.saveConstructorHistory({ pageID: this.props.pageID });
+        this.props.generatePageTemplate({ pageID: this.props.pageID });
     }
 
     removeTag(payload?: any) {
         payload.pageID = this.props.pageID;
-        payload.vde = this.props.vde;
         this.props.removeTag(payload);
-        this.props.saveConstructorHistory({ pageID: this.props.pageID, vde: this.props.vde });
-        this.props.generatePageTemplate({ pageID: this.props.pageID, vde: this.props.vde });
+        this.props.saveConstructorHistory({ pageID: this.props.pageID });
+        this.props.generatePageTemplate({ pageID: this.props.pageID });
     }
 
     setTagCanDropPosition(payload?: any) {
         payload.pageID = this.props.pageID;
-        payload.vde = this.props.vde;
         this.props.setTagCanDropPosition(payload);
     }
 
     selectTag(payload?: any) {
         this.props.selectTag({
             pageID: this.props.pageID,
-            vde: this.props.vde,
             tag: payload.tag
         });
     }
@@ -173,18 +163,18 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
 
     onSave(block: string, error?: { type: string, error: string }) {
         if (this.props.onSave) {
-            this.props.onSave(this.props.pageID, this.props.vde);
+            this.props.onSave(this.props.pageID);
         }
     }
 
     render() {
-        const pageTree = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')] && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')].data || null;
-        const pageTemplate = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')] && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')].pageTemplate || null;
-        const selectedTag = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')] && this.props.tabData['interfaceConstructor' + this.props.pageID + (this.props.vde ? '-vde' : '')].selectedTag || null;
-        const canUndo = this.props.tabHistory && this.props.tabHistory['page' + this.props.pageID + (this.props.vde ? '-vde' : '')] && this.props.tabHistory['page' + this.props.pageID + (this.props.vde ? '-vde' : '')].canUndo || false;
-        const canRedo = this.props.tabHistory && this.props.tabHistory['page' + this.props.pageID + (this.props.vde ? '-vde' : '')] && this.props.tabHistory['page' + this.props.pageID + (this.props.vde ? '-vde' : '')].canRedo || false;
+        const pageTree = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID] && this.props.tabData['interfaceConstructor' + this.props.pageID].data || null;
+        const pageTemplate = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID] && this.props.tabData['interfaceConstructor' + this.props.pageID].pageTemplate || null;
+        const selectedTag = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID] && this.props.tabData['interfaceConstructor' + this.props.pageID].selectedTag || null;
+        const canUndo = this.props.tabHistory && this.props.tabHistory['page' + this.props.pageID] && this.props.tabHistory['page' + this.props.pageID].canUndo || false;
+        const canRedo = this.props.tabHistory && this.props.tabHistory['page' + this.props.pageID] && this.props.tabHistory['page' + this.props.pageID].canRedo || false;
 
-        const pageTab = this.props.tabData && this.props.tabData['interfacePage' + this.props.pageID + (this.props.vde ? '-vde' : '')] || null;
+        const pageTab = this.props.tabData && this.props.tabData['interfacePage' + this.props.pageID] || null;
         let page = null;
         if (pageTab) {
             page = pageTab.data;

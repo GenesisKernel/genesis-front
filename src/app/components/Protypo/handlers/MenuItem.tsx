@@ -27,7 +27,6 @@ export interface IMenuItemProps {
     'page'?: string;
     'icon'?: string;
     'params'?: IParamsSpec;
-    'vde'?: string;
 
     // TODO: Stub value
     '_systemPageHook'?: string;
@@ -83,13 +82,11 @@ export const StyledMenuItem = styled.div`
 `;
 
 interface IMenuItemContext {
-    vde?: boolean;
     protypo: Protypo;
-    navigatePage: (params: { name: string, params: any, force?: boolean, vde?: boolean }) => void;
+    navigatePage: (params: { name: string, params: any, force?: boolean }) => void;
 }
 
 const MenuItem: React.SFC<IMenuItemProps> = (props, context: IMenuItemContext) => {
-    const isVDE = props.vde === 'true' ? true : props.vde === 'false' ? false : context.vde;
     const isActive = context.protypo.getCurrentPage() === props.page;
     const classes = classnames({
         active: isActive
@@ -97,7 +94,7 @@ const MenuItem: React.SFC<IMenuItemProps> = (props, context: IMenuItemContext) =
 
     return (
         <StyledMenuItem className={classes}>
-            <PageLink page={props.page} params={context.protypo.resolveParams(props.params)} vde={isVDE} section={isVDE ? 'vde' : 'home'}>
+            <PageLink page={props.page} params={context.protypo.resolveParams(props.params)} section="home">
                 <span className="link-active-decorator" />
                 <span className="link-body">
                     {props.icon && (<em className={`icon ${props.icon}`} />)}
@@ -110,8 +107,7 @@ const MenuItem: React.SFC<IMenuItemProps> = (props, context: IMenuItemContext) =
 
 MenuItem.contextTypes = {
     protypo: propTypes.object.isRequired,
-    navigatePage: propTypes.func.isRequired,
-    vde: propTypes.bool
+    navigatePage: propTypes.func.isRequired
 };
 
 export default MenuItem;

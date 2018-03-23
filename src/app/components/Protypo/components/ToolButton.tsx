@@ -29,11 +29,10 @@ export interface IToolButtonProps {
 
 interface IToolButtonContext {
     protypo: Protypo;
-    vde?: boolean;
 }
 
 const ToolButton: React.SFC<IToolButtonProps> = (props, context: IToolButtonContext) => (
-    <PageLink className="ml btn-tool" page={props.page} params={context.protypo.resolveParams(props.pageparams)} vde={context.vde}>
+    <PageLink className="ml btn-tool" page={props.page} params={context.protypo.resolveParams(props.pageparams)}>
         <em className={`icon ${props.icon}`} />
         <span>
             <span>{props.title}</span>
@@ -42,8 +41,7 @@ const ToolButton: React.SFC<IToolButtonProps> = (props, context: IToolButtonCont
 );
 
 ToolButton.contextTypes = {
-    protypo: propTypes.object.isRequired,
-    vde: propTypes.bool
+    protypo: propTypes.object.isRequired
 };
 
 export default ToolButton;

@@ -27,7 +27,6 @@ import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTi
 import Validation from 'components/Validation';
 
 export interface IEditTableProps {
-    vde?: boolean;
     tableStruct: ITableResponse;
 }
 
@@ -49,10 +48,10 @@ class EditTable extends React.Component<IEditTableProps> {
                 insert: values.insert,
                 update: values.update,
                 new_column: values.newColumn,
-                ...(this.props.vde && {
+                ...(false ? {
                     read: values.read,
                     filter: values.filter
-                })
+                } : {})
             })
         };
     }
@@ -67,12 +66,12 @@ class EditTable extends React.Component<IEditTableProps> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <PageLink page="tables" vde={this.props.vde}>
+                                <PageLink page="tables">
                                     <FormattedMessage id="admin.tables" defaultMessage="Tables" />
                                 </PageLink>
                             </li>
                             <li>
-                                <PageLink page="table" params={{ table: this.props.tableStruct.name }} vde={this.props.vde}>
+                                <PageLink page="table" params={{ table: this.props.tableStruct.name }}>
                                     {this.props.tableStruct.name}
                                 </PageLink>
                             </li>
@@ -87,7 +86,7 @@ class EditTable extends React.Component<IEditTableProps> {
                                     footer={
                                         <div className="clearfix">
                                             <div className="pull-left">
-                                                <PageLink page="add-column" params={{ table: this.props.tableStruct.name }} vde={this.props.vde}>
+                                                <PageLink page="add-column" params={{ table: this.props.tableStruct.name }}>
                                                     <Button bsStyle="primary">
                                                         <FormattedMessage id="admin.tables.column.add" defaultMessage="Add column" />
                                                     </Button>
@@ -127,7 +126,7 @@ class EditTable extends React.Component<IEditTableProps> {
                                                         </td>
                                                         <td>{col.perm}</td>
                                                         <td>
-                                                            <PageLink page="edit-column" params={{ table: this.props.tableStruct.name, column: col.name }} vde={this.props.vde}>
+                                                            <PageLink page="edit-column" params={{ table: this.props.tableStruct.name, column: col.name }}>
                                                                 <Button bsStyle="primary">
                                                                     <FormattedMessage id="admin.tables.column.edit" defaultMessage="Edit" />
                                                                 </Button>
@@ -141,7 +140,7 @@ class EditTable extends React.Component<IEditTableProps> {
                                 </Panel>
                             </Col>
                         </Row>
-                        <ValidatedContractForm vde={this.props.vde} contractName={this.props.vde ? 'EditTable' : '@1EditTable'} mapContractParams={this.mapContractParams.bind(this)}>
+                        <ValidatedContractForm contractName="@1EditTable" mapContractParams={this.mapContractParams.bind(this)}>
                             <Row>
                                 <Col md={6}>
                                     <Panel
@@ -169,7 +168,7 @@ class EditTable extends React.Component<IEditTableProps> {
                                     </Panel>
                                 </Col>
                                 <Col md={6}>
-                                    {this.props.vde && (
+                                    {false && (
                                         <Panel header={<FormattedMessage id="admin.tables.permissions.read" defaultMessage="Read permissions" />}>
                                             <Validation.components.ValidatedFormGroup for="read">
                                                 <label>

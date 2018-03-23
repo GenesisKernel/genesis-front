@@ -24,7 +24,6 @@ import DataPreloader from 'components/Animation/DataPreloader';
 import Tables from 'components/Main/Admin/Tables';
 
 export interface ITablesContainerProps {
-    vde?: boolean;
     match?: { params: { tableName: string } };
 }
 
@@ -38,31 +37,19 @@ interface ITablesContainerDispatch {
 
 class TablesContainer extends React.Component<ITablesContainerProps & ITablesContainerState & ITablesContainerDispatch> {
     componentDidMount() {
-        this.props.getTables({
-            vde: this.props.vde
-        });
-    }
-
-    componentWillReceiveProps(props: ITablesContainerProps & ITablesContainerState & ITablesContainerDispatch) {
-        if (this.props.vde !== props.vde) {
-            props.getTables({
-                vde: props.vde
-            });
-        }
+        this.props.getTables(null);
     }
 
     render() {
         return (
             <DataPreloader data={[this.props.tables]}>
-                <Tables tables={this.props.tables} vde={this.props.vde} />
+                <Tables tables={this.props.tables} />
             </DataPreloader>
         );
     }
 }
 
-const mapStateToProps = (state: IRootState, ownProps: ITablesContainerProps) => ownProps.vde ? ({
-    tables: state.admin.vde_tables
-}) : ({
+const mapStateToProps = (state: IRootState) => ({
     tables: state.admin.tables
 });
 

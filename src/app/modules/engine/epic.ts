@@ -24,7 +24,6 @@ import * as actions from './actions';
 import * as authActions from 'modules/auth/actions';
 import { connect } from 'modules/socket/actions';
 import platform from 'lib/platform';
-import { setVDEAvailable } from 'modules/content/actions';
 import { setLocale } from './actions';
 import setLocaleEpic from './epics/setLocaleEpic';
 
@@ -133,13 +132,10 @@ export const createVDEEpic: Epic<Action, IRootState> =
             const state = store.getState();
             return Observable.fromPromise(api.createVDE(state.auth.sessionToken))
                 .flatMap(payload =>
-                    Observable.concat(
-                        Observable.of(setVDEAvailable(true)),
-                        Observable.of(actions.createVDE.done({
-                            params: action.payload,
-                            result: payload.result
-                        }))
-                    )
+                    Observable.of(actions.createVDE.done({
+                        params: action.payload,
+                        result: payload.result
+                    }))
                 )
                 .catch(error =>
                     Observable.of(actions.createVDE.failed({

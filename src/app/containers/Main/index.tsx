@@ -24,7 +24,6 @@ import Main, { IMainProps } from 'components/Main';
 import DefaultPage from 'containers/Main/containers/DefaultPage';
 import PageHistory from 'components/Main/Admin/Interface/PageHistory';
 import MenuHistory from 'components/Main/Admin/Interface/MenuHistory';
-import Tabs from 'containers/Main/containers/Admin/Tabs';
 import Page from 'containers/Main/containers/Page';
 import Debug from 'containers/Main/containers/Debug';
 import Backup from 'containers/Main/containers/Backup';
@@ -40,13 +39,6 @@ const MainContainer: React.SFC<IMainProps> = props => (
 
             <Route exact path="/admin/interface/page/history/:pageID-:pageName" render={routeProps => <PageHistory id={routeProps.match.params.pageID} name={routeProps.match.params.pageName} />} />
             <Route exact path="/admin/interface/menu/history/:menuID-:menuName" render={routeProps => <MenuHistory id={routeProps.match.params.menuID} name={routeProps.match.params.menuName} />} />
-
-            <Route exact path="/admin/tabs" component={Tabs} />
-            <Route exact path="/admin/tabs/:type-:id-:name/" component={Tabs} />
-            <Route exact path="/admin/tabs/:type-:id/" component={Tabs} />
-            <Route exact path="/vde/tabs" component={Tabs} />
-            <Route exact path="/vde/tabs/:type-:id-:name/" render={routeProps => <Tabs match={routeProps.match} vde />} />
-            <Route exact path="/vde/tabs/:type-:id/" render={routeProps => <Tabs match={routeProps.match} vde />} />
 
             <Route exact path="/backup" component={Backup} />
             <Route path="*" render={() => <NotFound main />} />

@@ -36,7 +36,7 @@ export const txExecEpic: Epic<Action, IRootState> =
                 signature: action.payload.signature,
                 time: action.payload.time,
                 ...action.payload.signParams
-            }, action.payload.tx.vde))
+            }))
                 .switchMap(result => {
                     if (!action.payload.tx.silent) {
                         toastr.success(

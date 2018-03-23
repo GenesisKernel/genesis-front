@@ -26,7 +26,6 @@ import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 
 export interface IEditColumnProps {
-    vde?: boolean;
     tableStruct: ITableResponse;
     column: { name: string, type: string, index: boolean, permissions: string };
 }
@@ -74,7 +73,7 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
         return {
             TableName: this.props.tableStruct.name,
             Name: this.props.column.name,
-            Permissions: this.props.vde ? JSON.stringify({
+            Permissions: false ? JSON.stringify({
                 ...(this.state.updatePermissions && { update: this.state.updatePermissions }),
                 ...(this.state.readPermissions && { read: this.state.readPermissions })
             }) : this.state.updatePermissions
@@ -106,20 +105,20 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <PageLink page="tables" vde={this.props.vde}>
+                                <PageLink page="tables">
                                     <FormattedMessage id="admin.tables" defaultMessage="Tables" />
                                 </PageLink>
                             </li>
                             {this.props.tableStruct && (
                                 <li>
-                                    <PageLink page="table" params={{ table: this.props.tableStruct.name }} vde={this.props.vde}>
+                                    <PageLink page="table" params={{ table: this.props.tableStruct.name }}>
                                         {this.props.tableStruct.name}
                                     </PageLink>
                                 </li>
                             )}
                             {this.props.tableStruct && (
                                 <li>
-                                    <PageLink page="edit-table" params={{ table: this.props.tableStruct.name }} vde={this.props.vde}>
+                                    <PageLink page="edit-table" params={{ table: this.props.tableStruct.name }}>
                                         <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
                                     </PageLink>
                                 </li>
@@ -128,7 +127,7 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
                                 <FormattedMessage id="admin.tables.column.edit" defaultMessage="Edit column" />
                             </li>
                         </ol>
-                        <ValidatedContractForm vde={this.props.vde} contractName={this.props.vde ? 'EditColumn' : '@1EditColumn'} mapContractParams={this.mapContractParams.bind(this)}>
+                        <ValidatedContractForm contractName="@1EditColumn" mapContractParams={this.mapContractParams.bind(this)}>
                             <div className="panel panel-default">
                                 <div className="panel-body">
                                     <div className="form-group">
@@ -151,7 +150,7 @@ export default class EditColumn extends React.Component<IEditColumnProps, IEditC
                                             )}
                                         </p>
                                     </div>
-                                    {this.props.vde && (
+                                    {false && (
                                         <Validation.components.ValidatedFormGroup for="readperm">
                                             <label htmlFor="readperm">
                                                 <FormattedMessage id="admin.tables.permissions.read" defaultMessage="Read permissions" />

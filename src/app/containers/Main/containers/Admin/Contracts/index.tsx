@@ -24,7 +24,7 @@ import DataPreloader from 'components/Animation/DataPreloader';
 import Contracts from 'components/Main/Admin/Contracts';
 
 interface IContractsContainerProps {
-    vde?: boolean;
+
 }
 
 interface IContractsContainerState {
@@ -37,27 +37,19 @@ interface IContractsContainerDispatch {
 
 class ContractsContainer extends React.Component<IContractsContainerProps & IContractsContainerState & IContractsContainerDispatch> {
     componentWillMount() {
-        this.props.getContracts({ vde: this.props.vde });
-    }
-
-    componentWillReceiveProps(props: IContractsContainerProps & IContractsContainerState & IContractsContainerDispatch) {
-        if (this.props.vde !== props.vde) {
-            props.getContracts({ vde: props.vde });
-        }
+        this.props.getContracts(null);
     }
 
     render() {
         return (
             <DataPreloader data={[this.props.contracts]}>
-                <Contracts contracts={this.props.contracts} vde={this.props.vde} />
+                <Contracts contracts={this.props.contracts} />
             </DataPreloader>
         );
     }
 }
 
-const mapStateToProps = (state: IRootState, ownProps: IContractsContainerProps) => ownProps.vde ? ({
-    contracts: state.admin.vde_contracts
-}) : ({
+const mapStateToProps = (state: IRootState, ownProps: IContractsContainerProps) => ({
     contracts: state.admin.contracts
 });
 

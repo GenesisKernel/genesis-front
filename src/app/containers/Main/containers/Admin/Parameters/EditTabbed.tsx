@@ -25,7 +25,6 @@ import Edit from 'components/Main/Admin/Parameters/Edit';
 export interface IEditContainerProps {
     parameterName: string;
     tabData?: any;
-    vde?: boolean;
     // match: { params: { parameterName: string } };
 }
 
@@ -40,20 +39,19 @@ interface IEditContainerDispatch {
 class EditContainer extends React.Component<IEditContainerProps & IEditContainerState & IEditContainerDispatch> {
     componentDidMount() {
         this.props.getParameter({
-            name: this.props.parameterName,
-            vde: this.props.vde
+            name: this.props.parameterName
         });
     }
 
     render() {
-        const parameterTab = this.props.tabData && this.props.tabData['parameter' + this.props.parameterName + (this.props.vde ? '-vde' : '')] || null;
+        const parameterTab = this.props.tabData && this.props.tabData['parameter' + this.props.parameterName] || null;
         let parameter = null;
         if (parameterTab) {
             parameter = parameterTab.data;
         }
 
         return (
-            <Edit parameter={parameter} vde={this.props.vde} tabView={true} />
+            <Edit parameter={parameter} tabView={true} />
         );
     }
 }

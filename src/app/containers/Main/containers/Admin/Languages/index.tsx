@@ -23,7 +23,7 @@ import DataPreloader from 'components/Animation/DataPreloader';
 import Languages from 'components/Main/Admin/Languages';
 
 export interface ILanguagesContainerProps {
-    vde?: boolean;
+
 }
 
 interface ILanguagesContainerState {
@@ -36,31 +36,19 @@ interface ILanguagesContainerDispatch {
 
 class LanguagesContainer extends React.Component<ILanguagesContainerProps & ILanguagesContainerState & ILanguagesContainerDispatch> {
     componentDidMount() {
-        this.props.getLanguages({
-            vde: this.props.vde
-        });
-    }
-
-    componentWillReceiveProps(props: ILanguagesContainerProps & ILanguagesContainerDispatch) {
-        if (this.props.vde !== props.vde) {
-            props.getLanguages({
-                vde: props.vde
-            });
-        }
+        this.props.getLanguages(null);
     }
 
     render() {
         return (
             <DataPreloader data={[this.props.resources]}>
-                <Languages resources={this.props.resources} vde={this.props.vde} />
+                <Languages resources={this.props.resources} />
             </DataPreloader>
         );
     }
 }
 
-const mapStateToProps = (state: IRootState, ownProps: ILanguagesContainerProps) => ownProps.vde ? ({
-    resources: state.admin.vde_languages
-}) : ({
+const mapStateToProps = (state: IRootState) => ({
     resources: state.admin.languages
 });
 

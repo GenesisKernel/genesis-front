@@ -25,7 +25,7 @@ export interface IPageLinkProps {
         [key: string]: string
     };
     className?: string;
-    navigatePage: (params: { name: string, section: string, params: { [key: string]: string }, vde?: boolean }) => void;
+    navigatePage: (params: { name: string, section: string, params: { [key: string]: string } }) => void;
 }
 
 const PageLink: React.SFC<IPageLinkProps> = props => {

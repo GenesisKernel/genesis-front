@@ -26,7 +26,6 @@ import TabView from 'components/TabView';
 import TxButton from 'containers/Widgets/TxButton';
 
 export interface IImportProps {
-    vde?: boolean;
     payload: {
         pages: { Name: string }[];
         blocks: { Name: string }[];
@@ -41,7 +40,7 @@ export interface IImportProps {
             Data: any[][];
         }[];
     };
-    importData: (payload: { file: File, vde?: boolean }) => void;
+    importData: (payload: { file: File }) => void;
     onPrunePage: (name: string) => void;
     onPruneBlock: (name: string) => void;
     onPruneMenu: (name: string) => void;
@@ -57,8 +56,7 @@ class Import extends React.Component<IImportProps & InjectedIntlProps> {
         // TODO: Set backup max size
         if (e.target.files && e.target.files[0]) {
             this.props.importData({
-                file: e.target.files[0],
-                vde: this.props.vde
+                file: e.target.files[0]
             });
         }
     }
@@ -299,7 +297,7 @@ class Import extends React.Component<IImportProps & InjectedIntlProps> {
                                     </Button>
 
                                     <div className="pull-right">
-                                        <TxButton className="btn btn-primary" vde={this.props.vde} contractName={this.props.vde ? 'Import' : '@1Import'} contractParams={{ Data: JSON.stringify(this.props.payload) }} disabled={this.isPristine()}>
+                                        <TxButton className="btn btn-primary" contractName="@1Import" contractParams={{ Data: JSON.stringify(this.props.payload) }} disabled={this.isPristine()}>
                                             <FormattedMessage id="admin.import.confirm" defaultMessage="Import" />
                                         </TxButton>
                                     </div>

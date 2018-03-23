@@ -17,9 +17,9 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
-import { TEditorTab } from 'genesis/content';
 import imgClose from 'images/close.svg';
 import { FormattedMessage } from 'react-intl';
+import { TEditorTab } from 'genesis/editor';
 
 export interface IEditorTabProps extends TEditorTab {
     icon: string;

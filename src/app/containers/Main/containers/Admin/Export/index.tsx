@@ -23,7 +23,7 @@ import { getContracts, getInterface, getParameters, getLanguages, getTables, exp
 import Export from 'components/Main/Admin/Export';
 
 export interface IExportContainerProps {
-    vde?: boolean;
+
 }
 
 interface IExportContainerState {
@@ -46,27 +46,16 @@ interface IExportContainerDispatch {
 
 class ExportContainer extends React.Component<IExportContainerProps & IExportContainerState & IExportContainerDispatch> {
     componentDidMount() {
-        this.props.getInterface({ vde: this.props.vde });
-        this.props.getParameters({ vde: this.props.vde });
-        this.props.getLanguages({ vde: this.props.vde });
-        this.props.getContracts({ vde: this.props.vde });
-        this.props.getTables({ vde: this.props.vde });
-    }
-
-    componentWillReceiveProps(props: IExportContainerProps & IExportContainerState & IExportContainerDispatch) {
-        if (this.props.vde !== props.vde) {
-            props.getInterface({ vde: props.vde });
-            props.getParameters({ vde: props.vde });
-            props.getLanguages({ vde: props.vde });
-            props.getContracts({ vde: props.vde });
-            props.getTables({ vde: props.vde });
-        }
+        this.props.getInterface(null);
+        this.props.getParameters(null);
+        this.props.getLanguages(null);
+        this.props.getContracts(null);
+        this.props.getTables(null);
     }
 
     render() {
         return (
             <Export
-                vde={this.props.vde}
                 exportPayload={this.props.exportPayload}
                 exportData={this.props.exportData}
                 pages={this.props.interfaces && this.props.interfaces.pages}
@@ -81,14 +70,7 @@ class ExportContainer extends React.Component<IExportContainerProps & IExportCon
     }
 }
 
-const mapStateToProps = (state: IRootState, ownProps: IExportContainerProps) => ownProps.vde ? ({
-    interfaces: state.admin.vde_interfaces,
-    parameters: state.admin.vde_parameters,
-    languages: state.admin.vde_languages,
-    contracts: state.admin.vde_contracts,
-    tables: state.admin.vde_tables,
-    exportPayload: state.admin.vde_exportPayload
-}) : ({
+const mapStateToProps = (state: IRootState) => ({
     interfaces: state.admin.interfaces,
     parameters: state.admin.parameters,
     languages: state.admin.languages,

@@ -25,7 +25,6 @@ import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 
 export interface IAddColumnProps {
-    vde?: boolean;
     table: string;
 }
 
@@ -66,10 +65,10 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
             TableName: this.props.table,
             Name: values.name,
             Type: this.state.type,
-            Permissions: this.props.vde ? JSON.stringify({
+            Permissions: false ? this.state.updatePermissions : JSON.stringify({
                 ...(this.state.updatePermissions && { update: this.state.updatePermissions }),
                 ...(this.state.readPermissions && { read: this.state.readPermissions })
-            }) : this.state.updatePermissions
+            })
         };
     }
 
@@ -101,17 +100,17 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
                     <div className="content-wrapper" >
                         <ol className="breadcrumb">
                             <li>
-                                <PageLink page="tables" vde={this.props.vde}>
+                                <PageLink page="tables">
                                     <FormattedMessage id="admin.tables" defaultMessage="Tables" />
                                 </PageLink>
                             </li>
                             <li>
-                                <PageLink page="table" params={{ table: this.props.table }} vde={this.props.vde}>
+                                <PageLink page="table" params={{ table: this.props.table }}>
                                     {this.props.table}
                                 </PageLink>
                             </li>
                             <li>
-                                <PageLink page="edit-table" params={{ table: this.props.table }} vde={this.props.vde}>
+                                <PageLink page="edit-table" params={{ table: this.props.table }}>
                                     <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
                                 </PageLink>
                             </li>
@@ -119,7 +118,7 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
                                 <FormattedMessage id="admin.tables.column.add" defaultMessage="Add column" />
                             </li>
                         </ol>
-                        <ValidatedContractForm vde={this.props.vde} contractName={this.props.vde ? 'NewColumn' : '@1NewColumn'} mapContractParams={this.mapContractParams.bind(this)}>
+                        <ValidatedContractForm contractName="@1NewColumn" mapContractParams={this.mapContractParams.bind(this)}>
                             <div className="panel panel-default">
                                 <div className="panel-body">
                                     <Validation.components.ValidatedFormGroup for="name">
@@ -140,7 +139,7 @@ class AddColumn extends React.Component<IAddColumnProps, IAddColumnState> {
                                             ))}
                                         </Validation.components.ValidatedSelect>
                                     </Validation.components.ValidatedFormGroup>
-                                    {this.props.vde && (
+                                    {false && (
                                         <Validation.components.ValidatedFormGroup for="readperm">
                                             <label htmlFor="readperm">
                                                 <FormattedMessage id="admin.tables.permissions.read" defaultMessage="Read permissions" />

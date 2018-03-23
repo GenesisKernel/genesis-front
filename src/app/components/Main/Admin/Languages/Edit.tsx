@@ -21,7 +21,6 @@ import Wrapper from 'components/Wrapper';
 import LocaleEditor from './LocaleEditor';
 
 export interface IEditProps {
-    vde?: boolean;
     translation: {
         name: string;
         res: string;
@@ -148,7 +147,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
                 }}
                 breadcrumbs={[
                     {
-                        url: this.props.vde ? '/vdeadmin/languages' : '/admin/languages',
+                        url: '/admin/languages',
                         title: (
                             <FormattedMessage id="admin.languages" defaultMessage="Language resources" />
                         )
@@ -159,8 +158,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
                 ]}
             >
                 <LocaleEditor
-                    vde={this.props.vde}
-                    contractName={this.props.vde ? 'EditLang' : '@1EditLang'}
+                    contractName={'@1EditLang'}
                     translation={this.props.translation.name}
                     translations={this.state.translations}
                     onNewLocale={this.onNewLocale.bind(this)}

@@ -22,7 +22,7 @@ import { navigatePage } from 'modules/content/actions';
 import Create from 'components/Main/Admin/Tables/Create';
 
 export interface ICreateContainerProps {
-    vde?: boolean;
+
 }
 
 interface ICreateContainerState {

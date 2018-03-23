@@ -23,7 +23,6 @@ import { ITableResponse, IListResponse } from 'lib/api';
 import View, { columnDisplayRules } from 'components/Main/Admin/Tables/View';
 
 export interface IViewContainerProps {
-    vde?: boolean;
     table: string;
 }
 
@@ -42,7 +41,7 @@ class ViewContainer extends React.Component<IViewContainerProps & IViewContainer
     }
 
     componentWillReceiveProps(props: IViewContainerProps & IViewContainerState & IViewContainerDispatch) {
-        if (this.props.table !== props.table || this.props.vde !== props.vde) {
+        if (this.props.table !== props.table) {
             this.getTable(props);
         }
     }
@@ -59,22 +58,22 @@ class ViewContainer extends React.Component<IViewContainerProps & IViewContainer
         }
         props.getTable({
             table: props.table,
-            columnTypes,
-            vde: props.vde
+            columnTypes
         });
     }
 
     render() {
         return (
-            <View vde={this.props.vde} tableName={this.props.table} table={this.props.tableStruct} tableData={this.props.tableData} />
+            <View
+                tableName={this.props.table}
+                table={this.props.tableStruct}
+                tableData={this.props.tableData}
+            />
         );
     }
 }
 
-const mapStateToProps = (state: IRootState, ownProps: IViewContainerProps) => ownProps.vde ? ({
-    tableStruct: state.admin.vde_table,
-    tableData: state.admin.vde_tableData
-}) : ({
+const mapStateToProps = (state: IRootState) => ({
     tableStruct: state.admin.table,
     tableData: state.admin.tableData
 });

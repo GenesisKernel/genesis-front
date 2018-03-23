@@ -19,13 +19,11 @@ declare module 'genesis/content' {
 
     type TMenu = {
         readonly name: string;
-        readonly vde?: boolean;
         readonly content: TProtypoElement[];
     };
 
     type TPage = {
         readonly name: string;
-        readonly vde?: boolean;
         readonly legacy?: boolean;
         readonly content: TProtypoElement[];
         readonly params: { [key: string]: any };
@@ -44,19 +42,5 @@ declare module 'genesis/content' {
         readonly defaultPage: string;
         readonly menus: TMenu[];
         readonly page: TPage;
-        readonly vde: boolean;
     }
-
-    type TEditorTab = {
-        readonly type: string;
-        readonly id: string;
-        readonly new: boolean;
-        readonly name: string;
-        readonly tool: string;
-        readonly value: string;
-        readonly initialValue: string;
-        readonly preview?: TProtypoElement[];
-        readonly vde: boolean;
-        readonly dirty: boolean;
-    };
 }

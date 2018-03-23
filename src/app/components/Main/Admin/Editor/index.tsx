@@ -15,7 +15,7 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { TEditorTab } from 'genesis/content';
+import { TEditorTab } from 'genesis/editor';
 
 import CodeEditor from 'components/Editor';
 import EditorTabs from './EditorTabs';
@@ -25,12 +25,11 @@ export interface IEditorProps {
     open?: string;
     create?: string;
     name?: string;
-    vde?: boolean;
 
     tabIndex: number;
     tabs: TEditorTab[];
     onTabCreate: (type: string) => void;
-    onTabLoad: (params: { type: string, name: string, vde?: boolean }) => void;
+    onTabLoad: (params: { type: string, name: string }) => void;
     onTabChange: (index: number) => void;
     onTabUpdate: (value: string) => void;
     onTabClose: (index: number) => void;
@@ -50,8 +49,7 @@ class Editor extends React.Component<IEditorProps> {
         if (props.open && props.name) {
             props.onTabLoad({
                 type: props.open,
-                name: props.name,
-                vde: props.vde
+                name: props.name
             });
         }
 

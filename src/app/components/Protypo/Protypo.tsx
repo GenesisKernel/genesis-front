@@ -27,14 +27,13 @@ import { IValidationResult } from 'components/Validation/ValidatedForm';
 import ToolButton, { IToolButtonProps } from 'components/Protypo/components/ToolButton';
 
 export interface IProtypoProps {
-    vde?: boolean;
     editable?: boolean;
     wrapper?: JSX.Element;
     context: string;
     page: string;
     content: TProtypoElement[];
     menuPush: (params: { name: string, content: TProtypoElement[] }) => void;
-    navigatePage: (params: { name: string, params: any, force?: boolean, vde?: boolean }) => void;
+    navigatePage: (params: { name: string, params: any, force?: boolean }) => void;
     navigate: (url: string) => void;
     displayData: (link: string) => void;
     changePage?: any;
@@ -85,8 +84,7 @@ class Protypo extends React.Component<IProtypoProps> {
             navigatePage: this._navigatePageBind,
             navigate: this._navigateBind,
             resolveSource: this._resolveSourceBind,
-            renderElements: this._renderElementsBind,
-            vde: this.props.vde
+            renderElements: this._renderElementsBind
         };
     }
 
@@ -271,8 +269,7 @@ class Protypo extends React.Component<IProtypoProps> {
     navigate: propTypes.func.isRequired,
     menuPush: propTypes.func.isRequired,
     resolveSource: propTypes.func.isRequired,
-    renderElements: propTypes.func.isRequired,
-    vde: propTypes.bool
+    renderElements: propTypes.func.isRequired
 };
 
 export default Protypo;

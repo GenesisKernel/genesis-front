@@ -23,7 +23,6 @@ import DataPreloader from 'components/Animation/DataPreloader';
 import Edit from 'components/Main/Admin/Languages/Edit';
 
 export interface IEditContainerProps {
-    vde?: boolean;
     translationID: string;
 }
 
@@ -38,16 +37,14 @@ interface IEditContainerDispatch {
 class EditContainer extends React.Component<IEditContainerProps & IEditContainerState & IEditContainerDispatch> {
     componentDidMount() {
         this.props.getLanguage({
-            id: this.props.translationID,
-            vde: this.props.vde
+            id: this.props.translationID
         });
     }
 
     componentWillReceiveProps(props: IEditContainerProps & IEditContainerState & IEditContainerDispatch) {
-        if (this.props.translationID !== props.translationID || this.props.vde !== props.vde) {
+        if (this.props.translationID !== props.translationID) {
             props.getLanguage({
-                id: props.translationID,
-                vde: props.vde
+                id: props.translationID
             });
         }
     }
@@ -55,15 +52,13 @@ class EditContainer extends React.Component<IEditContainerProps & IEditContainer
     render() {
         return (
             <DataPreloader data={[this.props.translation]}>
-                <Edit translation={this.props.translation} vde={this.props.vde} />
+                <Edit translation={this.props.translation} />
             </DataPreloader>
         );
     }
 }
 
-const mapStateToProps = (state: IRootState, ownProps: IEditContainerProps) => ownProps.vde ? ({
-    translation: state.admin.vde_language
-}) : ({
+const mapStateToProps = (state: IRootState) => ({
     translation: state.admin.language
 });
 

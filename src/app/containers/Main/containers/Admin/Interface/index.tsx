@@ -23,7 +23,7 @@ import { IInterfacesResponse } from 'lib/api';
 import Interface from 'components/Main/Admin/Interface';
 
 export interface IInterfaceContainerProps {
-    vde?: boolean;
+
 }
 
 interface IInterfaceContainerState {
@@ -36,23 +36,12 @@ interface IInterfaceContainerDispatch {
 
 class InterfaceContainer extends React.Component<IInterfaceContainerProps & IInterfaceContainerState & IInterfaceContainerDispatch> {
     componentDidMount() {
-        this.props.getInterface({
-            vde: this.props.vde
-        });
-    }
-
-    componentWillReceiveProps(props: IInterfaceContainerProps & IInterfaceContainerDispatch) {
-        if (this.props.vde !== props.vde) {
-            props.getInterface({
-                vde: props.vde
-            });
-        }
+        this.props.getInterface(null);
     }
 
     render() {
         return (
             <Interface
-                vde={this.props.vde}
                 pages={this.props.pages && this.props.pages.pages || []}
                 menus={this.props.pages && this.props.pages.menus || []}
                 blocks={this.props.pages && this.props.pages.blocks || []}
@@ -61,9 +50,7 @@ class InterfaceContainer extends React.Component<IInterfaceContainerProps & IInt
     }
 }
 
-const mapStateToProps = (state: IRootState, ownProps: IInterfaceContainerProps) => ownProps.vde ? ({
-    pages: state.admin.vde_interfaces
-}) : ({
+const mapStateToProps = (state: IRootState) => ({
     pages: state.admin.interfaces
 });
 
