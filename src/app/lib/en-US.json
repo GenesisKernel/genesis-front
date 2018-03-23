@@ -109,6 +109,7 @@
     "auth.getstarted": "Get started",
     "auth.havekey": "I have a key",
     "auth.havekey.desc": "If you are already familiar with Genesis and have a backup of your private key - choose this option to guide you through the process of restoring of your account data",
+    "auth.key.removed": "Account has been removed",
     "auth.import": "Import",
     "auth.import.existing": "Import existing key",
     "auth.login": "Login",
