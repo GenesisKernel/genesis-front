@@ -36,7 +36,7 @@ interface ILanguagesContainerDispatch {
 
 class LanguagesContainer extends React.Component<ILanguagesContainerProps & ILanguagesContainerState & ILanguagesContainerDispatch> {
     componentDidMount() {
-        this.props.getLanguages(null);
+        this.props.getLanguages({});
     }
 
     render() {

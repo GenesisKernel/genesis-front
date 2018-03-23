@@ -47,10 +47,10 @@ interface IExportContainerDispatch {
 class ExportContainer extends React.Component<IExportContainerProps & IExportContainerState & IExportContainerDispatch> {
     componentDidMount() {
         this.props.getInterface(null);
-        this.props.getParameters(null);
-        this.props.getLanguages(null);
-        this.props.getContracts(null);
-        this.props.getTables(null);
+        this.props.getParameters({});
+        this.props.getLanguages({});
+        this.props.getContracts({});
+        this.props.getTables({});
     }
 
     render() {

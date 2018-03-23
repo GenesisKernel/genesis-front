@@ -37,7 +37,7 @@ interface IParametersContainerDispatch {
 
 class ParametersContainer extends React.Component<IParametersContainerProps & IParametersContainerState & IParametersContainerDispatch> {
     componentDidMount() {
-        this.props.getParameters(null);
+        this.props.getParameters({});
     }
 
     render() {

@@ -37,7 +37,7 @@ interface IContractsContainerDispatch {
 
 class ContractsContainer extends React.Component<IContractsContainerProps & IContractsContainerState & IContractsContainerDispatch> {
     componentWillMount() {
-        this.props.getContracts(null);
+        this.props.getContracts({});
     }
 
     render() {

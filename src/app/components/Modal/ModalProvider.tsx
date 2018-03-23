@@ -31,9 +31,11 @@ import CreatePageModal from 'components/Modal/Editor/CreatePageModal';
 import CreateInterfaceModal from 'components/Modal/Editor/CreateInterfaceModal';
 import AuthorizeModal from 'components/Modal/AuthorizeModal';
 import SignatureModal from 'components/Modal/Tx/SignatureModal';
+import TxErrorModal from 'components/Modal/Tx/ErrorModal';
 
 const MODAL_COMPONENTS = {
     'AUTHORIZE': AuthorizeModal,
+    'TX_ERROR': TxErrorModal,
     'TX_SIGNATURE': SignatureModal,
     'CREATE_PAGE': CreatePageModal,
     'CREATE_INTERFACE': CreateInterfaceModal,

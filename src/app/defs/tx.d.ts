@@ -15,6 +15,15 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 declare module 'genesis/tx' {
+    type TxError =
+        'E_CONTRACT' |
+        'E_ERROR' |
+        'E_INFO' |
+        'E_INVALID_PASSWORD' |
+        'E_PANIC' |
+        'E_SERVER' |
+        'E_WARNING';
+
     interface ITransaction {
         uuid: string;
         contract: string;

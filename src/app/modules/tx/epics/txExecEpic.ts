@@ -30,6 +30,16 @@ export const txExecEpic: Epic<Action, IRootState> =
             const state = store.getState();
             const publicKey = keyring.generatePublicKey(action.payload.privateKey);
 
+            if (!keyring.validatePrivateKey(action.payload.privateKey)) {
+                return Observable.of(txExec.failed({
+                    params: action.payload,
+                    error: {
+                        type: 'E_INVALID_PASSWORD',
+                        error: null
+                    }
+                }));
+            }
+
             return Observable.from(api.txExec(state.auth.sessionToken, action.payload.tx.name, {
                 ...action.payload.tx.params,
                 pubkey: publicKey,

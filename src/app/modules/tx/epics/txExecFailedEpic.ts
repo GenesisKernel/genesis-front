@@ -14,19 +14,24 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { combineEpics } from 'redux-observable';
-import txCallEpic from './epics/txCallEpic';
-import txAuthorizeEpic from './epics/txAuthorizeEpic';
-import txPrepareEpic from './epics/txPrepareEpic';
-import txExecEpic from './epics/txExecEpic';
-import newEcosystemEpic from './epics/newEcosystemEpic';
-import txExecFailedEpic from './epics/txExecFailedEpic';
+import { IRootState } from 'modules';
+import { Epic } from 'redux-observable';
+import { Action } from 'redux';
+import { txExec } from '../actions';
+import { modalShow } from '../../modal/actions';
 
-export default combineEpics(
-    txCallEpic,
-    txAuthorizeEpic,
-    txPrepareEpic,
-    txExecEpic,
-    txExecFailedEpic,
-    newEcosystemEpic
-);
+export const txExecFailedEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(txExec.failed)
+        .filter(l => !l.payload.params.tx.silent)
+        .map(action =>
+            modalShow({
+                id: 'TX_ERROR',
+                type: 'TX_ERROR',
+                params: {
+                    tx: action.payload.params.tx,
+                    error: action.payload.error.type
+                }
+            })
+        );
+
+export default txExecFailedEpic;

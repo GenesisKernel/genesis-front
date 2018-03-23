@@ -108,39 +108,85 @@ export interface IModalWrapperProps {
     topOffset?: number;
 }
 
-class ModalWrapper extends React.Component<IModalWrapperProps> {
-    private _children: React.ReactNode;
-    private _lastChildState: string;
+interface IModalWrapperState {
+    active: boolean;
+    activeModal: React.ReactNode;
+    queuedModal: React.ReactNode;
+}
+
+class ModalWrapper extends React.Component<IModalWrapperProps, IModalWrapperState> {
+    private _exited = false;
+
+    constructor(props: IModalWrapperProps) {
+        super(props);
+        this.state = {
+            activeModal: null,
+            queuedModal: null,
+            active: false
+        };
+    }
 
     componentDidMount() {
-        this._children = this.props.children;
+        this.enqueueModal(this.props.children);
     }
 
     componentWillReceiveProps(props: IModalWrapperProps & { children: React.ReactNode }) {
-        if (null !== props.children) {
-            this._children = props.children;
+        this.enqueueModal(props.children);
+    }
+
+    onEntered = () => {
+        if (this.state.queuedModal) {
+            this.setState({
+                active: false
+            });
+        }
+    }
+
+    onExited = () => {
+        this._exited = true;
+        if (this.state.queuedModal) {
+            this._exited = false;
+            this.setState({
+                active: true,
+                activeModal: this.state.queuedModal,
+                queuedModal: null
+            });
+        }
+    }
+
+    enqueueModal = (node: React.ReactNode) => {
+        if (this.state.activeModal && !this._exited) {
+            this.setState({
+                active: false,
+                queuedModal: node
+            });
+        }
+        else if (node) {
+            this._exited = false;
+            this.setState({
+                active: true,
+                activeModal: node
+            });
+        }
+        else {
+            this.setState({
+                active: false,
+                activeModal: node
+            });
         }
     }
 
     renderChild(state: string) {
-        // Unmount hidden modal window
-        if ('exiting' === this._lastChildState && 'exited' === state) {
-            this._children = null;
-        }
-
-        // We must remember last state to correctly destroy the modal window
-        // when disappear animation has done it's work
-        this._lastChildState = state;
         return (
             <div className="modal-wnd" style={{ ...childAnimationDef.defaultStyle, ...childAnimationDef[state] }}>
-                {this._children}
+                {this.state.activeModal}
             </div>
         );
     }
 
     render() {
         return (
-            <Transition in={!!this.props.children} timeout={containerAnimationDuration}>
+            <Transition in={this.state.active} timeout={containerAnimationDuration} onEntered={this.onEntered} onExited={this.onExited} unmountOnExit>
                 {(state: string) => (
                     <StyledModalWrapper style={{ ...containerAnimationDef.defaultStyle, ...containerAnimationDef[state], marginTop: this.props.topOffset }}>
                         <Transition in={state === 'entered'} timeout={childAnimationDuration}>

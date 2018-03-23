@@ -50,66 +50,6 @@ class TxButton extends React.Component<ITxButtonProps & InjectedIntlProps> {
                     this.props.navigate(this.props.page, this.props.pageParams);
                 }
             }
-            else if (props.contractStatus.error) {
-                switch (props.contractStatus.error.type) {
-                    case 'E_INVALID_PASSWORD':
-                        this.props.alert(
-                            'error',
-                            this.props.intl.formatMessage({ id: 'general.error', defaultMessage: 'Error' }),
-                            this.props.intl.formatMessage({ id: 'tx.error.invalid_password', defaultMessage: 'Invalid password' }),
-                            this.props.intl.formatMessage({ id: 'close', defaultMessage: 'Close' })
-                        ); break;
-
-                    case 'E_CONTRACT':
-                        this.props.alert(
-                            'error',
-                            this.props.intl.formatMessage({ id: 'general.error', defaultMessage: 'Error' }),
-                            this.props.intl.formatMessage({ id: 'tx.error.contract', defaultMessage: 'Contract \'{contract}\' does not exists' }, { contract: props.contractName }),
-                            this.props.intl.formatMessage({ id: 'close', defaultMessage: 'Close' })
-                        ); break;
-
-                    case 'E_SERVER':
-                        this.props.alert(
-                            'error',
-                            this.props.intl.formatMessage({ id: 'general.error', defaultMessage: 'Error' }),
-                            props.contractStatus.error.error,
-                            this.props.intl.formatMessage({ id: 'close', defaultMessage: 'Close' })
-                        ); break;
-
-                    case 'panic':
-                        this.props.alert(
-                            'error',
-                            this.props.intl.formatMessage({ id: 'alert.panic', defaultMessage: 'Runtime error' }),
-                            props.contractStatus.error.error,
-                            this.props.intl.formatMessage({ id: 'close', defaultMessage: 'Close' })
-                        ); break;
-
-                    case 'warning':
-                        this.props.alert(
-                            'warning',
-                            this.props.intl.formatMessage({ id: 'alert.warning', defaultMessage: 'Warning' }),
-                            props.contractStatus.error.error,
-                            this.props.intl.formatMessage({ id: 'close', defaultMessage: 'Close' })
-                        ); break;
-
-                    case 'error':
-                        this.props.alert(
-                            'error',
-                            this.props.intl.formatMessage({ id: 'alert.error', defaultMessage: 'Error' }),
-                            props.contractStatus.error.error,
-                            this.props.intl.formatMessage({ id: 'close', defaultMessage: 'Close' })
-                        ); break;
-
-                    case 'info':
-                        this.props.alert(
-                            'info',
-                            this.props.intl.formatMessage({ id: 'alert.info', defaultMessage: 'Information' }),
-                            props.contractStatus.error.error,
-                            this.props.intl.formatMessage({ id: 'close', defaultMessage: 'Close' })
-                        ); break;
-                    default: break;
-                }
-            }
 
             if (this.props.onExec) {
                 this.props.onExec(props.contractStatus.block, props.contractStatus.error);

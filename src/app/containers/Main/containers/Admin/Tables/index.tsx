@@ -37,7 +37,7 @@ interface ITablesContainerDispatch {
 
 class TablesContainer extends React.Component<ITablesContainerProps & ITablesContainerState & ITablesContainerDispatch> {
     componentDidMount() {
-        this.props.getTables(null);
+        this.props.getTables({});
     }
 
     render() {

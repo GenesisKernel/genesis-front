@@ -221,5 +221,21 @@
     "undo": "Undo",
     "validation.minlength": "Password must be at least {value} characters long",
     "validation.field.invalid": "This field contains invalid data",
-    "tx.param.value": "Value"
+    "tx.param.value": "Value",
+    "tx.error.E_CONTRACT": "Execution failed",
+    "tx.error.E_DELETEDKEY": "Execution failed",
+    "tx.error.E_ERROR": "Error",
+    "tx.error.E_INFO": "Information",
+    "tx.error.E_INVALID_PASSWORD": "Execution failed",
+    "tx.error.E_PANIC": "Runtime error",
+    "tx.error.E_SERVER": "Runtime error",
+    "tx.error.E_WARNING": "Warning",
+    "tx.error.E_CONTRACT.desc": "Contract '{contract}' does not exists",
+    "tx.error.E_DELETEDKEY.desc": "Your account has been removed",
+    "tx.error.E_ERROR.desc": "{error}",
+    "tx.error.E_INFO.desc": "{error}",
+    "tx.error.E_INVALID_PASSWORD.desc": "Invalid password",
+    "tx.error.E_PANIC.desc": "{error}",
+    "tx.error.E_SERVER.desc": "{error}",
+    "tx.error.E_WARNING.desc": "{error}"
 }
