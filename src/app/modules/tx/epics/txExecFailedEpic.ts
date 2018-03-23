@@ -29,7 +29,7 @@ export const txExecFailedEpic: Epic<Action, IRootState> =
                 type: 'TX_ERROR',
                 params: {
                     tx: action.payload.params.tx,
-                    error: action.payload.error.type
+                    error: action.payload.error
                 }
             })
         );

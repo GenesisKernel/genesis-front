@@ -227,7 +227,6 @@
     "tx.error.E_ERROR": "Ошибка",
     "tx.error.E_INFO": "Информация",
     "tx.error.E_INVALID_PASSWORD": "Ошибка вызова",
-    "tx.error.E_PANIC": "Ошибка выполнения",
     "tx.error.E_SERVER": "Ошибка выполнения",
     "tx.error.E_WARNING": "Предупреждение",
     "tx.error.E_CONTRACT.desc": "Контракт '{contract}' не существует",
@@ -235,7 +234,8 @@
     "tx.error.E_ERROR.desc": "{error}",
     "tx.error.E_INFO.desc": "{error}",
     "tx.error.E_INVALID_PASSWORD.desc": "Неверный пароль",
-    "tx.error.E_PANIC.desc": "{error}",
     "tx.error.E_SERVER.desc": "{error}",
-    "tx.error.E_WARNING.desc": "{error}"
+    "tx.error.E_WARNING.desc": "{error}",
+    "tx.error.panic": "Ошибка выполнения",
+    "tx.error.panic.desc": "{error}"
 }

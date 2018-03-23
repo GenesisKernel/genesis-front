@@ -20,9 +20,9 @@ declare module 'genesis/tx' {
         'E_ERROR' |
         'E_INFO' |
         'E_INVALID_PASSWORD' |
-        'E_PANIC' |
         'E_SERVER' |
-        'E_WARNING';
+        'E_WARNING' |
+        'panic';
 
     interface ITransaction {
         uuid: string;

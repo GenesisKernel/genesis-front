@@ -23,7 +23,10 @@ import Modal from '../';
 
 export interface ITxErrorModalProps {
     tx: ITransactionCall;
-    error: TxError;
+    error: {
+        type: TxError,
+        error?: string
+    };
 }
 
 class TxErrorModal extends Modal<ITxErrorModalProps, void> {
@@ -31,11 +34,18 @@ class TxErrorModal extends Modal<ITxErrorModalProps, void> {
         return (
             <div>
                 <Modal.Header>
-                    <FormattedMessage id={`tx.error.${this.props.params.error}`} defaultMessage={this.props.params.error} />
+                    <FormattedMessage id={`tx.error.${this.props.params.error.type}`} defaultMessage={this.props.params.error.type} />
                 </Modal.Header>
                 <Modal.Body>
                     <div>
-                        <FormattedMessage id={`tx.error.${this.props.params.error}.desc`} defaultMessage={this.props.params.error} />
+                        <FormattedMessage
+                            id={`tx.error.${this.props.params.error.type}.desc`}
+                            defaultMessage={this.props.params.error.type}
+                            values={{
+                                error: this.props.params.error.error,
+                                contract: this.props.params.tx.name
+                            }}
+                        />
                     </div>
                 </Modal.Body>
                 <Modal.Footer className="text-right">
