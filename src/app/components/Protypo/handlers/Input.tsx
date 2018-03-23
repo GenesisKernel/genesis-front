@@ -126,6 +126,19 @@ const Input: React.SFC<IInputProps> = (props) => {
                     validators={compiledValidators}
                 />
             );
+
+        case 'checkbox':
+            return (
+                <Validation.components.ValidatedCheckbox
+                    className={className}
+                    disabled={!!props.disabled}
+                    name={props.name}
+                    title={props.placeholder}
+                    defaultChecked={'true' === props.value}
+                    validators={compiledValidators}
+                />
+            );
+
         case 'textarea':
             return (
                 <Validation.components.ValidatedTextarea
