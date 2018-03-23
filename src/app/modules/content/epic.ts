@@ -36,7 +36,7 @@ import editMenuEpic from './epics/editMenuEpic';
 import editBlockEpic from './epics/editBlockEpic';
 import newMenuEpic from './epics/newMenuEpic';
 import newBlockEpic from './epics/newBlockEpic';
-import { modalShow } from './actions';
+import { modalShow } from 'modules/modal/actions';
 
 export const navigatePageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.navigatePage.started)

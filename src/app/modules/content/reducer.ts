@@ -19,7 +19,6 @@ import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { TProtypoElement } from 'genesis/protypo';
 import { TSection, TEditorTab } from 'genesis/content';
-import { IModal } from 'genesis/modal';
 
 export type State = {
     readonly preloading: boolean;
@@ -37,7 +36,6 @@ export type State = {
     };
     readonly notifications: TProtypoElement[];
     readonly alert: { id: string, success: string, error: string };
-    readonly modal: IModal;
 };
 
 export const initialState: State = {
@@ -116,8 +114,7 @@ export const initialState: State = {
         tabs: []
     },
     notifications: null,
-    alert: null,
-    modal: null
+    alert: null
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -515,29 +512,6 @@ export default (state: State = initialState, action: Action): State => {
                     },
                     pending: false
                 }
-            }
-        };
-    }
-
-    if (isType(action, actions.modalShow)) {
-        return {
-            ...state,
-            modal: {
-                id: action.payload.id,
-                type: action.payload.type,
-                params: {
-                    ...action.payload.params
-                },
-                result: null
-            }
-        };
-    }
-    else if (isType(action, actions.modalClose)) {
-        return {
-            ...state,
-            modal: {
-                ...state.modal,
-                result: action.payload
             }
         };
     }

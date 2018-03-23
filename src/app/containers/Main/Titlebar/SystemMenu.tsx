@@ -17,9 +17,9 @@
 import * as React from 'react';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
+import { modalShow } from 'modules/modal/actions';
 
 import SystemMenu from 'components/Main/Titlebar/SystemMenu';
-import { modalShow } from 'modules/content/actions';
 
 export interface ISystemMenuContainerProps {
     align: 'left' | 'right';

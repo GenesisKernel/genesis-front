@@ -33,12 +33,25 @@ declare module 'genesis/modal' {
         data: any;
     }
 
+    interface IModalCall {
+        id: string;
+        type: string;
+        params: {
+            [key: string]: any;
+        }
+    }
+
+    interface IModalCloseCall {
+        reason: TModalResultReason;
+        data: any;
+    }
+
     interface IModal {
         id: string;
         type: string;
         result: IModalResult;
         params: {
             [key: string]: any;
-        };
+        }
     }
 }

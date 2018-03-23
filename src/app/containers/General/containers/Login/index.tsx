@@ -18,7 +18,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { navigate } from 'modules/engine/actions';
 import { login, logout, selectAccount } from 'modules/auth/actions';
-import { modalShow } from 'modules/content/actions';
+import { modalShow } from 'modules/modal/actions';
 import { removeAccount } from 'modules/storage/actions';
 import { IStoredAccount } from 'genesis/storage';
 import { INotificationsMessage } from 'genesis/socket';
@@ -110,7 +110,7 @@ const mapStateToProps = (state: IRootState) => ({
     accounts: state.storage.accounts,
     notifications: state.socket.notifications,
     defaultAccount: state.auth.defaultAccount,
-    modalResult: state.content.modal && state.content.modal.result
+    modalResult: state.modal.result
 });
 
 const mapDispatchToProps = {

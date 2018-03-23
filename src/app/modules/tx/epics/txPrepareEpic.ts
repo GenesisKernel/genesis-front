@@ -20,8 +20,8 @@ import { Action } from 'redux';
 import { Observable } from 'rxjs';
 import keyring from 'lib/keyring';
 import api, { IAPIError } from 'lib/api';
-import { modalShow, modalClose } from 'modules/content/actions';
 import { txExec, txPrepare } from '../actions';
+import { modalShow, modalClose } from 'modules/modal/actions';
 
 const txPrepareEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(txPrepare)

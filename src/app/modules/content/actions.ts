@@ -17,7 +17,6 @@
 import actionCreatorFactory from 'typescript-fsa';
 import { TMenu, TPage, TEditorTab } from 'genesis/content';
 import { TProtypoElement } from 'genesis/protypo';
-import { TModalResultReason } from 'genesis/modal';
 
 const actionCreator = actionCreatorFactory('content');
 
@@ -51,10 +50,6 @@ export const changeEditorTool = actionCreator.async<string, TProtypoElement[]>('
 
 // Protypo-specific
 export const displayData = actionCreator.async<string, string, string>('DISPLAY_DATA');
-
-// Modal windows
-export const modalShow = actionCreator<{ id: string, type: string, params: { [key: string]: any } }>('MODAL_SHOW');
-export const modalClose = actionCreator<{ reason: TModalResultReason, data: any }>('MODAL_CLOSE');
 
 // Notifications
 export const fetchNotifications = actionCreator.async<undefined, TProtypoElement[], undefined>('FETCH_NOTIFICATIONS');

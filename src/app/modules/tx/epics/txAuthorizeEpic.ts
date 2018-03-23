@@ -18,7 +18,7 @@ import { IRootState } from 'modules';
 import { Epic } from 'redux-observable';
 import { Action } from 'redux';
 import { Observable } from 'rxjs';
-import { modalShow, modalClose } from 'modules/content/actions';
+import { modalShow, modalClose } from 'modules/modal/actions';
 import { txAuthorize } from '../actions';
 
 const txAuthorizeEpic: Epic<Action, IRootState> =

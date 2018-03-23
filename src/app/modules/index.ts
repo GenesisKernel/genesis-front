@@ -22,6 +22,7 @@ import { loadingBarReducer } from 'react-redux-loading-bar';
 import * as admin from './admin';
 import * as auth from './auth';
 import * as content from './content';
+import * as modal from './modal';
 import * as engine from './engine';
 import * as tx from './tx';
 import * as gui from './gui';
@@ -32,6 +33,7 @@ export interface IRootState {
     auth: auth.State;
     admin: admin.State;
     content: content.State;
+    modal: modal.State;
     engine: engine.State;
     tx: tx.State;
     gui: gui.State;
@@ -56,6 +58,7 @@ export default combineReducers<IRootState>({
     admin: admin.reducer,
     auth: auth.reducer,
     content: content.reducer,
+    modal: modal.reducer,
     engine: engine.reducer,
     tx: tx.reducer,
     gui: gui.reducer,

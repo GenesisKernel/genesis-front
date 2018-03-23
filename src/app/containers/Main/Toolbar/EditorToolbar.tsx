@@ -17,7 +17,8 @@
 import * as React from 'react';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
-import { editorSave, modalShow, revertEditorTab, changeEditorTool, createEditorTab } from 'modules/content/actions';
+import { modalShow } from 'modules/modal/actions';
+import { editorSave, revertEditorTab, changeEditorTool, createEditorTab } from 'modules/content/actions';
 import { IModalResult } from 'genesis/modal';
 import { TEditorTab } from 'genesis/content';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
@@ -108,7 +109,7 @@ const mapStateToProps = (state: IRootState) => {
     return {
         currentTab,
         currentTabIndex: state.content.editor.tabIndex,
-        modalResult: state.content.modal && state.content.modal.result,
+        modalResult: state.modal.result,
         canSave: !state.content.editor.pending &&
             currentTab && currentTab.dirty,
         canRevert: !state.content.editor.pending &&
@@ -119,7 +120,7 @@ const mapStateToProps = (state: IRootState) => {
 const mapDispatchToProps = {
     modalShow: modalShow,
     createEditorTab: createEditorTab.started,
-    revertEditorTab: revertEditorTab.bind(null),
+    revertEditorTab: revertEditorTab,
     changeEditorTool: changeEditorTool.started,
     editorSave
 };

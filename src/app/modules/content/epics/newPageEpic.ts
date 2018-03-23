@@ -19,7 +19,8 @@ import { Action } from 'redux';
 import { Observable } from 'rxjs';
 import { Epic } from 'redux-observable';
 import { IRootState } from 'modules';
-import { editorSave, modalShow, modalClose, reloadEditorTab } from '../actions';
+import { editorSave, reloadEditorTab } from '../actions';
+import { modalShow, modalClose } from 'modules/modal/actions';
 import api from 'lib/api';
 import { txCall, txExec } from 'modules/tx/actions';
 

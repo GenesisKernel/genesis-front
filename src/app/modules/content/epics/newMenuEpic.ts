@@ -19,9 +19,10 @@ import { Action } from 'redux';
 import { Observable } from 'rxjs';
 import { Epic } from 'redux-observable';
 import { IRootState } from 'modules';
-import { editorSave, modalShow, modalClose, reloadEditorTab } from '../actions';
-import api from 'lib/api';
+import { editorSave, reloadEditorTab } from '../actions';
+import { modalShow, modalClose } from 'modules/modal/actions';
 import { txCall, txExec } from 'modules/tx/actions';
+import api from 'lib/api';
 
 const newMenuEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(editorSave)

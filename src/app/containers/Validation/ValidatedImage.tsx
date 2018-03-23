@@ -18,8 +18,8 @@ import * as React from 'react';
 import * as uuid from 'uuid';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { modalShow } from 'modules/content/actions';
 import { IModal } from 'genesis/modal';
+import { modalShow } from 'modules/modal/actions';
 
 import { Validator } from 'components/Validation/Validators';
 import ValidatedImage from 'components/Validation/ValidatedImage';
@@ -83,7 +83,7 @@ class ValidatedImageContainer extends React.Component<IValidatedImageContainerPr
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    modal: state.content.modal
+    modal: state.modal
 });
 
 const mapDispatchToProps = {

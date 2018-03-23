@@ -17,8 +17,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { modalClose } from 'modules/content/actions';
 import { IModal } from 'genesis/modal';
+import { modalClose } from 'modules/modal/actions';
 import ModalProvider from 'components/Modal/ModalProvider';
 
 interface IModalProviderContainerProps {
@@ -47,7 +47,7 @@ class ModalProviderContainer extends React.Component<IModalProviderContainerProp
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    modal: state.content.modal
+    modal: state.modal
 });
 
 const mapDispatchToProps = {

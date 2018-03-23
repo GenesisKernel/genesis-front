@@ -19,11 +19,12 @@ import { history } from 'store';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
+import { modalShow } from 'modules/modal/actions';
+import { changeEditorTab, closeEditorTab, updateEditorTab, loadEditorTab, createEditorTab } from 'modules/content/actions';
+import { TEditorTab } from 'genesis/content';
+import { IModalResult } from 'genesis/modal';
 
 import Editor from 'components/Main/Admin/Editor';
-import { TEditorTab } from 'genesis/content';
-import { changeEditorTab, closeEditorTab, updateEditorTab, loadEditorTab, modalShow, createEditorTab } from 'modules/content/actions';
-import { IModalResult } from 'genesis/modal';
 
 interface IEditorContainerProps {
     open?: string;
@@ -113,7 +114,7 @@ class EditorContainer extends React.Component<IEditorContainerProps & InjectedIn
 const mapStateToProps = (state: IRootState) => ({
     tabIndex: state.content.editor.tabIndex,
     tabs: state.content.editor.tabs,
-    modalResult: state.content.modal && state.content.modal.result
+    modalResult: state.modal.result
 });
 
 const mapDispatchToProps = {
