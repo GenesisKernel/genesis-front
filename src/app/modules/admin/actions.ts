@@ -49,7 +49,6 @@ export const selectTag = actionCreator<{ tag: any, pageID: string }>('SELECT_TAG
 export const saveConstructorHistory = actionCreator<{ pageID: string }>('SAVE_CONSTRUCTOR_HISTORY');
 export const constructorUndo = actionCreator<{ pageID: string }>('CONSTRUCTOR_UNDO');
 export const constructorRedo = actionCreator<{ pageID: string }>('CONSTRUCTOR_REDO');
-export const generatePageTemplate = actionCreator<{ pageID: string }>('GENERATE_PAGE_TEMPLATE');
 
 // Menus
 export const getMenu = actionCreator.async<{ name: string }, IInterfaceMenuResponse, string>('GET_MENU');

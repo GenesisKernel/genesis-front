@@ -17,10 +17,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { getPageTree, getPage, changePage, setTagCanDropPosition, addTag, moveTag, moveTreeTag, copyTag, removeTag, selectTag, constructorUndo, constructorRedo, saveConstructorHistory, generatePageTemplate } from 'modules/admin/actions';
+import { getPageTree, getPage, changePage, setTagCanDropPosition, addTag, moveTag, moveTreeTag, copyTag, removeTag, selectTag, constructorUndo, constructorRedo, saveConstructorHistory } from 'modules/admin/actions';
 import { navigatePage } from 'modules/content/actions';
 import Constructor from 'components/Main/Admin/Interface/Constructor';
 import { TProtypoElement } from 'genesis/protypo';
+import { generatePageTemplate } from 'modules/editor/actions';
 
 export interface IConstructorTabbedContainerProps {
     pageID: string;
@@ -121,21 +122,21 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
         payload.pageID = this.props.pageID;
         this.props.changePage(payload);
         this.props.saveConstructorHistory({ pageID: this.props.pageID });
-        this.props.generatePageTemplate({ pageID: this.props.pageID });
+        this.generatePageTemplate();
     }
 
     addTag(payload?: any) {
         payload.pageID = this.props.pageID;
         this.props.addTag(payload);
         this.props.saveConstructorHistory({ pageID: this.props.pageID });
-        this.props.generatePageTemplate({ pageID: this.props.pageID });
+        this.generatePageTemplate();
     }
 
     moveTag(payload?: any) {
         payload.pageID = this.props.pageID;
         this.props.moveTag(payload);
         this.props.saveConstructorHistory({ pageID: this.props.pageID });
-        this.props.generatePageTemplate({ pageID: this.props.pageID });
+        this.generatePageTemplate();
     }
 
     moveTreeTag(payload?: any) {
@@ -147,14 +148,14 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
         payload.pageID = this.props.pageID;
         this.props.copyTag(payload);
         this.props.saveConstructorHistory({ pageID: this.props.pageID });
-        this.props.generatePageTemplate({ pageID: this.props.pageID });
+        this.generatePageTemplate();
     }
 
     removeTag(payload?: any) {
         payload.pageID = this.props.pageID;
         this.props.removeTag(payload);
         this.props.saveConstructorHistory({ pageID: this.props.pageID });
-        this.props.generatePageTemplate({ pageID: this.props.pageID });
+        this.generatePageTemplate();
     }
 
     setTagCanDropPosition(payload?: any) {
@@ -185,18 +186,22 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
 
     undo() {
         this.props.constructorUndo({ pageID: this.props.pageID });
-        this.props.generatePageTemplate({ pageID: this.props.pageID });
+        this.generatePageTemplate();
     }
 
     redo() {
         this.props.constructorRedo({ pageID: this.props.pageID });
-        this.props.generatePageTemplate({ pageID: this.props.pageID });
+        this.generatePageTemplate();
     }
 
     onSave(block: string, error?: { type: string, error: string }) {
         if (this.props.onSave) {
             this.props.onSave(this.props.pageID);
         }
+    }
+
+    generatePageTemplate() {
+        this.props.generatePageTemplate(this.props.pageID);
     }
 
     render() {

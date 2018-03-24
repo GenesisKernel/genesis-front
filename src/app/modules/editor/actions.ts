@@ -29,3 +29,6 @@ export const updateEditorTab = actionCreator<string>('UPDATE_EDITOR_TAB');
 export const revertEditorTab = actionCreator<number>('REVERT_EDITOR_TAB');
 export const reloadEditorTab = actionCreator<IReloadEditorTabCall>('RELOAD_EDITOR_TAB');
 export const changeEditorTool = actionCreator.async<string, TProtypoElement[]>('CHANGE_EDITOR_TOOL');
+
+// TODO: Pending refactoring
+export const generatePageTemplate = actionCreator<string>('GENERATE_PAGE_TEMPLATE');

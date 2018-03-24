@@ -26,6 +26,7 @@ import { IRootState } from 'modules';
 import * as actions from './actions';
 import * as storageActions from 'modules/storage/actions';
 import { setIds, findTagById } from 'lib/constructor';
+import { generatePageTemplate } from 'modules/editor/actions';
 
 export const getTableEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getTable.started)
@@ -388,9 +389,7 @@ export const moveTreeTagEpic: Epic<Action, IRootState> =
                 Observable.of(actions.saveConstructorHistory({
                     pageID: action.payload.pageID
                 })),
-                Observable.of(actions.generatePageTemplate({
-                    pageID: action.payload.pageID
-                }))
+                Observable.of(generatePageTemplate(state.admin.tabs.data['interfaceConstructor' + action.payload.pageID].treeData))
             );
         });
 

@@ -35,12 +35,12 @@ export interface IEditorToolbarProps {
 }
 
 const editorTools = [
-    /*{
+    {
         type: 'constructor',
         content: (
             <FormattedMessage id="editor.tool.designer" defaultMessage="Designer" />
         )
-    },*/
+    },
     {
         type: 'editor',
         content: (

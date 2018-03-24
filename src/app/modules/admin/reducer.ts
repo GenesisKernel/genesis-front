@@ -19,7 +19,7 @@ import * as _ from 'lodash';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse, IHistoryResponse } from 'lib/api';
-import { findTagById, resolveTagHandler, Properties, generateId, setIds, CodeGenerator, convertToTreeData, getConstructorTemplate } from 'lib/constructor';
+import { findTagById, resolveTagHandler, Properties, generateId, setIds, convertToTreeData, getConstructorTemplate } from 'lib/constructor';
 import { TProtypoElement } from 'genesis/protypo';
 
 export type State = {
@@ -705,28 +705,6 @@ export default (state: State = initialState, action: Action): State => {
                 history: {
                     ...state.tabs.history,
                     ['page' + action.payload.pageID]: { data: data.concat([pageTree]), position: position + 1, canUndo, canRedo }
-                }
-            }
-        };
-    }
-
-    if (isType(action, actions.generatePageTemplate)) {
-        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID];
-        let pageTree = tabData && tabData.data || null;
-        const codeGenerator = new CodeGenerator(pageTree);
-        const pageTemplate = codeGenerator.render();
-
-        return {
-            ...state,
-            pending: false,
-            tabs: {
-                ...state.tabs,
-                data: {
-                    ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.pageID]: {
-                        ...state.tabs.data['interfaceConstructor' + action.payload.pageID],
-                        pageTemplate: pageTemplate
-                    }
                 }
             }
         };

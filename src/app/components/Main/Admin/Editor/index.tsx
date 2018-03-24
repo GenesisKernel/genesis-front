@@ -20,6 +20,7 @@ import { TEditorTab } from 'genesis/editor';
 import CodeEditor from 'components/Editor';
 import EditorTabs from './EditorTabs';
 import Page from 'components/Main/Page';
+import ConstructorTabbed from 'containers/Main/containers/Admin/Interface/ConstructorTabbed';
 
 export interface IEditorProps {
     open?: string;
@@ -62,7 +63,7 @@ class Editor extends React.Component<IEditorProps> {
         switch (tab.tool) {
             case 'constructor':
                 return (
-                    <span>[WIP] Constructor</span>
+                    <ConstructorTabbed pageID={tab.id} pageName={tab.name} />
                 );
 
             case 'preview':
@@ -74,13 +75,14 @@ class Editor extends React.Component<IEditorProps> {
                     />
                 );
 
-            default: return (
-                <CodeEditor
-                    language={'contract' === tab.type ? 'simvolio' : 'protypo'}
-                    value={tab.value}
-                    onChange={this.props.onTabUpdate}
-                />
-            );
+            default:
+                return (
+                    <CodeEditor
+                        language={'contract' === tab.type ? 'simvolio' : 'protypo'}
+                        value={tab.value}
+                        onChange={this.props.onTabUpdate}
+                    />
+                );
         }
     }
 
