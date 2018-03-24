@@ -36,6 +36,7 @@ export interface IValidatedFormState {
 
 export interface IValidationResult {
     name: string;
+    index?: number;
     error: boolean;
     validator?: Validator;
     value?: any;
@@ -43,7 +44,10 @@ export interface IValidationResult {
 
 export interface IValidatedControl {
     getValue: () => any;
-    props: { validators?: Validator[] };
+    props: {
+        name: string;
+        validators?: Validator[];
+    };
 }
 
 interface IValidationElement {
@@ -53,7 +57,9 @@ interface IValidationElement {
 }
 
 export default class ValidatedForm extends React.Component<IValidatedFormProps, IValidatedFormState> {
-    private _elements: { [name: string]: IValidationElement } = {};
+    private _elements: {
+        [name: string]: IValidationElement[];
+    } = {};
 
     constructor(props: IValidatedFormProps) {
         super(props);
@@ -68,16 +74,33 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
         };
     }
 
-    _registerElement(name: string, node: IValidatedControl) {
-        this._elements[name] = {
+    _registerElement(node: IValidatedControl) {
+        const name = node.props.name;
+
+        if (!this._elements[name]) {
+            this._elements[name] = [];
+        }
+
+        this._elements[name].push({
             name,
             node,
             validators: node.props.validators
-        };
+        });
     }
 
-    _unregisterElement(name: string) {
-        delete this._elements[name];
+    _unregisterElement(node: IValidatedControl) {
+        const name = node.props.name;
+
+        if (this._elements[name]) {
+            const index = this._elements[name].findIndex(l => l.node === node);
+            if (-1 !== index) {
+                this._elements[name].splice(index);
+            }
+
+            if (0 === this._elements[name].length) {
+                delete this._elements[name];
+            }
+        }
     }
 
     private _onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -121,8 +144,8 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
     }
 
     validate(name: string, withValue?: any): IValidationResult {
-        const element = this._elements[name];
-        if (!element) {
+        const elements = this._elements[name];
+        if (!elements) {
             return {
                 name,
                 error: false,
@@ -130,27 +153,42 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
             };
         }
 
-        const value = withValue || element.node.getValue();
+        const results: any[] = [];
+        for (let i = 0; i < elements.length; i++) {
+            const element = elements[i];
+            const value = withValue || element.node.getValue();
 
-        if (element.validators) {
-            for (let i = 0; i < element.validators.length; i++) {
-                const validator = element.validators[i];
+            if (element.validators) {
+                for (let v = 0; v < element.validators.length; v++) {
+                    const validator = element.validators[v];
 
-                if (!validator.validate(value)) {
-                    return {
-                        name,
-                        error: true,
-                        validator
-                    };
+                    if (!validator.validate(value)) {
+                        return {
+                            name,
+                            index: v,
+                            error: true,
+                            validator
+                        };
+                    }
                 }
             }
+            results.push(value);
         }
 
-        return {
-            name,
-            error: false,
-            value
-        };
+        if (1 < results.length) {
+            return {
+                name,
+                error: false,
+                value: results
+            };
+        }
+        else {
+            return {
+                name,
+                error: false,
+                value: results[0]
+            };
+        }
     }
 
     validateAll(): { valid: boolean, payload: { [key: string]: IValidationResult } } {

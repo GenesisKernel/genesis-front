@@ -18,13 +18,11 @@ import * as React from 'react';
 import { Button } from 'react-bootstrap';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import styled from 'styled-components';
-import { navigate } from 'modules/engine/actions';
-import { alertShow } from 'modules/content/actions';
 import { IStoredAccount } from 'genesis/storage';
 import { INotificationsMessage } from 'genesis/socket';
 import imgAvatar from 'images/avatar.svg';
 
-import DocumentTitle from 'components/DocumentTitle';
+import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import General from 'components/General';
 import Welcome from 'components/General/Welcome';
 import AccountButton from 'components/AccountButton';
@@ -95,46 +93,40 @@ const StyledLogin = styled.div`
     }
 `;
 
-export interface ILoginProps extends InjectedIntlProps {
+export interface ILoginProps {
     isLoggingIn: boolean;
     authenticationError: string;
     account: IStoredAccount;
     accounts: IStoredAccount[];
     notifications: INotificationsMessage[];
-    alert: { id: string, success: string, error: string };
     defaultAccount: string;
-    navigate: typeof navigate;
-    alertShow: typeof alertShow;
+    navigate: (url: string) => void;
+    onError: (text: string) => void;
+    onAccountRemove: (account: IStoredAccount) => void;
     login: (params: { encKey: string, ecosystem: string, password: string }) => void;
     logout: (params: {}) => void;
     selectAccount: (params: { account: IStoredAccount }) => void;
-    removeAccount: (account: { id: string, ecosystem: string }) => void;
 }
 
-class Login extends React.Component<ILoginProps> {
-    private _pendingRemoval: { account: IStoredAccount };
-
-    constructor(props: ILoginProps) {
+class Login extends React.Component<ILoginProps & InjectedIntlProps> {
+    constructor(props: ILoginProps & InjectedIntlProps) {
         super(props);
         this.state = {
             account: null
         };
     }
 
-    componentWillReceiveProps(props: ILoginProps) {
-        if (this._pendingRemoval && props.alert && 'C_REMOVE_ACCOUNT' === props.alert.id && props.alert.success) {
-            this.props.removeAccount(this._pendingRemoval.account);
-            this._pendingRemoval = null;
-        }
-
+    componentWillReceiveProps(props: ILoginProps & InjectedIntlProps) {
         if (this.props.isLoggingIn && !props.isLoggingIn && props.authenticationError) {
-            this.props.alertShow({
-                id: 'E_INVALID_PASSWORD',
-                title: this.props.intl.formatMessage({ id: 'alert.error', defaultMessage: 'Error' }),
-                type: 'error',
-                text: this.props.intl.formatMessage({ id: 'auth.password.invalid', defaultMessage: 'Invalid password' }),
-                cancelButton: this.props.intl.formatMessage({ id: 'alert.close', defaultMessage: 'Close' }),
-            });
+            switch (props.authenticationError) {
+                case 'E_DELETEDKEY':
+                    props.onError(props.intl.formatMessage({ id: 'auth.key.removed', defaultMessage: 'Account has been removed' }));
+                    break;
+
+                default:
+                    props.onError(props.intl.formatMessage({ id: 'auth.password.invalid', defaultMessage: 'Invalid password' }));
+                    break;
+            }
         }
     }
 
@@ -143,10 +135,6 @@ class Login extends React.Component<ILoginProps> {
     }
 
     onSubmit(values: { [key: string]: any }) {
-        /*if (!this.state.account || !this.state.account.encKey) {
-            return;
-        }*/
-
         this.props.login({
             encKey: this.props.account.encKey,
             password: values.password,
@@ -162,18 +150,7 @@ class Login extends React.Component<ILoginProps> {
     }
 
     onRemoveAccount(account: IStoredAccount) {
-        this._pendingRemoval = {
-            account
-        };
-
-        this.props.alertShow({
-            id: 'C_REMOVE_ACCOUNT',
-            title: 'Confirmation',
-            type: 'warning',
-            text: 'Do you really want to delete this account? THIS ACTION IS IRREVERSIBLE',
-            confirmButton: this.props.intl.formatMessage({ id: 'alert.confirm', defaultMessage: 'Confirm' }),
-            cancelButton: this.props.intl.formatMessage({ id: 'alert.cancel', defaultMessage: 'Cancel' }),
-        });
+        this.props.onAccountRemove(account);
     }
 
     getSortedAccounts() {
@@ -259,17 +236,17 @@ class Login extends React.Component<ILoginProps> {
         const body = this.props.account && this.props.authenticationError ? this.renderPasswordPrompt() : this.renderAccountList();
         return this.props.accounts.length ?
             (
-                <DocumentTitle title="auth.login" defaultTitle="Login">
+                <LocalizedDocumentTitle title="auth.login" defaultTitle="Login">
                     <General className="p0">
                         <StyledLogin className="desktop-flex-col desktop-flex-stretch">
                             {body}
                         </StyledLogin>
                     </General>
-                </DocumentTitle>
+                </LocalizedDocumentTitle>
             ) : (
-                <DocumentTitle title="auth.welcome" defaultTitle="Welcome">
+                <LocalizedDocumentTitle title="auth.welcome" defaultTitle="Welcome">
                     <Welcome navigate={this.props.navigate} />
-                </DocumentTitle>
+                </LocalizedDocumentTitle>
             );
     }
 }

@@ -23,7 +23,7 @@ import { getContracts, getInterface, getParameters, getLanguages, getTables, exp
 import Export from 'components/Main/Admin/Export';
 
 export interface IExportContainerProps {
-    vde?: boolean;
+
 }
 
 interface IExportContainerState {
@@ -46,18 +46,16 @@ interface IExportContainerDispatch {
 
 class ExportContainer extends React.Component<IExportContainerProps & IExportContainerState & IExportContainerDispatch> {
     componentDidMount() {
-        // TODO: Move to a separate action
-        this.props.getInterface({ vde: this.props.vde });
-        this.props.getParameters({ vde: this.props.vde });
-        this.props.getLanguages({ vde: this.props.vde });
-        this.props.getContracts({ vde: this.props.vde });
-        this.props.getTables({ vde: this.props.vde });
+        this.props.getInterface(null);
+        this.props.getParameters({});
+        this.props.getLanguages({});
+        this.props.getContracts({});
+        this.props.getTables({});
     }
 
     render() {
         return (
             <Export
-                vde={this.props.vde}
                 exportPayload={this.props.exportPayload}
                 exportData={this.props.exportData}
                 pages={this.props.interfaces && this.props.interfaces.pages}

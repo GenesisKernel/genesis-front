@@ -23,13 +23,12 @@ import { ITableResponse, IListResponse } from 'lib/api';
 import View, { columnDisplayRules } from 'components/Main/Admin/Tables/View';
 
 export interface IViewContainerProps {
-    vde?: boolean;
-    match?: { params: { tableName: string } };
+    table: string;
 }
 
 interface IViewContainerState {
     tableData: IListResponse;
-    table: ITableResponse;
+    tableStruct: ITableResponse;
 }
 
 interface IViewContainerDispatch {
@@ -38,6 +37,16 @@ interface IViewContainerDispatch {
 
 class ViewContainer extends React.Component<IViewContainerProps & IViewContainerState & IViewContainerDispatch> {
     componentDidMount() {
+        this.getTable(this.props);
+    }
+
+    componentWillReceiveProps(props: IViewContainerProps & IViewContainerState & IViewContainerDispatch) {
+        if (this.props.table !== props.table) {
+            this.getTable(props);
+        }
+    }
+
+    getTable(props: IViewContainerProps & IViewContainerState & IViewContainerDispatch) {
         const columnTypes = [];
         for (let itr in columnDisplayRules) {
             if (columnDisplayRules.hasOwnProperty(itr)) {
@@ -47,22 +56,25 @@ class ViewContainer extends React.Component<IViewContainerProps & IViewContainer
                 }
             }
         }
-        this.props.getTable({
-            table: this.props.match.params.tableName,
-            columnTypes,
-            vde: this.props.vde
+        props.getTable({
+            table: props.table,
+            columnTypes
         });
     }
 
     render() {
         return (
-            <View vde={this.props.vde} tableName={this.props.match.params.tableName} table={this.props.table} tableData={this.props.tableData} />
+            <View
+                tableName={this.props.table}
+                table={this.props.tableStruct}
+                tableData={this.props.tableData}
+            />
         );
     }
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    table: state.admin.table,
+    tableStruct: state.admin.table,
     tableData: state.admin.tableData
 });
 

@@ -19,7 +19,7 @@ import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { Button, Row, Col } from 'react-bootstrap';
 
 import Heading from 'components/Heading';
-import DocumentTitle from 'components/DocumentTitle';
+import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 
 export interface IVDEProps {
     pending: boolean;
@@ -50,7 +50,7 @@ class VDE extends React.Component<IVDEProps & InjectedIntlProps> {
 
     render() {
         return (
-            <DocumentTitle title="admin.vde" defaultTitle="Virtual Dedicated Ecosystem">
+            <LocalizedDocumentTitle title="admin.vde" defaultTitle="Virtual Dedicated Ecosystem">
                 <div>
                     <Heading>
                         <FormattedMessage id="admin.vde" defaultMessage="Virtual Dedicated Ecosystem" />
@@ -78,7 +78,7 @@ class VDE extends React.Component<IVDEProps & InjectedIntlProps> {
                         </Row>
                     </div>
                 </div>
-            </DocumentTitle>
+            </LocalizedDocumentTitle>
         );
     }
 }

@@ -21,8 +21,7 @@ import Wrapper from 'components/Wrapper';
 import ParameterEditor from './ParameterEditor';
 
 export interface ICreateProps {
-    vde?: boolean;
-    navigate: (url: string) => void;
+    navigatePage: (params: { name?: string, section?: string, force?: boolean, params: { [key: string]: any } }) => void;
 }
 
 interface ICreateState {
@@ -49,9 +48,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
 
     onExec(block: string, error: string) {
         if (block) {
-            this.props.vde ?
-                this.props.navigate('/vde/parameters') :
-                this.props.navigate('/admin/parameters');
+            this.props.navigatePage({ name: 'parameters', params: {} });
         }
     }
 
@@ -82,7 +79,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                 }}
                 breadcrumbs={[
                     {
-                        url: this.props.vde ? '/vde/parameters' : '/admin/parameters',
+                        url: '/admin/parameters',
                         title: (
                             <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
                         )
@@ -95,7 +92,6 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                 ]}
             >
                 <ParameterEditor
-                    vde={this.props.vde}
                     value={this.state.value}
                     conditions={this.state.conditions}
                     contractName="@1NewParameter"

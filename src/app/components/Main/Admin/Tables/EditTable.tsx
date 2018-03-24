@@ -17,18 +17,17 @@
 import * as React from 'react';
 import { Button, Col, Panel, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
 import { ITableResponse } from 'lib/api';
 import { columnTypes } from './Create';
 
 import Heading from 'components/Heading';
+import PageLink from 'containers/Routing/PageLink';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
-import DocumentTitle from 'components/DocumentTitle';
+import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import Validation from 'components/Validation';
 
 export interface IEditTableProps {
-    vde?: boolean;
-    table: ITableResponse;
+    tableStruct: ITableResponse;
 }
 
 const resolveColumnType = (type: string) => {
@@ -44,22 +43,22 @@ const resolveColumnType = (type: string) => {
 class EditTable extends React.Component<IEditTableProps> {
     mapContractParams(values: { [key: string]: any }) {
         return {
-            Name: this.props.table.name,
+            Name: this.props.tableStruct.name,
             Permissions: JSON.stringify({
                 insert: values.insert,
                 update: values.update,
                 new_column: values.newColumn,
-                ...(this.props.vde && {
+                ...(false ? {
                     read: values.read,
                     filter: values.filter
-                })
+                } : {})
             })
         };
     }
 
     render() {
-        return (
-            <DocumentTitle title={this.props.table && this.props.table.name}>
+        return this.props.tableStruct && (
+            <LocalizedDocumentTitle title={this.props.tableStruct.name}>
                 <div>
                     <Heading>
                         <FormattedMessage id="admin.tables" defaultMessage="Tables" />
@@ -67,17 +66,15 @@ class EditTable extends React.Component<IEditTableProps> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <Link to={this.props.vde ? '/vde/tables' : '/admin/tables'}>
+                                <PageLink page="tables">
                                     <FormattedMessage id="admin.tables" defaultMessage="Tables" />
-                                </Link>
+                                </PageLink>
                             </li>
-                            {this.props.table && (
-                                <li>
-                                    <Link to={`/${this.props.vde ? 'vde' : 'admin'}/tables/${this.props.table.name}`}>
-                                        {this.props.table.name}
-                                    </Link>
-                                </li>
-                            )}
+                            <li>
+                                <PageLink page="table" params={{ table: this.props.tableStruct.name }}>
+                                    {this.props.tableStruct.name}
+                                </PageLink>
+                            </li>
                             <li>
                                 <FormattedMessage id="admin.tables.edit" defaultMessage="Edit" />
                             </li>
@@ -89,13 +86,11 @@ class EditTable extends React.Component<IEditTableProps> {
                                     footer={
                                         <div className="clearfix">
                                             <div className="pull-left">
-                                                {this.props.table && (
-                                                    <Link to={`/${this.props.vde ? 'vde' : 'admin'}/tables/${this.props.table.name}/edit/add-column`}>
-                                                        <Button bsStyle="primary">
-                                                            <FormattedMessage id="admin.tables.column.add" defaultMessage="Add column" />
-                                                        </Button>
-                                                    </Link>
-                                                )}
+                                                <PageLink page="add-column" params={{ table: this.props.tableStruct.name }}>
+                                                    <Button bsStyle="primary">
+                                                        <FormattedMessage id="admin.tables.column.add" defaultMessage="Add column" />
+                                                    </Button>
+                                                </PageLink>
                                             </div>
                                         </div>
                                     }
@@ -119,7 +114,7 @@ class EditTable extends React.Component<IEditTableProps> {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {this.props.table && this.props.table.columns.map(col => (
+                                                {this.props.tableStruct.columns.map(col => (
                                                     <tr key={col.name}>
                                                         <td>{col.name}</td>
                                                         <td>
@@ -131,13 +126,11 @@ class EditTable extends React.Component<IEditTableProps> {
                                                         </td>
                                                         <td>{col.perm}</td>
                                                         <td>
-                                                            {this.props.table && (
-                                                                <Link to={`/${this.props.vde ? 'vde' : 'admin'}/tables/${this.props.table.name}/edit/column/${col.name}`}>
-                                                                    <Button bsStyle="primary">
-                                                                        <FormattedMessage id="admin.tables.column.edit" defaultMessage="Edit" />
-                                                                    </Button>
-                                                                </Link>
-                                                            )}
+                                                            <PageLink page="edit-column" params={{ table: this.props.tableStruct.name, column: col.name }}>
+                                                                <Button bsStyle="primary">
+                                                                    <FormattedMessage id="admin.tables.column.edit" defaultMessage="Edit" />
+                                                                </Button>
+                                                            </PageLink>
                                                         </td>
                                                     </tr>
                                                 ))}
@@ -147,67 +140,63 @@ class EditTable extends React.Component<IEditTableProps> {
                                 </Panel>
                             </Col>
                         </Row>
-                        {this.props.table && (
-                            <ValidatedContractForm vde={this.props.vde} contractName="@1EditTable" mapContractParams={this.mapContractParams.bind(this)}>
-                                <Row>
-                                    <Col md={6}>
-                                        <Panel
-                                            header={<FormattedMessage id="admin.tables.permissions.write" defaultMessage="Write permissions" />}
-                                            footer={<div className="text-right"><Button type="submit" bsStyle="primary"><FormattedMessage id="admin.tables.save" defaultMessage="Save" /></Button></div>}
-                                        >
-                                            <Validation.components.ValidatedFormGroup for="insert">
+                        <ValidatedContractForm contractName="@1EditTable" mapContractParams={this.mapContractParams.bind(this)}>
+                            <Row>
+                                <Col md={6}>
+                                    <Panel
+                                        header={<FormattedMessage id="admin.tables.permissions.write" defaultMessage="Write permissions" />}
+                                        footer={<div className="text-right"><Button type="submit" bsStyle="primary"><FormattedMessage id="admin.tables.save" defaultMessage="Save" /></Button></div>}
+                                    >
+                                        <Validation.components.ValidatedFormGroup for="insert">
+                                            <label>
+                                                <FormattedMessage id="admin.tables.permissions.insert" defaultMessage="Insert" />
+                                            </label>
+                                            <Validation.components.ValidatedControl type="text" name="insert" defaultValue={this.props.tableStruct.insert} validators={[Validation.validators.required]} />
+                                        </Validation.components.ValidatedFormGroup>
+                                        <Validation.components.ValidatedFormGroup for="update">
+                                            <label>
+                                                <FormattedMessage id="admin.tables.permissions.update" defaultMessage="Update" />
+                                            </label>
+                                            <Validation.components.ValidatedControl type="text" name="update" defaultValue={this.props.tableStruct.update} validators={[Validation.validators.required]} />
+                                        </Validation.components.ValidatedFormGroup>
+                                        <Validation.components.ValidatedFormGroup for="newColumn">
+                                            <label>
+                                                <FormattedMessage id="admin.tables.permissions.newcolumn" defaultMessage="New column" />
+                                            </label>
+                                            <Validation.components.ValidatedControl type="text" name="newColumn" defaultValue={this.props.tableStruct.new_column} validators={[Validation.validators.required]} />
+                                        </Validation.components.ValidatedFormGroup>
+                                    </Panel>
+                                </Col>
+                                <Col md={6}>
+                                    {false && (
+                                        <Panel header={<FormattedMessage id="admin.tables.permissions.read" defaultMessage="Read permissions" />}>
+                                            <Validation.components.ValidatedFormGroup for="read">
                                                 <label>
-                                                    <FormattedMessage id="admin.tables.permissions.insert" defaultMessage="Insert" />
+                                                    <FormattedMessage id="admin.tables.permissions.read" defaultMessage="Read" />
                                                 </label>
-                                                <Validation.components.ValidatedControl type="text" name="insert" defaultValue={this.props.table.insert} validators={[Validation.validators.required]} />
+                                                <Validation.components.ValidatedControl type="text" name="read" defaultValue={this.props.tableStruct.read} />
                                             </Validation.components.ValidatedFormGroup>
-                                            <Validation.components.ValidatedFormGroup for="update">
+                                            <Validation.components.ValidatedFormGroup for="filter">
                                                 <label>
-                                                    <FormattedMessage id="admin.tables.permissions.update" defaultMessage="Update" />
+                                                    <FormattedMessage id="admin.tables.permissions.filter" defaultMessage="Filter" />
                                                 </label>
-                                                <Validation.components.ValidatedControl type="text" name="update" defaultValue={this.props.table.update} validators={[Validation.validators.required]} />
-                                            </Validation.components.ValidatedFormGroup>
-                                            <Validation.components.ValidatedFormGroup for="newColumn">
-                                                <label>
-                                                    <FormattedMessage id="admin.tables.permissions.newcolumn" defaultMessage="New column" />
-                                                </label>
-                                                <Validation.components.ValidatedControl type="text" name="newColumn" defaultValue={this.props.table.new_column} validators={[Validation.validators.required]} />
+                                                <Validation.components.ValidatedControl type="text" name="filter" defaultValue={this.props.tableStruct.filter} />
                                             </Validation.components.ValidatedFormGroup>
                                         </Panel>
-                                    </Col>
-                                    <Col md={6}>
-                                        {this.props.vde && (
-                                            <Panel header={<FormattedMessage id="admin.tables.permissions.read" defaultMessage="Read permissions" />}>
-                                                <Validation.components.ValidatedFormGroup for="read">
-                                                    <label>
-                                                        <FormattedMessage id="admin.tables.permissions.read" defaultMessage="Read" />
-                                                    </label>
-                                                    <Validation.components.ValidatedControl type="text" name="read" defaultValue={this.props.table.read} />
-                                                </Validation.components.ValidatedFormGroup>
-                                                <Validation.components.ValidatedFormGroup for="filter">
-                                                    <label>
-                                                        <FormattedMessage id="admin.tables.permissions.filter" defaultMessage="Filter" />
-                                                    </label>
-                                                    <Validation.components.ValidatedControl type="text" name="filter" defaultValue={this.props.table.filter} />
-                                                </Validation.components.ValidatedFormGroup>
-                                            </Panel>
-                                        )}
-                                        <Panel
-                                            header={<FormattedMessage id="admin.tables.permissions.conditions" defaultMessage="Conditions for changing permissions" />}
-                                        >
-                                            {this.props.table && (
-                                                <Validation.components.ValidatedFormGroup for="conditions">
-                                                    <Validation.components.ValidatedControl type="text" name="conditions" readOnly defaultValue={this.props.table.conditions} validators={[Validation.validators.required]} />
-                                                </Validation.components.ValidatedFormGroup>
-                                            )}
-                                        </Panel>
-                                    </Col>
-                                </Row>
-                            </ValidatedContractForm>
-                        )}
+                                    )}
+                                    <Panel
+                                        header={<FormattedMessage id="admin.tables.permissions.conditions" defaultMessage="Conditions for changing permissions" />}
+                                    >
+                                        <Validation.components.ValidatedFormGroup for="conditions">
+                                            <Validation.components.ValidatedControl type="text" name="conditions" readOnly defaultValue={this.props.tableStruct.conditions} validators={[Validation.validators.required]} />
+                                        </Validation.components.ValidatedFormGroup>
+                                    </Panel>
+                                </Col>
+                            </Row>
+                        </ValidatedContractForm>
                     </div>
                 </div>
-            </DocumentTitle>
+            </LocalizedDocumentTitle>
         );
     }
 }

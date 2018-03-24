@@ -15,26 +15,34 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import * as _ from 'lodash';
+import { FormattedMessage } from 'react-intl';
 import ReduxToastr from 'react-redux-toastr';
 import LoadingBar from 'react-redux-loading-bar';
 import { OrderedMap } from 'immutable';
 import styled from 'styled-components';
 import platform from 'lib/platform';
+import { TSection } from 'genesis/content';
 import { history } from 'store';
+import { apiUrl } from 'lib/api';
 import url from 'url';
 
 import Titlebar from './Titlebar';
 import UserMenu from 'containers/Widgets/UserMenu';
 import Navigation from 'containers/Main/Navigation';
-import { apiUrl } from 'lib/api';
 import NotificationsMenu from 'containers/Widgets/NotificationsMenu';
+import Toolbar from './Toolbar';
+import SectionButton from 'components/Main/SectionButton';
+import ToolButton from 'components/Main/Toolbar/ToolButton';
+import EditorToolbar from 'containers/Main/Toolbar/EditorToolbar';
 // import TransactionsMenu from './TransactionsMenu';
 
 export const styles = {
     headerHeight: platform.select({ desktop: 28, web: 0 }),
     menuHeight: 40,
     toolbarHeight: 40,
-    mainColor: '#4c7dbd'
+    mainColor: '#4c7dbd',
+    toolColor: '#f3f3f3'
 };
 
 const StyledWrapper = styled.div`
@@ -46,6 +54,8 @@ export interface IMainProps {
     isAuthorized: boolean;
     isEcosystemOwner: boolean;
     pending: boolean;
+    section: string;
+    sections: { [name: string]: TSection };
     stylesheet: string;
     navigationSize: number;
     navigationVisible: boolean;
@@ -54,6 +64,8 @@ export interface IMainProps {
     onRefresh: () => void;
     onNavigateHome: () => void;
     onNavigationToggle: () => void;
+    onSwitchSection: (section: string) => void;
+    onCloseSection: (section: string) => void;
 }
 
 const StyledControls = styled.div`
@@ -100,30 +112,6 @@ const StyledMenu = styled.ul`
             right: 0;
             bottom: 0;
         }
-
-        button {
-            border-radius: 0;
-            padding: 0 20px;
-            margin: 0;
-            outline: 0;
-            border: 0;
-            background: 0;
-            color: #fff;
-            font-size: 16px;
-            font-weight: 300;
-            transition: background .15s;
-
-            &:hover {
-                background: rgba(0,0,0,0.1);
-            }
-        }
-
-        &.active {
-            > button {
-                background: #eeeeee;
-                color: #000;
-            }
-        }
     }
 `;
 
@@ -138,75 +126,6 @@ const StyledLoadingBar = styled(LoadingBar) `
     right: 0;
     left: 0;
 `;
-
-const MenuItem: React.SFC<{ active?: boolean, onClick?: () => void }> = props => (
-    <li className={props.active ? 'active' : ''}>
-        <button onClick={props.onClick}>
-            {props.children}
-        </button>
-    </li>
-);
-
-const StyledToolbar = styled.ul`
-    background: #eeeeee;
-    height: ${styles.toolbarHeight}px;
-    border-bottom: solid 2px #e5e5e5;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    font-size: 0;
-
-    > li {
-        display: inline-block;
-        vertical-align: top;
-
-        &.separator {
-            width: 2px;
-            height: 40px;
-            background: #e5e5e5;
-        }
-
-        > button {
-            text-align: center;
-            border-radius: 0;
-            min-width: 30px;
-            height: 30px;
-            outline: 0;
-            border: 0;
-            background: 0;
-            margin: 5px;
-            padding: 0;
-            color: #757e8a;
-            font-size: 14px;
-            font-weight: 300;
-            line-height: 30px;
-            transition: background .15s;
-
-            > span {
-                margin-left: 10px;
-            }
-
-            &:hover {
-                background: rgba(0,0,0,0.03);
-            }
-        }
-    }
-`;
-
-const ToolButton: React.SFC<{ icon: string, right?: boolean, onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void }> = props => (
-    <li style={{ float: props.right ? 'right' : null }}>
-        <button onClick={props.onClick}>
-            <em className={`icon ${props.icon}`} />
-            {props.children && (<span>{props.children}</span>)}
-        </button>
-    </li>
-);
-
-/*const ToolSeparator: React.SFC = props => (
-    <li className="separator">
-        <div />
-    </li>
-);*/
 
 class Main extends React.Component<IMainProps> {
     onBack() {
@@ -231,34 +150,63 @@ class Main extends React.Component<IMainProps> {
                         <Titlebar>{appTitle}</Titlebar>
                     </StyledTitlebar>
                     <StyledMenu className="drag">
-                        <MenuItem onClick={this.props.onNavigationToggle}>
-                            <em className="icon-menu" />
-                        </MenuItem>
-                        <MenuItem active>Home</MenuItem>
+                        <li>
+                            <SectionButton onClick={this.props.onNavigationToggle}>
+                                <em className="icon-menu" />
+                            </SectionButton>
+                        </li>
+                        {_.map(this.props.sections, l => l.visible ? (
+                            <li key={l.name}>
+                                <SectionButton
+                                    active={this.props.section === l.name}
+                                    closeable={l.closeable}
+                                    onClick={this.props.onSwitchSection.bind(this, l.name)}
+                                    onClose={this.props.onCloseSection.bind(this, l.name)}
+                                >
+                                    {l.title}
+                                </SectionButton>
+                            </li>
+                        ) : null)}
                         <li className="user-menu">
                             <NotificationsMenu />
                             {/*<TransactionsMenu />*/}
                             <UserMenu />
                         </li>
                     </StyledMenu>
-                    <StyledToolbar>
-                        <ToolButton icon="icon-arrow-left" onClick={this.onBack} />
-                        <ToolButton icon="icon-arrow-right" onClick={this.onForward} />
-                        <ToolButton icon="icon-refresh" onClick={this.props.onRefresh} />
-                        <ToolButton icon="icon-home" onClick={this.props.onNavigateHome} />
+                    <Toolbar>
                         {this.props.isAuthorized && (
                             <ToolButton right icon="icon-key" />
                         )}
-                    </StyledToolbar>
+                        {'editor' === this.props.section ?
+                            (
+                                <EditorToolbar />
+                            ) : (
+                                <div>
+                                    <ToolButton icon="icon-arrow-left" onClick={this.onBack}>
+                                        <FormattedMessage id="navigation.back" defaultMessage="Back" />
+                                    </ToolButton>
+                                    <ToolButton icon="icon-arrow-right" onClick={this.onForward}>
+                                        <FormattedMessage id="navigation.forward" defaultMessage="Forward" />
+                                    </ToolButton>
+                                    <ToolButton icon="icon-home" onClick={this.props.onNavigateHome}>
+                                        <FormattedMessage id="navigation.home" defaultMessage="Home" />
+                                    </ToolButton>
+                                    <ToolButton icon="icon-refresh" onClick={this.props.onRefresh}>
+                                        <FormattedMessage id="navigation.refresh" defaultMessage="Refresh" />
+                                    </ToolButton>
+                                </div>
+                            )
+                        }
+                    </Toolbar>
                     <StyledLoadingBar
                         showFastActions
                         style={{
-                            backgroundColor: '#c6d2da',
+                            backgroundColor: '#b2c5dc',
                             width: 'auto',
                             height: 2
                         }}
                     />
-                </StyledControls>
+                </StyledControls >
                 <Navigation topOffset={styles.headerHeight + styles.menuHeight + styles.toolbarHeight} />
                 <StyledContent style={{ marginLeft: this.props.navigationVisible ? this.props.navigationSize : 0 }}>
                     <ReduxToastr
@@ -270,7 +218,7 @@ class Main extends React.Component<IMainProps> {
                     />
                     {this.props.children}
                 </StyledContent>
-            </StyledWrapper>
+            </StyledWrapper >
         );
     }
 }

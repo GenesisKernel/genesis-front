@@ -19,3 +19,4 @@ import { TWindowType } from './reducer';
 
 const actionCreator = actionCreatorFactory('gui');
 export const switchWindow = actionCreator.async<{ window: TWindowType }, TWindowType, void>('SWITCH_WINDOW');
+export const setBadgeCount = actionCreator<number>('SET_BADGE_COUNT');

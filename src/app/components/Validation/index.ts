@@ -17,7 +17,8 @@
 import ValidatedCheckbox from './ValidatedCheckbox';
 import ValidatedControl from './ValidatedControl';
 import ValidatedFile from './ValidatedFile';
-import ValidatedImage from './ValidatedImage';
+import ValidatedImage from 'containers/Validation/ValidatedImage';
+import ValidatedMap from 'containers/Validation/ValidatedMap';
 import ValidatedSelect from './ValidatedSelect';
 import ValidationMessage from './ValidationMessage';
 import ValidatedTextarea from './ValidatedTextarea';
@@ -33,6 +34,7 @@ export default {
         ValidatedControl,
         ValidatedFile,
         ValidatedImage,
+        ValidatedMap,
         ValidatedSelect,
         ValidatedTextarea,
         ValidatedForm,

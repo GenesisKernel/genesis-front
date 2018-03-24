@@ -14,8 +14,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { IProtypoElement } from 'components/Protypo/Protypo';
+// tslint:disable
 import { findDOMNode } from 'react-dom';
+import { TProtypoElement } from 'genesis/protypo';
 import * as _ from 'lodash';
 
 let findTagByIdResult: {
@@ -24,11 +25,11 @@ let findTagByIdResult: {
     parentPosition: number,
     tail: boolean
 } = {
-    el: null,
-    parent: null,
-    parentPosition: 0,
-    tail: false
-};
+        el: null,
+        parent: null,
+        parentPosition: 0,
+        tail: false
+    };
 
 export const findTagById = (el: any, id: string): any => {
     findTagByIdResult.el = null;
@@ -88,7 +89,7 @@ let onPasteStripFormattingIEPaste: boolean = false;
 
 export function OnPasteStripFormatting(elem: any, e: any) {
     let text: string;
-    if (e.originalEvent &&  e.originalEvent.clipboardData && e.originalEvent.clipboardData.getData) {
+    if (e.originalEvent && e.originalEvent.clipboardData && e.originalEvent.clipboardData.getData) {
         e.preventDefault();
         text = e.originalEvent.clipboardData.getData('text/plain');
         window.document.execCommand('insertText', false, text);
@@ -163,7 +164,7 @@ export function convertToTreeData(data: any, selectedTag?: any): any {
                 const tagObj = new Handler();
                 let treeItem = {
                     // title: ((item.tag !== 'text') ? item.tag : '') + ' ' + (subtitle ? subtitle : ''),
-                    title: item.tag  + (subtitle ? (': ' + subtitle) : ''),
+                    title: item.tag + (subtitle ? (': ' + subtitle) : ''),
                     // subtitle: subtitle,
                     children: children,
                     expanded: true,
@@ -725,7 +726,7 @@ export function getConstructorTemplate(name: string) {
 }
 
 class Tag {
-    protected element: IProtypoElement;
+    protected element: TProtypoElement;
     protected tagName: string = 'Tag';
     public canHaveChildren: boolean = true;
     public canMove: boolean = true;
@@ -741,7 +742,7 @@ class Tag {
 
     protected editProps = ['class', 'align', 'transform', 'wrap', 'color'];
 
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         this.element = element;
     }
     setOffset(offset: number): void {
@@ -764,7 +765,7 @@ class Tag {
 
         let body = this.renderChildren();
         if (this.element.children && this.element.children.length === 1) {
-           params.push('Body:\n' + body);
+            params.push('Body:\n' + body);
         }
 
         if (this.element && this.element.attr) {
@@ -876,8 +877,8 @@ class Tag {
 
     getValidationParams(obj: Object) {
         const params = {
-           'minlength': 'minLength',
-           'maxlength': 'maxLength'
+            'minlength': 'minLength',
+            'maxlength': 'maxLength'
         };
         let paramsArr = [];
         for (let param in obj) {
@@ -915,7 +916,7 @@ class Tag {
 }
 
 class Button extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Button';
         this.canHaveChildren = true;
@@ -929,14 +930,14 @@ class Button extends Tag {
 }
 
 class P extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'P';
     }
 }
 
 class Div extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Div';
         this.generateTextElement = false;
@@ -944,28 +945,28 @@ class Div extends Tag {
 }
 
 class Span extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Span';
     }
 }
 
 class Strong extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Strong';
     }
 }
 
 class Em extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Em';
     }
 }
 
 class Form extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Form';
         this.generateTextElement = false;
@@ -973,14 +974,14 @@ class Form extends Tag {
 }
 
 class Label extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Label';
     }
 }
 
 class Table extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Table';
         this.canHaveChildren = false;
@@ -1003,7 +1004,7 @@ class Table extends Tag {
 }
 
 class Image extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Image';
         this.canHaveChildren = false;
@@ -1028,7 +1029,7 @@ class Image extends Tag {
 }
 
 class ImageInput extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'ImageInput';
         this.canHaveChildren = false;
@@ -1057,7 +1058,7 @@ class ImageInput extends Tag {
 }
 
 class Input extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Input';
         this.canHaveChildren = false;
@@ -1084,7 +1085,7 @@ class Input extends Tag {
 }
 
 class RadioGroup extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'RadioGroup';
         this.canHaveChildren = false;
@@ -1110,7 +1111,7 @@ class RadioGroup extends Tag {
 }
 
 class DBFind extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'DBFind';
         this.canHaveChildren = false;
@@ -1135,7 +1136,7 @@ class DBFind extends Tag {
 }
 
 class If extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'If';
         this.canHaveChildren = true;
@@ -1196,7 +1197,7 @@ class If extends Tag {
 }
 
 class ElseIf extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'ElseIf';
         this.canHaveChildren = true;
@@ -1240,7 +1241,7 @@ class ElseIf extends Tag {
 }
 
 class Else extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Else';
         this.canHaveChildren = true;
@@ -1279,8 +1280,8 @@ class Else extends Tag {
 }
 
 export class CodeGenerator {
-    private elements: IProtypoElement[];
-    constructor(elements: IProtypoElement[]) {
+    private elements: TProtypoElement[];
+    constructor(elements: TProtypoElement[]) {
         this.elements = elements;
     }
     render(): string {
@@ -1305,23 +1306,23 @@ export class CodeGenerator {
 
 const tagHandlers = {
     'button': Button,
-//     'data': Data,
+    //     'data': Data,
     'dbfind': DBFind,
     'div': Div,
     'em': Em,
-//     'forlist': ForList,
+    //     'forlist': ForList,
     'form': Form,
     'image': Image,
     'imageinput': ImageInput,
     'input': Input,
-//     'inputerr': InputErr,
+    //     'inputerr': InputErr,
     'label': Label,
-//     'linkpage': LinkPage,
-//     'menuitem': MenuItem,
-//     'menugroup': MenuGroup,
+    //     'linkpage': LinkPage,
+    //     'menuitem': MenuItem,
+    //     'menugroup': MenuGroup,
     'p': P,
     'radiogroup': RadioGroup,
-//     'select': Select,
+    //     'select': Select,
     'span': Span,
     'strong': Strong,
     'table': Table,

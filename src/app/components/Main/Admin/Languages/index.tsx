@@ -15,15 +15,14 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 
 import Wrapper from 'components/Wrapper';
+import PageLink from 'containers/Routing/PageLink';
 import Table, { ICellRenderer } from 'components/Table';
 
 export interface ILanguagesProps {
-    vde?: boolean;
     resources: {
         id: string;
         res: any;
@@ -41,13 +40,13 @@ const renderLocale: ICellRenderer = (value, rowData) => {
         );
 
         case 3: return (
-            <Link to={`/${rowData.rowData[4] ? 'vde' : 'admin'}/languages/${rowData.rowData[0]}-${rowData.rowData[1]}`}>
+            <PageLink page="edit-lang" params={{ id: rowData.rowData[0] }}>
                 <Button bsStyle="default" className="btn-labeled btn-icon">
                     <span className="btn-label">
                         <em className="icon-pencil" />
                     </span>
                 </Button>
-            </Link>
+            </PageLink>
         );
 
         default: return value;
@@ -67,7 +66,7 @@ const Languages: React.SFC<ILanguagesProps & InjectedIntlProps> = (props) => (
             ),
             toolButtons: [
                 {
-                    url: props.vde ? '/vde/languages/create' : '/admin/languages/create',
+                    url: '/admin/create-lang',
                     icon: 'icon-plus',
                     title: (
                         <FormattedMessage id="admin.languages.create" defaultMessage="Create localization" />
@@ -88,7 +87,7 @@ const Languages: React.SFC<ILanguagesProps & InjectedIntlProps> = (props) => (
                 { title: props.intl.formatMessage({ id: 'admin.languages.resources', defaultMessage: 'Resources' }) },
                 { width: 1 }
             ]}
-            data={props.resources.map(p => [p.id, p.name, p.res, p.conditions, props.vde])}
+            data={props.resources.map(p => [p.id, p.name, p.res, p.conditions])}
         />
     </Wrapper>
 );

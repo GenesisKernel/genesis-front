@@ -39,7 +39,7 @@ import { navigate } from 'modules/engine/actions';
 import { importSeed, importAccount, login } from 'modules/auth/actions';
 import { alertShow } from 'modules/content/actions';
 
-import DocumentTitle from 'components/DocumentTitle';
+import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import General from 'components/General';
 import Validation from 'components/Validation';
 
@@ -144,7 +144,7 @@ class Import extends React.Component<IImportProps, IImportState> {
 
     render() {
         return (
-            <DocumentTitle title="account.import" defaultTitle="Import account">
+            <LocalizedDocumentTitle title="auth.account.import" defaultTitle="Import account">
                 <General return={this.props.return}>
                     <input id="importFileLoader" type="file" className="hidden" onChange={this.onLoadSuccess.bind(this)} ref={l => this.inputFile = l} />
                     <div className="text-center">
@@ -191,7 +191,7 @@ class Import extends React.Component<IImportProps, IImportState> {
                         </StyledForm>
                     </div>
                 </General>
-            </DocumentTitle>
+            </LocalizedDocumentTitle>
         );
     }
 }

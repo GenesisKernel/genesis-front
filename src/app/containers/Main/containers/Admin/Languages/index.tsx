@@ -23,7 +23,7 @@ import DataPreloader from 'components/Animation/DataPreloader';
 import Languages from 'components/Main/Admin/Languages';
 
 export interface ILanguagesContainerProps {
-    vde?: boolean;
+
 }
 
 interface ILanguagesContainerState {
@@ -35,24 +35,14 @@ interface ILanguagesContainerDispatch {
 }
 
 class LanguagesContainer extends React.Component<ILanguagesContainerProps & ILanguagesContainerState & ILanguagesContainerDispatch> {
-    componentWillMount() {
-        this.props.getLanguages({
-            vde: this.props.vde
-        });
-    }
-
-    componentWillReceiveProps(props: ILanguagesContainerProps & ILanguagesContainerDispatch) {
-        if (this.props.vde !== props.vde) {
-            props.getLanguages({
-                vde: props.vde
-            });
-        }
+    componentDidMount() {
+        this.props.getLanguages({});
     }
 
     render() {
         return (
             <DataPreloader data={[this.props.resources]}>
-                <Languages resources={this.props.resources} vde={this.props.vde} />
+                <Languages resources={this.props.resources} />
             </DataPreloader>
         );
     }

@@ -26,12 +26,13 @@ import { IRootState } from 'modules';
 import * as actions from './actions';
 import * as storageActions from 'modules/storage/actions';
 import { setIds, findTagById } from 'lib/constructor';
+import { generatePageTemplate } from 'modules/editor/actions';
 
 export const getTableEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getTable.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.table(state.auth.sessionToken, action.payload.table, action.payload.vde))
+            return Observable.fromPromise(api.table(state.auth.sessionToken, action.payload.table))
                 .flatMap(tableStruct => {
                     const columns: string[] = [];
                     tableStruct.columns.forEach(column => {
@@ -40,7 +41,7 @@ export const getTableEpic: Epic<Action, IRootState> =
                         }
                     });
 
-                    return Observable.fromPromise(api.list(state.auth.sessionToken, action.payload.table, undefined, undefined, columns, action.payload.vde))
+                    return Observable.fromPromise(api.list(state.auth.sessionToken, action.payload.table, undefined, undefined, columns))
                         .map(tableData => actions.getTable.done({
                             params: action.payload,
                             result: {
@@ -61,7 +62,7 @@ export const getTableStructEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getTableStruct.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.table(state.auth.sessionToken, action.payload.name, action.payload.vde))
+            return Observable.fromPromise(api.table(state.auth.sessionToken, action.payload.name))
                 .map(payload =>
                     actions.getTableStruct.done({
                         params: action.payload,
@@ -80,7 +81,7 @@ export const getMenusEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getMenus.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.list(state.auth.sessionToken, 'menu', undefined, undefined, undefined, action.payload.vde))
+            return Observable.fromPromise(api.list(state.auth.sessionToken, 'menu'))
                 .map(payload =>
                     actions.getMenus.done({
                         params: action.payload,
@@ -104,7 +105,7 @@ export const getTablesEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getTables.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.tables(state.auth.sessionToken, action.payload.offset, action.payload.limit, action.payload.vde))
+            return Observable.fromPromise(api.tables(state.auth.sessionToken, action.payload.offset, action.payload.limit))
                 .map(payload =>
                     actions.getTables.done({
                         params: action.payload,
@@ -142,7 +143,7 @@ export const getInterfaceEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getInterface.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.pages(state.auth.sessionToken, action.payload.vde))
+            return Observable.fromPromise(api.pages(state.auth.sessionToken))
                 .map(payload =>
                     actions.getInterface.done({
                         params: action.payload,
@@ -161,13 +162,18 @@ export const getPageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getPage.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.page(state.auth.sessionToken, action.payload.id, action.payload.vde))
-                .map(payload =>
-                    actions.getPage.done({
-                        params: action.payload,
-                        result: payload
-                    })
-                )
+            return Observable.fromPromise(Promise.all([
+                api.findPage(state.auth.sessionToken, action.payload.name),
+                api.list(state.auth.sessionToken, 'menu', 0, 0, [])
+            ])).map(payload =>
+                actions.getPage.done({
+                    params: action.payload,
+                    result: {
+                        page: payload[0],
+                        menus: payload[1].list as any
+                    }
+                })
+            )
                 .catch((e: IAPIError) =>
                     Observable.of(actions.getPage.failed({
                         params: action.payload,
@@ -180,11 +186,11 @@ export const getMenuEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getMenu.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.row(state.auth.sessionToken, 'menu', action.payload.id, undefined, action.payload.vde))
+            return Observable.fromPromise(api.findMenu(state.auth.sessionToken, action.payload.name))
                 .map(payload =>
                     actions.getMenu.done({
                         params: action.payload,
-                        result: payload.value as any
+                        result: payload
                     })
                 )
                 .catch((e: IAPIError) =>
@@ -199,11 +205,18 @@ export const getContractEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getContract.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.row(state.auth.sessionToken, 'contracts', action.payload.id, undefined, action.payload.vde))
+            return Observable.fromPromise(
+                action.payload.id ?
+                    api.row(state.auth.sessionToken, 'contracts', action.payload.id)
+                    :
+                    api.contract(state.auth.sessionToken, action.payload.name).then(l =>
+                        api.row(state.auth.sessionToken, 'contracts', l.tableid.toString())
+                    ))
+
                 .map(payload => actions.getContract.done({
                     params: action.payload,
                     result: {
-                        id: action.payload.id,
+                        id: payload.value.id,
                         active: payload.value.active,
                         name: payload.value.name,
                         conditions: payload.value.conditions,
@@ -222,7 +235,7 @@ export const getContractsEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getContracts.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.contracts(state.auth.sessionToken, action.payload.vde, action.payload.offset, action.payload.limit))
+            return Observable.fromPromise(api.contracts(state.auth.sessionToken, action.payload.offset, action.payload.limit))
                 .map(payload => actions.getContracts.done({
                     params: action.payload,
                     result: payload
@@ -239,10 +252,10 @@ export const getBlockEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getBlock.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.row(state.auth.sessionToken, 'blocks', action.payload.id, undefined, action.payload.vde))
+            return Observable.fromPromise(api.findBlock(state.auth.sessionToken, action.payload.name))
                 .map(payload => actions.getBlock.done({
                     params: action.payload,
-                    result: payload.value as any
+                    result: payload
                 }))
                 .catch((e: IAPIError) =>
                     Observable.of(actions.getBlock.failed({
@@ -256,7 +269,7 @@ export const getLanguagesEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getLanguages.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.list(state.auth.sessionToken, 'languages', action.payload.offset, action.payload.limit, undefined, action.payload.vde))
+            return Observable.fromPromise(api.list(state.auth.sessionToken, 'languages', action.payload.offset, action.payload.limit))
                 .map(payload => actions.getLanguages.done({
                     params: action.payload,
                     result: (payload.list as any) || []
@@ -273,7 +286,7 @@ export const getLanguageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getLanguage.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.row(state.auth.sessionToken, 'languages', action.payload.id, undefined, action.payload.vde))
+            return Observable.fromPromise(api.row(state.auth.sessionToken, 'languages', action.payload.id, undefined))
                 .map(payload => {
                     return actions.getLanguage.done({
                         params: action.payload,
@@ -292,7 +305,7 @@ export const getParametersEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getParameters.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.parameters(state.auth.sessionToken, action.payload.params, action.payload.vde))
+            return Observable.fromPromise(api.parameters(state.auth.sessionToken, action.payload.params))
                 .map(payload => actions.getParameters.done({
                     params: action.payload,
                     result: payload
@@ -309,7 +322,7 @@ export const getParameterEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getParameter.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.parameter(state.auth.sessionToken, action.payload.name, action.payload.vde))
+            return Observable.fromPromise(api.parameter(state.auth.sessionToken, action.payload.name))
                 .map(payload => actions.getParameter.done({
                     params: action.payload,
                     result: payload
@@ -326,7 +339,7 @@ export const moveTreeTagEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.moveTreeTag)
         .flatMap(action => {
             const state = store.getState();
-            let pageTree = state.admin.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.admin.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
+            let pageTree = state.admin.tabs.data['interfaceConstructor' + action.payload.pageID] && state.admin.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
 
             let movedTag = _.cloneDeep(findTagById(pageTree, action.payload.tagID));
             let tagTreeNewPosition = _.cloneDeep(findTagById(action.payload.treeData, action.payload.tagID));
@@ -371,17 +384,12 @@ export const moveTreeTagEpic: Epic<Action, IRootState> =
                     tag: movedTag.el,
                     destinationTagID,
                     position,
-                    pageID: action.payload.pageID,
-                    vde: action.payload.vde
+                    pageID: action.payload.pageID
                 })),
                 Observable.of(actions.saveConstructorHistory({
-                    pageID: action.payload.pageID,
-                    vde: action.payload.vde
+                    pageID: action.payload.pageID
                 })),
-                Observable.of(actions.generatePageTemplate({
-                    pageID: action.payload.pageID,
-                    vde: action.payload.vde
-                }))
+                Observable.of(generatePageTemplate(state.admin.tabs.data['interfaceConstructor' + action.payload.pageID].treeData))
             );
         });
 
@@ -406,7 +414,7 @@ export const removeTabListEpic: Epic<Action, IRootState> =
             let tabList = _.cloneDeep(state.admin.tabs.list);
 
             if ('string' === typeof action.payload.id && 'string' === typeof action.payload.type) {
-                let index = tabList.findIndex((item: any) => item.id === action.payload.id && item.type === action.payload.type && !!item.vde === !!action.payload.vde);
+                let index = tabList.findIndex((item: any) => item.id === action.payload.id && item.type === action.payload.type);
                 if (index >= 0 && index < tabList.length) {
                     // mark tab is invisible to prevent reload pages
                     tabList[index].visible = false;
@@ -426,7 +434,7 @@ export const getPageTreeCodeEpic: Epic<Action, IRootState> =
         .flatMap(action => {
             const state = store.getState();
 
-            return Observable.fromPromise(api.contentTest(state.auth.sessionToken, action.payload.code))
+            return Observable.fromPromise(api.contentTest(state.auth.sessionToken, action.payload.code, state.storage.locale))
                 .map(payload => {
                     let pageTreeCode = payload.tree;
                     setIds(pageTreeCode);
@@ -452,7 +460,7 @@ export const getPageTreeEpic: Epic<Action, IRootState> =
         .flatMap(action => {
             const state = store.getState();
 
-            return Observable.fromPromise(api.contentSource(state.auth.sessionToken, action.payload.name, {}, action.payload.vde))
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, action.payload.name, {}, state.storage.locale))
                 .map(payload => {
                     let pageTree = payload.tree;
                     setIds(pageTree);
@@ -477,23 +485,23 @@ export const getPageTreeEpic: Epic<Action, IRootState> =
         });
 
 export const getPageTreeDoneEpic: Epic<Action, IRootState> = (action$, store) => action$.ofAction(actions.getPageTree.done)
-     .flatMap(action => {
-         return Observable.of(actions.saveConstructorHistory({pageID: action.payload.params.id}));
-     });
+    .flatMap(action => {
+        return Observable.of(actions.saveConstructorHistory({ pageID: action.payload.params.id }));
+    });
 
 export const exportDataEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.exportData.started)
         .flatMap(action => {
             const state = store.getState();
             const promise = Bluebird.all([
-                Bluebird.map(action.payload.pages, page => api.row(state.auth.sessionToken, 'pages', page, undefined, action.payload.vde), { concurrency: 3 }),
-                Bluebird.map(action.payload.blocks, block => api.row(state.auth.sessionToken, 'blocks', block, undefined, action.payload.vde), { concurrency: 3 }),
-                Bluebird.map(action.payload.menus, menu => api.row(state.auth.sessionToken, 'menu', menu, undefined, action.payload.vde), { concurrency: 3 }),
-                action.payload.parameters.length ? api.parameters(state.auth.sessionToken, action.payload.parameters, action.payload.vde) : Promise.resolve([]),
-                Bluebird.map(action.payload.languages, language => api.row(state.auth.sessionToken, 'languages', language, undefined, action.payload.vde), { concurrency: 3 }),
-                Bluebird.map(action.payload.contracts, contract => api.row(state.auth.sessionToken, 'contracts', contract.id, undefined, action.payload.vde).then(data => ({ name: contract.name, ...data })), { concurrency: 3 }),
-                Bluebird.map(action.payload.tables, table => api.table(state.auth.sessionToken, table, action.payload.vde), { concurrency: 3 }),
-                Bluebird.map(action.payload.data, table => api.table(state.auth.sessionToken, table, action.payload.vde), { concurrency: 1 }).map((struct: ITableResponse) => {
+                Bluebird.map(action.payload.pages, page => api.row(state.auth.sessionToken, 'pages', page), { concurrency: 3 }),
+                Bluebird.map(action.payload.blocks, block => api.row(state.auth.sessionToken, 'blocks', block), { concurrency: 3 }),
+                Bluebird.map(action.payload.menus, menu => api.row(state.auth.sessionToken, 'menu', menu), { concurrency: 3 }),
+                action.payload.parameters.length ? api.parameters(state.auth.sessionToken, action.payload.parameters) : Promise.resolve([]),
+                Bluebird.map(action.payload.languages, language => api.row(state.auth.sessionToken, 'languages', language), { concurrency: 3 }),
+                Bluebird.map(action.payload.contracts, contract => api.row(state.auth.sessionToken, 'contracts', contract.id).then(data => ({ name: contract.name, ...data })), { concurrency: 3 }),
+                Bluebird.map(action.payload.tables, table => api.table(state.auth.sessionToken, table), { concurrency: 3 }),
+                Bluebird.map(action.payload.data, table => api.table(state.auth.sessionToken, table), { concurrency: 1 }).map((struct: ITableResponse) => {
                     const columns = struct.columns.map(l => l.name);
 
                     const mapColumns = (data: { [key: string]: string }) => {
@@ -501,7 +509,7 @@ export const exportDataEpic: Epic<Action, IRootState> =
                     };
 
                     const fetchPartial = (offset: number, limit: number, values: any[] = []): any =>
-                        api.list(state.auth.sessionToken, struct.name, offset, limit, columns, action.payload.vde)
+                        api.list(state.auth.sessionToken, struct.name, offset, limit, columns)
                             .then(result => {
                                 // API returns null if requested offset is empty so we'll need to
                                 // handle this, otherwise list.length will fail
@@ -603,7 +611,7 @@ export const exportDataEpic: Epic<Action, IRootState> =
 export const importDataEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.importData.started)
         .flatMap(action => {
-            return Observable.from(readTextFile(action.payload)).map(payload => {
+            return Observable.from(readTextFile(action.payload.file)).map(payload => {
                 const result = JSON.parse(payload);
 
                 if (Array.isArray(result.pages) &&
@@ -614,7 +622,7 @@ export const importDataEpic: Epic<Action, IRootState> =
                     Array.isArray(result.contracts)) {
 
                     return actions.importData.done({
-                        params: null,
+                        params: action.payload,
                         result
                     });
                 }
@@ -623,7 +631,7 @@ export const importDataEpic: Epic<Action, IRootState> =
                 }
             }).catch(e => {
                 return Observable.of(actions.importData.failed({
-                    params: null,
+                    params: action.payload,
                     error: null
                 }));
             });

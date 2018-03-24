@@ -16,12 +16,12 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
-import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
+import { injectIntl, InjectedIntlProps } from 'react-intl';
 import StackGroup from 'components/Animation/StackGroup';
 
 import Protypo from 'containers/Widgets/Protypo';
 import ResizeHandle from 'containers/Main/Navigation/ResizeHandle';
-import { IProtypoElement } from 'components/Protypo/Protypo';
+import { TMenu } from 'genesis/content';
 
 const StyledNavigation = styled.aside`
     &.navigation-collapsed {
@@ -101,34 +101,6 @@ const StyledMenuContent = styled.div`
     }
 `;
 
-const StyledDevButton = styled.div`
-    position: absolute;
-    bottom: 15px;
-    left: 0;
-    right: 0;
-
-    > button {
-        background: transparent;
-        outline: none;
-        border: none;
-        display: block;
-        margin: 10px auto;
-        font-weight: bold;
-        color: #888;
-        font-size: 14px;
-
-        > .icon {
-            vertical-align: middle;
-            margin-right: 8px;
-            margin-top: -0.1em;
-        }
-
-        &:hover {
-            color: #999;
-        }
-    }
-`;
-
 export interface INavigationProps {
     isEcosystemOwner: boolean;
     preloading: boolean;
@@ -136,175 +108,12 @@ export interface INavigationProps {
     visible: boolean;
     topOffset: number;
     width: number;
-    menus: {
-        name: string;
-        content: IProtypoElement[];
-        vde?: boolean;
-    }[];
+    menus: TMenu[];
     menuPop: () => void;
-    menuPush: (menu: { name: string, vde?: boolean, content: IProtypoElement[] }) => void;
     ecosystemInit: (nullArg: null) => void;
 }
 
 class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
-    componentDidMount() {
-        this.preloadMenu(this.props);
-    }
-
-    componentWillReceiveProps(props: INavigationProps) {
-        this.preloadMenu(props);
-    }
-
-    preloadMenu(props: INavigationProps) {
-        if (!props.preloadingError && !props.preloading && !props.menus.find(l => l.name === 'default_menu')) {
-            this.props.ecosystemInit(null);
-        }
-    }
-
-    // TODO: This function is a stub. In future, admin menu will be reworked to show through the API call
-    onDeveloperTools() {
-        const menuStack = {
-            name: 'adminTools',
-            content: [
-                {
-                    tag: 'menuitem',
-                    attr: {
-                        icon: 'icon-screen-desktop',
-                        _systemPageHook: '/admin/interface',
-                        title: this.props.intl.formatMessage({ id: 'admin.interface', defaultMessage: 'Interface' })
-                    }
-                },
-                {
-                    tag: 'menuitem',
-                    attr: {
-                        icon: 'icon-docs',
-                        _systemPageHook: '/admin/tables',
-                        title: this.props.intl.formatMessage({ id: 'admin.tables', defaultMessage: 'Tables' })
-                    }
-                },
-                {
-                    tag: 'menuitem',
-                    attr: {
-                        icon: 'icon-briefcase',
-                        _systemPageHook: '/admin/contracts',
-                        title: this.props.intl.formatMessage({ id: 'admin.contracts', defaultMessage: 'Smart contracts' })
-                    }
-                },
-                {
-                    tag: 'menuitem',
-                    attr: {
-                        icon: 'icon-settings',
-                        _systemPageHook: '/admin/parameters',
-                        title: this.props.intl.formatMessage({ id: 'admin.parameters', defaultMessage: 'Ecosystem parameters' })
-                    }
-                },
-                {
-                    tag: 'menuitem',
-                    attr: {
-                        icon: 'icon-globe',
-                        _systemPageHook: '/admin/languages',
-                        title: this.props.intl.formatMessage({ id: 'admin.languages', defaultMessage: 'Language resources' })
-                    }
-                },
-                {
-                    tag: 'menuitem',
-                    attr: {
-                        icon: 'icon-cloud-upload',
-                        _systemPageHook: '/admin/import',
-                        title: this.props.intl.formatMessage({ id: 'admin.import', defaultMessage: 'Import' })
-                    }
-                },
-                {
-                    tag: 'menuitem',
-                    attr: {
-                        icon: 'icon-cloud-download',
-                        _systemPageHook: '/admin/export',
-                        title: this.props.intl.formatMessage({ id: 'admin.export', defaultMessage: 'Export' })
-                    }
-                }
-            ]
-        };
-
-        if (this.props.isEcosystemOwner) {
-            menuStack.content.push({
-                tag: 'menuitem',
-                attr: {
-                    icon: 'icon-lock',
-                    _systemPageHook: '/admin/vde',
-                    title: this.props.intl.formatMessage({ id: 'admin.vde.short', defaultMessage: 'Dedicated Ecosystem' })
-                }
-            });
-        }
-
-        this.props.menuPush(menuStack);
-    }
-
-    // TODO: This function is a stub. In future, admin menu will be reworked to show through the API call
-    onVDETools() {
-        this.props.menuPush({
-            name: 'vde_tools',
-            vde: false,
-            content: [
-                {
-                    tag: 'menuitem',
-                    attr: {
-                        icon: 'icon-screen-desktop',
-                        _systemPageHook: '/vde/interface',
-                        title: this.props.intl.formatMessage({ id: 'admin.interface', defaultMessage: 'Interface' })
-                    }
-                },
-                {
-                    tag: 'menuitem',
-                    attr: {
-                        icon: 'icon-docs',
-                        _systemPageHook: '/vde/tables',
-                        title: this.props.intl.formatMessage({ id: 'admin.tables', defaultMessage: 'Tables' })
-                    }
-                },
-                {
-                    tag: 'menuitem',
-                    attr: {
-                        icon: 'icon-briefcase',
-                        _systemPageHook: '/vde/contracts',
-                        title: this.props.intl.formatMessage({ id: 'admin.contracts', defaultMessage: 'Smart contracts' })
-                    }
-                },
-                {
-                    tag: 'menuitem',
-                    attr: {
-                        icon: 'icon-settings',
-                        _systemPageHook: '/vde/parameters',
-                        title: this.props.intl.formatMessage({ id: 'admin.parameters', defaultMessage: 'Ecosystem parameters' })
-                    }
-                },
-                {
-                    tag: 'menuitem',
-                    attr: {
-                        icon: 'icon-globe',
-                        _systemPageHook: '/vde/languages',
-                        title: this.props.intl.formatMessage({ id: 'admin.languages', defaultMessage: 'Language resources' })
-                    }
-                },
-                {
-                    tag: 'menuitem',
-                    attr: {
-                        icon: 'icon-cloud-upload',
-                        _systemPageHook: '/vde/import',
-                        title: this.props.intl.formatMessage({ id: 'admin.import', defaultMessage: 'Import' })
-                    }
-                },
-                {
-                    tag: 'menuitem',
-                    attr: {
-                        icon: 'icon-cloud-download',
-                        _systemPageHook: '/vde/export',
-                        title: this.props.intl.formatMessage({ id: 'admin.export', defaultMessage: 'Export' })
-                    }
-                }
-            ]
-        });
-    }
-
     render() {
         return (
             <StyledNavigation className={this.props.visible ? '' : 'navigation-collapsed'} style={{ width: this.props.visible ? this.props.width : 0 }}>
@@ -324,24 +133,13 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
                                         </div>
                                     </StyledBackButton>
                                     <Protypo
-                                        vde={menu.vde}
                                         context="menu"
-                                        payload={menu.content}
+                                        content={menu.content}
                                     />
                                 </StyledMenuContent>
                             ))}
                         />
                     </StyledMenu>
-                    <StyledDevButton>
-                        <button id="mainVDETools" onClick={this.onVDETools.bind(this)}>
-                            <em className="icon fa fa-wrench" />
-                            <FormattedMessage id="admin.vde.tools" defaultMessage="VDE tools" />
-                        </button>
-                        <button id="mainAdminTools" onClick={this.onDeveloperTools.bind(this)}>
-                            <em className="icon fa fa-cog" />
-                            <FormattedMessage id="admin.tools" defaultMessage="Admin tools" />
-                        </button>
-                    </StyledDevButton>
                 </nav>
                 <ResizeHandle />
             </StyledNavigation>

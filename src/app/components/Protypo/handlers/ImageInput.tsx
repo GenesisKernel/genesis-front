@@ -15,9 +15,9 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import * as classnames from 'classnames';
 
 import Validation from 'components/Validation';
-import * as classnames from 'classnames';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 

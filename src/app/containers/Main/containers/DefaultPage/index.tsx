@@ -19,14 +19,11 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { navigatePage } from 'modules/content/actions';
 
-import { IProtypoElement } from 'components/Protypo/Protypo';
-import Page from 'components/Main/Page';
-
 export interface IDefaultPageContainerProps {
 }
 
 interface IDefaultPageContainerState {
-    page: { name: string, content: IProtypoElement[] };
+
 }
 
 interface IDefaultPageContainerDispatch {
@@ -34,25 +31,17 @@ interface IDefaultPageContainerDispatch {
 }
 
 class DefaultPageContainer extends React.Component<IDefaultPageContainerProps & IDefaultPageContainerState & IDefaultPageContainerDispatch> {
-    componentWillMount() {
-        this.props.navigatePage({
-            name: 'default_page',
-            params: null
-        });
+    componentDidMount() {
+        this.props.navigatePage({ params: {} });
     }
 
     render() {
-        return (
-            <Page
-                name={this.props.page && this.props.page.name}
-                payload={this.props.page && this.props.page.content}
-            />
-        );
+        return null as JSX.Element;
     }
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    page: state.content.page
+
 });
 
 const mapDispatchToProps = {

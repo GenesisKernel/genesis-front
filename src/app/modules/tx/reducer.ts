@@ -42,7 +42,8 @@ export default reducerWithInitialState(initialState)
     .case(actions.txExec.done, (state, payload) => ({
         ...state,
         transactions: state.transactions.set(payload.params.tx.uuid, {
-            block: payload.result,
+            block: payload.result.block,
+            result: payload.result.result,
             error: null,
             contract: payload.params.tx.name,
             uuid: payload.params.tx.uuid

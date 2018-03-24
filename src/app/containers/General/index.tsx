@@ -52,7 +52,6 @@ const GeneralContainer: React.SFC<IGeneralContainerProps> = (props) => (
 
 const mapStateToProps = (state: IRootState) => ({
     isLoggingIn: state.auth.isLoggingIn,
-    locale: state.engine.locale,
     isLoading: state.engine.isLoading,
     isConnected: state.engine.isConnected,
     isInstalled: state.engine.isInstalled,

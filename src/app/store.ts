@@ -78,7 +78,7 @@ const configureStore = (initialState?: IRootState) => {
     ];
 
     if (process.env.NODE_ENV === 'development') {
-        const devToolsExtension = (window as { devToolsExtension?: string }).devToolsExtension;
+        const devToolsExtension = (window as { devToolsExtension?: Function }).devToolsExtension;
 
         if (typeof devToolsExtension === 'function') {
             enhancers.push(devToolsExtension());
@@ -89,7 +89,7 @@ const configureStore = (initialState?: IRootState) => {
         enhancers.unshift(persistState(storage, 'persistentData'));
     });
 
-    const composedEnhancers = compose(
+    const composedEnhancers: any = compose(
         applyMiddleware(...middleware),
         ...enhancers
     );

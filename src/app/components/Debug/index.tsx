@@ -24,7 +24,6 @@ import { history } from 'store';
 import Heading from 'components/Heading';
 import Editor from 'components/Editor';
 import DocumentTitle from 'components/DocumentTitle';
-import Validation from 'components/Validation';
 import Protypo from 'containers/Widgets/Protypo';
 import TxButton from 'containers/Widgets/TxButton';
 
@@ -81,7 +80,7 @@ export default class extends React.Component<IDebugProps, IDebugState> {
     }
 
     onSubmit(values: { [key: string]: string }) {
-        api.contentTest(this.props.session, this.state.code).then(r => {
+        api.contentTest(this.props.session, this.state.code, 'en-US').then(r => {
             this.setState({
                 result: r.tree
             });
@@ -129,7 +128,7 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                             {this.state.result && (
                                 <Protypo
                                     context="page"
-                                    payload={this.state.result}
+                                    content={this.state.result}
                                 />
                             )}
                             <div>
@@ -139,19 +138,6 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                             </div>
                         </Col>
                         <hr />
-                        <Validation.components.ValidatedForm onSubmitSuccess={r => console.log('Submit::', r)}>
-                            <Validation.components.ValidatedImage format="jpg" name="myImg" width={100} />
-                            <Validation.components.ValidatedRadioGroup
-                                name="selector"
-                                values={[
-                                    { title: 'First', value: 'v_first' },
-                                    { title: 'Second', value: 'v_second' },
-                                    { title: 'Third', value: 'v_third' },
-                                    { title: 'Foruth', value: 'v_fourth', disabled: true }
-                                ]}
-                            />
-                            <Validation.components.ValidatedSubmit>Submit</Validation.components.ValidatedSubmit>
-                        </Validation.components.ValidatedForm>
                         <hr />
                         <Button bsStyle="primary" className="btn-block" onClick={this.onSubmit.bind(this)}>Request template</Button>
                         <Button bsStyle="primary" className="btn-block" onClick={this.onPush.bind(this)}>Push</Button>

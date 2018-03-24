@@ -22,7 +22,6 @@ import Wrapper from 'components/Wrapper';
 import ParameterEditor from './ParameterEditor';
 
 export interface IEditProps {
-    vde?: boolean;
     tabView?: boolean;
     parameter: IParameterResponse;
 }
@@ -75,7 +74,6 @@ class Edit extends React.Component<IEditProps, IEditState> {
         if (this.props.tabView) {
             return (
                 <ParameterEditor
-                    vde={this.props.vde}
                     name={this.props.parameter && this.props.parameter.name}
                     value={this.state.value}
                     conditions={this.state.conditions}
@@ -101,7 +99,7 @@ class Edit extends React.Component<IEditProps, IEditState> {
                 }}
                 breadcrumbs={[
                     {
-                        url: this.props.vde ? '/vde/parameters' : '/admin/parameters',
+                        url: '/admin/parameters',
                         title: (
                             <FormattedMessage id="admin.parameters" defaultMessage="Ecosystem parameters" />
                         )
@@ -112,7 +110,6 @@ class Edit extends React.Component<IEditProps, IEditState> {
                 ]}
             >
                 <ParameterEditor
-                    vde={this.props.vde}
                     name={this.props.parameter.name}
                     value={this.state.value}
                     conditions={this.state.conditions}

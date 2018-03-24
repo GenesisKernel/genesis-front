@@ -24,7 +24,7 @@ import DataPreloader from 'components/Animation/DataPreloader';
 import Parameters from 'components/Main/Admin/Parameters';
 
 export interface IParametersContainerProps {
-    vde?: boolean;
+
 }
 
 interface IParametersContainerState {
@@ -37,23 +37,13 @@ interface IParametersContainerDispatch {
 
 class ParametersContainer extends React.Component<IParametersContainerProps & IParametersContainerState & IParametersContainerDispatch> {
     componentDidMount() {
-        this.props.getParameters({
-            vde: this.props.vde
-        });
-    }
-
-    componentWillReceiveProps(props: IParametersContainerProps & IParametersContainerDispatch) {
-        if (this.props.vde !== props.vde) {
-            props.getParameters({
-                vde: props.vde
-            });
-        }
+        this.props.getParameters({});
     }
 
     render() {
         return (
             <DataPreloader data={[this.props.parameters]}>
-                <Parameters parameters={this.props.parameters} vde={this.props.vde} />
+                <Parameters parameters={this.props.parameters} />
             </DataPreloader>
         );
     }

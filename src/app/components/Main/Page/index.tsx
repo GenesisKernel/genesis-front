@@ -16,31 +16,30 @@
 
 import * as React from 'react';
 import Protypo from 'containers/Widgets/Protypo';
-import { IProtypoElement } from 'components/Protypo/Protypo';
+import { TPage } from 'genesis/content';
 
 import DocumentTitle from 'components/DocumentTitle';
 import Error from './Error';
 import Timeout from './Timeout';
+import NotFound from './NotFound';
 
-export interface IPageProps {
-    name: string;
-    vde?: boolean;
-    error?: string;
-    payload: IProtypoElement[];
+export interface IPageProps extends TPage {
+
 }
 
 const Page: React.SFC<IPageProps> = (props) => {
     if (props.error) {
         switch (props.error) {
             case 'E_HEAVYPAGE': return (<Timeout />);
+            case 'E_NOTFOUND': return (<NotFound />);
             default: return (<Error error={props.error} />);
         }
     }
     else {
         return (
             <DocumentTitle title={props.name}>
-                <Protypo context="page" {...props} vde={props.vde} />
-            </DocumentTitle >
+                <Protypo context="page" {...props} />
+            </DocumentTitle>
         );
     }
 };

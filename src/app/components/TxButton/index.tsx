@@ -16,7 +16,6 @@
 
 import * as React from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { toastr } from 'react-redux-toastr';
 
 export interface ITxButtonConfirm {
     icon: string;
@@ -47,78 +46,9 @@ class TxButton extends React.Component<ITxButtonProps & InjectedIntlProps> {
         // Received non-empty transaction status, proceed to actions
         if (!props.pending && props.contractStatus && this.props.contractStatus !== props.contractStatus) {
             if (props.contractStatus.block) {
-                toastr.success(
-                    props.contractName,
-                    this.props.intl.formatMessage({ id: 'tx.imprinted.block', defaultMessage: 'Imprinted in the blockchain (block #{block})' }, { block: props.contractStatus.block }),
-                );
-
                 if (this.props.page) {
                     this.props.navigate(this.props.page, this.props.pageParams);
                 }
-            }
-            else if (props.contractStatus.error) {
-                switch (props.contractStatus.error.type) {
-                    case 'E_INVALID_PASSWORD':
-                        this.props.alert(
-                            'error',
-                            this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error' }),
-                            this.props.intl.formatMessage({ id: 'tx.error.invalid_password', defaultMessage: 'Invalid password' }),
-                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
-                        ); break;
-
-                    case 'E_CONTRACT':
-                        this.props.alert(
-                            'error',
-                            this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error' }),
-                            this.props.intl.formatMessage({ id: 'tx.error.contract', defaultMessage: 'Contract \'{contract}\' does not exists' }, { contract: props.contractName }),
-                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
-                        ); break;
-
-                    case 'E_SERVER':
-                        this.props.alert(
-                            'error',
-                            this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error' }),
-                            props.contractStatus.error.error,
-                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
-                        ); break;
-
-                    case 'panic':
-                        this.props.alert(
-                            'error',
-                            this.props.intl.formatMessage({ id: 'tx.panic', defaultMessage: 'Runtime error' }),
-                            props.contractStatus.error.error,
-                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
-                        ); break;
-
-                    case 'warning':
-                        this.props.alert(
-                            'warning',
-                            this.props.intl.formatMessage({ id: 'tx.warning', defaultMessage: 'Warning' }),
-                            props.contractStatus.error.error,
-                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
-                        ); break;
-
-                    case 'error':
-                        this.props.alert(
-                            'error',
-                            this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error' }),
-                            props.contractStatus.error.error,
-                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
-                        ); break;
-
-                    case 'info':
-                        this.props.alert(
-                            'info',
-                            this.props.intl.formatMessage({ id: 'tx.info', defaultMessage: 'Information' }),
-                            props.contractStatus.error.error,
-                            this.props.intl.formatMessage({ id: 'general.close', defaultMessage: 'Close' })
-                        ); break;
-                    default: break;
-                }
-                toastr.error(
-                    props.contractName,
-                    this.props.intl.formatMessage({ id: 'tx.error', defaultMessage: 'Error executing transaction' })
-                );
             }
 
             if (this.props.onExec) {

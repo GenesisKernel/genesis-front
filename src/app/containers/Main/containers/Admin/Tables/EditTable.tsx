@@ -23,12 +23,11 @@ import { ITableResponse } from 'lib/api';
 import EditTable from 'components/Main/Admin/Tables/EditTable';
 
 export interface IEditTableContainerProps {
-    vde?: boolean;
-    match: { params: { tableName: string } };
+    table: string;
 }
 
 interface IEditTableContainerState {
-    table: ITableResponse;
+    tableStruct: ITableResponse;
 }
 
 interface IEditTableContainerDispatch {
@@ -36,11 +35,18 @@ interface IEditTableContainerDispatch {
 }
 
 class EditTableContainer extends React.Component<IEditTableContainerProps & IEditTableContainerState & IEditTableContainerDispatch> {
-    componentWillMount() {
+    componentDidMount() {
         this.props.getTableStruct({
-            name: this.props.match.params.tableName,
-            vde: this.props.vde
+            name: this.props.table
         });
+    }
+
+    componentWillReceiveProps(props: IEditTableContainerProps & IEditTableContainerState & IEditTableContainerDispatch) {
+        if (this.props.table !== props.table) {
+            props.getTableStruct({
+                name: props.table
+            });
+        }
     }
 
     render() {
@@ -51,7 +57,7 @@ class EditTableContainer extends React.Component<IEditTableContainerProps & IEdi
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    table: state.admin.table
+    tableStruct: state.admin.table
 });
 
 const mapDispatchToProps = {

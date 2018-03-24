@@ -20,24 +20,19 @@ import NativeDocumentTitle from 'react-document-title';
 
 export interface IDocumentTitleProps {
     title: string;
-    defaultTitle?: string;
 }
 
-const DocumentTitle: React.SFC<IDocumentTitleProps & InjectedIntlProps> = (props) => (
-    <NativeDocumentTitle
-        title={props.title ? props.intl.formatMessage(
-            {
-                id: 'general.title',
-                defaultMessage: '{title} | Genesis'
-            }, {
-                title: props.intl.formatMessage({
-                    id: props.title,
-                    defaultMessage: props.defaultTitle || props.title
-                })
-            }) : ''}
-    >
-        {props.children}
-    </NativeDocumentTitle>
-);
+const DocumentTitle: React.SFC<IDocumentTitleProps & InjectedIntlProps> = props => {
+    const staticTitle = props.intl.formatMessage({
+        id: 'general.title',
+        defaultMessage: 'Genesis'
+    });
+
+    return (
+        <NativeDocumentTitle title={props.title || staticTitle}>
+            {props.children}
+        </NativeDocumentTitle>
+    );
+};
 
 export default injectIntl(DocumentTitle);

@@ -64,7 +64,6 @@ export interface IButtonProps {
 interface IButtonContext {
     form: ValidatedForm;
     protypo: Protypo;
-    vde?: boolean;
 }
 
 const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IButtonContext) => {
@@ -133,7 +132,7 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
         });
 
         return connectDragPreview(connectDropTarget(
-            <span style={{display: 'inline-block'}}>
+            <span style={{ display: 'inline-block' }}>
                 <TagWrapper
                     display="inline"
                     selected={props.selected}
@@ -144,16 +143,16 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
                     connectDragSource={connectDragSource}
                     canMove={true}
                 >
-                <button
-                    className={classes}
-                >
-                    <span
-                        contentEditable={props.selected}
-                        onBlur={onBlur}
+                    <button
+                        className={classes}
                     >
-                        {props.children}
-                    </span>
-                </button>
+                        <span
+                            contentEditable={props.selected}
+                            onBlur={onBlur}
+                        >
+                            {props.children}
+                        </span>
+                    </button>
                 </TagWrapper>
             </span>
         ));
@@ -161,7 +160,6 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
 
     return (
         <TxButton
-            vde={context.vde}
             className={props.class}
             contractName={props.contract}
             contractParams={getParams}
@@ -182,8 +180,7 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
 
 Button.contextTypes = {
     form: propTypes.object,
-    protypo: propTypes.object.isRequired,
-    vde: propTypes.bool
+    protypo: propTypes.object.isRequired
 };
 
 export default injectIntl(Button);

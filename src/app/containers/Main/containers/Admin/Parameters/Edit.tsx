@@ -24,8 +24,7 @@ import DataPreloader from 'components/Animation/DataPreloader';
 import Edit from 'components/Main/Admin/Parameters/Edit';
 
 export interface IEditContainerProps {
-    vde?: boolean;
-    match: { params: { parameterName: string } };
+    parameterName: string;
 }
 
 interface IEditContainerState {
@@ -39,15 +38,22 @@ interface IEditContainerDispatch {
 class EditContainer extends React.Component<IEditContainerProps & IEditContainerState & IEditContainerDispatch> {
     componentDidMount() {
         this.props.getParameter({
-            name: this.props.match.params.parameterName,
-            vde: this.props.vde
+            name: this.props.parameterName
         });
+    }
+
+    componentWillReceiveProps(props: IEditContainerProps & IEditContainerState & IEditContainerDispatch) {
+        if (this.props.parameterName !== props.parameterName) {
+            props.getParameter({
+                name: props.parameterName
+            });
+        }
     }
 
     render() {
         return (
             <DataPreloader data={[this.props.parameter]}>
-                <Edit parameter={this.props.parameter} vde={this.props.vde} />
+                <Edit parameter={this.props.parameter} />
             </DataPreloader>
         );
     }

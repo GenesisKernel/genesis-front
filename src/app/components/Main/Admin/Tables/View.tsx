@@ -17,11 +17,11 @@
 import * as React from 'react';
 import { Panel } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
 import { ITableResponse, IListResponse } from 'lib/api';
 
 import DocumentTitle from 'components/DocumentTitle';
 import Heading from 'components/Heading';
+import PageLink from 'containers/Routing/PageLink';
 import Money from 'components/Money';
 
 export interface IColumnDisplayRule {
@@ -39,7 +39,7 @@ export const columnDisplayRules: { [key: string]: IColumnDisplayRule } = {
     text: {
         render: data => (<span>{data}</span>)
     },
-    jsonb: {
+    json: {
         render: data => (<span>{data}</span>)
     },
     double: {
@@ -58,7 +58,6 @@ export const columnDisplayRules: { [key: string]: IColumnDisplayRule } = {
 };
 
 export interface IViewProps {
-    vde?: boolean;
     tableName: string;
     table: ITableResponse;
     tableData: IListResponse;
@@ -73,9 +72,9 @@ const View: React.SFC<IViewProps> = (props) => (
             <div className="content-wrapper">
                 <ol className="breadcrumb">
                     <li>
-                        <Link to={props.vde ? '/vde/tables' : '/admin/tables'}>
+                        <PageLink page="tables">
                             <FormattedMessage id="admin.tables" defaultMessage="Tables" />
-                        </Link>
+                        </PageLink>
                     </li>
                     <li>
                         {props.tableName}
@@ -91,11 +90,9 @@ const View: React.SFC<IViewProps> = (props) => (
                                         {props.table.columns.map(col => (
                                             <th key={col.name}>{col.name}</th>
                                         ))}
-                                        {!props.vde && (
-                                            <th style={{ width: 1 }}>
-                                                <FormattedMessage id="admin.tables.changes" defaultMessage="Changes" />
-                                            </th>
-                                        )}
+                                        <th style={{ width: 1 }}>
+                                            <FormattedMessage id="admin.tables.changes" defaultMessage="Changes" />
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -107,13 +104,11 @@ const View: React.SFC<IViewProps> = (props) => (
                                                     {columnDisplayRules[col.type] && columnDisplayRules[col.type].render(row[col.name])}
                                                 </td>
                                             ))}
-                                            {!props.vde && (
-                                                <td>
-                                                    <Link className="btn btn-primary" to={`/admin/tables/${props.table.name}/${row.id}/history`}>
-                                                        <FormattedMessage id="admin.tables.history" defaultMessage="History" />
-                                                    </Link>
-                                                </td>
-                                            )}
+                                            <td>
+                                                <PageLink className="btn btn-primary" page="history" params={{ table: props.table.name, id: row.id }}>
+                                                    <FormattedMessage id="admin.tables.history" defaultMessage="History" />
+                                                </PageLink>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>

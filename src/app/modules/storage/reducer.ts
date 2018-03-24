@@ -20,23 +20,29 @@ import * as actions from './actions';
 import * as _ from 'lodash';
 
 export type State = {
+    locale: string;
     accounts: IStoredAccount[];
     navigationSize: number;
     tabList: {
         id: string,
         name: string,
-        type: string,
-        vde: boolean
+        type: string
     }[]
 };
 
 export const initialState: State = {
+    locale: 'en-US',
     accounts: [],
     navigationSize: 230,
     tabList: []
 };
 
 export default reducerWithInitialState<State>(initialState)
+    .case(actions.saveLocale, (state, locale) => ({
+        ...state,
+        locale
+    }))
+
     .case(actions.saveAccount, (state, account) => ({
         ...state,
         accounts: [
@@ -60,7 +66,7 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.addTabList, (state, data) => {
         let tabList = _.cloneDeep(state.tabList || []);
         if (typeof data.addID === 'string') {
-            let index = tabList.findIndex(l => l.id === data.addID && l.type === data.addType && !!l.vde === !!data.addVDE);
+            let index = tabList.findIndex(l => l.id === data.addID && l.type === data.addType);
             // delete existing tab and add to the end. update name
             if (index >= 0 && index < tabList.length) {
                 tabList = [
@@ -71,8 +77,7 @@ export default reducerWithInitialState<State>(initialState)
             let newItem = {
                 id: data.addID,
                 name: data.addName,
-                type: data.addType,
-                vde: data.addVDE
+                type: data.addType
             };
             tabList = tabList.concat(newItem);
         }
@@ -86,7 +91,7 @@ export default reducerWithInitialState<State>(initialState)
         let tabList = _.cloneDeep(state.tabList || []);
         let tabListStorage = tabList;
 
-        let index = tabList.findIndex((item: any) => item.id === data.id && item.type === data.type && !!item.vde === !!data.vde);
+        let index = tabList.findIndex((item: any) => item.id === data.id && item.type === data.type);
         if (index >= 0 && index < tabList.length) {
             tabListStorage = [
                 ...tabList.slice(0, index),

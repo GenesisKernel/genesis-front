@@ -30,12 +30,15 @@ import Image, { ImageDnD } from './handlers/Image';
 import ImageInput, { ImageInputDnD } from './handlers/ImageInput';
 import Input, { InputDnD } from './handlers/Input';
 import InputErr from './handlers/InputErr';
+import InputMap from './handlers/InputMap';
 import Label, { LabelDnD } from './handlers/Label';
 import LinkPage from './handlers/LinkPage';
+import Map from './handlers/Map';
 import MenuItem from './handlers/MenuItem';
 import MenuGroup from './handlers/MenuGroup';
 import P, { PDnD } from './handlers/P';
 import RadioGroup, { RadioGroupDnD } from './handlers/RadioGroup';
+import Range from './handlers/Range';
 import Select from './handlers/Select';
 import Span, { SpanDnD } from './handlers/Span';
 import Strong, { StrongDnD } from './handlers/Strong';
@@ -57,12 +60,15 @@ const handlers = {
     'imageinput': ImageInput,
     'input': Input,
     'inputerr': InputErr,
+    'inputMap': InputMap,
     'label': Label,
     'linkpage': LinkPage,
+    'map': Map,
     'menuitem': MenuItem,
     'menugroup': MenuGroup,
     'p': P,
     'radiogroup': RadioGroup,
+    'range': Range,
     'select': Select,
     'span': Span,
     'strong': Strong,

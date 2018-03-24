@@ -22,7 +22,6 @@ import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 
 export interface IParameterEditorProps {
-    vde?: boolean;
     name?: string;
     value: string;
     conditions: string;
@@ -34,7 +33,7 @@ export interface IParameterEditorProps {
 }
 
 const ParameterEditor: React.SFC<IParameterEditorProps> = (props) => (
-    <ValidatedContractForm className="flex-col flex-stretch" vde={props.vde} contractName={props.contractName} mapContractParams={props.mapContractParams} onExec={props.onExec}>
+    <ValidatedContractForm className="flex-col flex-stretch" contractName={props.contractName} mapContractParams={props.mapContractParams} onExec={props.onExec}>
         <Validation.components.ValidatedFormGroup for="name">
             <label htmlFor="name">
                 <FormattedMessage id="admin.parameters.name" defaultMessage="Name" />

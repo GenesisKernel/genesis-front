@@ -20,21 +20,22 @@ import { Validator } from './Validators';
 import * as propTypes from 'prop-types';
 import { readBinaryFile } from 'lib/fs';
 
-import ImageEditor from 'containers/Widgets/ImageEditor';
 import ValidatedForm, { IValidatedControl } from './ValidatedForm';
 
 export interface IValidatedImageProps {
     format: 'png' | 'jpg' | 'jpeg';
     name: string;
-    value?: string;
+    value: string;
     aspectRatio?: number;
     width?: number;
     validators?: Validator[];
+    openEditor: (params: { mime: string, data: string, aspectRatio: number, width: number }) => void;
 }
 
 interface IValidatedImageState {
     value: string;
     filename: string;
+    resultFilename: string;
 }
 
 export default class ValidatedImage extends React.Component<IValidatedImageProps, IValidatedImageState> implements IValidatedControl {
@@ -45,19 +46,20 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
         super(props);
         this.state = {
             value: '',
-            filename: ''
+            filename: '',
+            resultFilename: ''
         };
     }
 
     componentDidMount() {
         if (this.context.form) {
-            (this.context.form as ValidatedForm)._registerElement(this.props.name, this);
+            (this.context.form as ValidatedForm)._registerElement(this);
         }
     }
 
     componentWillUnmount() {
         if (this.context.form) {
-            (this.context.form as ValidatedForm)._unregisterElement(this.props.name);
+            (this.context.form as ValidatedForm)._unregisterElement(this);
         }
     }
 
@@ -65,8 +67,9 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
         if (this.props.value !== props.value) {
             this.setState({
                 value: props.value as string,
-                filename: props.value ? this.state.filename : ''
+                resultFilename: props.value ? this.state.filename : ''
             });
+            this.onResult(props.value);
             (this.context.form as ValidatedForm).updateState(props.name, props.value);
         }
     }
@@ -83,6 +86,12 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
                     value: r,
                     filename: file.name
                 });
+                this.props.openEditor({
+                    mime: this.resolveMIME(),
+                    data: r,
+                    aspectRatio: this.props.aspectRatio,
+                    width: this.props.width
+                });
             });
         }
         e.target.value = '';
@@ -98,6 +107,10 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
 
     onResult(data: string) {
         this._value = data;
+        this.setState({
+            value: data ? this.state.value : null,
+            resultFilename: data ? this.state.filename : ''
+        });
     }
 
     resolveMIME() {
@@ -114,13 +127,6 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
     render() {
         return (
             <div className="input-group">
-                <ImageEditor
-                    mime={this.resolveMIME()}
-                    data={this.state.value}
-                    aspectRatio={this.props.aspectRatio}
-                    width={this.props.width}
-                    onResult={this.onResult.bind(this)}
-                />
                 <FormControl
                     className="hidden"
                     onChange={this.onChange.bind(this)}
@@ -129,7 +135,7 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
                     type="file"
                     noValidate
                 />
-                <input type="text" className="form-control" readOnly value={this.state.filename} />
+                <input type="text" className="form-control" readOnly value={this.state.resultFilename} />
                 <div className="group-span-filestyle input-group-btn">
                     <button className="btn btn-default" style={{ border: 'solid 1px #dde6e9' }} type="button" onClick={this.onBrowse.bind(this)}>
                         <span className="text-muted icon-span-filestyle glyphicon glyphicon-folder-open" />

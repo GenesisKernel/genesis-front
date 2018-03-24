@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import DocumentTitle from 'components/DocumentTitle';
+import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import Center from 'components/Center';
 
 export interface IErrorProps {
@@ -25,22 +25,24 @@ export interface IErrorProps {
 }
 
 const Error: React.SFC<IErrorProps> = (props) => (
-    <DocumentTitle title="general.error" defaultTitle="Error">
+    <LocalizedDocumentTitle title="general.error" defaultTitle="Error">
         <Center>
             <div className="text-muted">
                 <div className="text-center mb-xl">
                     <div className="text-lg mb-lg">500</div>
                     <p className="lead m0">
-                        <FormattedMessage id="general.error.timeout" defaultMessage="Internal server error" />
+                        <FormattedMessage id="general.error" defaultMessage="Error" />
                     </p>
-                    <p>
-                        <div><FormattedMessage id="general.error.timeout.desc" defaultMessage="The page you are looking for could not be processed" /></div>
+                    <div>
+                        <div>
+                            <FormattedMessage id="general.error.page" defaultMessage="The page you are looking for could not be processed" />
+                        </div>
                         <div>{props.error}</div>
-                    </p>
+                    </div>
                 </div>
             </div>
         </Center>
-    </DocumentTitle>
+    </LocalizedDocumentTitle>
 );
 
 export default Error;

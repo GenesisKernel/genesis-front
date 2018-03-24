@@ -25,7 +25,6 @@ import { alertShow, navigatePage } from 'modules/content/actions';
 import TxButton, { ITxButtonConfirm } from 'components/TxButton';
 
 interface ITxButtonContainerProps {
-    vde?: boolean;
     className?: string;
     contractName?: string;
     contractParams?: { [name: string]: any } | (() => { [name: string]: any });
@@ -64,6 +63,26 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
         }
     }
 
+    prepareParams(params: { [key: string]: any }) {
+        const result: { [key: string]: any } = {};
+        for (let itr in params) {
+            if (params.hasOwnProperty(itr)) {
+                const param = params[itr];
+                // Arrays
+                if (Array.isArray(param)) {
+                    result[`${itr}[]`] = param.length;
+                    param.forEach((p, i) => {
+                        result[`${itr}[${i}]`] = p;
+                    });
+                }
+                else {
+                    result[itr] = param;
+                }
+            }
+        }
+        return result;
+    }
+
     onExecContract(name: string, params: { [name: string]: any } | (() => { [name: string]: any }), confirm?: ITxButtonConfirm) {
         this._uuid = uuid.v4();
 
@@ -93,6 +112,9 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
                 if (null === contractParams) {
                     return;
                 }
+                else {
+                    contractParams = this.prepareParams(contractParams);
+                }
             }
             else {
                 contractParams = this.props.contractParams;
@@ -101,8 +123,7 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
             this.props.callContract({
                 uuid: this._uuid,
                 name: this.props.contractName,
-                params: contractParams,
-                vde: this.props.vde
+                params: contractParams
             });
         }
     }
@@ -115,6 +136,9 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
             // Stop redirection if provided parameters were invalid
             if (null === pageParams) {
                 return;
+            }
+            else {
+                pageParams = this.prepareParams(pageParams);
             }
         }
         else {
@@ -137,7 +161,7 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
             this.props.navigatePage({
                 name: page,
                 params: pageParams,
-                vde: this.props.vde
+                force: true
             });
         }
     }

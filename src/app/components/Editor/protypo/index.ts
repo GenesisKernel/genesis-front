@@ -363,6 +363,39 @@ const register = (editor: typeof monaco) => {
                 }
             ]
         },
+        InputMap: {
+            label: 'InputMap',
+            documentation: 'Form element to work with map coords',
+            kind: monaco.languages.CompletionItemKind.Method,
+            insertText: 'InputMap(',
+            params: [
+                staticParamTypes.Class,
+                {
+                    label: 'Name',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Unique input name to bind the value to',
+                    insertText: 'Name: '
+                },
+                {
+                    label: 'Value',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Default input value',
+                    insertText: 'Value: '
+                },
+                {
+                    label: 'Type',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: '',
+                    insertText: 'Type: '
+                },
+                {
+                    label: 'MapType',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    documentation: 'Identifier for common map types',
+                    insertText: 'MapType: '
+                }
+            ]
+        },
         Label: {
             label: 'Label',
             documentation: 'Form input label. Will set focus to bound input on click',
@@ -529,6 +562,38 @@ const register = (editor: typeof monaco) => {
                     insertText: 'Value: '
                 },
                 staticParamTypes.Class
+            ]
+        },
+        Range: {
+            label: 'Range',
+            documentation: 'Generate array of numbers. Represents a data-source',
+            kind: monaco.languages.CompletionItemKind.Function,
+            insertText: 'Range(',
+            params: [
+                {
+                    label: 'Source',
+                    documentation: 'Source identificator to bind results',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    insertText: 'Source: '
+                },
+                {
+                    label: 'From',
+                    documentation: 'Initial counter value',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    insertText: 'From: '
+                },
+                {
+                    label: 'To',
+                    documentation: 'Final counter value(exclusive)',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    insertText: 'To: '
+                },
+                {
+                    label: 'Step',
+                    documentation: 'Value that will be added for each step',
+                    kind: monaco.languages.CompletionItemKind.Property,
+                    insertText: 'Step: '
+                }
             ]
         },
         Select: {

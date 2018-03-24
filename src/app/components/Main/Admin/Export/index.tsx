@@ -26,7 +26,6 @@ import ExportTableData from './ExportTableData';
 import TabView from 'components/TabView';
 
 export interface IExportProps {
-    vde?: boolean;
     exportPayload: any;
     exportData: (params: {
         pages: string[];
@@ -37,7 +36,6 @@ export interface IExportProps {
         contracts: { id: string, name: string }[];
         tables: string[];
         data: string[];
-        vde?: boolean;
     }) => void;
     pages: { id: string, name: string }[];
     menus: { id: string, name: string }[];
@@ -139,8 +137,7 @@ class Export extends React.Component<IExportProps & InjectedIntlProps, IExportSt
             languages: this.state.languages.map(lang => lang.id),
             contracts: this.state.contracts.map(contract => ({ id: contract.id, name: contract.name })),
             tables: this.state.tables.map(table => table.name),
-            data: this.state.data.map(data => data.name),
-            vde: this.props.vde
+            data: this.state.data.map(data => data.name)
         });
     }
 

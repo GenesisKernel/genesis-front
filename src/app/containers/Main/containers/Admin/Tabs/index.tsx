@@ -21,11 +21,7 @@ import Tabs from 'components/Tabs';
 // import { removeTabList } from 'modules/admin/actions';
 import { addTabList, removeTabList } from 'modules/storage/actions';
 import styled from 'styled-components';
-import ContractEditTabbed from 'containers/Main/containers/Admin/Contracts/EditTabbed';
 import ParameterEditTabbed from 'containers/Main/containers/Admin/Parameters/EditTabbed';
-import InterfacePageEditTabbed from 'containers/Main/containers/Admin/Interface/EditPageTabbed';
-import InterfaceBlockEditTabbed from 'containers/Main/containers/Admin/Interface/EditBlockTabbed';
-import InterfaceMenuEditTabbed from 'containers/Main/containers/Admin/Interface/EditMenuTabbed';
 import InterfaceConstructorTabbed from 'containers/Main/containers/Admin/Interface/ConstructorTabbed';
 
 const Title = styled.div`
@@ -37,11 +33,10 @@ const Title = styled.div`
 
 interface ITabsContainerProps {
     tabData: any;
-    tabList: { id: string, type: string, name?: string, vde?: boolean; visible?: boolean }[];
+    tabList: { id: string, type: string, name?: string; visible?: boolean }[];
     // getTabList?: typeof getTabList.started;
     addTabList?: typeof addTabList;
     removeTabList?: typeof removeTabList;
-    vde?: boolean;
 }
 
 interface ITabsContainerState {
@@ -65,8 +60,7 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
             addTab = {
                 addID: this.props.match.params.id,
                 addName: this.props.match.params.name,
-                addType: this.props.match.params.type,
-                addVDE: !!this.props.vde
+                addType: this.props.match.params.type
             };
         }
         // this.props.loadTabList(addTab);
@@ -79,12 +73,11 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
         // alert('new' + JSON.stringify(this.props));
         // TODO: bugfix reopen closed tab from same page
         if (props.match.params.type && props.match.params.id) {
-            if (this.props.match.params.type !== props.match.params.type || this.props.match.params.id !== props.match.params.id || this.props.match.params.name !== props.match.params.name || this.props.vde !== props.vde) {
+            if (this.props.match.params.type !== props.match.params.type || this.props.match.params.id !== props.match.params.id || this.props.match.params.name !== props.match.params.name) {
                 let addTab = {
                     addID: props.match.params.id,
                     addName: props.match.params.name,
-                    addType: props.match.params.type,
-                    addVDE: !!props.vde
+                    addType: props.match.params.type
                 };
                 this.props.addTabList(addTab);
                 // this.props.getTabList(addTab);
@@ -92,17 +85,16 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
         }
     }
 
-    onTabClose(id: string, type: string, vde: boolean) {
+    onTabClose(id: string, type: string) {
         // alert('close ' + index);
-        this.props.removeTabList({ id, type, vde });
+        this.props.removeTabList({ id, type });
     }
 
-    onTabSave(pageID: string, vde?: boolean) {
-        // alert('saved tab ' + pageID + ' ' + (vde ? 'vde' : 'not vde'));
+    onTabSave(pageID: string) {
         this.setState({
             random: {
                 ...this.state.random,
-                ['page' + pageID + (vde ? 'vde' : '')]: Math.random()
+                ['page' + pageID]: Math.random()
             }
         });
     }
@@ -112,66 +104,30 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
         if (this.props.tabList.length) {
             for (let tabListItem of this.props.tabList) {
                 // switch components depending on tabListItem.type: page, contract, etc
-                if (tabListItem.type === 'interfacePage') {
-                    tabsContent.push(
-                        <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
-                            <Title>Interface Page</Title>
-                            <InterfacePageEditTabbed pageID={tabListItem.id} vde={tabListItem.vde} onSave={this.onTabSave.bind(this)} random={this.state.random && this.state.random['page' + tabListItem.id + (tabListItem.vde ? 'vde' : '')]}/>
-                        </div>
-                    );
-                }
-                else
-                if (tabListItem.type === 'interfaceBlock') {
-                    tabsContent.push(
-                        <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
-                            <Title>Interface Block</Title>
-                            <InterfaceBlockEditTabbed blockID={tabListItem.id} vde={tabListItem.vde}/>
-                        </div>
-                    );
-                }
-                else
-                if (tabListItem.type === 'interfaceMenu') {
-                    tabsContent.push(
-                        <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
-                            <Title>Interface Menu</Title>
-                            <InterfaceMenuEditTabbed menuID={tabListItem.id} vde={tabListItem.vde}/>
-                        </div>
-                    );
-                }
-                else
                 if (tabListItem.type === 'interfaceConstructor') {
                     tabsContent.push(
-                        <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')} className="fullscreen">
+                        <div key={tabListItem.type + tabListItem.id} className="fullscreen">
                             <Title>Interface Constructor</Title>
                             <div className="flex-col flex-stretch">
-                                <InterfaceConstructorTabbed pageID={tabListItem.id} pageName={tabListItem.name} vde={tabListItem.vde} onSave={this.onTabSave.bind(this)} random={this.state.random && this.state.random['page' + tabListItem.id + (tabListItem.vde ? 'vde' : '')]}/>
+                                <InterfaceConstructorTabbed pageID={tabListItem.id} pageName={tabListItem.name} onSave={this.onTabSave.bind(this)} random={this.state.random && this.state.random['page' + tabListItem.id]} />
                             </div>
                         </div>
                     );
                 }
                 else
-                if (tabListItem.type === 'contract') {
-                    tabsContent.push(
-                        <div className="fullscreen animated fadeIn" key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
-                            <Title>Smart Contract</Title>
-                            <ContractEditTabbed contractID={tabListItem.id} vde={tabListItem.vde}/>
-                        </div>
-                    );
-                }
-                else
-                if (tabListItem.type === 'parameter') {
-                    tabsContent.push(
-                        <div key={tabListItem.type + tabListItem.id + (tabListItem.vde ? 'vde' : '')}>
-                            <Title>Ecosystem Parameter</Title>
-                            <ParameterEditTabbed parameterName={tabListItem.id} vde={tabListItem.vde}/>
-                        </div>
-                    );
-                }
-                else {
-                    tabsContent.push(
-                        <div key={tabListItem.type + tabListItem.id}/>
-                    );
-                }
+                    if (tabListItem.type === 'parameter') {
+                        tabsContent.push(
+                            <div key={tabListItem.type + tabListItem.id}>
+                                <Title>Ecosystem Parameter</Title>
+                                <ParameterEditTabbed parameterName={tabListItem.id} />
+                            </div>
+                        );
+                    }
+                    else {
+                        tabsContent.push(
+                            <div key={tabListItem.type + tabListItem.id} />
+                        );
+                    }
             }
 
         }
@@ -187,17 +143,15 @@ class TabsContainer extends React.Component<ITabsContainerProps & { match: { par
                     id: tabListItem.id,
                     type: tabListItem.type,
                     name: tabListItem.name || tabListItem.id,
-                    vde: !!tabListItem.vde,
                     visible: tabListItem.visible
                 });
             }
         }
 
-        let openedTab = { id: '', type: '', vde: false };
+        let openedTab = { id: '', type: '' };
         if (this.props.match.params.id && this.props.match.params.type) {
             openedTab.id = this.props.match.params.id;
             openedTab.type = this.props.match.params.type;
-            openedTab.vde = !!this.props.vde;
         }
 
         return (

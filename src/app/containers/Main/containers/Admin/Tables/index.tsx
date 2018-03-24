@@ -24,7 +24,6 @@ import DataPreloader from 'components/Animation/DataPreloader';
 import Tables from 'components/Main/Admin/Tables';
 
 export interface ITablesContainerProps {
-    vde?: boolean;
     match?: { params: { tableName: string } };
 }
 
@@ -37,16 +36,14 @@ interface ITablesContainerDispatch {
 }
 
 class TablesContainer extends React.Component<ITablesContainerProps & ITablesContainerState & ITablesContainerDispatch> {
-    componentWillMount() {
-        this.props.getTables({
-            vde: this.props.vde
-        });
+    componentDidMount() {
+        this.props.getTables({});
     }
 
     render() {
         return (
             <DataPreloader data={[this.props.tables]}>
-                <Tables tables={this.props.tables} vde={this.props.vde} />
+                <Tables tables={this.props.tables} />
             </DataPreloader>
         );
     }

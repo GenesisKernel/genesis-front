@@ -42,8 +42,8 @@ const ImportTableData: React.SFC<IImportTableDataProps> = props => (
                 <tbody>
                     {table.Data.map((row, rowIndex) => (
                         <tr key={rowIndex}>
-                            {row.map(cell => (
-                                <td>{cell}</td>
+                            {row.map((cell, cellIndex) => (
+                                <td key={cellIndex}>{cell}</td>
                             ))}
                             <td>
                                 <Button className="btn-labeled btn-icon" disabled>

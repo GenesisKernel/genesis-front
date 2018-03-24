@@ -120,6 +120,10 @@ body {
     list-style: none;
 }
 
+.component-main {
+    background: #f6f7fa;
+}
+
 .content-wrapper {
     border-top: none;
 }
@@ -154,7 +158,7 @@ input[type="number"] {
     position: fixed;
     margin: -12px 0 0 0;
     top: auto;
-    z-index: 900;
+    z-index: 9000;
     left: 50%;
     width: 350px;
     transform: translateX(-175px);

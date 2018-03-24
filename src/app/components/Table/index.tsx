@@ -85,6 +85,16 @@ const StyledBody = styled.tbody`
         font-size: 13px;
         color: #666;
     }
+
+    &.tbody-collapse {
+        > tr > td:last-child {
+            padding-right: 0 !important;
+        }
+        
+        > tr > td {
+            padding-left: 0 !important;
+        }
+    }
 `;
 
 export interface ICellRenderer {
@@ -111,6 +121,7 @@ export interface ITableProps {
     striped?: boolean;
     bordered?: boolean;
     hover?: boolean;
+    collapse?: boolean;
 }
 
 interface ITableState {
@@ -241,7 +252,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                         ))}
                     </tr>
                 </StyledHead>
-                <StyledBody>
+                <StyledBody className={this.props.collapse ? 'tbody-collapse' : ''}>
                     {this.getSortedData().map((row, rowIndex) => (
                         <tr key={rowIndex}>
                             {this.props.columns.map((col, colIndex) => (

@@ -24,6 +24,22 @@ import * as actions from './actions';
 import * as authActions from 'modules/auth/actions';
 import { connect } from 'modules/socket/actions';
 import platform from 'lib/platform';
+import { setLocale } from './actions';
+import setLocaleEpic from './epics/setLocaleEpic';
+
+export const initializeEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.intialize)
+        .flatMap(action => {
+            const state = store.getState();
+            return Observable.merge(
+                Observable.of(connect.started({
+                    socketToken: state.auth.socketToken,
+                    timestamp: state.auth.timestamp,
+                    userID: state.auth.id
+                })),
+                Observable.of(setLocale.started(state.storage.locale))
+            );
+        });
 
 export const checkOnlineEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.checkOnline.started)
@@ -57,16 +73,10 @@ export const checkOnlineEpic: Epic<Action, IRootState> =
                                 ]);
                             }
                             else {
-                                const state = store.getState();
                                 return Observable.concat([
                                     actions.checkOnline.done({
                                         params: null,
                                         result: true
-                                    }),
-                                    connect.started({
-                                        socketToken: state.auth.socketToken,
-                                        timestamp: state.auth.timestamp,
-                                        userID: state.auth.id
                                     })
                                 ]);
                             }
@@ -121,11 +131,11 @@ export const createVDEEpic: Epic<Action, IRootState> =
         .flatMap(action => {
             const state = store.getState();
             return Observable.fromPromise(api.createVDE(state.auth.sessionToken))
-                .map(payload =>
-                    actions.createVDE.done({
+                .flatMap(payload =>
+                    Observable.of(actions.createVDE.done({
                         params: action.payload,
                         result: payload.result
-                    })
+                    }))
                 )
                 .catch(error =>
                     Observable.of(actions.createVDE.failed({
@@ -135,4 +145,10 @@ export const createVDEEpic: Epic<Action, IRootState> =
                 );
         });
 
-export default combineEpics(checkOnlineEpic, installEpic, createVDEEpic);
+export default combineEpics(
+    initializeEpic,
+    checkOnlineEpic,
+    installEpic,
+    createVDEEpic,
+    setLocaleEpic
+);

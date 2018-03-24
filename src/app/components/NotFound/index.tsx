@@ -18,7 +18,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
-import DocumentTitle from 'components/DocumentTitle';
+import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import Center from 'components/Center';
 
 export interface INotFoundProps {
@@ -26,7 +26,7 @@ export interface INotFoundProps {
 }
 
 const NotFound: React.SFC<INotFoundProps> = (props) => (
-    <DocumentTitle title="general.notfound" defaultTitle="Not found">
+    <LocalizedDocumentTitle title="general.notfound" defaultTitle="Not found">
         <Center>
             <div className={props.main ? 'text-muted' : 'text-white'}>
                 <div className="text-center mb-xl">
@@ -61,7 +61,7 @@ const NotFound: React.SFC<INotFoundProps> = (props) => (
                 )}
             </div>
         </Center>
-    </DocumentTitle>
+    </LocalizedDocumentTitle>
 );
 
 export default NotFound;

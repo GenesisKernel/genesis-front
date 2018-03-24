@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
+import * as queryString from 'query-string';
 import api, { IAPIError } from 'lib/api';
 import { Action } from 'redux';
 import { Observable } from 'rxjs';
@@ -24,14 +25,24 @@ import * as actions from './actions';
 import { logout, selectAccount } from 'modules/auth/actions';
 import * as storageActions from 'modules/storage/actions';
 import { history } from 'store';
+import { navigate } from 'modules/engine/actions';
+import { LEGACY_PAGES } from 'lib/legacyPages';
+import { modalShow } from 'modules/modal/actions';
 
 export const navigatePageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.navigatePage.started)
         .map(action => {
-            history.push(`/${action.payload.vde ? 'vde/page' : 'page'}/${action.payload.name}`, { params: action.payload.params });
+            const state = store.getState();
+            const sectionName = (LEGACY_PAGES[action.payload.name] && LEGACY_PAGES[action.payload.name].section) || action.payload.section || state.content.section;
+            const section = state.content.sections[sectionName];
+
+            const params = queryString.stringify(action.payload.params);
+            history.push(`/${sectionName}/${action.payload.name || section.defaultPage}${params ? '?' + params : ''}`);
             return actions.navigatePage.done({
                 params: action.payload,
-                result: null
+                result: {
+                    section: sectionName
+                }
             });
         });
 
@@ -39,17 +50,17 @@ export const renderPageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.renderPage.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, action.payload.name, action.payload.params, action.payload.vde))
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, action.payload.name, action.payload.params, state.storage.locale))
                 .map(payload =>
                     actions.renderPage.done({
                         params: action.payload,
                         result: {
                             menu: {
                                 name: payload.menu,
-                                vde: action.payload.vde,
                                 content: payload.menutree
                             },
                             page: {
+                                params: action.payload.params,
                                 name: action.payload.name,
                                 content: payload.tree
                             }
@@ -64,24 +75,63 @@ export const renderPageEpic: Epic<Action, IRootState> =
                 );
         });
 
+export const renderLegacyPageEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.renderLegacyPage.started)
+        .flatMap(action => {
+            if (action.payload.menu) {
+                const state = store.getState();
+                return Observable.fromPromise(api.contentMenu(state.auth.sessionToken, action.payload.menu, state.storage.locale))
+                    .map(payload =>
+                        actions.renderLegacyPage.done({
+                            params: action.payload,
+                            result: {
+                                menu: {
+                                    name: action.payload.menu,
+                                    content: payload.tree
+                                }
+                            }
+                        })
+                    )
+                    .catch(error =>
+                        Observable.of(actions.renderLegacyPage.done({
+                            params: action.payload,
+                            result: {
+                                menu: {
+                                    name: action.payload.menu,
+                                    content: []
+                                }
+                            }
+                        })));
+            }
+            else {
+                return Observable.of(actions.renderLegacyPage.done({
+                    params: action.payload,
+                    result: {
+                        menu: null
+                    }
+                }));
+            }
+        });
+
 export const reloadPageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.reloadPage.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, state.content.page.name, state.content.page, state.content.page.vde))
+            const section = state.content.sections[state.content.section];
+
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, section.page.name, section.page.params, state.storage.locale))
                 .map(payload =>
                     actions.reloadPage.done({
                         params: action.payload,
                         result: {
-                            vde: state.content.page.vde,
-                            params: state.content.page.params,
+                            params: section.page.params,
                             menu: {
                                 name: payload.menu,
-                                vde: state.content.page.vde,
                                 content: payload.menutree
                             },
                             page: {
-                                name: state.content.page.name,
+                                params: section.page.params,
+                                name: section.page.name,
                                 content: payload.tree
                             }
                         }
@@ -101,7 +151,6 @@ export const ecosystemInitEpic: Epic<Action, IRootState> =
             const state = store.getState();
 
             const promise = Promise.all([
-                api.contentMenu(state.auth.sessionToken, 'default_menu'),
                 api.parameter(state.auth.sessionToken, 'stylesheet'),
                 api.parameter(state.auth.sessionToken, 'ecosystem_name')
             ]);
@@ -111,18 +160,13 @@ export const ecosystemInitEpic: Epic<Action, IRootState> =
                     Observable.concat([
                         storageActions.saveAccount({
                             ...state.auth.account,
-                            ecosystemName: payload[2].value
+                            ecosystemName: payload[1].value
                         }),
                         actions.fetchNotifications.started(null),
                         actions.ecosystemInit.done({
                             params: action.payload,
                             result: {
-                                stylesheet: payload[1].value || null,
-                                defaultMenu: {
-                                    name: 'default_menu',
-                                    vde: false,
-                                    content: payload[0].tree
-                                }
+                                stylesheet: payload[0].value || null
                             }
                         })
                     ])
@@ -175,17 +219,19 @@ export const resetEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.reset.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, 'default_page', {}))
+            const section = state.content.sections[state.content.section];
+
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, section.defaultPage, {}, state.storage.locale))
                 .map(payload => actions.reset.done({
                     params: action.payload,
                     result: {
                         menu: {
                             name: payload.menu,
-                            vde: false,
                             content: payload.menutree
                         },
                         page: {
-                            name: 'default_page',
+                            params: {},
+                            name: section.defaultPage,
                             content: payload.tree
                         }
                     }
@@ -202,7 +248,7 @@ export const fetchNotificationsEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.fetchNotifications.started)
         .flatMap(action => {
             const state = store.getState();
-            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, 'notifications', {}))
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, 'notifications', {}, state.storage.locale))
                 .map(payload =>
                     actions.fetchNotifications.done({
                         params: action.payload,
@@ -221,21 +267,21 @@ export const displayDataEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.displayData.started)
         .flatMap(action => {
             return Observable.fromPromise(api.resolveTextData(action.payload))
-                .map(payload => {
-                    const state = store.getState();
-                    swal({
-                        title: state.engine.intl.formatMessage({ id: 'alert.info', defaultMessage: 'Information' }),
-                        html: `
-                            <div style="white-space: pre-wrap;text-align:left;">${payload}</div>
-                        `,
-                        type: 'info'
-                    }).catch(e => null);
-
-                    return actions.displayData.done({
-                        params: action.payload,
-                        result: payload
-                    });
-                })
+                .flatMap(payload =>
+                    Observable.of<Action>(
+                        modalShow({
+                            id: 'DISPLAY_INFO',
+                            type: 'INFO',
+                            params: {
+                                value: payload
+                            }
+                        }),
+                        actions.displayData.done({
+                            params: action.payload,
+                            result: payload
+                        })
+                    )
+                )
                 .catch((e: IAPIError) =>
                     Observable.of(actions.displayData.failed({
                         params: action.payload,
@@ -244,13 +290,37 @@ export const displayDataEpic: Epic<Action, IRootState> =
                 );
         });
 
+export const renderSectionEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.renderSection)
+        .map(action => {
+            const state = store.getState();
+            const section = state.content.sections[action.payload];
+            const params = section.page ? queryString.stringify(section.page.params) : '';
+            return navigate(`/${section.name}/${section.page ? section.page.name : ''}${params ? '?' + params : ''}`);
+        });
+
+export const closeSectionEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.closeSection)
+        .flatMap(action => {
+            const state = store.getState();
+            if (action.payload === state.content.section) {
+                return Observable.of(actions.renderSection('home'));
+            }
+            else {
+                return Observable.empty<never>();
+            }
+        });
+
 export default combineEpics(
     renderPageEpic,
+    renderLegacyPageEpic,
     reloadPageEpic,
     ecosystemInitEpic,
     resetEpic,
     alertEpic,
     navigatePageEpic,
     fetchNotificationsEpic,
-    displayDataEpic
+    displayDataEpic,
+    renderSectionEpic,
+    closeSectionEpic
 );

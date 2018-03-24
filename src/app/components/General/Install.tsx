@@ -20,7 +20,7 @@ import styled from 'styled-components';
 import { injectIntl, InjectedIntlProps, FormattedMessage } from 'react-intl';
 import { install } from 'modules/engine/actions';
 
-import DocumentTitle from 'components/DocumentTitle';
+import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import General from 'components/General';
 
 const fieldsetMargin = 10;
@@ -83,7 +83,7 @@ class InstallForm extends React.Component<IInstallProps, IInstallState> {
 
     render() {
         return (
-            <DocumentTitle title="general.install" defaultTitle="Install">
+            <LocalizedDocumentTitle title="general.install" defaultTitle="Install">
                 <General>
                     <StyledInstallForm>
                         <Validation.components.ValidatedForm className="form-horizontal component-install-form" onSubmitSuccess={this.onSubmit.bind(this)}>
@@ -107,7 +107,7 @@ class InstallForm extends React.Component<IInstallProps, IInstallState> {
                                 <FormGroup>
                                     <Col md={3}>
                                         <label className="control-label">
-                                            <FormattedMessage id="installLogLevel" defaultMessage="Log level" />
+                                            <FormattedMessage id="install.log.level" defaultMessage="Log level" />
                                         </label>
                                     </Col>
                                     <Col md={9}>
@@ -258,7 +258,7 @@ class InstallForm extends React.Component<IInstallProps, IInstallState> {
                         </Validation.components.ValidatedForm>
                     </StyledInstallForm>
                 </General>
-            </DocumentTitle>
+            </LocalizedDocumentTitle>
         );
     }
 }

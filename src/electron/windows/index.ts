@@ -67,7 +67,6 @@ export const spawnWindow = (name: string) => {
         wnd.setMenu(menu);
     }
 
-    //wnd.webContents.openDevTools();
     wnd.loadURL(appUrl);
     wnd.once('ready-to-show', () => {
         wnd.show();

@@ -23,7 +23,7 @@ import { IInterfacesResponse } from 'lib/api';
 import Interface from 'components/Main/Admin/Interface';
 
 export interface IInterfaceContainerProps {
-    vde?: boolean;
+
 }
 
 interface IInterfaceContainerState {
@@ -35,24 +35,13 @@ interface IInterfaceContainerDispatch {
 }
 
 class InterfaceContainer extends React.Component<IInterfaceContainerProps & IInterfaceContainerState & IInterfaceContainerDispatch> {
-    componentWillMount() {
-        this.props.getInterface({
-            vde: this.props.vde
-        });
-    }
-
-    componentWillReceiveProps(props: IInterfaceContainerProps & IInterfaceContainerDispatch) {
-        if (this.props.vde !== props.vde) {
-            props.getInterface({
-                vde: props.vde
-            });
-        }
+    componentDidMount() {
+        this.props.getInterface(null);
     }
 
     render() {
         return (
             <Interface
-                vde={this.props.vde}
                 pages={this.props.pages && this.props.pages.pages || []}
                 menus={this.props.pages && this.props.pages.menus || []}
                 blocks={this.props.pages && this.props.pages.blocks || []}

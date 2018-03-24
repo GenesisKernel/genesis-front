@@ -47,7 +47,20 @@ export const loginEpic = (actions$: Observable<Action>) =>
 
             const promise = api.getUid().then(uid => {
                 const signature = keyring.sign(uid.uid, privateKey);
-                return api.login(uid.token, publicKey, signature, undefined, action.payload.ecosystem);
+                return api.login(uid.token, publicKey, signature, undefined, action.payload.ecosystem)
+                    .then(loginResult =>
+                        api.row(loginResult.token, 'members', loginResult.key_id, 'avatar,member_name')
+                            .then(memberResult => ({
+                                ...loginResult,
+                                avatar: memberResult.value.avatar,
+                                username: memberResult.value.member_name
+                            }))
+                            .catch(e => ({
+                                ...loginResult,
+                                avatar: null,
+                                username: null
+                            }))
+                    );
             });
 
             return Observable.from(promise)
@@ -58,8 +71,8 @@ export const loginEpic = (actions$: Observable<Action>) =>
                         address: payload.address,
                         ecosystem: action.payload.ecosystem,
                         ecosystemName: null,
-                        avatar: null,
-                        username: payload.key_id,
+                        avatar: payload.avatar,
+                        username: payload.username,
                         sessionToken: payload.token,
                         refreshToken: payload.refresh,
                         socketToken: payload.notify_key,
@@ -71,9 +84,18 @@ export const loginEpic = (actions$: Observable<Action>) =>
                         actions.login.done({
                             params: action.payload,
                             result: {
-                                ...payload,
-                                // TODO: Not remembering the key is not implemented yet
-                                // privateKey: action.payload.remember ? action.payload.privateKey : null,
+                                error: payload.error,
+                                msg: payload.msg,
+                                token: payload.token,
+                                refresh: payload.refresh,
+                                notify_key: payload.notify_key,
+                                timestamp: payload.timestamp,
+                                key_id: payload.key_id,
+                                ecosystem_id: payload.ecosystem_id,
+                                address: payload.address,
+                                expiry: payload.expiry,
+                                isnode: payload.isnode,
+                                isowner: payload.isowner,
                                 privateKey: privateKey,
                                 publicKey,
                                 account
@@ -105,7 +127,8 @@ export const logoutEpic: Epic<Action, IRootState> =
                 actions.logout.done({
                     params: action.payload,
                     result: null
-                })
+                }),
+                guiActions.setBadgeCount(0)
             ])
         );
 
@@ -114,7 +137,7 @@ export const selectAccountEpic: Epic<Action, IRootState> =
         .flatMap(action => {
             const promise = api.refresh(action.payload.account.sessionToken, action.payload.account.refreshToken)
                 .then(tokens =>
-                    api.row(tokens.token, 'member', action.payload.account.id, 'avatar,member_name')
+                    api.row(tokens.token, 'members', action.payload.account.id, 'avatar,member_name')
                         .then(memberResult => ({
                             avatar: memberResult.value.avatar,
                             username: memberResult.value.member_name,

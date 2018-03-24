@@ -28,9 +28,8 @@ export interface ILinkPageProps {
 }
 
 interface ILinkPageContext {
-    vde?: boolean;
     protypo: Protypo;
-    navigatePage: (params: { name: string, params: any, vde?: boolean }) => void;
+    navigatePage: (params: { name: string, params: any, force?: boolean }) => void;
 }
 
 const LinkPage: React.SFC<ILinkPageProps> = (props, context: ILinkPageContext) => {
@@ -39,13 +38,13 @@ const LinkPage: React.SFC<ILinkPageProps> = (props, context: ILinkPageContext) =
         context.navigatePage({
             name: props.page,
             params: context.protypo.resolveParams(props.pageparams),
-            vde: context.vde
+            force: true
         });
         return false;
     };
 
     return (
-        <a href={props.page ? `/${context.vde ? 'vde/page' : 'page'}/${props.page}` : ''} className={[props.class, props.className].join(' ')} onClick={onNavigate}>
+        <a href="#" className={[props.class, props.className].join(' ')} onClick={onNavigate}>
             {props.children}
         </a>
     );
@@ -53,8 +52,7 @@ const LinkPage: React.SFC<ILinkPageProps> = (props, context: ILinkPageContext) =
 
 LinkPage.contextTypes = {
     protypo: propTypes.object.isRequired,
-    navigatePage: propTypes.func.isRequired,
-    vde: propTypes.bool
+    navigatePage: propTypes.func.isRequired
 };
 
 export default StyledComponent(LinkPage);

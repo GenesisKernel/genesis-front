@@ -17,13 +17,13 @@
 import actionCreatorFactory from 'typescript-fsa';
 import { push } from 'react-router-redux';
 import { IInstallParams } from 'lib/api';
-import { InjectedIntl } from 'react-intl';
 
 const actionCreator = actionCreatorFactory('engine');
 export const navigate = (url: string) => push(url);
 export const checkOnline = actionCreator.async<undefined, boolean, string>('CHECK_ONLINE');
-export const registerIntl = actionCreator<InjectedIntl>('REGISTER_INTL');
+export const intialize = actionCreator('INITIALIZE');
 export const install = actionCreator.async<IInstallParams, { uid: string, session: string }, string>('INSTALL');
 export const setLoading = actionCreator<boolean>('SET_LOADING');
 export const setCollapsed = actionCreator<boolean>('SET_COLLAPSED');
+export const setLocale = actionCreator.async<string, { [key: string]: string }>('SET_LOCALE');
 export const createVDE = actionCreator.async<undefined, boolean, boolean>('CREATE_VDE');

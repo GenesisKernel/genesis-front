@@ -23,8 +23,7 @@ import DataPreloader from 'components/Animation/DataPreloader';
 import Edit from 'components/Main/Admin/Languages/Edit';
 
 export interface IEditContainerProps {
-    vde?: boolean;
-    match: { params: { translationID: string } };
+    translationID: string;
 }
 
 interface IEditContainerState {
@@ -36,17 +35,24 @@ interface IEditContainerDispatch {
 }
 
 class EditContainer extends React.Component<IEditContainerProps & IEditContainerState & IEditContainerDispatch> {
-    componentWillMount() {
+    componentDidMount() {
         this.props.getLanguage({
-            id: this.props.match.params.translationID,
-            vde: this.props.vde
+            id: this.props.translationID
         });
+    }
+
+    componentWillReceiveProps(props: IEditContainerProps & IEditContainerState & IEditContainerDispatch) {
+        if (this.props.translationID !== props.translationID) {
+            props.getLanguage({
+                id: props.translationID
+            });
+        }
     }
 
     render() {
         return (
             <DataPreloader data={[this.props.translation]}>
-                <Edit translation={this.props.translation} vde={this.props.vde} />
+                <Edit translation={this.props.translation} />
             </DataPreloader>
         );
     }

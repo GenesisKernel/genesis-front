@@ -15,12 +15,12 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Row, Col, Panel } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
 
-import DocumentTitle from 'components/DocumentTitle';
+import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import Heading from 'components/Heading';
+import PageLink from 'containers/Routing/PageLink';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 
@@ -64,8 +64,7 @@ export const columnTypes = [
 ];
 
 export interface ICreateProps {
-    vde?: boolean;
-    navigate: (url: string) => void;
+    navigatePage: (params: { name?: string, section?: string, force?: boolean, params: { [key: string]: any } }) => void;
 }
 
 interface ICreateState {
@@ -97,18 +96,20 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                 conditions: 'true'
             }))),
             Permissions: JSON.stringify({
-                insert: 'true',
-                update: 'true',
-                new_column: 'true'
+                insert: values.insert,
+                update: values.update,
+                new_column: values.newColumn,
+                ...(false ? {
+                    read: values.read,
+                    filter: values.filter
+                } : {})
             })
         };
     }
 
     onExec(block: string, error: string) {
         if (block) {
-            this.props.vde ?
-                this.props.navigate('/vde/tables') :
-                this.props.navigate('/admin/tables');
+            this.props.navigatePage({ name: 'tables', params: {} });
         }
     }
 
@@ -169,7 +170,7 @@ class Create extends React.Component<ICreateProps, ICreateState> {
 
     render() {
         return (
-            <DocumentTitle title="admin.tables.create" defaultTitle="Create table">
+            <LocalizedDocumentTitle title="admin.tables.create" defaultTitle="Create table">
                 <div>
                     <Heading>
                         <FormattedMessage id="admin.tables" defaultMessage="Tables" />
@@ -177,15 +178,15 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                     <div className="content-wrapper">
                         <ol className="breadcrumb">
                             <li>
-                                <Link to={this.props.vde ? '/vde/tables' : '/admin/tables'}>
+                                <PageLink page="tables">
                                     <FormattedMessage id="admin.tables" defaultMessage="Tables" />
-                                </Link>
+                                </PageLink>
                             </li>
                             <li>
                                 <FormattedMessage id="admin.create" defaultMessage="Create" />
                             </li>
                         </ol>
-                        <ValidatedContractForm vde={this.props.vde} contractName="@1NewTable" mapContractParams={this.mapContractParams.bind(this)} onExec={this.onExec.bind(this)}>
+                        <ValidatedContractForm contractName="@1NewTable" mapContractParams={this.mapContractParams.bind(this)} onExec={this.onExec.bind(this)}>
                             <div className="panel panel-default">
                                 <div className="panel-body">
                                     <Validation.components.ValidatedFormGroup for="name">
@@ -272,18 +273,58 @@ class Create extends React.Component<ICreateProps, ICreateState> {
                                                 <FormattedMessage id="admin.tables.column.add" defaultMessage="Add column" />
                                             </Button>
                                         </div>
-                                        <div className="pull-right">
-                                            <Validation.components.ValidatedSubmit bsStyle="primary">
-                                                <FormattedMessage id="admin.save" defaultMessage="Save" />
-                                            </Validation.components.ValidatedSubmit>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <Row>
+                                <Col md={6}>
+                                    <Panel
+                                        header={<FormattedMessage id="admin.tables.permissions.write" defaultMessage="Write permissions" />}
+                                        footer={<div className="text-right"><Button type="submit" bsStyle="primary"><FormattedMessage id="admin.tables.save" defaultMessage="Save" /></Button></div>}
+                                    >
+                                        <Validation.components.ValidatedFormGroup for="insert">
+                                            <label>
+                                                <FormattedMessage id="admin.tables.permissions.insert" defaultMessage="Insert" />
+                                            </label>
+                                            <Validation.components.ValidatedControl type="text" name="insert" defaultValue={'ContractConditions("MainCondition")'} validators={[Validation.validators.required]} />
+                                        </Validation.components.ValidatedFormGroup>
+                                        <Validation.components.ValidatedFormGroup for="update">
+                                            <label>
+                                                <FormattedMessage id="admin.tables.permissions.update" defaultMessage="Update" />
+                                            </label>
+                                            <Validation.components.ValidatedControl type="text" name="update" defaultValue={'ContractConditions("MainCondition")'} validators={[Validation.validators.required]} />
+                                        </Validation.components.ValidatedFormGroup>
+                                        <Validation.components.ValidatedFormGroup for="newColumn">
+                                            <label>
+                                                <FormattedMessage id="admin.tables.permissions.newcolumn" defaultMessage="New column" />
+                                            </label>
+                                            <Validation.components.ValidatedControl type="text" name="newColumn" defaultValue={'ContractConditions("MainCondition")'} validators={[Validation.validators.required]} />
+                                        </Validation.components.ValidatedFormGroup>
+                                    </Panel>
+                                </Col>
+                                {false && (
+                                    <Col md={6}>
+                                        <Panel header={<FormattedMessage id="admin.tables.permissions.read" defaultMessage="Read permissions" />}>
+                                            <Validation.components.ValidatedFormGroup for="read">
+                                                <label>
+                                                    <FormattedMessage id="admin.tables.permissions.read" defaultMessage="Read" />
+                                                </label>
+                                                <Validation.components.ValidatedControl type="text" name="read" />
+                                            </Validation.components.ValidatedFormGroup>
+                                            <Validation.components.ValidatedFormGroup for="filter">
+                                                <label>
+                                                    <FormattedMessage id="admin.tables.permissions.filter" defaultMessage="Filter" />
+                                                </label>
+                                                <Validation.components.ValidatedControl type="text" name="filter" />
+                                            </Validation.components.ValidatedFormGroup>
+                                        </Panel>
+                                    </Col>
+                                )}
+                            </Row>
                         </ValidatedContractForm>
                     </div>
                 </div>
-            </DocumentTitle>
+            </LocalizedDocumentTitle>
         );
     }
 }

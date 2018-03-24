@@ -22,6 +22,7 @@ import * as propTypes from 'prop-types';
 import ValidatedForm, { IValidatedControl } from './ValidatedForm';
 
 export interface IValidatedControlProps extends FormControlProps {
+    name: string;
     validators?: Validator[];
 }
 
@@ -40,13 +41,13 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
 
     componentDidMount() {
         if (this.context.form) {
-            (this.context.form as ValidatedForm)._registerElement(this.props.name, this);
+            (this.context.form as ValidatedForm)._registerElement(this);
         }
     }
 
     componentWillUnmount() {
         if (this.context.form) {
-            (this.context.form as ValidatedForm)._unregisterElement(this.props.name);
+            (this.context.form as ValidatedForm)._unregisterElement(this);
         }
     }
 

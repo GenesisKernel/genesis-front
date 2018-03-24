@@ -16,6 +16,7 @@
 
 import { BrowserWindow } from 'electron';
 import config from '../config';
+import calcScreenOffset from '../util/calcScreenOffset';
 
 export default () => {
     const options = {
@@ -26,7 +27,7 @@ export default () => {
         resizable: true,
         show: false,
         maximized: config.get('maximized') || false,
-        ...config.get('dimensions')
+        ...calcScreenOffset(config.get('dimensions') || { width: 800, height: 600 })
     };
 
     const window = new BrowserWindow(options);

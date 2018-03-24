@@ -15,26 +15,26 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { IProtypoElement } from '../Protypo';
-import { StyledLinkButton } from './MenuItem';
+import { StyledMenuItem } from './MenuItem';
 import * as propTypes from 'prop-types';
+import { TProtypoElement } from 'genesis/protypo';
 
 export interface IMenuGroupProps {
-    'title'?: string;
-    'icon'?: string;
-    'params'?: { [key: string]: any };
-    'childrenTree'?: IProtypoElement[];
+    title?: string;
+    icon?: string;
+    params?: { [key: string]: any };
+    childrenTree?: TProtypoElement[];
 }
 
 const MenuGroup: React.SFC<IMenuGroupProps> = (props, context) => (
-    <StyledLinkButton>
+    <StyledMenuItem>
         <a href="#" onClick={() => context.menuPush({ name: props.title, content: props.childrenTree })}>
-            <div className="link-body">
+            <span className="link-body">
                 {props.icon && (<em className={`icon ${props.icon}`} />)}
                 <span>{props.title}</span>
-            </div>
+            </span>
         </a>
-    </StyledLinkButton>
+    </StyledMenuItem>
 );
 
 MenuGroup.contextTypes = {

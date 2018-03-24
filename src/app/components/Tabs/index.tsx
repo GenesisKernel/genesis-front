@@ -104,9 +104,9 @@ const TabItem = styled.div`
 `;
 
 export interface IConstructorTabsProps {
-    tabList: { id: string, type: string, name?: string, vde?: boolean, visible?: boolean }[];
+    tabList: { id: string, type: string, name?: string, visible?: boolean }[];
     children: JSX.Element[];
-    openedTab: { id: string, type: string, vde: boolean };
+    openedTab: { id: string, type: string };
     onTabClose?: any;
     className?: string;
 }
@@ -135,7 +135,7 @@ export default class ConstructorTabs extends React.Component<IConstructorTabsPro
     componentWillReceiveProps(props: IConstructorTabsProps) {
         // open selected tab
         if (props.tabList && !this.state.loaded) {
-            let tabIndex = props.tabList.findIndex((item: any) => item.id === props.openedTab.id && item.type === props.openedTab.type && !!item.vde === !!props.openedTab.vde);
+            let tabIndex = props.tabList.findIndex((item: any) => item.id === props.openedTab.id && item.type === props.openedTab.type);
             if (tabIndex >= 0 && this.state.tabIndex < tabIndex) {
                 this.setState({
                     tabIndex,
@@ -145,11 +145,11 @@ export default class ConstructorTabs extends React.Component<IConstructorTabsPro
         }
     }
 
-    onTabClose(id: string, type: string, vde: boolean) {
+    onTabClose(id: string, type: string) {
         // if closed tab was active, set first tab active
 
         if (this.props.tabList) {
-            let closedTabItemIndex = this.props.tabList.findIndex((tabItem: any) => tabItem.id === id && tabItem.type === type && !!tabItem.vde === !!vde);
+            let closedTabItemIndex = this.props.tabList.findIndex((tabItem: any) => tabItem.id === id && tabItem.type === type);
             if (closedTabItemIndex === this.state.tabIndex) {
                 let switchToTabIndex = this.props.tabList.findIndex((tabItem: any, index: number) =>
                     tabItem.visible !== false && index !== closedTabItemIndex
@@ -168,7 +168,7 @@ export default class ConstructorTabs extends React.Component<IConstructorTabsPro
         ).length;
 
         if (this.props.onTabClose && openedTabs > 1) {
-            this.props.onTabClose(id, type, vde);
+            this.props.onTabClose(id, type);
         }
     }
 
@@ -178,8 +178,8 @@ export default class ConstructorTabs extends React.Component<IConstructorTabsPro
                 <TabItems>
                     {this.props.tabList && this.props.tabList.map((tab, index) => (
                         <TabItem key={index} className={`${index === this.state.tabIndex ? 'active' : ''} ${tab.visible === false ? 'hidden' : ''} ${tab.type}`}>
-                            <span onClick={this.onTabSwitch.bind(this, index)}>{(tab.vde ? 'VDE: ' : '') + tab.name}</span>
-                            <a href="javascript:void(0)" onClick={this.onTabClose.bind(this, tab.id, tab.type, tab.vde)}>&times;</a>
+                            <span onClick={this.onTabSwitch.bind(this, index)}>{tab.name}</span>
+                            <a href="javascript:void(0)" onClick={this.onTabClose.bind(this, tab.id, tab.type)}>&times;</a>
                         </TabItem>
                     ))}
                 </TabItems>

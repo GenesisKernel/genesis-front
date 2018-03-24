@@ -24,7 +24,7 @@ import styled from 'styled-components';
 import keyring from 'lib/keyring';
 import { sendAttachment } from 'lib/fs';
 
-import DocumentTitle from 'components/DocumentTitle';
+import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import General from 'components/General';
 import Validation from 'components/Validation';
 
@@ -183,7 +183,7 @@ class Create extends React.Component<ICreateProps & InjectedIntlProps, ICreateSt
             <div key="firstStep">
                 <fieldset>
                     <p className="text-center">
-                        <FormattedMessage id="auth.remember.disclaimer.confirm" defaultMessage="Please make sure that you keep your passphrase (account seed) safe and remember the password. You will be asked to re-type them for confirmation" />
+                        <FormattedMessage id="auth.remember.disclaimer" defaultMessage="Please make sure that you keep your passphrase (account seed) safe and remember the password. You will be asked to re-type them for confirmation" />
                     </p>
                 </fieldset>
                 <fieldset>
@@ -299,7 +299,7 @@ class Create extends React.Component<ICreateProps & InjectedIntlProps, ICreateSt
 
     render() {
         return (
-            <DocumentTitle title="account.create" defaultTitle="Create account">
+            <LocalizedDocumentTitle title="account.create" defaultTitle="Create account">
                 <General return={this.state.isConfirming ? this.onBack.bind(this) : this.props.return}>
                     <input id="registerFileLoader" type="file" className="hidden" onChange={this.onLoadSuccess.bind(this)} ref={l => this.inputFile = l} />
                     <div className="text-center">
@@ -310,7 +310,7 @@ class Create extends React.Component<ICreateProps & InjectedIntlProps, ICreateSt
                         </StyledForm>
                     </div>
                 </General>
-            </DocumentTitle>
+            </LocalizedDocumentTitle>
         );
     }
 }

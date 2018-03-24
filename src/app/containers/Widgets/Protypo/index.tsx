@@ -19,16 +19,15 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { navigate } from 'modules/engine/actions';
 import { menuPush, navigatePage, displayData } from 'modules/content/actions';
+import { TProtypoElement } from 'genesis/protypo';
 
 import Protypo from 'components/Protypo';
-import { IProtypoElement } from 'components/Protypo/Protypo';
 
 export interface IProtypoContainerProps {
-    vde?: boolean;
     editable?: boolean;
     wrapper?: JSX.Element;
     context: string;
-    payload: IProtypoElement[];
+    content: TProtypoElement[];
     changePage?: any;
     setTagCanDropPosition?: any;
     addTag?: any;
@@ -55,9 +54,14 @@ const ProtypoContainer: React.SFC<IProtypoContainerState & IProtypoContainerDisp
     <Protypo {...props} />
 );
 
-const mapStateToProps = (state: IRootState) => ({
-    page: state.content.page && state.content.page.name
-});
+const mapStateToProps = (state: IRootState) => {
+    const section = state.content.sections[state.content.section];
+
+    return {
+        section: state.content.section,
+        page: section.page && section.page.name
+    };
+};
 
 const mapDispatchToProps = {
     navigatePage: navigatePage.started,

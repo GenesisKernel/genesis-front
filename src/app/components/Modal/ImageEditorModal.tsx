@@ -16,32 +16,33 @@
 
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Button, Modal, Well } from 'react-bootstrap';
+import { Button, Well } from 'react-bootstrap';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
+
+import Modal from './';
 
 export interface IImageEditorModalProps {
     mime: string;
     data: string;
     aspectRatio: number;
     width: number;
-    onSuccess: (result: string) => void;
 }
 
-class ImageEditorModal extends React.Component<IImageEditorModalProps> {
+class ImageEditorModal extends Modal<IImageEditorModalProps, string> {
     private _cropper: Cropper = null;
 
     onSuccess() {
         const input = this._cropper.getCroppedCanvas();
 
-        if (this.props.width) {
+        if (this.props.params.width) {
             const output = document.createElement('canvas'),
                 ctx = output.getContext('2d'),
                 oc = document.createElement('canvas'),
                 octx = oc.getContext('2d');
 
-            output.width = this.props.width;
-            output.height = this.props.width * input.height / input.width;
+            output.width = this.props.params.width;
+            output.height = this.props.params.width * input.height / input.width;
 
             let current = {
                 width: Math.floor(input.width * 0.5),
@@ -53,7 +54,7 @@ class ImageEditorModal extends React.Component<IImageEditorModalProps> {
 
             octx.drawImage(input, 0, 0, current.width, current.height);
 
-            while (current.width * 0.5 > this.props.width) {
+            while (current.width * 0.5 > this.props.params.width) {
                 current = {
                     width: Math.floor(current.width * 0.5),
                     height: Math.floor(current.height * 0.5)
@@ -62,20 +63,18 @@ class ImageEditorModal extends React.Component<IImageEditorModalProps> {
             }
 
             ctx.drawImage(oc, 0, 0, current.width, current.height, 0, 0, output.width, output.height);
-            this.props.onSuccess(output.toDataURL(this.props.mime));
+            this.props.onResult(output.toDataURL(this.props.params.mime));
         }
         else {
-            this.props.onSuccess(input.toDataURL(this.props.mime));
+            this.props.onResult(input.toDataURL(this.props.params.mime));
         }
     }
 
     render() {
         return (
-            <Modal show={!!this.props.data} onHide={() => undefined as any}>
+            <div>
                 <Modal.Header>
-                    <Modal.Title>
-                        <FormattedMessage id="modal.imageeditor.title" defaultMessage="Image editor" />
-                    </Modal.Title>
+                    <FormattedMessage id="modal.imageeditor.title" defaultMessage="Image editor" />
                 </Modal.Header>
                 <Modal.Body>
                     <Well>
@@ -83,21 +82,21 @@ class ImageEditorModal extends React.Component<IImageEditorModalProps> {
                     </Well>
                     <Cropper
                         ref={(ref: any) => this._cropper = ref}
-                        src={this.props.data}
+                        src={this.props.params.data}
                         style={{ maxHeight: 400, width: '100%' }}
-                        aspectRatio={this.props.aspectRatio}
+                        aspectRatio={this.props.params.aspectRatio}
                         viewMode={1}
                     />
                 </Modal.Body>
                 <Modal.Footer className="text-right">
-                    <Button type="button" bsStyle="link" onClick={this.props.onSuccess.bind(null, null)}>
+                    <Button type="button" bsStyle="link" onClick={this.props.onCancel.bind(this)}>
                         <FormattedMessage id="modal.imageeditor.cancel" defaultMessage="Cancel" />
                     </Button>
                     <Button type="button" bsStyle="primary" onClick={this.onSuccess.bind(this)}>
                         <FormattedMessage id="modal.imageeditor.confirm" defaultMessage="Confirm" />
                     </Button>
                 </Modal.Footer>
-            </Modal >
+            </div>
         );
     }
 }

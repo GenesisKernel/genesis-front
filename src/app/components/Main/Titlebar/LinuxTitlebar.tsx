@@ -18,48 +18,55 @@ import * as React from 'react';
 import styled from 'styled-components';
 import imgControls from './wndControls.svg';
 import { remote } from 'electron';
+import { ITitlebarProps } from './';
+
+import SystemMenu from 'containers/Main/Titlebar/SystemMenu';
 
 const StyledControls = styled.div`
     position: absolute;
     left: 0;
     right: 0;
     top: 0;
-    text-align: right;
 
-    button {
-        -webkit-app-region: no-drag;
-        cursor: default;
-        background: 0;
-        border: 0;
-        outline: 0;
-        padding: 0;
-        margin: 0;
-        width: 28px;
-        height: 28px;
-        text-align: center;
-        opacity: 0.5;
+    .window-systemmenu {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 10000;
+    }
+    
+    .window-controls {
+        position: absolute;
+        right: 0;
+        top: 0;
 
-        > i {
-            background: url(${imgControls}) 0 -70px no-repeat;
-            width: 14px;
-            height: 14px;
-            display: inline-block;
-            margin-top: 6px;
+        button {
+            cursor: default;
+            background: 0;
+            border: 0;
+            outline: 0;
+            padding: 0;
+            margin: 0;
+            width: 28px;
+            height: 28px;
+            text-align: center;
+            opacity: 0.5;
+
+            > i {
+                background: url(${imgControls}) 0 -70px no-repeat;
+                width: 14px;
+                height: 14px;
+                display: inline-block;
+                margin-top: 6px;
+            }
+
+            &:hover { opacity: 0.8; }
+
+            &.quit { > i { background-position-x: 0; } }
+            &.maximize > i { background-position-x: -14px; }
+            &.restore > i { background-position-x: -42px; }
+            &.minimize > i { background-position-x: -28px; }
         }
-
-        &:hover { opacity: 0.8; }
-
-        &.quit {
-            position: absolute;
-            left: 0;
-            > i { background-position-x: 0; }
-        }
-
-        &.maximize > i { background-position-x: -14px; }
-
-        &.restore > i { background-position-x: -42px; }
-
-        &.minimize > i { background-position-x: -28px; }
     }
 `;
 
@@ -67,7 +74,7 @@ interface ILinuxTitlebarState {
     maximized: boolean;
 }
 
-class LinuxTitlebar extends React.Component<{}, ILinuxTitlebarState> {
+class LinuxTitlebar extends React.Component<ITitlebarProps, ILinuxTitlebarState> {
     _stateListener = this.onStateChange.bind(this);
 
     constructor(props: {}) {
@@ -112,9 +119,14 @@ class LinuxTitlebar extends React.Component<{}, ILinuxTitlebarState> {
     render() {
         return (
             <StyledControls>
-                <div className="window-controls">
+                <div className="window-systemmenu no-drag">
+                    <SystemMenu align="left" />
+                </div>
+                <div className="window-controls no-drag">
                     <button className="minimize" onClick={this.onMinimize}><i /></button>
-                    <button className={this.state.maximized ? 'restore' : 'maximize'} onClick={this.onMaximize}><i /></button>
+                    {false !== this.props.maximizable && (
+                        <button className={this.state.maximized ? 'restore' : 'maximize'} onClick={this.onMaximize}><i /></button>
+                    )}
                     <button className="quit" onClick={this.onClose}><i /></button>
                 </div>
             </StyledControls>

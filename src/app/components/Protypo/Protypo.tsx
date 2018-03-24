@@ -19,20 +19,20 @@ import { resolveHandler, resolveFunction } from 'components/Protypo';
 import * as propTypes from 'prop-types';
 import api from 'lib/api';
 import contextDefinitions from './contexts';
+import { TProtypoElement } from 'genesis/protypo';
+import { IValidationResult } from 'components/Validation/ValidatedForm';
 
 import Heading from 'components/Heading';
-import { IValidationResult } from 'components/Validation/ValidatedForm';
 import ToolButton, { IToolButtonProps } from 'components/Protypo/components/ToolButton';
 
 export interface IProtypoProps {
-    vde?: boolean;
     editable?: boolean;
     wrapper?: JSX.Element;
     context: string;
     page: string;
-    payload: IProtypoElement[];
-    menuPush: (params: { name: string, content: IProtypoElement[] }) => void;
-    navigatePage: (params: { name: string, params: any, vde?: boolean }) => void;
+    content: TProtypoElement[];
+    menuPush: (params: { name: string, content: TProtypoElement[] }) => void;
+    navigatePage: (params: { name: string, params: any, force?: boolean }) => void;
     navigate: (url: string) => void;
     displayData: (link: string) => void;
     changePage?: any;
@@ -44,16 +44,6 @@ export interface IProtypoProps {
     selectTag?: any;
     selectedTag?: any;
     logic?: boolean;
-}
-
-export interface IProtypoElement {
-    tag: string;
-    id?: string;
-    text?: string;
-    // attr?: { [key: string]: string };
-    attr?: { [key: string]: any };  // attr can be structured
-    children?: IProtypoElement[];
-    tail?: IProtypoElement[];
 }
 
 export interface IParamsSpec {
@@ -71,6 +61,8 @@ class Protypo extends React.Component<IProtypoProps> {
     private _menuPushBind: Function;
     private _navigatePageBind: Function;
     private _navigateBind: Function;
+    private _resolveSourceBind: Function;
+    private _renderElementsBind: Function;
     private _title: string;
     private _toolButtons: IToolButtonProps[];
     private _sources: { [key: string]: { columns: string[], types: string[], data: string[][] } };
@@ -81,6 +73,8 @@ class Protypo extends React.Component<IProtypoProps> {
         this._menuPushBind = props.menuPush.bind(this);
         this._navigatePageBind = props.navigatePage.bind(this);
         this._navigateBind = props.navigate.bind(this);
+        this._resolveSourceBind = this.resolveSource.bind(this);
+        this._renderElementsBind = this.renderElements.bind(this);
     }
 
     getChildContext() {
@@ -89,7 +83,8 @@ class Protypo extends React.Component<IProtypoProps> {
             menuPush: this._menuPushBind,
             navigatePage: this._navigatePageBind,
             navigate: this._navigateBind,
-            vde: this.props.vde
+            resolveSource: this._resolveSourceBind,
+            renderElements: this._renderElementsBind
         };
     }
 
@@ -140,7 +135,7 @@ class Protypo extends React.Component<IProtypoProps> {
         return result;
     }
 
-    renderElement(element: IProtypoElement, optionalKey?: string): React.ReactNode {
+    renderElement(element: TProtypoElement, optionalKey?: string): React.ReactNode {
         switch (element.tag) {
             case 'text':
                 return element.text;
@@ -225,7 +220,7 @@ class Protypo extends React.Component<IProtypoProps> {
         }
     }
 
-    renderElements(elements: IProtypoElement[], keyPrefix?: string): React.ReactNode[] {
+    renderElements(elements: TProtypoElement[], keyPrefix?: string): React.ReactNode[] {
         if (!elements) {
             return null;
         }
@@ -255,7 +250,7 @@ class Protypo extends React.Component<IProtypoProps> {
         this._title = null;
         this._errors = [];
 
-        const body = this.renderElements(this.props.payload);
+        const body = this.renderElements(this.props.content);
         const head = this.renderHeading();
         const children = [
             this._errors.length ? (
@@ -298,7 +293,8 @@ class Protypo extends React.Component<IProtypoProps> {
     navigatePage: propTypes.func.isRequired,
     navigate: propTypes.func.isRequired,
     menuPush: propTypes.func.isRequired,
-    vde: propTypes.bool
+    resolveSource: propTypes.func.isRequired,
+    renderElements: propTypes.func.isRequired
 };
 
 export default Protypo;

@@ -19,7 +19,7 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { alertShow } from 'modules/content/actions';
 
-import Backup, { IBackupProps } from 'components/Main/Backup';
+import Backup from 'components/Main/Backup';
 import { IStoredAccount } from 'genesis/storage';
 
 export interface IBackupProps {
@@ -35,7 +35,7 @@ interface IBackupDispatch {
     alertShow: typeof alertShow;
 }
 
-const BackupContainer: React.SFC<IBackupProps> = (props) => (
+const BackupContainer: React.SFC<IBackupProps & IBackupState & IBackupDispatch> = (props) => (
     <Backup {...props} />
 );
 

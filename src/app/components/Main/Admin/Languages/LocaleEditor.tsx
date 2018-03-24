@@ -23,7 +23,6 @@ import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Validation from 'components/Validation';
 
 export interface ILocaleEditorProps {
-    vde?: boolean;
     contractName: string;
     translation?: string;
     translations: {
@@ -85,7 +84,7 @@ const LocaleEditor: React.SFC<ILocaleEditorProps & InjectedIntlProps> = (props) 
     };
 
     return (
-        <ValidatedContractForm vde={props.vde} className="flex-col flex-stretch" contractName={props.contractName} mapContractParams={props.mapContractParams} onExec={props.onExec}>
+        <ValidatedContractForm className="flex-col flex-stretch" contractName={props.contractName} mapContractParams={props.mapContractParams} onExec={props.onExec}>
             <Validation.components.ValidatedFormGroup for="name">
                 <label htmlFor="name">
                     <FormattedMessage id="admin.languages.name" defaultMessage="Name" />
@@ -120,7 +119,7 @@ const LocaleEditor: React.SFC<ILocaleEditorProps & InjectedIntlProps> = (props) 
                     <FormattedMessage id="admin.save" defaultMessage="Save" />
                 </Validation.components.ValidatedSubmit>
                 <Button bsStyle="link" onClick={props.onNewLocale}>
-                    <FormattedMessage id="admin.languages.add" defaultMessage="Add localization" />
+                    <FormattedMessage id="admin.languages.create" defaultMessage="Add localization" />
                 </Button>
             </div>
         </ValidatedContractForm>

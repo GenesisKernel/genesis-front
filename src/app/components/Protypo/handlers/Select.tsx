@@ -84,12 +84,15 @@ const Select: React.SFC<ISelectProps> = (props, context: ISelectContext) => {
         });
     }
 
+    const defaultValue = (props.value && options.find(l => l.value === props.value)) ?
+        props.value : null;
+
     return (
         <Validation.components.ValidatedSelect
             className={[props.class, props.className].join(' ')}
             name={props.name}
             validators={compiledValidators}
-            defaultValue={props.value || (options && options.length && options[0].value)}
+            defaultValue={defaultValue || (options && options.length && options[0].value)}
         >
             {options.map((l, index) => (
                 <option key={index} value={l.value}>

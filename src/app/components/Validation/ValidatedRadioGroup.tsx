@@ -51,13 +51,13 @@ export default class ValidatedRadioGroup extends React.Component<IValidatedRadio
 
     componentDidMount() {
         if (this.context.form) {
-            (this.context.form as ValidatedForm)._registerElement(this.props.name, this);
+            (this.context.form as ValidatedForm)._registerElement(this);
         }
     }
 
     componentWillUnmount() {
         if (this.context.form) {
-            (this.context.form as ValidatedForm)._unregisterElement(this.props.name);
+            (this.context.form as ValidatedForm)._unregisterElement(this);
         }
     }
 
