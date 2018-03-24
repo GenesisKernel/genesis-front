@@ -19,9 +19,10 @@ import { resolveHandler, resolveFunction } from 'components/Protypo';
 import * as propTypes from 'prop-types';
 import api from 'lib/api';
 import contextDefinitions from './contexts';
+import { TProtypoElement } from 'genesis/protypo';
+import { IValidationResult } from 'components/Validation/ValidatedForm';
 
 import Heading from 'components/Heading';
-import { IValidationResult } from 'components/Validation/ValidatedForm';
 import ToolButton, { IToolButtonProps } from 'components/Protypo/components/ToolButton';
 
 export interface IProtypoProps {

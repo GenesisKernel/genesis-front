@@ -20,6 +20,7 @@ import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse, IHistoryResponse } from 'lib/api';
 import { findTagById, resolveTagHandler, Properties, generateId, setIds, CodeGenerator, convertToTreeData, getConstructorTemplate } from 'lib/constructor';
+import { TProtypoElement } from 'genesis/protypo';
 
 export type State = {
     readonly pending: boolean;

@@ -37,7 +37,7 @@ export const getInterface = actionCreator.async<void, IInterfacesResponse, strin
 // Constructor
 
 export const getPageTreeCode = actionCreator.async<{ code: string }, { pageTreeCode: any }, string>('GET_PAGE_TREE_CODE');
-export const getPageTree = actionCreator.async<{ id: string, name: string }, { page: { name: string, tree: IProtypoElement[], error?: string } }, string>('GET_PAGE_TREE');
+export const getPageTree = actionCreator.async<{ id: string, name: string }, { page: { name: string, tree: TProtypoElement[], error?: string } }, string>('GET_PAGE_TREE');
 export const changePage = actionCreator<{ text?: string, class?: string; name?: string; source?: string; align?: string; transform?: string; wrap?: string, color?: string; btn?: string; width?: string; ratio?: string; condition?: string; canDropPosition?: string; tagID: string, pageID: string }>('CHANGE_PAGE');
 export const setTagCanDropPosition = actionCreator<{ tagID: string, pageID: string, position: string }>('SET_TAG_CAN_DROP_POSITION');
 export const addTag = actionCreator<{ tag: any, pageID: string, destinationTagID?: string, position?: string }>('ADD_TAG');

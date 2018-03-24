@@ -742,7 +742,7 @@ class Tag {
 
     protected editProps = ['class', 'align', 'transform', 'wrap', 'color'];
 
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         this.element = element;
     }
     setOffset(offset: number): void {
@@ -1085,7 +1085,7 @@ class Input extends Tag {
 }
 
 class RadioGroup extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'RadioGroup';
         this.canHaveChildren = false;
@@ -1111,7 +1111,7 @@ class RadioGroup extends Tag {
 }
 
 class DBFind extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'DBFind';
         this.canHaveChildren = false;
@@ -1136,7 +1136,7 @@ class DBFind extends Tag {
 }
 
 class If extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'If';
         this.canHaveChildren = true;
@@ -1197,7 +1197,7 @@ class If extends Tag {
 }
 
 class ElseIf extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'ElseIf';
         this.canHaveChildren = true;
@@ -1241,7 +1241,7 @@ class ElseIf extends Tag {
 }
 
 class Else extends Tag {
-    constructor(element: IProtypoElement) {
+    constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Else';
         this.canHaveChildren = true;

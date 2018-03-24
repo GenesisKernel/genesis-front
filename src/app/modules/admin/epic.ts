@@ -338,7 +338,7 @@ export const moveTreeTagEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.moveTreeTag)
         .flatMap(action => {
             const state = store.getState();
-            let pageTree = state.admin.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.admin.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
+            let pageTree = state.admin.tabs.data['interfaceConstructor' + action.payload.pageID] && state.admin.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
 
             let movedTag = _.cloneDeep(findTagById(pageTree, action.payload.tagID));
             let tagTreeNewPosition = _.cloneDeep(findTagById(action.payload.treeData, action.payload.tagID));
@@ -383,16 +383,13 @@ export const moveTreeTagEpic: Epic<Action, IRootState> =
                     tag: movedTag.el,
                     destinationTagID,
                     position,
-                    pageID: action.payload.pageID,
-                    vde: action.payload.vde
+                    pageID: action.payload.pageID
                 })),
                 Observable.of(actions.saveConstructorHistory({
-                    pageID: action.payload.pageID,
-                    vde: action.payload.vde
+                    pageID: action.payload.pageID
                 })),
                 Observable.of(actions.generatePageTemplate({
-                    pageID: action.payload.pageID,
-                    vde: action.payload.vde
+                    pageID: action.payload.pageID
                 }))
             );
         });

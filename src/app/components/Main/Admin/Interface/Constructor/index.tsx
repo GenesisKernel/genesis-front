@@ -19,7 +19,6 @@ import styled from 'styled-components';
 
 import Protypo from 'containers/Widgets/Protypo';
 import Layout from './Layout';
-import EditPage from 'components/Main/Admin/Interface/EditPage';
 
 import TabView from 'components/TabView';
 
@@ -144,26 +143,26 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                         wrapperClassName="g-fullheight flex-col"
                         paneClassName="g-fullheight"
                         tabsClassName="nav-tabs-dark nav-justified"
-                        tabs={[ 'Objects', 'Search', 'Tree' ]}
+                        tabs={['Objects', 'Search', 'Tree']}
                     >
-                            <SourceElements search={false}/>
-                            <SourceElements search={true}/>
-                            <Tree
-                                treeData={this.state.treeData}
-                                onChange={(treeData: any) => { this.setState({treeData}); }}
-                                onMoveNode={(args) => {
+                        <SourceElements search={false} />
+                        <SourceElements search={true} />
+                        <Tree
+                            treeData={this.state.treeData}
+                            onChange={(treeData: any) => { this.setState({ treeData }); }}
+                            onMoveNode={(args) => {
                                 this.props.moveTreeTag({
                                     treeData: this.state.treeData,
                                     tagID: args.node.id
                                 });
                             }}
-                                scaffoldBlockPxWidth={10}
-                                canDrag={(node: any) => { return node.node.canMove; }}
-                                canDrop={(node: any) => { return node.nextParent ? node.nextParent.canDrop : true; /*alert(JSON.stringify(node)); return node.node.canDrop;*/ }}
-                                innerStyle={{padding: '15px 0', backgroundColor: '#465669', color: '#FFFFFF' }}
-                                theme={TreeTheme}
-                                generateNodeProps={({ node, path }) => ({
-                                title:  (
+                            scaffoldBlockPxWidth={10}
+                            canDrag={(node: any) => { return node.node.canMove; }}
+                            canDrop={(node: any) => { return node.nextParent ? node.nextParent.canDrop : true; /*alert(JSON.stringify(node)); return node.node.canDrop;*/ }}
+                            innerStyle={{ padding: '15px 0', backgroundColor: '#465669', color: '#FFFFFF' }}
+                            theme={TreeTheme}
+                            generateNodeProps={({ node, path }) => ({
+                                title: (
                                     <span
                                         onClick={
                                             () => {
@@ -188,7 +187,7 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                                     </button>
                                 ]
                             })}
-                            />
+                        />
 
                     </TabView>
                 </div>
@@ -199,13 +198,13 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                                 className={this.props.canUndo ? 'btn-container btn-container_active' : 'btn-container btn-container_disabled'}
                                 onClick={this.props.undo}
                             >
-                                <i className="site-icon-undo site-icon_big"/>
+                                <i className="site-icon-undo site-icon_big" />
                             </button>
                             <button
                                 className={this.props.canRedo ? 'btn-container btn-container_active' : 'btn-container btn-container_disabled'}
                                 onClick={this.props.redo}
                             >
-                                <i className="site-icon-redo site-icon_big"/>
+                                <i className="site-icon-redo site-icon_big" />
                             </button>
                         </div>
                         <div className="b-instrument-panel__inner pull-right">
@@ -259,7 +258,7 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                     <Layout grid={this.props.grid} addTag={this.props.addTag} moveTag={this.props.moveTag} copyTag={this.props.copyTag}>
                         <Protypo
                             context="page"
-                            payload={this.props.pageTree}
+                            content={this.props.pageTree}
                             editable={true}
                             changePage={this.props.changePage}
                             setTagCanDropPosition={this.props.setTagCanDropPosition}
@@ -281,7 +280,7 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                             changePage={this.props.changePage}
                         />
                     </div>
-                    <EditPage
+                    {/*<EditPage
                         page={this.props.page}
                         pageTemplate={this.props.pageTemplate}
                         menus={this.props.menus}
@@ -290,7 +289,7 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                         canSave={this.props.canSave}
                         navigatePage={this.props.navigatePage}
                         onExec={this.props.onSave}
-                    />
+                    />*/}
                 </div>
             </ConstructorDiv>
         );
