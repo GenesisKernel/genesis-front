@@ -36,6 +36,7 @@ export interface IProtypoContainerProps {
     removeTag?: any;
     selectTag?: any;
     selectedTag?: any;
+    logic?: boolean;
 }
 
 interface IProtypoContainerState {

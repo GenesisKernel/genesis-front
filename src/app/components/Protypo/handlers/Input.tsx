@@ -22,6 +22,7 @@ import StyledComponent from './StyledComponent';
 import Validation from 'components/Validation';
 import { Validator, IValidatorGenerator } from 'components/Validation/Validators';
 import TagWrapper from '../components/TagWrapper';
+import DnDComponent from './DnDComponent';
 
 export interface IInputProps {
     'className'?: string;
@@ -103,6 +104,7 @@ const Input: React.SFC<IInputProps> = (props) => {
                     onClick={onClick}
                     removeTag={removeTag}
                     connectDragSource={connectDragSource}
+                    canMove={true}
                 >
                     <input
                         name={props.name}
@@ -167,3 +169,4 @@ const Input: React.SFC<IInputProps> = (props) => {
 };
 
 export default StyledComponent(Input);
+export const InputDnD = DnDComponent(StyledComponent(Input));

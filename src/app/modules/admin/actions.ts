@@ -35,12 +35,14 @@ export const getPage = actionCreator.async<{ name: string }, { page: IInterfaceP
 export const getInterface = actionCreator.async<void, IInterfacesResponse, string>('GET_INTERFACE');
 
 // Constructor
+
 export const getPageTreeCode = actionCreator.async<{ code: string }, { pageTreeCode: any }, string>('GET_PAGE_TREE_CODE');
-export const getPageTree = actionCreator.async<{ id: string, name: string }, { page: { name: string, tree: TProtypoElement[], error?: string } }, string>('GET_PAGE_TREE');
-export const changePage = actionCreator<{ text?: string, class?: string; align?: string; transform?: string; wrap?: string, color?: string; canDropPosition?: string; tagID: string, pageID: string }>('CHANGE_PAGE');
+export const getPageTree = actionCreator.async<{ id: string, name: string }, { page: { name: string, tree: IProtypoElement[], error?: string } }, string>('GET_PAGE_TREE');
+export const changePage = actionCreator<{ text?: string, class?: string; name?: string; source?: string; align?: string; transform?: string; wrap?: string, color?: string; btn?: string; width?: string; ratio?: string; condition?: string; canDropPosition?: string; tagID: string, pageID: string }>('CHANGE_PAGE');
 export const setTagCanDropPosition = actionCreator<{ tagID: string, pageID: string, position: string }>('SET_TAG_CAN_DROP_POSITION');
 export const addTag = actionCreator<{ tag: any, pageID: string, destinationTagID?: string, position?: string }>('ADD_TAG');
 export const moveTag = actionCreator<{ tag: any, pageID: string, destinationTagID?: string, position?: string }>('MOVE_TAG');
+export const moveTreeTag = actionCreator<{ treeData: any, tagID: string, pageID: string }>('MOVE_TREE_TAG');
 export const copyTag = actionCreator<{ tag: any, pageID: string, destinationTagID?: string, position?: string }>('COPY_TAG');
 export const removeTag = actionCreator<{ tag: any, pageID: string }>('REMOVE_TAG');
 export const selectTag = actionCreator<{ tag: any, pageID: string }>('SELECT_TAG');

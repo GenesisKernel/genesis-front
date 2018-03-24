@@ -19,8 +19,6 @@ import { resolveHandler, resolveFunction } from 'components/Protypo';
 import * as propTypes from 'prop-types';
 import api from 'lib/api';
 import contextDefinitions from './contexts';
-import DnDComponent from './handlers/DnDComponent';
-import { TProtypoElement } from 'genesis/protypo';
 
 import Heading from 'components/Heading';
 import { IValidationResult } from 'components/Validation/ValidatedForm';
@@ -44,6 +42,7 @@ export interface IProtypoProps {
     setTagCanDropPosition?: any;
     selectTag?: any;
     selectedTag?: any;
+    logic?: boolean;
 }
 
 export interface IParamsSpec {
@@ -141,12 +140,9 @@ class Protypo extends React.Component<IProtypoProps> {
                 return element.text;
 
             default:
-                let Handler = resolveHandler(element.tag);
+                const Handler = resolveHandler(element.tag, this.props.editable);
                 const func = resolveFunction(element.tag);
                 if (Handler) {
-                    if (this.props.editable) {
-                        Handler = DnDComponent(Handler);
-                    }
                     const selected = this.props.selectedTag && this.props.selectedTag.id === element.id;
 
                     if (-1 !== contextDefinitions[this.props.context].disabledHandlers.indexOf(element.tag)) {
@@ -154,6 +150,33 @@ class Protypo extends React.Component<IProtypoProps> {
                     }
                     else {
                         const key = optionalKey || (this._lastID++).toString();
+
+                        if (element.tag === 'if') {
+                            return (
+                                <Handler
+                                    {...element.attr}
+                                    key={key}
+                                    id={key}
+                                    tag={element}
+                                    childrenTree={element.children}
+                                    editable={this.props.editable}
+                                    changePage={this.props.changePage}
+                                    setTagCanDropPosition={this.props.setTagCanDropPosition}
+                                    addTag={this.props.addTag}
+                                    moveTag={this.props.moveTag}
+                                    copyTag={this.props.copyTag}
+                                    removeTag={this.props.removeTag}
+                                    selectTag={this.props.selectTag}
+                                    selected={selected}
+                                    logic={this.props.logic}
+                                    tail={this.renderElements(element.tail)}
+                                >
+
+                                    {this.renderElements(element.children)}
+                                </Handler>
+                            );
+                        }
+
                         return (
                             <Handler
                                 {...element.attr}
@@ -170,6 +193,7 @@ class Protypo extends React.Component<IProtypoProps> {
                                 removeTag={this.props.removeTag}
                                 selectTag={this.props.selectTag}
                                 selected={selected}
+                                logic={this.props.logic}
                             >
                                 {this.renderElements(element.children)}
                             </Handler>

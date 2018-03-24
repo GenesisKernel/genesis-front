@@ -18,6 +18,7 @@ import * as React from 'react';
 import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
+import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
 
 export interface IPProps {
@@ -93,6 +94,7 @@ class P extends React.Component<IPProps, IPState> {
                         onClick={this.onClick.bind(this)}
                         removeTag={this.removeTag.bind(this)}
                         connectDragSource={connectDragSource}
+                        canMove={true}
                     >
                     <p
                         className={classes}
@@ -118,3 +120,4 @@ class P extends React.Component<IPProps, IPState> {
 }
 
 export default StyledComponent(P);
+export const PDnD = DnDComponent(StyledComponent(P));

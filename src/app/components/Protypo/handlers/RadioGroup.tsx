@@ -23,6 +23,10 @@ import StyledComponent from './StyledComponent';
 import Validation from 'components/Validation';
 import { Validator } from 'components/Validation/Validators';
 
+import * as classnames from 'classnames';
+import TagWrapper from '../components/TagWrapper';
+import DnDComponent from './DnDComponent';
+
 export interface IRadioGroupProps {
     'className'?: string;
     'class'?: string;
@@ -34,6 +38,24 @@ export interface IRadioGroupProps {
     'validate'?: {
         [validator: string]: string
     };
+
+    // constructor props
+    'editable'?: boolean;
+    'changePage'?: any;
+    'setTagCanDropPosition'?: any;
+    'addTag'?: any;
+    'moveTag'?: any;
+    'copyTag'?: any;
+    'removeTag'?: any;
+    'selectTag'?: any;
+    'selected'?: boolean;
+    'tag'?: any;
+    'canDropPosition'?: string;
+    connectDropTarget?: any;
+    isOver?: boolean;
+    connectDragSource?: any;
+    connectDragPreview?: any;
+    isDragging?: boolean;
 }
 
 interface IRadioGroupContext {
@@ -41,6 +63,72 @@ interface IRadioGroupContext {
 }
 
 const RadioGroup: React.SFC<IRadioGroupProps> = (props, context: IRadioGroupContext) => {
+    const onClick = (e: any) => {
+        e.stopPropagation();
+        props.selectTag({ tag: props.tag });
+    };
+
+    const removeTag = () => {
+        props.removeTag({ tag: props.tag });
+    };
+
+    if (props.editable) {
+        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = props;
+
+        const classes = classnames({
+            [props.class]: true,
+            [props.className]: true,
+            'radio': true,
+            'c-radio': true,
+            'c-radio-nofont': true,
+            'b-selected': props.selected
+        });
+
+        return connectDragPreview(connectDropTarget(
+            <span style={{display: 'block'}}>
+                <TagWrapper
+                    display="block"
+                    selected={props.selected}
+                    canDrop={isOver}
+                    canDropPosition={props.canDropPosition}
+                    onClick={onClick}
+                    removeTag={removeTag}
+                    connectDragSource={connectDragSource}
+                    canMove={true}
+                >
+                    <div className={classes}>
+                        <label>
+                            <input
+                                type="radio"
+                                name="radio"
+                            />
+                            <em className="fa fa-circle" />
+                            Option 1
+                        </label>
+                        <br/>
+                        <label>
+                            <input
+                                type="radio"
+                                name="radio"
+                            />
+                            <em className="fa fa-circle" />
+                            Option 2
+                        </label>
+                        <br/>
+                        <label>
+                            <input
+                                type="radio"
+                                name="radio"
+                            />
+                            <em className="fa fa-circle" />
+                            Option 3
+                        </label>
+                    </div>
+                </TagWrapper>
+            </span>
+        ));
+    }
+
     const compiledValidators: Validator[] = [];
     _.forEach(props.validate, (value, name) => {
         const validator = Validation.validators[name];
@@ -103,3 +191,4 @@ RadioGroup.contextTypes = {
 };
 
 export default StyledComponent(RadioGroup);
+export const RadioGroupDnD = DnDComponent(StyledComponent(RadioGroup));

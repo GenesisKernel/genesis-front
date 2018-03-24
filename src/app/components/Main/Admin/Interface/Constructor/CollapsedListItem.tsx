@@ -31,7 +31,7 @@ export default class CollapsedListItem extends React.Component<ICollapsedListIte
     constructor(props: ICollapsedListItemProps) {
         super(props);
         this.state = {
-            collapsed: false
+            collapsed: true
         };
     }
     render() {

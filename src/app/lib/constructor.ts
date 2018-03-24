@@ -17,24 +17,27 @@
 // tslint:disable
 import { findDOMNode } from 'react-dom';
 import { TProtypoElement } from 'genesis/protypo';
+import * as _ from 'lodash';
 
 let findTagByIdResult: {
     el: any;
     parent: any,
-    parentPosition: number
+    parentPosition: number,
+    tail: boolean
 } = {
         el: null,
         parent: null,
-        parentPosition: 0
+        parentPosition: 0,
+        tail: false
     };
 
 export const findTagById = (el: any, id: string): any => {
     findTagByIdResult.el = null;
-    findNextTagById(el, id, null);
+    findNextTagById(el, id, null, false);
     return findTagByIdResult;
 };
 
-const findNextTagById = (el: any, id: string, parent: any): any => {
+const findNextTagById = (el: any, id: string, parent: any, tail: boolean): any => {
     if (el.id === id) {
         findTagByIdResult.el = el;
         return;
@@ -46,14 +49,18 @@ const findNextTagById = (el: any, id: string, parent: any): any => {
             }
             findTagByIdResult.parent = parent;
             findTagByIdResult.parentPosition = i;
-            findNextTagById(el[i], id, parent);
+            findTagByIdResult.tail = tail;
+            findNextTagById(el[i], id, parent, false);
         }
     }
     if (findTagByIdResult.el) {
         return;
     }
     if (el.children) {
-        findNextTagById(el.children, id, el);
+        findNextTagById(el.children, id, el, false);
+    }
+    if (el.tail) {
+        findNextTagById(el.tail, id, el, true);
     }
 };
 
@@ -71,6 +78,9 @@ export function setIds(children: any[], force: boolean = false) {
         }
         if (tag.children) {
             setIds(tag.children, force);
+        }
+        if (tag.tail) {
+            setIds(tag.tail, force);
         }
     }
 }
@@ -100,39 +110,710 @@ export function OnPasteStripFormatting(elem: any, e: any) {
     }
 }
 
+export function convertToTreeData(data: any, selectedTag?: any): any {
+    let result = [];
+    if (data instanceof Array) {
+        for (const item of data) {
+            let children = null;
+            let subtitle = item.text;
+            if (item.children) {
+                if (item.children.length && item.children[0] && item.children[0].tag === 'text') {
+                    subtitle = _.truncate(item.children[0].text, {
+                        'length': 24,
+                        'separator': /,? +/
+                    });
+                    if (item.children.length > 1) {
+                        children = convertToTreeData([...item.children.slice(1)], selectedTag);
+                    }
+                }
+                else {
+                    children = convertToTreeData(item.children, selectedTag);
+                }
+            }
+
+            if (item.tail) {
+                if (!children) {
+                    children = [];
+                }
+
+                const tail = convertToTreeData(item.tail, selectedTag);
+
+                let tailTreeItem = {
+                    // title: ((item.tag !== 'text') ? item.tag : '') + ' ' + (subtitle ? subtitle : ''),
+                    title: '...',
+                    children: tail,
+                    expanded: true,
+                    id: '',
+                    selected: false,
+                    logic: true,
+                    tag: '',
+                    canMove: false,
+                    canDrop: false
+                };
+
+                children.push(tailTreeItem);
+            }
+
+            let selected = false;
+            if (selectedTag && selectedTag.id === item.id) {
+                selected = true;
+            }
+
+            const Handler = resolveTagHandler(item.tag);
+            if (Handler) {
+                const tagObj = new Handler();
+                let treeItem = {
+                    // title: ((item.tag !== 'text') ? item.tag : '') + ' ' + (subtitle ? subtitle : ''),
+                    title: item.tag + (subtitle ? (': ' + subtitle) : ''),
+                    // subtitle: subtitle,
+                    children: children,
+                    expanded: true,
+                    id: item.id,
+                    selected: selected,
+                    logic: tagObj.isLogic(),
+                    canMove: tagObj.canMove,
+                    canDrop: tagObj.canHaveChildren,
+                    tag: item
+                };
+                result.push(treeItem);
+            }
+        }
+    }
+    return result;
+}
+
+const constructorTemplates: any = {
+    'formWithHeader': {
+        tag: 'div',
+        attr: {
+            'class': 'panel panel-primary'
+        },
+        children: [
+            {
+                tag: 'div',
+                attr: {
+                    'class': 'panel-heading'
+                },
+                children: [
+                    {
+                        tag: 'text',
+                        text: 'Money transfer'
+                    }
+                ]
+            },
+            {
+                tag: 'form',
+                children: [
+                    {
+                        tag: 'div',
+                        attr: {
+                            'class': 'list-group-item'
+                        },
+                        children: [
+                            {
+                                tag: 'div',
+                                attr: {
+                                    'class': 'row df f-valign'
+                                },
+                                children: [
+                                    {
+                                        tag: 'div',
+                                        attr: {
+                                            'class': 'col-md-3 mt-sm text-right'
+                                        },
+                                        children: [
+                                            {
+                                                tag: 'label',
+                                                children: [
+                                                    {
+                                                        tag: 'text',
+                                                        text: 'Input1'
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        tag: 'div',
+                                        attr: {
+                                            'class': 'col-md-9 mc-sm text-left'
+                                        },
+                                        children: [
+                                            {
+                                                tag: 'input',
+                                                attr: {
+                                                    class: 'form-control',
+                                                    name: 'Input3',
+                                                    type: 'text'
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        tag: 'div',
+                        attr: {
+                            'class': 'list-group-item'
+                        },
+                        children: [
+                            {
+                                tag: 'div',
+                                attr: {
+                                    'class': 'row df f-valign'
+                                },
+                                children: [
+                                    {
+                                        tag: 'div',
+                                        attr: {
+                                            'class': 'col-md-3 mt-sm text-right'
+                                        },
+                                        children: [
+                                            {
+                                                tag: 'label',
+                                                children: [
+                                                    {
+                                                        tag: 'text',
+                                                        text: 'Input2'
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        tag: 'div',
+                                        attr: {
+                                            'class': 'col-md-9 mc-sm text-left'
+                                        },
+                                        children: [
+                                            {
+                                                tag: 'input',
+                                                attr: {
+                                                    class: 'form-control',
+                                                    name: 'Input3',
+                                                    type: 'text'
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        tag: 'div',
+                        attr: {
+                            'class': 'list-group-item'
+                        },
+                        children: [
+                            {
+                                tag: 'div',
+                                attr: {
+                                    'class': 'row df f-valign'
+                                },
+                                children: [
+                                    {
+                                        tag: 'div',
+                                        attr: {
+                                            'class': 'col-md-3 mt-sm text-right'
+                                        },
+                                        children: [
+                                            {
+                                                tag: 'label',
+                                                children: [
+                                                    {
+                                                        tag: 'text',
+                                                        text: 'Input3'
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        tag: 'div',
+                                        attr: {
+                                            'class': 'col-md-9 mc-sm text-left'
+                                        },
+                                        children: [
+                                            {
+                                                tag: 'input',
+                                                attr: {
+                                                    class: 'form-control',
+                                                    name: 'Input3',
+                                                    type: 'text'
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        tag: 'div',
+                        attr: {
+                            'class': 'panel-footer text-right'
+                        },
+                        children: [
+                            {
+                                tag: 'button',
+                                attr: {
+                                    'class': 'btn btn-primary',
+                                    contract: 'ContractName'
+                                },
+                                children: [
+                                    {
+                                        tag: 'text',
+                                        text: 'Send'
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+    ,
+    'tableWithHeader': {
+        tag: 'div',
+        attr: {
+            'class': 'panel panel-primary'
+        },
+        children: [
+            {
+                tag: 'div',
+                attr: {
+                    'class': 'panel-heading'
+                },
+                children: [
+                    {
+                        tag: 'text',
+                        text: 'Table block'
+                    }
+                ]
+            },
+            {
+                tag: 'table',
+                attr: {
+                    source: 'test_key'
+                }
+            },
+            {
+                tag: 'div',
+                attr: {
+                    'class': 'panel-footer text-right'
+                },
+                children: [
+                    {
+                        tag: 'button',
+                        attr: {
+                            'class': 'btn btn-primary',
+                            contract: 'ContractName'
+                        },
+                        children: [
+                            {
+                                tag: 'text',
+                                text: 'More'
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+    ,
+    'searchForm': {
+        tag: 'div',
+        attr: {
+            'class': 'panel panel-primary'
+        },
+        children: [
+            {
+                tag: 'form',
+                children: [
+                    {
+                        tag: 'div',
+                        attr: {
+                            'class': 'list-group-item'
+                        },
+                        children: [
+                            {
+                                tag: 'div',
+                                attr: {
+                                    'class': 'row df f-valign'
+                                },
+                                children: [
+                                    {
+                                        tag: 'div',
+                                        attr: {
+                                            'class': 'col-md-1 mt-sm text-right'
+                                        },
+                                        children: [
+                                            {
+                                                tag: 'label',
+                                                attr: {
+                                                    'for': 'Search'
+                                                },
+                                                children: [
+                                                    {
+                                                        tag: 'span',
+                                                        children: [
+                                                            {
+                                                                tag: 'text',
+                                                                text: 'name'
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        tag: 'div',
+                                        attr: {
+                                            'class': 'col-md-11 mc-sm'
+                                        },
+                                        children: [
+                                            {
+                                                tag: 'div',
+                                                attr: {
+                                                    'class': 'input-group'
+                                                },
+                                                children: [
+                                                    {
+                                                        tag: 'input',
+                                                        attr: {
+                                                            class: 'form-control',
+                                                            name: 'Search',
+                                                            type: 'text',
+                                                            value: '#v_Search#'
+                                                        }
+                                                    },
+                                                    {
+                                                        tag: 'div',
+                                                        attr: {
+                                                            'class': 'input-group-btn'
+                                                        },
+                                                        children: [
+                                                            {
+                                                                tag: 'button',
+                                                                attr: {
+                                                                    'class': 'btn btn-default',
+                                                                    page: 'roles_list',
+                                                                    pageparams: {
+                                                                        isSearch: {
+                                                                            text: '1',
+                                                                            type: 'text'
+                                                                        },
+                                                                        v_Search: {
+                                                                            params: [
+                                                                                'Search'
+                                                                            ],
+                                                                            type: 'Val'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                children: [
+                                                                    {
+                                                                        tag: 'em',
+                                                                        attr: {
+                                                                            'class': 'fa fa-search'
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        tag: 'div',
+                        attr: {
+                            'class': 'list-group-item'
+                        },
+                        children: [
+                            {
+                                tag: 'table',
+                                attr: {
+                                    /*columns: [
+                                        {
+                                            Name: 'custom_id',
+                                            Title: '$id$'
+                                        },
+                                        {
+                                            Name: 'custom_name',
+                                            Title: '$name$'
+                                        },
+                                        {
+                                            Name: 'custom_type',
+                                            Title: '$type$'
+                                        },
+                                        {
+                                            Name: 'custom_date',
+                                            Title: '$created$ / $deleted$'
+                                        },
+                                        {
+                                            Name: 'custom_status',
+                                            Title: '$status$'
+                                        },
+                                        {
+                                            Name: 'custom_creator',
+                                            Title: '$creator$'
+                                        },
+                                        {
+                                            Name: 'actions',
+                                            Title: '$actions$'
+                                        }
+                                    ],*/
+                                    columns: '$id$=custom_id,$name$=custom_name,$type$=custom_type,$created$ / $deleted$=custom_date,$status$=custom_status,$creator$=custom_creator,$actions$=actions',
+                                    source: 'src_roles_list'
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        tag: 'div',
+                        attr: {
+                            'class': 'panel-footer clearfix'
+                        },
+                        children: [
+                            {
+                                tag: 'div',
+                                attr: {
+                                    'class': 'pull-right'
+                                },
+                                children: [
+                                    {
+                                        tag: 'button',
+                                        attr: {
+                                            'class': 'btn btn-primary',
+                                            page: 'roles_create'
+                                        },
+                                        children: [
+                                            {
+                                                tag: 'text',
+                                                text: 'create'
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    'radioPanel': {
+        tag: 'form',
+        attr: {
+            'class': 'panel panel-primary'
+        },
+        children: [
+            {
+                tag: 'div',
+                attr: {
+                    'class': 'panel-heading'
+                },
+                children: [
+                    {
+                        tag: 'div',
+                        attr: {
+                            'class': 'panel-title'
+                        },
+                        children: [
+                            {
+                                tag: 'text',
+                                text: 'Payment'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                tag: 'div',
+                attr: {
+                    'class': 'panel-body'
+                },
+                children: [
+                    {
+                        tag: 'div',
+                        attr: {
+                            'class': 'form-group'
+                        },
+                        children: [
+                            {
+                                tag: 'label',
+                                children: [
+                                    {
+                                        tag: 'text',
+                                        text: 'Payment methods'
+                                    }
+                                ]
+                            },
+                            {
+                                tag: 'radiogroup',
+                                attr: {
+                                    name: 'Payments',
+                                    namecolumn: 'type',
+                                    source: 'payment',
+                                    value: '#value_payment_method#',
+                                    valuecolumn: 'id'
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                tag: 'div',
+                attr: {
+                    'class': 'panel-footer text-center'
+                },
+                children: [
+                    {
+                        tag: 'button',
+                        attr: {
+                            alert: {
+                                text: 'Select the payment method'
+                            },
+                            'class': 'btn btn-default mr-lg',
+                            contract: 'ContractName'
+                        },
+                        children: [
+                            {
+                                tag: 'text',
+                                text: 'Cancel'
+                            }
+                        ]
+                    },
+                    {
+                        tag: 'button',
+                        attr: {
+                            'class': 'btn btn-primary',
+                            contract: 'ContractName',
+                            page: 'proof_payment'
+                        },
+                        children: [
+                            {
+                                tag: 'text',
+                                text: 'Payment'
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+};
+
+export function getConstructorTemplate(name: string) {
+    let template = _.cloneDeep(constructorTemplates[name]);
+    template.id = generateId();
+    if (template.children) {
+        setIds(template.children, true);
+    }
+    return template;
+}
+
 class Tag {
     protected element: TProtypoElement;
     protected tagName: string = 'Tag';
-    protected canHaveChildren: boolean = true;
+    public canHaveChildren: boolean = true;
+    public canMove: boolean = true;
+    public canCopy: boolean = true;
+    public canChangePosition: boolean = true;
+    protected offset: number = 0;
+    protected generateTextElement = true;
+    protected logic = false;
 
     protected attr: any = {
         'class': 'Class'
     };
 
-    constructor(element: TProtypoElement) {
+    protected editProps = ['class', 'align', 'transform', 'wrap', 'color'];
+
+    constructor(element: IProtypoElement) {
         this.element = element;
+    }
+    setOffset(offset: number): void {
+        this.offset = offset;
+    }
+    renderOffset(): string {
+        return Array(this.offset + 1).join(' ');
     }
     renderCode(): string {
         let result: string = this.tagName + '(';
         let params = [];
         for (let attr in this.attr) {
             if (this.attr.hasOwnProperty(attr)) {
-                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
+                let value = this.element && this.element.attr && this.element.attr[attr] || '';
+                if (value) {
+                    params.push(this.attr[attr] + ': ' + value);
+                }
             }
         }
 
         let body = this.renderChildren();
-        if (body.length > 0) {
-            params.push('Body: ' + body);
+        if (this.element.children && this.element.children.length === 1) {
+            params.push('Body:\n' + body);
         }
+
+        if (this.element && this.element.attr) {
+            if (this.element.attr.params) {
+                params.push(this.getParamsStr('Params', this.element.attr.params));
+            }
+            if (this.element.attr.pageparams) {
+                params.push(this.getParamsStr('PageParams', this.element.attr.pageparams));
+            }
+            if (this.element.attr.columns) {
+                params.push('Columns: "' + this.element.attr.columns + '"');
+            }
+        }
+
         result += params.join(', ');
-        result += ')';
+        result += ((this.element.children && this.element.children.length === 1) ? ('\n' + this.renderOffset()) : '') + ')';
+
+        if (this.element && this.element.attr && this.element.attr.validate) {
+            result += this.getValidationParams(this.element.attr.validate);
+        }
+
         if (this.element && this.element.attr) {
             if (this.element.attr.style) {
                 result += '.Style(' + this.element.attr.style + ')';
             }
+            if (this.element.attr.alert && typeof this.element.attr.alert === 'object') {
+                let alertParamsArr = [];
+                if (this.element.attr.alert.text) {
+                    alertParamsArr.push('Text: ' + this.element.attr.alert.text);
+                }
+                if (this.element.attr.alert.confirmbutton) {
+                    alertParamsArr.push('ConfirmButton: ' + this.element.attr.alert.confirmbutton);
+                }
+                if (this.element.attr.alert.cancelbutton) {
+                    alertParamsArr.push('CancelButton: ' + this.element.attr.alert.cancelbutton);
+                }
+                if (this.element.attr.alert.icon) {
+                    alertParamsArr.push('Icon: ' + this.element.attr.alert.icon);
+                }
+                result += '.Alert(' + alertParamsArr.join(', ') + ')';
+            }
         }
-        return result + ' ';
+
+        if (this.element.children && this.element.children.length > 1) {
+            result += ' {\n' + body + '\n' + this.renderOffset() + '}';
+        }
+
+        return this.renderOffset() + result;
     }
     renderChildren(): string {
         if (!this.element.children) {
@@ -141,11 +822,12 @@ class Tag {
         let result = this.element.children.map((element, index) => {
             switch (element.tag) {
                 case 'text':
-                    return element.text;
+                    return this.renderOffset() + ' ' + element.text;
                 default:
                     const Handler = resolveTagHandler(element.tag);
                     if (Handler) {
                         let tag = new Handler(element);
+                        tag.setOffset(this.offset + 1);
                         return tag.renderCode();
                     }
                     return '';
@@ -162,11 +844,11 @@ class Tag {
         return {
             tag: this.tagName.toLowerCase(),
             id: generateId(),
-            children: [{
+            children: this.generateTextElement ? [{
                 tag: 'text',
                 text: text,
                 id: generateId()
-            }]
+            }] : []
         };
     }
 
@@ -182,10 +864,15 @@ class Tag {
 
     getParamsArrStr(name: string, obj: { Name: string, Title: string }[]) {
         let paramsArr = [];
-        for (let param of obj) {
-            paramsArr.push(param.Name + '=' + param.Title);
+        if (name && obj) {
+            for (let param of obj) {
+                if (param && param.Title) {
+                    paramsArr.push(param.Title + '=' + param.Name);
+                }
+            }
+            return name + ': ' + '"' + paramsArr.join(',') + '"';
         }
-        return name + ': ' + '"' + paramsArr.join(',') + '"';
+        return '';
     }
 
     getValidationParams(obj: Object) {
@@ -218,6 +905,14 @@ class Tag {
     getCanHaveChildren() {
         return this.canHaveChildren;
     }
+
+    hasEditProp(prop: string): boolean {
+        return this.editProps.indexOf(prop) !== -1;
+    }
+
+    isLogic(): boolean {
+        return this.logic;
+    }
 }
 
 class Button extends Tag {
@@ -230,56 +925,7 @@ class Button extends Tag {
             'page': 'Page',
             'contract': 'Contract'
         };
-    }
-
-    renderCode(): string {
-        let result: string = this.tagName + '(';
-        let params = [];
-        for (let attr in this.attr) {
-            if (this.attr.hasOwnProperty(attr)) {
-                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
-            }
-        }
-        let body = this.renderChildren();
-        if (body.length > 0) {
-            params.push('Body: ' + body);
-        }
-        if (this.element && this.element.attr) {
-            if (this.element.attr.params) {
-                params.push(this.getParamsStr('Params', this.element.attr.params));
-            }
-            if (this.element.attr.pageparams) {
-
-                params.push(this.getParamsStr('PageParams', this.element.attr.pageparams));
-
-            }
-        }
-
-        result += params.join(', ');
-        result += ')';
-        if (this.element && this.element.attr) {
-            if (this.element.attr.style) {
-                result += '.Style(' + this.element.attr.style + ')';
-            }
-            if (this.element.attr.alert && typeof this.element.attr.alert === 'object') {
-                let alertParamsArr = [];
-                if (this.element.attr.alert.text) {
-                    alertParamsArr.push('Text: ' + this.element.attr.alert.text);
-                }
-                if (this.element.attr.alert.confirmbutton) {
-                    alertParamsArr.push('ConfirmButton: ' + this.element.attr.alert.confirmbutton);
-                }
-                if (this.element.attr.alert.cancelbutton) {
-                    alertParamsArr.push('CancelButton: ' + this.element.attr.alert.cancelbutton);
-                }
-                if (this.element.attr.alert.icon) {
-                    alertParamsArr.push('Icon: ' + this.element.attr.alert.icon);
-                }
-                result += '.Alert(' + alertParamsArr.join(', ') + ')';
-            }
-        }
-
-        return result + ' ';
+        this.editProps = ['class', 'btn', 'align', 'transform', 'wrap'];
     }
 }
 
@@ -294,6 +940,7 @@ class Div extends Tag {
     constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Div';
+        this.generateTextElement = false;
     }
 }
 
@@ -322,6 +969,7 @@ class Form extends Tag {
     constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Form';
+        this.generateTextElement = false;
     }
 }
 
@@ -340,6 +988,7 @@ class Table extends Tag {
         this.attr = {
             'source': 'Source'
         };
+        this.editProps = ['class'];
     }
 
     generateTreeJSON(text: string): any {
@@ -348,45 +997,9 @@ class Table extends Tag {
             id: generateId(),
             attr: {
                 source: 'keysStr',
-                columns: [
-                    {
-                        Name: 'id',
-                        Title: 'KEY_ID'
-                    },
-                    {
-                        Name: 'amount',
-                        Title: 'MONEY'
-                    }
-                ]
+                columns: 'KEY_ID=id,MONEY=amount'
             }
         };
-    }
-
-    renderCode(): string {
-        let result: string = this.tagName + '(';
-        let params = [];
-
-        for (let attr in this.attr) {
-            if (this.attr.hasOwnProperty(attr)) {
-                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
-            }
-        }
-
-        if (this.element && this.element.attr) {
-            if (this.element.attr.columns) {
-                params.push(this.getParamsArrStr('Columns', this.element.attr.columns));
-            }
-        }
-
-        result += params.join(', ');
-        result += ')';
-        if (this.element && this.element.attr) {
-            if (this.element.attr.style) {
-                result += '.Style(' + this.element.attr.style + ')';
-            }
-        }
-
-        return result + ' ';
     }
 }
 
@@ -400,6 +1013,7 @@ class Image extends Tag {
             'src': 'Src',
             'alt': 'Alt'
         };
+        this.editProps = ['class', 'src', 'alt'];
     }
 
     generateTreeJSON(text: string): any {
@@ -408,31 +1022,9 @@ class Image extends Tag {
             id: generateId(),
             attr: {
                 alt: 'Image',
-                src: 'http://apla.readthedocs.io/en/latest/_images/logo.png'
+                src: '/img/dummy.png'
             }
         };
-    }
-
-    renderCode(): string {
-        let result: string = this.tagName + '(';
-        let params = [];
-        for (let attr in this.attr) {
-            if (this.attr.hasOwnProperty(attr)) {
-                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
-            }
-        }
-        let body = this.renderChildren();
-        if (body.length > 0) {
-            params.push('Body: ' + body);
-        }
-        result += params.join(', ');
-        result += ')';
-        if (this.element && this.element.attr) {
-            if (this.element.attr.style) {
-                result += '.Style(' + this.element.attr.style + ')';
-            }
-        }
-        return result + ' ';
     }
 }
 
@@ -448,6 +1040,7 @@ class ImageInput extends Tag {
             'ratio': 'Ratio',
             'width': 'Width'
         };
+        this.editProps = ['class', 'ratio', 'width'];
     }
 
     generateTreeJSON(text: string): any {
@@ -461,29 +1054,6 @@ class ImageInput extends Tag {
                 width: '100'
             }
         };
-    }
-
-    renderCode(): string {
-        let result: string = this.tagName + '(';
-        let params = [];
-        for (let attr in this.attr) {
-            if (this.attr.hasOwnProperty(attr)) {
-                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
-            }
-        }
-        let body = this.renderChildren();
-        if (body.length > 0) {
-            params.push('Body: ' + body);
-        }
-
-        result += params.join(', ');
-        result += ')';
-        if (this.element && this.element.attr) {
-            if (this.element.attr.style) {
-                result += '.Style(' + this.element.attr.style + ')';
-            }
-        }
-        return result + ' ';
     }
 }
 
@@ -499,6 +1069,58 @@ class Input extends Tag {
             'type': 'Type',
             'value': 'Value'
         };
+        this.editProps = ['class', 'align', 'transform', 'wrap'];
+    }
+
+    generateTreeJSON(text: string): any {
+        return {
+            tag: this.tagName.toLowerCase(),
+            id: generateId(),
+            attr: {
+                name: 'sample image',
+                class: 'form-control'
+            }
+        };
+    }
+}
+
+class RadioGroup extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'RadioGroup';
+        this.canHaveChildren = false;
+        this.attr = {
+            'name': 'Name',
+            'source': 'Source',
+            'namecolumn': 'NameColumn',
+            'valuecolumn': 'ValueColumn',
+            'value': 'Value',
+            'class': 'Class'
+        };
+    }
+
+    generateTreeJSON(text: string): any {
+        return {
+            tag: this.tagName.toLowerCase(),
+            id: generateId(),
+            attr: {
+                name: 'sample radio'
+            }
+        };
+    }
+}
+
+class DBFind extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'DBFind';
+        this.canHaveChildren = false;
+        this.logic = true;
+        this.attr = {
+            'name': 'Name',
+            'source': 'Source'
+        };
+        this.editProps = ['name', 'source'];
     }
 
     generateTreeJSON(text: string): any {
@@ -511,33 +1133,149 @@ class Input extends Tag {
             }
         };
     }
+}
+
+class If extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'If';
+        this.canHaveChildren = true;
+        this.logic = true;
+        this.attr = {
+            'condition': 'Condition'
+        };
+        this.editProps = ['condition'];
+    }
 
     renderCode(): string {
         let result: string = this.tagName + '(';
-        let params = [];
-        let body = this.renderChildren();
-        if (body.length > 0) {
-            params.push('Body: ' + body);
-        }
-        for (let attr in this.attr) {
-            if (this.attr.hasOwnProperty(attr)) {
-                params.push(this.attr[attr] + ': ' + (this.element && this.element.attr && this.element.attr[attr] || ''));
-            }
-        }
 
-        result += params.join(', ');
+        if (this.element && this.element.attr && this.element.attr.condition) {
+            result += this.element.attr.condition;
+        }
         result += ')';
 
-        if (this.element && this.element.attr && this.element.attr.validate) {
-            result += this.getValidationParams(this.element.attr.validate);
+        let body = this.renderChildren();
+        result += '{\n';
+        if (this.element.children && this.element.children.length) {
+            result += body + '\n' + this.renderOffset();
+        }
+        result += '}';
+
+        if (this.element.tail && this.element.tail.length) {
+            result += this.element.tail.map((element, index) => {
+                const TailHandler = resolveTagHandler(element.tag);
+                if (TailHandler) {
+                    let tag = new TailHandler(element);
+                    // tag.setOffset(this.offset + 1);
+                    return tag.renderCode();
+                }
+                return '';
+            }).join('');
         }
 
-        if (this.element && this.element.attr) {
-            if (this.element.attr.style) {
-                result += '.Style(' + this.element.attr.style + ')';
-            }
+        return this.renderOffset() + result;
+    }
+
+    generateTreeJSON(text: string): any {
+        return {
+            tag: this.tagName.toLowerCase(),
+            id: generateId(),
+            attr: {
+                condition: '#value#'
+            },
+            children: [],
+            tail: [
+                {
+                    tag: 'else',
+                    id: generateId(),
+                    children: []
+                }
+            ]
+        };
+    }
+}
+
+class ElseIf extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'ElseIf';
+        this.canHaveChildren = true;
+        this.canMove = false;
+        this.canCopy = false;
+        this.canChangePosition = false;
+        this.logic = true;
+        this.attr = {
+            'condition': 'Condition'
+        };
+        this.editProps = ['condition'];
+    }
+
+    renderCode(): string {
+        let result: string = '.' + this.tagName + '(';
+
+        if (this.element && this.element.attr && this.element.attr.condition) {
+            result += this.element.attr.condition;
         }
-        return result + ' ';
+
+        result += ')';
+
+        let body = this.renderChildren();
+        result += '{\n';
+        if (this.element.children && this.element.children.length) {
+            result += body + '\n' + this.renderOffset();
+        }
+        result += '}';
+        return this.renderOffset() + result;
+    }
+
+    generateTreeJSON(text: string): any {
+        return {
+            tag: this.tagName.toLowerCase(),
+            id: generateId(),
+            attr: {
+                condition: '#value#'
+            }
+        };
+    }
+}
+
+class Else extends Tag {
+    constructor(element: IProtypoElement) {
+        super(element);
+        this.tagName = 'Else';
+        this.canHaveChildren = true;
+        this.canMove = false;
+        this.canCopy = false;
+        this.canChangePosition = false;
+        this.logic = true;
+        this.attr = {
+        };
+        this.editProps = [];
+    }
+
+    renderCode(): string {
+
+        if (this.element.children && this.element.children.length === 0) {
+            return '';
+        }
+
+        let result: string = '.' + this.tagName;
+        result += '{\n';
+        let body = this.renderChildren();
+
+        if (this.element.children && this.element.children.length) {
+            result += body + '\n' + this.renderOffset();
+        }
+        result += '}';
+        return this.renderOffset() + result;
+    }
+
+    generateTreeJSON(text: string): any {
+        return {
+            tag: this.tagName.toLowerCase(),
+            id: generateId()
+        };
     }
 }
 
@@ -569,7 +1307,7 @@ export class CodeGenerator {
 const tagHandlers = {
     'button': Button,
     //     'data': Data,
-    //     'dbfind': DBFind,
+    'dbfind': DBFind,
     'div': Div,
     'em': Em,
     //     'forlist': ForList,
@@ -583,11 +1321,14 @@ const tagHandlers = {
     //     'menuitem': MenuItem,
     //     'menugroup': MenuGroup,
     'p': P,
-    //     'radiogroup': RadioGroup,
+    'radiogroup': RadioGroup,
     //     'select': Select,
     'span': Span,
     'strong': Strong,
-    'table': Table
+    'table': Table,
+    'if': If,
+    'elseif': ElseIf,
+    'else': Else
 };
 
 export class Properties {
@@ -611,16 +1352,28 @@ export class Properties {
             'info': 'text-info',
             'warning': 'text-warning',
             'danger': 'text-danger'
+        },
+        'btn': {
+            'default': 'btn btn-default',
+            'primary': 'btn btn-primary',
+            'success': 'btn btn-success',
+            'info': 'btn btn-info',
+            'warning': 'btn btn-warning',
+            'danger': 'btn btn-danger',
+            'link': 'btn btn-link',
+            'basic': 'btn'
         }
     };
 
     public getInitial(property: string, tag: any) {
         // alert('getInitial ' + property + (tag && tag.attr && tag.attr.class));
+
         if (tag && tag.attr && tag.attr.class) {
+            const classes = ' ' + tag.attr.class + ' ';
             if (this.propertiesClasses[property]) {
                 for (let value in this.propertiesClasses[property]) {
                     if (this.propertiesClasses[property].hasOwnProperty(value)) {
-                        if (tag.attr.class.indexOf(this.propertiesClasses[property][value]) >= 0) {
+                        if (classes.indexOf(' ' + this.propertiesClasses[property][value] + ' ') >= 0) {
                             return value;
                         }
                     }
@@ -638,6 +1391,7 @@ export class Properties {
             case 'transform':
             case 'wrap':
             case 'color':
+            case 'btn':
                 for (let prop in this.propertiesClasses[property]) {
                     if (this.propertiesClasses[property].hasOwnProperty(prop)) {
                         classes = classes.replace(this.propertiesClasses[property][prop], '');
@@ -647,6 +1401,19 @@ export class Properties {
                     classes += ' ' + this.propertiesClasses[property][value];
                 }
                 break;
+            /*
+            case 'btn':
+                for (let prop in this.propertiesClasses[property]) {
+                    if (this.propertiesClasses[property].hasOwnProperty(prop)) {
+                        classes = classes.replace(this.propertiesClasses[property][prop], '');
+                    }
+                }
+                classes = classes.replace('btn', '');
+                if (this.propertiesClasses[property][value]) {
+                    classes += ' btn ' + this.propertiesClasses[property][value];
+                }
+                break;
+                */
             default:
                 break;
         }
@@ -693,6 +1460,10 @@ export function getDropPosition(monitor: any, component: any, tag: any) {
     const Handler = resolveTagHandler(tag.tag);
     if (Handler) {
         tagObj = new Handler();
+    }
+
+    if (!tagObj.canChangePosition && tagObj.canHaveChildren) {
+        return 'inside';
     }
 
     if (hoverClientY < gapY || hoverClientX < gapX) {

@@ -18,6 +18,7 @@ import * as React from 'react';
 import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
+import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
 
 export interface IDivProps {
@@ -91,6 +92,7 @@ class Div extends React.Component<IDivProps, IDivState> {
                         onClick={this.onClick.bind(this)}
                         removeTag={this.removeTag.bind(this)}
                         connectDragSource={connectDragSource}
+                        canMove={true}
                     >
                     <div
                         className={classes}
@@ -115,3 +117,4 @@ class Div extends React.Component<IDivProps, IDivState> {
 }
 
 export default StyledComponent(Div);
+export const DivDnD = DnDComponent(StyledComponent(Div));

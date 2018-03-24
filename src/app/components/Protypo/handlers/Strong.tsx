@@ -18,6 +18,7 @@ import * as React from 'react';
 import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
+import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
 
 export interface IStrongProps {
@@ -89,6 +90,7 @@ class Strong extends React.Component<IStrongProps, IStrongState> {
                         onClick={this.onClick.bind(this)}
                         removeTag={this.removeTag.bind(this)}
                         connectDragSource={connectDragSource}
+                        canMove={true}
                     >
                     <strong
                         className={classes}
@@ -114,3 +116,4 @@ class Strong extends React.Component<IStrongProps, IStrongState> {
 }
 
 export default StyledComponent(Strong);
+export const StrongDnD = DnDComponent(StyledComponent(Strong));

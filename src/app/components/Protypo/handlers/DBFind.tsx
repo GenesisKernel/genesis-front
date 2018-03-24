@@ -16,8 +16,11 @@
 
 import * as React from 'react';
 import * as propTypes from 'prop-types';
+import StyledComponent from './StyledComponent';
 
 import Protypo from '../';
+import TagWrapper from '../components/TagWrapper';
+import DnDComponent from './DnDComponent';
 
 export interface IDBFindProps {
     columns: string[];
@@ -25,6 +28,28 @@ export interface IDBFindProps {
     data: string[][];
     name: string;
     source: string;
+
+    'editable'?: boolean;
+    'changePage'?: any;
+    'setTagCanDropPosition'?: any;
+    'addTag'?: any;
+    'moveTag'?: any;
+    'copyTag'?: any;
+    'removeTag'?: any;
+    'selectTag'?: any;
+    'selected'?: boolean;
+    'tag'?: any;
+
+    'canDropPosition'?: string;
+
+    connectDropTarget?: any;
+    isOver?: boolean;
+
+    connectDragSource?: any;
+    connectDragPreview?: any;
+    isDragging?: boolean;
+
+    logic?: boolean;
 }
 
 interface IDBFindContext {
@@ -32,6 +57,42 @@ interface IDBFindContext {
 }
 
 const DBFind: React.SFC<IDBFindProps> = (props, context: IDBFindContext) => {
+
+    if (props.editable) {
+        if (!props.logic) {
+            return null;
+        }
+        const onClick = (e: any) => {
+            e.stopPropagation();
+            props.selectTag({tag: props.tag});
+        };
+
+        const removeTag = () => {
+            props.removeTag({tag: props.tag});
+        };
+
+        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = props;
+
+        return connectDragPreview(connectDropTarget(
+            <span style={{display: 'inline-block'}}>
+                <TagWrapper
+                    display="inline"
+                    selected={props.selected}
+                    canDrop={isOver}
+                    canDropPosition={props.canDropPosition}
+                    onClick={onClick}
+                    removeTag={removeTag}
+                    connectDragSource={connectDragSource}
+                    canMove={true}
+                >
+                    <span style={{'backgroundColor': '#FFCC66'}}>
+                        DBFind
+                    </span>
+                </TagWrapper>
+            </span>
+        ));
+    }
+
     context.protypo.registerSource(props.source, {
         columns: props.columns,
         types: props.types,
@@ -45,3 +106,4 @@ DBFind.contextTypes = {
 };
 
 export default DBFind;
+export const DBFindDnD = DnDComponent(StyledComponent(DBFind));

@@ -74,12 +74,12 @@ export default reducerWithInitialState<State>(initialState)
                     ...tabList.slice(index + 1)
                 ];
             }
-            let item = {
+            let newItem = {
                 id: data.addID,
                 name: data.addName,
                 type: data.addType
             };
-            tabList = tabList.concat(item);
+            tabList = tabList.concat(newItem);
         }
 
         return {

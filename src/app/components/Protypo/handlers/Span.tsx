@@ -18,6 +18,7 @@ import * as React from 'react';
 import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
+import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
 
 export interface ISpanProps {
@@ -93,6 +94,7 @@ class Span extends React.Component<ISpanProps, ISpanState> {
                         onClick={this.onClick.bind(this)}
                         removeTag={this.removeTag.bind(this)}
                         connectDragSource={connectDragSource}
+                        canMove={true}
                     >
                     <span
                         className={classes}
@@ -116,3 +118,4 @@ class Span extends React.Component<ISpanProps, ISpanState> {
 }
 
 export default StyledComponent(Span);
+export const SpanDnD = DnDComponent(StyledComponent(Span));

@@ -25,7 +25,7 @@ import { Observable } from 'rxjs';
 import { IRootState } from 'modules';
 import * as actions from './actions';
 import * as storageActions from 'modules/storage/actions';
-import { setIds } from 'lib/constructor';
+import { setIds, findTagById } from 'lib/constructor';
 
 export const getTableEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getTable.started)
@@ -334,6 +334,69 @@ export const getParameterEpic: Epic<Action, IRootState> =
                 );
         });
 
+export const moveTreeTagEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(actions.moveTreeTag)
+        .flatMap(action => {
+            const state = store.getState();
+            let pageTree = state.admin.tabs.data['interfaceConstructor' + action.payload.pageID + (action.payload.vde ? '-vde' : '')] && state.admin.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
+
+            let movedTag = _.cloneDeep(findTagById(pageTree, action.payload.tagID));
+            let tagTreeNewPosition = _.cloneDeep(findTagById(action.payload.treeData, action.payload.tagID));
+
+            let destinationTagID = null;
+            let position = 'inside';
+
+            if (tagTreeNewPosition.parent === null) {
+                if (tagTreeNewPosition.parentPosition === 0) {
+                    position = 'before';
+                    destinationTagID = pageTree[0].id;
+                }
+                else {
+                    position = 'after';
+                    if (pageTree[tagTreeNewPosition.parentPosition]) {
+                        destinationTagID = pageTree[tagTreeNewPosition.parentPosition].id;
+                    }
+                    else {
+                        destinationTagID = pageTree[tagTreeNewPosition.parentPosition - 1].id;
+                    }
+                }
+            }
+            else {
+                if (tagTreeNewPosition.parent.children.length === 1) {
+                    position = 'inside';
+                    destinationTagID = tagTreeNewPosition.parent.id;
+                }
+                else {
+                    if (tagTreeNewPosition.parentPosition === 0) {
+                        destinationTagID = tagTreeNewPosition.parent.children[1].id;
+                        position = 'before';
+                    }
+                    else {
+                        position = 'after';
+                        destinationTagID = tagTreeNewPosition.parent.children[tagTreeNewPosition.parentPosition - 1].id;
+                    }
+                }
+            }
+
+            return Observable.concat(
+                Observable.of(actions.moveTag({
+                    tag: movedTag.el,
+                    destinationTagID,
+                    position,
+                    pageID: action.payload.pageID,
+                    vde: action.payload.vde
+                })),
+                Observable.of(actions.saveConstructorHistory({
+                    pageID: action.payload.pageID,
+                    vde: action.payload.vde
+                })),
+                Observable.of(actions.generatePageTemplate({
+                    pageID: action.payload.pageID,
+                    vde: action.payload.vde
+                }))
+            );
+        });
+
 export const addTabListEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(storageActions.addTabList)
         .flatMap(action => {
@@ -599,6 +662,7 @@ export default combineEpics(
     getParametersEpic,
     addTabListEpic,
     removeTabListEpic,
+    moveTreeTagEpic,
     exportDataEpic,
     importDataEpic
 );

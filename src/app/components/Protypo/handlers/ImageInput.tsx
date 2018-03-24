@@ -19,6 +19,7 @@ import * as classnames from 'classnames';
 
 import Validation from 'components/Validation';
 import TagWrapper from '../components/TagWrapper';
+import DnDComponent from './DnDComponent';
 
 export interface IInputProps {
     'format'?: string;
@@ -99,6 +100,7 @@ const ImageInput: React.SFC<IInputProps> = (props) => {
                     onClick={onClick}
                     removeTag={removeTag}
                     connectDragSource={connectDragSource}
+                    canMove={true}
                 >
                     <div
                         className={classes}
@@ -127,3 +129,4 @@ const ImageInput: React.SFC<IInputProps> = (props) => {
 };
 
 export default ImageInput;
+export const ImageInputDnD = DnDComponent(ImageInput);

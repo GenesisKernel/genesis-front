@@ -20,8 +20,10 @@ import Panel from './Panel';
 import AlignRadioButtons from './AlignRadioButtons';
 import TransformRadioButtons from './TransformRadioButtons';
 import ColorRadioButtons from './ColorRadioButtons';
+import BtnRadioButtons from './BtnRadioButtons';
 import Switch from './Switch';
-import { getInitialTagValue } from 'lib/constructor';
+import PropertiesInput from './PropertiesInput';
+import { getInitialTagValue, resolveTagHandler } from 'lib/constructor';
 
 interface IPropertiesProps {
     changePage?: any;
@@ -32,124 +34,197 @@ interface IPropertiesState {
 }
 
 export default class Properties extends React.Component<IPropertiesProps, IPropertiesState> {
-    onClassesChange(e: React.ChangeEvent<HTMLInputElement>) {
+    onChange(attr: string, e: React.ChangeEvent<HTMLInputElement>) {
         if (this.props && this.props.tag) {
-            this.props.changePage({class: e.target.value, tagID: this.props.tag.id});
+            this.props.changePage({[attr]: e.target.value, tagID: this.props.tag.id});
         }
     }
 
-    onAlignChange(align: string) {
+    onAttrChange(attr: string, value: string) {
         if (this.props && this.props.tag) {
-            this.props.changePage({align: align, tagID: this.props.tag.id});
-        }
-    }
-
-    onTransformChange(transform: string) {
-        if (this.props && this.props.tag) {
-            this.props.changePage({transform: transform, tagID: this.props.tag.id});
-        }
-    }
-
-    onWrapChange(wrap: string) {
-        if (this.props && this.props.tag) {
-            this.props.changePage({wrap: wrap, tagID: this.props.tag.id});
-        }
-    }
-
-    onColorChange(color: string) {
-        if (this.props && this.props.tag) {
-            this.props.changePage({color: color, tagID: this.props.tag.id});
+            this.props.changePage({[attr]: value, tagID: this.props.tag.id});
         }
     }
 
     render() {
-        return (
-            <Panel title="Properties">
-                <div className="content-wrapper b-panel-light">
-                    <form className="form-horizontal">
-                        <div className="form-group">
-                            <label className="col-xs-3 control-label g-no-padding"><small>Tag</small></label>
-                            <Col xs={9}>
-                                <input type="text" className="form-control input-sm" placeholder="Tag name" value={this.props.tag && this.props.tag.tag || ''} readOnly={true}/>
-                            </Col>
-                        </div>
-                        <div className="form-group">
-                            <label className="col-xs-3 control-label g-no-padding"><small>ID</small></label>
-                            <Col xs={9}>
-                                <input type="text" className="form-control input-sm" placeholder="Element ID" value={this.props.tag && this.props.tag.id || ''} readOnly={true}/>
-                            </Col>
-                        </div>
-                        <div className="form-group">
-                            <label className="col-xs-3 control-label g-no-padding"><small>CSS CLASS</small></label>
-                            <Col xs={9}>
-                                <input type="text" className="form-control input-sm" placeholder="Element Classes" value={this.props.tag && this.props.tag.attr && this.props.tag.attr.class || ''} onChange={this.onClassesChange.bind(this)}/>
-                            </Col>
-                        </div>
-                    </form>
-                </div>
-                <div className="content-wrapper"/>
-                <div className="content-wrapper b-panel-light">
-                    <Row className="g-padding-bottom hidden">
-                        <Col xs={3} className="text-uppercase">
-                            position
-                        </Col>
-                        <Col xs={9}>
-                            <div className="b-position-bullet b-position-bullet_selected"/>
-                            <div className="b-position-bullet b-position-bullet_selected"/>
-                            <div className="b-position-bullet b-position-bullet_selected"/>
-                            <div className="b-position-bullet b-position-bullet_selected"/>
-                            <div className="b-position-bullet b-position-bullet_selected"/>
-                            <div className="b-position-bullet b-position-bullet_selected"/>
-                            <div className="b-position-bullet"/>
-                            <div className="b-position-bullet"/>
-                            <div className="b-position-bullet"/>
-                            <div className="b-position-bullet"/>
-                            <div className="b-position-bullet"/>
-                            <div className="b-position-bullet"/>
-                        </Col>
-                    </Row>
-                    <Row className="g-padding-bottom">
-                        <Col xs={4} className="text-center">
-                            <div className="text-uppercase">
-                                alignment
-                            </div>
-                            <AlignRadioButtons initialValue={(getInitialTagValue('align', this.props && this.props.tag))} onSelect={this.onAlignChange.bind(this)}/>
-                        </Col>
-                        <Col xs={4} className="text-center">
-                            <div className="text-uppercase">
-                                transform
-                            </div>
-                            <TransformRadioButtons initialValue={(getInitialTagValue('transform', this.props && this.props.tag))} onSelect={this.onTransformChange.bind(this)}/>
-                        </Col>
-                        <Col xs={4} className="text-center">
-                            <div className="text-center text-uppercase">
-                                no wrap
-                            </div>
-                            <Switch initialValue={(getInitialTagValue('wrap', this.props && this.props.tag))} onValue="nowrap" offValue="" onChange={this.onWrapChange.bind(this)} />
-                        </Col>
-                    </Row>
-                    <Row className="g-padding-bottom">
-                        <Col xs={12}>
-                            <div className="text-uppercase">
-                                color
-                            </div>
-                        </Col>
-                        <Col xs={12}>
-                            <ColorRadioButtons initialValue={(getInitialTagValue('color', this.props && this.props.tag))} onSelect={this.onColorChange.bind(this)}/>
-                            {/*<div className="b-bullet-color b-bullet-color_blue"/>*/}
-                            {/*<div className="b-bullet-color b-bullet-color_green b-bullet-color_selected"/>*/}
-                            {/*<div className="b-bullet-color b-bullet-color_red"/>*/}
-                            {/*<div className="b-bullet-color b-bullet-color_yellow"/>*/}
-                            {/*<div className="b-bullet-color b-bullet-color_magenta"/>*/}
-                            {/*<div className="b-bullet-color b-bullet-color_dark-blue"/>*/}
-                            {/*<div className="b-bullet-color b-bullet-color_light-grey"/>*/}
-                            {/*<div className="b-bullet-color b-bullet-color_black"/>*/}
-                            {/*<div className="b-bullet-color b-bullet-color_grey"/>*/}
-                        </Col>
-                    </Row>
-                </div>
-            </Panel>
-        );
-    }
+        let Handler: any = null;
+        if (this.props.tag) {
+            Handler = resolveTagHandler(this.props.tag.tag);
+        }
+        if (Handler) {
+            const Tag = new Handler();
 
+            return (
+                <Panel title="Properties">
+                    <div className="content-wrapper b-panel-light">
+                        <form className="form-horizontal">
+                            <PropertiesInput
+                                name="tag"
+                                title="Tag"
+                                placeholder="Tag name"
+                                value={this.props.tag && this.props.tag.tag || ''}
+                                readOnly={true}
+                            />
+                            <PropertiesInput
+                                name="id"
+                                title="ID"
+                                placeholder="Element ID"
+                                value={this.props.tag && this.props.tag.id || ''}
+                                readOnly={true}
+                            />
+                            { Tag.hasEditProp('class') && (
+                                <PropertiesInput
+                                    name="class"
+                                    title="CSS CLASS"
+                                    placeholder="Element Classes"
+                                    value={this.props.tag && this.props.tag.attr && this.props.tag.attr.class || ''}
+                                    onChange={this.onChange.bind(this, 'class')}
+                                />
+                            )}
+                        </form>
+                    </div>
+                    <div className="content-wrapper"/>
+                    <div className="content-wrapper b-panel-light">
+                        <Row className="g-padding-bottom hidden">
+                            <Col xs={3} className="text-uppercase">
+                                position
+                            </Col>
+                            <Col xs={9}>
+                                <div className="b-position-bullet b-position-bullet_selected"/>
+                                <div className="b-position-bullet b-position-bullet_selected"/>
+                                <div className="b-position-bullet b-position-bullet_selected"/>
+                                <div className="b-position-bullet b-position-bullet_selected"/>
+                                <div className="b-position-bullet b-position-bullet_selected"/>
+                                <div className="b-position-bullet b-position-bullet_selected"/>
+                                <div className="b-position-bullet"/>
+                                <div className="b-position-bullet"/>
+                                <div className="b-position-bullet"/>
+                                <div className="b-position-bullet"/>
+                                <div className="b-position-bullet"/>
+                                <div className="b-position-bullet"/>
+                            </Col>
+                        </Row>
+                        <form className="form-horizontal">
+                            { Tag.hasEditProp('width') && (
+                                <PropertiesInput
+                                    name="width"
+                                    title="Width"
+                                    placeholder="Image width"
+                                    value={this.props.tag && this.props.tag.attr && this.props.tag.attr.width || ''}
+                                    onChange={this.onChange.bind(this, 'width')}
+                                />
+                            )}
+                            { Tag.hasEditProp('ratio') && (
+                                <PropertiesInput
+                                    name="ratio"
+                                    title="Height / ratio"
+                                    placeholder="Image height or ratio"
+                                    value={this.props.tag && this.props.tag.attr && this.props.tag.attr.ratio || ''}
+                                    onChange={this.onChange.bind(this, 'ratio')}
+                                />
+                            )}
+                            { Tag.hasEditProp('name') && (
+                                <PropertiesInput
+                                    name="name"
+                                    title="Table name"
+                                    value={this.props.tag && this.props.tag.attr && this.props.tag.attr.name || ''}
+                                    onChange={this.onChange.bind(this, 'name')}
+                                />
+                            )}
+                            { Tag.hasEditProp('source') && (
+                                <PropertiesInput
+                                    name="source"
+                                    title="Source"
+                                    value={this.props.tag && this.props.tag.attr && this.props.tag.attr.source || ''}
+                                    onChange={this.onChange.bind(this, 'source')}
+                                />
+                            )}
+                            { Tag.hasEditProp('condition') && (
+                                <PropertiesInput
+                                    name="condition"
+                                    title="Condition"
+                                    value={this.props.tag && this.props.tag.attr && this.props.tag.attr.condition || ''}
+                                    onChange={this.onChange.bind(this, 'condition')}
+                                />
+                            )}
+                        </form>
+                        <Row className="g-padding-bottom">
+                            { Tag.hasEditProp('align') && (
+                                <Col xs={4} className="text-center">
+                                    <div className="text-uppercase">
+                                        alignment
+                                    </div>
+                                    <AlignRadioButtons
+                                        initialValue={(getInitialTagValue('align', this.props && this.props.tag))}
+                                        onSelect={this.onAttrChange.bind(this, 'align')}
+                                    />
+                                </Col>
+                            )}
+                            { Tag.hasEditProp('transform') && (
+                                <Col xs={4} className="text-center">
+                                    <div className="text-uppercase">
+                                        transform
+                                    </div>
+                                    <TransformRadioButtons
+                                        initialValue={(getInitialTagValue('transform', this.props && this.props.tag))}
+                                        onSelect={this.onAttrChange.bind(this, 'transform')}
+                                    />
+                                </Col>
+                            )}
+                            { Tag.hasEditProp('wrap') && (
+                                <Col xs={4} className="text-center">
+                                    <div className="text-center text-uppercase">
+                                        no wrap
+                                    </div>
+                                    <Switch
+                                        initialValue={(getInitialTagValue('wrap', this.props && this.props.tag))}
+                                        onValue="nowrap"
+                                        offValue=""
+                                        onChange={this.onAttrChange.bind(this, 'wrap')}
+                                    />
+                                </Col>
+                            )}
+                        </Row>
+                        <Row className="g-padding-bottom">
+                            { Tag.hasEditProp('btn') && (
+                                <div>
+                                    <Col xs={12}>
+                                        <div className="text-uppercase">
+                                            button
+                                        </div>
+                                    </Col>
+                                    <Col xs={12}>
+                                        <BtnRadioButtons
+                                            initialValue={(getInitialTagValue('btn', this.props && this.props.tag))}
+                                            onSelect={this.onAttrChange.bind(this, 'btn')}
+                                        />
+                                    </Col>
+                                </div>
+                            )}
+                            { Tag.hasEditProp('color') && (
+                                <div>
+                                    <Col xs={12}>
+                                        <div className="text-uppercase">
+                                            color
+                                        </div>
+                                    </Col>
+                                    <Col xs={12}>
+                                        <ColorRadioButtons
+                                            initialValue={(getInitialTagValue('color', this.props && this.props.tag))}
+                                            onSelect={this.onAttrChange.bind(this, 'color')}
+                                        />
+                                    </Col>
+                                </div>
+                            )}
+                        </Row>
+                    </div>
+                </Panel>
+            );
+        }
+        else {
+            return (
+                <Panel title="Properties"/>
+            );
+        }
+    }
 }

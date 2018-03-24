@@ -18,6 +18,7 @@ import * as React from 'react';
 import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
+import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
 
 export interface IEmProps {
@@ -93,6 +94,7 @@ class Em extends React.Component<IEmProps, IEmState> {
                         onClick={this.onClick.bind(this)}
                         removeTag={this.removeTag.bind(this)}
                         connectDragSource={connectDragSource}
+                        canMove={true}
                     >
                     <em
                         className={classes}
@@ -116,3 +118,4 @@ class Em extends React.Component<IEmProps, IEmState> {
 }
 
 export default StyledComponent(Em);
+export const EmDnD = DnDComponent(StyledComponent(Em));

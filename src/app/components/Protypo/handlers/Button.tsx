@@ -24,6 +24,7 @@ import ValidatedForm from 'components/Validation/ValidatedForm';
 import TxButton from 'containers/Widgets/TxButton';
 
 import TagWrapper from '../components/TagWrapper';
+import DnDComponent from './DnDComponent';
 
 export interface IButtonProps {
     'class'?: string;
@@ -140,6 +141,7 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
                     onClick={onClick}
                     removeTag={removeTag}
                     connectDragSource={connectDragSource}
+                    canMove={true}
                 >
                     <button
                         className={classes}
@@ -182,3 +184,4 @@ Button.contextTypes = {
 };
 
 export default injectIntl(Button);
+export const ButtonDnD = DnDComponent(injectIntl(Button));
