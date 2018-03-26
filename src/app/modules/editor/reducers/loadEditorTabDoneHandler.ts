@@ -40,13 +40,6 @@ export default function (state: State, payload: Success<ILoadEditorTabCall, TEdi
 
     return {
         ...state,
-        /*sections: {
-            ...state.sections,
-            editor: {
-                ...state.sections.editor,
-                visible: true
-            }
-        },*/
         tabIndex: -1 === tabIndex ? tabs.length - 1 : tabIndex,
         tabs
     };
