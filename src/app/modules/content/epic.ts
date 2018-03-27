@@ -28,6 +28,7 @@ import { history } from 'store';
 import { navigate } from 'modules/engine/actions';
 import { LEGACY_PAGES } from 'lib/legacyPages';
 import { modalShow } from 'modules/modal/actions';
+import resetOnAccountSelectEpic from './epics/resetOnAccountSelectEpic';
 
 export const navigatePageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.navigatePage.started)
@@ -177,9 +178,7 @@ export const ecosystemInitEpic: Epic<Action, IRootState> =
 
                         return Observable.concat([
                             logout.started({}),
-                            selectAccount.started({
-                                account
-                            }),
+                            selectAccount.started(account),
                             actions.ecosystemInit.failed({
                                 params: action.payload,
                                 error: e.error
@@ -322,5 +321,6 @@ export default combineEpics(
     fetchNotificationsEpic,
     displayDataEpic,
     renderSectionEpic,
-    closeSectionEpic
+    closeSectionEpic,
+    resetOnAccountSelectEpic
 );

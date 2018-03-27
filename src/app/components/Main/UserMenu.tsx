@@ -76,7 +76,7 @@ const StyledUserMenu = styled.div`
 export interface IUserMenuProps {
     account: IStoredAccount;
     ecosystemAccounts: IStoredAccount[];
-    switchAccount: (options: { account: IStoredAccount }) => void;
+    switchAccount: (account: IStoredAccount) => void;
     logout: () => void;
 }
 
@@ -124,7 +124,7 @@ class UserMenu extends React.Component<IUserMenuProps> {
                         <ul className="dropdown-group">
                             {this.props.ecosystemAccounts.map(account => (
                                 <li key={account.ecosystem}>
-                                    <CloseDropdownButton onClick={account.ecosystem !== this.props.account.ecosystem && this.props.switchAccount.bind(this, { account })}>
+                                    <CloseDropdownButton onClick={account.ecosystem !== this.props.account.ecosystem && this.props.switchAccount.bind(this, account)}>
                                         {account.ecosystemName ?
                                             (
                                                 account.ecosystemName

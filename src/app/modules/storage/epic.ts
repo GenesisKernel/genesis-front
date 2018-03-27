@@ -15,20 +15,14 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { combineEpics } from 'redux-observable';
-import loginEpic from './epics/loginEpic';
-import logoutEpic from './epics/logoutEpic';
-import authorizeEpic from './epics/authorizeEpic';
-import createAccountEpic from './epics/createAccountEpic';
-import importAccountEpic from './epics/importAccountEpic';
-import importSeedEpic from './epics/importSeedEpic';
-import selectAccountEpic from './epics/selectAccountEpic';
+import saveAccountOnLoginEpic from './epics/saveAccountOnLoginEpic';
+import saveAccountOnSelectEpic from './epics/saveAccountOnSelectEpic';
+import saveAccountOnImportEpic from './epics/saveAccountOnImportEpic';
+import saveAccountOnCreateEpic from './epics/saveAccountOnCreateEpic';
 
 export default combineEpics(
-    authorizeEpic,
-    createAccountEpic,
-    importAccountEpic,
-    importSeedEpic,
-    loginEpic,
-    logoutEpic,
-    selectAccountEpic
+    saveAccountOnCreateEpic,
+    saveAccountOnImportEpic,
+    saveAccountOnLoginEpic,
+    saveAccountOnSelectEpic
 );

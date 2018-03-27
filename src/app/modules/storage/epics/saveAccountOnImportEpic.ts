@@ -14,21 +14,18 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { combineEpics } from 'redux-observable';
-import loginEpic from './epics/loginEpic';
-import logoutEpic from './epics/logoutEpic';
-import authorizeEpic from './epics/authorizeEpic';
-import createAccountEpic from './epics/createAccountEpic';
-import importAccountEpic from './epics/importAccountEpic';
-import importSeedEpic from './epics/importSeedEpic';
-import selectAccountEpic from './epics/selectAccountEpic';
+import { Action } from 'redux';
+import { Epic } from 'redux-observable';
+import { IRootState } from 'modules';
+import { saveAccount } from '../actions';
+import { importAccount } from 'modules/auth/actions';
 
-export default combineEpics(
-    authorizeEpic,
-    createAccountEpic,
-    importAccountEpic,
-    importSeedEpic,
-    loginEpic,
-    logoutEpic,
-    selectAccountEpic
-);
+const saveAccountOnImportEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(importAccount.done)
+        .flatMap(action =>
+            action.payload.result.map(account =>
+                saveAccount(account)
+            )
+        );
+
+export default saveAccountOnImportEpic;

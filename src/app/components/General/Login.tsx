@@ -105,7 +105,7 @@ export interface ILoginProps {
     onAccountRemove: (account: IStoredAccount) => void;
     login: (params: { encKey: string, ecosystem: string, password: string }) => void;
     logout: (params: {}) => void;
-    selectAccount: (params: { account: IStoredAccount }) => void;
+    selectAccount: (account: IStoredAccount) => void;
 }
 
 class Login extends React.Component<ILoginProps & InjectedIntlProps> {
@@ -144,9 +144,7 @@ class Login extends React.Component<ILoginProps & InjectedIntlProps> {
     }
 
     onSelectAccount(account: IStoredAccount) {
-        this.props.selectAccount({
-            account
-        });
+        this.props.selectAccount(account);
     }
 
     onRemoveAccount(account: IStoredAccount) {

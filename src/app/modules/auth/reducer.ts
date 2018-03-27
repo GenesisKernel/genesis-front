@@ -165,7 +165,7 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.selectAccount.started, (state, payload) => ({
         ...state,
         authenticationError: null,
-        account: payload.account
+        account: payload
     }))
     .case(actions.selectAccount.done, (state, payload) => ({
         ...state,
@@ -173,16 +173,16 @@ export default reducerWithInitialState<State>(initialState)
         authenticationError: null,
         sessionToken: payload.result.sessionToken,
         refreshToken: payload.result.refreshToken,
-        socketToken: payload.params.account.socketToken,
-        timestamp: payload.params.account.timestamp,
-        account: payload.params.account,
-        id: payload.params.account.id
+        socketToken: payload.params.socketToken,
+        timestamp: payload.params.timestamp,
+        account: payload.params,
+        id: payload.params.id
     }))
     .case(actions.selectAccount.failed, (state, payload) => ({
         ...state,
         isAuthenticated: false,
         authenticationError: payload.error,
-        account: payload.params.account
+        account: payload.params
     }))
 
     // Authorize/Deauthorize

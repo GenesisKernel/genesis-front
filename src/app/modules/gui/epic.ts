@@ -17,8 +17,12 @@
 import { combineEpics } from 'redux-observable';
 import switchWindowEpic from './epics/switchWindowEpic';
 import setBadgeCountEpic from './epics/setBadgeCountEpic';
+import switchWindowOnLoginEpic from './epics/switchWindowOnLoginEpic';
+import setBadgeCountOnLogoutEpic from './epics/setBadgeCountOnLogoutEpic';
 
 export default combineEpics(
     setBadgeCountEpic,
-    switchWindowEpic
+    switchWindowEpic,
+    switchWindowOnLoginEpic,
+    setBadgeCountOnLogoutEpic
 );
