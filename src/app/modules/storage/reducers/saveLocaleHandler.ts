@@ -14,25 +14,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { Action } from 'redux';
-import { combineEpics, Epic } from 'redux-observable';
-import { IRootState } from 'modules';
-import * as actions from './actions';
-import { subscribe, unsubscribe } from 'modules/socket/actions';
+import { State } from '../reducer';
 
-export const saveAccountEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(actions.saveAccount)
-        .map(action =>
-            subscribe.started(action.payload)
-        );
-
-export const removeAccountEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(actions.removeAccount)
-        .map(action =>
-            unsubscribe.started(action.payload)
-        );
-
-export default combineEpics(
-    saveAccountEpic,
-    removeAccountEpic
-);
+export default function (state: State, locale: string): State {
+    return {
+        ...state,
+        locale
+    };
+}

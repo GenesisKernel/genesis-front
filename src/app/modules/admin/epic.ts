@@ -24,7 +24,6 @@ import { Action } from 'redux';
 import { Observable } from 'rxjs';
 import { IRootState } from 'modules';
 import * as actions from './actions';
-import * as storageActions from 'modules/storage/actions';
 import { setIds, findTagById } from 'lib/constructor';
 import { generatePageTemplate } from 'modules/editor/actions';
 
@@ -393,42 +392,6 @@ export const moveTreeTagEpic: Epic<Action, IRootState> =
             );
         });
 
-export const addTabListEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(storageActions.addTabList)
-        .flatMap(action => {
-            const state = store.getState();
-            let tabList: any = state.storage.tabList;
-
-            return Observable.of(actions.getTabList.done({
-                params: action.payload,
-                result: { tabList: tabList }
-            }));
-
-        });
-
-export const removeTabListEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(storageActions.removeTabList)
-        .flatMap(action => {
-
-            const state = store.getState();
-            let tabList = _.cloneDeep(state.admin.tabs.list);
-
-            if ('string' === typeof action.payload.id && 'string' === typeof action.payload.type) {
-                let index = tabList.findIndex((item: any) => item.id === action.payload.id && item.type === action.payload.type);
-                if (index >= 0 && index < tabList.length) {
-                    // mark tab is invisible to prevent reload pages
-                    tabList[index].visible = false;
-                }
-            }
-
-            return Observable.of(
-                actions.removeTabList.done({
-                    params: action.payload,
-                    result: { tabList: tabList }
-                })
-            );
-        });
-
 export const getPageTreeCodeEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getPageTreeCode.started)
         .flatMap(action => {
@@ -656,8 +619,6 @@ export default combineEpics(
     getLanguageEpic,
     getParameterEpic,
     getParametersEpic,
-    addTabListEpic,
-    removeTabListEpic,
     moveTreeTagEpic,
     exportDataEpic,
     importDataEpic

@@ -15,12 +15,10 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import reducer, { State } from './reducer';
-import epic from './epic';
 import * as actions from './actions';
 
 export type State = State;
 export {
     actions,
-    reducer,
-    epic
+    reducer
 };

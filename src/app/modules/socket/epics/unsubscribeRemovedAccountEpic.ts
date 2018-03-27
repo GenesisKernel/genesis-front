@@ -14,21 +14,16 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { combineEpics } from 'redux-observable';
-import connectEpic from './epics/connectEpic';
-import disconnectEpic from './epics/disconnectEpic';
-import subscribeEpic from './epics/subscribeEpic';
-import unsubscribeEpic from './epics/unsubscribeEpic';
-import getNotificationsCountEpic from './epics/getNotificationsCountEpic';
-import subscribeSavedAccountEpic from './epics/subscribeSavedAccountEpic';
-import unsubscribeRemovedAccountEpic from './epics/unsubscribeRemovedAccountEpic';
+import { Action } from 'redux';
+import { Epic } from 'redux-observable';
+import { IRootState } from 'modules';
+import { unsubscribe } from '../actions';
+import { removeAccount } from 'modules/storage/actions';
 
-export default combineEpics(
-    connectEpic,
-    disconnectEpic,
-    subscribeEpic,
-    unsubscribeEpic,
-    getNotificationsCountEpic,
-    subscribeSavedAccountEpic,
-    unsubscribeRemovedAccountEpic
-);
+const unsubscribeRemovedAccountEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(removeAccount)
+        .map(action =>
+            unsubscribe.started(action.payload)
+        );
+
+export default unsubscribeRemovedAccountEpic;

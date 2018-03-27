@@ -14,21 +14,15 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { combineEpics } from 'redux-observable';
-import connectEpic from './epics/connectEpic';
-import disconnectEpic from './epics/disconnectEpic';
-import subscribeEpic from './epics/subscribeEpic';
-import unsubscribeEpic from './epics/unsubscribeEpic';
-import getNotificationsCountEpic from './epics/getNotificationsCountEpic';
-import subscribeSavedAccountEpic from './epics/subscribeSavedAccountEpic';
-import unsubscribeRemovedAccountEpic from './epics/unsubscribeRemovedAccountEpic';
+import { State } from '../reducer';
+import { IStoredAccount } from 'genesis/storage';
 
-export default combineEpics(
-    connectEpic,
-    disconnectEpic,
-    subscribeEpic,
-    unsubscribeEpic,
-    getNotificationsCountEpic,
-    subscribeSavedAccountEpic,
-    unsubscribeRemovedAccountEpic
-);
+export default function (state: State, account: IStoredAccount): State {
+    return {
+        ...state,
+        accounts: [
+            ...state.accounts.filter(l => l.id !== account.id || l.ecosystem !== account.ecosystem),
+            account
+        ]
+    };
+}
