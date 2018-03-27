@@ -396,6 +396,24 @@ const register = (editor: typeof monaco) => {
                 }
             ]
         },
+        JsonToSource: {
+            label: 'JsonToSource',
+            documentation: 'Data emitter that converts JSON string to a source',
+            kind: monaco.languages.CompletionItemKind.Function,
+            insertText: 'JsonToSource(',
+            params: [
+                {
+                    label: 'Source',
+                    documentation: 'Source identificator to bind results',
+                    insertText: 'Source: '
+                },
+                {
+                    label: 'Data',
+                    documentation: 'Emitted data that must be a valid json-formatted string',
+                    insertText: 'Data: '
+                }
+            ]
+        },
         Label: {
             label: 'Label',
             documentation: 'Form input label. Will set focus to bound input on click',

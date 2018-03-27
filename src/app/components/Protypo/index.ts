@@ -31,6 +31,7 @@ import ImageInput, { ImageInputDnD } from './handlers/ImageInput';
 import Input, { InputDnD } from './handlers/Input';
 import InputErr from './handlers/InputErr';
 import InputMap from './handlers/InputMap';
+import JsonToSource from './handlers/JsonToSource';
 import Label, { LabelDnD } from './handlers/Label';
 import LinkPage from './handlers/LinkPage';
 import Map from './handlers/Map';
@@ -61,6 +62,7 @@ const handlers = {
     'input': Input,
     'inputerr': InputErr,
     'inputMap': InputMap,
+    'jsontosource': JsonToSource,
     'label': Label,
     'linkpage': LinkPage,
     'map': Map,
