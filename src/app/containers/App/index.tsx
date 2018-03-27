@@ -62,9 +62,7 @@ class App extends React.Component<IAppProps> {
 
     componentWillReceiveProps(props: IAppProps) {
         if (this.props.isAuthenticated !== props.isAuthenticated) {
-            props.switchWindow({
-                window: props.isAuthenticated ? 'main' : 'general'
-            });
+            props.switchWindow(props.isAuthenticated ? 'main' : 'general');
         }
 
         if (null === this.props.isConnected && null !== props.isConnected) {

@@ -14,11 +14,24 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { combineEpics } from 'redux-observable';
-import switchWindowEpic from './epics/switchWindowEpic';
-import setBadgeCountEpic from './epics/setBadgeCountEpic';
+import { Action } from 'redux';
+import { Epic } from 'redux-observable';
+import { IRootState } from 'modules';
+import { switchWindow } from '../actions';
+import platform from 'lib/platform';
 
-export default combineEpics(
-    setBadgeCountEpic,
-    switchWindowEpic
-);
+const switchWindowEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(switchWindow.started)
+        .map(action => {
+            platform.on('desktop', () => {
+                const Electron = require('electron');
+                Electron.ipcRenderer.sendSync('switchWindow', action.payload);
+            });
+
+            return switchWindow.done({
+                params: action.payload,
+                result: action.payload
+            });
+        });
+
+export default switchWindowEpic;

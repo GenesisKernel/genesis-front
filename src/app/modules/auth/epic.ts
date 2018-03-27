@@ -106,9 +106,7 @@ export const loginEpic = (actions$: Observable<Action>) =>
                             timestamp: payload.timestamp,
                             userID: payload.key_id
                         }),
-                        guiActions.switchWindow.started({
-                            window: 'main'
-                        })
+                        guiActions.switchWindow.started('main')
                     ]);
                 }).catch((e: IAPIError) => {
                     return Observable.of(actions.login.failed({

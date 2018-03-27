@@ -16,12 +16,11 @@
 
 import * as actions from './actions';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-
-export type TWindowType =
-    'general' | 'main';
+import { TWindowType } from 'genesis/gui';
+import switchWindowHandler from './reducers/switchWindowHandler';
 
 export type State = {
-    readonly window: 'general' | 'main';
+    readonly window: TWindowType;
 };
 
 export const initialState: State = {
@@ -29,7 +28,4 @@ export const initialState: State = {
 };
 
 export default reducerWithInitialState(initialState)
-    .case(actions.switchWindow.done, (state, payload) => ({
-        ...state,
-        window: payload.result
-    }));
+    .case(actions.switchWindow.done, switchWindowHandler);

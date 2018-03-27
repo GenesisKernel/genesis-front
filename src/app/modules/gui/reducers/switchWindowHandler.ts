@@ -14,11 +14,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { combineEpics } from 'redux-observable';
-import switchWindowEpic from './epics/switchWindowEpic';
-import setBadgeCountEpic from './epics/setBadgeCountEpic';
+import { State } from '../reducer';
+import { Success } from 'typescript-fsa';
+import { TWindowType } from 'genesis/gui';
 
-export default combineEpics(
-    setBadgeCountEpic,
-    switchWindowEpic
-);
+export default function (state: State, payload: Success<TWindowType, TWindowType>): State {
+    return {
+        ...state,
+        window: payload.result
+    };
+}

@@ -22,9 +22,11 @@ import unsubscribeEpic from './epics/unsubscribeEpic';
 import getNotificationsCountEpic from './epics/getNotificationsCountEpic';
 import subscribeSavedAccountEpic from './epics/subscribeSavedAccountEpic';
 import unsubscribeRemovedAccountEpic from './epics/unsubscribeRemovedAccountEpic';
+import connectOnLoginEpic from './epics/connectOnLoginEpic';
 
 export default combineEpics(
     connectEpic,
+    connectOnLoginEpic,
     disconnectEpic,
     subscribeEpic,
     unsubscribeEpic,

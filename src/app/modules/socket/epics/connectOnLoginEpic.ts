@@ -14,11 +14,20 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { combineEpics } from 'redux-observable';
-import switchWindowEpic from './epics/switchWindowEpic';
-import setBadgeCountEpic from './epics/setBadgeCountEpic';
+import { Action } from 'redux';
+import { Epic } from 'redux-observable';
+import { IRootState } from 'modules';
+import { connect } from '../actions';
+import { login } from 'modules/auth/actions';
 
-export default combineEpics(
-    setBadgeCountEpic,
-    switchWindowEpic
-);
+const connectOnLoginEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(login.done)
+        .map(action =>
+            connect.started({
+                socketToken: action.payload.result.notify_key,
+                timestamp: action.payload.result.timestamp,
+                userID: action.payload.result.key_id
+            })
+        );
+
+export default connectOnLoginEpic;

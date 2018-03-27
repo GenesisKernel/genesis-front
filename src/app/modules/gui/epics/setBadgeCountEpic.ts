@@ -14,11 +14,22 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { combineEpics } from 'redux-observable';
-import switchWindowEpic from './epics/switchWindowEpic';
-import setBadgeCountEpic from './epics/setBadgeCountEpic';
+import { Action } from 'redux';
+import { Epic } from 'redux-observable';
+import { IRootState } from 'modules';
+import { setBadgeCount } from '../actions';
+import { Observable } from 'rxjs/Observable';
+import platform from 'lib/platform';
 
-export default combineEpics(
-    setBadgeCountEpic,
-    switchWindowEpic
-);
+const setBadgeCountEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(setBadgeCount)
+        .flatMap(action => {
+            platform.on('desktop', () => {
+                const Electron = require('electron');
+                Electron.remote.app.setBadgeCount(action.payload);
+            });
+
+            return Observable.empty();
+        });
+
+export default setBadgeCountEpic;

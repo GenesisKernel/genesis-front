@@ -14,11 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { combineEpics } from 'redux-observable';
-import switchWindowEpic from './epics/switchWindowEpic';
-import setBadgeCountEpic from './epics/setBadgeCountEpic';
-
-export default combineEpics(
-    setBadgeCountEpic,
-    switchWindowEpic
-);
+declare module 'genesis/gui' {
+    type TWindowType =
+        'general' | 'main';
+}
