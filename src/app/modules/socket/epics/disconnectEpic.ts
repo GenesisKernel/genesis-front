@@ -14,17 +14,29 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-declare module 'genesis/socket' {
-    interface INotificationsMessage {
-        id: string;
-        ecosystem: string;
-        role: number;
-        count: number;
-    }
+import { Action } from 'redux';
+import { Epic } from 'redux-observable';
+import { IRootState } from 'modules';
+import { disconnect } from '../actions';
 
-    interface IConnectCall {
-        userID: string;
-        socketToken: string;
-        timestamp: string;
-    }
-}
+const disconnectEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(disconnect.started)
+        .map(action => {
+            const socket = store.getState().socket.socket;
+
+            if (socket) {
+                socket.disconnect();
+                return disconnect.done({
+                    params: action.payload,
+                    result: null
+                });
+            }
+            else {
+                return disconnect.failed({
+                    params: action.payload,
+                    error: null
+                });
+            }
+        });
+
+export default disconnectEpic;

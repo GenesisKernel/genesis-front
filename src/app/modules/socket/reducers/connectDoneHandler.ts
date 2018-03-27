@@ -14,17 +14,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-declare module 'genesis/socket' {
-    interface INotificationsMessage {
-        id: string;
-        ecosystem: string;
-        role: number;
-        count: number;
-    }
+import { State } from '../reducer';
+import { Success } from 'typescript-fsa';
+import { IConnectCall } from 'genesis/socket';
 
-    interface IConnectCall {
-        userID: string;
-        socketToken: string;
-        timestamp: string;
-    }
+export default function (state: State, payload: Success<IConnectCall, ICentrifuge>): State {
+    return {
+        ...state,
+        socket: payload.result
+    };
 }

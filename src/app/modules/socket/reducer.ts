@@ -18,15 +18,18 @@ import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import * as actions from './actions';
 import { INotificationsMessage } from 'genesis/socket';
 import { IStoredAccount } from 'genesis/storage';
+import connectDoneHandler from './reducers/connectDoneHandler';
+import disconnectDoneHandler from './reducers/disconnectDoneHandler';
+import subscribeDoneHandler from './reducers/subscribeDoneHandler';
+import setNotificationsCountHandler from './reducers/setNotificationsCountHandler';
+import unsubscribeHandler from './reducers/unsubscribeHandler';
 
 export type State = {
     readonly socket: ICentrifuge;
     readonly notifications: INotificationsMessage[];
     readonly subscriptions: {
         account: IStoredAccount;
-        instance: {
-            unsubscribe: () => void;
-        };
+        instance: ISubscription;
     }[];
 };
 
@@ -37,46 +40,8 @@ export const initialState: State = {
 };
 
 export default reducerWithInitialState<State>(initialState)
-    // Connect
-    .case(actions.connect.done, (state, payload) => ({
-        ...state,
-        socket: payload.result
-    }))
-
-    // Disconnect
-    .case(actions.disconnect.done, (state, payload) => ({
-        ...state,
-        socket: null,
-        subscriptions: []
-    }))
-
-    // SetNotificationsCount
-    .case(actions.setNotificationsCount, (state, payload) => ({
-        ...state,
-        notifications: [
-            ...state.notifications.filter(l =>
-                l.id !== payload.id ||
-                l.role !== payload.role ||
-                l.ecosystem !== payload.ecosystem
-            ),
-            payload
-        ]
-    }))
-
-    // Subscribe
-    .case(actions.subscribe.done, (state, payload) => ({
-        ...state,
-        subscriptions: [
-            ...state.subscriptions,
-            {
-                account: payload.params.account,
-                instance: payload.result
-            }
-        ]
-    }))
-
-    // Unsubscribe
-    .case(actions.unsubscribe.done, (state, payload) => ({
-        ...state,
-        subscriptions: state.subscriptions.filter(l => l.account.id !== payload.params.account.id)
-    }));
+    .case(actions.connect.done, connectDoneHandler)
+    .case(actions.disconnect.done, disconnectDoneHandler)
+    .case(actions.setNotificationsCount, setNotificationsCountHandler)
+    .case(actions.subscribe.done, subscribeDoneHandler)
+    .case(actions.unsubscribe.done, unsubscribeHandler);

@@ -15,24 +15,27 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { Action } from 'redux';
-import { combineEpics, Epic } from 'redux-observable';
+import { Epic } from 'redux-observable';
 import { IRootState } from 'modules';
-import * as actions from './actions';
-import { subscribe, unsubscribe } from 'modules/socket/actions';
+import { unsubscribe } from '../actions';
 
-export const saveAccountEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(actions.saveAccount)
-        .map(action =>
-            subscribe.started(action.payload)
-        );
+const unsubscribeEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(unsubscribe.started)
+        .map(action => {
+            const sub = store.getState().socket.subscriptions.find(l => l.account.id === action.payload.id);
+            if (sub) {
+                sub.instance.unsubscribe();
+                return unsubscribe.done({
+                    params: action.payload,
+                    result: null
+                });
+            }
+            else {
+                return unsubscribe.failed({
+                    params: action.payload,
+                    error: null
+                });
+            }
+        });
 
-export const removeAccountEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(actions.removeAccount)
-        .map(action =>
-            unsubscribe.started(action.payload)
-        );
-
-export default combineEpics(
-    saveAccountEpic,
-    removeAccountEpic
-);
+export default unsubscribeEpic;
