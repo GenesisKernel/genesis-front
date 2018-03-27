@@ -23,21 +23,15 @@ import removeAccountHandler from './reducers/removeAccountHandler';
 import saveNavigationSizeHandler from './reducers/saveNavigationSizeHandler';
 
 export type State = {
-    locale: string;
-    accounts: IStoredAccount[];
-    navigationSize: number;
-    tabList: {
-        id: string,
-        name: string,
-        type: string
-    }[]
+    readonly locale: string;
+    readonly accounts: IStoredAccount[];
+    readonly navigationSize: number;
 };
 
 export const initialState: State = {
     locale: 'en-US',
     accounts: [],
-    navigationSize: 230,
-    tabList: []
+    navigationSize: 230
 };
 
 export default reducerWithInitialState<State>(initialState)
