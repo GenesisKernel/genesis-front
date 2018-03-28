@@ -23,6 +23,7 @@ import keyring from 'lib/keyring';
 import api, { IAPIError, ITxStatusResponse } from 'lib/api';
 import { toastr } from 'react-redux-toastr';
 import { authorize } from 'modules/auth/actions';
+import { TTxError } from 'genesis/tx';
 
 export const txExecEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(txExec.started)
@@ -69,7 +70,7 @@ export const txExecEpic: Epic<Action, IRootState> =
                 .catch((error: IAPIError & ITxStatusResponse) => Observable.of(txExec.failed({
                     params: action.payload,
                     error: {
-                        type: error.errmsg ? error.errmsg.type : error.error,
+                        type: (error.errmsg ? error.errmsg.type : error.error) as TTxError,
                         error: error.errmsg ? error.errmsg.error : error.msg
                     }
                 })));

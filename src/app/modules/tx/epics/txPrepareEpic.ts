@@ -22,6 +22,7 @@ import keyring from 'lib/keyring';
 import api, { IAPIError } from 'lib/api';
 import { txExec, txPrepare } from '../actions';
 import { modalShow, modalClose } from 'modules/modal/actions';
+import { TTxError } from 'genesis/tx';
 
 const txPrepareEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(txPrepare)
@@ -87,7 +88,7 @@ const txPrepareEpic: Epic<Action, IRootState> =
                 .catch((e: IAPIError) => Observable.of(txExec.failed({
                     params: action.payload,
                     error: {
-                        type: e.error,
+                        type: e.error as TTxError,
                         error: e.msg
                     }
                 })));

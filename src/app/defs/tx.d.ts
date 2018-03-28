@@ -15,7 +15,7 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 declare module 'genesis/tx' {
-    type TxError =
+    type TTxError =
         'E_CONTRACT' |
         'E_ERROR' |
         'E_INFO' |
@@ -23,6 +23,16 @@ declare module 'genesis/tx' {
         'E_SERVER' |
         'E_WARNING' |
         'panic';
+
+    interface ITxResult {
+        block: string;
+        result: string;
+    }
+
+    interface ITxError {
+        type: TTxError;
+        error: string;
+    }
 
     interface ITransaction {
         uuid: string;
@@ -43,5 +53,13 @@ declare module 'genesis/tx' {
         params: {
             [key: string]: any;
         };
+    }
+
+    interface IExecutionCall {
+        tx: ITransactionCall;
+        privateKey?: string;
+        signature?: string;
+        time?: string;
+        signParams?: { [key: string]: string };
     }
 }

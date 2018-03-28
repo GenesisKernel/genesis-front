@@ -14,11 +14,19 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import actionCreatorFactory from 'typescript-fsa';
-import { IExecutionCall, ITransactionCall, ITxResult, ITxError } from 'genesis/tx';
+import { State } from '../reducer';
+import { Success } from 'typescript-fsa';
+import { IExecutionCall, ITxResult } from 'genesis/tx';
 
-const actionCreator = actionCreatorFactory('tx');
-export const txCall = actionCreator<ITransactionCall>('TX_CALL');
-export const txAuthorize = actionCreator.async<{ contract: string }, string, void>('TX_AUTHORIZE');
-export const txPrepare = actionCreator<{ tx: ITransactionCall, privateKey: string }>('TX_PREPARE');
-export const txExec = actionCreator.async<IExecutionCall, ITxResult, ITxError>('TX_EXEC');
+export default function (state: State, payload: Success<IExecutionCall, ITxResult>): State {
+    return {
+        ...state,
+        transactions: state.transactions.set(payload.params.tx.uuid, {
+            block: payload.result.block,
+            result: payload.result.result,
+            error: null,
+            contract: payload.params.tx.name,
+            uuid: payload.params.tx.uuid
+        })
+    };
+}

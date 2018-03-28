@@ -18,6 +18,9 @@ import { OrderedMap } from 'immutable';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import * as actions from './actions';
 import { ITransaction } from 'genesis/tx';
+import txExecHandler from './reducers/txExecHandler';
+import txExecDoneHandler from './reducers/txExecDoneHandler';
+import txExecFailedHandler from './reducers/txExecFailedHandler';
 
 export type State = {
     readonly pendingTransaction: ITransaction;
@@ -30,31 +33,6 @@ export const initialState: State = {
 };
 
 export default reducerWithInitialState(initialState)
-    .case(actions.txExec.started, (state, payload) => ({
-        ...state,
-        transactions: state.transactions.set(payload.tx.uuid, {
-            block: null,
-            error: null,
-            contract: payload.tx.name,
-            uuid: payload.tx.uuid
-        })
-    }))
-    .case(actions.txExec.done, (state, payload) => ({
-        ...state,
-        transactions: state.transactions.set(payload.params.tx.uuid, {
-            block: payload.result.block,
-            result: payload.result.result,
-            error: null,
-            contract: payload.params.tx.name,
-            uuid: payload.params.tx.uuid
-        })
-    }))
-    .case(actions.txExec.failed, (state, payload) => ({
-        ...state,
-        transactions: state.transactions.set(payload.params.tx.uuid, {
-            block: null,
-            error: payload.error,
-            contract: payload.params.tx.name,
-            uuid: payload.params.tx.uuid
-        })
-    }));
+    .case(actions.txExec.started, txExecHandler)
+    .case(actions.txExec.done, txExecDoneHandler)
+    .case(actions.txExec.failed, txExecFailedHandler);
