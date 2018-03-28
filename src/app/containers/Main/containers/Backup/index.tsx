@@ -20,13 +20,13 @@ import { IRootState } from 'modules';
 import { alertShow } from 'modules/content/actions';
 
 import Backup from 'components/Main/Backup';
-import { IStoredAccount } from 'genesis/storage';
+import { IAccount } from 'genesis/auth';
 
 export interface IBackupProps {
 }
 
 interface IBackupState {
-    account: IStoredAccount;
+    account: IAccount;
     ecosystems: string[];
     privateKey: string;
 }

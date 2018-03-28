@@ -18,7 +18,7 @@ import * as React from 'react';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
 import { logout, selectAccount } from 'modules/auth/actions';
-import { IStoredAccount } from 'genesis/storage';
+import { IAccount } from 'genesis/auth';
 
 import UserMenu from 'components/Main//UserMenu';
 
@@ -27,8 +27,8 @@ export interface IUserMenuContainerProps {
 }
 
 interface IUserMenuContainerState {
-    account: IStoredAccount;
-    ecosystemAccounts: IStoredAccount[];
+    account: IAccount;
+    ecosystemAccounts: IAccount[];
 }
 
 interface IUserMenuContainerDispatch {

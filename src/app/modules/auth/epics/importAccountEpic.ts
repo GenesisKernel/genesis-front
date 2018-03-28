@@ -19,7 +19,7 @@ import { Epic } from 'redux-observable';
 import { IRootState } from 'modules';
 import { importAccount } from '../actions';
 import { Observable } from 'rxjs/Observable';
-import { IStoredAccount } from 'genesis/storage';
+import { IAccount } from 'genesis/auth';
 import api from 'lib/api';
 import keyring from 'lib/keyring';
 import * as Promise from 'bluebird';
@@ -53,7 +53,7 @@ const importAccountEpic: Epic<Action, IRootState> =
 
             )).flatMap(payload => {
                 const encKey = keyring.encryptAES(backup.privateKey, action.payload.password);
-                const accounts: IStoredAccount[] = payload.filter(l => l !== null).map(response => ({
+                const accounts: IAccount[] = payload.filter(l => l !== null).map(response => ({
                     id: response.key_id,
                     encKey,
                     address: response.address,

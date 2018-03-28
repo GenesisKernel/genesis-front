@@ -15,9 +15,9 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { IStoredAccount } from 'genesis/storage';
+import { IAccount } from 'genesis/auth';
 
-export default function (state: State, account: IStoredAccount): State {
+export default function (state: State, account: IAccount): State {
     return {
         ...state,
         accounts: [

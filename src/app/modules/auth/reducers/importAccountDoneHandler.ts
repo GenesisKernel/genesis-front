@@ -17,9 +17,9 @@
 import { State } from '../reducer';
 import { Success } from 'typescript-fsa';
 import { IImportAccountCall } from 'genesis/auth';
-import { IStoredAccount } from 'genesis/storage';
+import { IAccount } from 'genesis/auth';
 
-export default function (state: State, payload: Success<IImportAccountCall, IStoredAccount[]>): State {
+export default function (state: State, payload: Success<IImportAccountCall, IAccount[]>): State {
     return {
         ...state,
         defaultAccount: payload.params.isDefault && payload.result[0] ? payload.result[0].id : state.defaultAccount,

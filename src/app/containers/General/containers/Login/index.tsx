@@ -20,7 +20,7 @@ import { navigate } from 'modules/engine/actions';
 import { login, logout, selectAccount } from 'modules/auth/actions';
 import { modalShow } from 'modules/modal/actions';
 import { removeAccount } from 'modules/storage/actions';
-import { IStoredAccount } from 'genesis/storage';
+import { IAccount } from 'genesis/auth';
 import { INotificationsMessage } from 'genesis/socket';
 import { IRootState } from 'modules';
 
@@ -35,8 +35,8 @@ export interface ILoginContainerProps {
 interface ILoginContainerState {
     isLoggingIn: boolean;
     authenticationError: string;
-    account: IStoredAccount;
-    accounts: IStoredAccount[];
+    account: IAccount;
+    accounts: IAccount[];
     notifications: INotificationsMessage[];
     modalResult: IModalResult;
     defaultAccount: string;
@@ -52,7 +52,7 @@ interface ILoginContainerDispatch {
 }
 
 class LoginContainer extends React.Component<ILoginContainerProps & ILoginContainerState & ILoginContainerDispatch & InjectedIntlProps> {
-    private _pendingRemove: IStoredAccount = null;
+    private _pendingRemove: IAccount = null;
 
     componentWillReceiveProps(props: ILoginContainerProps & ILoginContainerState & ILoginContainerDispatch & InjectedIntlProps) {
         if (this._pendingRemove && props.modalResult && 'RESULT' === props.modalResult.reason && props.modalResult.data) {
@@ -69,7 +69,7 @@ class LoginContainer extends React.Component<ILoginContainerProps & ILoginContai
         }
     })
 
-    onAccountRemove = (account: IStoredAccount) => {
+    onAccountRemove = (account: IAccount) => {
         this._pendingRemove = account;
         this.props.modalShow({
             id: 'AUTH_REMOVE_ACCOUNT',

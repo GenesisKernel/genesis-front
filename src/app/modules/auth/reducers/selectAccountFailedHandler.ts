@@ -16,9 +16,9 @@
 
 import { State } from '../reducer';
 import { Failure } from 'typescript-fsa';
-import { IStoredAccount } from 'genesis/storage';
+import { IAccount } from 'genesis/auth';
 
-export default function (state: State, payload: Failure<IStoredAccount, string>): State {
+export default function (state: State, payload: Failure<IAccount, string>): State {
     return {
         ...state,
         isAuthenticated: false,

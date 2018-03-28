@@ -18,9 +18,9 @@ import { State } from '../reducer';
 import { Success } from 'typescript-fsa';
 import { ILoginCall } from 'genesis/auth';
 import { ILoginResponse } from 'lib/api';
-import { IStoredAccount } from 'genesis/storage';
+import { IAccount } from 'genesis/auth';
 
-export default function (state: State, payload: Success<ILoginCall, ILoginResponse & { account: IStoredAccount, privateKey: string, publicKey: string }>): State {
+export default function (state: State, payload: Success<ILoginCall, ILoginResponse & { account: IAccount, privateKey: string, publicKey: string }>): State {
     return {
         ...state,
         isAuthenticated: true,

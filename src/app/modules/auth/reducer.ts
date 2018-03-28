@@ -16,7 +16,7 @@
 
 import * as actions from './actions';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import { IStoredAccount } from 'genesis/storage';
+import { IAccount } from 'genesis/auth';
 import loginHandler from './reducers/loginHandler';
 import loginDoneHandler from './reducers/loginDoneHandler';
 import loginFailedHandler from './reducers/loginFailedHandler';
@@ -49,7 +49,7 @@ export type State = {
     readonly socketToken: string;
     readonly timestamp: string;
     readonly defaultAccount: string;
-    readonly account: IStoredAccount;
+    readonly account: IAccount;
     readonly privateKey: string;
     readonly ecosystem: string;
 };

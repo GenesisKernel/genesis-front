@@ -18,7 +18,7 @@ import * as React from 'react';
 import { Button } from 'react-bootstrap';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import styled from 'styled-components';
-import { IStoredAccount } from 'genesis/storage';
+import { IAccount } from 'genesis/auth';
 import { INotificationsMessage } from 'genesis/socket';
 import imgAvatar from 'images/avatar.svg';
 
@@ -96,16 +96,16 @@ const StyledLogin = styled.div`
 export interface ILoginProps {
     isLoggingIn: boolean;
     authenticationError: string;
-    account: IStoredAccount;
-    accounts: IStoredAccount[];
+    account: IAccount;
+    accounts: IAccount[];
     notifications: INotificationsMessage[];
     defaultAccount: string;
     navigate: (url: string) => void;
     onError: (text: string) => void;
-    onAccountRemove: (account: IStoredAccount) => void;
+    onAccountRemove: (account: IAccount) => void;
     login: (params: { encKey: string, ecosystem: string, password: string }) => void;
     logout: (params: {}) => void;
-    selectAccount: (account: IStoredAccount) => void;
+    selectAccount: (account: IAccount) => void;
 }
 
 class Login extends React.Component<ILoginProps & InjectedIntlProps> {
@@ -143,11 +143,11 @@ class Login extends React.Component<ILoginProps & InjectedIntlProps> {
         this.props.navigate('/');
     }
 
-    onSelectAccount(account: IStoredAccount) {
+    onSelectAccount(account: IAccount) {
         this.props.selectAccount(account);
     }
 
-    onRemoveAccount(account: IStoredAccount) {
+    onRemoveAccount(account: IAccount) {
         this.props.onAccountRemove(account);
     }
 
@@ -159,7 +159,7 @@ class Login extends React.Component<ILoginProps & InjectedIntlProps> {
             );
     }
 
-    getNotificationsCount(account: IStoredAccount) {
+    getNotificationsCount(account: IAccount) {
         const notifications = this.props.notifications.filter(n =>
             n.id === account.id &&
             n.ecosystem === account.ecosystem,

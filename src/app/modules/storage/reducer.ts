@@ -16,7 +16,7 @@
 
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import * as actions from './actions';
-import { IStoredAccount } from 'genesis/storage';
+import { IAccount } from 'genesis/auth';
 import saveLocaleHandler from './reducers/saveLocaleHandler';
 import saveAccountHandler from './reducers/saveAccountHandler';
 import removeAccountHandler from './reducers/removeAccountHandler';
@@ -24,7 +24,7 @@ import saveNavigationSizeHandler from './reducers/saveNavigationSizeHandler';
 
 export type State = {
     readonly locale: string;
-    readonly accounts: IStoredAccount[];
+    readonly accounts: IAccount[];
     readonly navigationSize: number;
 };
 

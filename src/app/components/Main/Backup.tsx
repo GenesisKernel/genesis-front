@@ -20,7 +20,7 @@ import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import keyring from 'lib/keyring';
 import { sendAttachment } from 'lib/fs';
 import { alertShow } from 'modules/content/actions';
-import { IStoredAccount } from 'genesis/storage';
+import { IAccount } from 'genesis/auth';
 import * as CopyToClipboard from 'react-copy-to-clipboard';
 import * as QRCode from 'qrcode.react';
 
@@ -28,7 +28,7 @@ import Wrapper from 'components/Wrapper';
 import Validation from 'components/Validation';
 
 export interface IBackupProps extends InjectedIntlProps {
-    account: IStoredAccount;
+    account: IAccount;
     ecosystems: string[];
     privateKey: string;
     alertShow: typeof alertShow;

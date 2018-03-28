@@ -15,10 +15,10 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IStoredAccount } from 'genesis/storage';
+import { IAccount } from 'genesis/auth';
 
 const actionCreator = actionCreatorFactory('storage');
 export const saveLocale = actionCreator<string>('SAVE_LOCALE');
-export const saveAccount = actionCreator<IStoredAccount>('SAVE_ACCOUNT');
-export const removeAccount = actionCreator<IStoredAccount>('REMOVE_ACCOUNT');
+export const saveAccount = actionCreator<IAccount>('SAVE_ACCOUNT');
+export const removeAccount = actionCreator<IAccount>('REMOVE_ACCOUNT');
 export const saveNavigationSize = actionCreator<number>('SAVE_NAVIGATION_SIZE');

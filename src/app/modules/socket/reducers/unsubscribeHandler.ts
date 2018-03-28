@@ -15,10 +15,10 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { IStoredAccount } from 'genesis/storage';
+import { IAccount } from 'genesis/auth';
 import { Success } from 'typescript-fsa';
 
-export default function (state: State, payload: Success<IStoredAccount, void>): State {
+export default function (state: State, payload: Success<IAccount, void>): State {
     return {
         ...state,
         subscriptions: state.subscriptions.filter(l =>

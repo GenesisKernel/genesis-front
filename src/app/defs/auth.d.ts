@@ -15,6 +15,20 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 declare module 'genesis/auth' {
+    interface IAccount {
+        id: string;
+        encKey: string;
+        address: string;
+        ecosystem: string;
+        ecosystemName: string;
+        avatar: string;
+        username: string;
+        sessionToken: string;
+        refreshToken: string;
+        socketToken: string;
+        timestamp: string;
+    }
+
     interface ILoginCall {
         encKey: string;
         ecosystem: string;

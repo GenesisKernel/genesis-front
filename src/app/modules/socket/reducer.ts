@@ -17,7 +17,7 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import * as actions from './actions';
 import { INotificationsMessage } from 'genesis/socket';
-import { IStoredAccount } from 'genesis/storage';
+import { IAccount } from 'genesis/auth';
 import connectDoneHandler from './reducers/connectDoneHandler';
 import disconnectDoneHandler from './reducers/disconnectDoneHandler';
 import subscribeDoneHandler from './reducers/subscribeDoneHandler';
@@ -28,7 +28,7 @@ export type State = {
     readonly socket: ICentrifuge;
     readonly notifications: INotificationsMessage[];
     readonly subscriptions: {
-        account: IStoredAccount;
+        account: IAccount;
         instance: ISubscription;
     }[];
 };
