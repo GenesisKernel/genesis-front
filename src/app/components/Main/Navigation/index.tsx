@@ -102,7 +102,6 @@ const StyledMenuContent = styled.div`
 `;
 
 export interface INavigationProps {
-    isEcosystemOwner: boolean;
     preloading: boolean;
     preloadingError: string;
     visible: boolean;

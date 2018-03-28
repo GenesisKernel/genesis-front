@@ -17,6 +17,7 @@
 import actionCreatorFactory from 'typescript-fsa';
 import { ILoginResponse } from 'lib/api';
 import { IStoredAccount } from 'genesis/storage';
+import { ICreateAccountCall, IImportAccountCall } from 'genesis/auth';
 
 const actionCreator = actionCreatorFactory('auth');
 export const selectAccount = actionCreator.async<IStoredAccount, { sessionToken: string, refreshToken: string }, string>('SELECT_ACCOUNT');
@@ -25,7 +26,7 @@ export const logout = actionCreator.async('LOGOUT');
 export const createEcosystem = actionCreator<{ name: string, id: string }>('CREATE_ECOSYSTEM');
 export const setAction = actionCreator<string>('SET_ACTION');
 export const importSeed = actionCreator.async<Blob, string, undefined>('IMPORT_SEED');
-export const importAccount = actionCreator.async<{ backup: string, password: string, isDefault?: boolean }, IStoredAccount[], string>('IMPORT_ACCOUNT');
-export const createAccount = actionCreator.async<{ seed: string, password: string }, IStoredAccount, string>('CREATE_ACCOUNT');
-export const authorize = actionCreator<{ privateKey: string }>('AUTHORIZE');
-export const deauthorize = actionCreator<void>('DEAUTHORIZE');
+export const importAccount = actionCreator.async<IImportAccountCall, IStoredAccount[], string>('IMPORT_ACCOUNT');
+export const createAccount = actionCreator.async<ICreateAccountCall, IStoredAccount, string>('CREATE_ACCOUNT');
+export const authorize = actionCreator<string>('AUTHORIZE');
+export const deauthorize = actionCreator('DEAUTHORIZE');

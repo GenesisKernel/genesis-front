@@ -27,7 +27,6 @@ interface INavigationContainerProps {
 }
 
 interface INavigationContainerState {
-    isEcosystemOwner: boolean;
     preloading: boolean;
     preloadingError: string;
     visible: boolean;
@@ -48,7 +47,6 @@ const NavigationContainer: React.SFC<INavigationContainerProps & INavigationCont
 const mapStateToProps = (state: IRootState) => {
     const section = state.content.sections[state.content.section] || state.content.sections.home;
     return {
-        isEcosystemOwner: state.auth.isEcosystemOwner,
         preloading: state.content.preloading,
         preloadingError: state.content.preloadingError,
         visible: state.content.sections[state.content.section].menuDisabled ? false : state.content.sections[state.content.section].menuVisible,

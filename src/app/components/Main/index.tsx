@@ -52,7 +52,6 @@ const StyledWrapper = styled.div`
 export interface IMainProps {
     session: string;
     isAuthorized: boolean;
-    isEcosystemOwner: boolean;
     pending: boolean;
     section: string;
     sections: { [name: string]: TSection };

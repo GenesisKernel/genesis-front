@@ -47,7 +47,6 @@ const MainContainer: React.SFC<IMainProps> = props => (
 );
 
 const mapStateToProps = (state: IRootState) => ({
-    isEcosystemOwner: state.auth.isEcosystemOwner,
     isAuthorized: !!state.auth.privateKey,
     stylesheet: state.content.stylesheet,
     section: state.content.section,

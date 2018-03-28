@@ -17,14 +17,28 @@
 import * as actions from './actions';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { IStoredAccount } from 'genesis/storage';
+import loginHandler from './reducers/loginHandler';
+import loginDoneHandler from './reducers/loginDoneHandler';
+import loginFailedHandler from './reducers/loginFailedHandler';
+import logoutDoneHandler from './reducers/logoutDoneHandler';
+import createAccountHandler from './reducers/createAccountHandler';
+import createAccountDoneHandler from './reducers/createAccountDoneHandler';
+import createAccountFailedHandler from './reducers/createAccountFailedHandler';
+import importAccountHandler from './reducers/importAccountHandler';
+import importAccountDoneHandler from './reducers/importAccountDoneHandler';
+import importAccountFailedHandler from './reducers/importAccountFailedHandler';
+import importSeedDoneHandler from './reducers/importSeedDoneHandler';
+import selectAccountHandler from './reducers/selectAccountHandler';
+import selectAccountDoneHandler from './reducers/selectAccountDoneHandler';
+import selectAccountFailedHandler from './reducers/selectAccountFailedHandler';
+import authorizeHandler from './reducers/authorizeHandler';
+import deauthorizeHandler from './reducers/deauthorizeHandler';
 
 export type State = {
     readonly loadedSeed: string;
     readonly isAuthenticated: boolean;
     readonly authenticationError: string;
     readonly isLoggingIn: boolean;
-    readonly isNodeOwner: boolean;
-    readonly isEcosystemOwner: boolean;
     readonly isCreatingAccount: boolean;
     readonly createAccountError: string;
     readonly isImportingAccount: boolean;
@@ -45,8 +59,6 @@ export const initialState: State = {
     isAuthenticated: false,
     authenticationError: null,
     isLoggingIn: false,
-    isNodeOwner: false,
-    isEcosystemOwner: false,
     isCreatingAccount: false,
     createAccountError: null,
     isImportingAccount: false,
@@ -63,134 +75,19 @@ export const initialState: State = {
 };
 
 export default reducerWithInitialState<State>(initialState)
-    // Login
-    .case(actions.login.started, (state, payload) => ({
-        ...state,
-        isAuthenticated: false,
-        isLoggingIn: true,
-        isNodeOwner: false,
-        isEcosystemOwner: false,
-        account: null,
-        sessionToken: null,
-        refreshToken: null,
-        socketToken: null,
-        timestamp: null
-    }))
-    .case(actions.login.done, (state, payload) => ({
-        ...state,
-        isAuthenticated: true,
-        isLoggingIn: false,
-        isNodeOwner: payload.result.isnode,
-        isEcosystemOwner: payload.result.isowner,
-        account: payload.result.account,
-        ecosystem: payload.result.ecosystem_id,
-        sessionToken: payload.result.token,
-        refreshToken: payload.result.refresh,
-        privateKey: payload.result.privateKey,
-        socketToken: payload.result.notify_key,
-        timestamp: payload.result.timestamp,
-        authenticationError: null,
-        id: payload.result.account.id
-    }))
-    .case(actions.login.failed, (state, payload) => ({
-        ...state,
-        isLoggingIn: false,
-        authenticationError: payload.error
-    }))
-
-    // Logout
-    .case(actions.logout.done, (state, payload) => ({
-        ...state,
-        account: null,
-        isAuthenticated: false,
-        isLoggingIn: false,
-        isNodeOwner: false,
-        isEcosystemOwner: false
-    }))
-
-    // CreateAccount
-    .case(actions.createAccount.started, (state, payload) => ({
-        ...state,
-        isCreatingAccount: true,
-        createAccountError: null
-    }))
-    .case(actions.createAccount.done, (state, payload) => ({
-        ...state,
-        isCreatingAccount: false,
-        createAccountError: null
-    }))
-    .case(actions.createAccount.failed, (state, payload) => ({
-        ...state,
-        isCreatingAccount: false,
-        createAccountError: payload.error
-    }))
-
-    // ImportAccount
-    .case(actions.importAccount.started, (state, payload) => ({
-        ...state,
-        isImportingAccount: true,
-        importAccountError: null
-    }))
-    .case(actions.importAccount.done, (state, payload) => ({
-        ...state,
-        isImportingAccount: false,
-        importAccountError: null
-    }))
-    .case(actions.importAccount.failed, (state, payload) => ({
-        ...state,
-        isImportingAccount: false,
-        importAccountError: payload.error
-    }))
-
-    // ImportAccount
-    .case(actions.importAccount.done, (state, payload) => {
-        if (payload.params.isDefault) {
-            return {
-                ...state,
-                defaultAccount: payload.result[0].id
-            };
-        }
-        else {
-            return state;
-        }
-    })
-
-    // ImportSeed
-    .case(actions.importSeed.done, (state, payload) => ({
-        ...state,
-        loadedSeed: payload.result
-    }))
-
-    // SwitchAccount
-    .case(actions.selectAccount.started, (state, payload) => ({
-        ...state,
-        authenticationError: null,
-        account: payload
-    }))
-    .case(actions.selectAccount.done, (state, payload) => ({
-        ...state,
-        isAuthenticated: true,
-        authenticationError: null,
-        sessionToken: payload.result.sessionToken,
-        refreshToken: payload.result.refreshToken,
-        socketToken: payload.params.socketToken,
-        timestamp: payload.params.timestamp,
-        account: payload.params,
-        id: payload.params.id
-    }))
-    .case(actions.selectAccount.failed, (state, payload) => ({
-        ...state,
-        isAuthenticated: false,
-        authenticationError: payload.error,
-        account: payload.params
-    }))
-
-    // Authorize/Deauthorize
-    .case(actions.authorize, (state, payload) => ({
-        ...state,
-        privateKey: payload.privateKey
-    }))
-    .case(actions.deauthorize, (state, payload) => ({
-        ...state,
-        privateKey: null
-    }));
+    .case(actions.login.started, loginHandler)
+    .case(actions.login.done, loginDoneHandler)
+    .case(actions.login.failed, loginFailedHandler)
+    .case(actions.logout.done, logoutDoneHandler)
+    .case(actions.createAccount.started, createAccountHandler)
+    .case(actions.createAccount.done, createAccountDoneHandler)
+    .case(actions.createAccount.failed, createAccountFailedHandler)
+    .case(actions.importAccount.started, importAccountHandler)
+    .case(actions.importAccount.done, importAccountDoneHandler)
+    .case(actions.importAccount.failed, importAccountFailedHandler)
+    .case(actions.importSeed.done, importSeedDoneHandler)
+    .case(actions.selectAccount.started, selectAccountHandler)
+    .case(actions.selectAccount.done, selectAccountDoneHandler)
+    .case(actions.selectAccount.failed, selectAccountFailedHandler)
+    .case(actions.authorize, authorizeHandler)
+    .case(actions.deauthorize, deauthorizeHandler);

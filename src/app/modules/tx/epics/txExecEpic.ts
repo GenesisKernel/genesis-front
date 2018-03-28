@@ -63,9 +63,7 @@ export const txExecEpic: Epic<Action, IRootState> =
                                 result: result.result
                             }
                         }),
-                        authorize({
-                            privateKey: action.payload.privateKey
-                        }),
+                        authorize(action.payload.privateKey)
                     );
                 })
                 .catch((error: IAPIError & ITxStatusResponse) => Observable.of(txExec.failed({
