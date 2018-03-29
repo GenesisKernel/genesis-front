@@ -1,0 +1,53 @@
+// Copyright 2017 The genesis-front Authors
+// This file is part of the genesis-front library.
+// 
+// The genesis-front library is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// The genesis-front library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
+
+import { Action } from 'redux';
+import { Epic } from 'redux-observable';
+import * as actions from '../actions';
+import api, { IAPIError } from 'lib/api';
+// import { setIds, convertToTreeData } from 'lib/constructor';
+import { IRootState } from 'modules';
+import { Observable } from 'rxjs';
+
+const getPageTreeEpic: Epic<Action, IRootState> =
+    (action$, store, { convertToTreeData, setIds }) => action$.ofAction(actions.getPageTree.started)
+        .flatMap(action => {
+            const state = store.getState();
+
+            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, action.payload.name, {}, state.storage.locale))
+                .map(payload => {
+                        let pageTree = payload.tree;
+                        setIds(pageTree);
+
+                        return actions.getPageTree.done({
+                            params: action.payload,
+                            result: {
+                                // name: action.payload.name,
+                                jsonData: pageTree,
+                                treeData: convertToTreeData(pageTree)
+                            }
+                        });
+                    }
+                )
+                .catch((e: IAPIError) =>
+                    Observable.of(actions.getPageTree.failed({
+                        params: action.payload,
+                        error: e.error
+                    }))
+                );
+        });
+
+export default getPageTreeEpic;

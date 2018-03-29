@@ -29,6 +29,7 @@ import createEditorTabEpic from './epics/createEditorTabEpic';
 import changeEditorToolEpic from './epics/changeEditorToolEpic';
 import loadEditorTabEpic from './epics/loadEditorTabEpic';
 import generatePageTemplateEpic from './epics/generatePageTemplateEpic';
+import getPageTreeEpic from './epics/getPageTreeEpic';
 
 export default combineEpics(
     changeEditorToolEpic,
@@ -44,5 +45,6 @@ export default combineEpics(
     newContractEpic,
     newMenuEpic,
     newPageEpic,
-    generatePageTemplateEpic
+    generatePageTemplateEpic,
+    getPageTreeEpic
 );

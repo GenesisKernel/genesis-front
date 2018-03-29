@@ -17,6 +17,26 @@
 declare module 'genesis/editor' {
     import { TProtypoElement } from 'genesis/protypo';
 
+    type TConstructorData = {
+        // type: string,
+        jsonData: any,
+        treeData?: any,
+        pageTemplate?: string,
+        selectedTag?: TProtypoElement
+    };
+
+    type TConstructorTreeElement = {
+        title: string,
+        children?: TConstructorTreeElement[],
+        expanded?: boolean,
+        id?: string,
+        selected: boolean,
+        logic: boolean,
+        canMove: boolean,
+        canDrop: boolean,
+        tag?: TProtypoElement
+    };
+
     type TEditorTab = {
         readonly type: string;
         readonly id: string;
@@ -26,6 +46,15 @@ declare module 'genesis/editor' {
         readonly value: string;
         readonly initialValue: string;
         readonly preview?: TProtypoElement[];
+        readonly designer?: {
+            data: TConstructorData,
+            history?: {
+                data: TConstructorData[],
+                position?: number,
+                canUndo?: boolean,
+                canRedo?: boolean
+            };
+        };
         readonly dirty: boolean;
     };
 

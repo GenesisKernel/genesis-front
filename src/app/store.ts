@@ -30,6 +30,7 @@ import createHistory from 'history/createBrowserHistory';
 import createMemoryHistory from 'history/createMemoryHistory';
 import rootReducer, { rootEpic, IRootState } from './modules';
 import platform from 'lib/platform';
+import { setIds, convertToTreeData } from 'lib/constructor';
 
 export const history = platform.select<() => History>({
     desktop: createMemoryHistory,
@@ -68,7 +69,8 @@ const configureStore = (initialState?: IRootState) => {
         routerMiddleware(history),
         createEpicMiddleware(rootEpic, {
             dependencies: {
-
+                setIds,
+                convertToTreeData
             }
         }),
         loadingBarMiddleware({

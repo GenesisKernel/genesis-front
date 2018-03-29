@@ -26,6 +26,8 @@ import reloadEditorTabHandler from './reducers/reloadEditorTabHandler';
 import revertEditorTabHandler from './reducers/revertEditorTabHandler';
 import updateEditorTabHandler from './reducers/updateEditorTabHandler';
 import loadEditorTabDoneHandler from './reducers/loadEditorTabDoneHandler';
+import getPageTreeDoneHandler from './reducers/getPageTreeDoneHandler';
+import selectTagHandler from './reducers/selectTagHandler';
 
 export type State = {
     readonly pending: boolean;
@@ -48,4 +50,6 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.loadEditorTab.done, loadEditorTabDoneHandler)
     .case(actions.reloadEditorTab, reloadEditorTabHandler)
     .case(actions.revertEditorTab, revertEditorTabHandler)
-    .case(actions.updateEditorTab, updateEditorTabHandler);
+    .case(actions.updateEditorTab, updateEditorTabHandler)
+    .case(actions.getPageTree.done, getPageTreeDoneHandler)
+    .case(actions.selectTag, selectTagHandler);
