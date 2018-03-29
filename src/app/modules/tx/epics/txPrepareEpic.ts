@@ -39,7 +39,15 @@ const txPrepareEpic: Epic<Action, IRootState> =
                 }));
             }
 
-            return Observable.fromPromise(api.txPrepare(state.auth.sessionToken, action.payload.tx.name, action.payload.tx.params))
+            const txCall = {
+                ...action.payload.tx,
+                params: {
+                    ...action.payload.tx.params,
+                    Lang: state.storage.locale
+                }
+            };
+
+            return Observable.fromPromise(api.txPrepare(state.auth.sessionToken, txCall.name, txCall.params))
                 .flatMap(prepare => {
                     let forSign = prepare.forsign;
                     const signParams = {};
@@ -50,9 +58,9 @@ const txPrepareEpic: Epic<Action, IRootState> =
                                 id: 'SIGNATURE',
                                 type: 'TX_SIGNATURE',
                                 params: {
-                                    txParams: action.payload.tx.params,
+                                    txParams: txCall.params,
                                     signs: prepare.signs,
-                                    contract: action.payload.tx.name
+                                    contract: txCall.name
                                 }
                             })),
                             action$.ofAction(modalClose)
@@ -69,8 +77,9 @@ const txPrepareEpic: Epic<Action, IRootState> =
                                     });
 
                                     return Observable.of(txExec.started({
-                                        ...action.payload,
+                                        tx: txCall,
                                         time: prepare.time,
+                                        privateKey: action.payload.privateKey,
                                         signature: keyring.sign(forSign, action.payload.privateKey),
                                         signParams
                                     }));
@@ -79,8 +88,9 @@ const txPrepareEpic: Epic<Action, IRootState> =
                     }
                     else {
                         return Observable.of(txExec.started({
-                            ...action.payload,
+                            tx: txCall,
                             time: prepare.time,
+                            privateKey: action.payload.privateKey,
                             signature: keyring.sign(forSign, action.payload.privateKey)
                         }));
                     }
