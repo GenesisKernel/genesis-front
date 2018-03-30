@@ -35,6 +35,7 @@ import Toolbar from './Toolbar';
 import SectionButton from 'components/Main/SectionButton';
 import ToolButton from 'components/Main/Toolbar/ToolButton';
 import EditorToolbar from 'containers/Main/Toolbar/EditorToolbar';
+import { TTransactionStatus } from 'genesis/tx';
 // import TransactionsMenu from './TransactionsMenu';
 
 export const styles = {
@@ -58,7 +59,7 @@ export interface IMainProps {
     stylesheet: string;
     navigationSize: number;
     navigationVisible: boolean;
-    pendingTransactions: OrderedMap<string, { uuid: string, block: string, error?: { type: string, error: string }, contract: string }>;
+    pendingTransactions: OrderedMap<string, TTransactionStatus>;
     transactionsCount: number;
     onRefresh: () => void;
     onNavigateHome: () => void;

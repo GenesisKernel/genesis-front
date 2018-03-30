@@ -17,16 +17,15 @@
 import { State } from '../reducer';
 import { Success } from 'typescript-fsa';
 import { IExecutionCall, ITxResult } from 'genesis/tx';
+import setTxData from './setTxData';
 
 export default function (state: State, payload: Success<IExecutionCall, ITxResult>): State {
-    return {
-        ...state,
-        transactions: state.transactions.set(payload.params.tx.uuid, {
+    return setTxData(state, {
+        tx: payload.params.tx,
+        data: {
             block: payload.result.block,
             result: payload.result.result,
-            error: null,
-            contract: payload.params.tx.name,
-            uuid: payload.params.tx.uuid
-        })
-    };
+            error: null
+        }
+    });
 }
