@@ -43,7 +43,7 @@ const txCallBatchEpic: Epic<Action, IRootState> =
                                                     name: contract.name,
                                                     parent: action.payload.uuid,
                                                     silent: true,
-                                                    params: contract.data
+                                                    params
                                                 })),
                                                 action$.filter(l => (txExec.done.match(l) || txExec.failed.match(l)) && id === l.payload.params.tx.uuid)
                                                     .take(1)
