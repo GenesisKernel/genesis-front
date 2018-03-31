@@ -17,12 +17,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { /*getPageTree, getPage,*/ changePage, setTagCanDropPosition, addTag, moveTag, moveTreeTag, copyTag, removeTag, /*selectTag,*/ constructorUndo, constructorRedo, saveConstructorHistory } from 'modules/admin/actions';
-import { getPageTree, selectTag } from 'modules/editor/actions';
+import { /*getPageTree, getPage, changePage,*/ setTagCanDropPosition, addTag, moveTag, moveTreeTag, copyTag, removeTag, /*selectTag,*/ constructorUndo, constructorRedo /*, saveConstructorHistory*/ } from 'modules/admin/actions';
+import { getPageTree, selectTag, changePage, saveConstructorHistory } from 'modules/editor/actions';
 // import { navigatePage } from 'modules/content/actions';
 import Constructor from 'components/Main/Admin/Interface/Constructor';
 import { TProtypoElement } from 'genesis/protypo';
 import { generatePageTemplate } from 'modules/editor/actions';
+import { IChangePageCall } from 'genesis/editor';
 
 export interface IConstructorTabbedContainerProps {
     pageID: string;
@@ -61,7 +62,7 @@ interface IConstructorTabbedContainerState {
 interface IConstructorTabbedContainerDispatch {
     getPageTree: typeof getPageTree.started;
     // getPage?: typeof getPage.started;
-    changePage: typeof changePage;
+    changePage: typeof changePage.started;
     setTagCanDropPosition: typeof setTagCanDropPosition;
     addTag: typeof addTag;
     moveTag: typeof moveTag;
@@ -71,7 +72,7 @@ interface IConstructorTabbedContainerDispatch {
     selectTag: typeof selectTag;
     constructorUndo: typeof constructorUndo;
     constructorRedo: typeof constructorRedo;
-    saveConstructorHistory: typeof saveConstructorHistory;
+    saveConstructorHistory: typeof saveConstructorHistory.started;
     generatePageTemplate: typeof generatePageTemplate;
 }
 
@@ -123,24 +124,24 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
         // });
     }
 
-    changePage(payload?: any) {
-        payload.pageID = this.props.pageID;
+    changePage(payload: IChangePageCall) {
+        // payload.pageID = this.props.pageID;
         this.props.changePage(payload);
-        this.props.saveConstructorHistory({ pageID: this.props.pageID });
-        this.generatePageTemplate();
+        this.props.saveConstructorHistory({});
+        // this.generatePageTemplate();
     }
 
     addTag(payload?: any) {
         payload.pageID = this.props.pageID;
         this.props.addTag(payload);
-        this.props.saveConstructorHistory({ pageID: this.props.pageID });
+        this.props.saveConstructorHistory({});
         this.generatePageTemplate();
     }
 
     moveTag(payload?: any) {
         payload.pageID = this.props.pageID;
         this.props.moveTag(payload);
-        this.props.saveConstructorHistory({ pageID: this.props.pageID });
+        this.props.saveConstructorHistory({});
         this.generatePageTemplate();
     }
 
@@ -152,14 +153,14 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     copyTag(payload?: any) {
         payload.pageID = this.props.pageID;
         this.props.copyTag(payload);
-        this.props.saveConstructorHistory({ pageID: this.props.pageID });
+        this.props.saveConstructorHistory({});
         this.generatePageTemplate();
     }
 
     removeTag(payload?: any) {
         payload.pageID = this.props.pageID;
         this.props.removeTag(payload);
-        this.props.saveConstructorHistory({ pageID: this.props.pageID });
+        this.props.saveConstructorHistory({});
         this.generatePageTemplate();
     }
 
@@ -281,7 +282,7 @@ const mapDispatchToProps = {
     getPageTree: getPageTree.started,
     // getPage: getPage.started,
     // navigatePage: navigatePage.started,
-    changePage,
+    changePage: changePage.started,
     setTagCanDropPosition,
     addTag,
     moveTag,
@@ -291,7 +292,7 @@ const mapDispatchToProps = {
     selectTag,
     constructorUndo,
     constructorRedo,
-    saveConstructorHistory,
+    saveConstructorHistory: saveConstructorHistory.started,
     generatePageTemplate
 };
 

@@ -64,6 +64,30 @@ const findNextTagById = (el: any, id: string, parent: any, tail: boolean): any =
     }
 };
 
+export function copyObject(item: any) {
+    let result: any = null;
+    if (!item) {
+        return result;
+    }
+    if (Array.isArray(item)) {
+        result = [];
+        item.forEach(element => {
+            result.push(copyObject(element));
+        });
+    }
+    else {
+        if (item instanceof Object && !(item instanceof Function)) {
+            result = {};
+            for (let key in item) {
+                if (key) {
+                    result[key] = copyObject(item[key]);
+                }
+            }
+        }
+    }
+    return result || item;
+}
+
 export function generateId() {
     return 'tag_' + (10000000 + Math.floor(Math.random() * 89999999));
 }

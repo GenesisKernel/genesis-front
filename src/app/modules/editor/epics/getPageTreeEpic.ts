@@ -18,7 +18,6 @@ import { Action } from 'redux';
 import { Epic } from 'redux-observable';
 import * as actions from '../actions';
 import api, { IAPIError } from 'lib/api';
-// import { setIds, convertToTreeData } from 'lib/constructor';
 import { IRootState } from 'modules';
 import { Observable } from 'rxjs';
 

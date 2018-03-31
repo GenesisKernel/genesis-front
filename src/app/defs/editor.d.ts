@@ -49,7 +49,7 @@ declare module 'genesis/editor' {
         readonly designer?: {
             data: TConstructorData,
             history?: {
-                data: TConstructorData[],
+                data: TProtypoElement[],
                 position?: number,
                 canUndo?: boolean,
                 canRedo?: boolean
@@ -73,5 +73,36 @@ declare module 'genesis/editor' {
         type: string;
         id: string;
         data: Partial<TEditorTab>;
+    }
+
+    interface IChangePageCall {
+        text?: string;
+        class?: string;
+        name?: string;
+        source?: string;
+        align?: string;
+        transform?: string;
+        wrap?: string;
+        color?: string;
+        btn?: string;
+        width?: string;
+        ratio?: string;
+        condition?: string;
+        canDropPosition?: string;
+        tagID: string;
+        pageID?: string;
+    }
+
+    interface IChangePageResult {
+        jsonData: TProtypoElement[];
+        treeData: TConstructorTreeElement[];
+        selectedTag?: TProtypoElement;
+    }
+
+    interface ISaveConstructorHistoryResult {
+        data: TProtypoElement[];
+        position: number;
+        canUndo: boolean;
+        canRedo: boolean;
     }
 }

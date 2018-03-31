@@ -16,7 +16,7 @@
 
 import actionCreatorFactory from 'typescript-fsa';
 import { TProtypoElement } from 'genesis/protypo';
-import { IEditorTabCreateCall, ILoadEditorTabCall, IReloadEditorTabCall, TEditorTab, TConstructorTreeElement } from 'genesis/editor';
+import { IEditorTabCreateCall, ILoadEditorTabCall, IReloadEditorTabCall, IChangePageCall, IChangePageResult, ISaveConstructorHistoryResult, TEditorTab, TConstructorTreeElement } from 'genesis/editor';
 
 const actionCreator = actionCreatorFactory('editor');
 
@@ -32,5 +32,7 @@ export const changeEditorTool = actionCreator.async<string, TProtypoElement[]>('
 
 // TODO: Pending refactoring
 export const getPageTree = actionCreator.async<{ id: string, name: string }, { name?: string, jsonData: TProtypoElement[], treeData?: TConstructorTreeElement[], error?: string }, string>('GET_PAGE_TREE');
+export const changePage = actionCreator.async<IChangePageCall, IChangePageResult>('CHANGE_PAGE');
 export const selectTag = actionCreator<{ tag: TProtypoElement }>('SELECT_TAG');
+export const saveConstructorHistory = actionCreator.async<{}, ISaveConstructorHistoryResult>('SAVE_CONSTRUCTOR_HISTORY');
 export const generatePageTemplate = actionCreator<string>('GENERATE_PAGE_TEMPLATE');
