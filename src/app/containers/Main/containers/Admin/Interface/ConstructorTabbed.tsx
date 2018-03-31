@@ -17,8 +17,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { /*getPageTree, getPage, changePage,*/ setTagCanDropPosition, addTag, moveTag, moveTreeTag, copyTag, removeTag, /*selectTag,*/ constructorUndo, constructorRedo /*, saveConstructorHistory*/ } from 'modules/admin/actions';
-import { getPageTree, selectTag, changePage, saveConstructorHistory } from 'modules/editor/actions';
+import { /*getPageTree, getPage, changePage, setTagCanDropPosition, addTag,*/ moveTag, moveTreeTag, copyTag, removeTag, /*selectTag,*/ constructorUndo, constructorRedo /*, saveConstructorHistory*/ } from 'modules/admin/actions';
+import { getPageTree, selectTag, changePage, saveConstructorHistory, setTagCanDropPosition, addTag } from 'modules/editor/actions';
 // import { navigatePage } from 'modules/content/actions';
 import Constructor from 'components/Main/Admin/Interface/Constructor';
 import { TProtypoElement } from 'genesis/protypo';
@@ -63,7 +63,7 @@ interface IConstructorTabbedContainerDispatch {
     getPageTree: typeof getPageTree.started;
     // getPage?: typeof getPage.started;
     changePage: typeof changePage.started;
-    setTagCanDropPosition: typeof setTagCanDropPosition;
+    setTagCanDropPosition: typeof setTagCanDropPosition.started;
     addTag: typeof addTag;
     moveTag: typeof moveTag;
     moveTreeTag: typeof moveTreeTag;
@@ -96,7 +96,7 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
         this.getPage();
     }
 
-    componentWillReceiveProps(props: IConstructorTabbedContainerProps & IConstructorTabbedContainerState & IConstructorTabbedContainerDispatch) {
+    /*componentWillReceiveProps(props: IConstructorTabbedContainerProps & IConstructorTabbedContainerState & IConstructorTabbedContainerDispatch) {
         if (props.random && this.props.random !== props.random) {
             this.getPage();
         }
@@ -112,7 +112,7 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
             ...this.state,
             canSave
         });
-    }
+    }*/
 
     getPage() {
         this.props.getPageTree({
@@ -165,7 +165,7 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     }
 
     setTagCanDropPosition(payload?: any) {
-        payload.pageID = this.props.pageID;
+        // payload.pageID = this.props.pageID;
         this.props.setTagCanDropPosition(payload);
     }
 
@@ -283,7 +283,7 @@ const mapDispatchToProps = {
     // getPage: getPage.started,
     // navigatePage: navigatePage.started,
     changePage: changePage.started,
-    setTagCanDropPosition,
+    setTagCanDropPosition: setTagCanDropPosition.started,
     addTag,
     moveTag,
     moveTreeTag,

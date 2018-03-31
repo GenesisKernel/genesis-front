@@ -20,36 +20,31 @@ import * as actions from '../actions';
 import { IRootState } from 'modules';
 import { Observable } from 'rxjs';
 
-const saveConstructorHistoryEpic: Epic<Action, IRootState> =
-    (action$, store, { }) => action$.ofAction(actions.saveConstructorHistory.started)
+const setTagCanDropPositionEpic: Epic<Action, IRootState> =
+    (action$, store, { findTagById, convertToTreeData, copyObject }) => action$.ofAction(actions.setTagCanDropPosition.started)
         .flatMap(action => {
             const state = store.getState().editor;
-
             const tab = state.tabs[state.tabIndex].designer;
             const tabData = tab && tab.data || null;
-            const tabHistory = tab && tab.history || null;
+            let jsonData = tabData.jsonData && copyObject(tabData.jsonData) || null;
 
-            let historyData = tabHistory && tabHistory.data || [];
-            const jsonData = tabData && tabData.jsonData || [];
-
-            const position = tabHistory && tabHistory.position || 0;
-
-            if (position < historyData.length) {
-                historyData = [...historyData.slice(0, position)];
+            let tag = findTagById(jsonData, action.payload.tagID).el;
+            if (tag) {
+                if (!tag.attr) {
+                    tag.attr = {};
+                }
+                if ('string' === typeof action.payload.position) {
+                    tag.attr.canDropPosition = action.payload.position;
+                }
             }
 
-            const canUndo = position > 0;
-            const canRedo = false;
-
-            return Observable.of(actions.saveConstructorHistory.done({
+            return Observable.of(actions.setTagCanDropPosition.done({
                 params: action.payload,
                 result: {
-                    data: historyData.concat([jsonData]),
-                    position: position + 1,
-                    canUndo,
-                    canRedo
+                    jsonData,
+                    treeData: convertToTreeData(jsonData)
                 }
             }));
         });
 
-export default saveConstructorHistoryEpic;
+export default setTagCanDropPositionEpic;

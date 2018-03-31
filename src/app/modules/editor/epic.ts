@@ -32,6 +32,7 @@ import generatePageTemplateEpic from './epics/generatePageTemplateEpic';
 import getPageTreeEpic from './epics/getPageTreeEpic';
 import changePageEpic from './epics/changePageEpic';
 import saveConstructorHistoryEpic from './epics/saveConstructorHistoryEpic';
+import setTagCanDropPositionEpic from './epics/setTagCanDropPositionEpic';
 
 export default combineEpics(
     changeEditorToolEpic,
@@ -50,5 +51,6 @@ export default combineEpics(
     generatePageTemplateEpic,
     getPageTreeEpic,
     changePageEpic,
-    saveConstructorHistoryEpic
+    saveConstructorHistoryEpic,
+    setTagCanDropPositionEpic
 );

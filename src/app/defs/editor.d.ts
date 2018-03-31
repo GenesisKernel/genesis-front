@@ -19,8 +19,8 @@ declare module 'genesis/editor' {
 
     type TConstructorData = {
         // type: string,
-        jsonData: any,
-        treeData?: any,
+        jsonData: TProtypoElement[],
+        treeData?: TConstructorTreeElement[],
         pageTemplate?: string,
         selectedTag?: TProtypoElement
     };
@@ -49,7 +49,7 @@ declare module 'genesis/editor' {
         readonly designer?: {
             data: TConstructorData,
             history?: {
-                data: TProtypoElement[],
+                data: TProtypoElement[][],
                 position?: number,
                 canUndo?: boolean,
                 canRedo?: boolean
@@ -100,9 +100,19 @@ declare module 'genesis/editor' {
     }
 
     interface ISaveConstructorHistoryResult {
-        data: TProtypoElement[];
+        data: TProtypoElement[][];
         position: number;
         canUndo: boolean;
         canRedo: boolean;
+    }
+
+    interface ISetTagCanDropPositionCall {
+        tagID: string;
+        position: string;
+    }
+
+    interface ISetTagCanDropPositionResult {
+        jsonData: TProtypoElement[];
+        treeData: TConstructorTreeElement[];
     }
 }

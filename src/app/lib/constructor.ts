@@ -64,16 +64,19 @@ const findNextTagById = (el: any, id: string, parent: any, tail: boolean): any =
     }
 };
 
+// todo: copyArray, copyObject
+
 export function copyObject(item: any) {
     let result: any = null;
     if (!item) {
         return result;
     }
     if (Array.isArray(item)) {
-        result = [];
-        item.forEach(element => {
-            result.push(copyObject(element));
-        });
+        result = item.map(copyObject);
+        // result = [];
+        // item.forEach(element => {
+        //     result.push(copyObject(element));
+        // });
     }
     else {
         if (item instanceof Object && !(item instanceof Function)) {
