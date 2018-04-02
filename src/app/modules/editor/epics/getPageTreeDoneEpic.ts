@@ -14,26 +14,16 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { State } from '../reducer';
-import { TProtypoElement } from 'genesis/protypo';
+import { Action } from 'redux';
+import { Epic } from 'redux-observable';
+import * as actions from '../actions';
+import { IRootState } from 'modules';
+import { Observable } from 'rxjs';
 
-export default function (state: State, payload: {tag: TProtypoElement}): State {
-    return {
-        ...state,
-        tabs: [
-            ...state.tabs.slice(0, state.tabIndex),
-            {
-                ...state.tabs[state.tabIndex],
-                designer: {
-                    ...state.tabs[state.tabIndex].designer,
-                    data: {
-                        ...state.tabs[state.tabIndex].designer.data,
-                        selectedTag: payload.tag
-                    }
-                }
+const getPageTreeDoneEpic: Epic<Action, IRootState> =
+    (action$, store, { convertToTreeData, setIds }) => action$.ofAction(actions.getPageTree.done)
+        .flatMap(action => {
+            return Observable.of(actions.saveConstructorHistory.started({}));
+        });
 
-            },
-            ...state.tabs.slice(state.tabIndex + 1),
-        ]
-    };
-}
+export default getPageTreeDoneEpic;

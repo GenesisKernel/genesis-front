@@ -17,8 +17,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { /*getPageTree, getPage, changePage, setTagCanDropPosition, addTag,*/ moveTag, moveTreeTag, copyTag, removeTag, /*selectTag,*/ constructorUndo, constructorRedo /*, saveConstructorHistory*/ } from 'modules/admin/actions';
-import { getPageTree, selectTag, changePage, saveConstructorHistory, setTagCanDropPosition, addTag } from 'modules/editor/actions';
+import { /*getPageTree, getPage, changePage, setTagCanDropPosition, addTag,*/ moveTag, moveTreeTag, copyTag, removeTag, /*selectTag, constructorUndo, constructorRedo, saveConstructorHistory*/ } from 'modules/admin/actions';
+import { getPageTree, selectTag, changePage, saveConstructorHistory, setTagCanDropPosition, addTag, constructorUndo, constructorRedo } from 'modules/editor/actions';
 // import { navigatePage } from 'modules/content/actions';
 import Constructor from 'components/Main/Admin/Interface/Constructor';
 import { TProtypoElement } from 'genesis/protypo';
@@ -70,8 +70,8 @@ interface IConstructorTabbedContainerDispatch {
     copyTag: typeof copyTag;
     removeTag: typeof removeTag;
     selectTag: typeof selectTag;
-    constructorUndo: typeof constructorUndo;
-    constructorRedo: typeof constructorRedo;
+    constructorUndo: typeof constructorUndo.started;
+    constructorRedo: typeof constructorRedo.started;
     saveConstructorHistory: typeof saveConstructorHistory.started;
     generatePageTemplate: typeof generatePageTemplate;
 }
@@ -190,12 +190,12 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     }
 
     undo() {
-        this.props.constructorUndo({ pageID: this.props.pageID });
+        this.props.constructorUndo({});
         this.generatePageTemplate();
     }
 
     redo() {
-        this.props.constructorRedo({ pageID: this.props.pageID });
+        this.props.constructorRedo({});
         this.generatePageTemplate();
     }
 
@@ -290,8 +290,8 @@ const mapDispatchToProps = {
     copyTag,
     removeTag,
     selectTag,
-    constructorUndo,
-    constructorRedo,
+    constructorUndo: constructorUndo.started,
+    constructorRedo: constructorRedo.started,
     saveConstructorHistory: saveConstructorHistory.started,
     generatePageTemplate
 };

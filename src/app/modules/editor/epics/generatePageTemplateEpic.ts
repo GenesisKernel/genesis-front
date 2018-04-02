@@ -23,8 +23,16 @@ import { CodeGenerator } from 'lib/constructor';
 const generatePageTemplateEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(generatePageTemplate)
         .map(action => {
-            const tabData = store.getState().admin.tabs.data['interfaceConstructor' + action.payload].data;
-            const codeGenerator = new CodeGenerator(tabData);
+            // const tabData = store.getState().admin.tabs.data['interfaceConstructor' + action.payload].data;
+            // const codeGenerator = new CodeGenerator(tabData);
+            // const pageTemplate = codeGenerator.render();
+            //
+            // return updateEditorTab(pageTemplate);
+
+            const state = store.getState().editor;
+            const tab = state.tabs[state.tabIndex].designer;
+            const jsonData = tab && tab.data && tab.data.jsonData;
+            const codeGenerator = new CodeGenerator(jsonData);
             const pageTemplate = codeGenerator.render();
 
             return updateEditorTab(pageTemplate);

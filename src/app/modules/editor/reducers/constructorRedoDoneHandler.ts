@@ -15,9 +15,10 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { TProtypoElement } from 'genesis/protypo';
+import { IConstructorUndoRedoResult } from 'genesis/editor';
+import { Success } from 'typescript-fsa';
 
-export default function (state: State, payload: {tag: TProtypoElement}): State {
+export default function (state: State, payload: Success<{}, IConstructorUndoRedoResult>): State {
     return {
         ...state,
         tabs: [
@@ -27,11 +28,17 @@ export default function (state: State, payload: {tag: TProtypoElement}): State {
                 designer: {
                     ...state.tabs[state.tabIndex].designer,
                     data: {
-                        ...state.tabs[state.tabIndex].designer.data,
-                        selectedTag: payload.tag
+                        jsonData: payload.result.jsonData,
+                        treeData: payload.result.treeData,
+                        selectedTag: null
+                    },
+                    history: {
+                        ...state.tabs[state.tabIndex].designer.history,
+                        position: payload.result.position,
+                        canUndo: payload.result.canUndo,
+                        canRedo: payload.result.canRedo
                     }
                 }
-
             },
             ...state.tabs.slice(state.tabIndex + 1),
         ]

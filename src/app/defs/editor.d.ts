@@ -106,6 +106,14 @@ declare module 'genesis/editor' {
         canRedo: boolean;
     }
 
+    interface IConstructorUndoRedoResult {
+        position: number;
+        canUndo: boolean;
+        canRedo: boolean;
+        jsonData: TProtypoElement[];
+        treeData: TConstructorTreeElement[];
+    }
+
     interface ISetTagCanDropPositionCall {
         tagID: string;
         position: string;

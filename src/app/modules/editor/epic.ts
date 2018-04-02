@@ -30,8 +30,11 @@ import changeEditorToolEpic from './epics/changeEditorToolEpic';
 import loadEditorTabEpic from './epics/loadEditorTabEpic';
 import generatePageTemplateEpic from './epics/generatePageTemplateEpic';
 import getPageTreeEpic from './epics/getPageTreeEpic';
+import getPageTreeDoneEpic from './epics/getPageTreeDoneEpic';
 import changePageEpic from './epics/changePageEpic';
 import saveConstructorHistoryEpic from './epics/saveConstructorHistoryEpic';
+import constructorUndoEpic from './epics/constructorUndoEpic';
+import constructorRedoEpic from './epics/constructorRedoEpic';
 import setTagCanDropPositionEpic from './epics/setTagCanDropPositionEpic';
 
 export default combineEpics(
@@ -50,7 +53,10 @@ export default combineEpics(
     newPageEpic,
     generatePageTemplateEpic,
     getPageTreeEpic,
+    getPageTreeDoneEpic,
     changePageEpic,
     saveConstructorHistoryEpic,
+    constructorUndoEpic,
+    constructorRedoEpic,
     setTagCanDropPositionEpic
 );

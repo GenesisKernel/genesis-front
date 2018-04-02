@@ -31,6 +31,8 @@ import selectTagHandler from './reducers/selectTagHandler';
 import changePageDoneHandler from './reducers/changePageDoneHandler';
 import saveConstructorHistoryDoneHandler from './reducers/saveConstructorHistoryDoneHandler';
 import setTagCanDropPositionDoneHandler from './reducers/setTagCanDropPositionDoneHandler';
+import constructorUndoDoneHandler from './reducers/constructorUndoDoneHandler';
+import constructorRedoDoneHandler from './reducers/constructorRedoDoneHandler';
 
 export type State = {
     readonly pending: boolean;
@@ -58,4 +60,6 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.selectTag, selectTagHandler)
     .case(actions.changePage.done, changePageDoneHandler)
     .case(actions.saveConstructorHistory.done, saveConstructorHistoryDoneHandler)
+    .case(actions.constructorUndo.done, constructorUndoDoneHandler)
+    .case(actions.constructorRedo.done, constructorRedoDoneHandler)
     .case(actions.setTagCanDropPosition.done, setTagCanDropPositionDoneHandler);
