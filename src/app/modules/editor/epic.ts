@@ -32,6 +32,7 @@ import generatePageTemplateEpic from './epics/generatePageTemplateEpic';
 import getPageTreeEpic from './epics/getPageTreeEpic';
 import getPageTreeDoneEpic from './epics/getPageTreeDoneEpic';
 import changePageEpic from './epics/changePageEpic';
+import addTagEpic from './epics/addTagEpic';
 import saveConstructorHistoryEpic from './epics/saveConstructorHistoryEpic';
 import constructorUndoEpic from './epics/constructorUndoEpic';
 import constructorRedoEpic from './epics/constructorRedoEpic';
@@ -55,6 +56,7 @@ export default combineEpics(
     getPageTreeEpic,
     getPageTreeDoneEpic,
     changePageEpic,
+    addTagEpic,
     saveConstructorHistoryEpic,
     constructorUndoEpic,
     constructorRedoEpic,

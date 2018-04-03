@@ -17,8 +17,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { /*getPageTree, getPage, changePage, setTagCanDropPosition, addTag,*/ moveTag, moveTreeTag, copyTag, removeTag, /*selectTag, constructorUndo, constructorRedo, saveConstructorHistory*/ } from 'modules/admin/actions';
-import { getPageTree, selectTag, changePage, saveConstructorHistory, setTagCanDropPosition, addTag, constructorUndo, constructorRedo } from 'modules/editor/actions';
+import { /*getPageTree, getPage, changePage, setTagCanDropPosition, addTag, moveTag,*/ moveTreeTag, copyTag, removeTag, /*selectTag, constructorUndo, constructorRedo, saveConstructorHistory*/ } from 'modules/admin/actions';
+import { getPageTree, selectTag, changePage, saveConstructorHistory, setTagCanDropPosition, addTag, constructorUndo, constructorRedo, moveTag } from 'modules/editor/actions';
 // import { navigatePage } from 'modules/content/actions';
 import Constructor from 'components/Main/Admin/Interface/Constructor';
 import { TProtypoElement } from 'genesis/protypo';
@@ -64,7 +64,7 @@ interface IConstructorTabbedContainerDispatch {
     // getPage?: typeof getPage.started;
     changePage: typeof changePage.started;
     setTagCanDropPosition: typeof setTagCanDropPosition.started;
-    addTag: typeof addTag;
+    addTag: typeof addTag.started;
     moveTag: typeof moveTag;
     moveTreeTag: typeof moveTreeTag;
     copyTag: typeof copyTag;
@@ -132,7 +132,7 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     }
 
     addTag(payload?: any) {
-        payload.pageID = this.props.pageID;
+        // payload.pageID = this.props.pageID;
         this.props.addTag(payload);
         this.props.saveConstructorHistory({});
         this.generatePageTemplate();
@@ -284,7 +284,7 @@ const mapDispatchToProps = {
     // navigatePage: navigatePage.started,
     changePage: changePage.started,
     setTagCanDropPosition: setTagCanDropPosition.started,
-    addTag,
+    addTag: addTag.started,
     moveTag,
     moveTreeTag,
     copyTag,

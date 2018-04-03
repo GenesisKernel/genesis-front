@@ -17,7 +17,7 @@
 import actionCreatorFactory from 'typescript-fsa';
 import { TProtypoElement } from 'genesis/protypo';
 import { IEditorTabCreateCall, ILoadEditorTabCall, IReloadEditorTabCall, IChangePageCall, IChangePageResult, ISaveConstructorHistoryResult,
-    IConstructorUndoRedoResult, ISetTagCanDropPositionCall, ISetTagCanDropPositionResult,
+    IConstructorUndoRedoResult, ISetTagCanDropPositionCall, ISetTagCanDropPositionResult, IAddTagCall, IAddTagResult,
     TEditorTab, TConstructorTreeElement
 } from 'genesis/editor';
 
@@ -38,7 +38,8 @@ export const getPageTree = actionCreator.async<{ id: string, name: string }, { n
 export const changePage = actionCreator.async<IChangePageCall, IChangePageResult>('CHANGE_PAGE');
 export const selectTag = actionCreator<{ tag: TProtypoElement }>('SELECT_TAG');
 export const setTagCanDropPosition = actionCreator.async<ISetTagCanDropPositionCall, ISetTagCanDropPositionResult>('SET_TAG_CAN_DROP_POSITION');
-export const addTag = actionCreator<{ tag: any, pageID: string, destinationTagID?: string, position?: string }>('ADD_TAG');
+export const addTag = actionCreator.async<IAddTagCall, IAddTagResult>('ADD_TAG');
+export const moveTag = actionCreator<{ tag: any, pageID: string, destinationTagID?: string, position?: string }>('MOVE_TAG');
 export const saveConstructorHistory = actionCreator.async<{}, ISaveConstructorHistoryResult>('SAVE_CONSTRUCTOR_HISTORY');
 export const constructorUndo = actionCreator.async<{ }, IConstructorUndoRedoResult>('CONSTRUCTOR_UNDO');
 export const constructorRedo = actionCreator.async<{ }, IConstructorUndoRedoResult>('CONSTRUCTOR_REDO');

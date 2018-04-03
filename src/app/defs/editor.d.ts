@@ -99,6 +99,17 @@ declare module 'genesis/editor' {
         selectedTag?: TProtypoElement;
     }
 
+    interface IAddTagCall {
+        tag: any;
+        destinationTagID?: string;
+        position?: string;
+    }
+
+    interface IAddTagResult {
+        jsonData: TProtypoElement[];
+        treeData: TConstructorTreeElement[];
+    }
+
     interface ISaveConstructorHistoryResult {
         data: TProtypoElement[][];
         position: number;

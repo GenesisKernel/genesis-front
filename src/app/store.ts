@@ -30,7 +30,7 @@ import createHistory from 'history/createBrowserHistory';
 import createMemoryHistory from 'history/createMemoryHistory';
 import rootReducer, { rootEpic, IRootState } from './modules';
 import platform from 'lib/platform';
-import { setIds, convertToTreeData, findTagById, copyObject, Properties } from 'lib/constructor';
+import { setIds, convertToTreeData, findTagById, copyObject, Properties, resolveTagHandler, getConstructorTemplate } from 'lib/constructor';
 
 export const history = platform.select<() => History>({
     desktop: createMemoryHistory,
@@ -73,7 +73,9 @@ const configureStore = (initialState?: IRootState) => {
                 convertToTreeData,
                 findTagById,
                 copyObject,
-                Properties
+                Properties,
+                resolveTagHandler,
+                getConstructorTemplate
             }
         }),
         loadingBarMiddleware({
