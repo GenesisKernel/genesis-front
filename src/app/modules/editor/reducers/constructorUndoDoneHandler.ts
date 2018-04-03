@@ -28,6 +28,7 @@ export default function (state: State, payload: Success<{}, IConstructorUndoRedo
                 designer: {
                     ...state.tabs[state.tabIndex].designer,
                     data: {
+                        ...state.tabs[state.tabIndex].designer.data,
                         jsonData: payload.result.jsonData,
                         treeData: payload.result.treeData,
                         selectedTag: null

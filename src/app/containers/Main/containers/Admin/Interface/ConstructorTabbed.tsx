@@ -89,7 +89,7 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     }
 
     componentWillMount() {
-        this.getPage();
+        // this.getPage();
     }
 
     /*componentWillReceiveProps(props: IConstructorTabbedContainerProps & IConstructorTabbedContainerState & IConstructorTabbedContainerDispatch) {
@@ -110,50 +110,50 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
         });
     }*/
 
-    getPage() {
-        this.props.getPageTree({
-            id: this.props.pageID,
-            name: this.props.pageName
-        });
-    }
+    // getPage() {
+    //     this.props.getPageTree({
+    //         id: this.props.pageID,
+    //         name: this.props.pageName
+    //     });
+    // }
 
     changePage(payload: IChangePageCall) {
         this.props.changePage(payload);
         this.props.saveConstructorHistory({});
-        // this.generatePageTemplate();
+        this.generatePageTemplate();
     }
 
     addTag(payload?: any) {
         // payload.pageID = this.props.pageID;
         this.props.addTag(payload);
         this.props.saveConstructorHistory({});
-        // this.generatePageTemplate();
+        this.generatePageTemplate();
     }
 
     moveTag(payload?: any) {
         // payload.pageID = this.props.pageID;
         this.props.moveTag(payload);
         this.props.saveConstructorHistory({});
-        // this.generatePageTemplate();
+        this.generatePageTemplate();
     }
 
     moveTreeTag(payload?: any) {
-
         this.props.moveTreeTag(payload);
+        this.generatePageTemplate();
     }
 
     copyTag(payload?: any) {
         // payload.pageID = this.props.pageID;
         this.props.copyTag(payload);
         this.props.saveConstructorHistory({});
-        // this.generatePageTemplate();
+        this.generatePageTemplate();
     }
 
     removeTag(payload?: any) {
         // payload.pageID = this.props.pageID;
         this.props.removeTag(payload);
         this.props.saveConstructorHistory({});
-        // this.generatePageTemplate();
+        this.generatePageTemplate();
     }
 
     setTagCanDropPosition(payload?: any) {

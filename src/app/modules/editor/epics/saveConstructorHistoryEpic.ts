@@ -24,10 +24,14 @@ const saveConstructorHistoryEpic: Epic<Action, IRootState> =
     (action$, store, { }) => action$.ofAction(actions.saveConstructorHistory.started)
         .flatMap(action => {
             const state = store.getState().editor;
-
             const tab = state.tabs[state.tabIndex].designer;
             const tabData = tab && tab.data || null;
             const tabHistory = tab && tab.history || null;
+
+            // do not save history if template was not modified
+            // if (tabData && tabData.pageTemplate === state.tabs[state.tabIndex].value) {
+            //    return Observable.empty();
+            // }
 
             let historyData = tabHistory && tabHistory.data || [];
             const jsonData = tabData && tabData.jsonData || [];

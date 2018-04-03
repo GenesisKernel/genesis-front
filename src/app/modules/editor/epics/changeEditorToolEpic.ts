@@ -17,7 +17,7 @@
 import { Action } from 'redux';
 import { Epic } from 'redux-observable';
 import { IRootState } from 'modules';
-import { changeEditorTool } from '../actions';
+import { changeEditorTool, getPageTree } from '../actions';
 import { Observable } from 'rxjs/Observable';
 import api from 'lib/api';
 
@@ -38,6 +38,8 @@ const changeEditorToolEpic: Epic<Action, IRootState> =
                             params: action.payload,
                             error: e
                         })));
+                case 'constructor':
+                    return Observable.of(getPageTree.started({}));
 
                 default:
                     return Observable.of(changeEditorTool.done({

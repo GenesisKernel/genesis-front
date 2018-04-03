@@ -37,6 +37,7 @@ import saveConstructorHistoryDoneHandler from './reducers/saveConstructorHistory
 import setTagCanDropPositionDoneHandler from './reducers/setTagCanDropPositionDoneHandler';
 import constructorUndoDoneHandler from './reducers/constructorUndoDoneHandler';
 import constructorRedoDoneHandler from './reducers/constructorRedoDoneHandler';
+import setPageTemplateHandler from './reducers/setPageTemplateHandler';
 
 export type State = {
     readonly pending: boolean;
@@ -70,4 +71,5 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.saveConstructorHistory.done, saveConstructorHistoryDoneHandler)
     .case(actions.constructorUndo.done, constructorUndoDoneHandler)
     .case(actions.constructorRedo.done, constructorRedoDoneHandler)
-    .case(actions.setTagCanDropPosition.done, setTagCanDropPositionDoneHandler);
+    .case(actions.setTagCanDropPosition.done, setTagCanDropPositionDoneHandler)
+    .case(actions.setPageTemplate, setPageTemplateHandler);

@@ -34,7 +34,8 @@ export const reloadEditorTab = actionCreator<IReloadEditorTabCall>('RELOAD_EDITO
 export const changeEditorTool = actionCreator.async<string, TProtypoElement[]>('CHANGE_EDITOR_TOOL');
 
 // TODO: Pending refactoring
-export const getPageTree = actionCreator.async<{ id: string, name: string }, { name?: string, jsonData: TProtypoElement[], treeData?: TConstructorTreeElement[], error?: string }, string>('GET_PAGE_TREE');
+export const setPageTemplate = actionCreator<string>('SET_PAGE_TEMPLATE');
+export const getPageTree = actionCreator.async<{ }, { name?: string, jsonData: TProtypoElement[], treeData?: TConstructorTreeElement[], error?: string }, string>('GET_PAGE_TREE');
 export const changePage = actionCreator.async<IChangePageCall, IChangePageResult>('CHANGE_PAGE');
 export const selectTag = actionCreator.async<ISelectTagCall, ISelectTagResult>('SELECT_TAG');
 export const setTagCanDropPosition = actionCreator.async<ISetTagCanDropPositionCall, ISetTagCanDropPositionResult>('SET_TAG_CAN_DROP_POSITION');

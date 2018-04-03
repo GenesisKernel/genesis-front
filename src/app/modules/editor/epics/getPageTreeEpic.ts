@@ -26,7 +26,9 @@ const getPageTreeEpic: Epic<Action, IRootState> =
         .flatMap(action => {
             const state = store.getState();
 
-            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, action.payload.name, {}, state.storage.locale))
+            const template = state.editor.tabs[state.editor.tabIndex].value;
+
+            return Observable.fromPromise(api.contentJson(state.auth.sessionToken, template, state.storage.locale, true))
                 .map(payload => {
                         let pageTree = payload.tree;
                         setIds(pageTree);
@@ -34,7 +36,6 @@ const getPageTreeEpic: Epic<Action, IRootState> =
                         return actions.getPageTree.done({
                             params: action.payload,
                             result: {
-                                // name: action.payload.name,
                                 jsonData: pageTree,
                                 treeData: convertToTreeData(pageTree)
                             }

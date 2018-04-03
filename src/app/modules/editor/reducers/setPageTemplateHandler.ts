@@ -16,8 +16,7 @@
 
 import { State } from '../reducer';
 
-export default function (state: State, payload: any): State {
-    const data = state.tabs[state.tabIndex] && state.tabs[state.tabIndex].designer && state.tabs[state.tabIndex].designer.data;
+export default function (state: State, payload: string): State {
     return {
         ...state,
         tabs: [
@@ -27,10 +26,8 @@ export default function (state: State, payload: any): State {
                 designer: {
                     ...state.tabs[state.tabIndex].designer,
                     data: {
-                        ...data,
-                        jsonData: payload.result.jsonData,
-                        treeData: payload.result.treeData,
-                        selectedTag: null
+                        ...state.tabs[state.tabIndex].designer.data,
+                        pageTemplate: payload
                     }
                 }
             },

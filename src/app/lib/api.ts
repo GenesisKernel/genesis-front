@@ -352,6 +352,8 @@ const api = {
         .then(transformContent),
     contentTest: (session: string, template: string, locale: string) => securedRequest('content', session, { template, lang: locale })
         .then(transformContent),
+    contentJson: (session: string, template: string, locale: string, source?: boolean) => securedRequest('content', session, { template, source, lang: locale })
+        .then(transformContent),
     table: (session: string, name: string) => securedRequest(`table/${name}`, session, null, { method: 'GET' }) as Promise<ITableResponse>,
     tables: (session: string, offset?: number, limit?: number) => securedRequest(`tables?offset=${offset || 0}&limit=${limit || 1000}`, session, null, { method: 'GET' }) as Promise<ITablesResponse>,
     history: (session: string, table: string, id: string) => securedRequest(`history/${table}/${id}`, session, null, { method: 'GET' }) as Promise<IHistoryResponse>,
