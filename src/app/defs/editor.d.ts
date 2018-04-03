@@ -27,12 +27,18 @@ declare module 'genesis/editor' {
         readonly initialValue: string;
         readonly preview?: TProtypoElement[];
         readonly dirty: boolean;
+        readonly appId?: number;
     };
 
     interface IEditorTabCreateCall {
         id: string;
         name: string;
         value: string
+    }
+
+    interface ICreateEditorTabCall{
+        type: string;
+        appId: number;
     }
 
     interface ILoadEditorTabCall {

@@ -49,7 +49,8 @@ const newMenuEpic: Epic<Action, IRootState> =
                                     params: {
                                         Name: result.payload.data.name,
                                         Value: action.payload.value,
-                                        Conditions: result.payload.data.conditions
+                                        Conditions: result.payload.data.conditions,
+                                        ApplicationId: action.payload.appId ? action.payload.appId : 0
                                     }
                                 })),
                                 action$.ofAction(txExec.done)

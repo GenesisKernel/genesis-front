@@ -27,7 +27,7 @@ export interface IEditorToolbarProps {
     currentTab: TEditorTab;
     canSave: boolean;
     canRevert: boolean;
-    onCreate: (type: string) => void;
+    onCreate: (params: {type: string, appId: number}) => void;
     onRevert: () => void;
     onToolChange: (tool: string) => void;
     onExec: () => void;

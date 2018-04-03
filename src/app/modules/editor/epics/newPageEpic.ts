@@ -53,7 +53,8 @@ const newPageEpic: Epic<Action, IRootState> =
                                         Name: result.payload.data.name,
                                         Value: action.payload.value,
                                         Menu: result.payload.data.menu,
-                                        Conditions: result.payload.data.conditions
+                                        Conditions: result.payload.data.conditions,
+                                        ApplicationId: action.payload.appId ? action.payload.appId : 0
                                     }
                                 })),
                                 action$.ofAction(txExec.done)
