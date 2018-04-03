@@ -17,7 +17,7 @@
 import actionCreatorFactory from 'typescript-fsa';
 import { TProtypoElement } from 'genesis/protypo';
 import { IEditorTabCreateCall, ILoadEditorTabCall, IReloadEditorTabCall, IChangePageCall, IChangePageResult, ISaveConstructorHistoryResult,
-    IConstructorUndoRedoResult, ISetTagCanDropPositionCall, ISetTagCanDropPositionResult, IAddTagCall, IAddTagResult,
+    IConstructorUndoRedoResult, ISetTagCanDropPositionCall, ISetTagCanDropPositionResult, IOperateTagCall, IOperateTagResult, ISelectTagCall, ISelectTagResult,
     TEditorTab, TConstructorTreeElement
 } from 'genesis/editor';
 
@@ -36,10 +36,13 @@ export const changeEditorTool = actionCreator.async<string, TProtypoElement[]>('
 // TODO: Pending refactoring
 export const getPageTree = actionCreator.async<{ id: string, name: string }, { name?: string, jsonData: TProtypoElement[], treeData?: TConstructorTreeElement[], error?: string }, string>('GET_PAGE_TREE');
 export const changePage = actionCreator.async<IChangePageCall, IChangePageResult>('CHANGE_PAGE');
-export const selectTag = actionCreator<{ tag: TProtypoElement }>('SELECT_TAG');
+export const selectTag = actionCreator.async<ISelectTagCall, ISelectTagResult>('SELECT_TAG');
 export const setTagCanDropPosition = actionCreator.async<ISetTagCanDropPositionCall, ISetTagCanDropPositionResult>('SET_TAG_CAN_DROP_POSITION');
-export const addTag = actionCreator.async<IAddTagCall, IAddTagResult>('ADD_TAG');
-export const moveTag = actionCreator<{ tag: any, pageID: string, destinationTagID?: string, position?: string }>('MOVE_TAG');
+export const addTag = actionCreator.async<IOperateTagCall, IOperateTagResult>('ADD_TAG');
+export const copyTag = actionCreator.async<IOperateTagCall, IOperateTagResult>('COPY_TAG');
+export const moveTag = actionCreator.async<IOperateTagCall, IOperateTagResult>('MOVE_TAG');
+export const removeTag = actionCreator.async<IOperateTagCall, IOperateTagResult>('REMOVE_TAG');
+export const moveTreeTag = actionCreator<{ treeData: any, tagID: string, pageID: string }>('MOVE_TREE_TAG');
 export const saveConstructorHistory = actionCreator.async<{}, ISaveConstructorHistoryResult>('SAVE_CONSTRUCTOR_HISTORY');
 export const constructorUndo = actionCreator.async<{ }, IConstructorUndoRedoResult>('CONSTRUCTOR_UNDO');
 export const constructorRedo = actionCreator.async<{ }, IConstructorUndoRedoResult>('CONSTRUCTOR_REDO');

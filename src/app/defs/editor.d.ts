@@ -99,13 +99,13 @@ declare module 'genesis/editor' {
         selectedTag?: TProtypoElement;
     }
 
-    interface IAddTagCall {
+    interface IOperateTagCall {
         tag: any;
         destinationTagID?: string;
         position?: string;
     }
 
-    interface IAddTagResult {
+    interface IOperateTagResult {
         jsonData: TProtypoElement[];
         treeData: TConstructorTreeElement[];
     }
@@ -132,6 +132,15 @@ declare module 'genesis/editor' {
 
     interface ISetTagCanDropPositionResult {
         jsonData: TProtypoElement[];
+        treeData: TConstructorTreeElement[];
+    }
+
+    interface ISelectTagCall {
+        tag: TProtypoElement;
+    }
+
+    interface ISelectTagResult {
+        selectedTag: TProtypoElement;
         treeData: TConstructorTreeElement[];
     }
 }

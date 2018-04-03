@@ -17,9 +17,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { /*getPageTree, getPage, changePage, setTagCanDropPosition, addTag, moveTag,*/ moveTreeTag, copyTag, removeTag, /*selectTag, constructorUndo, constructorRedo, saveConstructorHistory*/ } from 'modules/admin/actions';
-import { getPageTree, selectTag, changePage, saveConstructorHistory, setTagCanDropPosition, addTag, constructorUndo, constructorRedo, moveTag } from 'modules/editor/actions';
-// import { navigatePage } from 'modules/content/actions';
+import { getPageTree, selectTag, changePage, saveConstructorHistory, constructorUndo, constructorRedo, setTagCanDropPosition, addTag, copyTag, moveTag, removeTag, moveTreeTag } from 'modules/editor/actions';
 import Constructor from 'components/Main/Admin/Interface/Constructor';
 import { TProtypoElement } from 'genesis/protypo';
 import { generatePageTemplate } from 'modules/editor/actions';
@@ -28,7 +26,6 @@ import { IChangePageCall } from 'genesis/editor';
 export interface IConstructorTabbedContainerProps {
     pageID: string;
     pageName: string;
-    // navigatePage?: (params: { name: string, params?: any }) => void;
     menus?: { id: string, name: string, conditions: string, value: string }[];
     onSave?: (pageID: string) => void;
     random?: number;
@@ -61,15 +58,14 @@ interface IConstructorTabbedContainerState {
 
 interface IConstructorTabbedContainerDispatch {
     getPageTree: typeof getPageTree.started;
-    // getPage?: typeof getPage.started;
     changePage: typeof changePage.started;
     setTagCanDropPosition: typeof setTagCanDropPosition.started;
     addTag: typeof addTag.started;
-    moveTag: typeof moveTag;
+    moveTag: typeof moveTag.started;
     moveTreeTag: typeof moveTreeTag;
-    copyTag: typeof copyTag;
-    removeTag: typeof removeTag;
-    selectTag: typeof selectTag;
+    copyTag: typeof copyTag.started;
+    removeTag: typeof removeTag.started;
+    selectTag: typeof selectTag.started;
     constructorUndo: typeof constructorUndo.started;
     constructorRedo: typeof constructorRedo.started;
     saveConstructorHistory: typeof saveConstructorHistory.started;
@@ -119,13 +115,9 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
             id: this.props.pageID,
             name: this.props.pageName
         });
-        // this.props.getPage({
-        //     name: this.props.pageName
-        // });
     }
 
     changePage(payload: IChangePageCall) {
-        // payload.pageID = this.props.pageID;
         this.props.changePage(payload);
         this.props.saveConstructorHistory({});
         // this.generatePageTemplate();
@@ -135,33 +127,33 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
         // payload.pageID = this.props.pageID;
         this.props.addTag(payload);
         this.props.saveConstructorHistory({});
-        this.generatePageTemplate();
+        // this.generatePageTemplate();
     }
 
     moveTag(payload?: any) {
-        payload.pageID = this.props.pageID;
+        // payload.pageID = this.props.pageID;
         this.props.moveTag(payload);
         this.props.saveConstructorHistory({});
-        this.generatePageTemplate();
+        // this.generatePageTemplate();
     }
 
     moveTreeTag(payload?: any) {
-        payload.pageID = this.props.pageID;
+
         this.props.moveTreeTag(payload);
     }
 
     copyTag(payload?: any) {
-        payload.pageID = this.props.pageID;
+        // payload.pageID = this.props.pageID;
         this.props.copyTag(payload);
         this.props.saveConstructorHistory({});
-        this.generatePageTemplate();
+        // this.generatePageTemplate();
     }
 
     removeTag(payload?: any) {
-        payload.pageID = this.props.pageID;
+        // payload.pageID = this.props.pageID;
         this.props.removeTag(payload);
         this.props.saveConstructorHistory({});
-        this.generatePageTemplate();
+        // this.generatePageTemplate();
     }
 
     setTagCanDropPosition(payload?: any) {
@@ -285,11 +277,11 @@ const mapDispatchToProps = {
     changePage: changePage.started,
     setTagCanDropPosition: setTagCanDropPosition.started,
     addTag: addTag.started,
-    moveTag,
+    moveTag: moveTag.started,
     moveTreeTag,
-    copyTag,
-    removeTag,
-    selectTag,
+    copyTag: copyTag.started,
+    removeTag: removeTag.started,
+    selectTag: selectTag.started,
     constructorUndo: constructorUndo.started,
     constructorRedo: constructorRedo.started,
     saveConstructorHistory: saveConstructorHistory.started,

@@ -15,9 +15,10 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { TProtypoElement } from 'genesis/protypo';
+import { ISelectTagCall, ISelectTagResult } from 'genesis/editor';
+import { Success } from 'typescript-fsa';
 
-export default function (state: State, payload: {tag: TProtypoElement}): State {
+export default function (state: State, payload: Success<ISelectTagCall, ISelectTagResult>): State {
     return {
         ...state,
         tabs: [
@@ -28,7 +29,8 @@ export default function (state: State, payload: {tag: TProtypoElement}): State {
                     ...state.tabs[state.tabIndex].designer,
                     data: {
                         ...state.tabs[state.tabIndex].designer.data,
-                        selectedTag: payload.tag
+                        treeData: payload.result.treeData,
+                        selectedTag: payload.result.selectedTag
                     }
                 }
 

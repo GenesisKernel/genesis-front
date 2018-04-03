@@ -27,9 +27,12 @@ import revertEditorTabHandler from './reducers/revertEditorTabHandler';
 import updateEditorTabHandler from './reducers/updateEditorTabHandler';
 import loadEditorTabDoneHandler from './reducers/loadEditorTabDoneHandler';
 import getPageTreeDoneHandler from './reducers/getPageTreeDoneHandler';
-import selectTagHandler from './reducers/selectTagHandler';
+import selectTagDoneHandler from './reducers/selectTagDoneHandler';
 import changePageDoneHandler from './reducers/changePageDoneHandler';
 import addTagDoneHandler from './reducers/addTagDoneHandler';
+import moveTagDoneHandler from './reducers/moveTagDoneHandler';
+import copyTagDoneHandler from './reducers/copyTagDoneHandler';
+import removeTagDoneHandler from './reducers/removeTagDoneHandler';
 import saveConstructorHistoryDoneHandler from './reducers/saveConstructorHistoryDoneHandler';
 import setTagCanDropPositionDoneHandler from './reducers/setTagCanDropPositionDoneHandler';
 import constructorUndoDoneHandler from './reducers/constructorUndoDoneHandler';
@@ -58,9 +61,12 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.revertEditorTab, revertEditorTabHandler)
     .case(actions.updateEditorTab, updateEditorTabHandler)
     .case(actions.getPageTree.done, getPageTreeDoneHandler)
-    .case(actions.selectTag, selectTagHandler)
+    .case(actions.selectTag.done, selectTagDoneHandler)
     .case(actions.changePage.done, changePageDoneHandler)
     .case(actions.addTag.done, addTagDoneHandler)
+    .case(actions.moveTag.done, moveTagDoneHandler)
+    .case(actions.copyTag.done, copyTagDoneHandler)
+    .case(actions.removeTag.done, removeTagDoneHandler)
     .case(actions.saveConstructorHistory.done, saveConstructorHistoryDoneHandler)
     .case(actions.constructorUndo.done, constructorUndoDoneHandler)
     .case(actions.constructorRedo.done, constructorRedoDoneHandler)
