@@ -14,18 +14,24 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { State } from '../reducer';
-import { Failure } from 'typescript-fsa';
-import { IExecutionCall, ITxError } from 'genesis/tx';
-import setTxData from './setTxData';
+import { IRootState } from 'modules';
+import { Epic } from 'redux-observable';
+import { Action } from 'redux';
+import { txCallBatch } from '../actions';
+import { modalShow } from '../../modal/actions';
 
-export default function (state: State, payload: Failure<IExecutionCall, ITxError>): State {
-    return setTxData(state, {
-        tx: payload.params.tx,
-        data: {
-            block: null,
-            error: payload.error,
-            contract: payload.params.tx.name
-        }
-    });
-}
+export const txCallBatchFailedEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(txCallBatch.failed)
+        .filter(l => !l.payload.params.silent && !!l.payload.error)
+        .map(action =>
+            modalShow({
+                id: 'TX_ERROR',
+                type: 'TX_ERROR',
+                params: {
+                    tx: action.payload.error.tx,
+                    error: action.payload.error.error
+                }
+            })
+        );
+
+export default txCallBatchFailedEpic;

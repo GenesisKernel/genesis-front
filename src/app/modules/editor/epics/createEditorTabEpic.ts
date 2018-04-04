@@ -35,7 +35,7 @@ const createEditorTabEpic: Epic<Action, IRootState> =
 
             const id = (ids.length ? parseInt(ids[ids.length - 1], 10) + 1 : 1).toString();
 
-            switch (action.payload) {
+            switch (action.payload.type) {
                 case 'contract':
                     return Observable.of<Action>(
                         createEditorTab.done({

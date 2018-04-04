@@ -20,33 +20,56 @@ import { Action } from 'redux';
 import { Observable } from 'rxjs';
 import { modalShow, modalClose } from 'modules/modal/actions';
 import { txAuthorize } from '../actions';
+import { authorize } from 'modules/auth/actions';
+import keyring from 'lib/keyring';
 
 const txAuthorizeEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(txAuthorize.started)
-        .flatMap(action =>
-            Observable.merge(
-                Observable.of(modalShow({
-                    id: 'TX_AUTHORIZE',
-                    type: 'AUTHORIZE',
-                    params: {
-                        contract: action.payload.contract
-                    }
-                })),
-                action$.ofAction(modalClose).map(result => {
-                    if (result.payload.data) {
-                        return txAuthorize.done({
-                            params: action.payload,
-                            result: result.payload.data
-                        });
-                    }
-                    else {
-                        return txAuthorize.failed({
-                            params: action.payload,
-                            error: null
-                        });
-                    }
-                })
-            )
-        );
+        .switchMap(action => {
+            const state = store.getState();
+            if (keyring.validatePrivateKey(state.auth.privateKey)) {
+                return Observable.of(txAuthorize.done({
+                    params: action.payload,
+                    result: null
+                }));
+            }
+            else {
+                return Observable.merge(
+                    Observable.of(modalShow({
+                        id: 'TX_AUTHORIZE',
+                        type: 'AUTHORIZE',
+                        params: {
+                            contract: action.payload.contract
+                        }
+                    })),
+                    action$.ofAction(modalClose).flatMap(result => {
+                        if (result.payload.data) {
+                            const privateKey = keyring.decryptAES(store.getState().auth.account.encKey, result.payload.data || '');
+                            if (keyring.validatePrivateKey(privateKey)) {
+                                return Observable.of<Action>(
+                                    authorize(privateKey),
+                                    txAuthorize.done({
+                                        params: action.payload,
+                                        result: result.payload.data
+                                    })
+                                );
+                            }
+                            else {
+                                return Observable.of(txAuthorize.failed({
+                                    params: action.payload,
+                                    error: null
+                                }));
+                            }
+                        }
+                        else {
+                            return Observable.of(txAuthorize.failed({
+                                params: action.payload,
+                                error: null
+                            }));
+                        }
+                    })
+                );
+            }
+        });
 
 export default txAuthorizeEpic;

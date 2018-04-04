@@ -34,7 +34,11 @@ declare module 'genesis/tx' {
         error: string;
     }
 
+    type TTransactionStatus =
+        ITransaction | ITransactionCollection;
+
     interface ITransaction {
+        type: 'single';
         uuid: string;
         contract: string;
         block: string;
@@ -45,14 +49,31 @@ declare module 'genesis/tx' {
         }
     }
 
+    interface ITransactionCollection {
+        type: 'collection';
+        uuid: string;
+        transactions: ITransaction[];
+    }
+
     interface ITransactionCall {
         uuid: string;
         name: string;
-        vde?: boolean;
+        parent?: string;
         silent?: boolean;
         params: {
             [key: string]: any;
         };
+    }
+
+    interface ITransactionBatchCall {
+        uuid: string;
+        contracts: {
+            name: string;
+            data: {
+                [key: string]: any;
+            }[];
+        }[];
+        silent?: boolean;
     }
 
     interface IExecutionCall {
