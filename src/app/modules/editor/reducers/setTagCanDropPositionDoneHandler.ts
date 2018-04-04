@@ -15,10 +15,10 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { ISetTagCanDropPositionResult } from 'genesis/editor';
+import { ISetTagCanDropPositionCall, ISetTagCanDropPositionResult } from 'genesis/editor';
 import { Success } from 'typescript-fsa';
 
-export default function (state: State, payload: Success<{}, ISetTagCanDropPositionResult>): State {
+export default function (state: State, payload: Success<ISetTagCanDropPositionCall, ISetTagCanDropPositionResult>): State {
     return {
         ...state,
         tabs: [

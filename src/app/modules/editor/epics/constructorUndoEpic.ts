@@ -48,8 +48,9 @@ const constructorUndoEpic: Epic<Action, IRootState> =
                     }
                 }));
             }
-
-            return Observable.empty();
+            else {
+                return Observable.empty();
+            }
         });
 
 export default constructorUndoEpic;

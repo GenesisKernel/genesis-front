@@ -17,14 +17,11 @@
 import { Action } from 'redux';
 import { Epic } from 'redux-observable';
 import * as actions from '../actions';
-// import api, { IAPIError } from 'lib/api';
-// import { setIds, convertToTreeData } from 'lib/constructor';
 import { IRootState } from 'modules';
-import { Observable } from 'rxjs';
 
 const changePageEpic: Epic<Action, IRootState> =
     (action$, store, { convertToTreeData, setIds, findTagById, copyObject, Properties }) => action$.ofAction(actions.changePage.started)
-        .flatMap(action => {
+        .map(action => {
             const state = store.getState().editor;
             const tabData = state.tabs[state.tabIndex].designer.data;
             const jsonData = tabData && copyObject(tabData.jsonData) || null;
@@ -105,14 +102,14 @@ const changePageEpic: Epic<Action, IRootState> =
                 selectedTag = copyObject(tag);
             }
 
-            return Observable.of(actions.changePage.done({
+            return actions.changePage.done({
                 params: action.payload,
                 result: {
                     jsonData,
                     treeData: convertToTreeData(jsonData),
                     selectedTag
                 }
-            }));
+            });
 
         });
 

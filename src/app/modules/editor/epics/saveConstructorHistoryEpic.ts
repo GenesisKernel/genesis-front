@@ -18,20 +18,14 @@ import { Action } from 'redux';
 import { Epic } from 'redux-observable';
 import * as actions from '../actions';
 import { IRootState } from 'modules';
-import { Observable } from 'rxjs';
 
 const saveConstructorHistoryEpic: Epic<Action, IRootState> =
-    (action$, store, { }) => action$.ofAction(actions.saveConstructorHistory.started)
-        .flatMap(action => {
+    (action$, store) => action$.ofAction(actions.saveConstructorHistory.started)
+        .map(action => {
             const state = store.getState().editor;
             const tab = state.tabs[state.tabIndex].designer;
             const tabData = tab && tab.data || null;
             const tabHistory = tab && tab.history || null;
-
-            // do not save history if template was not modified
-            // if (tabData && tabData.pageTemplate === state.tabs[state.tabIndex].value) {
-            //    return Observable.empty();
-            // }
 
             let historyData = tabHistory && tabHistory.data || [];
             const jsonData = tabData && tabData.jsonData || [];
@@ -45,7 +39,7 @@ const saveConstructorHistoryEpic: Epic<Action, IRootState> =
             const canUndo = position > 0;
             const canRedo = false;
 
-            return Observable.of(actions.saveConstructorHistory.done({
+            return actions.saveConstructorHistory.done({
                 params: action.payload,
                 result: {
                     data: historyData.concat([jsonData]),
@@ -53,7 +47,7 @@ const saveConstructorHistoryEpic: Epic<Action, IRootState> =
                     canUndo,
                     canRedo
                 }
-            }));
+            });
         });
 
 export default saveConstructorHistoryEpic;

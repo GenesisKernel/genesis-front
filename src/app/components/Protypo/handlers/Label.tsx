@@ -55,7 +55,7 @@ class Label extends React.Component<ILabelProps> {
 
     onClick(e: any) {
         e.stopPropagation();
-        this.props.selectTag({ tag: this.props.tag });
+        this.props.selectTag(this.props.tag);
     }
 
     onBlur(e: any) {

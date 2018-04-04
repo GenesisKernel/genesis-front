@@ -24,12 +24,10 @@ import Edit from 'components/Main/Admin/Parameters/Edit';
 
 export interface IEditContainerProps {
     parameterName: string;
-    // tabData?: any;
-    // match: { params: { parameterName: string } };
 }
 
 interface IEditContainerState {
-    // parameter: IParameterResponse;
+
 }
 
 interface IEditContainerDispatch {

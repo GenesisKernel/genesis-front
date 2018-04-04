@@ -16,7 +16,7 @@
 
 import { State } from '../reducer';
 
-export default function (state: State, payload: any): State {
+export default function (state: State): State {
     const data = state.tabs[state.tabIndex] && state.tabs[state.tabIndex].designer && state.tabs[state.tabIndex].designer.data;
     return {
         ...state,

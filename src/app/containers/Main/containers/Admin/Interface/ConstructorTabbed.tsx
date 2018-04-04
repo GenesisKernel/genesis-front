@@ -21,7 +21,7 @@ import { getPageTree, selectTag, changePage, saveConstructorHistory, constructor
 import Constructor from 'components/Main/Admin/Interface/Constructor';
 import { TProtypoElement } from 'genesis/protypo';
 import { generatePageTemplate } from 'modules/editor/actions';
-import { IChangePageCall } from 'genesis/editor';
+import { IChangePageCall, TConstructorData, IAddTagCall, IOperateTagCall, IMoveTreeTag, ISetTagCanDropPositionCall } from 'genesis/editor';
 
 export interface IConstructorTabbedContainerProps {
     pageID: string;
@@ -32,27 +32,12 @@ export interface IConstructorTabbedContainerProps {
 }
 
 interface IConstructorTabbedContainerState {
-    data?: any;
-    history?: any;
-
-    // todo: remove
-    session?: string;
-    tabData?: {
-        [key: string]: {
-            type: string,
-            data: any,
-            treeData?: any,
-            pageTemplate?: string,
-            selectedTag?: TProtypoElement
-        }
-    };
-    tabHistory?: {
-        [key: string]: {
-            data: any,
-            position?: number,
-            canUndo?: boolean,
-            canRedo?: boolean
-        }
+    data?: TConstructorData;
+    history?: {
+        data: TProtypoElement[][],
+        position?: number,
+        canUndo?: boolean,
+        canRedo?: boolean
     };
 }
 
@@ -88,83 +73,47 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
         };
     }
 
-    componentWillMount() {
-        // this.getPage();
-    }
-
-    /*componentWillReceiveProps(props: IConstructorTabbedContainerProps & IConstructorTabbedContainerState & IConstructorTabbedContainerDispatch) {
-        if (props.random && this.props.random !== props.random) {
-            this.getPage();
-        }
-
-        let canSave = true;
-        const tabData = props.tabData && props.tabData['interfaceConstructor' + props.pageID];
-        const pageTree = tabData && tabData.data || null;
-        if (!pageTree || pageTree && pageTree.length === 0) {
-            canSave = false;
-        }
-
-        this.setState({
-            ...this.state,
-            canSave
-        });
-    }*/
-
-    // getPage() {
-    //     this.props.getPageTree({
-    //         id: this.props.pageID,
-    //         name: this.props.pageName
-    //     });
-    // }
-
     changePage(payload: IChangePageCall) {
         this.props.changePage(payload);
-        this.props.saveConstructorHistory({});
+        this.props.saveConstructorHistory(null);
         this.generatePageTemplate();
     }
 
-    addTag(payload?: any) {
-        // payload.pageID = this.props.pageID;
+    addTag(payload?: IAddTagCall) {
         this.props.addTag(payload);
-        this.props.saveConstructorHistory({});
+        this.props.saveConstructorHistory(null);
         this.generatePageTemplate();
     }
 
-    moveTag(payload?: any) {
-        // payload.pageID = this.props.pageID;
+    moveTag(payload?: IOperateTagCall) {
         this.props.moveTag(payload);
-        this.props.saveConstructorHistory({});
+        this.props.saveConstructorHistory(null);
         this.generatePageTemplate();
     }
 
-    moveTreeTag(payload?: any) {
+    moveTreeTag(payload?: IMoveTreeTag) {
         this.props.moveTreeTag(payload);
         this.generatePageTemplate();
     }
 
-    copyTag(payload?: any) {
-        // payload.pageID = this.props.pageID;
+    copyTag(payload?: IOperateTagCall) {
         this.props.copyTag(payload);
-        this.props.saveConstructorHistory({});
+        this.props.saveConstructorHistory(null);
         this.generatePageTemplate();
     }
 
-    removeTag(payload?: any) {
-        // payload.pageID = this.props.pageID;
+    removeTag(payload?: IOperateTagCall) {
         this.props.removeTag(payload);
-        this.props.saveConstructorHistory({});
+        this.props.saveConstructorHistory(null);
         this.generatePageTemplate();
     }
 
-    setTagCanDropPosition(payload?: any) {
-        // payload.pageID = this.props.pageID;
+    setTagCanDropPosition(payload?: ISetTagCanDropPositionCall) {
         this.props.setTagCanDropPosition(payload);
     }
 
-    selectTag(payload: {tag: TProtypoElement}) {
-        this.props.selectTag({
-            tag: payload.tag
-        });
+    selectTag(payload: any) {
+        this.props.selectTag(payload);
     }
 
     toggleGrid() {
@@ -182,12 +131,12 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     }
 
     undo() {
-        this.props.constructorUndo({});
+        this.props.constructorUndo(null);
         this.generatePageTemplate();
     }
 
     redo() {
-        this.props.constructorRedo({});
+        this.props.constructorRedo(null);
         this.generatePageTemplate();
     }
 
@@ -202,7 +151,6 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     }
 
     render() {
-        // const tabData = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID];
         const data = this.props.data;
         const history = this.props.history;
 
@@ -211,20 +159,8 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
         const pageTemplate = data && data.pageTemplate || null;
         const selectedTag = data && data.selectedTag || null;
 
-        // const pageTree = tabData && tabData.data || null;
-        // const treeData = tabData && tabData.treeData || null;
-        // const pageTemplate = tabData && tabData.pageTemplate || null;
-        // const selectedTag = tabData && tabData.selectedTag || null;
-        // const tabHistory = this.props.tabHistory && this.props.tabHistory['page' + this.props.pageID];
-
         const canUndo = history && history.canUndo || false;
         const canRedo = history && history.canRedo || false;
-
-        // const pageTab = this.props.tabData && this.props.tabData['interfacePage' + this.props.pageID] || null;
-        // let page = null;
-        // if (pageTab) {
-        //     page = pageTab.data;
-        // }
 
         return (
             <Constructor
@@ -250,12 +186,6 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
                 pageTemplate={pageTemplate}
             />
         );
-
-        /*page={page}
-         menus={this.props.menus}
-         navigatePage={this.props.navigatePage}
-         onSave={this.onSave.bind(this)}
-         canSave={this.state.canSave}*/
     }
 }
 
@@ -265,15 +195,11 @@ const mapStateToProps = (state: IRootState) => {
     return {
         data: currentTab.designer && currentTab.designer.data || null,
         history: currentTab.designer && currentTab.designer.history || null
-        // menus: state.admin.menus,
-        // session: state.auth.sessionToken
     };
 };
 
 const mapDispatchToProps = {
     getPageTree: getPageTree.started,
-    // getPage: getPage.started,
-    // navigatePage: navigatePage.started,
     changePage: changePage.started,
     setTagCanDropPosition: setTagCanDropPosition.started,
     addTag: addTag.started,

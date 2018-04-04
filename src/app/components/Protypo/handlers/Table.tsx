@@ -76,7 +76,7 @@ class Table extends React.Component<ITableProps> {
         if (this.props.editable) {
             const onClick = (e: any) => {
                 e.stopPropagation();
-                this.props.selectTag({ tag: this.props.tag });
+                this.props.selectTag(this.props.tag);
             };
 
             const removeTag = () => {

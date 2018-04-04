@@ -18,11 +18,10 @@ import { Action } from 'redux';
 import { Epic } from 'redux-observable';
 import * as actions from '../actions';
 import { IRootState } from 'modules';
-import { Observable } from 'rxjs';
 
 const copyTagEpic: Epic<Action, IRootState> =
     (action$, store, { findTagById, convertToTreeData, copyObject, resolveTagHandler, getConstructorTemplate, generateId, setIds }) => action$.ofAction(actions.copyTag.started)
-        .flatMap(action => {
+        .map(action => {
             const state = store.getState().editor;
             const tab = state.tabs[state.tabIndex].designer;
             const tabData = tab && tab.data || null;
@@ -42,11 +41,7 @@ const copyTagEpic: Epic<Action, IRootState> =
             if ('string' === typeof action.payload.destinationTagID &&
                 'string' === typeof action.payload.position) {
                 let tag = findTagById(jsonData, action.payload.destinationTagID);
-                // alert(JSON.stringify(tag));
                 if (tag.el) {
-                    // generate new id for inserted tag
-                    // tagCopy.id = generateId();
-
                     switch (action.payload.position) {
                         case 'inside':
                             if (tag.el.children) {
@@ -73,9 +68,7 @@ const copyTagEpic: Epic<Action, IRootState> =
                         default:
                             break;
                     }
-
                 }
-                // alert(tag.el.id + ' parent ' + (tag.parent && tag.parent.id || 'root') + " pos " + tag.parentPosition);
             }
             else {
                 jsonData = jsonData.concat(
@@ -83,13 +76,13 @@ const copyTagEpic: Epic<Action, IRootState> =
                 );
             }
 
-            return Observable.of(actions.copyTag.done({
+            return actions.copyTag.done({
                 params: action.payload,
                 result: {
                     jsonData,
                     treeData: convertToTreeData(jsonData)
                 }
-            }));
+            });
         });
 
 export default copyTagEpic;

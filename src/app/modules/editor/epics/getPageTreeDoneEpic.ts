@@ -18,12 +18,11 @@ import { Action } from 'redux';
 import { Epic } from 'redux-observable';
 import * as actions from '../actions';
 import { IRootState } from 'modules';
-import { Observable } from 'rxjs';
 
 const getPageTreeDoneEpic: Epic<Action, IRootState> =
     (action$, store, { convertToTreeData, setIds }) => action$.ofAction(actions.getPageTree.done)
-        .flatMap(action => {
-            return Observable.of(actions.saveConstructorHistory.started({}));
+        .map(action => {
+            return actions.saveConstructorHistory.started(null);
         });
 
 export default getPageTreeDoneEpic;

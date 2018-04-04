@@ -15,10 +15,11 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { ISelectTagCall, ISelectTagResult } from 'genesis/editor';
+import { ISelectTagResult } from 'genesis/editor';
+import { TProtypoElement } from 'genesis/protypo';
 import { Success } from 'typescript-fsa';
 
-export default function (state: State, payload: Success<ISelectTagCall, ISelectTagResult>): State {
+export default function (state: State, payload: Success<TProtypoElement, ISelectTagResult>): State {
     return {
         ...state,
         tabs: [

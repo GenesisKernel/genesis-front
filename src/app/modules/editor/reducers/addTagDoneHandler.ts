@@ -15,10 +15,10 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { IOperateTagCall, IOperateTagResult } from 'genesis/editor';
+import { IAddTagCall, IOperateTagResult } from 'genesis/editor';
 import { Success } from 'typescript-fsa';
 
-export default function (state: State, payload: Success<IOperateTagCall, IOperateTagResult>): State {
+export default function (state: State, payload: Success<IAddTagCall, IOperateTagResult>): State {
     return {
         ...state,
         tabs: [

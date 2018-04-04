@@ -18,7 +18,7 @@ import { State } from '../reducer';
 import { IConstructorUndoRedoResult } from 'genesis/editor';
 import { Success } from 'typescript-fsa';
 
-export default function (state: State, payload: Success<{}, IConstructorUndoRedoResult>): State {
+export default function (state: State, payload: Success<void, IConstructorUndoRedoResult>): State {
     return {
         ...state,
         tabs: [

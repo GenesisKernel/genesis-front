@@ -65,7 +65,7 @@ interface IRadioGroupContext {
 const RadioGroup: React.SFC<IRadioGroupProps> = (props, context: IRadioGroupContext) => {
     const onClick = (e: any) => {
         e.stopPropagation();
-        props.selectTag({ tag: props.tag });
+        props.selectTag(props.tag);
     };
 
     const removeTag = () => {

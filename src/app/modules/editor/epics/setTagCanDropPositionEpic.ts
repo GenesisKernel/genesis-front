@@ -18,11 +18,10 @@ import { Action } from 'redux';
 import { Epic } from 'redux-observable';
 import * as actions from '../actions';
 import { IRootState } from 'modules';
-import { Observable } from 'rxjs';
 
 const setTagCanDropPositionEpic: Epic<Action, IRootState> =
     (action$, store, { findTagById, convertToTreeData, copyObject }) => action$.ofAction(actions.setTagCanDropPosition.started)
-        .flatMap(action => {
+        .map(action => {
             const state = store.getState().editor;
             const tab = state.tabs[state.tabIndex].designer;
             const tabData = tab && tab.data || null;
@@ -38,13 +37,13 @@ const setTagCanDropPositionEpic: Epic<Action, IRootState> =
                 }
             }
 
-            return Observable.of(actions.setTagCanDropPosition.done({
+            return actions.setTagCanDropPosition.done({
                 params: action.payload,
                 result: {
                     jsonData,
                     treeData: convertToTreeData(jsonData)
                 }
-            }));
+            });
         });
 
 export default setTagCanDropPositionEpic;

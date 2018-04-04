@@ -53,7 +53,7 @@ interface IElseState {
 class Else extends React.Component<IElseProps, IElseState> {
     onClick(e: any) {
         e.stopPropagation();
-        this.props.selectTag({ tag: this.props.tag });
+        this.props.selectTag(this.props.tag);
     }
 
     removeTag() {

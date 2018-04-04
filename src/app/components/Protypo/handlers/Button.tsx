@@ -110,7 +110,7 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
 
     const onClick = (e: any) => {
         e.stopPropagation();
-        props.selectTag({ tag: props.tag });
+        props.selectTag(props.tag);
     };
 
     const onBlur = (e: any) => {

@@ -166,7 +166,7 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                                     <span
                                         onClick={
                                             () => {
-                                                this.props.selectTag({ tag: node.tag });
+                                                this.props.selectTag(node.tag);
                                             }
                                         }
                                     >

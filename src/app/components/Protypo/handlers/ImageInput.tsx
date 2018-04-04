@@ -74,7 +74,7 @@ const ImageInput: React.SFC<IInputProps> = (props) => {
     const onClick = (e: any) => {
         e.stopPropagation();
         e.preventDefault();
-        props.selectTag({ tag: props.tag });
+        props.selectTag(props.tag);
     };
 
     const removeTag = () => {

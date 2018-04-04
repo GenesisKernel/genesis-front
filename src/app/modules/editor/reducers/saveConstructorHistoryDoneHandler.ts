@@ -18,7 +18,7 @@ import { State } from '../reducer';
 import { ISaveConstructorHistoryResult } from 'genesis/editor';
 import { Success } from 'typescript-fsa';
 
-export default function (state: State, payload: Success<{}, ISaveConstructorHistoryResult>): State {
+export default function (state: State, payload: Success<void, ISaveConstructorHistoryResult>): State {
     return {
         ...state,
         tabs: [

@@ -62,7 +62,7 @@ class Em extends React.Component<IEmProps, IEmState> {
 
     onClick(e: any) {
         e.stopPropagation();
-        this.props.selectTag({ tag: this.props.tag });
+        this.props.selectTag(this.props.tag);
     }
 
     onBlur(e: any) {

@@ -18,11 +18,10 @@ import { Action } from 'redux';
 import { Epic } from 'redux-observable';
 import * as actions from '../actions';
 import { IRootState } from 'modules';
-import { Observable } from 'rxjs';
 
 const moveTagEpic: Epic<Action, IRootState> =
     (action$, store, { findTagById, convertToTreeData, copyObject, resolveTagHandler, getConstructorTemplate, generateId }) => action$.ofAction(actions.moveTag.started)
-        .flatMap(action => {
+        .map(action => {
             const state = store.getState().editor;
             const tab = state.tabs[state.tabIndex].designer;
             const tabData = tab && tab.data || null;
@@ -82,7 +81,6 @@ const moveTagEpic: Epic<Action, IRootState> =
                 moved = true;
             }
 
-            // delete moved element, skip for copying, todo: check ids
             if (moved) {
                 let sourceTag = findTagById(jsonData.concat(), action.payload.tag.id);
                 if (sourceTag.parent) {
@@ -94,13 +92,13 @@ const moveTagEpic: Epic<Action, IRootState> =
                 }
             }
 
-            return Observable.of(actions.moveTag.done({
+            return actions.moveTag.done({
                 params: action.payload,
                 result: {
                     jsonData,
                     treeData: convertToTreeData(jsonData)
                 }
-            }));
+            });
         });
 
 export default moveTagEpic;

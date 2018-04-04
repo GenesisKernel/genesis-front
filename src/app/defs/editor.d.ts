@@ -18,7 +18,6 @@ declare module 'genesis/editor' {
     import { TProtypoElement } from 'genesis/protypo';
 
     type TConstructorData = {
-        // type: string,
         jsonData: TProtypoElement[],
         treeData?: TConstructorTreeElement[],
         pageTemplate?: string,
@@ -99,8 +98,14 @@ declare module 'genesis/editor' {
         selectedTag?: TProtypoElement;
     }
 
+    interface IAddTagCall {
+        tag: ISourceElement;
+        destinationTagID?: string;
+        position?: string;
+    }
+
     interface IOperateTagCall {
-        tag: any;
+        tag: TProtypoElement;
         destinationTagID?: string;
         position?: string;
     }
@@ -108,6 +113,11 @@ declare module 'genesis/editor' {
     interface IOperateTagResult {
         jsonData: TProtypoElement[];
         treeData: TConstructorTreeElement[];
+    }
+
+    interface IMoveTreeTag {
+        treeData: TConstructorTreeElement[];
+        tagID: string;
     }
 
     interface ISaveConstructorHistoryResult {
@@ -135,12 +145,15 @@ declare module 'genesis/editor' {
         treeData: TConstructorTreeElement[];
     }
 
-    interface ISelectTagCall {
-        tag: TProtypoElement;
-    }
-
     interface ISelectTagResult {
         selectedTag: TProtypoElement;
         treeData: TConstructorTreeElement[];
+    }
+
+    interface ISourceElement {
+        new: boolean;
+        element: string;
+        template?: string;
+        text?: string;
     }
 }

@@ -57,7 +57,7 @@ interface IImageContext {
 const Image: React.SFC<IImageProps> = (props, context: IImageContext) => {
     const onClick = (e: any) => {
         e.stopPropagation();
-        props.selectTag({ tag: props.tag });
+        props.selectTag(props.tag);
     };
 
     const removeTag = () => {

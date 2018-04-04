@@ -18,11 +18,10 @@ import { Action } from 'redux';
 import { Epic } from 'redux-observable';
 import * as actions from '../actions';
 import { IRootState } from 'modules';
-import { Observable } from 'rxjs';
 
 const addTagEpic: Epic<Action, IRootState> =
     (action$, store, { findTagById, convertToTreeData, copyObject, resolveTagHandler, getConstructorTemplate }) => action$.ofAction(actions.addTag.started)
-        .flatMap(action => {
+        .map(action => {
             const state = store.getState().editor;
             const tab = state.tabs[state.tabIndex].designer;
             const tabData = tab && tab.data || null;
@@ -83,13 +82,13 @@ const addTagEpic: Epic<Action, IRootState> =
                 );
             }
 
-            return Observable.of(actions.addTag.done({
+            return actions.addTag.done({
                 params: action.payload,
                 result: {
                     jsonData,
                     treeData: convertToTreeData(jsonData)
                 }
-            }));
+            });
         });
 
 export default addTagEpic;
