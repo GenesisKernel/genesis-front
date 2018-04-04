@@ -39,7 +39,12 @@ const changeEditorToolEpic: Epic<Action, IRootState> =
                             error: e
                         })));
                 case 'constructor':
-                    return Observable.of(getPageTree.started(null));
+                    return Observable.of<Action>(
+                        getPageTree.started(null),
+                        changeEditorTool.done({
+                            params: action.payload,
+                            result: null
+                        }));
 
                 default:
                     return Observable.of(changeEditorTool.done({
