@@ -20,15 +20,15 @@ import * as actions from '../actions';
 import { IRootState } from 'modules';
 
 const moveTreeTagEpic: Epic<Action, IRootState> =
-    (action$, store, { findTagById, convertToTreeData, copyObject, resolveTagHandler, getConstructorTemplate, generateId }) => action$.ofAction(actions.moveTreeTag)
+    (action$, store, { constructorModule }) => action$.ofAction(actions.moveTreeTag)
         .map(action => {
             const state = store.getState().editor;
             const tab = state.tabs[state.tabIndex].designer;
             const tabData = tab && tab.data || null;
-            let jsonData = tabData.jsonData && copyObject(tabData.jsonData) || null;
+            let jsonData = tabData.jsonData && constructorModule.copyObject(tabData.jsonData) || null;
 
-            let movedTag = copyObject(findTagById(jsonData, action.payload.tagID));
-            let tagTreeNewPosition = copyObject(findTagById(action.payload.treeData, action.payload.tagID));
+            let movedTag = constructorModule.copyObject(constructorModule.findTagById(jsonData, action.payload.tagID));
+            let tagTreeNewPosition = constructorModule.copyObject(constructorModule.findTagById(action.payload.treeData, action.payload.tagID));
 
             let destinationTagID = null;
             let position = 'inside';
@@ -60,7 +60,10 @@ const moveTreeTagEpic: Epic<Action, IRootState> =
                     }
                     else {
                         position = 'after';
-                        destinationTagID = tagTreeNewPosition.parent.children[tagTreeNewPosition.parentPosition - 1].id;
+                        const el = tagTreeNewPosition.parent.children[tagTreeNewPosition.parentPosition - 1];
+                        if (el) {
+                            destinationTagID = el.id;
+                        }
                     }
                 }
             }

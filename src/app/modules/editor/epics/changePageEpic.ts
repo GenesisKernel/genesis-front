@@ -20,14 +20,14 @@ import * as actions from '../actions';
 import { IRootState } from 'modules';
 
 const changePageEpic: Epic<Action, IRootState> =
-    (action$, store, { convertToTreeData, setIds, findTagById, copyObject, Properties }) => action$.ofAction(actions.changePage.started)
+    (action$, store, { constructorModule }) => action$.ofAction(actions.changePage.started)
         .map(action => {
             const state = store.getState().editor;
             const tabData = state.tabs[state.tabIndex].designer.data;
-            const jsonData = tabData && copyObject(tabData.jsonData) || null;
+            const jsonData = tabData && constructorModule.copyObject(tabData.jsonData) || null;
             let selectedTag = tabData && tabData.selectedTag || null;
 
-            let tag = findTagById(jsonData, action.payload.tagID).el;
+            let tag = constructorModule.findTagById(jsonData, action.payload.tagID).el;
             if (tag) {
                 if (typeof (action.payload.text) !== 'undefined') {
                     // todo: parse contentEditable tags and create children array
@@ -75,7 +75,7 @@ const changePageEpic: Epic<Action, IRootState> =
                     tag.attr.class = action.payload.class || '';
                 }
 
-                let properties = new Properties();
+                let properties = new constructorModule.Properties();
 
                 if ('string' === typeof action.payload.align) {
                     tag.attr.class = properties.updateClassList(tag.attr.class || '', 'align', action.payload.align);
@@ -99,14 +99,14 @@ const changePageEpic: Epic<Action, IRootState> =
             }
 
             if (selectedTag && tag && selectedTag.id === tag.id) {
-                selectedTag = copyObject(tag);
+                selectedTag = constructorModule.copyObject(tag);
             }
 
             return actions.changePage.done({
                 params: action.payload,
                 result: {
                     jsonData,
-                    treeData: convertToTreeData(jsonData),
+                    treeData: constructorModule.convertToTreeData(jsonData),
                     selectedTag
                 }
             });

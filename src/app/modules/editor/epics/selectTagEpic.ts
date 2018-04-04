@@ -20,18 +20,18 @@ import * as actions from '../actions';
 import { IRootState } from 'modules';
 
 const changePageEpic: Epic<Action, IRootState> =
-    (action$, store, { convertToTreeData, setIds, findTagById, copyObject, Properties }) => action$.ofAction(actions.selectTag.started)
+    (action$, store, { constructorModule }) => action$.ofAction(actions.selectTag.started)
         .map(action => {
             const state = store.getState().editor;
             const tabData = state.tabs[state.tabIndex].designer.data;
-            const jsonData = tabData && copyObject(tabData.jsonData) || null;
+            const jsonData = tabData && constructorModule.copyObject(tabData.jsonData) || null;
 
             const selectedTag = action.payload;
 
             return actions.selectTag.done({
                 params: action.payload,
                 result: {
-                    treeData: convertToTreeData(jsonData, selectedTag),
+                    treeData: constructorModule.convertToTreeData(jsonData, selectedTag),
                     selectedTag
                 }
             });

@@ -20,26 +20,26 @@ import * as actions from '../actions';
 import { IRootState } from 'modules';
 
 const moveTagEpic: Epic<Action, IRootState> =
-    (action$, store, { findTagById, convertToTreeData, copyObject, resolveTagHandler, getConstructorTemplate, generateId }) => action$.ofAction(actions.moveTag.started)
+    (action$, store, { constructorModule }) => action$.ofAction(actions.moveTag.started)
         .map(action => {
             const state = store.getState().editor;
             const tab = state.tabs[state.tabIndex].designer;
             const tabData = tab && tab.data || null;
-            let jsonData = tabData.jsonData && copyObject(tabData.jsonData) || null;
+            let jsonData = tabData.jsonData && constructorModule.copyObject(tabData.jsonData) || null;
 
-            let tagCopy = copyObject(action.payload.tag);
+            let tagCopy = constructorModule.copyObject(action.payload.tag);
             // generate new id for inserted tag
-            tagCopy.id = generateId();
+            tagCopy.id = constructorModule.generateId();
 
             let moved = false;
 
             if ('string' === typeof action.payload.destinationTagID &&
                 'string' === typeof action.payload.position) {
-                let tag = findTagById(jsonData, action.payload.destinationTagID);
+                let tag = constructorModule.findTagById(jsonData, action.payload.destinationTagID);
                 if (tag.el) {
                     switch (action.payload.position) {
                         case 'inside':
-                            const Handler = resolveTagHandler(tag.el.tag);
+                            const Handler = constructorModule.resolveTagHandler(tag.el.tag);
                             if (Handler) {
                                 const Tag = new Handler();
                                 if (Tag.canHaveChildren) {
@@ -82,7 +82,7 @@ const moveTagEpic: Epic<Action, IRootState> =
             }
 
             if (moved) {
-                let sourceTag = findTagById(jsonData.concat(), action.payload.tag.id);
+                let sourceTag = constructorModule.findTagById(jsonData.concat(), action.payload.tag.id);
                 if (sourceTag.parent) {
                     sourceTag.parent.children.splice(sourceTag.parentPosition, 1);
                 }
@@ -96,7 +96,7 @@ const moveTagEpic: Epic<Action, IRootState> =
                 params: action.payload,
                 result: {
                     jsonData,
-                    treeData: convertToTreeData(jsonData)
+                    treeData: constructorModule.convertToTreeData(jsonData)
                 }
             });
         });

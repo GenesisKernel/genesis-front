@@ -20,27 +20,27 @@ import * as actions from '../actions';
 import { IRootState } from 'modules';
 
 const copyTagEpic: Epic<Action, IRootState> =
-    (action$, store, { findTagById, convertToTreeData, copyObject, resolveTagHandler, getConstructorTemplate, generateId, setIds }) => action$.ofAction(actions.copyTag.started)
+    (action$, store, { constructorModule }) => action$.ofAction(actions.copyTag.started)
         .map(action => {
             const state = store.getState().editor;
             const tab = state.tabs[state.tabIndex].designer;
             const tabData = tab && tab.data || null;
-            let jsonData = tabData.jsonData && copyObject(tabData.jsonData) || null;
+            let jsonData = tabData.jsonData && constructorModule.copyObject(tabData.jsonData) || null;
 
-            let tagCopy = copyObject(action.payload.tag);
+            let tagCopy = constructorModule.copyObject(action.payload.tag);
             // generate new id for inserted tag
-            tagCopy.id = generateId();
+            tagCopy.id = constructorModule.generateId();
 
             if (tagCopy.children) {
-                setIds(tagCopy.children, true);
+                constructorModule.setIds(tagCopy.children, true);
             }
             if (tagCopy.tail) {
-                setIds(tagCopy.tail, true);
+                constructorModule.setIds(tagCopy.tail, true);
             }
 
             if ('string' === typeof action.payload.destinationTagID &&
                 'string' === typeof action.payload.position) {
-                let tag = findTagById(jsonData, action.payload.destinationTagID);
+                let tag = constructorModule.findTagById(jsonData, action.payload.destinationTagID);
                 if (tag.el) {
                     switch (action.payload.position) {
                         case 'inside':
@@ -80,7 +80,7 @@ const copyTagEpic: Epic<Action, IRootState> =
                 params: action.payload,
                 result: {
                     jsonData,
-                    treeData: convertToTreeData(jsonData)
+                    treeData: constructorModule.convertToTreeData(jsonData)
                 }
             });
         });

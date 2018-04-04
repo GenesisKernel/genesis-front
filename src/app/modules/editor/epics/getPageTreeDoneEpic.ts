@@ -20,7 +20,7 @@ import * as actions from '../actions';
 import { IRootState } from 'modules';
 
 const getPageTreeDoneEpic: Epic<Action, IRootState> =
-    (action$, store, { convertToTreeData, setIds }) => action$.ofAction(actions.getPageTree.done)
+    (action$, store) => action$.ofAction(actions.getPageTree.done)
         .map(action => {
             return actions.saveConstructorHistory.started(null);
         });

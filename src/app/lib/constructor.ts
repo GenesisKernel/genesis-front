@@ -1517,4 +1517,14 @@ export function startHoverTimer() {
     return true;
 }
 
-export default findTagById;
+export default {
+    setIds,
+    convertToTreeData,
+    findTagById,
+    copyObject,
+    resolveTagHandler,
+    getConstructorTemplate,
+    generateId,
+    CodeGenerator,
+    Properties
+};

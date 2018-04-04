@@ -22,7 +22,7 @@ import { IRootState } from 'modules';
 import { Observable } from 'rxjs';
 
 const getPageTreeEpic: Epic<Action, IRootState> =
-    (action$, store, { convertToTreeData, setIds }) => action$.ofAction(actions.getPageTree.started)
+    (action$, store, { constructorModule }) => action$.ofAction(actions.getPageTree.started)
         .flatMap(action => {
             const state = store.getState();
 
@@ -30,18 +30,17 @@ const getPageTreeEpic: Epic<Action, IRootState> =
 
             return Observable.fromPromise(api.contentJson(state.auth.sessionToken, template, state.storage.locale, true))
                 .map(payload => {
-                        let pageTree = payload.tree;
-                        setIds(pageTree);
+                    let pageTree = payload.tree;
+                    constructorModule.setIds(pageTree);
 
-                        return actions.getPageTree.done({
-                            params: action.payload,
-                            result: {
-                                jsonData: pageTree,
-                                treeData: convertToTreeData(pageTree)
-                            }
-                        });
-                    }
-                )
+                    return actions.getPageTree.done({
+                        params: action.payload,
+                        result: {
+                            jsonData: pageTree,
+                            treeData: constructorModule.convertToTreeData(pageTree)
+                        }
+                    });
+                })
                 .catch((e: IAPIError) =>
                     Observable.of(actions.getPageTree.failed({
                         params: action.payload,

@@ -21,7 +21,7 @@ import { IRootState } from 'modules';
 import { Observable } from 'rxjs';
 
 const constructorRedoEpic: Epic<Action, IRootState> =
-    (action$, store, { convertToTreeData }) => action$.ofAction(actions.constructorRedo.started)
+    (action$, store, { constructorModule }) => action$.ofAction(actions.constructorRedo.started)
         .flatMap(action => {
             const state = store.getState().editor;
 
@@ -41,7 +41,7 @@ const constructorRedoEpic: Epic<Action, IRootState> =
                     params: action.payload,
                     result: {
                         jsonData: historyData[position - 1],
-                        treeData: convertToTreeData(historyData[position - 1]),
+                        treeData: constructorModule.convertToTreeData(historyData[position - 1]),
                         position,
                         canUndo,
                         canRedo

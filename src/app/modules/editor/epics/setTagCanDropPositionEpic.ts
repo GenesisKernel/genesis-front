@@ -20,14 +20,14 @@ import * as actions from '../actions';
 import { IRootState } from 'modules';
 
 const setTagCanDropPositionEpic: Epic<Action, IRootState> =
-    (action$, store, { findTagById, convertToTreeData, copyObject }) => action$.ofAction(actions.setTagCanDropPosition.started)
+    (action$, store, { constructorModule }) => action$.ofAction(actions.setTagCanDropPosition.started)
         .map(action => {
             const state = store.getState().editor;
             const tab = state.tabs[state.tabIndex].designer;
             const tabData = tab && tab.data || null;
-            let jsonData = tabData.jsonData && copyObject(tabData.jsonData) || null;
+            let jsonData = tabData.jsonData && constructorModule.copyObject(tabData.jsonData) || null;
 
-            let tag = findTagById(jsonData, action.payload.tagID).el;
+            let tag = constructorModule.findTagById(jsonData, action.payload.tagID).el;
             if (tag) {
                 if (!tag.attr) {
                     tag.attr = {};
@@ -41,7 +41,7 @@ const setTagCanDropPositionEpic: Epic<Action, IRootState> =
                 params: action.payload,
                 result: {
                     jsonData,
-                    treeData: convertToTreeData(jsonData)
+                    treeData: constructorModule.convertToTreeData(jsonData)
                 }
             });
         });

@@ -20,18 +20,18 @@ import * as actions from '../actions';
 import { IRootState } from 'modules';
 
 const addTagEpic: Epic<Action, IRootState> =
-    (action$, store, { findTagById, convertToTreeData, copyObject, resolveTagHandler, getConstructorTemplate }) => action$.ofAction(actions.addTag.started)
+    (action$, store, { constructorModule }) => action$.ofAction(actions.addTag.started)
         .map(action => {
             const state = store.getState().editor;
             const tab = state.tabs[state.tabIndex].designer;
             const tabData = tab && tab.data || null;
-            let jsonData = tabData.jsonData && copyObject(tabData.jsonData) || null;
+            let jsonData = tabData.jsonData && constructorModule.copyObject(tabData.jsonData) || null;
 
             let Tag: any = null;
             let treeJSON: any = null;
 
             if (action.payload.tag.element) {
-                const Handler = resolveTagHandler(action.payload.tag.element);
+                const Handler = constructorModule.resolveTagHandler(action.payload.tag.element);
                 if (Handler) {
                     Tag = new Handler();
                     treeJSON = Tag.generateTreeJSON(action.payload.tag.text);
@@ -39,13 +39,13 @@ const addTagEpic: Epic<Action, IRootState> =
             }
             else {
                 if (action.payload.tag.template) {
-                    treeJSON = getConstructorTemplate(action.payload.tag.template);
+                    treeJSON = constructorModule.getConstructorTemplate(action.payload.tag.template);
                 }
             }
 
             if ('string' === typeof action.payload.destinationTagID &&
                 'string' === typeof action.payload.position) {
-                let tag = findTagById(jsonData, action.payload.destinationTagID);
+                let tag = constructorModule.findTagById(jsonData, action.payload.destinationTagID);
                 if (tag.el) {
                     switch (action.payload.position) {
                         case 'inside':
@@ -86,7 +86,7 @@ const addTagEpic: Epic<Action, IRootState> =
                 params: action.payload,
                 result: {
                     jsonData,
-                    treeData: convertToTreeData(jsonData)
+                    treeData: constructorModule.convertToTreeData(jsonData)
                 }
             });
         });
