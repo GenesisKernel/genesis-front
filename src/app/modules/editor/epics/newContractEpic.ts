@@ -36,7 +36,8 @@ const newContractEpic: Epic<Action, IRootState> =
                     name: '@1NewContract',
                     params: {
                         Value: action.payload.value,
-                        Conditions: 'true'
+                        Conditions: 'true',
+                        ApplicationId: action.payload.appId ? action.payload.appId : 0
                     }
                 })),
                 action$.ofAction(txExec.done)

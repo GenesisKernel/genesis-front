@@ -16,15 +16,14 @@
 
 import { State } from '../reducer';
 import { IExecutionCall } from 'genesis/tx';
+import setTxData from './setTxData';
 
 export default function (state: State, payload: IExecutionCall): State {
-    return {
-        ...state,
-        transactions: state.transactions.set(payload.tx.uuid, {
+    return setTxData(state, {
+        tx: payload.tx,
+        data: {
             block: null,
-            error: null,
-            contract: payload.tx.name,
-            uuid: payload.tx.uuid
-        })
-    };
+            error: null
+        }
+    });
 }

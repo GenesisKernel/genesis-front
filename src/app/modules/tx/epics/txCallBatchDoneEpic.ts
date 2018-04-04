@@ -14,18 +14,23 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { State } from '../reducer';
-import { Failure } from 'typescript-fsa';
-import { IExecutionCall, ITxError } from 'genesis/tx';
-import setTxData from './setTxData';
+import { IRootState } from 'modules';
+import { Epic } from 'redux-observable';
+import { Action } from 'redux';
+import { txCallBatch } from '../actions';
+import { Observable } from 'rxjs/Observable';
+import { toastr } from 'react-redux-toastr';
 
-export default function (state: State, payload: Failure<IExecutionCall, ITxError>): State {
-    return setTxData(state, {
-        tx: payload.params.tx,
-        data: {
-            block: null,
-            error: payload.error,
-            contract: payload.params.tx.name
-        }
-    });
-}
+export const txCallBatchFailedEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(txCallBatch.done)
+        .filter(l => !l.payload.params.silent)
+        .flatMap(action => {
+            toastr.success(
+                action.payload.params.uuid,
+                'Batch processing completed',
+            );
+
+            return Observable.empty();
+        });
+
+export default txCallBatchFailedEpic;

@@ -16,15 +16,16 @@
 
 import actionCreatorFactory from 'typescript-fsa';
 import { TProtypoElement } from 'genesis/protypo';
-import { IEditorTabCreateCall, ILoadEditorTabCall, IReloadEditorTabCall, IChangePageCall, IChangePageResult, ISaveConstructorHistoryResult,
+
+import { IEditorTabCreateCall, ICreateEditorTabCall, ILoadEditorTabCall, IReloadEditorTabCall, TEditorTab, IChangePageCall, IChangePageResult, ISaveConstructorHistoryResult,
     IConstructorUndoRedoResult, ISetTagCanDropPositionCall, ISetTagCanDropPositionResult, IOperateTagCall, IOperateTagResult, ISelectTagCall, ISelectTagResult,
-    TEditorTab, TConstructorTreeElement
+    TConstructorTreeElement
 } from 'genesis/editor';
 
 const actionCreator = actionCreatorFactory('editor');
 
 export const editorSave = actionCreator<TEditorTab>('EDITOR_SAVE');
-export const createEditorTab = actionCreator.async<string, IEditorTabCreateCall>('CREATE_EDITOR_TAB');
+export const createEditorTab = actionCreator.async<ICreateEditorTabCall, IEditorTabCreateCall>('CREATE_EDITOR_TAB');
 export const loadEditorTab = actionCreator.async<ILoadEditorTabCall, TEditorTab>('LOAD_EDITOR_TAB');
 export const changeEditorTab = actionCreator<number>('CHANGE_EDITOR_TAB');
 export const closeEditorTab = actionCreator<number>('CLOSE_EDITOR_TAB');

@@ -15,17 +15,20 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { Failure } from 'typescript-fsa';
-import { IExecutionCall, ITxError } from 'genesis/tx';
-import setTxData from './setTxData';
+import { TTransactionStatus } from 'genesis/tx';
 
-export default function (state: State, payload: Failure<IExecutionCall, ITxError>): State {
-    return setTxData(state, {
-        tx: payload.params.tx,
-        data: {
-            block: null,
-            error: payload.error,
-            contract: payload.params.tx.name
-        }
-    });
+export default function (state: State, uuid: string): TTransactionStatus {
+    const parent = state.transactions.get(uuid);
+
+    switch (parent.type) {
+        case 'single':
+            return parent;
+
+        case 'collection':
+            const txIndex = parent.transactions.findIndex(l => uuid === l.uuid);
+            return parent.transactions[txIndex];
+
+        default:
+            return null;
+    }
 }

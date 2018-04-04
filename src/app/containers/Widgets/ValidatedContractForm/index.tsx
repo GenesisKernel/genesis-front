@@ -17,9 +17,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { Map } from 'immutable';
+import { OrderedMap } from 'immutable';
 import { IRootState } from 'modules';
 import { txCall } from 'modules/tx/actions';
+import { TTransactionStatus, ITransaction } from 'genesis/tx';
 import * as uuid from 'uuid';
 
 import Validation from 'components/Validation';
@@ -33,7 +34,7 @@ interface IValidatedContractFormProps {
 }
 
 interface IValidatedContractFormStateProps {
-    transactions: Map<string, { block: string, error?: { type: string, error: string } }>;
+    transactions: OrderedMap<string, TTransactionStatus>;
 }
 
 interface IValidatedContractFormDispatchProps {
@@ -49,7 +50,7 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
     }
 
     componentWillReceiveProps(props: IValidatedContractFormProps & IValidatedContractFormStateProps & IValidatedContractFormDispatchProps) {
-        const transaction = props.transactions.get(this._uuid);
+        const transaction = props.transactions.get(this._uuid) as ITransaction;
         if (this._pending && transaction && (transaction.block || transaction.error)) {
             this._pending = false;
 
@@ -75,7 +76,7 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
     }
 
     render() {
-        const transaction = this.props.transactions.get(this._uuid);
+        const transaction = this.props.transactions.get(this._uuid) as ITransaction;
         const pending = transaction && !transaction.block && !transaction.error;
 
         return (

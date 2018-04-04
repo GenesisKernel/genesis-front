@@ -28,13 +28,7 @@ const txCallEpic: Epic<Action, IRootState> =
             const state = store.getState();
             if (keyring.validatePrivateKey(state.auth.privateKey)) {
                 return Observable.of(txPrepare({
-                    tx: {
-                        ...action.payload,
-                        params: {
-                            ...action.payload.params,
-                            Lang: state.storage.locale
-                        }
-                    },
+                    tx: action.payload,
                     privateKey: state.auth.privateKey
                 }));
             }
@@ -46,13 +40,7 @@ const txCallEpic: Epic<Action, IRootState> =
                         .flatMap(result => {
                             if (isType(result, txAuthorize.done)) {
                                 return Observable.of(txPrepare({
-                                    tx: {
-                                        ...action.payload,
-                                        params: {
-                                            ...action.payload.params,
-                                            Lang: state.storage.locale
-                                        }
-                                    },
+                                    tx: action.payload,
                                     privateKey: keyring.decryptAES(store.getState().auth.account.encKey, result.payload.result)
                                 }, action.meta));
                             }

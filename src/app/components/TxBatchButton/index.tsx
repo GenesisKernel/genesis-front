@@ -15,7 +15,6 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { injectIntl, InjectedIntlProps } from 'react-intl';
 
 export interface ITxButtonConfirm {
     icon: string;
@@ -27,42 +26,47 @@ export interface ITxButtonConfirm {
 
 export interface ITxButtonProps {
     disabled?: boolean;
-    pending?: boolean;
     className?: string;
-    contractName?: string;
-    contractParams?: { [key: string]: any } | (() => { [key: string]: any });
-    contractStatus?: { block: string, error?: { type: string, error: string } };
+    contracts: {
+        name: string;
+        data: {
+            [key: string]: any
+        }[]
+    }[];
+    status: 'PENDING' | 'DONE' | 'ERROR';
     confirm?: ITxButtonConfirm;
     page?: string;
     pageParams?: { [key: string]: any };
-    execContract: (contractName: string, contractParams: { [key: string]: any }, confirm?: ITxButtonConfirm) => void;
+    execContracts: (params: { contracts: { name: string, data: { [key: string]: any }[] }[], confirm?: ITxButtonConfirm }) => void;
     navigate: (page: string, params: { [key: string]: any }, confirm?: ITxButtonConfirm) => void;
-    onExec?: (block: string, error?: { type: string, error: string }) => void;
+    onExec?: (success: boolean) => void;
 }
 
-class TxButton extends React.Component<ITxButtonProps & InjectedIntlProps> {
+class TxBatchButton extends React.Component<ITxButtonProps> {
     componentWillReceiveProps(props: ITxButtonProps) {
-        // Received non-empty transaction status, proceed to actions
-        if (!props.pending && props.contractStatus && this.props.contractStatus !== props.contractStatus) {
-            if (props.contractStatus.block) {
-                if (this.props.page) {
-                    this.props.navigate(this.props.page, this.props.pageParams);
+        if ('PENDING' === this.props.status && 'PENDING' !== props.status) {
+            if ('DONE' === props.status) {
+                if (props.page) {
+                    props.navigate(props.page, props.pageParams);
+                }
+
+                if (props.onExec) {
+                    props.onExec(true);
                 }
             }
-
-            if (this.props.onExec) {
-                this.props.onExec(props.contractStatus.block, props.contractStatus.error);
+            else if ('ERROR' === props.status) {
+                if (props.onExec) {
+                    props.onExec(false);
+                }
             }
         }
     }
 
     onClick() {
-        if (this.props.contractName) {
-            this.props.execContract(this.props.contractName, this.props.contractParams, this.props.confirm);
-        }
-        else if (this.props.page) {
-            this.props.navigate(this.props.page, this.props.pageParams, this.props.confirm);
-        }
+        this.props.execContracts({
+            contracts: this.props.contracts,
+            confirm: this.props.confirm
+        });
     }
 
     render() {
@@ -70,7 +74,7 @@ class TxButton extends React.Component<ITxButtonProps & InjectedIntlProps> {
             <button
                 type="button"
                 onClick={this.onClick.bind(this)}
-                disabled={this.props.disabled || this.props.pending}
+                disabled={this.props.disabled || 'PENDING' === this.props.status}
                 className={this.props.className}
             >
                 {this.props.children}
@@ -79,4 +83,4 @@ class TxButton extends React.Component<ITxButtonProps & InjectedIntlProps> {
     }
 }
 
-export default injectIntl(TxButton);
+export default TxBatchButton;

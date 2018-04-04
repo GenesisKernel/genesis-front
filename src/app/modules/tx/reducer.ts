@@ -17,18 +17,16 @@
 import { OrderedMap } from 'immutable';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import * as actions from './actions';
-import { ITransaction } from 'genesis/tx';
+import { TTransactionStatus } from 'genesis/tx';
 import txExecHandler from './reducers/txExecHandler';
 import txExecDoneHandler from './reducers/txExecDoneHandler';
 import txExecFailedHandler from './reducers/txExecFailedHandler';
 
 export type State = {
-    readonly pendingTransaction: ITransaction;
-    readonly transactions: OrderedMap<string, ITransaction>;
+    readonly transactions: OrderedMap<string, TTransactionStatus>;
 };
 
 export const initialState: State = {
-    pendingTransaction: null,
     transactions: OrderedMap()
 };
 

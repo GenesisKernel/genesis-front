@@ -30,6 +30,7 @@ interface IEditorContainerProps {
     open?: string;
     create?: string;
     name?: string;
+    appId?: number;
 }
 
 interface IEditorContainerState {
@@ -60,9 +61,9 @@ class EditorContainer extends React.Component<IEditorContainerProps & InjectedIn
         }
     }
 
-    onTabCreate = (type: string) => {
+    onTabCreate = (params: {type: string, appId: number}) => {
         history.replace('/editor');
-        this.props.onTabCreate(type);
+        this.props.onTabCreate(params);
     }
 
     onTabLoad = (params: { type: string, name: string }) => {
@@ -97,6 +98,7 @@ class EditorContainer extends React.Component<IEditorContainerProps & InjectedIn
                 open={this.props.open}
                 create={this.props.create}
                 name={this.props.name}
+                appId={this.props.appId}
                 tabIndex={this.props.tabIndex}
                 tabs={this.props.tabs}
                 onTabCreate={this.onTabCreate}
