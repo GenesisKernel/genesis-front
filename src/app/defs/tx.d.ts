@@ -16,13 +16,13 @@
 
 declare module 'genesis/tx' {
     type TTxError =
+        'error' |
+        'info' |
+        'warning' |
+        'panic' |
         'E_CONTRACT' |
-        'E_ERROR' |
-        'E_INFO' |
         'E_INVALID_PASSWORD' |
-        'E_SERVER' |
-        'E_WARNING' |
-        'panic';
+        'E_SERVER';
 
     interface ITxResult {
         block: string;
