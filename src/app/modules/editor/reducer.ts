@@ -27,6 +27,7 @@ import revertEditorTabHandler from './reducers/revertEditorTabHandler';
 import updateEditorTabHandler from './reducers/updateEditorTabHandler';
 import loadEditorTabDoneHandler from './reducers/loadEditorTabDoneHandler';
 import getPageTreeDoneHandler from './reducers/getPageTreeDoneHandler';
+import getPageTreeFailedHandler from './reducers/getPageTreeFailedHandler';
 import selectTagDoneHandler from './reducers/selectTagDoneHandler';
 import changePageDoneHandler from './reducers/changePageDoneHandler';
 import addTagDoneHandler from './reducers/addTagDoneHandler';
@@ -62,6 +63,7 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.revertEditorTab, revertEditorTabHandler)
     .case(actions.updateEditorTab, updateEditorTabHandler)
     .case(actions.getPageTree.done, getPageTreeDoneHandler)
+    .case(actions.getPageTree.failed, getPageTreeFailedHandler)
     .case(actions.selectTag.done, selectTagDoneHandler)
     .case(actions.changePage.done, changePageDoneHandler)
     .case(actions.addTag.done, addTagDoneHandler)

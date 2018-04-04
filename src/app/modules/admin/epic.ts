@@ -24,8 +24,6 @@ import { Action } from 'redux';
 import { Observable } from 'rxjs';
 import { IRootState } from 'modules';
 import * as actions from './actions';
-import { setIds, findTagById } from 'lib/constructor';
-import { generatePageTemplate } from 'modules/editor/actions';
 
 export const getTableEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.getTable.started)
@@ -334,124 +332,6 @@ export const getParameterEpic: Epic<Action, IRootState> =
                 );
         });
 
-export const moveTreeTagEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(actions.moveTreeTag)
-        .flatMap(action => {
-            const state = store.getState();
-            let pageTree = state.admin.tabs.data['interfaceConstructor' + action.payload.pageID] && state.admin.tabs.data['interfaceConstructor' + action.payload.pageID].data || null;
-
-            let movedTag = _.cloneDeep(findTagById(pageTree, action.payload.tagID));
-            let tagTreeNewPosition = _.cloneDeep(findTagById(action.payload.treeData, action.payload.tagID));
-
-            let destinationTagID = null;
-            let position = 'inside';
-
-            if (tagTreeNewPosition.parent === null) {
-                if (tagTreeNewPosition.parentPosition === 0) {
-                    position = 'before';
-                    destinationTagID = pageTree[0].id;
-                }
-                else {
-                    position = 'after';
-                    if (pageTree[tagTreeNewPosition.parentPosition]) {
-                        destinationTagID = pageTree[tagTreeNewPosition.parentPosition].id;
-                    }
-                    else {
-                        destinationTagID = pageTree[tagTreeNewPosition.parentPosition - 1].id;
-                    }
-                }
-            }
-            else {
-                if (tagTreeNewPosition.parent.children.length === 1) {
-                    position = 'inside';
-                    destinationTagID = tagTreeNewPosition.parent.id;
-                }
-                else {
-                    if (tagTreeNewPosition.parentPosition === 0) {
-                        destinationTagID = tagTreeNewPosition.parent.children[1].id;
-                        position = 'before';
-                    }
-                    else {
-                        position = 'after';
-                        destinationTagID = tagTreeNewPosition.parent.children[tagTreeNewPosition.parentPosition - 1].id;
-                    }
-                }
-            }
-
-            return Observable.concat(
-                Observable.of(actions.moveTag({
-                    tag: movedTag.el,
-                    destinationTagID,
-                    position,
-                    pageID: action.payload.pageID
-                })),
-                Observable.of(actions.saveConstructorHistory({
-                    pageID: action.payload.pageID
-                })),
-                Observable.of(generatePageTemplate(state.admin.tabs.data['interfaceConstructor' + action.payload.pageID].treeData))
-            );
-        });
-
-export const getPageTreeCodeEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(actions.getPageTreeCode.started)
-        .flatMap(action => {
-            const state = store.getState();
-
-            return Observable.fromPromise(api.contentTest(state.auth.sessionToken, action.payload.code, state.storage.locale))
-                .map(payload => {
-                    let pageTreeCode = payload.tree;
-                    setIds(pageTreeCode);
-
-                    return actions.getPageTreeCode.done({
-                        params: action.payload,
-                        result: {
-                            pageTreeCode: pageTreeCode
-                        }
-                    });
-                }
-                )
-                .catch((e: IAPIError) =>
-                    Observable.of(actions.getPageTreeCode.failed({
-                        params: action.payload,
-                        error: e.error
-                    }))
-                );
-        });
-
-export const getPageTreeEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(actions.getPageTree.started)
-        .flatMap(action => {
-            const state = store.getState();
-
-            return Observable.fromPromise(api.contentPage(state.auth.sessionToken, action.payload.name, {}, state.storage.locale))
-                .map(payload => {
-                    let pageTree = payload.tree;
-                    setIds(pageTree);
-
-                    return actions.getPageTree.done({
-                        params: action.payload,
-                        result: {
-                            page: {
-                                name: action.payload.name,
-                                tree: pageTree
-                            }
-                        }
-                    });
-                }
-                )
-                .catch((e: IAPIError) =>
-                    Observable.of(actions.getPageTree.failed({
-                        params: action.payload,
-                        error: e.error
-                    }))
-                );
-        });
-
-export const getPageTreeDoneEpic: Epic<Action, IRootState> = (action$, store) => action$.ofAction(actions.getPageTree.done)
-    .flatMap(action => {
-        return Observable.of(actions.saveConstructorHistory({ pageID: action.payload.params.id }));
-    });
-
 export const exportDataEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.exportData.started)
         .flatMap(action => {
@@ -610,16 +490,12 @@ export default combineEpics(
     getTableStructEpic,
     getInterfaceEpic,
     getPageEpic,
-    getPageTreeEpic,
-    getPageTreeCodeEpic,
-    getPageTreeDoneEpic,
     getMenuEpic,
     getMenusEpic,
     getLanguagesEpic,
     getLanguageEpic,
     getParameterEpic,
     getParametersEpic,
-    moveTreeTagEpic,
     exportDataEpic,
     importDataEpic
 );

@@ -24,7 +24,7 @@ import Edit from 'components/Main/Admin/Parameters/Edit';
 
 export interface IEditContainerProps {
     parameterName: string;
-    tabData?: any;
+    // tabData?: any;
     // match: { params: { parameterName: string } };
 }
 
@@ -44,7 +44,7 @@ class EditContainer extends React.Component<IEditContainerProps & IEditContainer
     }
 
     render() {
-        const parameterTab = this.props.tabData && this.props.tabData['parameter' + this.props.parameterName] || null;
+        const parameterTab: any = null;
         let parameter = null;
         if (parameterTab) {
             parameter = parameterTab.data;
@@ -58,7 +58,7 @@ class EditContainer extends React.Component<IEditContainerProps & IEditContainer
 
 const mapStateToProps = (state: IRootState) => ({
     // parameter: state.admin.parameter
-    tabData: state.admin.tabs && state.admin.tabs.data || null
+    // tabData: null
 });
 
 const mapDispatchToProps = {
