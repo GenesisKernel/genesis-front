@@ -52,7 +52,7 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
             Handler = resolveTagHandler(this.props.tag.tag);
         }
         if (Handler) {
-            const Tag = new Handler();
+            const Tag = new Handler(this.props.tag);
 
             return (
                 <Panel title="Properties">
@@ -126,7 +126,7 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
                             { Tag.hasEditProp('name') && (
                                 <PropertiesInput
                                     name="name"
-                                    title="Table name"
+                                    title="Name"
                                     value={this.props.tag && this.props.tag.attr && this.props.tag.attr.name || ''}
                                     onChange={this.onChange.bind(this, 'name')}
                                 />

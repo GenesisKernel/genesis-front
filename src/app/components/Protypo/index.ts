@@ -18,6 +18,7 @@ import Protypo from './Protypo';
 import Button, { ButtonDnD } from './handlers/Button';
 import Code from 'components/Protypo/handlers/Code';
 import Data from './handlers/Data';
+import LogicDnD from './handlers/Logic';
 import DBFind, { DBFindDnD } from './handlers/DBFind';
 import IfDnD from './handlers/If';
 import ElseIfDnD from './handlers/ElseIf';
@@ -104,7 +105,7 @@ const functions = {
 
 export const resolveHandler = (name: string, DnD?: boolean) => {
     if (DnD) {
-        return handlersDnD[name];
+        return handlersDnD[name] || LogicDnD;
     }
     return handlers[name];
 };

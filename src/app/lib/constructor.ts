@@ -188,7 +188,7 @@ export function convertToTreeData(data: any, selectedTag?: any): any {
 
             const Handler = resolveTagHandler(item.tag);
             if (Handler) {
-                const tagObj = new Handler();
+                const tagObj = new Handler(item);
                 let treeItem = {
                     // title: ((item.tag !== 'text') ? item.tag : '') + ' ' + (subtitle ? subtitle : ''),
                     title: item.tag + (subtitle ? (': ' + subtitle) : ''),
@@ -1306,6 +1306,55 @@ class Else extends Tag {
     }
 }
 
+const LogicTagNames = {
+    'getvar': 'GetVar',
+    'setvar': 'SetVar',
+    'addtoolbutton': 'AddToolButton',
+    'linkpage': 'LinkPage',
+    'and': 'And',
+    'calculate': 'Calculate',
+    'cmptime': 'CmpTime',
+    'datetime': 'DateTime',
+    'now': 'Now',
+    'or': 'Or',
+    'code': 'Code',
+    'chart': 'Chart',
+    'forlist': 'ForList',
+    'menugroup': 'MenuGroup',
+    'menuitem': 'MenuItem',
+    'qrcode': 'QRcode',
+    'address': 'Address',
+    'appparam': 'AppParam',
+    'data': 'Data',
+    'ecosysparam': 'EcosysParam',
+    'jsontosource': 'JsonToSource',
+    'langres': 'LangRes',
+    'range': 'Range',
+    'sysparam': 'SysParam',
+    'binary': 'Binary',
+    'settitle': 'SetTitle',
+    'inputerr': 'InputErr',
+    'select': 'Select',
+    'inputmap': 'InputMap',
+    'map': 'Map',
+    'include': 'Include'
+};
+
+class Logic extends Tag {
+    constructor(element: TProtypoElement) {
+        super(element);
+        this.tagName = LogicTagNames[element.tag] || element.tag;
+        this.canHaveChildren = false;
+        this.logic = true;
+        this.attr = {
+        };
+        this.editProps = [];
+        for (let attr in element.attr) {
+            this.attr[attr] = attr;
+        }
+    }
+}
+
 export class CodeGenerator {
     private elements: TProtypoElement[];
     constructor(elements: TProtypoElement[]) {
@@ -1455,7 +1504,7 @@ export const getInitialTagValue = (prop: string, tag: any): string => {
 };
 
 export const resolveTagHandler = (name: string) => {
-    return tagHandlers[name];
+    return tagHandlers[name] || Logic;
 };
 
 export function getDropPosition(monitor: any, component: any, tag: any) {
@@ -1486,7 +1535,7 @@ export function getDropPosition(monitor: any, component: any, tag: any) {
     let tagObj: any = null;
     const Handler = resolveTagHandler(tag.tag);
     if (Handler) {
-        tagObj = new Handler();
+        tagObj = new Handler(tag);
     }
 
     if (!tagObj.canChangePosition && tagObj.canHaveChildren) {
