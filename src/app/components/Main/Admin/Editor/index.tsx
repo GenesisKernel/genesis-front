@@ -26,10 +26,11 @@ export interface IEditorProps {
     open?: string;
     create?: string;
     name?: string;
+    appId?: number;
 
     tabIndex: number;
     tabs: TEditorTab[];
-    onTabCreate: (type: string) => void;
+    onTabCreate: (params: {type: string, appId: number }) => void;
     onTabLoad: (params: { type: string, name: string }) => void;
     onTabChange: (index: number) => void;
     onTabUpdate: (value: string) => void;
@@ -55,7 +56,10 @@ class Editor extends React.Component<IEditorProps> {
         }
 
         if (props.create) {
-            props.onTabCreate(props.create);
+            props.onTabCreate({
+                type: props.create,
+                appId: props.appId
+            });
         }
     }
 
