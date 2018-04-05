@@ -21,6 +21,8 @@ import StyledComponent from './StyledComponent';
 import Protypo from '../';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
+import { editorActions } from 'modules/editor/actions';
+import { TProtypoElement } from 'genesis/protypo';
 
 export interface IDBFindProps {
     columns: string[];
@@ -30,15 +32,15 @@ export interface IDBFindProps {
     source: string;
 
     'editable'?: boolean;
-    'changePage'?: any;
-    'setTagCanDropPosition'?: any;
-    'addTag'?: any;
-    'moveTag'?: any;
-    'copyTag'?: any;
-    'removeTag'?: any;
-    'selectTag'?: any;
+    'changePage'?: typeof editorActions.changePage.started;
+    'setTagCanDropPosition'?: typeof editorActions.setTagCanDropPosition.started;
+    'addTag'?: typeof editorActions.addTag.started;
+    'moveTag'?: typeof editorActions.moveTag.started;
+    'copyTag'?: typeof editorActions.copyTag.started;
+    'removeTag'?: typeof editorActions.removeTag.started;
+    'selectTag'?: typeof editorActions.selectTag.started;
     'selected'?: boolean;
-    'tag'?: any;
+    'tag'?: TProtypoElement;
 
     'canDropPosition'?: string;
 

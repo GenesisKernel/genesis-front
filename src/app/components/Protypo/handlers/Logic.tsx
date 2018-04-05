@@ -22,16 +22,17 @@ import Protypo from '../';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import { TProtypoElement } from 'genesis/protypo';
+import { editorActions } from 'modules/editor/actions';
 
 export interface ILogicProps {
     'editable'?: boolean;
-    'changePage'?: any;
-    'setTagCanDropPosition'?: any;
-    'addTag'?: any;
-    'moveTag'?: any;
-    'copyTag'?: any;
-    'removeTag'?: any;
-    'selectTag'?: any;
+    'changePage'?: typeof editorActions.changePage.started;
+    'setTagCanDropPosition'?: typeof editorActions.setTagCanDropPosition.started;
+    'addTag'?: typeof editorActions.addTag.started;
+    'moveTag'?: typeof editorActions.moveTag.started;
+    'copyTag'?: typeof editorActions.copyTag.started;
+    'removeTag'?: typeof editorActions.removeTag.started;
+    'selectTag'?: typeof editorActions.selectTag.started;
     'selected'?: boolean;
     'tag'?: TProtypoElement;
 

@@ -25,6 +25,7 @@ import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import LongText from 'components/Protypo/components/LongText';
 import BlobData from 'components/Protypo/components/BlobData';
+import { editorActions } from 'modules/editor/actions';
 
 export interface ITableProps {
     id: string;
@@ -33,15 +34,15 @@ export interface ITableProps {
     columns?: { Name: string, Title: string }[];
 
     'editable'?: boolean;
-    'changePage'?: any;
-    'setTagCanDropPosition'?: any;
-    'addTag'?: any;
-    'moveTag'?: any;
-    'copyTag'?: any;
-    'removeTag'?: any;
-    'selectTag'?: any;
+    'changePage'?: typeof editorActions.changePage.started;
+    'setTagCanDropPosition'?: typeof editorActions.setTagCanDropPosition.started;
+    'addTag'?: typeof editorActions.addTag.started;
+    'moveTag'?: typeof editorActions.moveTag.started;
+    'copyTag'?: typeof editorActions.copyTag.started;
+    'removeTag'?: typeof editorActions.removeTag.started;
+    'selectTag'?: typeof editorActions.selectTag.started;
     'selected'?: boolean;
-    'tag'?: any;
+    'tag'?: TProtypoElement;
 
     'canDropPosition'?: string;
 

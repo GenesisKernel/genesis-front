@@ -49,3 +49,7 @@ export const saveConstructorHistory = actionCreator.async<void, ISaveConstructor
 export const constructorUndo = actionCreator.async<void, IConstructorUndoRedoResult>('CONSTRUCTOR_UNDO');
 export const constructorRedo = actionCreator.async<void, IConstructorUndoRedoResult>('CONSTRUCTOR_REDO');
 export const generatePageTemplate = actionCreator<string>('GENERATE_PAGE_TEMPLATE');
+
+export const editorActions = {
+    changePage, setTagCanDropPosition, addTag, moveTag, copyTag, removeTag, selectTag
+};
