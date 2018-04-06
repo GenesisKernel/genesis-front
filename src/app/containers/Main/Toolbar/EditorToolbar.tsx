@@ -18,7 +18,7 @@ import * as React from 'react';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
 import { modalShow } from 'modules/modal/actions';
-import { editorSave, revertEditorTab, changeEditorTool, createEditorTab } from 'modules/editor/actions';
+import { editorSave, revertEditorTab, changeEditorTool } from 'modules/editor/actions';
 import { IModalResult } from 'genesis/modal';
 import { TEditorTab } from 'genesis/editor';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
@@ -39,7 +39,6 @@ interface IEditorToolbarState {
 
 interface IEditorToolbarDispatch {
     modalShow: typeof modalShow;
-    createEditorTab: typeof createEditorTab.started;
     changeEditorTool: typeof changeEditorTool.started;
     revertEditorTab: typeof revertEditorTab;
     editorSave: typeof editorSave;
@@ -93,7 +92,6 @@ class EditorToolbarContainer extends React.Component<IEditorToolbarProps & Injec
                 currentTab={this.props.currentTab}
                 canRevert={this.props.canRevert}
                 canSave={this.props.canSave}
-                onCreate={this.props.createEditorTab}
                 onExec={this.onExec}
                 onRevert={this.onRevert}
                 onToolChange={this.props.changeEditorTool}
@@ -119,7 +117,6 @@ const mapStateToProps = (state: IRootState) => {
 
 const mapDispatchToProps = {
     modalShow: modalShow,
-    createEditorTab: createEditorTab.started,
     revertEditorTab: revertEditorTab,
     changeEditorTool: changeEditorTool.started,
     editorSave

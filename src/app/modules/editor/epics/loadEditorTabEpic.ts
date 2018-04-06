@@ -19,17 +19,15 @@ import { Epic } from 'redux-observable';
 import { IRootState } from 'modules';
 import { loadEditorTab } from '../actions';
 import { Observable } from 'rxjs/Observable';
-import { history } from 'store';
 import { updateSection } from '../../content/actions';
 import api, { IAPIError, IContract } from 'lib/api';
+import { replace } from 'react-router-redux';
 
 const loadEditorTabEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(loadEditorTab.started)
         .flatMap(action => {
             const state = store.getState();
             const nameParser = /^(@[0-9]+)?(.*)$/i;
-
-            history.replace('/editor');
 
             switch (action.payload.type) {
                 case 'contract':
@@ -118,12 +116,17 @@ const loadEditorTabEpic: Epic<Action, IRootState> =
             }
         })
         .flatMap(result => {
-            const section = store.getState().content.sections.editor;
+            const editor = store.getState().content.sections.editor;
             return Observable.of<Action>(
+                replace('/editor'),
                 result,
                 updateSection({
-                    ...section,
-                    visible: true
+                    ...editor,
+                    visible: true,
+                    page: {
+                        ...editor.page,
+                        params: {}
+                    }
                 })
             );
         })
