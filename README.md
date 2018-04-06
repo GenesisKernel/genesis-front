@@ -1,6 +1,7 @@
 [![Throughput Graph](https://graphs.waffle.io/GenesisKernel/genesis-front/throughput.svg)](https://waffle.io/GenesisKernel/genesis-front/metrics/throughput)
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![Build Status](https://travis-ci.org/GenesisKernel/genesis-front.svg?branch=master)](https://travis-ci.org/GenesisKernel/genesis-front)
 [![](https://tokei.rs/b1/github/GenesisKernel/genesis-front)](https://github.com/GenesisKernel/genesis-front)
 ![](https://reposs.herokuapp.com/?path=GenesisKernel/genesis-front&style=flat)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/GenesisKernel?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
