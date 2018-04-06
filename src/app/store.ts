@@ -51,6 +51,7 @@ const storageAdapters = [
         'auth.refreshToken',
         'auth.socketToken',
         'auth.id',
+        'auth.role',
         'auth.account',
         'auth.timestamp'
     ])

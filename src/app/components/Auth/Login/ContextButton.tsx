@@ -16,25 +16,25 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
-import { FormattedMessage } from 'react-intl';
 
-export interface IAddAccountButtonProps {
+export interface IContextButtonProps {
     className?: string;
+    icon: string;
     onClick: () => void;
 }
 
-const AddAccountButton: React.SFC<IAddAccountButtonProps> = props => (
+const ContextButton: React.SFC<IContextButtonProps> = props => (
     <button className={props.className} onClick={props.onClick}>
         <div className="button-icon">
-            <em className="icon-plus" />
+            <em className={props.icon} />
         </div>
         <div className="button-label">
-            <FormattedMessage id="account.createimport" defaultMessage="Create or import account" />
+            {props.children}
         </div>
     </button>
 );
 
-export default styled(AddAccountButton) `
+export default styled(ContextButton) `
     display: block;
     width: 100%;
     height: 40px;

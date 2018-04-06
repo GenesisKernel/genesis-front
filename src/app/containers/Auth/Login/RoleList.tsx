@@ -19,34 +19,46 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { IAccount } from 'genesis/auth';
 
-import Login from 'components/Auth/Login';
+import RoleList from 'components/Auth/Login/RoleList';
+import { logout, selectRole } from 'modules/auth/actions';
+import getNotificationsCount from 'modules/socket/reducers/getNotificationsCount';
 
-export interface ILoginContainerProps {
+export interface IAccountListContainerProps {
 
 }
 
-interface ILoginContainerState {
+interface IRoleListContainerState {
     account: IAccount;
-    isAuthenticating: boolean;
-    isSelectingRole: boolean;
+    roles: {
+        id: number;
+        name: string;
+        notifications: number;
+    }[];
 }
 
-interface ILoginContainerDispatch {
-    onLogout: () => void;
+interface IRoleListContainerDispatch {
+    onSubmit: (role: number) => void;
+    onCancel: () => void;
 }
 
 const mapStateToProps = (state: IRootState) => ({
     account: state.auth.account,
-    isAuthenticating: state.auth.account && !state.auth.isAuthenticated,
-    isSelectingRole: state.auth.roles && state.auth.roles.length && state.auth.account && !state.auth.isAuthenticated
+    roles: state.auth.roles.map(r => ({
+        ...r,
+        notifications: getNotificationsCount(state.socket, {
+            account: state.auth.account,
+            role: r.id
+        })
+    }))
 });
 
 const mapDispatchToProps = {
-
+    onSubmit: (role: number) => selectRole.started(role),
+    onCancel: () => logout.started(null)
 };
 
-const LoginContainer: React.SFC<ILoginContainerProps & ILoginContainerState & ILoginContainerDispatch> = props => (
-    <Login {...props} />
+const AccountListContainer: React.SFC<IAccountListContainerProps & IRoleListContainerState & IRoleListContainerDispatch> = props => (
+    <RoleList {...props} />
 );
 
-export default connect<ILoginContainerState, ILoginContainerDispatch, ILoginContainerProps>(mapStateToProps, mapDispatchToProps)(LoginContainer);
+export default connect<IRoleListContainerState, IRoleListContainerDispatch, IAccountListContainerProps>(mapStateToProps, mapDispatchToProps)(AccountListContainer);

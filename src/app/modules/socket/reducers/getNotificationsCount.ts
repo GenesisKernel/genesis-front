@@ -15,19 +15,20 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { Success } from 'typescript-fsa';
 import { IAccount } from 'genesis/auth';
 
-export default function (state: State, payload: Success<IAccount, { sessionToken: string, refreshToken: string }>): State {
-    return {
-        ...state,
-        sessionToken: payload.result.sessionToken,
-        refreshToken: payload.result.refreshToken,
-        socketToken: payload.params.socketToken,
-        timestamp: payload.params.timestamp,
-        roles: null,
-        role: null,
-        account: payload.params,
-        id: payload.params.id
-    };
+export default function (state: State, payload: { account: IAccount, role?: number }): number {
+    if ('number' === typeof payload.role) {
+        return state.notifications.filter(l =>
+            l.id === payload.account.id &&
+            l.ecosystem === payload.account.ecosystem &&
+            l.role === payload.role
+        ).map(l => l.count).concat([0]).reduce((a, b) => a + b);
+    }
+    else {
+        return state.notifications.filter(l =>
+            l.id === payload.account.id &&
+            l.ecosystem === payload.account.ecosystem
+        ).map(l => l.count).concat([0]).reduce((a, b) => a + b);
+    }
 }

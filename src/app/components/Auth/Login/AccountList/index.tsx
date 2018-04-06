@@ -23,7 +23,7 @@ import { IAccount } from 'genesis/auth';
 import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import AccountButton from './AccountButton';
 import Heading from 'components/Auth/Heading';
-import AddAccountButton from './AddAccountButton';
+import ContextButton from '../ContextButton';
 
 export interface IAccountListProps {
     className?: string;
@@ -80,7 +80,9 @@ class AccountList extends React.Component<IAccountListProps & InjectedIntlProps>
                             ))}
                         </div>
                         <div className="text-left">
-                            <AddAccountButton onClick={this.props.onCreate} />
+                            <ContextButton icon="icon-plus" onClick={this.props.onCreate}>
+                                <FormattedMessage id="account.createimport" defaultMessage="Create or import account" />
+                            </ContextButton>
                         </div>
                     </div>
                 </div>

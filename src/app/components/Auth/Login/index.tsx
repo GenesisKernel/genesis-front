@@ -19,16 +19,20 @@ import { Route, Switch } from 'react-router-dom';
 import { IAccount } from 'genesis/auth';
 
 import AccountList from 'containers/Auth/Login/AccountList';
+import RoleList from 'containers/Auth/Login/RoleList';
 import PasswordPrompt from 'containers/Auth/Login/PasswordPrompt';
 
 export interface ILoginProps {
     account: IAccount;
+    isAuthenticating: boolean;
+    isSelectingRole: boolean;
 }
 
 const Login: React.SFC<ILoginProps> = props => (
     <div>
         <Switch>
-            {props.account && (<Route path="/" component={PasswordPrompt} />)}
+            {props.account && props.isSelectingRole ? <Route path="/" component={RoleList} /> : null}
+            {props.account && props.isAuthenticating ? <Route path="/" component={PasswordPrompt} /> : null}
             <Route path="/" component={AccountList} />
         </Switch>
     </div>

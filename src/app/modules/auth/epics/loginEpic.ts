@@ -70,6 +70,10 @@ const loginEpic: Epic<Action, IRootState> =
                             socketToken: payload.notify_key,
                             timestamp: payload.timestamp
                         },
+                        roles: payload.roles && payload.roles.map(role => ({
+                            id: role.role_id,
+                            name: role.role_name
+                        })),
                         privateKey,
                         publicKey,
                     }

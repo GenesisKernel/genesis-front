@@ -329,10 +329,11 @@ const api = {
         forsign: forSign,
         pubkey: publicKey
     }) as Promise<ISignTestResponse>,
-    login: (session: string, publicKey: string, signature: string, expirySeconds: number = SESSION_DURATION_DEFAULT, ecosystem: string = '1') => securedRequest('login', session, {
+    login: (session: string, publicKey: string, signature: string, expirySeconds: number = SESSION_DURATION_DEFAULT, ecosystem: string = '1', role?: number) => securedRequest('login', session, {
         pubkey: publicKey.slice(2),
         signature,
         ecosystem,
+        role_id: role,
         expire: expirySeconds,
     }).then((result: ILoginResponse) => ({
         ...result,

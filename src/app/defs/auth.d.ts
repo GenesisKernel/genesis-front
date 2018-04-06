@@ -29,6 +29,11 @@ declare module 'genesis/auth' {
         timestamp: string;
     }
 
+    interface IRole {
+        id: number;
+        name: string;
+    }
+
     interface ILoginCall {
         account: IAccount;
         password: string;

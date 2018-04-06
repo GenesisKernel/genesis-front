@@ -20,12 +20,6 @@ import { ILoginCall } from 'genesis/auth';
 export default function (state: State, payload: ILoginCall): State {
     return {
         ...state,
-        isAuthenticated: false,
-        isLoggingIn: true,
-        account: null,
-        sessionToken: null,
-        refreshToken: null,
-        socketToken: null,
-        timestamp: null
+        isLoggingIn: true
     };
 }
