@@ -14,17 +14,16 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { combineEpics } from 'redux-observable';
-import switchWindowEpic from './epics/switchWindowEpic';
-import setBadgeCountEpic from './epics/setBadgeCountEpic';
-import switchWindowOnLoginEpic from './epics/switchWindowOnLoginEpic';
-import setBadgeCountOnLogoutEpic from './epics/setBadgeCountOnLogoutEpic';
-import switchWindowOnRoleEpic from './epics/switchWindowOnRoleEpic';
+import { Action } from 'redux';
+import { Epic } from 'redux-observable';
+import { IRootState } from 'modules';
+import { switchWindow } from '../actions';
+import { selectRole } from 'modules/auth/actions';
 
-export default combineEpics(
-    setBadgeCountEpic,
-    switchWindowEpic,
-    switchWindowOnLoginEpic,
-    setBadgeCountOnLogoutEpic,
-    switchWindowOnRoleEpic
-);
+const switchWindowOnRoleEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(selectRole.done)
+        .map(action =>
+            switchWindow.started('main')
+        );
+
+export default switchWindowOnRoleEpic;

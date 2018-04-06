@@ -19,11 +19,17 @@ import { Epic } from 'redux-observable';
 import { IRootState } from 'modules';
 import { switchWindow } from '../actions';
 import { login } from 'modules/auth/actions';
+import { Observable } from 'rxjs/Observable';
 
 const switchWindowOnLoginEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(login.done)
-        .map(action =>
-            switchWindow.started('main')
-        );
+        .flatMap(action => {
+            if (action.payload.result.roles && action.payload.result.roles.length) {
+                return Observable.empty<never>();
+            }
+            else {
+                return Observable.of(switchWindow.started('main'));
+            }
+        });
 
 export default switchWindowOnLoginEpic;
