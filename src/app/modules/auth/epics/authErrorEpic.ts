@@ -17,11 +17,11 @@
 import { Action } from 'typescript-fsa';
 import { Epic } from 'redux-observable';
 import { IRootState } from 'modules';
-import { login, importAccount } from '../actions';
+import { login, importAccount, selectRole } from '../actions';
 import { modalShow } from 'modules/modal/actions';
 
 const authErrorEpic: Epic<Action<any>, IRootState> =
-    (action$, store) => action$.ofType(login.failed.type, importAccount.failed.type)
+    (action$, store) => action$.ofType(login.failed.type, importAccount.failed.type, selectRole.failed.type)
         .map(action =>
             modalShow({
                 id: 'AUTH_ERROR',
