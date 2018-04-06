@@ -76,6 +76,8 @@ const copyTagEpic: Epic<Action, IRootState> =
                 );
             }
 
+            jsonData = constructorModule.updateChildrenText(jsonData);
+
             return actions.copyTag.done({
                 params: action.payload,
                 result: {

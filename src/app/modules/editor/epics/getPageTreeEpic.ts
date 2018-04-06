@@ -30,14 +30,16 @@ const getPageTreeEpic: Epic<Action, IRootState> =
 
             return Observable.fromPromise(api.contentJson(state.auth.sessionToken, template, state.storage.locale, true))
                 .map(payload => {
-                    let pageTree = payload.tree;
-                    constructorModule.setIds(pageTree);
+                    let jsonData = payload.tree;
+                    constructorModule.setIds(jsonData);
+
+                    jsonData = constructorModule.updateChildrenText(jsonData);
 
                     return actions.getPageTree.done({
                         params: action.payload,
                         result: {
-                            jsonData: pageTree,
-                            treeData: constructorModule.convertToTreeData(pageTree)
+                            jsonData,
+                            treeData: constructorModule.convertToTreeData(jsonData)
                         }
                     });
                 })

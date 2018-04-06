@@ -18,6 +18,7 @@
 import { findDOMNode } from 'react-dom';
 import { TProtypoElement } from 'genesis/protypo';
 import * as _ from 'lodash';
+import { html2json } from 'html2json';
 
 let findTagByIdResult: {
     el: any;
@@ -755,6 +756,7 @@ export function getConstructorTemplate(name: string) {
 class Tag {
     protected element: TProtypoElement;
     protected tagName: string = 'Tag';
+    protected HTMLTag: string = null;
     public canHaveChildren: boolean = true;
     public canMove: boolean = true;
     public canCopy: boolean = true;
@@ -867,6 +869,56 @@ class Tag {
 
         return '';
     }
+    renderHTML(): string {
+        if (this.HTMLTag) {
+            let result: string = '<' + this.HTMLTag;
+            if (this.element.attr && (this.element.attr.class || this.element.attr.className)) {
+                result += ' class="' + (this.element.attr.class ? this.element.attr.class : '') + ' ' + (this.element.attr.className ? this.element.attr.className : '') + '"';
+            }
+            result += '>';
+            const children = this.renderHTMLChildren();
+            if (children === null) {
+                return null;
+            }
+            result += children;
+            result += '</' + this.HTMLTag + '>';
+            return result;
+        }
+        else {
+            return null;
+        }
+    }
+    renderHTMLChildren(): string {
+        if (!this.element.children) {
+            return '';
+        }
+        let resultArr = this.element.children.map((element, index) => {
+            switch (element.tag) {
+                case 'text':
+                    return element.text;
+                default:
+                    const Handler = resolveTagHandler(element.tag);
+                    if (Handler) {
+                        let tag = new Handler(element);
+                        return tag.renderHTML();
+                    }
+                    return '';
+            }
+        });
+
+        // if any of subtags has null -> result is null
+        if (resultArr.indexOf(null) !== -1) {
+            return null;
+        }
+
+        const result = resultArr.join(' ');
+
+        if (result.length > 0) {
+            return result;
+        }
+
+        return '';
+    }
     generateTreeJSON(text: string): any {
         return {
             tag: this.tagName.toLowerCase(),
@@ -960,6 +1012,7 @@ class P extends Tag {
     constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'P';
+        this.HTMLTag = 'p';
     }
 }
 
@@ -967,6 +1020,7 @@ class Div extends Tag {
     constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Div';
+        this.HTMLTag = 'div';
         this.generateTextElement = false;
     }
 }
@@ -975,6 +1029,7 @@ class Span extends Tag {
     constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Span';
+        this.HTMLTag = 'span';
     }
 }
 
@@ -982,6 +1037,7 @@ class Strong extends Tag {
     constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Strong';
+        this.HTMLTag = 'b';
     }
 }
 
@@ -989,6 +1045,7 @@ class Em extends Tag {
     constructor(element: TProtypoElement) {
         super(element);
         this.tagName = 'Em';
+        this.HTMLTag = 'i';
     }
 }
 
@@ -1556,6 +1613,138 @@ export function getDropPosition(monitor: any, component: any, tag: any) {
     return 'after';
 }
 
+function updateElementChildrenText(el: TProtypoElement) {
+
+    if (el.children) {
+        let childrenText = null;
+        const Handler = resolveTagHandler(el.tag);
+        if (Handler) {
+            let tag = new Handler(el);
+            childrenText = tag.renderHTMLChildren();
+        }
+        let children: TProtypoElement[] = [];
+        for (let child of el.children) {
+            children.push(updateElementChildrenText(child));
+        }
+        return {
+            ...el,
+            childrenText,
+            children
+        }
+    }
+    else {
+        return el;
+    }
+}
+
+export function updateChildrenText(tree: TProtypoElement[]): TProtypoElement[] {
+    let updatedElements = [];
+    if (tree && tree.length) {
+        for (let el of tree) {
+            updatedElements.push(updateElementChildrenText(el));
+        }
+        return updatedElements;
+    }
+    else {
+        return tree;
+    }
+}
+
+function html2childrenTags(html: string): TProtypoElement[] {
+    const htmlJson = html2json(html);
+    // alert(JSON.stringify(htmlJson));
+
+    return htmlJsonChild2childrenTags(htmlJson.child);
+}
+
+function htmlJsonChild2childrenTags(nodes: IHtmlJsonNode[]): TProtypoElement[] {
+    let children = [];
+    let i = 0;
+    for (const node of nodes) {
+        const el = htmlJson2proptypoElement(node, i);
+        if (el) {
+            children.push(el);
+        }
+        i++;
+    }
+    return children;
+}
+
+interface IHtmlJsonNode {
+    node: string;
+    tag?: string;
+    text?: string;
+    attr?: { [key: string]: any };
+    child?: IHtmlJsonNode[];
+};
+
+function clearHtml(text: string): string {
+    return text.replace(/&nbsp;/g, '');
+}
+
+function htmlJson2proptypoElement(node: IHtmlJsonNode, index: number) {
+    switch (node.node) {
+        case 'text':
+            if (index === 0) {
+                return {
+                    tag: 'text',
+                    text: clearHtml(node.text),
+                    id: generateId()
+                }
+            }
+            else {
+                return {
+                    tag: 'span',
+                    id: generateId(),
+                    children: [{
+                        tag: 'text',
+                        text: clearHtml(node.text),
+                        id: generateId()
+                    }]
+                }
+            }
+        case 'element':
+            switch (node.tag) {
+                case 'p':
+                    return {
+                        tag: 'p',
+                        id: generateId(),
+                        children: htmlJsonChild2childrenTags(node.child)
+                    }
+                case 'i':
+                    return {
+                        tag: 'em',
+                        id: generateId(),
+                        children: htmlJsonChild2childrenTags(node.child)
+                    }
+                case 'b':
+                case 'strong':
+                    return {
+                        tag: 'strong',
+                        id: generateId(),
+                        children: htmlJsonChild2childrenTags(node.child)
+                    }
+                case 'span':
+                    return {
+                        tag: 'span',
+                        id: generateId(),
+                        children: htmlJsonChild2childrenTags(node.child)
+                    }
+                case 'div':
+                    return {
+                        tag: 'div',
+                        id: generateId(),
+                        children: htmlJsonChild2childrenTags(node.child)
+                    }
+                default:
+                    break;
+            }
+        default:
+            break;
+    }
+    return null;
+}
+
 let hoverTimer: any = null;
 
 export function startHoverTimer() {
@@ -1574,6 +1763,8 @@ export default {
     resolveTagHandler,
     getConstructorTemplate,
     generateId,
+    updateChildrenText,
+    html2childrenTags,
     CodeGenerator,
     Properties
 };

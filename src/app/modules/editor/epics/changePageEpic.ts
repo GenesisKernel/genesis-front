@@ -24,27 +24,13 @@ const changePageEpic: Epic<Action, IRootState> =
         .map(action => {
             const state = store.getState().editor;
             const tabData = state.tabs[state.tabIndex].designer.data;
-            const jsonData = tabData && constructorModule.copyObject(tabData.jsonData) || null;
+            let jsonData = tabData && constructorModule.copyObject(tabData.jsonData) || null;
             let selectedTag = tabData && tabData.selectedTag || null;
 
             let tag = constructorModule.findTagById(jsonData, action.payload.tagID).el;
             if (tag) {
                 if (typeof (action.payload.text) !== 'undefined') {
-                    // todo: parse contentEditable tags and create children array
-
-                    const regex = /(<[^\/>]+>[^<]*<\/[^>]+>)/ig; // remove tags
-                    let plainText = action.payload.text.replace(regex, '');
-                    const regexTags = /(<[^>]+>)/ig;    // remove empty tags
-                    plainText = plainText.replace(regexTags, '');
-
-                    if (tag.children && tag.children.length) {
-                        for (let i = 0; i < tag.children.length; i++) {
-                            if (tag.children[i].tag === 'text') {
-                                tag.children[i].text = plainText;
-                                break;
-                            }
-                        }
-                    }
+                    tag.children = constructorModule.html2childrenTags(action.payload.text);
                 }
 
                 if (!tag.attr) {
@@ -97,6 +83,8 @@ const changePageEpic: Epic<Action, IRootState> =
                     tag.attr.class = properties.updateClassList(tag.attr.class || '', 'btn', action.payload.btn);
                 }
             }
+
+            jsonData = constructorModule.updateChildrenText(jsonData);
 
             if (selectedTag && tag && selectedTag.id === tag.id) {
                 selectedTag = constructorModule.copyObject(tag);

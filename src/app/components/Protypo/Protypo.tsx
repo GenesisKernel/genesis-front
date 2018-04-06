@@ -25,6 +25,8 @@ import { IValidationResult } from 'components/Validation/ValidatedForm';
 import Heading from 'components/Heading';
 import ToolButton, { IToolButtonProps } from 'components/Protypo/components/ToolButton';
 
+import { editorActions } from 'modules/editor/actions';
+
 export interface IProtypoProps {
     editable?: boolean;
     wrapper?: JSX.Element;
@@ -35,14 +37,15 @@ export interface IProtypoProps {
     navigatePage: (params: { name: string, params: any, force?: boolean }) => void;
     navigate: (url: string) => void;
     displayData: (link: string) => void;
-    changePage?: any;
-    addTag?: any;
-    moveTag?: any;
-    copyTag?: any;
-    removeTag?: any;
-    setTagCanDropPosition?: any;
-    selectTag?: any;
-    selectedTag?: any;
+
+    'changePage'?: typeof editorActions.changePage.started;
+    'setTagCanDropPosition'?: typeof editorActions.setTagCanDropPosition.started;
+    'addTag'?: typeof editorActions.addTag.started;
+    'moveTag'?: typeof editorActions.moveTag.started;
+    'copyTag'?: typeof editorActions.copyTag.started;
+    'removeTag'?: typeof editorActions.removeTag.started;
+    'selectTag'?: typeof editorActions.selectTag.started;
+    selectedTag?: TProtypoElement;
     logic?: boolean;
 }
 
@@ -160,6 +163,7 @@ class Protypo extends React.Component<IProtypoProps> {
                                     id={key}
                                     tag={element}
                                     childrenTree={element.children}
+                                    childrenText={element.childrenText}
                                     editable={this.props.editable}
                                     changePage={this.props.changePage}
                                     setTagCanDropPosition={this.props.setTagCanDropPosition}
@@ -185,6 +189,7 @@ class Protypo extends React.Component<IProtypoProps> {
                                 id={key}
                                 tag={element}
                                 childrenTree={element.children}
+                                childrenText={element.childrenText}
                                 editable={this.props.editable}
                                 changePage={this.props.changePage}
                                 setTagCanDropPosition={this.props.setTagCanDropPosition}

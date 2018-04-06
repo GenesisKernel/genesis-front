@@ -37,11 +37,14 @@ const constructorRedoEpic: Epic<Action, IRootState> =
                 const canUndo = position > 1;
                 const canRedo = position < historyData.length;
 
+                let jsonData = historyData[position - 1];
+                jsonData = constructorModule.updateChildrenText(jsonData);
+
                 return Observable.of(actions.constructorRedo.done({
                     params: action.payload,
                     result: {
-                        jsonData: historyData[position - 1],
-                        treeData: constructorModule.convertToTreeData(historyData[position - 1]),
+                        jsonData,
+                        treeData: constructorModule.convertToTreeData(jsonData),
                         position,
                         canUndo,
                         canRedo

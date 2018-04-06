@@ -42,6 +42,8 @@ const removeTagEpic: Epic<Action, IRootState> =
                 jsonData.splice(sourceTag.parentPosition, 1);
             }
 
+            jsonData = constructorModule.updateChildrenText(jsonData);
+
             return actions.removeTag.done({
                 params: action.payload,
                 result: {

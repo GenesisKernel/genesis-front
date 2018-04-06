@@ -82,6 +82,8 @@ const addTagEpic: Epic<Action, IRootState> =
                 );
             }
 
+            jsonData = constructorModule.updateChildrenText(jsonData);
+
             return actions.addTag.done({
                 params: action.payload,
                 result: {

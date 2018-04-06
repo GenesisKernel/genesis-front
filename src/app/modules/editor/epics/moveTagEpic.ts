@@ -92,6 +92,8 @@ const moveTagEpic: Epic<Action, IRootState> =
                 }
             }
 
+            jsonData = constructorModule.updateChildrenText(jsonData);
+
             return actions.moveTag.done({
                 params: action.payload,
                 result: {

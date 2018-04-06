@@ -19,7 +19,7 @@ import { Epic } from 'redux-observable';
 import * as actions from '../actions';
 import { IRootState } from 'modules';
 
-const changePageEpic: Epic<Action, IRootState> =
+const selectTagEpic: Epic<Action, IRootState> =
     (action$, store, { constructorModule }) => action$.ofAction(actions.selectTag.started)
         .map(action => {
             const state = store.getState().editor;
@@ -38,4 +38,4 @@ const changePageEpic: Epic<Action, IRootState> =
 
         });
 
-export default changePageEpic;
+export default selectTagEpic;
