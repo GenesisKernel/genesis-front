@@ -20,6 +20,7 @@ import { IRootState } from 'modules';
 import { importAccount } from '../actions';
 import { Observable } from 'rxjs/Observable';
 import { IAccount } from 'genesis/auth';
+import { navigate } from 'modules/engine/actions';
 import api from 'lib/api';
 import keyring from 'lib/keyring';
 import * as Promise from 'bluebird';
@@ -68,11 +69,12 @@ const importAccountEpic: Epic<Action, IRootState> =
                 }));
 
                 if (accounts.length) {
-                    return Observable.of(
+                    return Observable.of<Action>(
                         importAccount.done({
                             params: action.payload,
                             result: accounts
-                        })
+                        }),
+                        navigate('/')
                     );
                 }
                 else {

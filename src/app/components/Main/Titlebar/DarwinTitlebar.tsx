@@ -48,7 +48,7 @@ const StyledControls = styled.div`
             height: 14px;
 
             &:active {
-                background-position-x: -28px;
+                background-position-x: -28px !important;
             }
 
             &.quit {

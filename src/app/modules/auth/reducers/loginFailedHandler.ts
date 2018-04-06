@@ -21,7 +21,6 @@ import { ILoginCall } from 'genesis/auth';
 export default function (state: State, payload: Failure<ILoginCall, string>): State {
     return {
         ...state,
-        isLoggingIn: false,
-        authenticationError: payload.error
+        isLoggingIn: false
     };
 }

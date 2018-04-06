@@ -19,15 +19,14 @@ import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { IntlProvider } from 'react-intl';
-import { login } from 'modules/auth/actions';
-import { navigate, checkOnline, setLoading } from 'modules/engine/actions';
+import { checkOnline, setLoading } from 'modules/engine/actions';
 import platform from 'lib/platform';
 import * as classnames from 'classnames';
 
 import { AnimatedSwitch } from 'components/Animation';
 import Splash from 'components/Splash';
 import Main from 'containers/Main';
-import General from 'containers/General';
+import Auth from 'containers/Auth';
 
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
@@ -39,16 +38,11 @@ interface IAppProps {
     locale: string;
     isAuthenticated: boolean;
     isCollapsed: boolean;
-    isLoggingIn: boolean;
     isLoading: boolean;
     isConnected: boolean;
-    isInstalled: boolean;
     isConnecting: boolean;
-    isImportingAccount: boolean;
     localeMessages: { [key: string]: string };
-    navigate?: typeof navigate;
     setLoading?: typeof setLoading;
-    login?: typeof login.started;
     checkOnline?: typeof checkOnline.started;
     switchWindow?: typeof switchWindow.started;
 }
@@ -67,19 +61,6 @@ class App extends React.Component<IAppProps> {
 
         if (null === this.props.isConnected && null !== props.isConnected) {
             if (props.isConnected) {
-                /*const privateKey = storage.settings.load('privateKey');
-                const lastEcosystem = storage.settings.load('lastEcosystem');
-                if (privateKey && props.isInstalled && !props.isAuthenticated && !props.isImportingAccount) {
-                    this.props.login({
-                        privateKey,
-                        ecosystem: lastEcosystem,
-                        remember: true
-                    });
-                }
-                else {
-                    this.props.setLoading(false);
-                }*/
-
                 props.setLoading(false);
             }
             else {
@@ -112,7 +93,7 @@ class App extends React.Component<IAppProps> {
                             <Route path="/" component={Splash} />
                         )}
                         {!this.props.isAuthenticated && (
-                            <Route path="/" component={General} />
+                            <Route path="/" component={Auth} />
                         )}
                         <Route path="/" component={Main} />
                     </AnimatedSwitch>
@@ -127,19 +108,14 @@ const mapStateToProps = (state: IRootState) => ({
     localeMessages: state.engine.localeMessages,
     isAuthenticated: state.auth.isAuthenticated,
     isCollapsed: state.engine.isCollapsed,
-    isLoggingIn: state.auth.isLoggingIn,
     isLoading: state.engine.isLoading,
-    isInstalled: state.engine.isInstalled,
     isConnected: state.engine.isConnected,
-    isConnecting: state.engine.isConnecting,
-    isImportingAccount: state.auth.isImportingAccount
+    isConnecting: state.engine.isConnecting
 });
 
 const mapDispatchToProps = {
-    navigate,
     setLoading,
     checkOnline: checkOnline.started,
-    login: login.started,
     switchWindow: switchWindow.started
 };
 

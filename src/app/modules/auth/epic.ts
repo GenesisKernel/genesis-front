@@ -22,13 +22,19 @@ import createAccountEpic from './epics/createAccountEpic';
 import importAccountEpic from './epics/importAccountEpic';
 import importSeedEpic from './epics/importSeedEpic';
 import selectAccountEpic from './epics/selectAccountEpic';
+import generateSeedEpic from './epics/generateSeedEpic';
+import authErrorEpic from './epics/authErrorEpic';
+import removeAccountEpic from './epics/removeAccountEpic';
 
 export default combineEpics(
     authorizeEpic,
     createAccountEpic,
+    generateSeedEpic,
     importAccountEpic,
     importSeedEpic,
     loginEpic,
+    authErrorEpic,
     logoutEpic,
-    selectAccountEpic
+    selectAccountEpic,
+    removeAccountEpic
 );

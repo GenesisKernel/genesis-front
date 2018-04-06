@@ -25,7 +25,7 @@ import api, { IAPIError } from 'lib/api';
 const loginEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(login.started)
         .flatMap(action => {
-            const privateKey = keyring.decryptAES(action.payload.encKey, action.payload.password);
+            const privateKey = keyring.decryptAES(action.payload.account.encKey, action.payload.password);
 
             if (!keyring.validatePrivateKey(privateKey)) {
                 return Observable.of(login.failed({
@@ -38,7 +38,7 @@ const loginEpic: Epic<Action, IRootState> =
 
             return Observable.from(api.getUid().then(uid => {
                 const signature = keyring.sign(uid.uid, privateKey);
-                return api.login(uid.token, publicKey, signature, undefined, action.payload.ecosystem)
+                return api.login(uid.token, publicKey, signature, undefined, action.payload.account.ecosystem)
                     .then(loginResult =>
                         api.row(loginResult.token, 'members', loginResult.key_id, 'avatar,member_name')
                             .then(memberResult => ({
@@ -57,25 +57,11 @@ const loginEpic: Epic<Action, IRootState> =
                 login.done({
                     params: action.payload,
                     result: {
-                        error: payload.error,
-                        msg: payload.msg,
-                        token: payload.token,
-                        refresh: payload.refresh,
-                        notify_key: payload.notify_key,
-                        timestamp: payload.timestamp,
-                        key_id: payload.key_id,
-                        ecosystem_id: payload.ecosystem_id,
-                        address: payload.address,
-                        expiry: payload.expiry,
-                        isnode: payload.isnode,
-                        isowner: payload.isowner,
-                        privateKey: privateKey,
-                        publicKey,
                         account: {
                             id: payload.key_id,
-                            encKey: action.payload.encKey,
+                            encKey: action.payload.account.encKey,
                             address: payload.address,
-                            ecosystem: action.payload.ecosystem,
+                            ecosystem: action.payload.account.ecosystem,
                             ecosystemName: null,
                             avatar: payload.avatar,
                             username: payload.username,
@@ -83,15 +69,19 @@ const loginEpic: Epic<Action, IRootState> =
                             refreshToken: payload.refresh,
                             socketToken: payload.notify_key,
                             timestamp: payload.timestamp
-                        }
+                        },
+                        privateKey,
+                        publicKey,
                     }
                 })
-            ).catch((e: IAPIError) => {
-                return Observable.of(login.failed({
-                    params: null,
-                    error: e.error
-                }));
-            });
+            ).catch((e: IAPIError) =>
+                Observable.of(
+                    login.failed({
+                        params: null,
+                        error: e.error
+                    })
+                )
+            );
         });
 
 export default loginEpic;

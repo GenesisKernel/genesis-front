@@ -92,6 +92,10 @@ export interface ILoginResponse extends IResponse {
     expiry: number;
     isnode: boolean;
     isowner: boolean;
+    roles: {
+        role_id: number;
+        role_name: string;
+    }[];
 }
 
 export interface ISignTestResponse extends IResponse {
@@ -329,9 +333,10 @@ const api = {
         pubkey: publicKey.slice(2),
         signature,
         ecosystem,
-        expire: expirySeconds
+        expire: expirySeconds,
     }).then((result: ILoginResponse) => ({
         ...result,
+        roles: result.roles || [],
         expiry: expirySeconds
     })) as Promise<ILoginResponse>,
     refresh: (session: string, token: string, expirySeconds: number = SESSION_DURATION_DEFAULT) => securedRequest('refresh', session, { token }).then((result: IRefreshResponse) => ({

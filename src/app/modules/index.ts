@@ -27,6 +27,7 @@ import * as engine from './engine';
 import * as editor from './editor';
 import * as tx from './tx';
 import * as gui from './gui';
+import * as io from './io';
 import * as storage from './storage';
 import * as socket from './socket';
 
@@ -39,6 +40,7 @@ export interface IRootState {
     editor: editor.State;
     tx: tx.State;
     gui: gui.State;
+    io: io.State;
     storage: storage.State;
     socket: socket.State;
     loadingBar: number;
@@ -53,6 +55,7 @@ export const rootEpic = combineEpics(
     editor.epic,
     tx.epic,
     gui.epic,
+    io.epic,
     storage.epic,
     socket.epic
 );

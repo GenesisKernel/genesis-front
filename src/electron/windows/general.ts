@@ -23,6 +23,6 @@ export default () => {
         backgroundColor: '#17437b',
         resizable: false,
         show: false,
-        ...calcScreenOffset({ width: 640, height: 524 })
+        ...calcScreenOffset({ width: 640, height: 470 })
     });
 };

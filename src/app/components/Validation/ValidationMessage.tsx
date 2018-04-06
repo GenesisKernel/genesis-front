@@ -20,17 +20,11 @@ import { FormattedMessage } from 'react-intl';
 
 import ValidatedForm from './ValidatedForm';
 
-type TLocalizedMessage = {
-    id: string;
-    defaultMessage?: string;
-    values?: { [key: string]: any };
-};
-
 interface IValidationMessageProps {
     className?: string;
     for: string;
-    messages: {
-        [validator: string]: TLocalizedMessage | string;
+    messages?: {
+        [validator: string]: string;
     };
 }
 
@@ -44,10 +38,10 @@ const ValidationMessage: React.SFC<IValidationMessageProps> = (props, context: I
     if (context.form) {
         const value = !context.form.getState(props.for) && context.form.validate(props.for);
         if (value && value.error) {
-            const message = props.messages[value.validator.name];
+            const message = props.messages && props.messages[value.validator.name];
             if (!message) {
                 result = (
-                    <FormattedMessage id="validation.field.invalid" defaultMessage="This field contains invalid data" />
+                    <FormattedMessage id={`validation.${value.validator.name}`} defaultMessage="This field contains invalid data" />
                 );
             }
             else if ('string' === typeof message) {
@@ -55,7 +49,7 @@ const ValidationMessage: React.SFC<IValidationMessageProps> = (props, context: I
             }
             else {
                 result = (
-                    <FormattedMessage id={message.id} defaultMessage={message.defaultMessage} values={message.values} />
+                    <FormattedMessage id="validation.field.invalid" defaultMessage="This field contains invalid data" />
                 );
             }
         }

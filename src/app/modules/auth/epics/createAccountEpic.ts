@@ -19,6 +19,7 @@ import { Epic } from 'redux-observable';
 import { IRootState } from 'modules';
 import { Observable } from 'rxjs/Observable';
 import { createAccount } from '../actions';
+import { navigate } from 'modules/engine/actions';
 import api, { IAPIError } from 'lib/api';
 import keyring from 'lib/keyring';
 
@@ -31,24 +32,26 @@ const createAccountEpic: Epic<Action, IRootState> =
                 const signature = keyring.sign(uid.uid, keys.private);
                 return api.login(uid.token, keys.public, signature);
 
-            })).map(payload =>
-                createAccount.done({
-                    params: action.payload,
-                    result: {
-                        id: payload.key_id,
-                        encKey: keyring.encryptAES(keys.private, action.payload.password),
-                        address: payload.address,
-                        ecosystem: '1',
-                        ecosystemName: null,
-                        username: payload.key_id,
-                        avatar: null,
-                        sessionToken: payload.token,
-                        refreshToken: payload.refresh,
-                        socketToken: payload.notify_key,
-                        timestamp: payload.timestamp
-                    }
-                })
-            );
+            })).flatMap(payload =>
+                Observable.of<Action>(
+                    createAccount.done({
+                        params: action.payload,
+                        result: {
+                            id: payload.key_id,
+                            encKey: keyring.encryptAES(keys.private, action.payload.password),
+                            address: payload.address,
+                            ecosystem: '1',
+                            ecosystemName: null,
+                            username: payload.key_id,
+                            avatar: null,
+                            sessionToken: payload.token,
+                            refreshToken: payload.refresh,
+                            socketToken: payload.notify_key,
+                            timestamp: payload.timestamp
+                        }
+                    }),
+                    navigate('/')
+                ));
         })
         .catch((e: IAPIError) =>
             Observable.of(createAccount.failed({

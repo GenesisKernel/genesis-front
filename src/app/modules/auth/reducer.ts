@@ -33,11 +33,11 @@ import selectAccountDoneHandler from './reducers/selectAccountDoneHandler';
 import selectAccountFailedHandler from './reducers/selectAccountFailedHandler';
 import authorizeHandler from './reducers/authorizeHandler';
 import deauthorizeHandler from './reducers/deauthorizeHandler';
+import generateSeedHandler from './reducers/generateSeedHandler';
 
 export type State = {
     readonly loadedSeed: string;
     readonly isAuthenticated: boolean;
-    readonly authenticationError: string;
     readonly isLoggingIn: boolean;
     readonly isCreatingAccount: boolean;
     readonly createAccountError: string;
@@ -57,7 +57,6 @@ export type State = {
 export const initialState: State = {
     loadedSeed: null,
     isAuthenticated: false,
-    authenticationError: null,
     isLoggingIn: false,
     isCreatingAccount: false,
     createAccountError: null,
@@ -90,4 +89,5 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.selectAccount.done, selectAccountDoneHandler)
     .case(actions.selectAccount.failed, selectAccountFailedHandler)
     .case(actions.authorize, authorizeHandler)
-    .case(actions.deauthorize, deauthorizeHandler);
+    .case(actions.deauthorize, deauthorizeHandler)
+    .case(actions.generateSeed.done, generateSeedHandler);

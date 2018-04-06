@@ -26,15 +26,19 @@ import MapEditorModal from 'components/Modal/MapEditorModal';
 import AboutModal from 'components/Modal/AboutModal';
 import InfoModal from 'components/Modal/InfoModal';
 import ErrorModal from 'components/Modal/ErrorModal';
-import ConfirmModal from './ConfirmModal';
+import ConfirmModal from 'components/Modal/ConfirmModal';
 import CreatePageModal from 'components/Modal/Editor/CreatePageModal';
 import CreateInterfaceModal from 'components/Modal/Editor/CreateInterfaceModal';
-import AuthorizeModal from 'components/Modal/AuthorizeModal';
+import AuthorizeModal from 'components/Modal/Tx/AuthorizeModal';
 import SignatureModal from 'components/Modal/Tx/SignatureModal';
 import TxErrorModal from 'components/Modal/Tx/ErrorModal';
+import AuthErrorModal from 'components/Modal/Auth/AuthErrorModal';
+import AuthRemoveAccountModal from 'components/Modal/Auth/AuthRemoveAccountModal';
 
 const MODAL_COMPONENTS = {
     'AUTHORIZE': AuthorizeModal,
+    'AUTH_ERROR': AuthErrorModal,
+    'AUTH_REMOVE_ACCOUNT': AuthRemoveAccountModal,
     'TX_ERROR': TxErrorModal,
     'TX_SIGNATURE': SignatureModal,
     'CREATE_PAGE': CreatePageModal,

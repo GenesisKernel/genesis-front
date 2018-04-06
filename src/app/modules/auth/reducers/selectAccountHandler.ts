@@ -20,7 +20,6 @@ import { IAccount } from 'genesis/auth';
 export default function (state: State, account: IAccount): State {
     return {
         ...state,
-        authenticationError: null,
         account
     };
 }

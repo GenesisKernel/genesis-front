@@ -30,8 +30,7 @@ declare module 'genesis/auth' {
     }
 
     interface ILoginCall {
-        encKey: string;
-        ecosystem: string;
+        account: IAccount;
         password: string;
     }
 
