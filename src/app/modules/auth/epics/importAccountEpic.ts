@@ -15,82 +15,85 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
+import { Epic } from 'modules';
 import { importAccount } from '../actions';
 import { Observable } from 'rxjs/Observable';
 import { IAccount } from 'genesis/auth';
 import { navigate } from 'modules/engine/actions';
-import api from 'lib/api';
 import keyring from 'lib/keyring';
 import * as Promise from 'bluebird';
 
-const importAccountEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(importAccount.started)
-        // We need to delay the response to make reducer think
-        // as this is an async call to properly catch errors
-        .delay(1)
-        .flatMap(action => {
-            const backup = keyring.restore(action.payload.backup);
-            if (!backup || backup.privateKey.length !== keyring.KEY_LENGTH) {
+const importAccountEpic: Epic = (action$, store, { api }) => action$.ofAction(importAccount.started)
+    .flatMap(action => {
+        const state = store.getState();
+        const client = api(state.engine.apiURL, state.auth.sessionToken);
+
+        const backup = keyring.restore(action.payload.backup);
+        if (!backup || backup.privateKey.length !== keyring.KEY_LENGTH) {
+            return Observable.of(importAccount.failed({
+                params: action.payload,
+                error: 'E_INVALID_KEY'
+            }));
+        }
+
+        const ecosystems = ['1', ...backup.ecosystems];
+        const publicKey = keyring.generatePublicKey(backup.privateKey);
+
+        return Observable.from(Promise.map(ecosystems, ecosystem =>
+            client.getUid()
+                .then(uid => {
+                    const signature = keyring.sign(uid.uid, backup.privateKey);
+                    return client
+                        .authorize(uid.token)
+                        .login({
+                            publicKey,
+                            signature,
+                            ecosystem
+                        });
+                })
+                .catch(e => {
+                    return null;
+                })
+
+        )).flatMap(payload => {
+            const encKey = keyring.encryptAES(backup.privateKey, action.payload.password);
+            const accounts: IAccount[] = payload.filter(l => l !== null).map(response => ({
+                id: response.key_id,
+                encKey,
+                address: response.address,
+                ecosystem: response.ecosystem_id,
+                ecosystemName: null,
+                username: response.key_id,
+                avatar: null,
+                sessionToken: response.token,
+                refreshToken: response.refresh,
+                socketToken: response.notify_key,
+                timestamp: response.timestamp
+            }));
+
+            if (accounts.length) {
+                return Observable.of<Action>(
+                    importAccount.done({
+                        params: action.payload,
+                        result: accounts
+                    }),
+                    navigate('/')
+                );
+            }
+            else {
                 return Observable.of(importAccount.failed({
-                    params: action.payload,
-                    error: 'E_INVALID_KEY'
+                    params: null,
+                    error: 'E_IMPORT_FAILED'
                 }));
             }
 
-            const ecosystems = ['1', ...backup.ecosystems];
-            const publicKey = keyring.generatePublicKey(backup.privateKey);
-
-            return Observable.from(Promise.map(ecosystems, ecosystem =>
-                api.getUid()
-                    .then(uid => {
-                        const signature = keyring.sign(uid.uid, backup.privateKey);
-                        return api.login(uid.token, publicKey, signature, undefined, ecosystem);
-                    })
-                    .catch(e => {
-                        return null;
-                    })
-
-            )).flatMap(payload => {
-                const encKey = keyring.encryptAES(backup.privateKey, action.payload.password);
-                const accounts: IAccount[] = payload.filter(l => l !== null).map(response => ({
-                    id: response.key_id,
-                    encKey,
-                    address: response.address,
-                    ecosystem: response.ecosystem_id,
-                    ecosystemName: null,
-                    username: response.key_id,
-                    avatar: null,
-                    sessionToken: response.token,
-                    refreshToken: response.refresh,
-                    socketToken: response.notify_key,
-                    timestamp: response.timestamp
-                }));
-
-                if (accounts.length) {
-                    return Observable.of<Action>(
-                        importAccount.done({
-                            params: action.payload,
-                            result: accounts
-                        }),
-                        navigate('/')
-                    );
-                }
-                else {
-                    return Observable.of(importAccount.failed({
-                        params: null,
-                        error: 'E_IMPORT_FAILED'
-                    }));
-                }
-
-            });
-        })
-        .catch(e => {
-            return Observable.of(importAccount.failed({
-                params: null,
-                error: null
-            }));
         });
+    })
+    .catch(e => {
+        return Observable.of(importAccount.failed({
+            params: null,
+            error: null
+        }));
+    });
 
 export default importAccountEpic;

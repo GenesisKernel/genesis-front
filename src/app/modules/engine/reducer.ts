@@ -20,6 +20,7 @@ import { isType } from 'typescript-fsa';
 import defaultLocale from 'lib/en-US.json';
 
 export type State = {
+    readonly apiURL: string;
     readonly localeMessages: { [key: string]: string };
     readonly isInstalled: boolean;
     readonly isInstalling: boolean;
@@ -32,6 +33,7 @@ export type State = {
 };
 
 export const initialState: State = {
+    apiURL: 'http://127.0.0.1:7079/api/v2',
     localeMessages: defaultLocale,
     isInstalled: null,
     isInstalling: false,

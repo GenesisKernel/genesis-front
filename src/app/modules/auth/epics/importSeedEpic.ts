@@ -14,29 +14,26 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
+import { Epic } from 'modules';
 import { importSeed } from '../actions';
 import { Observable } from 'rxjs/Observable';
 import { readTextFile } from 'lib/fs';
 
-const importSeedEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(importSeed.started)
-        .switchMap(action =>
-            Observable.from(readTextFile(action.payload))
-                .map(payload =>
-                    importSeed.done({
-                        params: null,
-                        result: payload
-                    })
+const importSeedEpic: Epic = (action$, store) => action$.ofAction(importSeed.started)
+    .switchMap(action =>
+        Observable.from(readTextFile(action.payload))
+            .map(payload =>
+                importSeed.done({
+                    params: null,
+                    result: payload
+                })
 
-                ).catch(e =>
-                    Observable.of(importSeed.failed({
-                        params: null,
-                        error: null
-                    }))
-                )
-        );
+            ).catch(e =>
+                Observable.of(importSeed.failed({
+                    params: null,
+                    error: null
+                }))
+            )
+    );
 
 export default importSeedEpic;

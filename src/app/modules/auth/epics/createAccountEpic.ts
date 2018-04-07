@@ -15,49 +15,55 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
+import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
 import { createAccount } from '../actions';
 import { navigate } from 'modules/engine/actions';
-import api, { IAPIError } from 'lib/api';
 import keyring from 'lib/keyring';
 
-const createAccountEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(createAccount.started)
-        .flatMap(action => {
-            const keys = keyring.generateKeyPair(action.payload.seed);
+const createAccountEpic: Epic = (action$, store, { api }) => action$.ofAction(createAccount.started)
+    .flatMap(action => {
+        const state = store.getState();
+        const client = api(state.engine.apiURL, state.auth.sessionToken);
+        const keys = keyring.generateKeyPair(action.payload.seed);
 
-            return Observable.from(api.getUid().then(uid => {
+        return Observable.from(
+            client.getUid().then(uid => {
                 const signature = keyring.sign(uid.uid, keys.private);
-                return api.login(uid.token, keys.public, signature);
-
-            })).flatMap(payload =>
-                Observable.of<Action>(
-                    createAccount.done({
-                        params: action.payload,
-                        result: {
-                            id: payload.key_id,
-                            encKey: keyring.encryptAES(keys.private, action.payload.password),
-                            address: payload.address,
-                            ecosystem: '1',
-                            ecosystemName: null,
-                            username: payload.key_id,
-                            avatar: null,
-                            sessionToken: payload.token,
-                            refreshToken: payload.refresh,
-                            socketToken: payload.notify_key,
-                            timestamp: payload.timestamp
-                        }
-                    }),
-                    navigate('/')
-                ));
-        })
-        .catch((e: IAPIError) =>
-            Observable.of(createAccount.failed({
-                params: null,
-                error: e.error
-            }))
+                return client
+                    .authorize(uid.token)
+                    .login({
+                        signature,
+                        publicKey: keys.public
+                    });
+            })
+        ).flatMap(payload =>
+            Observable.of<Action>(
+                createAccount.done({
+                    params: action.payload,
+                    result: {
+                        id: payload.key_id,
+                        encKey: keyring.encryptAES(keys.private, action.payload.password),
+                        address: payload.address,
+                        ecosystem: '1',
+                        ecosystemName: null,
+                        username: payload.key_id,
+                        avatar: null,
+                        sessionToken: payload.token,
+                        refreshToken: payload.refresh,
+                        socketToken: payload.notify_key,
+                        timestamp: payload.timestamp
+                    }
+                }),
+                navigate('/')
+            )
         );
+    })
+    .catch(e =>
+        Observable.of(createAccount.failed({
+            params: null,
+            error: e.error
+        }))
+    );
 
 export default createAccountEpic;

@@ -14,22 +14,19 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { Action } from 'typescript-fsa';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
+import { Epic } from 'modules';
 import { login, importAccount, selectRole } from '../actions';
 import { modalShow } from 'modules/modal/actions';
 
-const authErrorEpic: Epic<Action<any>, IRootState> =
-    (action$, store) => action$.ofType(login.failed.type, importAccount.failed.type, selectRole.failed.type)
-        .map(action =>
-            modalShow({
-                id: 'AUTH_ERROR',
-                type: 'AUTH_ERROR',
-                params: {
-                    error: action.payload.error
-                }
-            })
-        );
+const authErrorEpic: Epic = (action$, store) => action$.ofType(login.failed.type, importAccount.failed.type, selectRole.failed.type)
+    .map(action =>
+        modalShow({
+            id: 'AUTH_ERROR',
+            type: 'AUTH_ERROR',
+            params: {
+                error: (action as any).payload.error
+            }
+        })
+    );
 
 export default authErrorEpic;

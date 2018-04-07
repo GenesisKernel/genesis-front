@@ -14,36 +14,33 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
+import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
 import { removeAccount } from '../actions';
 import { removeAccount as removeStoredAccount } from 'modules/storage/actions';
 import { modalClose, modalShow } from 'modules/modal/actions';
 
-const removeAccountEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(removeAccount)
-        .flatMap(action => {
-            return Observable.merge(
-                Observable.of(modalShow({
-                    id: 'AUTH_REMOVE_ACCOUNT',
-                    type: 'AUTH_REMOVE_ACCOUNT',
-                    params: {
-                        account: action.payload
+const removeAccountEpic: Epic = (action$, store) => action$.ofAction(removeAccount)
+    .flatMap(action =>
+        Observable.merge(
+            Observable.of(modalShow({
+                id: 'AUTH_REMOVE_ACCOUNT',
+                type: 'AUTH_REMOVE_ACCOUNT',
+                params: {
+                    account: action.payload
+                }
+            })),
+            action$.ofAction(modalClose)
+                .take(1)
+                .flatMap(result => {
+                    if ('RESULT' === result.payload.reason) {
+                        return Observable.of(removeStoredAccount(action.payload));
                     }
-                })),
-                action$.ofAction(modalClose)
-                    .take(1)
-                    .flatMap(result => {
-                        if ('RESULT' === result.payload.reason) {
-                            return Observable.of(removeStoredAccount(action.payload));
-                        }
-                        else {
-                            return Observable.empty<never>();
-                        }
-                    })
-            );
-        });
+                    else {
+                        return Observable.empty<never>();
+                    }
+                })
+        )
+    );
 
 export default removeAccountEpic;

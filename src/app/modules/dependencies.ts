@@ -14,16 +14,21 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { Epic } from 'modules';
-import { generateSeed } from '../actions';
-import keyring from 'lib/keyring';
+import needle from 'needle';
+import GenesisAPI from 'lib/genesisAPI';
 
-const authorizeEpic: Epic = (action$, store) => action$.ofAction(generateSeed.started)
-    .map(action =>
-        generateSeed.done({
-            params: action.payload,
-            result: keyring.generateSeed()
-        })
-    );
+export interface IStoreDependencies {
+    api: IAPIDependency;
+}
 
-export default authorizeEpic;
+export interface IAPIDependency {
+    (apiURL: string, session?: string): GenesisAPI;
+}
+
+export default {
+    api: (apiURL: string, session?: string) => new GenesisAPI({
+        transport: needle,
+        apiURL,
+        session
+    })
+} as IStoreDependencies;

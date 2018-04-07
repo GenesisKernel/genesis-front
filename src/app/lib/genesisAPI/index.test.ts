@@ -20,10 +20,10 @@ interface IMockTransportResponse {
     method: TRequestMethod;
     endpoint: string;
     body: { [key: string]: any };
-    options?: IRequestOptions;
+    options?: IRequestOptions<any, any>;
 }
 
-const apiPassthroughTransportMock: IRequestTransport = (method: TRequestMethod, endpoint: string, body: { [key: string]: any } = {}, options?: IRequestOptions) => {
+const apiPassthroughTransportMock: IRequestTransport = (method: TRequestMethod, endpoint: string, body: { [key: string]: any } = {}, options?: IRequestOptions<any, any>) => {
     return new Promise<any>((resolve, reject) => {
         setTimeout(() => {
             resolve({
@@ -38,7 +38,7 @@ const apiPassthroughTransportMock: IRequestTransport = (method: TRequestMethod, 
     });
 };
 
-const apiJsonTransportMock: IRequestTransport = (method: TRequestMethod, endpoint: string, body: { [key: string]: any } = {}, options?: IRequestOptions) => {
+const apiJsonTransportMock: IRequestTransport = (method: TRequestMethod, endpoint: string, body: { [key: string]: any } = {}, options?: IRequestOptions<any, any>) => {
     return new Promise<any>((resolve, reject) => {
         setTimeout(() => {
             resolve({ body });
@@ -51,9 +51,9 @@ test('Url slug parsing', () => {
     const TEST_ROUTE = 'test_route';
 
     class MockAPI extends GenesisAPI {
-        public slugEndpoint = this.setEndpoint<IMockTransportResponse, { slug: string }>('get', `${TEST_ROUTE}/{slug}`);
-        public complexSlugEndpoint = this.setEndpoint<IMockTransportResponse, { a: string, b: string }>('get', `${TEST_ROUTE}/{a}/${TEST_ROUTE}/{b}/test`);
-        public postSlugEndpoint = this.setEndpoint<IMockTransportResponse, { slug: string, some: 1, more: true, params: 'hello' }>('post', `${TEST_ROUTE}/{slug}`);
+        public slugEndpoint = this.setEndpoint<{ slug: string }, IMockTransportResponse>('get', `${TEST_ROUTE}/{slug}`);
+        public complexSlugEndpoint = this.setEndpoint<{ a: string, b: string }, IMockTransportResponse>('get', `${TEST_ROUTE}/{a}/${TEST_ROUTE}/{b}/test`);
+        public postSlugEndpoint = this.setEndpoint<{ slug: string, some: 1, more: true, params: 'hello' }, IMockTransportResponse>('post', `${TEST_ROUTE}/{slug}`);
     }
 
     const api = new MockAPI({
@@ -62,21 +62,26 @@ test('Url slug parsing', () => {
     });
 
     return Promise.all([
-        api.slugEndpoint({ slug: 'test0123456789' }).then(l => {
-            expect(l.endpoint).toEqual(`${TEST_URL}/${TEST_ROUTE}/test0123456789`);
-        }),
-        api.complexSlugEndpoint({ a: '../../test', b: '-12345-' }).then(l => {
-            expect(l.endpoint).toEqual(`${TEST_URL}/${TEST_ROUTE}/${encodeURIComponent('../../test')}/${TEST_ROUTE}/-12345-/test`);
-        }),
-        api.postSlugEndpoint({ slug: 'test0123456789', some: 1, more: true, params: 'hello' }).then(l => {
-            expect(l.endpoint).toEqual(`${TEST_URL}/${TEST_ROUTE}/test0123456789`);
-        })
+        api.slugEndpoint({ slug: 'test0123456789' }).then(l =>
+            expect(l.endpoint).toEqual(`${TEST_URL}/${TEST_ROUTE}/test0123456789`)
+        ),
+        api.complexSlugEndpoint({ a: '../../test', b: '-12345-' }).then(l =>
+            expect(l.endpoint).toEqual(`${TEST_URL}/${TEST_ROUTE}/${encodeURIComponent('../../test')}/${TEST_ROUTE}/-12345-/test`)
+        ),
+        api.postSlugEndpoint({ slug: 'test0123456789', some: 1, more: true, params: 'hello' }).then(l =>
+            expect(l.endpoint).toEqual(`${TEST_URL}/${TEST_ROUTE}/test0123456789`)
+        )
     ]);
 });
 
-test('Content transformer', () => {
+test('Request transformer', () => {
+    const testArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
     class MockAPI extends GenesisAPI {
-        public transformEndpoint = this.setEndpoint<number[], number[]>('get', 'test', {}, (response: number[]) => response.reverse());
+        public transformEndpoint = this.setEndpoint<number[], number[]>('get', 'test', {
+            requestTransformer: request =>
+                request.slice().reverse()
+        });
     }
 
     const api = new MockAPI({
@@ -84,9 +89,48 @@ test('Content transformer', () => {
         transport: apiJsonTransportMock
     });
 
+    return api.transformEndpoint(testArray).then(l =>
+        expect(l).toEqual(testArray.slice().reverse())
+    );
+});
+
+test('Response transformer', () => {
     const testArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-    return api.transformEndpoint(testArray).then(l => {
-        expect(l).toEqual(testArray.reverse());
+    class MockAPI extends GenesisAPI {
+        public transformEndpoint = this.setEndpoint<number[], number[]>('get', 'test', {
+            responseTransformer: response => response.slice().reverse()
+        });
+    }
+
+    const api = new MockAPI({
+        apiURL: '://test_url.com',
+        transport: apiJsonTransportMock
     });
+
+    return api.transformEndpoint(testArray).then(l =>
+        expect(l).toEqual(testArray.slice().reverse())
+    );
+});
+
+test('Login', () => {
+    const api = new GenesisAPI({
+        apiURL: '://test_url.com',
+        transport: apiJsonTransportMock
+    });
+
+    return api.login({
+        publicKey: '04123456789',
+        signature: 'test'
+
+    }).then(response =>
+        expect(response).toEqual({
+            pubkey: '123456789',
+            signature: 'test',
+            ecosystem: undefined,
+            role_id: undefined,
+            expire: undefined,
+            roles: []
+        })
+    );
 });

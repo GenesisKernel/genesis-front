@@ -15,21 +15,24 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import urlTemplate from 'url-template';
+import { IUIDResponse, ILoginRequest, ILoginResponse, IRefreshResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IRefreshRequest, IParamRequest, ITemplateRequest } from 'genesis/api';
 
 export type TRequestMethod =
     'get' |
     'post';
 
-export interface IRequestOptions {
+export interface IRequestOptions<P, R> {
     connection?: string;
     headers?: {
         [key: string]: string;
     };
+    requestTransformer?: (request: P) => { [key: string]: any };
+    responseTransformer?: (response: any) => R;
 }
 
 export interface IEndpointFactory {
-    <T>(method: TRequestMethod, endpoint: string, options?: IRequestOptions, transformer?: (response: any) => T): IParameterLessEndpoint<T>;
-    <T, P>(method: TRequestMethod, endpoint: string, options?: IRequestOptions, transformer?: (response: any) => T): IEndpoint<P, T>;
+    <R>(method: TRequestMethod, endpoint: string, options?: IRequestOptions<never, R>): IParameterLessEndpoint<R>;
+    <P, R>(method: TRequestMethod, endpoint: string, options?: IRequestOptions<P, R>): IEndpoint<P, R>;
 }
 
 export interface IEndpoint<P, R> {
@@ -41,87 +44,177 @@ export interface IParameterLessEndpoint<R> {
 }
 
 export interface IRequestTransport {
-    (method: TRequestMethod, endpoint: string, options?: IRequestOptions): Promise<{ body: any }>;
-    (method: TRequestMethod, endpoint: string, body: { [key: string]: any }, options?: IRequestOptions): Promise<{ body: any }>;
+    (method: TRequestMethod, endpoint: string, options?: IRequestOptions<any, any>): Promise<{ body: any }>;
+    (method: TRequestMethod, endpoint: string, body: { [key: string]: any }, options?: IRequestOptions<any, any>): Promise<{ body: any }>;
+}
+
+export interface IRequestParams {
+    [key: string]: any;
+}
+
+export interface ISecuredRequestParams extends IRequestParams {
+    session: string;
 }
 
 export interface IAPIOptions {
     apiURL: string;
     transport: IRequestTransport;
-    requestOptions?: IRequestOptions;
+    session?: string;
+    requestOptions?: IRequestOptions<any, any>;
 }
 
 class GenesisAPI {
-    private _defaultOptions: IRequestOptions = {
+    private _defaultOptions: IRequestOptions<any, any> = {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
         }
     };
-    private _transport: IRequestTransport = null;
-    private _apiUrl = '://127.0.0.1:7079/api/v2';
-    private _session = '';
+    private _options: IAPIOptions;
 
     constructor(options: IAPIOptions) {
-        this._apiUrl = options.apiURL;
-        this._transport = options.transport;
+        this._options = {
+            ...options
+        };
 
         if (options.requestOptions) {
             this._defaultOptions = options.requestOptions;
         }
     }
 
-    protected setEndpoint: IEndpointFactory = <P, T>(method: TRequestMethod, endpoint: string, options: IRequestOptions = {}, transformer?: (response: any) => T) => {
-        return async (params?: P) => {
-            // TODO: Set request timeout
-            const requestOptions: IRequestOptions = {
-                ...this._defaultOptions,
-                ...options
-            };
+    protected request = async <P, R>(method: TRequestMethod, endpoint: string, requestParams: P, options: IRequestOptions<P, R> = {}) => {
+        const requestEndpoint = urlTemplate.parse(endpoint).expand(requestParams);
+        const requestUrl = `${this._options.apiURL}/${requestEndpoint}`;
+        const params = requestParams && options.requestTransformer ? options.requestTransformer(requestParams) : requestParams;
 
-            let json: any = null;
-            let requestEndpoint = urlTemplate.parse(endpoint).expand(params || {});
+        // TODO: Set request timeout
+        const requestOptions: IRequestOptions<P, R> = {
+            ...this._defaultOptions,
+            ...options
+        };
 
-            try {
-                const response = await this._transport(method, `${this._apiUrl}/${requestEndpoint}`, params, {
-                    connection: 'Keep-Alive',
-                    headers: {
-                        ...requestOptions.headers
-                    }
-                });
-                json = transformer ? transformer(response.body) : response.body;
-            }
-            catch (e) {
-                // TODO: Not possible to catch with any other way
-                if (e.message && ('Failed to fetch' === e.message || -1 !== e.message.indexOf('ECONNREFUSED'))) {
-                    json = { error: 'E_OFFLINE' };
+        let json: any = null;
+
+        try {
+            const response = await this._options.transport(method, requestUrl, params, {
+                connection: 'Keep-Alive',
+                headers: {
+                    ...requestOptions.headers
                 }
-                else {
-                    json = { error: e };
-                }
+            });
+            json = requestOptions.responseTransformer ? requestOptions.responseTransformer(response.body) : response.body;
+        }
+        catch (e) {
+            // TODO: Not possible to catch with any other way
+            if (!e) {
+                json = { error: 'E_OFFLINE' };
             }
-
-            if (json.error) {
-                throw json;
+            else if (e && e.message && ('Failed to fetch' === e.message || -1 !== e.message.indexOf('ECONNREFUSED'))) {
+                json = { error: 'E_OFFLINE' };
             }
             else {
-                return json as T;
+                json = { error: e };
             }
+        }
+
+        if (json && json.error) {
+            throw json;
+        }
+        else {
+            return json as R;
+        }
+    }
+
+    protected setEndpoint: IEndpointFactory = <P extends IRequestParams, R>(method: TRequestMethod, endpoint: string, options: IRequestOptions<P, R> = {}) => {
+        return async (requestParams?: P) => {
+            return this.request(method, endpoint, requestParams, options);
         };
     }
 
-    protected setSecuredEndpoint: IEndpointFactory = <T>(method: TRequestMethod, endpoint: string, options: IRequestOptions = {}, transformer?: (response: any) => T) => {
-        const extendedOptions: IRequestOptions = {
-            ...options,
-            headers: {
-                ...options.headers,
-                Authorization: `Bearer ${this._session}`
-            }
+    protected setSecuredEndpoint: IEndpointFactory = <P extends IRequestParams, R>(method: TRequestMethod, endpoint: string, options: IRequestOptions<P, R> = {}) => {
+        return async (requestParams?: P) => {
+            return this.request(method, endpoint, requestParams, {
+                ...options,
+                headers: {
+                    ...options.headers,
+                    Authorization: `Bearer ${this._options.session}`
+                }
+            });
         };
-        return this.setEndpoint(method, endpoint, extendedOptions, transformer);
     }
 
-    public getUid = this.setEndpoint<{ uid: string, token: string }>('get', 'getuid');
+    public to(apiURL: string) {
+        return new GenesisAPI({
+            ...this._options,
+            apiURL
+        });
+    }
 
+    public authorize(session: string) {
+        return new GenesisAPI({
+            ...this._options,
+            session
+        });
+    }
+
+    // Authorization
+    public getUid = this.setEndpoint<IUIDResponse>('get', 'getuid');
+    public login = this.setSecuredEndpoint<ILoginRequest, ILoginResponse>('post', 'login', {
+        requestTransformer: request => ({
+            pubkey: request.publicKey.slice(2),
+            signature: request.signature,
+            ecosystem: request.ecosystem,
+            role_id: request.role,
+            expire: request.expire,
+        }),
+        responseTransformer: response => ({
+            ...response,
+            roles: response.roles || []
+        })
+    });
+    public refresh = this.setSecuredEndpoint<IRefreshRequest, IRefreshResponse>('post', 'refresh');
+    public requestNotifications = this.setSecuredEndpoint<INotificationsRequest[], void>('post', 'updnotificator', {
+        requestTransformer: request => ({
+            ids: JSON.stringify(request)
+        })
+    });
+
+    // Data getters
+    public getParam = this.setSecuredEndpoint<IParamRequest, IParamResponse>('get', 'ecosystemparam/{name}');
+    public getParams = this.setSecuredEndpoint<IParamsRequest, IParamsResponse>('get', 'ecosystemparams', {
+        requestTransformer: request => ({
+            names: (request.names || []).join(',')
+        })
+    });
+    public getPage = this.setSecuredEndpoint<ITemplateRequest, IPageResponse>('get', 'interface/page/{name}');
+    public getBlock = this.setSecuredEndpoint<ITemplateRequest, IBlockResponse>('get', 'interface/block/{name}');
+    public getMenu = this.setSecuredEndpoint<ITemplateRequest, IMenuResponse>('get', 'interface/menu/{name}');
+    public getTable = this.setSecuredEndpoint<ITemplateRequest, ITableResponse>('get', 'table/{name}');
+    public getTables = this.setSecuredEndpoint<ISegmentRequest, ITablesResponse>('get', 'tables');
+    public getHistory = this.setSecuredEndpoint<IHistoryRequest, IHistoryResponse>('get', 'history/{table}/{id}', {
+        requestTransformer: () => null
+    });
+    public getRow = this.setSecuredEndpoint<IRowRequest, IRowResponse>('get', 'row/{table}/{id}', {
+        requestTransformer: request => ({
+            columns: request.columns.join(',')
+        })
+    });
+    public getData = this.setSecuredEndpoint<IDataRequest, IDataResponse>('get', 'list/{name}', {
+        requestTransformer: request => ({
+            ...request,
+            columns: request.columns.join(',')
+        })
+    });
+
+    // Template engine
+    public content = this.setSecuredEndpoint<IContentRequest, IContentResponse>('post', 'content/menu/{type}', {
+        requestTransformer: request => ({
+            lang: request.locale,
+            params: request.params
+        })
+    });
+    public contentTest = this.setSecuredEndpoint<IContentTestRequest, IContentResponse>('post', 'content');
+
+    // Transactions
     // txStatus: (session: string, hash: string) => securedRequest(`txstatus/${hash}`, session, null, { method: 'GET' }) as Promise<ITxStatusResponse>,
 }
 
