@@ -107,28 +107,6 @@ export default (state: State = initialState, action: Action): State => {
         };
     }
 
-    if (isType(action, actions.install.started)) {
-        return {
-            ...state,
-            isInstalling: true
-        };
-    }
-
-    if (isType(action, actions.install.done)) {
-        return {
-            ...state,
-            isInstalled: true,
-            isInstalling: false
-        };
-    }
-
-    if (isType(action, actions.install.failed)) {
-        return {
-            ...state,
-            isInstalling: false
-        };
-    }
-
     if (isType(action, actions.setCollapsed)) {
         return {
             ...state,

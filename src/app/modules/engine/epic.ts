@@ -104,28 +104,6 @@ export const checkOnlineEpic: Epic<Action, IRootState> =
             }).delay(600)
         );
 
-export const installEpic = (actions$: Observable<Action>) =>
-    actions$.filter(actions.install.started.match)
-        .switchMap(action => {
-            return Observable.from(api.install(action.payload)).map(payload => {
-                return actions.install.done({
-                    params: null,
-                    result: null
-                });
-            }).catch((error: IAPIError) => {
-                switch (error.error) {
-                    // TODO: NOTIFICATION STUB
-                    case 'E_DBNIL': alert('NL_DATABASE_IS_NIL'); break;
-                    default: break;
-                }
-
-                return Observable.of(actions.install.failed({
-                    params: null,
-                    error: error.error
-                }));
-            }).delay(600);
-        });
-
 export const createVDEEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.createVDE.started)
         .flatMap(action => {
@@ -148,7 +126,6 @@ export const createVDEEpic: Epic<Action, IRootState> =
 export default combineEpics(
     initializeEpic,
     checkOnlineEpic,
-    installEpic,
     createVDEEpic,
     setLocaleEpic
 );
