@@ -15,7 +15,7 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import urlTemplate from 'url-template';
-import { IUIDResponse, ILoginRequest, ILoginResponse, IRefreshResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IRefreshRequest, IParamRequest, ITemplateRequest } from 'genesis/api';
+import { IUIDResponse, ILoginRequest, ILoginResponse, IRefreshResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IRefreshRequest, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse } from 'genesis/api';
 
 export type TRequestMethod =
     'get' |
@@ -179,6 +179,8 @@ class GenesisAPI {
     });
 
     // Data getters
+    public getContract = this.setSecuredEndpoint<IContractRequest, IContractResponse>('get', 'contract/{name}');
+    public getContracts = this.setSecuredEndpoint<ISegmentRequest, IContractsResponse>('get', 'contracts');
     public getParam = this.setSecuredEndpoint<IParamRequest, IParamResponse>('get', 'ecosystemparam/{name}');
     public getParams = this.setSecuredEndpoint<IParamsRequest, IParamsResponse>('get', 'ecosystemparams', {
         requestTransformer: request => ({
@@ -195,13 +197,13 @@ class GenesisAPI {
     });
     public getRow = this.setSecuredEndpoint<IRowRequest, IRowResponse>('get', 'row/{table}/{id}', {
         requestTransformer: request => ({
-            columns: request.columns.join(',')
+            columns: (request.columns || []).join(',')
         })
     });
     public getData = this.setSecuredEndpoint<IDataRequest, IDataResponse>('get', 'list/{name}', {
         requestTransformer: request => ({
             ...request,
-            columns: request.columns.join(',')
+            columns: (request.columns || []).join(',')
         })
     });
 

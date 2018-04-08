@@ -24,8 +24,6 @@ import styled from 'styled-components';
 import platform from 'lib/platform';
 import { TSection } from 'genesis/content';
 import { history } from 'store';
-import { apiUrl } from 'lib/api';
-import url from 'url';
 
 import Titlebar from './Titlebar';
 import UserMenu from 'containers/Widgets/UserMenu';
@@ -51,7 +49,7 @@ const StyledWrapper = styled.div`
 `;
 
 export interface IMainProps {
-    session: string;
+    nodeUrl: string;
     isAuthorized: boolean;
     pending: boolean;
     section: string;
@@ -137,8 +135,7 @@ class Main extends React.Component<IMainProps> {
     }
 
     render() {
-        const apiUrlTokens = url.parse(apiUrl);
-        const appTitle = `Genesis (${apiUrlTokens.protocol}//${apiUrlTokens.host})`;
+        const appTitle = `Genesis (${this.props.nodeUrl})`;
 
         return (
             <StyledWrapper className="wrapper component-main">

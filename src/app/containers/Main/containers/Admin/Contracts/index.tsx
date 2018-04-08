@@ -18,7 +18,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getContracts } from 'modules/admin/actions';
-import { IContract } from 'lib/api';
 
 import DataPreloader from 'components/Animation/DataPreloader';
 import Contracts from 'components/Main/Admin/Contracts';
@@ -28,7 +27,16 @@ interface IContractsContainerProps {
 }
 
 interface IContractsContainerState {
-    contracts: IContract[];
+    contracts: {
+        id: string;
+        name: string;
+        value: string;
+        wallet_id: string;
+        address: string;
+        conditions: string;
+        token_id: string;
+        active: string;
+    }[];
 }
 
 interface IContractsContainerDispatch {

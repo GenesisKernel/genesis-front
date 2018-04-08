@@ -18,7 +18,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getParameter } from 'modules/admin/actions';
-// import { IParameterResponse } from 'lib/api';
 
 import Edit from 'components/Main/Admin/Parameters/Edit';
 

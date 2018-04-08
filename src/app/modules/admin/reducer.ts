@@ -18,7 +18,7 @@ import * as actions from './actions';
 import * as _ from 'lodash';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
-import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContract, IParameterResponse, IHistoryResponse } from 'lib/api';
+import { ITableResponse, IDataResponse, IHistoryResponse, IParamResponse, ITablesResponse } from 'genesis/api';
 import { findTagById, resolveTagHandler, Properties, generateId, setIds, convertToTreeData, getConstructorTemplate } from 'lib/constructor';
 import { TProtypoElement } from 'genesis/protypo';
 
@@ -29,13 +29,17 @@ export type State = {
     readonly menus: { id: number, name: string, value: string, conditions: string }[];
     readonly tables: ITablesResponse;
     readonly table: ITableResponse;
-    readonly tableData: IListResponse;
+    readonly tableData: IDataResponse;
     readonly history: IHistoryResponse;
     readonly page: { id: number, name: string, menu: string, conditions: string, value: string };
     readonly pageTreeCode: any;
-    readonly interfaces: IInterfacesResponse;
+    readonly interfaces: {
+        pages: { id: string, name: string }[];
+        blocks: { id: string, name: string }[];
+        menus: { id: string, name: string }[];
+    };
     readonly contract: { id: string, active: string, name: string, conditions: string, address: string, value: string };
-    readonly contracts: IContract[];
+    readonly contracts: { id: string, name: string, value: string, wallet_id: string, address: string, conditions: string, token_id: string, active: string }[];
     readonly tabs: {
         data: {
             [key: string]: {
@@ -58,8 +62,8 @@ export type State = {
     };
     readonly language: { id: string, res: any, name: string, conditions: string };
     readonly languages: { id: string, res: any, name: string, conditions: string }[];
-    readonly parameter: IParameterResponse;
-    readonly parameters: IParameterResponse[];
+    readonly parameter: IParamResponse;
+    readonly parameters: IParamResponse[];
     readonly exportPayload: Object;
     readonly importPayload: {
         pages: { Name: string }[];

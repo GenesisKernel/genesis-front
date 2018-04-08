@@ -17,14 +17,14 @@
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
-import { IParameterResponse } from 'lib/api';
+import { IParamResponse } from 'genesis/api';
 
 import Wrapper from 'components/Wrapper';
 import PageLink from 'containers/Routing/PageLink';
 import Table, { ICellRenderer } from 'components/Table';
 
 export interface IParametersProps {
-    parameters: IParameterResponse[];
+    parameters: IParamResponse[];
 }
 
 const renderParameter: ICellRenderer = (value, rowData) => {

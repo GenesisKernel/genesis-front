@@ -18,7 +18,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getTableStruct } from 'modules/admin/actions';
-import { ITableResponse } from 'lib/api';
+import { ITableResponse } from 'genesis/api';
 
 import EditTable from 'components/Main/Admin/Tables/EditTable';
 

@@ -18,7 +18,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getHistory, getTableStruct } from 'modules/admin/actions';
-import { IHistoryResponse, ITableResponse } from 'lib/api';
+import { IHistoryResponse, ITableResponse } from 'genesis/api';
 
 import DataPreloader from 'components/Animation/DataPreloader';
 import History from 'components/Main/Admin/History';

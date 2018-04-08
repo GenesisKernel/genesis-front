@@ -16,14 +16,22 @@
 
 import * as React from 'react';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
-import { IContract } from 'lib/api';
 
 import Wrapper from 'components/Wrapper';
 import PageLink from 'containers/Routing/PageLink';
 import Table, { ICellRenderer } from 'components/Table';
 
 export interface IContractsProps {
-    contracts: IContract[];
+    contracts: {
+        id: string;
+        name: string;
+        value: string;
+        wallet_id: string;
+        address: string;
+        conditions: string;
+        token_id: string;
+        active: string;
+    }[];
 }
 
 const renderCell: ICellRenderer = (data, rowData) => {

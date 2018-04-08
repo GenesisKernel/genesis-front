@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { Panel } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import { ITableResponse, IListResponse } from 'lib/api';
+import { ITableResponse, IDataResponse } from 'genesis/api';
 
 import DocumentTitle from 'components/DocumentTitle';
 import Heading from 'components/Heading';
@@ -60,7 +60,7 @@ export const columnDisplayRules: { [key: string]: IColumnDisplayRule } = {
 export interface IViewProps {
     tableName: string;
     table: ITableResponse;
-    tableData: IListResponse;
+    tableData: IDataResponse;
 }
 
 const View: React.SFC<IViewProps> = (props) => (

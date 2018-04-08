@@ -16,14 +16,14 @@
 
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { IParameterResponse } from 'lib/api';
+import { IParamResponse } from 'genesis/api';
 
 import Wrapper from 'components/Wrapper';
 import ParameterEditor from './ParameterEditor';
 
 export interface IEditProps {
     tabView?: boolean;
-    parameter: IParameterResponse;
+    parameter: IParamResponse;
 }
 
 interface IEditState {

@@ -18,7 +18,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getTable } from 'modules/admin/actions';
-import { ITableResponse, IListResponse } from 'lib/api';
+import { ITableResponse, IDataResponse } from 'genesis/api';
 
 import View, { columnDisplayRules } from 'components/Main/Admin/Tables/View';
 
@@ -27,7 +27,7 @@ export interface IViewContainerProps {
 }
 
 interface IViewContainerState {
-    tableData: IListResponse;
+    tableData: IDataResponse;
     tableStruct: ITableResponse;
 }
 

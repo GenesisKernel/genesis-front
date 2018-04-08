@@ -15,6 +15,7 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import url from 'url';
 import { connect, Dispatch } from 'react-redux';
 import { Route } from 'react-router-dom';
 import { IRootState } from 'modules';
@@ -46,16 +47,22 @@ const MainContainer: React.SFC<IMainProps> = props => (
     </Main>
 );
 
-const mapStateToProps = (state: IRootState) => ({
-    isAuthorized: !!state.auth.privateKey,
-    stylesheet: state.content.stylesheet,
-    section: state.content.section,
-    sections: state.content.sections,
-    navigationSize: state.storage.navigationSize,
-    navigationVisible: state.content.sections[state.content.section].menuDisabled ? false : state.content.sections[state.content.section].menuVisible,
-    transactionsCount: state.tx.transactions.count(),
-    pendingTransactions: state.tx.transactions.takeLast(5)
-});
+const mapStateToProps = (state: IRootState) => {
+    const apiUrlTokens = url.parse(state.engine.apiURL);
+    const nodeUrl = `${apiUrlTokens.protocol}//${apiUrlTokens.host}`;
+
+    return {
+        nodeUrl,
+        isAuthorized: !!state.auth.privateKey,
+        stylesheet: state.content.stylesheet,
+        section: state.content.section,
+        sections: state.content.sections,
+        navigationSize: state.storage.navigationSize,
+        navigationVisible: state.content.sections[state.content.section].menuDisabled ? false : state.content.sections[state.content.section].menuVisible,
+        transactionsCount: state.tx.transactions.count(),
+        pendingTransactions: state.tx.transactions.takeLast(5)
+    };
+};
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
     onNavigationToggle: () => {

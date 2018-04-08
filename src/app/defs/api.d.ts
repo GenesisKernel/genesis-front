@@ -63,15 +63,45 @@ declare module 'genesis/api' {
         ecosystem: string;
     }
 
+    interface IContractRequest {
+        name: string;
+    }
+
+    interface IContractResponse {
+        name: string;
+        active: boolean;
+        tableid: number;
+        fields: {
+            name: string;
+            htmltype: string;
+            type: string;
+            tags: string;
+        }[];
+    }
+
+    interface IContractsResponse {
+        count: number;
+        list: {
+            id: string;
+            name: string;
+            value: string;
+            wallet_id: string;
+            address: string;
+            conditions: string;
+            token_id: string;
+            active: string;
+        }[];
+    }
+
+    interface IParamRequest {
+        name: string;
+    }
+
     interface IParamResponse {
         id: string;
         name: string;
         value: string;
         conditions: string;
-    }
-
-    interface IParamRequest {
-        name: string;
     }
 
     interface IParamsRequest {

@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { IInterfacesResponse, IParameterResponse, IContract, ITablesResponse } from 'lib/api';
+import { IParamResponse, ITablesResponse } from 'genesis/api';
 import { getContracts, getInterface, getParameters, getLanguages, getTables, exportData } from 'modules/admin/actions';
 
 import Export from 'components/Main/Admin/Export';
@@ -27,9 +27,22 @@ export interface IExportContainerProps {
 }
 
 interface IExportContainerState {
-    interfaces: IInterfacesResponse;
-    parameters: IParameterResponse[];
-    contracts: IContract[];
+    interfaces: {
+        pages: { id: string, name: string }[];
+        blocks: { id: string, name: string }[];
+        menus: { id: string, name: string }[];
+    };
+    parameters: IParamResponse[];
+    contracts: {
+        id: string;
+        name: string;
+        value: string;
+        wallet_id: string;
+        address: string;
+        conditions: string;
+        token_id: string;
+        active: string;
+    }[];
     languages: { id: string, name: string }[];
     tables: ITablesResponse;
     exportPayload: object;

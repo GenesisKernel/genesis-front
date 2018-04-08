@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { Button, Col, Panel, Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import { ITableResponse } from 'lib/api';
+import { ITableResponse } from 'genesis/api';
 import { columnTypes } from './Create';
 
 import Heading from 'components/Heading';
