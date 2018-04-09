@@ -16,7 +16,7 @@
 
 import * as React from 'react';
 import { Button, Panel } from 'react-bootstrap';
-import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import keyring from 'lib/keyring';
 import { sendAttachment } from 'lib/fs';
 import { IAccount } from 'genesis/auth';
@@ -26,11 +26,12 @@ import * as QRCode from 'qrcode.react';
 import Wrapper from 'components/Wrapper';
 import Validation from 'components/Validation';
 
-export interface IBackupProps extends InjectedIntlProps {
+export interface IBackupProps {
     account: IAccount;
     ecosystems: string[];
     privateKey: string;
-    // alertShow: typeof alertShow;
+    onError: () => void;
+    onCopy: () => void;
 }
 
 interface IBackupState {
@@ -58,24 +59,8 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
             });
         }
         else {
-            /*this.props.alertShow({
-                id: 'E_INVALID_PASSWORD',
-                title: this.props.intl.formatMessage({ id: 'alert.error', defaultMessage: 'Error' }),
-                type: 'error',
-                text: this.props.intl.formatMessage({ id: 'auth.password.invalid', defaultMessage: 'Invalid password' }),
-                cancelButton: this.props.intl.formatMessage({ id: 'alert.close', defaultMessage: 'Close' }),
-            });*/
+            this.props.onError();
         }
-    }
-
-    onCopy() {
-        /*this.props.alertShow({
-            id: 'I_COPIED_TO_CLIPBOARD',
-            title: this.props.intl.formatMessage({ id: 'alert.info', defaultMessage: 'Information' }),
-            type: 'info',
-            text: this.props.intl.formatMessage({ id: 'alert.clipboard.copied', defaultMessage: 'Copied to clipboard' }),
-            cancelButton: this.props.intl.formatMessage({ id: 'alert.close', defaultMessage: 'Close' }),
-        });*/
     }
 
     onKeyDownlaod() {
@@ -125,7 +110,7 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
                 footer={(
                     <div className="clearfix">
                         <div className="pull-left">
-                            <CopyToClipboard text={this.generatePayload()} onCopy={this.onCopy.bind(this)}>
+                            <CopyToClipboard text={this.generatePayload()} onCopy={this.props.onCopy}>
                                 <Button bsStyle="primary">
                                     <FormattedMessage id="general.clipboard.copy" defaultMessage="Copy to clipboard" />
                                 </Button>
@@ -211,4 +196,4 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
     }
 }
 
-export default injectIntl(Backup);
+export default Backup;
