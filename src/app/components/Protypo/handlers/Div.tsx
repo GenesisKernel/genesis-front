@@ -22,10 +22,12 @@ import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
 import { TProtypoElement } from 'genesis/protypo';
 import { editorActions } from 'modules/editor/actions';
+import Parser from 'html-react-parser';
 
 export interface IDivProps {
     'className'?: string;
     'class'?: string;
+    'childrenText'?: string;
 
     'editable'?: boolean;
     'changePage'?: typeof editorActions.changePage.started;
@@ -67,11 +69,16 @@ class Div extends React.Component<IDivProps, IDivState> {
 
     onBlur(e: any) {
         e.stopPropagation();
+        this.props.selectTag(null);
         this.props.changePage({ text: e.target.innerHTML, tagID: this.props.tag.id });
     }
 
     removeTag() {
         this.props.removeTag({ tag: this.props.tag });
+    }
+
+    renderChildrenText() {
+        return Parser(this.props.childrenText || '');
     }
 
     render() {
@@ -96,14 +103,22 @@ class Div extends React.Component<IDivProps, IDivState> {
                         connectDragSource={connectDragSource}
                         canMove={true}
                     >
-                    <div
-                        className={classes}
-                        contentEditable={this.props.selected}
-                        onBlur={this.onBlur.bind(this)}
-                        onPaste={this.onPaste.bind(this)}
-                    >
-                        {this.props.children}
-                    </div>
+                    {(this.props.selected && this.props.childrenText && this.props.childrenText.length >= 0) ? (
+                        <div
+                            className={classes}
+                            contentEditable={this.props.selected}
+                            onPaste={this.onPaste.bind(this)}
+                            onBlur={this.onBlur.bind(this)}
+                        >
+                            {this.props.childrenText && this.props.childrenText.length >= 0 && Parser(this.props.childrenText || '')}
+                        </div>
+                    ) : (
+                        <div
+                            className={classes}
+                        >
+                            {this.props.children}
+                        </div>
+                    )}
                     </TagWrapper>
                 </span>
             ));

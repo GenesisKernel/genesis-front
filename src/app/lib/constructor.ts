@@ -911,7 +911,7 @@ class Tag {
             return null;
         }
 
-        const result = resultArr.join(' ');
+        const result = resultArr.join('');
 
         if (result.length > 0) {
             return result;
@@ -1660,12 +1660,14 @@ function html2childrenTags(html: string): TProtypoElement[] {
 function htmlJsonChild2childrenTags(nodes: IHtmlJsonNode[]): TProtypoElement[] {
     let children = [];
     let i = 0;
-    for (const node of nodes) {
-        const el = htmlJson2proptypoElement(node, i);
-        if (el) {
-            children.push(el);
+    if (nodes) {
+        for (const node of nodes) {
+            const el = htmlJson2proptypoElement(node, i);
+            if (el) {
+                children.push(el);
+            }
+            i++;
         }
-        i++;
     }
     return children;
 }
