@@ -26,7 +26,6 @@ import 'jspolyfill-array.prototype.find';
 import 'whatwg-fetch';
 import 'font-awesome/css/font-awesome.css';
 import 'simple-line-icons/css/simple-line-icons.css';
-import 'sweetalert2/dist/sweetalert2.min.css';
 import 'styles/built/sass.css';
 import 'styles/index.css';
 

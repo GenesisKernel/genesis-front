@@ -63,7 +63,6 @@
         "simple-line-icons": "^2.4.1",
         "sockjs-client": "^1.1.4",
         "styled-components": "^2.1.2",
-        "sweetalert2": "^6.10.3",
         "typescript-fsa": "^2.5.0",
         "typescript-fsa-reducers": "^0.4.4",
         "url-template": "^2.0.8",
