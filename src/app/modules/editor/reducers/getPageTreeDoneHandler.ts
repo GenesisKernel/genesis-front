@@ -15,8 +15,10 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
+import { IChangePageResult } from 'genesis/editor';
+import { Success } from 'typescript-fsa';
 
-export default function (state: State, payload: any): State {
+export default function (state: State, payload: Success<void, IChangePageResult> ): State {
     const data = state.tabs[state.tabIndex] && state.tabs[state.tabIndex].designer && state.tabs[state.tabIndex].designer.data;
     return {
         ...state,

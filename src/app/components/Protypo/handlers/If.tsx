@@ -20,33 +20,11 @@ import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
 import Switch from 'components/Main/Admin/Interface/Constructor/Switch';
-import { TProtypoElement } from 'genesis/protypo';
-import { editorActions } from 'modules/editor/actions';
+import { IConstructorElementProps } from 'genesis/editor';
 
-export interface IIfProps {
-    'className'?: string;
-    'class'?: string;
-
-    'editable'?: boolean;
-    'changePage'?: typeof editorActions.changePage.started;
-    'setTagCanDropPosition'?: typeof editorActions.setTagCanDropPosition.started;
-    'addTag'?: typeof editorActions.addTag.started;
-    'moveTag'?: typeof editorActions.moveTag.started;
-    'copyTag'?: typeof editorActions.copyTag.started;
-    'removeTag'?: typeof editorActions.removeTag.started;
-    'selectTag'?: typeof editorActions.selectTag.started;
-    'selected'?: boolean;
-    'tag'?: TProtypoElement;
-
-    'canDropPosition'?: string;
-
-    connectDropTarget?: any;
-    isOver?: boolean;
-
-    connectDragSource?: any;
-    connectDragPreview?: any;
-    isDragging?: boolean;
-    logic?: boolean;
+export interface IIfProps extends IConstructorElementProps {
+    className?: string;
+    class?: string;
     tail?: any;
 }
 

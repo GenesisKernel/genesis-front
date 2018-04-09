@@ -20,34 +20,13 @@ import * as classnames from 'classnames';
 import Validation from 'components/Validation';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
-import { TProtypoElement } from 'genesis/protypo';
-import { editorActions } from 'modules/editor/actions';
+import { IConstructorElementProps } from 'genesis/editor';
 
-export interface IInputProps {
+export interface IInputProps extends IConstructorElementProps {
     'format'?: string;
     'name'?: string;
     'width'?: string;
     'ratio'?: string;
-
-    'editable'?: boolean;
-    'changePage'?: typeof editorActions.changePage.started;
-    'setTagCanDropPosition'?: typeof editorActions.setTagCanDropPosition.started;
-    'addTag'?: typeof editorActions.addTag.started;
-    'moveTag'?: typeof editorActions.moveTag.started;
-    'copyTag'?: typeof editorActions.copyTag.started;
-    'removeTag'?: typeof editorActions.removeTag.started;
-    'selectTag'?: typeof editorActions.selectTag.started;
-    'selected'?: boolean;
-    'tag'?: TProtypoElement;
-
-    'canDropPosition'?: string;
-
-    connectDropTarget?: any;
-    isOver?: boolean;
-
-    connectDragSource?: any;
-    connectDragPreview?: any;
-    isDragging?: boolean;
 }
 
 const ImageInput: React.SFC<IInputProps> = (props) => {

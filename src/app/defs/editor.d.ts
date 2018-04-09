@@ -162,4 +162,26 @@ declare module 'genesis/editor' {
         template?: string;
         text?: string;
     }
+
+    interface IConstructorElementProps {
+        editable?: boolean;
+        selected?: boolean;
+        logic?: boolean;
+        changePage?: (attrs: IChangePageCall) => void;
+        setTagCanDropPosition?: (attrs: ISetTagCanDropPositionCall) => void;
+        addTag?: (attrs: IAddTagCall) => void;
+        copyTag?: (attrs: IOperateTagCall) => void;
+        moveTag?: (attrs: IOperateTagCall) => void;
+        removeTag?: (attrs: IOperateTagCall) => void;
+        selectTag?: (attrs: TProtypoElement) => void;
+        selectedTag?: TProtypoElement;
+        tag?: TProtypoElement;
+        canDropPosition?: string;
+        isOver?: boolean;
+        isDragging?: boolean;
+
+        connectDropTarget?: any;
+        connectDragSource?: any;
+        connectDragPreview?: any;
+    }
 }

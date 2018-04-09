@@ -21,31 +21,10 @@ import StyledComponent from './StyledComponent';
 import Protypo from '../';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
-import { TProtypoElement } from 'genesis/protypo';
-import { editorActions } from 'modules/editor/actions';
+import { IConstructorElementProps } from 'genesis/editor';
 
-export interface ILogicProps {
-    'editable'?: boolean;
-    'changePage'?: typeof editorActions.changePage.started;
-    'setTagCanDropPosition'?: typeof editorActions.setTagCanDropPosition.started;
-    'addTag'?: typeof editorActions.addTag.started;
-    'moveTag'?: typeof editorActions.moveTag.started;
-    'copyTag'?: typeof editorActions.copyTag.started;
-    'removeTag'?: typeof editorActions.removeTag.started;
-    'selectTag'?: typeof editorActions.selectTag.started;
-    'selected'?: boolean;
-    'tag'?: TProtypoElement;
+export interface ILogicProps extends IConstructorElementProps {
 
-    'canDropPosition'?: string;
-
-    connectDropTarget?: any;
-    isOver?: boolean;
-
-    connectDragSource?: any;
-    connectDragPreview?: any;
-    isDragging?: boolean;
-
-    logic?: boolean;
 }
 
 interface ILogicContext {

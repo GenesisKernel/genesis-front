@@ -25,33 +25,13 @@ import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import LongText from 'components/Protypo/components/LongText';
 import BlobData from 'components/Protypo/components/BlobData';
-import { editorActions } from 'modules/editor/actions';
+import { IConstructorElementProps } from 'genesis/editor';
 
-export interface ITableProps {
+export interface ITableProps extends IConstructorElementProps {
     id: string;
     className?: string;
     source?: string;
     columns?: { Name: string, Title: string }[];
-
-    'editable'?: boolean;
-    'changePage'?: typeof editorActions.changePage.started;
-    'setTagCanDropPosition'?: typeof editorActions.setTagCanDropPosition.started;
-    'addTag'?: typeof editorActions.addTag.started;
-    'moveTag'?: typeof editorActions.moveTag.started;
-    'copyTag'?: typeof editorActions.copyTag.started;
-    'removeTag'?: typeof editorActions.removeTag.started;
-    'selectTag'?: typeof editorActions.selectTag.started;
-    'selected'?: boolean;
-    'tag'?: TProtypoElement;
-
-    'canDropPosition'?: string;
-
-    connectDropTarget?: any;
-    isOver?: boolean;
-
-    connectDragSource?: any;
-    connectDragPreview?: any;
-    isDragging?: boolean;
 }
 
 interface ITableContext {

@@ -21,13 +21,11 @@ import api from 'lib/api';
 import contextDefinitions from './contexts';
 import { TProtypoElement } from 'genesis/protypo';
 import { IValidationResult } from 'components/Validation/ValidatedForm';
-
 import Heading from 'components/Heading';
 import ToolButton, { IToolButtonProps } from 'components/Protypo/components/ToolButton';
+import { IConstructorElementProps } from 'genesis/editor';
 
-import { editorActions } from 'modules/editor/actions';
-
-export interface IProtypoProps {
+export interface IProtypoProps extends IConstructorElementProps {
     editable?: boolean;
     wrapper?: JSX.Element;
     context: string;
@@ -37,16 +35,6 @@ export interface IProtypoProps {
     navigatePage: (params: { name: string, params: any, force?: boolean }) => void;
     navigate: (url: string) => void;
     displayData: (link: string) => void;
-
-    'changePage'?: typeof editorActions.changePage.started;
-    'setTagCanDropPosition'?: typeof editorActions.setTagCanDropPosition.started;
-    'addTag'?: typeof editorActions.addTag.started;
-    'moveTag'?: typeof editorActions.moveTag.started;
-    'copyTag'?: typeof editorActions.copyTag.started;
-    'removeTag'?: typeof editorActions.removeTag.started;
-    'selectTag'?: typeof editorActions.selectTag.started;
-    selectedTag?: TProtypoElement;
-    logic?: boolean;
 }
 
 export interface IParamsSpec {

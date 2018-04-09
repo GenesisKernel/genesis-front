@@ -19,33 +19,11 @@ import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
-import { TProtypoElement } from 'genesis/protypo';
-import { editorActions } from 'modules/editor/actions';
+import { IConstructorElementProps } from 'genesis/editor';
 
-export interface IElseProps {
+export interface IElseProps extends IConstructorElementProps {
     'className'?: string;
     'class'?: string;
-
-    'editable'?: boolean;
-    'changePage'?: typeof editorActions.changePage.started;
-    'setTagCanDropPosition'?: typeof editorActions.setTagCanDropPosition.started;
-    'addTag'?: typeof editorActions.addTag.started;
-    'moveTag'?: typeof editorActions.moveTag.started;
-    'copyTag'?: typeof editorActions.copyTag.started;
-    'removeTag'?: typeof editorActions.removeTag.started;
-    'selectTag'?: typeof editorActions.selectTag.started;
-    'selected'?: boolean;
-    'tag'?: TProtypoElement;
-
-    'canDropPosition'?: string;
-
-    connectDropTarget?: any;
-    isOver?: boolean;
-
-    connectDragSource?: any;
-    connectDragPreview?: any;
-    isDragging?: boolean;
-    logic?: boolean;
 }
 
 interface IElseState {

@@ -26,10 +26,9 @@ import TxBatchButton from 'containers/Widgets/TxBatchButton';
 
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
-import { editorActions } from 'modules/editor/actions';
-import { TProtypoElement } from 'genesis/protypo';
+import { IConstructorElementProps } from 'genesis/editor';
 
-export interface IButtonProps {
+export interface IButtonProps extends IConstructorElementProps {
     'class'?: string;
     'alert'?: {
         icon: string;
@@ -48,26 +47,6 @@ export interface IButtonProps {
     'pageparams'?: IParamsSpec;
     'params'?: IParamsSpec;
     'formID'?: number;
-
-    'editable'?: boolean;
-    'changePage'?: typeof editorActions.changePage.started;
-    'setTagCanDropPosition'?: typeof editorActions.setTagCanDropPosition.started;
-    'addTag'?: typeof editorActions.addTag.started;
-    'moveTag'?: typeof editorActions.moveTag.started;
-    'copyTag'?: typeof editorActions.copyTag.started;
-    'removeTag'?: typeof editorActions.removeTag.started;
-    'selectTag'?: typeof editorActions.selectTag.started;
-    'selected'?: boolean;
-    'tag'?: TProtypoElement;
-
-    'canDropPosition'?: string;
-
-    connectDropTarget?: any;
-    isOver?: boolean;
-
-    connectDragSource?: any;
-    connectDragPreview?: any;
-    isDragging?: boolean;
 }
 
 interface IButtonContext {

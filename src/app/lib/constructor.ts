@@ -1161,7 +1161,7 @@ class Input extends Tag {
             tag: this.tagName.toLowerCase(),
             id: generateId(),
             attr: {
-                name: 'sample image',
+                name: 'sample input',
                 class: 'form-control'
             }
         };
@@ -1188,7 +1188,7 @@ class RadioGroup extends Tag {
             tag: this.tagName.toLowerCase(),
             id: generateId(),
             attr: {
-                name: 'sample radio'
+                name: 'name'
             }
         };
     }
@@ -1212,8 +1212,8 @@ class DBFind extends Tag {
             tag: this.tagName.toLowerCase(),
             id: generateId(),
             attr: {
-                name: 'sample image',
-
+                name: 'name',
+                source: 'source'
             }
         };
     }
@@ -1652,8 +1652,6 @@ export function updateChildrenText(tree: TProtypoElement[]): TProtypoElement[] {
 
 function html2childrenTags(html: string): TProtypoElement[] {
     const htmlJson = html2json(html);
-    // alert(JSON.stringify(htmlJson));
-
     return htmlJsonChild2childrenTags(htmlJson.child);
 }
 
@@ -1662,7 +1660,7 @@ function htmlJsonChild2childrenTags(nodes: IHtmlJsonNode[]): TProtypoElement[] {
     let i = 0;
     if (nodes) {
         for (const node of nodes) {
-            const el = htmlJson2proptypoElement(node, i);
+            const el = htmlJson2ProtypoElement(node, i);
             if (el) {
                 children.push(el);
             }
@@ -1684,7 +1682,7 @@ function clearHtml(text: string): string {
     return text.replace(/&nbsp;/g, '');
 }
 
-function htmlJson2proptypoElement(node: IHtmlJsonNode, index: number) {
+function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
     switch (node.node) {
         case 'text':
             if (index === 0) {
