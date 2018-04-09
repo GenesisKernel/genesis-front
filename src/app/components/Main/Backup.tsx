@@ -19,7 +19,6 @@ import { Button, Panel } from 'react-bootstrap';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import keyring from 'lib/keyring';
 import { sendAttachment } from 'lib/fs';
-import { alertShow } from 'modules/content/actions';
 import { IAccount } from 'genesis/auth';
 import * as CopyToClipboard from 'react-copy-to-clipboard';
 import * as QRCode from 'qrcode.react';
@@ -31,7 +30,7 @@ export interface IBackupProps extends InjectedIntlProps {
     account: IAccount;
     ecosystems: string[];
     privateKey: string;
-    alertShow: typeof alertShow;
+    // alertShow: typeof alertShow;
 }
 
 interface IBackupState {
@@ -59,24 +58,24 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
             });
         }
         else {
-            this.props.alertShow({
+            /*this.props.alertShow({
                 id: 'E_INVALID_PASSWORD',
                 title: this.props.intl.formatMessage({ id: 'alert.error', defaultMessage: 'Error' }),
                 type: 'error',
                 text: this.props.intl.formatMessage({ id: 'auth.password.invalid', defaultMessage: 'Invalid password' }),
                 cancelButton: this.props.intl.formatMessage({ id: 'alert.close', defaultMessage: 'Close' }),
-            });
+            });*/
         }
     }
 
     onCopy() {
-        this.props.alertShow({
+        /*this.props.alertShow({
             id: 'I_COPIED_TO_CLIPBOARD',
             title: this.props.intl.formatMessage({ id: 'alert.info', defaultMessage: 'Information' }),
             type: 'info',
             text: this.props.intl.formatMessage({ id: 'alert.clipboard.copied', defaultMessage: 'Copied to clipboard' }),
             cancelButton: this.props.intl.formatMessage({ id: 'alert.close', defaultMessage: 'Close' }),
-        });
+        });*/
     }
 
     onKeyDownlaod() {

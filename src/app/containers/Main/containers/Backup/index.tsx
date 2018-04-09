@@ -17,7 +17,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { alertShow } from 'modules/content/actions';
 
 import Backup from 'components/Main/Backup';
 import { IAccount } from 'genesis/auth';
@@ -32,7 +31,7 @@ interface IBackupState {
 }
 
 interface IBackupDispatch {
-    alertShow: typeof alertShow;
+
 }
 
 const BackupContainer: React.SFC<IBackupProps & IBackupState & IBackupDispatch> = (props) => (
@@ -49,7 +48,7 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    alertShow
+
 };
 
 export default connect<IBackupState, IBackupDispatch, IBackupProps>(mapStateToProps, mapDispatchToProps)(BackupContainer);

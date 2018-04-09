@@ -63,6 +63,15 @@ declare module 'genesis/tx' {
         params: {
             [key: string]: any;
         };
+        confirm?: ITransactionConfirm;
+    }
+
+    interface ITransactionConfirm {
+        type?: string;
+        title?: string;
+        text?: string;
+        confirmButton?: string;
+        cancelButton?: string;
     }
 
     interface ITransactionBatchCall {
@@ -74,6 +83,7 @@ declare module 'genesis/tx' {
             }[];
         }[];
         silent?: boolean;
+        confirm?: ITransactionConfirm;
     }
 
     interface IExecutionCall {

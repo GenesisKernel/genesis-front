@@ -14,17 +14,17 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { combineEpics } from 'redux-observable';
-import saveAccountOnLoginEpic from './epics/saveAccountOnLoginEpic';
-import saveAccountOnEcosystemInitEpic from './epics/saveAccountOnEcosystemInitEpic';
-import saveAccountOnSelectEpic from './epics/saveAccountOnSelectEpic';
-import saveAccountOnImportEpic from './epics/saveAccountOnImportEpic';
-import saveAccountOnCreateEpic from './epics/saveAccountOnCreateEpic';
+import * as queryString from 'query-string';
+import { Epic } from 'modules';
+import { push } from 'react-router-redux';
+import { renderSection } from 'modules/content/actions';
 
-export default combineEpics(
-    saveAccountOnCreateEpic,
-    saveAccountOnEcosystemInitEpic,
-    saveAccountOnImportEpic,
-    saveAccountOnLoginEpic,
-    saveAccountOnSelectEpic
-);
+const renderSectionEpic: Epic = (action$, store) => action$.ofAction(renderSection)
+    .map(action => {
+        const state = store.getState();
+        const section = state.content.sections[action.payload];
+        const params = section.page ? queryString.stringify(section.page.params) : '';
+        return push(`/${section.name}/${section.page ? section.page.name : ''}${params ? '?' + params : ''}`);
+    });
+
+export default renderSectionEpic;

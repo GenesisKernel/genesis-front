@@ -226,4 +226,49 @@ declare module 'genesis/api' {
             [key: string]: string;
         }[];
     }
+
+    type TTxParams = {
+        [key: string]: any;
+    };
+
+    interface ITxCallRequest {
+        name: string;
+        params: TTxParams;
+    }
+
+    interface ITxCallResponse {
+        hash: string;
+    }
+
+    interface ITxPrepareRequest {
+        name: string;
+        params: TTxParams;
+    }
+
+    interface ITxPrepareResponse {
+        forsign: string;
+        time: string;
+        signs?: {
+            forsign: string;
+            field: string;
+            title: string;
+            params: {
+                name: string;
+                text: string;
+            }[];
+        }[];
+    }
+
+    interface ITxStatusRequest {
+        hash: string;
+    }
+
+    interface ITxStatusResponse {
+        blockid: string;
+        result: string;
+        errmsg?: {
+            type: string;
+            error: string;
+        };
+    }
 }

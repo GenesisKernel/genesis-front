@@ -17,7 +17,6 @@
 import actionCreatorFactory from 'typescript-fsa';
 import { TProtypoElement } from 'genesis/protypo';
 import { ITableResponse, IDataResponse, IHistoryResponse, IPageResponse, IMenuResponse, IBlockResponse, IParamResponse, IContractsResponse, ITablesResponse } from 'genesis/api';
-import { ITabListResponse } from 'lib/api';
 
 const actionCreator = actionCreatorFactory('admin');
 
@@ -72,5 +71,5 @@ export const importData = actionCreator.async<{ file: File }, any, undefined>('I
 export const importDataPrune = actionCreator<{ name: string, key: string, index?: number }>('IMPORT_DATA_PRUNE');
 
 // Tabs
-export const getTabList = actionCreator.async<{ addID?: string, addName?: string, addType?: string }, ITabListResponse, string>('GET_TAB_LIST');
+export const getTabList = actionCreator.async<{ addID?: string, addName?: string, addType?: string }, any, string>('GET_TAB_LIST');
 export const removeTabList = actionCreator.async<{ id: string, type: string }, any, string>('REMOVE_TAB_LIST');

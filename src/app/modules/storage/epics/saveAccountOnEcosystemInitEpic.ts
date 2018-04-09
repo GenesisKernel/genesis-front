@@ -14,17 +14,19 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { combineEpics } from 'redux-observable';
-import saveAccountOnLoginEpic from './epics/saveAccountOnLoginEpic';
-import saveAccountOnEcosystemInitEpic from './epics/saveAccountOnEcosystemInitEpic';
-import saveAccountOnSelectEpic from './epics/saveAccountOnSelectEpic';
-import saveAccountOnImportEpic from './epics/saveAccountOnImportEpic';
-import saveAccountOnCreateEpic from './epics/saveAccountOnCreateEpic';
+import { Action } from 'redux';
+import { Epic } from 'redux-observable';
+import { IRootState } from 'modules';
+import { saveAccount } from '../actions';
+import { ecosystemInit } from '../../content/actions';
 
-export default combineEpics(
-    saveAccountOnCreateEpic,
-    saveAccountOnEcosystemInitEpic,
-    saveAccountOnImportEpic,
-    saveAccountOnLoginEpic,
-    saveAccountOnSelectEpic
-);
+const saveAccountOnEcosystemInitEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(ecosystemInit.done)
+        .map(action =>
+            saveAccount({
+                ...store.getState().auth.account,
+                ecosystemName: action.payload.result.name
+            })
+        );
+
+export default saveAccountOnEcosystemInitEpic;

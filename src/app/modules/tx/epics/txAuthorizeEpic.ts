@@ -42,17 +42,26 @@ const txAuthorizeEpic: Epic<Action, IRootState> =
                             contract: action.payload.contract
                         }
                     })),
-                    action$.ofAction(modalClose).flatMap(result => {
-                        if (result.payload.data) {
-                            const privateKey = keyring.decryptAES(store.getState().auth.account.encKey, result.payload.data || '');
-                            if (keyring.validatePrivateKey(privateKey)) {
-                                return Observable.of<Action>(
-                                    authorize(privateKey),
-                                    txAuthorize.done({
+                    action$.ofAction(modalClose)
+                        .take(1)
+                        .flatMap(result => {
+                            if (result.payload.data) {
+                                const privateKey = keyring.decryptAES(store.getState().auth.account.encKey, result.payload.data || '');
+                                if (keyring.validatePrivateKey(privateKey)) {
+                                    return Observable.of<Action>(
+                                        authorize(privateKey),
+                                        txAuthorize.done({
+                                            params: action.payload,
+                                            result: result.payload.data
+                                        })
+                                    );
+                                }
+                                else {
+                                    return Observable.of(txAuthorize.failed({
                                         params: action.payload,
-                                        result: result.payload.data
-                                    })
-                                );
+                                        error: null
+                                    }));
+                                }
                             }
                             else {
                                 return Observable.of(txAuthorize.failed({
@@ -60,14 +69,7 @@ const txAuthorizeEpic: Epic<Action, IRootState> =
                                     error: null
                                 }));
                             }
-                        }
-                        else {
-                            return Observable.of(txAuthorize.failed({
-                                params: action.payload,
-                                error: null
-                            }));
-                        }
-                    })
+                        })
                 );
             }
         });

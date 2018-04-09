@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { txCallBatch } from 'modules/tx/actions';
 import { TTransactionStatus, ITransactionCollection } from 'genesis/tx';
-import { alertShow, navigatePage } from 'modules/content/actions';
+import { navigatePage } from 'modules/content/actions';
 
 import TxBatchButton, { ITxButtonConfirm } from 'components/TxBatchButton';
 
@@ -43,46 +43,23 @@ interface ITxBatchButtonContainerProps {
 
 interface ITxBatchButtonContainerState {
     transactions: OrderedMap<string, TTransactionStatus>;
-    confirmation: { id: string, success: string, error: string };
 }
 
 interface ITxBatchButtonContainerDispatch {
     execContracts: typeof txCallBatch.started;
-    alertShow: typeof alertShow;
     navigatePage: typeof navigatePage.started;
 }
 
 class TxBatchButtonContainer extends React.Component<ITxBatchButtonContainerProps & ITxBatchButtonContainerState & ITxBatchButtonContainerDispatch> {
     private _uuid: string;
 
-    componentWillReceiveProps(props: ITxBatchButtonContainerProps & ITxBatchButtonContainerState & ITxBatchButtonContainerDispatch) {
-        if (props.confirmation && props.confirmation.id === this._uuid && props.confirmation.success) {
-            this.execContracts({
-                contracts: props.contracts,
-                confirm: props.confirm
-            });
-        }
-    }
-
-    execContracts(params: { contracts: { name: string, data: { [key: string]: any }[] }[], confirm?: ITxButtonConfirm }) {
+    execContracts(params: { contracts: { name: string, data: { [key: string]: any }[] }[] }) {
         this._uuid = uuid.v4();
-
-        if (params.confirm) {
-            this.props.alertShow({
-                id: this._uuid,
-                type: params.confirm.icon,
-                title: params.confirm.title,
-                text: params.confirm.text,
-                confirmButton: params.confirm.confirmButton,
-                cancelButton: params.confirm.cancelButton
-            });
-        }
-        else {
-            this.props.execContracts({
-                uuid: this._uuid,
-                contracts: params.contracts
-            });
-        }
+        this.props.execContracts({
+            uuid: this._uuid,
+            contracts: params.contracts,
+            confirm: this.props.confirm
+        });
     }
 
     prepareParams(params: { [key: string]: any }) {
@@ -105,7 +82,7 @@ class TxBatchButtonContainer extends React.Component<ITxBatchButtonContainerProp
         return result;
     }
 
-    onNavigate(page: string, params: { [key: string]: any } | (() => { [key: string]: any }), confirm?: ITxButtonConfirm) {
+    onNavigate(page: string, params: { [key: string]: any } | (() => { [key: string]: any })) {
         let pageParams = {};
         if ('function' === typeof params) {
             pageParams = (this.props.pageParams as Function)();
@@ -123,33 +100,11 @@ class TxBatchButtonContainer extends React.Component<ITxBatchButtonContainerProp
         }
 
         this._uuid = uuid.v4();
-
-        if (confirm) {
-            this.props.alertShow({
-                id: this._uuid,
-                type: confirm.icon,
-                title: confirm.title,
-                text: confirm.text,
-                confirmButton: confirm.confirmButton,
-                cancelButton: confirm.cancelButton
-            });
-        }
-        else {
-            this.props.navigatePage({
-                name: page,
-                params: pageParams,
-                force: true
-            });
-        }
-    }
-
-    onAlert(type: string, title: string, text: string, buttonText: string) {
-        this.props.alertShow({
-            id: this._uuid,
-            type,
-            title,
-            text,
-            cancelButton: buttonText
+        this.props.navigatePage({
+            name: page,
+            params: pageParams,
+            confirm: this.props.confirm,
+            force: true
         });
     }
 
@@ -175,13 +130,11 @@ class TxBatchButtonContainer extends React.Component<ITxBatchButtonContainerProp
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    transactions: state.tx.transactions,
-    confirmation: state.content.alert
+    transactions: state.tx.transactions
 });
 
 const mapDispatchToProps = {
     execContracts: txCallBatch.started,
-    alertShow: alertShow,
     navigatePage: navigatePage.started
 };
 

@@ -14,17 +14,19 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { combineEpics } from 'redux-observable';
-import saveAccountOnLoginEpic from './epics/saveAccountOnLoginEpic';
-import saveAccountOnEcosystemInitEpic from './epics/saveAccountOnEcosystemInitEpic';
-import saveAccountOnSelectEpic from './epics/saveAccountOnSelectEpic';
-import saveAccountOnImportEpic from './epics/saveAccountOnImportEpic';
-import saveAccountOnCreateEpic from './epics/saveAccountOnCreateEpic';
+import { Epic } from 'modules';
+import { closeSection, renderSection } from 'modules/content/actions';
+import { Observable } from 'rxjs/Observable';
 
-export default combineEpics(
-    saveAccountOnCreateEpic,
-    saveAccountOnEcosystemInitEpic,
-    saveAccountOnImportEpic,
-    saveAccountOnLoginEpic,
-    saveAccountOnSelectEpic
-);
+const closeSectionEpic: Epic = (action$, store) => action$.ofAction(closeSection)
+    .flatMap(action => {
+        const state = store.getState();
+        if (action.payload === state.content.section) {
+            return Observable.of(renderSection('home'));
+        }
+        else {
+            return Observable.empty<never>();
+        }
+    });
+
+export default closeSectionEpic;
