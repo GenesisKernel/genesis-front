@@ -125,6 +125,10 @@ declare module 'genesis/api' {
         };
     }
 
+    interface ITableRequest {
+        name: string;
+    }
+
     interface ITemplateRequest {
         name: string;
     }

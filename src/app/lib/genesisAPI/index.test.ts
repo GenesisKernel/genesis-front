@@ -15,6 +15,8 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import GenesisAPI, { IRequestTransport, TRequestMethod, IRequestOptions } from './';
+import * as queryString from 'query-string';
+import { IContentRequest } from 'genesis/api';
 
 interface IMockTransportResponse {
     method: TRequestMethod;
@@ -38,13 +40,41 @@ const apiPassthroughTransportMock: IRequestTransport = (method: TRequestMethod, 
     });
 };
 
-const apiJsonTransportMock: IRequestTransport = (method: TRequestMethod, endpoint: string, body: { [key: string]: any } = {}, options?: IRequestOptions<any, any>) => {
+const apiJsonTransportMock: IRequestTransport = (method: TRequestMethod, url: string, body: { [key: string]: any } = {}, options?: IRequestOptions<any, any>) => {
     return new Promise<any>((resolve, reject) => {
         setTimeout(() => {
-            resolve({ body });
+            resolve({
+                body
+            });
         }, 0);
     });
 };
+
+const paramsTransportMock: IRequestTransport = (method: TRequestMethod, url: string, body: { [key: string]: any } = {}, options?: IRequestOptions<any, any>) => {
+    return new Promise<any>((resolve, reject) => {
+        let qs = '';
+        if ('get' === method) {
+            qs = queryString.stringify(body);
+            if (qs) {
+                qs = '?' + qs;
+            }
+        }
+        setTimeout(() => {
+            resolve({
+                body: {
+                    ...body,
+                    __requestUrl: `${url}${qs}`
+                }
+            });
+        }, 0);
+    });
+};
+
+const paramTestingAPIHost = 'http://test_Url.com';
+const paramTestingAPIMock = () => new GenesisAPI({
+    apiURL: paramTestingAPIHost,
+    transport: paramsTransportMock
+});
 
 test('Url slug parsing', () => {
     const TEST_URL = '://test_url.com';
@@ -114,23 +144,322 @@ test('Response transformer', () => {
 });
 
 test('Login', () => {
-    const api = new GenesisAPI({
-        apiURL: '://test_url.com',
-        transport: apiJsonTransportMock
-    });
-
-    return api.login({
+    const testRequest = {
+        ecosystem: '1',
+        expire: 4815162342,
         publicKey: '04123456789',
-        signature: 'test'
+        signature: 'test',
+        role: 123
+    };
 
-    }).then(response =>
+    return paramTestingAPIMock().login(testRequest).then((response: any) => {
         expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/login`,
+            ecosystem: '1',
+            expire: 4815162342,
             pubkey: '123456789',
             signature: 'test',
-            ecosystem: undefined,
-            role_id: undefined,
-            expire: undefined,
+            role_id: 123,
             roles: []
-        })
-    );
+        });
+    });
+});
+
+test('Refresh', () => {
+    const testRequest = {
+        token: '4815162342',
+        expire: 4815162342
+    };
+
+    return paramTestingAPIMock().refresh(testRequest).then((response: any) => {
+        expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/refresh`,
+            token: '4815162342',
+            expire: 4815162342
+        });
+    });
+});
+
+test('RequestNotifications', () => {
+    const testRequest = [
+        { id: '1', ecosystem: '2' },
+        { id: '1', ecosystem: '1' },
+        { id: '1', ecosystem: '3' },
+        { id: '2', ecosystem: '1' },
+        { id: '2', ecosystem: '2' },
+        { id: '3', ecosystem: '3' },
+        { id: '3', ecosystem: '1' },
+        { id: '3', ecosystem: '2' },
+        { id: '3', ecosystem: '3' },
+    ];
+
+    return paramTestingAPIMock().requestNotifications(testRequest).then((response: any) => {
+        expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/updnotificator`,
+            ids: JSON.stringify(testRequest)
+        });
+    });
+});
+
+test('GetContract', () => {
+    const testRequest = {
+        name: 'TEST_CONTRACT',
+    };
+
+    return paramTestingAPIMock().getContract(testRequest).then((response: any) => {
+        expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/contract/TEST_CONTRACT`
+        });
+    });
+});
+
+test('GetContracts', () => {
+    const testRequest = {
+        offset: 4,
+        limit: 8
+    };
+
+    return paramTestingAPIMock().getContracts(testRequest).then((response: any) => {
+        expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/contracts?limit=8&offset=4`,
+            offset: 4,
+            limit: 8
+        });
+    });
+});
+
+test('GetParam', () => {
+    const testRequest = {
+        name: 'TEST_PARAM'
+    };
+
+    return paramTestingAPIMock().getParam(testRequest).then((response: any) => {
+        expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/ecosystemparam/TEST_PARAM`
+        });
+    });
+});
+
+test('GetParams', () => {
+    const testRequest = {
+        names: ['TEST_PARAM', 'MOCK_PARAM', ',#PARAM']
+    };
+
+    return paramTestingAPIMock().getParams(testRequest).then((response: any) => {
+        expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/ecosystemparams?names=TEST_PARAM%2CMOCK_PARAM%2C%2C%23PARAM`,
+            names: 'TEST_PARAM,MOCK_PARAM,,#PARAM'
+        });
+    });
+});
+
+test('GetPage', () => {
+    const testRequest = {
+        name: 'TEST_PAGE'
+    };
+
+    return paramTestingAPIMock().getPage(testRequest).then((response: any) => {
+        expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/interface/page/TEST_PAGE`
+        });
+    });
+});
+
+test('GetMenu', () => {
+    const testRequest = {
+        name: 'TEST_MENU'
+    };
+
+    return paramTestingAPIMock().getMenu(testRequest).then((response: any) => {
+        expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/interface/menu/TEST_MENU`
+        });
+    });
+});
+
+test('GetBlock', () => {
+    const testRequest = {
+        name: 'TEST_BLOCK'
+    };
+
+    return paramTestingAPIMock().getBlock(testRequest).then((response: any) => {
+        expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/interface/block/TEST_BLOCK`
+        });
+    });
+});
+
+test('GetTable', () => {
+    const testRequest = {
+        name: 'TEST_TABLE'
+    };
+
+    return paramTestingAPIMock().getTable(testRequest).then((response: any) => {
+        expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/table/TEST_TABLE`
+        });
+    });
+});
+
+test('GetTables', () => {
+    const testRequest = {
+        offset: 4,
+        limit: 8
+    };
+
+    return paramTestingAPIMock().getTables(testRequest).then((response: any) => {
+        expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/tables?limit=8&offset=4`,
+            offset: 4,
+            limit: 8
+        });
+    });
+});
+
+test('GetHistory', () => {
+    const testRequest = {
+        id: '4815162342',
+        table: 'TEST_TABLE'
+    };
+
+    return paramTestingAPIMock().getHistory(testRequest).then((response: any) => {
+        expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/history/TEST_TABLE/4815162342`
+        });
+    });
+});
+
+test('GetRow', () => {
+    const testRequest = {
+        id: '4815162342',
+        table: 'TEST_TABLE',
+        columns: ['COL_1', 'COL2', '@COL"3']
+    };
+
+    return paramTestingAPIMock().getRow(testRequest).then((response: any) => {
+        expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/row/TEST_TABLE/4815162342?columns=COL_1%2CCOL2%2C%40COL%223`,
+            columns: 'COL_1,COL2,@COL"3'
+        });
+    });
+});
+
+test('GetData', () => {
+    const testRequest = {
+        name: 'TEST_TABLE',
+        columns: ['COL_1', 'COL2', '@COL"3']
+    };
+
+    return paramTestingAPIMock().getData(testRequest).then((response: any) => {
+        expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/list/TEST_TABLE?columns=COL_1%2CCOL2%2C%40COL%223`,
+            columns: 'COL_1,COL2,@COL"3'
+        });
+    });
+});
+
+test('Content', () => {
+    const testRequest = {
+        type: 'page',
+        name: 'TEST_PAGE',
+        locale: 'en-US',
+        params: {
+            strParam: 'hello?',
+            numParam: 4815162342,
+            boolParam: true
+        }
+    } as IContentRequest;
+
+    return paramTestingAPIMock().content(testRequest).then((response: any) => {
+        expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/content/page/TEST_PAGE`,
+            lang: 'en-US',
+            params: {
+                strParam: 'hello?',
+                numParam: 4815162342,
+                boolParam: true
+            }
+        });
+    });
+});
+
+test('ContentTest', () => {
+    const testRequest = {
+        template: 'TEST_DATA',
+        locale: 'en-US',
+        params: {
+            strParam: 'hello?',
+            numParam: 4815162342,
+            boolParam: true
+        }
+    };
+
+    return paramTestingAPIMock().contentTest(testRequest).then((response: any) => {
+        expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/content`,
+            lang: 'en-US',
+            template: 'TEST_DATA',
+            params: {
+                strParam: 'hello?',
+                numParam: 4815162342,
+                boolParam: true
+            }
+        });
+    });
+});
+
+test('TxCall', () => {
+    const testRequest = {
+        name: 'TEST_TX',
+        params: {
+            strParam: 'hello?',
+            numParam: 4815162342,
+            boolParam: true
+        }
+    };
+
+    return paramTestingAPIMock().txCall(testRequest).then((response: any) => {
+        expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/contract/TEST_TX`,
+            params: {
+                strParam: 'hello?',
+                numParam: 4815162342,
+                boolParam: true
+            }
+        });
+    });
+});
+
+test('TxPrepare', () => {
+    const testRequest = {
+        name: 'TEST_TX',
+        params: {
+            strParam: 'hello?',
+            numParam: 4815162342,
+            boolParam: true
+        }
+    };
+
+    return paramTestingAPIMock().txPrepare(testRequest).then((response: any) => {
+        expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/prepare/TEST_TX`,
+            params: {
+                strParam: 'hello?',
+                numParam: 4815162342,
+                boolParam: true
+            }
+        });
+    });
+});
+
+test('TxStatus', () => {
+    const testRequest = {
+        hash: '4815162342'
+    };
+
+    return paramTestingAPIMock().txStatus(testRequest).then((response: any) => {
+        expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/txstatus/4815162342`
+        });
+    });
 });

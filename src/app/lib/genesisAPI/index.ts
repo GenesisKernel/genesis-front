@@ -15,7 +15,7 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import urlTemplate from 'url-template';
-import { IUIDResponse, ILoginRequest, ILoginResponse, IRefreshResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IRefreshRequest, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse, ITxCallRequest, ITxCallResponse, ITxPrepareRequest, ITxPrepareResponse, ITxStatusRequest, ITxStatusResponse } from 'genesis/api';
+import { IUIDResponse, ILoginRequest, ILoginResponse, IRefreshResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IRefreshRequest, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse, ITxCallRequest, ITxCallResponse, ITxPrepareRequest, ITxPrepareResponse, ITxStatusRequest, ITxStatusResponse, ITableRequest } from 'genesis/api';
 
 export type TRequestMethod =
     'get' |
@@ -179,22 +179,20 @@ class GenesisAPI {
     });
 
     // Data getters
-    public getContract = this.setSecuredEndpoint<IContractRequest, IContractResponse>('get', 'contract/{name}');
+    public getContract = this.setSecuredEndpoint<IContractRequest, IContractResponse>('get', 'contract/{name}', { requestTransformer: request => null });
     public getContracts = this.setSecuredEndpoint<ISegmentRequest, IContractsResponse>('get', 'contracts');
-    public getParam = this.setSecuredEndpoint<IParamRequest, IParamResponse>('get', 'ecosystemparam/{name}');
+    public getParam = this.setSecuredEndpoint<IParamRequest, IParamResponse>('get', 'ecosystemparam/{name}', { requestTransformer: request => null });
     public getParams = this.setSecuredEndpoint<IParamsRequest, IParamsResponse>('get', 'ecosystemparams', {
         requestTransformer: request => ({
             names: (request.names || []).join(',')
         })
     });
-    public getPage = this.setSecuredEndpoint<ITemplateRequest, IPageResponse>('get', 'interface/page/{name}');
-    public getBlock = this.setSecuredEndpoint<ITemplateRequest, IBlockResponse>('get', 'interface/block/{name}');
-    public getMenu = this.setSecuredEndpoint<ITemplateRequest, IMenuResponse>('get', 'interface/menu/{name}');
-    public getTable = this.setSecuredEndpoint<ITemplateRequest, ITableResponse>('get', 'table/{name}');
+    public getPage = this.setSecuredEndpoint<ITemplateRequest, IPageResponse>('get', 'interface/page/{name}', { requestTransformer: request => null });
+    public getBlock = this.setSecuredEndpoint<ITemplateRequest, IBlockResponse>('get', 'interface/block/{name}', { requestTransformer: request => null });
+    public getMenu = this.setSecuredEndpoint<ITemplateRequest, IMenuResponse>('get', 'interface/menu/{name}', { requestTransformer: request => null });
+    public getTable = this.setSecuredEndpoint<ITableRequest, ITableResponse>('get', 'table/{name}', { requestTransformer: request => null });
     public getTables = this.setSecuredEndpoint<ISegmentRequest, ITablesResponse>('get', 'tables');
-    public getHistory = this.setSecuredEndpoint<IHistoryRequest, IHistoryResponse>('get', 'history/{table}/{id}', {
-        requestTransformer: () => null
-    });
+    public getHistory = this.setSecuredEndpoint<IHistoryRequest, IHistoryResponse>('get', 'history/{table}/{id}', { requestTransformer: () => null });
     public getRow = this.setSecuredEndpoint<IRowRequest, IRowResponse>('get', 'row/{table}/{id}', {
         requestTransformer: request => ({
             columns: (request.columns || []).join(',')
@@ -202,7 +200,6 @@ class GenesisAPI {
     });
     public getData = this.setSecuredEndpoint<IDataRequest, IDataResponse>('get', 'list/{name}', {
         requestTransformer: request => ({
-            ...request,
             columns: (request.columns || []).join(',')
         })
     });
@@ -214,12 +211,26 @@ class GenesisAPI {
             params: request.params
         })
     });
-    public contentTest = this.setSecuredEndpoint<IContentTestRequest, IContentResponse>('post', 'content');
+    public contentTest = this.setSecuredEndpoint<IContentTestRequest, IContentResponse>('post', 'content', {
+        requestTransformer: request => ({
+            template: request.template,
+            lang: request.locale,
+            params: request.params
+        })
+    });
 
     // Transactions
-    public txCall = this.setSecuredEndpoint<ITxCallRequest, ITxCallResponse>('post', 'contract/{name}');
-    public txPrepare = this.setSecuredEndpoint<ITxPrepareRequest, ITxPrepareResponse>('post', 'prepare/{name}');
-    public txStatus = this.setSecuredEndpoint<ITxStatusRequest, ITxStatusResponse>('get', 'txstatus/{hash}');
+    public txCall = this.setSecuredEndpoint<ITxCallRequest, ITxCallResponse>('post', 'contract/{name}', {
+        requestTransformer: request => ({
+            params: request.params
+        })
+    });
+    public txPrepare = this.setSecuredEndpoint<ITxPrepareRequest, ITxPrepareResponse>('post', 'prepare/{name}', {
+        requestTransformer: request => ({
+            params: request.params
+        })
+    });
+    public txStatus = this.setSecuredEndpoint<ITxStatusRequest, ITxStatusResponse>('get', 'txstatus/{hash}', { requestTransformer: () => null });
 
     // Blob data getters
     public resolveTextData = (link: string) => this._options.transport('get', `${this._options.apiURL}${link}`).then(res => res.body as string);
