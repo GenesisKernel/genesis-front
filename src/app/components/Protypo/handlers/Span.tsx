@@ -48,7 +48,6 @@ class Span extends React.Component<ISpanProps, ISpanState> {
     }
 
     handleChange(e: any) {
-        // alert(e.target.value);
         this.props.changePage({text: e.target.value, tagID: this.props.tag.id});
     }
 

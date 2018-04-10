@@ -74,10 +74,6 @@ export function copyObject(item: any) {
     }
     if (Array.isArray(item)) {
         result = item.map(copyObject);
-        // result = [];
-        // item.forEach(element => {
-        //     result.push(copyObject(element));
-        // });
     }
     else {
         if (item instanceof Object && !(item instanceof Function)) {
