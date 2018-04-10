@@ -17,15 +17,11 @@
 // tslint:disable
 import { findDOMNode } from 'react-dom';
 import { TProtypoElement } from 'genesis/protypo';
+import { IFindTagResult } from 'genesis/editor';
 import * as _ from 'lodash';
 import { html2json } from 'html2json';
 
-let findTagByIdResult: {
-    el: any;
-    parent: any,
-    parentPosition: number,
-    tail: boolean
-} = {
+let findTagByIdResult: IFindTagResult = {
         el: null,
         parent: null,
         parentPosition: 0,
@@ -134,7 +130,7 @@ export function OnPasteStripFormatting(elem: any, e: any) {
     }
 }
 
-export function convertToTreeData(data: any, selectedTag?: any): any {
+export function convertToTreeData(data: TProtypoElement[], selectedTag?: TProtypoElement): any {
     let result = [];
     if (data instanceof Array) {
         for (const item of data) {
@@ -163,7 +159,6 @@ export function convertToTreeData(data: any, selectedTag?: any): any {
                 const tail = convertToTreeData(item.tail, selectedTag);
 
                 let tailTreeItem = {
-                    // title: ((item.tag !== 'text') ? item.tag : '') + ' ' + (subtitle ? subtitle : ''),
                     title: '...',
                     children: tail,
                     expanded: true,
@@ -187,9 +182,7 @@ export function convertToTreeData(data: any, selectedTag?: any): any {
             if (Handler) {
                 const tagObj = new Handler(item);
                 let treeItem = {
-                    // title: ((item.tag !== 'text') ? item.tag : '') + ' ' + (subtitle ? subtitle : ''),
                     title: item.tag + (subtitle ? (': ' + subtitle) : ''),
-                    // subtitle: subtitle,
                     children: children,
                     expanded: true,
                     id: item.id,
@@ -568,36 +561,6 @@ const constructorTemplates: any = {
                             {
                                 tag: 'table',
                                 attr: {
-                                    /*columns: [
-                                        {
-                                            Name: 'custom_id',
-                                            Title: '$id$'
-                                        },
-                                        {
-                                            Name: 'custom_name',
-                                            Title: '$name$'
-                                        },
-                                        {
-                                            Name: 'custom_type',
-                                            Title: '$type$'
-                                        },
-                                        {
-                                            Name: 'custom_date',
-                                            Title: '$created$ / $deleted$'
-                                        },
-                                        {
-                                            Name: 'custom_status',
-                                            Title: '$status$'
-                                        },
-                                        {
-                                            Name: 'custom_creator',
-                                            Title: '$creator$'
-                                        },
-                                        {
-                                            Name: 'actions',
-                                            Title: '$actions$'
-                                        }
-                                    ],*/
                                     columns: '$id$=custom_id,$name$=custom_name,$type$=custom_type,$created$ / $deleted$=custom_date,$status$=custom_status,$creator$=custom_creator,$actions$=actions',
                                     source: 'src_roles_list'
                                 }
@@ -1435,23 +1398,16 @@ export class CodeGenerator {
 
 const tagHandlers = {
     'button': Button,
-    //     'data': Data,
     'dbfind': DBFind,
     'div': Div,
     'em': Em,
-    //     'forlist': ForList,
     'form': Form,
     'image': Image,
     'imageinput': ImageInput,
     'input': Input,
-    //     'inputerr': InputErr,
     'label': Label,
-    //     'linkpage': LinkPage,
-    //     'menuitem': MenuItem,
-    //     'menugroup': MenuGroup,
     'p': P,
     'radiogroup': RadioGroup,
-    //     'select': Select,
     'span': Span,
     'strong': Strong,
     'table': Table,
@@ -1495,8 +1451,6 @@ export class Properties {
     };
 
     public getInitial(property: string, tag: any) {
-        // alert('getInitial ' + property + (tag && tag.attr && tag.attr.class));
-
         if (tag && tag.attr && tag.attr.class) {
             const classes = ' ' + tag.attr.class + ' ';
             if (this.propertiesClasses[property]) {
@@ -1530,19 +1484,6 @@ export class Properties {
                     classes += ' ' + this.propertiesClasses[property][value];
                 }
                 break;
-            /*
-            case 'btn':
-                for (let prop in this.propertiesClasses[property]) {
-                    if (this.propertiesClasses[property].hasOwnProperty(prop)) {
-                        classes = classes.replace(this.propertiesClasses[property][prop], '');
-                    }
-                }
-                classes = classes.replace('btn', '');
-                if (this.propertiesClasses[property][value]) {
-                    classes += ' btn ' + this.propertiesClasses[property][value];
-                }
-                break;
-                */
             default:
                 break;
         }

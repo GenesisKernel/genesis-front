@@ -184,4 +184,11 @@ declare module 'genesis/editor' {
         connectDragSource?: any;
         connectDragPreview?: any;
     }
+
+    interface IFindTagResult {
+        el: TProtypoElement | null;
+        parent: TProtypoElement | null,
+        parentPosition: number,
+        tail: boolean
+    }
 }
