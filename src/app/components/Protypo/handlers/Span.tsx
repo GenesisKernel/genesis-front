@@ -21,10 +21,12 @@ import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
 import { IConstructorElementProps } from 'genesis/editor';
+import ContentEditable from 'react-contenteditable';
 
 export interface ISpanProps extends IConstructorElementProps {
     'className'?: string;
     'class'?: string;
+    'childrenText'?: string;
 }
 
 interface ISpanState {
@@ -45,9 +47,9 @@ class Span extends React.Component<ISpanProps, ISpanState> {
         this.props.selectTag(this.props.tag);
     }
 
-    onBlur(e: any) {
-        e.stopPropagation();
-        this.props.changePage({ text: e.target.innerHTML, tagID: this.props.tag.id });
+    handleChange(e: any) {
+        // alert(e.target.value);
+        this.props.changePage({text: e.target.value, tagID: this.props.tag.id});
     }
 
     removeTag() {
@@ -76,14 +78,20 @@ class Span extends React.Component<ISpanProps, ISpanState> {
                         connectDragSource={connectDragSource}
                         canMove={true}
                     >
-                    <span
-                        className={classes}
-                        contentEditable={this.props.selected}
-                        onBlur={this.onBlur.bind(this)}
-                        onPaste={this.onPaste.bind(this)}
-                    >
-                        {this.props.children}
-                    </span>
+                    {(this.props.selected && this.props.childrenText !== null && this.props.childrenText.length >= 0) ? (
+                        <ContentEditable
+                            tagName="span"
+                            className={classes}
+                            html={this.props.childrenText}
+                            onChange={this.handleChange.bind(this)}
+                        />
+                    ) : (
+                        <span
+                            className={classes}
+                        >
+                            {this.props.children}
+                        </span>
+                    )}
                     </TagWrapper>
                 </span>
             ));

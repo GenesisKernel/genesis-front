@@ -154,8 +154,8 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
         const data = this.props.data;
         const history = this.props.history;
 
-        const jsonData = data && data.jsonData || null;
-        const treeData = data && data.treeData || null;
+        const jsonData = data && data.jsonData || [];
+        const treeData = data && data.treeData || [];
         const pageTemplate = data && data.pageTemplate || null;
         const selectedTag = data && data.selectedTag || null;
 

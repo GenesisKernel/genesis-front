@@ -1704,17 +1704,24 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                 }
             }
         case 'element':
+            const className = node.attr && node.attr.class && node.attr.class.join(' ') || '';
             switch (node.tag) {
                 case 'p':
                     return {
                         tag: 'p',
                         id: generateId(),
+                        attr: {
+                            className: className
+                        },
                         children: htmlJsonChild2childrenTags(node.child)
                     }
                 case 'i':
                     return {
                         tag: 'em',
                         id: generateId(),
+                        attr: {
+                            className: className
+                        },
                         children: htmlJsonChild2childrenTags(node.child)
                     }
                 case 'b':
@@ -1722,18 +1729,27 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                     return {
                         tag: 'strong',
                         id: generateId(),
+                        attr: {
+                            className: className
+                        },
                         children: htmlJsonChild2childrenTags(node.child)
                     }
                 case 'span':
                     return {
                         tag: 'span',
                         id: generateId(),
+                        attr: {
+                            className: className
+                        },
                         children: htmlJsonChild2childrenTags(node.child)
                     }
                 case 'div':
                     return {
                         tag: 'div',
                         id: generateId(),
+                        attr: {
+                            className: className
+                        },
                         children: htmlJsonChild2childrenTags(node.child)
                     }
                 default:

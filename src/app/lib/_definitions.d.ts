@@ -17,8 +17,8 @@
 declare module 'react-dom';
 declare module 'jsrsasign';
 declare module 'react-router-transition';
-declare module 'html-react-parser';
 declare module 'html2json';
+declare module 'react-contenteditable';
 
 declare module '*.svg' {
     const content: string;

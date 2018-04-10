@@ -20,8 +20,8 @@ import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
-import Parser from 'html-react-parser';
 import { IConstructorElementProps } from 'genesis/editor';
+import ContentEditable from 'react-contenteditable';
 
 export interface IDivProps extends IConstructorElementProps {
     'className'?: string;
@@ -46,18 +46,12 @@ class Div extends React.Component<IDivProps, IDivState> {
         this.props.selectTag(this.props.tag);
     }
 
-    onBlur(e: any) {
-        e.stopPropagation();
-        this.props.selectTag(null);
-        this.props.changePage({ text: e.target.innerHTML, tagID: this.props.tag.id });
+    handleChange(e: any) {
+        this.props.changePage({text: e.target.value, tagID: this.props.tag.id});
     }
 
     removeTag() {
         this.props.removeTag({ tag: this.props.tag });
-    }
-
-    renderChildrenText() {
-        return Parser(this.props.childrenText || '');
     }
 
     render() {
@@ -82,15 +76,13 @@ class Div extends React.Component<IDivProps, IDivState> {
                         connectDragSource={connectDragSource}
                         canMove={true}
                     >
-                    {(this.props.selected && this.props.childrenText && this.props.childrenText.length >= 0) ? (
-                        <div
+                    {(this.props.selected && this.props.childrenText !== null && this.props.childrenText.length >= 0) ? (
+                        <ContentEditable
+                            tagName="div"
                             className={classes}
-                            contentEditable={this.props.selected}
-                            onPaste={this.onPaste.bind(this)}
-                            onBlur={this.onBlur.bind(this)}
-                        >
-                            {this.props.childrenText && this.props.childrenText.length >= 0 && Parser(this.props.childrenText || '')}
-                        </div>
+                            html={this.props.childrenText}
+                            onChange={this.handleChange.bind(this)}
+                        />
                     ) : (
                         <div
                             className={classes}

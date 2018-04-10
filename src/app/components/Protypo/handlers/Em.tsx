@@ -21,10 +21,12 @@ import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
 import { IConstructorElementProps } from 'genesis/editor';
+import ContentEditable from 'react-contenteditable';
 
 export interface IEmProps extends IConstructorElementProps {
     'className'?: string;
     'class'?: string;
+    'childrenText'?: string;
 }
 
 interface IEmState {
@@ -45,9 +47,8 @@ class Em extends React.Component<IEmProps, IEmState> {
         this.props.selectTag(this.props.tag);
     }
 
-    onBlur(e: any) {
-        e.stopPropagation();
-        this.props.changePage({ text: e.target.innerHTML, tagID: this.props.tag.id });
+    handleChange(e: any) {
+        this.props.changePage({text: e.target.value, tagID: this.props.tag.id});
     }
 
     removeTag() {
@@ -76,14 +77,20 @@ class Em extends React.Component<IEmProps, IEmState> {
                         connectDragSource={connectDragSource}
                         canMove={true}
                     >
-                    <em
-                        className={classes}
-                        contentEditable={this.props.selected}
-                        onBlur={this.onBlur.bind(this)}
-                        onPaste={this.onPaste.bind(this)}
-                    >
-                        {this.props.children}
-                    </em>
+                    {(this.props.selected && this.props.childrenText !== null && this.props.childrenText.length >= 0) ? (
+                        <ContentEditable
+                            tagName="em"
+                            className={classes}
+                            html={this.props.childrenText}
+                            onChange={this.handleChange.bind(this)}
+                        />
+                    ) : (
+                        <em
+                            className={classes}
+                        >
+                            {this.props.children}
+                        </em>
+                    )}
                     </TagWrapper>
                 </span>
             ));
