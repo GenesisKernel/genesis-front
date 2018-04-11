@@ -23,8 +23,6 @@ export type State = {
     readonly apiHost: string;
     readonly wsHost: string;
     readonly localeMessages: { [key: string]: string };
-    readonly isInstalled: boolean;
-    readonly isInstalling: boolean;
     readonly isLoading: boolean;
     readonly isConnected: boolean;
     readonly isConnecting: boolean;
@@ -35,8 +33,6 @@ export const initialState: State = {
     apiHost: 'http://127.0.0.1:7079',
     wsHost: 'ws://127.0.0.1:8000',
     localeMessages: defaultLocale,
-    isInstalled: null,
-    isInstalling: false,
     isLoading: true,
     isConnected: null,
     isConnecting: false,
@@ -52,50 +48,28 @@ export default (state: State = initialState, action: Action): State => {
     }
 
     if (isType(action, actions.checkOnline.failed)) {
-        switch (action.payload.error) {
-            case 'E_NOTINSTALLED':
-                return {
-                    ...state,
-                    isInstalled: false,
-                    isConnected: true,
-                    isConnecting: false
-                };
+        return {
+            ...state,
+            isConnected: false,
+            isConnecting: false
+        };
 
-            default:
-                return {
-                    ...state,
-                    isConnected: false,
-                    isConnecting: false
-                };
-        }
     }
 
     if (isType(action, actions.checkOnline.done)) {
         return {
             ...state,
-            isInstalled: true,
             isConnected: action.payload.result,
             isConnecting: false
         };
     }
 
     if (isType(action, actions.checkOnline.failed)) {
-        switch (action.payload.error) {
-            case 'E_NOTINSTALLED':
-                return {
-                    ...state,
-                    isInstalled: false,
-                    isConnected: true,
-                    isConnecting: false
-                };
-
-            default:
-                return {
-                    ...state,
-                    isConnected: false,
-                    isConnecting: false
-                };
-        }
+        return {
+            ...state,
+            isConnected: false,
+            isConnecting: false
+        };
     }
 
     if (isType(action, actions.setLoading)) {
