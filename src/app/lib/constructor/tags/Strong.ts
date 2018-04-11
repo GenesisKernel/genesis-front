@@ -14,10 +14,15 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { tagHandlers } from 'lib/constructor';
+import { TProtypoElement } from 'genesis/protypo';
+import Tag from './Tag';
 
-const resolveTagHandler = (name: string) => {
-    return tagHandlers.list[name] || tagHandlers.default;
-};
+class Strong extends Tag {
+    constructor(element: TProtypoElement) {
+        super(element);
+        this.tagName = 'Strong';
+        this.HTMLTag = 'b';
+    }
+}
 
-export default resolveTagHandler;
+export default Strong;

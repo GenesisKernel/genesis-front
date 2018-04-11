@@ -24,7 +24,7 @@ import BtnRadioButtons from './BtnRadioButtons';
 import Switch from './Switch';
 import PropertiesInput from './PropertiesInput';
 import { getInitialTagValue } from 'lib/constructor';
-import resolveTagHandler from 'lib/tagHandlers';
+import resolveTagHandler from 'lib/constructor/tags';
 
 interface IPropertiesProps {
     changePage?: any;
