@@ -91,6 +91,5 @@ declare module 'genesis/tx' {
         privateKey?: string;
         signature?: string;
         time?: string;
-        signParams?: { [key: string]: string };
     }
 }

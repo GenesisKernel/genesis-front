@@ -19,7 +19,7 @@ import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { IntlProvider } from 'react-intl';
-import { checkOnline, setLoading } from 'modules/engine/actions';
+import { setLoading } from 'modules/engine/actions';
 import platform from 'lib/platform';
 import * as classnames from 'classnames';
 
@@ -33,6 +33,7 @@ import { DragDropContext } from 'react-dnd';
 import InitHook from 'containers/App/InitHook';
 import { switchWindow } from 'modules/gui/actions';
 import ModalProvider from 'containers/Modal/ModalProvider';
+import Offline from 'containers/Auth/Offline';
 
 interface IAppProps {
     locale: string;
@@ -43,17 +44,10 @@ interface IAppProps {
     isConnecting: boolean;
     localeMessages: { [key: string]: string };
     setLoading?: typeof setLoading;
-    checkOnline?: typeof checkOnline.started;
     switchWindow?: typeof switchWindow.started;
 }
 
 class App extends React.Component<IAppProps> {
-    componentDidMount() {
-        if (!this.props.isConnecting && this.props.isLoading) {
-            this.props.checkOnline(null);
-        }
-    }
-
     componentWillReceiveProps(props: IAppProps) {
         if (this.props.isAuthenticated !== props.isAuthenticated) {
             props.switchWindow(props.isAuthenticated ? 'main' : 'general');
@@ -92,6 +86,9 @@ class App extends React.Component<IAppProps> {
                         {this.props.isLoading && (
                             <Route path="/" component={Splash} />
                         )}
+                        {!this.props.isConnected && (
+                            <Route path="/" component={Offline} />
+                        )}
                         {!this.props.isAuthenticated && (
                             <Route path="/" component={Auth} />
                         )}
@@ -115,7 +112,6 @@ const mapStateToProps = (state: IRootState) => ({
 
 const mapDispatchToProps = {
     setLoading,
-    checkOnline: checkOnline.started,
     switchWindow: switchWindow.started
 };
 

@@ -23,7 +23,7 @@ import { logout, selectAccount } from 'modules/auth/actions';
 const ecosystemInitEpic: Epic = (action$, store, { api }) => action$.ofAction(ecosystemInit.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiURL, state.auth.sessionToken);
+        const client = api(state.engine.apiHost, state.auth.sessionToken);
 
         return Observable.fromPromise(client.getParams({
             names: ['stylesheet', 'ecosystem_name']

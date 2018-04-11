@@ -19,7 +19,6 @@ import { Observable } from 'rxjs/Observable';
 import { Epic } from 'redux-observable';
 import { IRootState } from 'modules';
 import { connect, disconnect, subscribe } from '../actions';
-import { socketUrl } from 'lib/api';
 import * as _ from 'lodash';
 import * as Centrifuge from 'centrifuge';
 import * as SockJS from 'sockjs-client';
@@ -33,7 +32,7 @@ const connectEpic: Epic<Action, IRootState> =
                     observer.next(disconnect.started(null));
 
                     const centrifuge = new Centrifuge({
-                        url: socketUrl,
+                        url: store.getState().engine.wsHost,
                         user: action.payload.userID,
                         timestamp: action.payload.timestamp,
                         token: action.payload.socketToken,

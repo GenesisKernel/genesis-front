@@ -24,7 +24,7 @@ import keyring from 'lib/keyring';
 const createAccountEpic: Epic = (action$, store, { api }) => action$.ofAction(createAccount.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiURL, state.auth.sessionToken);
+        const client = api(state.engine.apiHost, state.auth.sessionToken);
         const keys = keyring.generateKeyPair(action.payload.seed);
 
         return Observable.from(

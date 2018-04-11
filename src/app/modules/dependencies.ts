@@ -17,6 +17,8 @@
 import needle from 'needle';
 import GenesisAPI from 'lib/genesisAPI';
 
+export const apiEndpoint = 'api/v2';
+
 export interface IStoreDependencies {
     api: IAPIDependency;
 }
@@ -26,9 +28,10 @@ export interface IAPIDependency {
 }
 
 export default {
-    api: (apiURL: string, session?: string) => new GenesisAPI({
+    api: (apiHost: string, session?: string) => new GenesisAPI({
         transport: needle,
-        apiURL,
+        apiHost,
+        apiEndpoint,
         session
     })
 } as IStoreDependencies;

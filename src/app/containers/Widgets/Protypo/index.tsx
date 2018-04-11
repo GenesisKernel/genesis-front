@@ -40,6 +40,7 @@ export interface IProtypoContainerProps {
 }
 
 interface IProtypoContainerState {
+    apiHost: string;
     page: string;
 }
 
@@ -58,6 +59,7 @@ const mapStateToProps = (state: IRootState) => {
     const section = state.content.sections[state.content.section];
 
     return {
+        apiHost: state.engine.apiHost,
         section: state.content.section,
         page: section.page && section.page.name
     };

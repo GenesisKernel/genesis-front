@@ -237,6 +237,9 @@ declare module 'genesis/api' {
 
     interface ITxCallRequest {
         name: string;
+        time: string;
+        signature: string;
+        pubkey: string;
         params: TTxParams;
     }
 

@@ -23,7 +23,7 @@ import { navigate } from 'modules/engine/actions';
 const selectAccountEpic: Epic = (action$, store, { api }) => action$.ofAction(selectAccount.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiURL, state.auth.sessionToken);
+        const client = api(state.engine.apiHost, state.auth.sessionToken);
 
         return Observable.fromPromise(client.refresh({ token: action.payload.refreshToken })
             .then(tokens => client.authorize(tokens.token)

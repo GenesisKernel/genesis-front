@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
+import urlJoin from 'url-join';
 import urlTemplate from 'url-template';
 import { IUIDResponse, ILoginRequest, ILoginResponse, IRefreshResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IRefreshRequest, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse, ITxCallRequest, ITxCallResponse, ITxPrepareRequest, ITxPrepareResponse, ITxStatusRequest, ITxStatusResponse, ITableRequest } from 'genesis/api';
 
@@ -57,7 +58,8 @@ export interface ISecuredRequestParams extends IRequestParams {
 }
 
 export interface IAPIOptions {
-    apiURL: string;
+    apiHost: string;
+    apiEndpoint: string;
     transport: IRequestTransport;
     session?: string;
     requestOptions?: IRequestOptions<any, any>;
@@ -83,7 +85,7 @@ class GenesisAPI {
 
     protected request = async <P, R>(method: TRequestMethod, endpoint: string, requestParams: P, options: IRequestOptions<P, R> = {}) => {
         const requestEndpoint = urlTemplate.parse(endpoint).expand(requestParams);
-        const requestUrl = `${this._options.apiURL}/${requestEndpoint}`;
+        const requestUrl = urlJoin(this._options.apiHost, this._options.apiEndpoint, requestEndpoint);
         const params = requestParams && options.requestTransformer ? options.requestTransformer(requestParams) : requestParams;
 
         // TODO: Set request timeout
@@ -142,10 +144,10 @@ class GenesisAPI {
         };
     }
 
-    public to(apiURL: string) {
+    public to(apiHost: string) {
         return new GenesisAPI({
             ...this._options,
-            apiURL
+            apiHost
         });
     }
 
@@ -222,18 +224,21 @@ class GenesisAPI {
     // Transactions
     public txCall = this.setSecuredEndpoint<ITxCallRequest, ITxCallResponse>('post', 'contract/{name}', {
         requestTransformer: request => ({
-            params: request.params
+            time: request.time,
+            signature: request.signature,
+            pubkey: request.pubkey,
+            ...request.params
         })
     });
     public txPrepare = this.setSecuredEndpoint<ITxPrepareRequest, ITxPrepareResponse>('post', 'prepare/{name}', {
         requestTransformer: request => ({
-            params: request.params
+            ...request.params
         })
     });
     public txStatus = this.setSecuredEndpoint<ITxStatusRequest, ITxStatusResponse>('get', 'txstatus/{hash}', { requestTransformer: () => null });
 
     // Blob data getters
-    public resolveTextData = (link: string) => this._options.transport('get', `${this._options.apiURL}${link}`).then(res => res.body as string);
+    public resolveTextData = (link: string) => this._options.transport('get', urlJoin(this._options.apiHost, this._options.apiEndpoint, link)).then(res => res.body as string);
 }
 
 export default GenesisAPI;

@@ -21,7 +21,7 @@ import { fetchNotifications } from 'modules/content/actions';
 const fetchNotificationsEpic: Epic = (action$, store, { api }) => action$.ofAction(fetchNotifications.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiURL, state.auth.sessionToken);
+        const client = api(state.engine.apiHost, state.auth.sessionToken);
 
         return Observable.fromPromise(client.content({
             type: 'page',

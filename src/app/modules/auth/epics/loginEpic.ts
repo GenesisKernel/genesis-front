@@ -22,7 +22,7 @@ import keyring from 'lib/keyring';
 const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiURL);
+        const client = api(state.engine.apiHost);
         const privateKey = keyring.decryptAES(action.payload.account.encKey, action.payload.password);
 
         if (!keyring.validatePrivateKey(privateKey)) {

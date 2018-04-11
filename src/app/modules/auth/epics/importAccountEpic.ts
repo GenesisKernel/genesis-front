@@ -26,7 +26,7 @@ import * as Promise from 'bluebird';
 const importAccountEpic: Epic = (action$, store, { api }) => action$.ofAction(importAccount.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiURL, state.auth.sessionToken);
+        const client = api(state.engine.apiHost, state.auth.sessionToken);
 
         const backup = keyring.restore(action.payload.backup);
         if (!backup || backup.privateKey.length !== keyring.KEY_LENGTH) {

@@ -14,18 +14,18 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
+import { Epic } from 'modules';
 import { getNotificationsCount } from '../actions';
 import { Observable } from 'rxjs/Observable';
-import api from 'lib/api';
 
-const getNotificationsCountEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(getNotificationsCount)
-        .flatMap(action => {
-            api.updNotificator(store.getState().auth.sessionToken, action.payload.ids);
-            return Observable.empty();
-        });
+const getNotificationsCountEpic: Epic = (action$, store, { api }) => action$.ofAction(getNotificationsCount)
+    .flatMap(action => {
+        const state = store.getState();
+        const client = api(state.engine.apiHost, state.auth.sessionToken);
+
+        return Observable.fromPromise(client.requestNotifications(action.payload.ids))
+            .flatMap(() => Observable.empty<never>())
+            .catch(() => Observable.empty<never>());
+    });
 
 export default getNotificationsCountEpic;

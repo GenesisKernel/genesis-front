@@ -18,7 +18,6 @@ import * as React from 'react';
 import * as propTypes from 'prop-types';
 
 import Protypo from '../Protypo';
-import api from 'lib/api';
 
 export interface IBlobDataProps {
     link: string;
@@ -29,7 +28,7 @@ interface IBlobDataContext {
 }
 
 const IBlobData: React.SFC<IBlobDataProps> = (props, context: IBlobDataContext) => (
-    <a className="btn btn-link p0" href={api.resolveData(props.link)} target="_blank">
+    <a className="btn btn-link p0" href={context.protypo.resolveData(props.link)} target="_blank">
         {props.children}
     </a>
 );
