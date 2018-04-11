@@ -14,12 +14,15 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-// tslint:disable
 import { findDOMNode } from 'react-dom';
 import { TProtypoElement } from 'genesis/protypo';
 import { IFindTagResult } from 'genesis/editor';
 import * as _ from 'lodash';
 import { html2json } from 'html2json';
+
+import resolveTagHandler from 'lib/tagHandlers';
+
+declare const window: Window & { clipboardData: any };
 
 let findTagByIdResult: IFindTagResult = {
         el: null,
@@ -27,12 +30,6 @@ let findTagByIdResult: IFindTagResult = {
         parentPosition: 0,
         tail: false
     };
-
-export const findTagById = (el: any, id: string): any => {
-    findTagByIdResult.el = null;
-    findNextTagById(el, id, null, false);
-    return findTagByIdResult;
-};
 
 const findNextTagById = (el: any, id: string, parent: any, tail: boolean): any => {
     if (el.id === id) {
@@ -59,6 +56,12 @@ const findNextTagById = (el: any, id: string, parent: any, tail: boolean): any =
     if (el.tail) {
         findNextTagById(el.tail, id, el, true);
     }
+};
+
+export const findTagById = (el: any, id: string): any => {
+    findTagByIdResult.el = null;
+    findNextTagById(el, id, null, false);
+    return findTagByIdResult;
 };
 
 // todo: copyArray, copyObject
@@ -119,7 +122,7 @@ export function OnPasteStripFormatting(elem: any, e: any) {
         text = e.clipboardData.getData('text/plain');
         window.document.execCommand('insertText', false, text);
     }
-    else if (window['clipboardData'] && window['clipboardData'].getData) {
+    else if (window.clipboardData && window.clipboardData.getData) {
         // Stop stack overflow
         if (!onPasteStripFormattingIEPaste) {
             onPasteStripFormattingIEPaste = true;
@@ -1366,7 +1369,9 @@ class Logic extends Tag {
         };
         this.editProps = [];
         for (let attr in element.attr) {
-            this.attr[attr] = attr;
+            if (element.attr.hasOwnProperty(attr)) {
+                this.attr[attr] = attr;
+            }
         }
     }
 }
@@ -1396,24 +1401,27 @@ export class CodeGenerator {
     }
 }
 
-const tagHandlers = {
-    'button': Button,
-    'dbfind': DBFind,
-    'div': Div,
-    'em': Em,
-    'form': Form,
-    'image': Image,
-    'imageinput': ImageInput,
-    'input': Input,
-    'label': Label,
-    'p': P,
-    'radiogroup': RadioGroup,
-    'span': Span,
-    'strong': Strong,
-    'table': Table,
-    'if': If,
-    'elseif': ElseIf,
-    'else': Else
+export const tagHandlers = {
+    list: {
+        'button': Button,
+        'dbfind': DBFind,
+        'div': Div,
+        'em': Em,
+        'form': Form,
+        'image': Image,
+        'imageinput': ImageInput,
+        'input': Input,
+        'label': Label,
+        'p': P,
+        'radiogroup': RadioGroup,
+        'span': Span,
+        'strong': Strong,
+        'table': Table,
+        'if': If,
+        'elseif': ElseIf,
+        'else': Else
+    },
+    default: Logic
 };
 
 export class Properties {
@@ -1497,9 +1505,9 @@ export const getInitialTagValue = (prop: string, tag: any): string => {
     return properties.getInitial(prop, tag);
 };
 
-export const resolveTagHandler = (name: string) => {
-    return tagHandlers[name] || Logic;
-};
+// export const resolveTagHandler = (name: string) => {
+//     return tagHandlers[name] || Logic;
+// };
 
 export function getDropPosition(monitor: any, component: any, tag: any) {
 
@@ -1567,7 +1575,7 @@ function updateElementChildrenText(el: TProtypoElement) {
             ...el,
             childrenText,
             children
-        }
+        };
     }
     else {
         return el;
@@ -1613,7 +1621,7 @@ interface IHtmlJsonNode {
     text?: string;
     attr?: { [key: string]: any };
     child?: IHtmlJsonNode[];
-};
+}
 
 function clearHtml(text: string): string {
     return text.replace(/&nbsp;/g, '');
@@ -1627,7 +1635,7 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                     tag: 'text',
                     text: clearHtml(node.text),
                     id: generateId()
-                }
+                };
             }
             else {
                 return {
@@ -1638,7 +1646,7 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                         text: clearHtml(node.text),
                         id: generateId()
                     }]
-                }
+                };
             }
         case 'element':
             const className = node.attr && node.attr.class && node.attr.class.join(' ') || '';
@@ -1651,7 +1659,7 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                             className: className
                         },
                         children: htmlJsonChild2childrenTags(node.child)
-                    }
+                    };
                 case 'i':
                     return {
                         tag: 'em',
@@ -1660,7 +1668,7 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                             className: className
                         },
                         children: htmlJsonChild2childrenTags(node.child)
-                    }
+                    };
                 case 'b':
                 case 'strong':
                     return {
@@ -1670,7 +1678,7 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                             className: className
                         },
                         children: htmlJsonChild2childrenTags(node.child)
-                    }
+                    };
                 case 'span':
                     return {
                         tag: 'span',
@@ -1679,7 +1687,7 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                             className: className
                         },
                         children: htmlJsonChild2childrenTags(node.child)
-                    }
+                    };
                 case 'div':
                     return {
                         tag: 'div',
@@ -1688,10 +1696,11 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                             className: className
                         },
                         children: htmlJsonChild2childrenTags(node.child)
-                    }
+                    };
                 default:
                     break;
             }
+            break;
         default:
             break;
     }
@@ -1713,7 +1722,6 @@ export default {
     convertToTreeData,
     findTagById,
     copyObject,
-    resolveTagHandler,
     getConstructorTemplate,
     generateId,
     updateChildrenText,

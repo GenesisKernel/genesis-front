@@ -23,7 +23,8 @@ import ColorRadioButtons from './ColorRadioButtons';
 import BtnRadioButtons from './BtnRadioButtons';
 import Switch from './Switch';
 import PropertiesInput from './PropertiesInput';
-import { getInitialTagValue, resolveTagHandler } from 'lib/constructor';
+import { getInitialTagValue } from 'lib/constructor';
+import resolveTagHandler from 'lib/tagHandlers';
 
 interface IPropertiesProps {
     changePage?: any;
