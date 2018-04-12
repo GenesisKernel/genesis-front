@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { Button } from 'react-bootstrap';
-import { ITablesResponse } from 'lib/api';
+import { ITablesResponse } from 'genesis/api';
 
 import Wrapper from 'components/Wrapper';
 import Table, { ICellRenderer } from 'components/Table';

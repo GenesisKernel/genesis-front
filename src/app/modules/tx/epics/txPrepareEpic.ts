@@ -14,95 +14,91 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { IRootState } from 'modules';
-import { Epic } from 'redux-observable';
-import { Action } from 'redux';
+import { Epic } from 'modules';
 import { Observable } from 'rxjs';
 import keyring from 'lib/keyring';
-import api, { IAPIError } from 'lib/api';
 import { txExec, txPrepare } from '../actions';
-import { modalShow, modalClose } from 'modules/modal/actions';
-import { TTxError } from 'genesis/tx';
+import ModalObservable from 'modules/modal/util/ModalObservable';
 
-const txPrepareEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(txPrepare)
-        .flatMap(action => {
-            const state = store.getState();
+const txPrepareEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrepare)
+    .flatMap(action => {
+        const state = store.getState();
+        const client = api(state.engine.apiHost, state.auth.sessionToken);
 
-            if (!keyring.validatePrivateKey(action.payload.privateKey)) {
-                Observable.of(txExec.failed({
-                    params: action.payload,
-                    error: {
-                        type: 'E_INVALID_PASSWORD',
-                        error: null
-                    }
-                }));
-            }
-
-            const txCall = {
-                ...action.payload.tx,
-                params: {
-                    ...action.payload.tx.params,
-                    Lang: state.storage.locale
+        if (!keyring.validatePrivateKey(action.payload.privateKey)) {
+            Observable.of(txExec.failed({
+                params: action.payload,
+                error: {
+                    type: 'E_INVALID_PASSWORD',
+                    error: null
                 }
-            };
+            }));
+        }
 
-            return Observable.fromPromise(api.txPrepare(state.auth.sessionToken, txCall.name, txCall.params))
-                .flatMap(prepare => {
-                    let forSign = prepare.forsign;
-                    const signParams = {};
+        const txCall = {
+            ...action.payload.tx,
+            params: {
+                ...action.payload.tx.params,
+                Lang: state.storage.locale
+            }
+        };
 
-                    if (prepare.signs) {
-                        return Observable.merge(
-                            Observable.of(modalShow({
-                                id: 'SIGNATURE',
-                                type: 'TX_SIGNATURE',
-                                params: {
-                                    txParams: txCall.params,
-                                    signs: prepare.signs,
-                                    contract: txCall.name
-                                }
-                            })),
-                            action$.ofAction(modalClose)
-                                .take(1)
-                                .switchMap(modal => {
-                                    if ('RESULT' !== modal.payload.reason) {
-                                        throw { error: 'E_CANCELLED' };
-                                    }
+        return Observable.fromPromise(client.txPrepare(txCall)).flatMap(prepare => {
+            let forSign = prepare.forsign;
+            const signParams = {};
 
-                                    prepare.signs.forEach(sign => {
-                                        const childSign = keyring.sign(sign.forsign, action.payload.privateKey);
-                                        signParams[sign.field] = childSign;
-                                        forSign += `,${childSign}`;
-                                    });
+            if (prepare.signs) {
+                return ModalObservable(action$, {
+                    modal: {
+                        id: 'SIGNATURE',
+                        type: 'TX_SIGNATURE',
+                        params: {
+                            txParams: txCall.params,
+                            signs: prepare.signs,
+                            contract: txCall.name
+                        }
+                    },
+                    success: result => {
+                        prepare.signs.forEach(sign => {
+                            const childSign = keyring.sign(sign.forsign, action.payload.privateKey);
+                            signParams[sign.field] = childSign;
+                            forSign += `,${childSign}`;
+                        });
 
-                                    return Observable.of(txExec.started({
-                                        tx: txCall,
-                                        time: prepare.time,
-                                        privateKey: action.payload.privateKey,
-                                        signature: keyring.sign(forSign, action.payload.privateKey),
-                                        signParams
-                                    }));
-                                })
-                        );
-                    }
-                    else {
                         return Observable.of(txExec.started({
-                            tx: txCall,
+                            tx: {
+                                ...txCall,
+                                params: {
+                                    ...txCall.params,
+                                    ...signParams
+                                }
+                            },
                             time: prepare.time,
                             privateKey: action.payload.privateKey,
                             signature: keyring.sign(forSign, action.payload.privateKey)
                         }));
-                    }
-                })
-                .catch((e: IAPIError) => Observable.of(txExec.failed({
-                    params: action.payload,
-                    error: {
-                        type: e.error as TTxError,
-                        error: e.msg
-                    }
-                })));
+                    },
+                    failure: reason => Observable.throw({
+                        error: 'E_CANCELLED'
+                    })
+                });
+            }
+            else {
+                return Observable.of(txExec.started({
+                    tx: txCall,
+                    time: prepare.time,
+                    privateKey: action.payload.privateKey,
+                    signature: keyring.sign(forSign, action.payload.privateKey)
+                }));
+            }
 
-        });
+        }).catch(e => Observable.of(txExec.failed({
+            params: action.payload,
+            error: {
+                type: e.error,
+                error: e.msg
+            }
+        })));
+    });
 
 export default txPrepareEpic;

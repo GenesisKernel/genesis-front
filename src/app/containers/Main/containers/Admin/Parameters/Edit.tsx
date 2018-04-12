@@ -18,7 +18,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getParameter } from 'modules/admin/actions';
-import { IParameterResponse } from 'lib/api';
+import { IParamResponse } from 'genesis/api';
 
 import DataPreloader from 'components/Animation/DataPreloader';
 import Edit from 'components/Main/Admin/Parameters/Edit';
@@ -28,7 +28,7 @@ export interface IEditContainerProps {
 }
 
 interface IEditContainerState {
-    parameter: IParameterResponse;
+    parameter: IParamResponse;
 }
 
 interface IEditContainerDispatch {

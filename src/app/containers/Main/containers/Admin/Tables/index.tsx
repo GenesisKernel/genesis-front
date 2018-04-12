@@ -18,7 +18,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getTables } from 'modules/admin/actions';
-import { ITablesResponse } from 'lib/api';
+import { ITablesResponse } from 'genesis/api';
 
 import DataPreloader from 'components/Animation/DataPreloader';
 import Tables from 'components/Main/Admin/Tables';

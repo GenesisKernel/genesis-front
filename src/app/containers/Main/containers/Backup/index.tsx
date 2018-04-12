@@ -17,25 +17,27 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { alertShow } from 'modules/content/actions';
+import { modalShow } from 'modules/modal/actions';
+import { FormattedMessage } from 'react-intl';
 
 import Backup from 'components/Main/Backup';
 import { IAccount } from 'genesis/auth';
 
-export interface IBackupProps {
+export interface IBackupContainerProps {
 }
 
-interface IBackupState {
+interface IBackupContainerState {
     account: IAccount;
     ecosystems: string[];
     privateKey: string;
 }
 
-interface IBackupDispatch {
-    alertShow: typeof alertShow;
+interface IBackupContainerDispatch {
+    onError: () => void;
+    onCopy: () => void;
 }
 
-const BackupContainer: React.SFC<IBackupProps & IBackupState & IBackupDispatch> = (props) => (
+const BackupContainer: React.SFC<IBackupContainerProps & IBackupContainerState & IBackupContainerDispatch> = (props) => (
     <Backup {...props} />
 );
 
@@ -49,7 +51,20 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    alertShow
+    onError: () => modalShow({
+        id: 'E_INVALID_PASSWORD',
+        type: 'AUTH_ERROR',
+        params: {
+            error: 'E_INVALID_PASSWORD'
+        }
+    }),
+    onCopy: () => modalShow({
+        id: 'I_COPIED',
+        type: 'INFO',
+        params: {
+            value: (<FormattedMessage id="alert.clipboard.copied" defaultMessage="alert.clipboard.copied" />)
+        }
+    })
 };
 
-export default connect<IBackupState, IBackupDispatch, IBackupProps>(mapStateToProps, mapDispatchToProps)(BackupContainer);
+export default connect<IBackupContainerState, IBackupContainerDispatch, IBackupContainerProps>(mapStateToProps, mapDispatchToProps)(BackupContainer);

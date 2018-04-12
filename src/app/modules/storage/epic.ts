@@ -16,12 +16,14 @@
 
 import { combineEpics } from 'redux-observable';
 import saveAccountOnLoginEpic from './epics/saveAccountOnLoginEpic';
+import saveAccountOnEcosystemInitEpic from './epics/saveAccountOnEcosystemInitEpic';
 import saveAccountOnSelectEpic from './epics/saveAccountOnSelectEpic';
 import saveAccountOnImportEpic from './epics/saveAccountOnImportEpic';
 import saveAccountOnCreateEpic from './epics/saveAccountOnCreateEpic';
 
 export default combineEpics(
     saveAccountOnCreateEpic,
+    saveAccountOnEcosystemInitEpic,
     saveAccountOnImportEpic,
     saveAccountOnLoginEpic,
     saveAccountOnSelectEpic

@@ -47,6 +47,7 @@ const MainContainer: React.SFC<IMainProps> = props => (
 );
 
 const mapStateToProps = (state: IRootState) => ({
+    nodeUrl: state.engine.apiHost,
     isAuthorized: !!state.auth.privateKey,
     stylesheet: state.content.stylesheet,
     section: state.content.section,

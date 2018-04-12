@@ -27,7 +27,7 @@ type TMixedContent =
 export interface IWrapperProps {
     type: 'default' | 'fullscreen' | 'noscroll';
     title: { title: string, defaultTitle: string };
-    heading: {
+    heading?: {
         content: TMixedContent;
         toolButtons?: {
             url: string;
@@ -78,17 +78,19 @@ const bodyClasses = {
 const Wrapper: React.SFC<IWrapperProps> = props => (
     <LocalizedDocumentTitle title={props.title.title} defaultTitle={props.title.defaultTitle}>
         <div className="fullscreen">
-            <Heading>
-                <div className="pull-right">
-                    {props.heading.toolButtons && props.heading.toolButtons.map((button, index) => (
-                        <Link key={index} to={button.url} className="ml btn-tool">
-                            <em className={`icon ${button.icon}`} />
-                            <span>{button.title}</span>
-                        </Link>
-                    ))}
-                </div>
-                <div>{props.heading.content}</div>
-            </Heading>
+            {props.heading && (
+                <Heading>
+                    <div className="pull-right">
+                        {props.heading.toolButtons && props.heading.toolButtons.map((button, index) => (
+                            <Link key={index} to={button.url} className="ml btn-tool">
+                                <em className={`icon ${button.icon}`} />
+                                <span>{button.title}</span>
+                            </Link>
+                        ))}
+                    </div>
+                    <div>{props.heading.content}</div>
+                </Heading>
+            )}
 
             {props.description && (
                 <StyledDescription>

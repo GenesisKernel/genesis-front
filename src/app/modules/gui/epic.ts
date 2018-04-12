@@ -19,10 +19,12 @@ import switchWindowEpic from './epics/switchWindowEpic';
 import setBadgeCountEpic from './epics/setBadgeCountEpic';
 import switchWindowOnLoginEpic from './epics/switchWindowOnLoginEpic';
 import setBadgeCountOnLogoutEpic from './epics/setBadgeCountOnLogoutEpic';
+import switchWindowOnRoleEpic from './epics/switchWindowOnRoleEpic';
 
 export default combineEpics(
     setBadgeCountEpic,
     switchWindowEpic,
     switchWindowOnLoginEpic,
-    setBadgeCountOnLogoutEpic
+    setBadgeCountOnLogoutEpic,
+    switchWindowOnRoleEpic
 );

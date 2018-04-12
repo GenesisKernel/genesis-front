@@ -20,13 +20,13 @@ import { IRootState } from 'modules';
 import { createEditorTab } from '../actions';
 import { updateSection } from '../../content/actions';
 import { Observable } from 'rxjs/Observable';
+import { replace } from 'react-router-redux';
 
 const createEditorTabEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(createEditorTab.started)
         .delay(0)
-        .flatMap(action => {
+        .map(action => {
             const state = store.getState();
-            const section = state.content.sections.editor;
 
             const ids = state.editor.tabs
                 .filter(l => l.new)
@@ -37,44 +37,48 @@ const createEditorTabEpic: Epic<Action, IRootState> =
 
             switch (action.payload.type) {
                 case 'contract':
-                    return Observable.of<Action>(
-                        createEditorTab.done({
-                            params: action.payload,
-                            result: {
-                                id,
-                                name: null,
-                                value: 'contract ... {\n    data {\n\n    }\n    conditions {\n\n    }\n    action {\n\n    }\n}'
-                            }
-                        }),
-                        updateSection({
-                            ...section,
-                            visible: true
-                        })
-                    );
+                    return createEditorTab.done({
+                        params: action.payload,
+                        result: {
+                            id,
+                            name: null,
+                            value: 'contract ... {\n    data {\n\n    }\n    conditions {\n\n    }\n    action {\n\n    }\n}'
+                        }
+                    });
 
                 case 'page':
                 case 'block':
                 case 'menu':
-                    return Observable.of<Action>(
-                        createEditorTab.done({
-                            params: action.payload,
-                            result: {
-                                id,
-                                name,
-                                value: ''
-                            }
-                        }),
-                        updateSection({
-                            ...section,
-                            visible: true
-                        })
-                    );
+                    return createEditorTab.done({
+                        params: action.payload,
+                        result: {
+                            id,
+                            name,
+                            value: ''
+                        }
+                    });
 
-                default: return Observable.of(createEditorTab.failed({
+                default: return createEditorTab.failed({
                     params: action.payload,
                     error: null
-                }));
+                });
             }
+        })
+        .flatMap(action => {
+            const editor = store.getState().content.sections.editor;
+
+            return Observable.of<Action>(
+                replace('/editor'),
+                updateSection({
+                    ...editor,
+                    visible: true,
+                    page: {
+                        ...editor.page,
+                        params: {}
+                    }
+                }),
+                action
+            );
         });
 
 export default createEditorTabEpic;

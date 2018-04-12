@@ -22,7 +22,6 @@ export default function (state: State, payload: Failure<IAccount, string>): Stat
     return {
         ...state,
         isAuthenticated: false,
-        authenticationError: payload.error,
         account: payload.params
     };
 }

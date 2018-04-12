@@ -21,7 +21,7 @@ import { FormattedMessage } from 'react-intl';
 import Modal from './';
 
 export interface IInfoModalProps {
-    value: string;
+    value: React.ReactNode;
 }
 
 class InfoModal extends Modal<IInfoModalProps, void> {

@@ -15,7 +15,6 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { history } from 'store';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
@@ -51,6 +50,23 @@ interface IEditorContainerDispatch {
 class EditorContainer extends React.Component<IEditorContainerProps & InjectedIntlProps & IEditorContainerState & IEditorContainerDispatch> {
     private _pendingClose: number;
 
+    constructor(props: IEditorContainerProps & InjectedIntlProps & IEditorContainerState & IEditorContainerDispatch) {
+        super(props);
+
+        if (props.open && props.name) {
+            props.onTabLoad({
+                type: props.open,
+                name: props.name
+            });
+        }
+        else if (props.appId && props.create) {
+            props.onTabCreate({
+                type: props.create,
+                appId: props.appId
+            });
+        }
+    }
+
     componentWillReceiveProps(props: IEditorContainerProps & IEditorContainerState & IEditorContainerDispatch) {
         if ('number' === typeof this._pendingClose && props.modalResult) {
             if ('RESULT' === props.modalResult.reason) {
@@ -59,16 +75,20 @@ class EditorContainer extends React.Component<IEditorContainerProps & InjectedIn
 
             this._pendingClose = null;
         }
-    }
 
-    onTabCreate = (params: {type: string, appId: number}) => {
-        history.replace('/editor');
-        this.props.onTabCreate(params);
-    }
+        if (props.open && props.name && (this.props.open !== props.open || this.props.name !== props.name)) {
+            props.onTabLoad({
+                type: props.open,
+                name: props.name
+            });
+        }
 
-    onTabLoad = (params: { type: string, name: string }) => {
-        history.replace('/editor');
-        this.props.onTabLoad(params);
+        if (props.appId && props.create && (this.props.appId !== props.appId && this.props.create !== props.create)) {
+            props.onTabCreate({
+                type: props.create,
+                appId: props.appId
+            });
+        }
     }
 
     onTabClose = (index: number) => {
@@ -95,14 +115,8 @@ class EditorContainer extends React.Component<IEditorContainerProps & InjectedIn
     render() {
         return (
             <Editor
-                open={this.props.open}
-                create={this.props.create}
-                name={this.props.name}
-                appId={this.props.appId}
                 tabIndex={this.props.tabIndex}
                 tabs={this.props.tabs}
-                onTabCreate={this.onTabCreate}
-                onTabLoad={this.onTabLoad}
                 onTabChange={this.props.onTabChange}
                 onTabUpdate={this.props.onTabUpdate}
                 onTabClose={this.onTabClose}

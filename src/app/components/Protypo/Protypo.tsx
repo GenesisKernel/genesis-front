@@ -17,7 +17,6 @@
 import * as React from 'react';
 import { resolveHandler, resolveFunction } from 'components/Protypo';
 import * as propTypes from 'prop-types';
-import api from 'lib/api';
 import contextDefinitions from './contexts';
 import { TProtypoElement } from 'genesis/protypo';
 import { IValidationResult } from 'components/Validation/ValidatedForm';
@@ -26,6 +25,7 @@ import ToolButton, { IToolButtonProps } from 'components/Protypo/components/Tool
 import { IConstructorElementProps } from 'genesis/editor';
 
 export interface IProtypoProps extends IConstructorElementProps {
+    apiHost: string;
     editable?: boolean;
     wrapper?: JSX.Element;
     context: string;
@@ -104,7 +104,7 @@ class Protypo extends React.Component<IProtypoProps> {
     }
 
     resolveData(name: string) {
-        return api.resolveData(name);
+        return `${this.props.apiHost}${name}`;
     }
 
     resolveParams(values: IParamsSpec, formValues?: { [key: string]: IValidationResult }) {

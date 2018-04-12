@@ -15,70 +15,53 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as uuid from 'uuid';
-import { Action } from 'redux';
 import { Observable } from 'rxjs';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
+import { Epic } from 'modules';
 import { editorSave, reloadEditorTab } from '../actions';
-import { modalShow, modalClose } from 'modules/modal/actions';
-import { txCall, txExec } from 'modules/tx/actions';
-import api from 'lib/api';
+import ModalObservable from 'modules/modal/util/ModalObservable';
+import TxObservable from 'modules/tx/util/TxObservable';
 
-const newMenuEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(editorSave)
-        .filter(l => l.payload.new && 'menu' === l.payload.type)
-        .switchMap(action => {
-            const id = uuid.v4();
+const newMenuEpic: Epic = (action$, store, { api }) => action$.ofAction(editorSave)
+    .filter(l => l.payload.new && 'menu' === l.payload.type)
+    .flatMap(action => {
+        const id = uuid.v4();
+        const state = store.getState();
+        const client = api(state.engine.apiHost, state.auth.sessionToken);
 
-            return Observable.merge(
-                Observable.of(modalShow({
-                    id,
-                    type: 'CREATE_INTERFACE',
+        return ModalObservable<{ name: string, conditions: string }>(action$, {
+            modal: {
+                id,
+                type: 'CREATE_INTERFACE',
+                params: {
+                    type: 'menu'
+                }
+            },
+            success: result => TxObservable(action$, {
+                tx: {
+                    uuid: id,
+                    name: '@1NewMenu',
                     params: {
-                        type: 'menu'
+                        Name: result.name,
+                        Value: action.payload.value,
+                        Conditions: result.conditions,
+                        ApplicationId: action.payload.appId ? action.payload.appId : 0
                     }
-                })),
-                action$.ofAction(modalClose)
-                    .take(1)
-                    .switchMap(result => {
-                        if ('RESULT' === result.payload.reason) {
-                            return Observable.merge(
-                                Observable.of(txCall({
-                                    uuid: id,
-                                    name: '@1NewMenu',
-                                    params: {
-                                        Name: result.payload.data.name,
-                                        Value: action.payload.value,
-                                        Conditions: result.payload.data.conditions,
-                                        ApplicationId: action.payload.appId ? action.payload.appId : 0
-                                    }
-                                })),
-                                action$.ofAction(txExec.done)
-                                    .filter(l => id === l.payload.params.tx.uuid)
-                                    .take(1)
-                                    .takeUntil(action$.ofAction(txExec.failed).filter(l => id === l.payload.params.tx.uuid))
-                                    .switchMap(tx => {
-                                        const state = store.getState();
+                },
+                success: tx => Observable.fromPromise(client.getMenu({
+                    name: result.name
 
-                                        return Observable.from(api.findMenu(state.auth.sessionToken, result.payload.data.name))
-                                            .map(response => reloadEditorTab({
-                                                type: action.payload.type,
-                                                id: action.payload.id,
-                                                data: {
-                                                    new: false,
-                                                    id: String(response.id),
-                                                    name: response.name,
-                                                    initialValue: response.value
-                                                }
-                                            }));
-                                    })
-                            );
-                        }
-                        else {
-                            return Observable.empty<never>();
-                        }
-                    })
-            );
+                })).map(response => reloadEditorTab({
+                    type: action.payload.type,
+                    id: action.payload.id,
+                    data: {
+                        new: false,
+                        id: String(response.id),
+                        name: response.name,
+                        initialValue: response.value
+                    }
+                }))
+            })
         });
+    });
 
 export default newMenuEpic;

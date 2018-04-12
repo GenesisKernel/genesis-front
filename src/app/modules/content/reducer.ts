@@ -31,7 +31,6 @@ export type State = {
         readonly [name: string]: TSection;
     };
     readonly notifications: TProtypoElement[];
-    readonly alert: { id: string, success: string, error: string };
 };
 
 export const initialState: State = {
@@ -77,8 +76,7 @@ export const initialState: State = {
             page: null
         }
     },
-    notifications: null,
-    alert: null
+    notifications: null
 };
 
 export default (state: State = initialState, action: Action): State => {
@@ -407,19 +405,6 @@ export default (state: State = initialState, action: Action): State => {
             ...state,
             preloading: false,
             preloadingError: action.payload.error
-        };
-    }
-
-    if (isType(action, actions.alertShow)) {
-        return {
-            ...state,
-            alert: null
-        };
-    }
-    else if (isType(action, actions.alertClose)) {
-        return {
-            ...state,
-            alert: action.payload
         };
     }
 

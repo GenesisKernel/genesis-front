@@ -14,17 +14,16 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { IRootState } from 'modules';
-import { Epic } from 'redux-observable';
-import { Action } from 'redux';
+import { Epic } from 'modules';
 import { Observable } from 'rxjs';
 import { isType } from 'typescript-fsa';
 import keyring from 'lib/keyring';
 import { txCall, txAuthorize, txPrepare } from '../actions';
+import { modalShow, modalClose } from '../../modal/actions';
 
-const txCallEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(txCall)
-        .flatMap(action => {
+const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall)
+    .flatMap(action => {
+        const execTx = () => {
             const state = store.getState();
             if (keyring.validatePrivateKey(state.auth.privateKey)) {
                 return Observable.of(txPrepare({
@@ -50,6 +49,30 @@ const txCallEpic: Epic<Action, IRootState> =
                         })
                 );
             }
-        });
+        };
+
+        if (action.payload.confirm) {
+            return Observable.merge(
+                Observable.of(modalShow({
+                    id: action.payload.uuid,
+                    type: 'TX_CONFIRM',
+                    params: action.payload.confirm
+                })),
+                action$.ofAction(modalClose)
+                    .take(1)
+                    .flatMap(modalPayload => {
+                        if ('RESULT' === modalPayload.payload.reason) {
+                            return execTx();
+                        }
+                        else {
+                            return Observable.empty<never>();
+                        }
+                    })
+            );
+        }
+        else {
+            return execTx();
+        }
+    });
 
 export default txCallEpic;

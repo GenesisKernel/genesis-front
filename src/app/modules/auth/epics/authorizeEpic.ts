@@ -14,20 +14,17 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
+import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
 import { authorize, deauthorize } from '../actions';
 
-const authorizeEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(authorize)
-        .switchMap(action =>
-            Observable.timer(60000 * 60)
-                .map(() => {
-                    return deauthorize(null);
-                })
-                .takeUntil(action$.ofAction(authorize))
-        );
+const authorizeEpic: Epic = (action$, store) => action$.ofAction(authorize)
+    .switchMap(action =>
+        Observable.timer(60000 * 60)
+            .map(() => {
+                return deauthorize(null);
+            })
+            .takeUntil(action$.ofAction(authorize))
+    );
 
 export default authorizeEpic;

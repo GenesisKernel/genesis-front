@@ -18,41 +18,24 @@ import * as React from 'react';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import { render } from 'react-dom';
-import { overrideSettings } from 'lib/api';
 import store, { history } from 'store';
-import needle from 'needle';
 
 import 'jspolyfill-array.prototype.find';
 import 'whatwg-fetch';
 import 'font-awesome/css/font-awesome.css';
 import 'simple-line-icons/css/simple-line-icons.css';
-import 'sweetalert2/dist/sweetalert2.min.css';
 import 'styles/built/sass.css';
 import 'styles/index.css';
 
 import App from 'containers/App';
 
-needle('get', `${location.origin}/settings.json`, { parse: 'json' })
-    .then(response => {
-        if ('string' === typeof response.body) {
-            throw 'E_SETTINGS_INVALID';
-        }
-        else {
-            overrideSettings(response.body);
-        }
-    })
-    .catch(e => {
-        // Fall back to the default settings defined through env parameters or const value
-    })
-    .then(() => {
-        const TARGET_ROOT = document.querySelector('#root');
+const TARGET_ROOT = document.querySelector('#root');
 
-        render(
-            <Provider store={store}>
-                <ConnectedRouter history={history}>
-                    <App />
-                </ConnectedRouter>
-            </Provider>,
-            TARGET_ROOT
-        );
-    });
+render(
+    <Provider store={store}>
+        <ConnectedRouter history={history}>
+            <App />
+        </ConnectedRouter>
+    </Provider>,
+    TARGET_ROOT
+);

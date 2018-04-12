@@ -34,11 +34,10 @@ export interface ITxButtonProps {
         }[]
     }[];
     status: 'PENDING' | 'DONE' | 'ERROR';
-    confirm?: ITxButtonConfirm;
     page?: string;
     pageParams?: { [key: string]: any };
-    execContracts: (params: { contracts: { name: string, data: { [key: string]: any }[] }[], confirm?: ITxButtonConfirm }) => void;
-    navigate: (page: string, params: { [key: string]: any }, confirm?: ITxButtonConfirm) => void;
+    execContracts: (params: { contracts: { name: string, data: { [key: string]: any }[] }[] }) => void;
+    navigate: (page: string, params: { [key: string]: any }) => void;
     onExec?: (success: boolean) => void;
 }
 
@@ -64,8 +63,7 @@ class TxBatchButton extends React.Component<ITxButtonProps> {
 
     onClick() {
         this.props.execContracts({
-            contracts: this.props.contracts,
-            confirm: this.props.confirm
+            contracts: this.props.contracts
         });
     }
 

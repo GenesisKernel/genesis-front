@@ -15,74 +15,56 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as uuid from 'uuid';
-import { Action } from 'redux';
 import { Observable } from 'rxjs';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
+import { Epic } from 'modules';
 import { editorSave, reloadEditorTab } from '../actions';
-import { modalShow, modalClose } from 'modules/modal/actions';
-import api from 'lib/api';
-import { txCall, txExec } from 'modules/tx/actions';
+import ModalObservable from '../../modal/util/ModalObservable';
+import TxObservable from '../../tx/util/TxObservable';
 
-const newPageEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(editorSave)
-        .filter(l => l.payload.new && 'page' === l.payload.type)
-        .switchMap(action => {
-            const id = uuid.v4();
+const newPageEpic: Epic = (action$, store, { api }) => action$.ofAction(editorSave)
+    .filter(l => l.payload.new && 'page' === l.payload.type)
+    .flatMap(action => {
+        const state = store.getState();
+        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const id = uuid.v4();
 
-            return Observable.merge(
-                Observable.from(api.list(store.getState().auth.sessionToken, 'menu', null, null, ['name']))
-                    .map(menus =>
-                        modalShow({
-                            id,
-                            type: 'CREATE_PAGE',
-                            params: {
-                                menus: menus.list.map(l => l.name)
-                            }
-                        })
-                    ),
-                action$.ofAction(modalClose)
-                    .take(1)
-                    .switchMap(result => {
-                        if ('RESULT' === result.payload.reason) {
-                            return Observable.merge(
-                                Observable.of(txCall({
-                                    uuid: id,
-                                    name: '@1NewPage',
-                                    params: {
-                                        Name: result.payload.data.name,
-                                        Value: action.payload.value,
-                                        Menu: result.payload.data.menu,
-                                        Conditions: result.payload.data.conditions,
-                                        ApplicationId: action.payload.appId ? action.payload.appId : 0
-                                    }
-                                })),
-                                action$.ofAction(txExec.done)
-                                    .filter(l => id === l.payload.params.tx.uuid)
-                                    .take(1)
-                                    .takeUntil(action$.ofAction(txExec.failed).filter(l => id === l.payload.params.tx.uuid))
-                                    .switchMap(tx => {
-                                        const state = store.getState();
+        return Observable.fromPromise(client.getData({
+            name: 'menu',
+            columns: ['name']
 
-                                        return Observable.from(api.findPage(state.auth.sessionToken, result.payload.data.name))
-                                            .map(response => reloadEditorTab({
-                                                type: action.payload.type,
-                                                id: action.payload.id,
-                                                data: {
-                                                    new: false,
-                                                    id: String(response.id),
-                                                    name: response.name,
-                                                    initialValue: response.value
-                                                }
-                                            }));
-                                    })
-                            );
+        })).flatMap(menus => ModalObservable<{ name: string, menu: string, conditions: string }>(action$, {
+            modal: {
+                id,
+                type: 'CREATE_PAGE',
+                params: {
+                    menus: menus.list.map(l => l.name)
+                }
+            },
+            success: result => TxObservable(action$, {
+                tx: {
+                    uuid: id,
+                    name: '@1NewPage',
+                    params: {
+                        Name: result.name,
+                        Value: action.payload.value,
+                        Menu: result.menu,
+                        Conditions: result.conditions,
+                        ApplicationId: action.payload.appId || 0
+                    }
+                },
+                success: tx => Observable.from(client.getPage({ name: result.name }))
+                    .map(response => reloadEditorTab({
+                        type: action.payload.type,
+                        id: action.payload.id,
+                        data: {
+                            new: false,
+                            id: String(response.id),
+                            name: response.name,
+                            initialValue: response.value
                         }
-                        else {
-                            return Observable.empty<never>();
-                        }
-                    })
-            );
-        });
+                    }))
+            })
+        }));
+    });
 
 export default newPageEpic;

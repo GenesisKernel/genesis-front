@@ -16,7 +16,6 @@
 
 import * as React from 'react';
 import { Button, Col } from 'react-bootstrap';
-import api from 'lib/api';
 import { txCall } from 'modules/tx/actions';
 import styled from 'styled-components';
 import { history } from 'store';
@@ -80,18 +79,7 @@ export default class extends React.Component<IDebugProps, IDebugState> {
     }
 
     onSubmit(values: { [key: string]: string }) {
-        api.contentTest(this.props.session, this.state.code, 'en-US').then(r => {
-            this.setState({
-                result: r.tree
-            });
-        });
-    }
-
-    onHistory() {
-        api.history(this.props.session, 'pages', '1')
-            .then(result => {
-                console.log(result);
-            });
+        return null as any;
     }
 
     onChange(code: string) {
@@ -156,7 +144,6 @@ export default class extends React.Component<IDebugProps, IDebugState> {
                         >
                             Confirm button
                         </TxButton>
-                        <Button className="btn btn-info btn-block" onClick={this.onHistory.bind(this)}>History</Button>
                         <TxButton className="btn btn-danger btn-block" contractName="NewEcosystem">CreateEcosystem</TxButton>
                         <div className="row">
                             <div className="col-md-4">

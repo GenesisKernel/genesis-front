@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { txCall } from 'modules/tx/actions';
 import { TTransactionStatus, ITransaction } from 'genesis/tx';
-import { alertShow, navigatePage } from 'modules/content/actions';
+import { navigatePage } from 'modules/content/actions';
 
 import TxButton, { ITxButtonConfirm } from 'components/TxButton';
 
@@ -39,30 +39,15 @@ interface ITxButtonContainerProps {
 
 interface ITxButtonStateProps {
     transactions: OrderedMap<string, TTransactionStatus>;
-    confirmation: { id: string, success: string, error: string };
 }
 
 interface ITxButtonDispatchProps {
     callContract: typeof txCall;
-    alertShow: typeof alertShow;
     navigatePage: typeof navigatePage.started;
 }
 
 class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxButtonStateProps & ITxButtonDispatchProps> {
     private _uuid: string;
-
-    componentWillReceiveProps(props: ITxButtonContainerProps & ITxButtonStateProps & ITxButtonDispatchProps) {
-        if (props.confirmation && props.confirmation.id === this._uuid && props.confirmation.success) {
-            this._uuid = uuid.v4();
-
-            if (this.props.contractName) {
-                this.onExecContract(this.props.contractName, this.props.contractParams);
-            }
-            else if (this.props.page) {
-                this.onNavigate(this.props.page, this.props.pageParams);
-            }
-        }
-    }
 
     prepareParams(params: { [key: string]: any }) {
         const result: { [key: string]: any } = {};
@@ -87,46 +72,28 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
     onExecContract(name: string, params: { [name: string]: any } | (() => { [name: string]: any }), confirm?: ITxButtonConfirm) {
         this._uuid = uuid.v4();
 
-        if (confirm) {
+        let contractParams = {};
+        if ('function' === typeof this.props.contractParams) {
+            contractParams = this.props.contractParams();
+
             // Stop executing contract if provided parameters were invalid
-            if ('function' === typeof this.props.contractParams) {
-                if (null === this.props.contractParams()) {
-                    return;
-                }
-            }
-
-            this.props.alertShow({
-                id: this._uuid,
-                type: confirm.icon,
-                title: confirm.title,
-                text: confirm.text,
-                confirmButton: confirm.confirmButton,
-                cancelButton: confirm.cancelButton
-            });
-        }
-        else {
-            let contractParams = {};
-            if ('function' === typeof this.props.contractParams) {
-                contractParams = this.props.contractParams();
-
-                // Stop executing contract if provided parameters were invalid
-                if (null === contractParams) {
-                    return;
-                }
-                else {
-                    contractParams = this.prepareParams(contractParams);
-                }
+            if (null === contractParams) {
+                return;
             }
             else {
-                contractParams = this.props.contractParams;
+                contractParams = this.prepareParams(contractParams);
             }
-
-            this.props.callContract({
-                uuid: this._uuid,
-                name: this.props.contractName,
-                params: contractParams
-            });
         }
+        else {
+            contractParams = this.props.contractParams;
+        }
+
+        this.props.callContract({
+            uuid: this._uuid,
+            confirm,
+            name: this.props.contractName,
+            params: contractParams
+        });
     }
 
     onNavigate(page: string, params: { [key: string]: any } | (() => { [key: string]: any }), confirm?: ITxButtonConfirm) {
@@ -147,24 +114,12 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
         }
 
         this._uuid = uuid.v4();
-
-        if (confirm) {
-            this.props.alertShow({
-                id: this._uuid,
-                type: confirm.icon,
-                title: confirm.title,
-                text: confirm.text,
-                confirmButton: confirm.confirmButton,
-                cancelButton: confirm.cancelButton
-            });
-        }
-        else {
-            this.props.navigatePage({
-                name: page,
-                params: pageParams,
-                force: true
-            });
-        }
+        this.props.navigatePage({
+            confirm,
+            name: page,
+            params: pageParams,
+            force: true
+        });
     }
 
     render() {
@@ -184,7 +139,6 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
                 execContract={this.onExecContract.bind(this)}
                 onExec={this.props.onExec}
                 navigate={this.onNavigate.bind(this)}
-
             >
                 {this.props.children}
             </TxButton>
@@ -193,14 +147,12 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    transactions: state.tx.transactions,
-    confirmation: state.content.alert
+    transactions: state.tx.transactions
 });
 
 const mapDispatchToProps = {
     callContract: txCall,
-    navigatePage: navigatePage.started,
-    alertShow,
+    navigatePage: navigatePage.started
 };
 
 export default connect<ITxButtonStateProps, ITxButtonDispatchProps, ITxButtonContainerProps>(mapStateToProps, mapDispatchToProps)(TxButtonContainer);

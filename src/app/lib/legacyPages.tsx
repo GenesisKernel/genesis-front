@@ -32,7 +32,6 @@ import CreateLang from 'containers/Main/containers/Admin/Languages/Create';
 import EditLang from 'containers/Main/containers/Admin/Languages/Edit';
 import Import from 'containers/Main/containers/Admin/Import';
 import Export from 'containers/Main/containers/Admin/Export';
-import VDE from 'containers/Main/containers/Admin/VDE';
 import Backup from 'containers/Main/containers/Backup';
 import Editor from 'containers/Main/containers/Admin/Editor';
 
@@ -71,7 +70,6 @@ const LEGACY_PAGES: { [page: string]: ILegacyPage } = {
 
     'import': { section: 'admin', menu: 'admin_menu', render: () => <Import /> },
     'export': { section: 'admin', menu: 'admin_menu', render: () => <Export /> },
-    'vde': { section: 'admin', menu: 'admin_menu', render: () => <VDE /> },
 
     'editor': { section: 'editor', menu: null, render: (props: { open?: string, create?: string, name?: string, vde?: string }) => <Editor {...props} /> }
 };

@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { columnTypes } from './Create';
-import { ITableResponse } from 'lib/api';
+import { ITableResponse } from 'genesis/api';
 
 import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import Heading from 'components/Heading';

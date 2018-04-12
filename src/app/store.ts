@@ -30,7 +30,7 @@ import createHistory from 'history/createBrowserHistory';
 import createMemoryHistory from 'history/createMemoryHistory';
 import rootReducer, { rootEpic, IRootState } from './modules';
 import platform from 'lib/platform';
-import constructorModule from 'lib/constructor';
+import dependencies from 'modules/dependencies';
 
 export const history = platform.select<() => History>({
     desktop: createMemoryHistory,
@@ -52,6 +52,7 @@ const storageAdapters = [
         'auth.refreshToken',
         'auth.socketToken',
         'auth.id',
+        'auth.role',
         'auth.account',
         'auth.timestamp'
     ])
@@ -68,9 +69,7 @@ const configureStore = (initialState?: IRootState) => {
     const middleware = [
         routerMiddleware(history),
         createEpicMiddleware(rootEpic, {
-            dependencies: {
-                constructorModule
-            }
+            dependencies
         }),
         loadingBarMiddleware({
             promiseTypeSuffixes: ['STARTED', 'DONE', 'FAILED']

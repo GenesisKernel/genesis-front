@@ -15,23 +15,21 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
+import { Epic } from 'modules';
 import { logout, deauthorize } from '../actions';
 import { Observable } from 'rxjs/Observable';
 import { navigate } from 'modules/engine/actions';
 
-const logoutEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(logout.started)
-        .flatMap(action =>
-            Observable.of<Action>(
-                navigate('/'),
-                deauthorize(null),
-                logout.done({
-                    params: action.payload,
-                    result: null
-                })
-            )
-        );
+const logoutEpic: Epic = (action$, store) => action$.ofAction(logout.started)
+    .flatMap(action =>
+        Observable.of<Action>(
+            navigate('/'),
+            deauthorize(null),
+            logout.done({
+                params: action.payload,
+                result: null
+            })
+        )
+    );
 
 export default logoutEpic;

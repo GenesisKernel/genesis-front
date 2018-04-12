@@ -19,15 +19,12 @@ import { FormattedMessage } from 'react-intl';
 import { TEditorTab } from 'genesis/editor';
 
 import ToolButton from './ToolButton';
-import DropdownToolButton from './DropdownToolButton';
 import SectionToolButton from './SectionToolButton';
-import { CloseDropdownButton } from 'components/DropdownButton';
 
 export interface IEditorToolbarProps {
     currentTab: TEditorTab;
     canSave: boolean;
     canRevert: boolean;
-    onCreate: (params: {type: string, appId: number}) => void;
     onRevert: () => void;
     onToolChange: (tool: string) => void;
     onExec: () => void;
@@ -69,60 +66,6 @@ const EditorToolbar: React.SFC<IEditorToolbarProps> = props => {
 
     return (
         <div>
-            <DropdownToolButton
-                leftMost
-                icon="icon-doc"
-                content={(
-                    <div>
-                        <div className="dropdown-heading">
-                            <FormattedMessage id="editor.create" defaultMessage="Create" />
-                        </div>
-                        <ul className="dropdown-group">
-                            <li>
-                                <CloseDropdownButton onClick={props.onCreate.bind(null, 'contract')}>
-                                    <em className="icon icon-docs text-primary" />
-                                    <span>
-                                        <FormattedMessage id="contract" defaultMessage="Smart contract" />
-                                    </span>
-                                </CloseDropdownButton>
-                            </li>
-                        </ul>
-                        <div className="dropdown-heading">
-                            <FormattedMessage id="interface" defaultMessage="Interface" />
-                        </div>
-                        <ul className="dropdown-group">
-                            <ul className="dropdown-group">
-                                <li>
-                                    <CloseDropdownButton onClick={props.onCreate.bind(null, 'page')}>
-                                        <em className="icon icon-notebook text-primary" />
-                                        <span>
-                                            <FormattedMessage id="interface.page" defaultMessage="Page" />
-                                        </span>
-                                    </CloseDropdownButton>
-                                </li>
-                                <li>
-                                    <CloseDropdownButton onClick={props.onCreate.bind(null, 'menu')}>
-                                        <em className="icon icon-list text-primary" />
-                                        <span>
-                                            <FormattedMessage id="interface.menu" defaultMessage="Menu" />
-                                        </span>
-                                    </CloseDropdownButton>
-                                </li>
-                                <li>
-                                    <CloseDropdownButton onClick={props.onCreate.bind(null, 'block')}>
-                                        <em className="icon icon-layers text-primary" />
-                                        <span>
-                                            <FormattedMessage id="interface.block" defaultMessage="Block" />
-                                        </span>
-                                    </CloseDropdownButton>
-                                </li>
-                            </ul>
-                        </ul>
-                    </div>
-                )}
-            >
-                <FormattedMessage id="editor.create" defaultMessage="Create" />
-            </DropdownToolButton>
             <ToolButton icon="icon-note" disabled={!props.canSave} onClick={props.onSave}>
                 <FormattedMessage id="editor.save" defaultMessage="Save" />
             </ToolButton>

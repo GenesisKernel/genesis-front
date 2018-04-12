@@ -15,23 +15,30 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
+import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
 import { createAccount } from '../actions';
-import api, { IAPIError } from 'lib/api';
+import { navigate } from 'modules/engine/actions';
 import keyring from 'lib/keyring';
 
-const createAccountEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(createAccount.started)
-        .flatMap(action => {
-            const keys = keyring.generateKeyPair(action.payload.seed);
+const createAccountEpic: Epic = (action$, store, { api }) => action$.ofAction(createAccount.started)
+    .flatMap(action => {
+        const state = store.getState();
+        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const keys = keyring.generateKeyPair(action.payload.seed);
 
-            return Observable.from(api.getUid().then(uid => {
+        return Observable.from(
+            client.getUid().then(uid => {
                 const signature = keyring.sign(uid.uid, keys.private);
-                return api.login(uid.token, keys.public, signature);
-
-            })).map(payload =>
+                return client
+                    .authorize(uid.token)
+                    .login({
+                        signature,
+                        publicKey: keys.public
+                    });
+            })
+        ).flatMap(payload =>
+            Observable.of<Action>(
                 createAccount.done({
                     params: action.payload,
                     result: {
@@ -47,14 +54,16 @@ const createAccountEpic: Epic<Action, IRootState> =
                         socketToken: payload.notify_key,
                         timestamp: payload.timestamp
                     }
-                })
-            );
-        })
-        .catch((e: IAPIError) =>
-            Observable.of(createAccount.failed({
-                params: null,
-                error: e.error
-            }))
+                }),
+                navigate('/')
+            )
         );
+    })
+    .catch(e =>
+        Observable.of(createAccount.failed({
+            params: null,
+            error: e.error
+        }))
+    );
 
 export default createAccountEpic;

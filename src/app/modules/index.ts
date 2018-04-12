@@ -14,6 +14,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
+import { Action } from 'redux';
+import { Epic as NativeEpic } from 'redux-observable';
+import { IStoreDependencies } from './dependencies';
 import { combineReducers } from 'redux';
 import { reducer as toastrReducer } from 'react-redux-toastr';
 import { combineEpics } from 'redux-observable';
@@ -27,8 +30,11 @@ import * as engine from './engine';
 import * as editor from './editor';
 import * as tx from './tx';
 import * as gui from './gui';
+import * as io from './io';
 import * as storage from './storage';
 import * as socket from './socket';
+
+export type Epic = NativeEpic<Action, IRootState, IStoreDependencies>;
 
 export interface IRootState {
     auth: auth.State;
@@ -39,6 +45,7 @@ export interface IRootState {
     editor: editor.State;
     tx: tx.State;
     gui: gui.State;
+    io: io.State;
     storage: storage.State;
     socket: socket.State;
     loadingBar: number;
@@ -53,6 +60,7 @@ export const rootEpic = combineEpics(
     editor.epic,
     tx.epic,
     gui.epic,
+    io.epic,
     storage.epic,
     socket.epic
 );

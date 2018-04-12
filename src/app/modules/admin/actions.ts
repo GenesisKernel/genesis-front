@@ -15,8 +15,8 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IListResponse, ITableResponse, ITablesResponse, IInterfacesResponse, IContractsResponse, IParameterResponse, IHistoryResponse, ITabListResponse, IInterfacePageResponse, IInterfaceMenuResponse, IInterfaceBlockResponse } from 'lib/api';
 import { TProtypoElement } from 'genesis/protypo';
+import { ITableResponse, IDataResponse, IHistoryResponse, IPageResponse, IMenuResponse, IBlockResponse, IParamResponse, IContractsResponse, ITablesResponse } from 'genesis/api';
 
 const actionCreator = actionCreatorFactory('admin');
 
@@ -25,14 +25,14 @@ export const getContract = actionCreator.async<{ id?: string, name?: string }, {
 export const getContracts = actionCreator.async<{ offset?: number, limit?: number }, IContractsResponse, string>('GET_CONTRACTS');
 
 // Tables
-export const getTable = actionCreator.async<{ table: string, columnTypes?: string[] }, { table: ITableResponse, data: IListResponse }, string>('GET_TABLE');
+export const getTable = actionCreator.async<{ table: string, columnTypes?: string[] }, { table: ITableResponse, data: IDataResponse }, string>('GET_TABLE');
 export const getTableStruct = actionCreator.async<{ name: string }, ITableResponse, string>('GET_TABLE_STRUCT');
 export const getTables = actionCreator.async<{ offset?: number, limit?: number }, ITablesResponse, string>('GET_TABLES');
 export const getHistory = actionCreator.async<{ id: string, table: string }, IHistoryResponse, string>('GET_HISTORY');
 
 // Pages
-export const getPage = actionCreator.async<{ name: string }, { page: IInterfacePageResponse, menus: IInterfaceMenuResponse[] }, string>('GET_PAGE');
-export const getInterface = actionCreator.async<void, IInterfacesResponse, string>('GET_INTERFACE');
+export const getPage = actionCreator.async<{ name: string }, { page: IPageResponse, menus: IMenuResponse[] }, string>('GET_PAGE');
+export const getInterface = actionCreator.async<void, { menus: { id: string, name: string }[], pages: { id: string, name: string }[], blocks: { id: string, name: string }[] }, string>('GET_INTERFACE');
 
 // Constructor
 
@@ -51,15 +51,15 @@ export const constructorUndo = actionCreator<{ pageID: string }>('CONSTRUCTOR_UN
 export const constructorRedo = actionCreator<{ pageID: string }>('CONSTRUCTOR_REDO');
 
 // Menus
-export const getMenu = actionCreator.async<{ name: string }, IInterfaceMenuResponse, string>('GET_MENU');
+export const getMenu = actionCreator.async<{ name: string }, IMenuResponse, string>('GET_MENU');
 export const getMenus = actionCreator.async<void, { id: string, name: string, conditions: string, value: string }[], string>('GET_MENUS');
 
 // Blocks
-export const getBlock = actionCreator.async<{ name: string }, IInterfaceBlockResponse, string>('GET_BLOCK');
+export const getBlock = actionCreator.async<{ name: string }, IBlockResponse, string>('GET_BLOCK');
 
 // Parameters
-export const getParameter = actionCreator.async<{ name: string }, IParameterResponse, string>('GET_PARAMETER');
-export const getParameters = actionCreator.async<{ params?: string[] }, IParameterResponse[], string>('GET_PARAMETERS');
+export const getParameter = actionCreator.async<{ name: string }, IParamResponse, string>('GET_PARAMETER');
+export const getParameters = actionCreator.async<{ params?: string[] }, IParamResponse[], string>('GET_PARAMETERS');
 
 // Languages
 export const getLanguage = actionCreator.async<{ id: string }, { id: string, res: any, name: string, conditions: string }, string>('GET_LANGUAGE');
@@ -71,5 +71,5 @@ export const importData = actionCreator.async<{ file: File }, any, undefined>('I
 export const importDataPrune = actionCreator<{ name: string, key: string, index?: number }>('IMPORT_DATA_PRUNE');
 
 // Tabs
-export const getTabList = actionCreator.async<{ addID?: string, addName?: string, addType?: string }, ITabListResponse, string>('GET_TAB_LIST');
+export const getTabList = actionCreator.async<{ addID?: string, addName?: string, addType?: string }, any, string>('GET_TAB_LIST');
 export const removeTabList = actionCreator.async<{ id: string, type: string }, any, string>('REMOVE_TAB_LIST');

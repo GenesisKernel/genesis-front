@@ -16,7 +16,7 @@
 
 import * as actions from './actions';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import { IAccount } from 'genesis/auth';
+import { IAccount, IRole } from 'genesis/auth';
 import loginHandler from './reducers/loginHandler';
 import loginDoneHandler from './reducers/loginDoneHandler';
 import loginFailedHandler from './reducers/loginFailedHandler';
@@ -33,11 +33,13 @@ import selectAccountDoneHandler from './reducers/selectAccountDoneHandler';
 import selectAccountFailedHandler from './reducers/selectAccountFailedHandler';
 import authorizeHandler from './reducers/authorizeHandler';
 import deauthorizeHandler from './reducers/deauthorizeHandler';
+import generateSeedHandler from './reducers/generateSeedHandler';
+import selectRoleDoneHandler from './reducers/selectRoleDoneHandler';
 
 export type State = {
+    readonly guestKey: string;
     readonly loadedSeed: string;
     readonly isAuthenticated: boolean;
-    readonly authenticationError: string;
     readonly isLoggingIn: boolean;
     readonly isCreatingAccount: boolean;
     readonly createAccountError: string;
@@ -50,14 +52,16 @@ export type State = {
     readonly timestamp: string;
     readonly defaultAccount: string;
     readonly account: IAccount;
+    readonly role: IRole;
+    readonly roles: IRole[];
     readonly privateKey: string;
     readonly ecosystem: string;
 };
 
 export const initialState: State = {
+    guestKey: 'e5a87a96a445cb55a214edaad3661018061ef2936e63a0a93bdb76eb28251c1f',
     loadedSeed: null,
     isAuthenticated: false,
-    authenticationError: null,
     isLoggingIn: false,
     isCreatingAccount: false,
     createAccountError: null,
@@ -70,6 +74,8 @@ export const initialState: State = {
     timestamp: null,
     defaultAccount: null,
     account: null,
+    role: null,
+    roles: null,
     privateKey: null,
     ecosystem: null
 };
@@ -89,5 +95,7 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.selectAccount.started, selectAccountHandler)
     .case(actions.selectAccount.done, selectAccountDoneHandler)
     .case(actions.selectAccount.failed, selectAccountFailedHandler)
+    .case(actions.selectRole.done, selectRoleDoneHandler)
     .case(actions.authorize, authorizeHandler)
-    .case(actions.deauthorize, deauthorizeHandler);
+    .case(actions.deauthorize, deauthorizeHandler)
+    .case(actions.generateSeed.done, generateSeedHandler);

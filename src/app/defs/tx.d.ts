@@ -16,13 +16,13 @@
 
 declare module 'genesis/tx' {
     type TTxError =
+        'error' |
+        'info' |
+        'warning' |
+        'panic' |
         'E_CONTRACT' |
-        'E_ERROR' |
-        'E_INFO' |
         'E_INVALID_PASSWORD' |
-        'E_SERVER' |
-        'E_WARNING' |
-        'panic';
+        'E_SERVER';
 
     interface ITxResult {
         block: string;
@@ -63,6 +63,15 @@ declare module 'genesis/tx' {
         params: {
             [key: string]: any;
         };
+        confirm?: ITransactionConfirm;
+    }
+
+    interface ITransactionConfirm {
+        type?: string;
+        title?: string;
+        text?: string;
+        confirmButton?: string;
+        cancelButton?: string;
     }
 
     interface ITransactionBatchCall {
@@ -74,6 +83,7 @@ declare module 'genesis/tx' {
             }[];
         }[];
         silent?: boolean;
+        confirm?: ITransactionConfirm;
     }
 
     interface IExecutionCall {
@@ -81,6 +91,5 @@ declare module 'genesis/tx' {
         privateKey?: string;
         signature?: string;
         time?: string;
-        signParams?: { [key: string]: string };
     }
 }

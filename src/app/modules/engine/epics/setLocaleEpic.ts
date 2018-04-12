@@ -25,7 +25,7 @@ import { saveLocale } from 'modules/storage/actions';
 
 const defaultLocale = 'en-US';
 
-export const setLocaleEpic: Epic<Action, IRootState> =
+const setLocaleEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(setLocale.started)
         .delay(0)
         .flatMap(action => {

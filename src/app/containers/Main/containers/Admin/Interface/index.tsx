@@ -18,7 +18,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getInterface } from 'modules/admin/actions';
-import { IInterfacesResponse } from 'lib/api';
 
 import Interface from 'components/Main/Admin/Interface';
 
@@ -27,7 +26,11 @@ export interface IInterfaceContainerProps {
 }
 
 interface IInterfaceContainerState {
-    pages: IInterfacesResponse;
+    pages: {
+        pages: { id: string, name: string }[];
+        blocks: { id: string, name: string }[];
+        menus: { id: string, name: string }[];
+    };
 }
 
 interface IInterfaceContainerDispatch {

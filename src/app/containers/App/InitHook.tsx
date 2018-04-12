@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { intialize } from 'modules/engine/actions';
+import { initialize } from 'modules/engine/actions';
 
 export interface IInitHookProps {
 
@@ -28,12 +28,12 @@ interface IInitHookState {
 }
 
 interface IInitHookDispatch {
-    intialize: typeof intialize;
+    initialize: () => void;
 }
 
 class InitHook extends React.Component<IInitHookProps & IInitHookState & IInitHookDispatch> {
     componentDidMount() {
-        this.props.intialize();
+        this.props.initialize();
     }
 
     render() {
@@ -46,7 +46,7 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    intialize
+    initialize: () => initialize.started(null)
 };
 
 export default connect<IInitHookState, IInitHookDispatch, IInitHookProps>(mapStateToProps, mapDispatchToProps)(InitHook);

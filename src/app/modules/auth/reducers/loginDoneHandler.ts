@@ -16,23 +16,23 @@
 
 import { State } from '../reducer';
 import { Success } from 'typescript-fsa';
-import { ILoginCall } from 'genesis/auth';
-import { ILoginResponse } from 'lib/api';
+import { ILoginCall, IRole } from 'genesis/auth';
 import { IAccount } from 'genesis/auth';
 
-export default function (state: State, payload: Success<ILoginCall, ILoginResponse & { account: IAccount, privateKey: string, publicKey: string }>): State {
+export default function (state: State, payload: Success<ILoginCall, { account: IAccount, roles: IRole[], privateKey: string, publicKey: string }>): State {
+    const hasRoles = !!(payload.result.roles && payload.result.roles.length);
     return {
         ...state,
-        isAuthenticated: true,
-        isLoggingIn: false,
+        isAuthenticated: !hasRoles,
+        isLoggingIn: hasRoles,
         account: payload.result.account,
-        ecosystem: payload.result.ecosystem_id,
-        sessionToken: payload.result.token,
-        refreshToken: payload.result.refresh,
+        roles: payload.result.roles,
+        ecosystem: payload.result.account.ecosystem,
+        sessionToken: payload.result.account.sessionToken,
+        refreshToken: payload.result.account.refreshToken,
         privateKey: payload.result.privateKey,
-        socketToken: payload.result.notify_key,
-        timestamp: payload.result.timestamp,
-        authenticationError: null,
+        socketToken: payload.result.account.socketToken,
+        timestamp: payload.result.account.timestamp,
         id: payload.result.account.id
     };
 }
