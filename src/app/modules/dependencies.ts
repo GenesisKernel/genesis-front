@@ -22,7 +22,7 @@ export const apiEndpoint = 'api/v2';
 
 export interface IStoreDependencies {
     api: IAPIDependency;
-    constructorModule: any;
+    constructorModule: typeof constructorModule;
 }
 
 export interface IAPIDependency {

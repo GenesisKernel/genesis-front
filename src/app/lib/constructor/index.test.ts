@@ -19,7 +19,7 @@ import { TProtypoElement } from 'genesis/protypo';
 import { TConstructorTreeElement, IFindTagResult } from 'genesis/editor';
 
 test('Constructor module', () => {
-    
+
     const jsonData: TProtypoElement[] = [
         {
             tag: 'p',
