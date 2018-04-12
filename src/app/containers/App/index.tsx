@@ -19,12 +19,10 @@ import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { IntlProvider } from 'react-intl';
-import { setLoading } from 'modules/engine/actions';
 import platform from 'lib/platform';
 import * as classnames from 'classnames';
 
 import { AnimatedSwitch } from 'components/Animation';
-import Splash from 'components/Splash';
 import Main from 'containers/Main';
 import Auth from 'containers/Auth';
 
@@ -33,17 +31,12 @@ import { DragDropContext } from 'react-dnd';
 import InitHook from 'containers/App/InitHook';
 import { switchWindow } from 'modules/gui/actions';
 import ModalProvider from 'containers/Modal/ModalProvider';
-import Offline from 'containers/Auth/Offline';
 
 interface IAppProps {
     locale: string;
     isAuthenticated: boolean;
     isCollapsed: boolean;
-    isLoading: boolean;
-    isConnected: boolean;
-    isConnecting: boolean;
     localeMessages: { [key: string]: string };
-    setLoading?: typeof setLoading;
     switchWindow?: typeof switchWindow.started;
 }
 
@@ -51,19 +44,6 @@ class App extends React.Component<IAppProps> {
     componentWillReceiveProps(props: IAppProps) {
         if (this.props.isAuthenticated !== props.isAuthenticated) {
             props.switchWindow(props.isAuthenticated ? 'main' : 'general');
-        }
-
-        if (null === this.props.isConnected && null !== props.isConnected) {
-            if (props.isConnected) {
-                props.setLoading(false);
-            }
-            else {
-                this.props.setLoading(false);
-            }
-        }
-
-        if (this.props.isAuthenticated !== props.isAuthenticated) {
-            this.props.setLoading(false);
         }
     }
 
@@ -83,12 +63,6 @@ class App extends React.Component<IAppProps> {
                     <InitHook />
                     <ModalProvider />
                     <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
-                        {this.props.isLoading && (
-                            <Route path="/" component={Splash} />
-                        )}
-                        {!this.props.isConnected && (
-                            <Route path="/" component={Offline} />
-                        )}
                         {!this.props.isAuthenticated && (
                             <Route path="/" component={Auth} />
                         )}
@@ -104,14 +78,10 @@ const mapStateToProps = (state: IRootState) => ({
     locale: state.storage.locale,
     localeMessages: state.engine.localeMessages,
     isAuthenticated: state.auth.isAuthenticated,
-    isCollapsed: state.engine.isCollapsed,
-    isLoading: state.engine.isLoading,
-    isConnected: state.engine.isConnected,
-    isConnecting: state.engine.isConnecting
+    isCollapsed: state.engine.isCollapsed
 });
 
 const mapDispatchToProps = {
-    setLoading,
     switchWindow: switchWindow.started
 };
 

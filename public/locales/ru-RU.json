@@ -110,6 +110,7 @@
     "auth.error.E_INVALID_KEY": "Указанный ключ содержит некорректные данные или повреждён",
     "auth.error.E_INVALID_PASSWORD": "Неверный пароль",
     "auth.error.E_DELETEDKEY": "Данный аккаунт был удалён из экосистемы",
+    "auth.error.E_OFFLINE": "Не удалось подключиться к серверу",
     "auth.backup.invalid": "Указанный ключ повреждён или содержит некорректные данные",
     "auth.generate.new": "Сгенерировать новый",
     "auth.getstarted": "Начать работу",

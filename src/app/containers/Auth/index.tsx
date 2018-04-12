@@ -26,7 +26,6 @@ export interface IAuthContainerProps {
 
 interface IAuthContainerState {
     firstRun: boolean;
-    isConnected: boolean;
 }
 
 interface IAuthContainerDispatch {
@@ -34,8 +33,7 @@ interface IAuthContainerDispatch {
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    firstRun: !state.storage.accounts || 0 === state.storage.accounts.length,
-    isConnected: state.engine.isConnected
+    firstRun: !state.storage.accounts || 0 === state.storage.accounts.length
 });
 
 const mapDispatchToProps = {

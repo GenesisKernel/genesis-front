@@ -23,14 +23,12 @@ import platform from 'lib/platform';
 
 import Titlebar from 'components/Main/Titlebar';
 import Welcome from 'containers/Auth/Welcome';
-import Offline from 'containers/Auth/Offline';
 import Account from 'components/Auth/Account';
 import Login from 'containers/Auth/Login';
 
 export interface IAuthProps {
     className?: string;
     firstRun: boolean;
-    isConnected: boolean;
 }
 
 const Auth: React.SFC<IAuthProps> = props => (
@@ -43,7 +41,6 @@ const Auth: React.SFC<IAuthProps> = props => (
                 >
                     <Switch>
                         <Route path="/account" component={Account} />
-                        {!props.isConnected && <Route path="*" component={Offline} />}
                         {props.firstRun && (<Route path="/" component={Welcome} />)}
                         {!props.firstRun && (<Route path="/" component={Login} />)}
                         <Redirect to="/" />

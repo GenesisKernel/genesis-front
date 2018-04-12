@@ -15,12 +15,10 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { combineEpics } from 'redux-observable';
-import checkOnlineEpic from './epics/checkOnlineEpic';
 import initializeEpic from './epics/initializeEpic';
 import setLocaleEpic from './epics/setLocaleEpic';
 
 export default combineEpics(
     initializeEpic,
-    checkOnlineEpic,
     setLocaleEpic
 );

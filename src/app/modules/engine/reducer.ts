@@ -23,9 +23,6 @@ export type State = {
     readonly apiHost: string;
     readonly wsHost: string;
     readonly localeMessages: { [key: string]: string };
-    readonly isLoading: boolean;
-    readonly isConnected: boolean;
-    readonly isConnecting: boolean;
     readonly isCollapsed: boolean;
 };
 
@@ -33,52 +30,10 @@ export const initialState: State = {
     apiHost: 'http://127.0.0.1:7079',
     wsHost: 'ws://127.0.0.1:8000',
     localeMessages: defaultLocale,
-    isLoading: true,
-    isConnected: null,
-    isConnecting: false,
     isCollapsed: true
 };
 
 export default (state: State = initialState, action: Action): State => {
-    if (isType(action, actions.checkOnline.started)) {
-        return {
-            ...state,
-            isConnecting: true
-        };
-    }
-
-    if (isType(action, actions.checkOnline.failed)) {
-        return {
-            ...state,
-            isConnected: false,
-            isConnecting: false
-        };
-
-    }
-
-    if (isType(action, actions.checkOnline.done)) {
-        return {
-            ...state,
-            isConnected: action.payload.result,
-            isConnecting: false
-        };
-    }
-
-    if (isType(action, actions.checkOnline.failed)) {
-        return {
-            ...state,
-            isConnected: false,
-            isConnecting: false
-        };
-    }
-
-    if (isType(action, actions.setLoading)) {
-        return {
-            ...state,
-            isLoading: action.payload
-        };
-    }
-
     if (isType(action, actions.setCollapsed)) {
         return {
             ...state,

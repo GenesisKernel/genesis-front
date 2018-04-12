@@ -18,7 +18,7 @@ import { Action } from 'redux';
 import { Epic } from 'modules';
 import { Observable } from 'rxjs';
 import { connect } from 'modules/socket/actions';
-import { initialize, setLocale, checkOnline } from '../actions';
+import { initialize, setLocale } from '../actions';
 import urlJoin from 'url-join';
 
 const initializeEpic: Epic = (action$, store) => action$.ofAction(initialize.started)
@@ -45,7 +45,6 @@ const initializeEpic: Epic = (action$, store) => action$.ofAction(initialize.sta
         const state = store.getState();
         return Observable.of<Action>(
             result,
-            checkOnline.started(null),
             connect.started({
                 socketToken: state.auth.socketToken,
                 timestamp: state.auth.timestamp,
