@@ -19,6 +19,7 @@ import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
 import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
+import Heading from './Heading';
 
 export interface IWelcomeProps {
     onConfirm: () => void;
@@ -27,8 +28,9 @@ export interface IWelcomeProps {
 const Welcome: React.SFC<IWelcomeProps> = (props) => (
     <LocalizedDocumentTitle title="auth.welcome" defaultTitle="Welcome">
         <div>
+            <Heading>Genesis</Heading>
             <h4>
-                <FormattedMessage id="auth.welcome.to" defaultMessage="Welcome to Genesis" />
+                <FormattedMessage id="auth.welcome" defaultMessage="Welcome" />
             </h4>
             <p className="pv">
                 <FormattedMessage id="auth.welcome.guide" defaultMessage="Before proceeding, you will now be guided through the account creation process. This will not take too much of your time. After completing this process you will be able to use all features of Genesis" />
