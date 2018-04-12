@@ -104,6 +104,13 @@ declare module 'genesis/editor' {
         selectedTag?: TProtypoElement;
     }
 
+    interface IGetPageTreeResult {
+        name?: string;
+        jsonData: TProtypoElement[];
+        treeData?: TConstructorTreeElement[];
+        error?: string;
+    }
+
     interface IAddTagCall {
         tag: ISourceElement;
         destinationTagID?: string;

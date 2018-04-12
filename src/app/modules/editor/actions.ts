@@ -19,7 +19,7 @@ import { TProtypoElement } from 'genesis/protypo';
 
 import { IEditorTabCreateCall, ILoadEditorTabCall, ICreateEditorTabCall, IReloadEditorTabCall, TEditorTab, IChangePageCall, IChangePageResult, ISaveConstructorHistoryResult,
     IConstructorUndoRedoResult, ISetTagCanDropPositionCall, ISetTagCanDropPositionResult, IAddTagCall, IOperateTagCall, IOperateTagResult, IMoveTreeTag, ISelectTagResult,
-    TConstructorTreeElement
+    IGetPageTreeResult
 } from 'genesis/editor';
 
 const actionCreator = actionCreatorFactory('editor');
@@ -36,7 +36,7 @@ export const changeEditorTool = actionCreator.async<string, TProtypoElement[]>('
 
 // TODO: Pending refactoring
 export const setPageTemplate = actionCreator<string>('SET_PAGE_TEMPLATE');
-export const getPageTree = actionCreator.async<void, { name?: string, jsonData: TProtypoElement[], treeData?: TConstructorTreeElement[], error?: string }, string>('GET_PAGE_TREE');
+export const getPageTree = actionCreator.async<void, IGetPageTreeResult, string>('GET_PAGE_TREE');
 export const changePage = actionCreator.async<IChangePageCall, IChangePageResult>('CHANGE_PAGE');
 export const selectTag = actionCreator.async<TProtypoElement, ISelectTagResult>('SELECT_TAG');
 export const setTagCanDropPosition = actionCreator.async<ISetTagCanDropPositionCall, ISetTagCanDropPositionResult>('SET_TAG_CAN_DROP_POSITION');

@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
+import { Action } from 'redux';
 import { Epic } from 'modules';
 import { changeEditorTool, getPageTree } from '../actions';
 import { Observable } from 'rxjs/Observable';
@@ -30,13 +31,6 @@ const changeEditorToolEpic: Epic = (action$, store, { api }) => action$.ofAction
                     template: payload,
                     locale: state.storage.locale,
                     params: {}
-                case 'constructor':
-                    return Observable.of<Action>(
-                        getPageTree.started(null),
-                        changeEditorTool.done({
-                            params: action.payload,
-                            result: null
-                        }));
 
                 })).map(result => changeEditorTool.done({
                     params: action.payload,
@@ -46,6 +40,14 @@ const changeEditorToolEpic: Epic = (action$, store, { api }) => action$.ofAction
                     params: action.payload,
                     error: e
                 })));
+
+            case 'constructor':
+                return Observable.of<Action>(
+                    getPageTree.started(null),
+                    changeEditorTool.done({
+                        params: action.payload,
+                        result: null
+                    }));
 
             default:
                 return Observable.of(changeEditorTool.done({
