@@ -209,15 +209,15 @@ class GenesisAPI {
     // Template engine
     public content = this.setSecuredEndpoint<IContentRequest, IContentResponse>('post', 'content/{type}/{name}', {
         requestTransformer: request => ({
-            lang: request.locale,
-            params: request.params
+            ...request.params,
+            lang: request.locale
         })
     });
     public contentTest = this.setSecuredEndpoint<IContentTestRequest, IContentResponse>('post', 'content', {
         requestTransformer: request => ({
+            ...request.params,
             template: request.template,
-            lang: request.locale,
-            params: request.params
+            lang: request.locale
         })
     });
 

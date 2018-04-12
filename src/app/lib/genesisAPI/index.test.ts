@@ -380,11 +380,9 @@ test('Content', () => {
         expect(response).toEqual({
             __requestUrl: `${paramTestingAPIHost}/${paramTestingAPIEndpoint}/content/page/TEST_PAGE`,
             lang: 'en-US',
-            params: {
-                strParam: 'hello?',
-                numParam: 4815162342,
-                boolParam: true
-            }
+            strParam: 'hello?',
+            numParam: 4815162342,
+            boolParam: true
         });
     });
 });
@@ -405,11 +403,9 @@ test('ContentTest', () => {
             __requestUrl: `${paramTestingAPIHost}/${paramTestingAPIEndpoint}/content`,
             lang: 'en-US',
             template: 'TEST_DATA',
-            params: {
-                strParam: 'hello?',
-                numParam: 4815162342,
-                boolParam: true
-            }
+            strParam: 'hello?',
+            numParam: 4815162342,
+            boolParam: true
         });
     });
 });
