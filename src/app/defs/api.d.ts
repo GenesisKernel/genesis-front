@@ -178,6 +178,16 @@ declare module 'genesis/api' {
         };
     }
 
+    interface IContentJsonRequest {
+        template: string;
+        locale: string;
+        source?: boolean;
+    }
+
+    interface IContentJsonResponse {
+        tree: TProtypoElement[];
+    }
+
     interface ISegmentRequest {
         offset?: number;
         limit?: number;

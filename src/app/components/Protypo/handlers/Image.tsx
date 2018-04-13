@@ -22,32 +22,13 @@ import StyledComponent from './StyledComponent';
 import * as classnames from 'classnames';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
+import { IConstructorElementProps } from 'genesis/editor';
 
-export interface IImageProps {
+export interface IImageProps extends IConstructorElementProps {
     'className'?: string;
     'class'?: string;
     'src'?: string;
     'alt'?: string;
-
-    'editable'?: boolean;
-    'changePage'?: any;
-    'setTagCanDropPosition'?: any;
-    'addTag'?: any;
-    'moveTag'?: any;
-    'copyTag'?: any;
-    'removeTag'?: any;
-    'selectTag'?: any;
-    'selected'?: boolean;
-    'tag'?: any;
-
-    'canDropPosition'?: string;
-
-    connectDropTarget?: any;
-    isOver?: boolean;
-
-    connectDragSource?: any;
-    connectDragPreview?: any;
-    isDragging?: boolean;
 }
 
 interface IImageContext {
@@ -57,7 +38,7 @@ interface IImageContext {
 const Image: React.SFC<IImageProps> = (props, context: IImageContext) => {
     const onClick = (e: any) => {
         e.stopPropagation();
-        props.selectTag({ tag: props.tag });
+        props.selectTag(props.tag);
     };
 
     const removeTag = () => {

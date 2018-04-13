@@ -26,8 +26,9 @@ import { Validator } from 'components/Validation/Validators';
 import * as classnames from 'classnames';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
+import { IConstructorElementProps } from 'genesis/editor';
 
-export interface IRadioGroupProps {
+export interface IRadioGroupProps extends IConstructorElementProps {
     'className'?: string;
     'class'?: string;
     'source'?: string;
@@ -38,24 +39,6 @@ export interface IRadioGroupProps {
     'validate'?: {
         [validator: string]: string
     };
-
-    // constructor props
-    'editable'?: boolean;
-    'changePage'?: any;
-    'setTagCanDropPosition'?: any;
-    'addTag'?: any;
-    'moveTag'?: any;
-    'copyTag'?: any;
-    'removeTag'?: any;
-    'selectTag'?: any;
-    'selected'?: boolean;
-    'tag'?: any;
-    'canDropPosition'?: string;
-    connectDropTarget?: any;
-    isOver?: boolean;
-    connectDragSource?: any;
-    connectDragPreview?: any;
-    isDragging?: boolean;
 }
 
 interface IRadioGroupContext {
@@ -65,7 +48,7 @@ interface IRadioGroupContext {
 const RadioGroup: React.SFC<IRadioGroupProps> = (props, context: IRadioGroupContext) => {
     const onClick = (e: any) => {
         e.stopPropagation();
-        props.selectTag({ tag: props.tag });
+        props.selectTag(props.tag);
     };
 
     const removeTag = () => {

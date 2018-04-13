@@ -26,8 +26,9 @@ import TxBatchButton from 'containers/Widgets/TxBatchButton';
 
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
+import { IConstructorElementProps } from 'genesis/editor';
 
-export interface IButtonProps {
+export interface IButtonProps extends IConstructorElementProps {
     'class'?: string;
     'alert'?: {
         icon: string;
@@ -46,26 +47,6 @@ export interface IButtonProps {
     'pageparams'?: IParamsSpec;
     'params'?: IParamsSpec;
     'formID'?: number;
-
-    'editable'?: boolean;
-    'changePage'?: any;
-    'setTagCanDropPosition'?: any;
-    'addTag'?: any;
-    'moveTag'?: any;
-    'copyTag'?: any;
-    'removeTag'?: any;
-    'selectTag'?: any;
-    'selected'?: boolean;
-    'tag'?: any;
-
-    'canDropPosition'?: string;
-
-    connectDropTarget?: any;
-    isOver?: boolean;
-
-    connectDragSource?: any;
-    connectDragPreview?: any;
-    isDragging?: boolean;
 }
 
 interface IButtonContext {
@@ -117,7 +98,7 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
 
     const onClick = (e: any) => {
         e.stopPropagation();
-        props.selectTag({ tag: props.tag });
+        props.selectTag(props.tag);
     };
 
     const onBlur = (e: any) => {

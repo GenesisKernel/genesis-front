@@ -15,12 +15,9 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as actions from './actions';
-import * as _ from 'lodash';
 import { Action } from 'redux';
 import { isType } from 'typescript-fsa';
 import { ITableResponse, IDataResponse, IHistoryResponse, IParamResponse, ITablesResponse } from 'genesis/api';
-import { findTagById, resolveTagHandler, Properties, generateId, setIds, convertToTreeData, getConstructorTemplate } from 'lib/constructor';
-import { TProtypoElement } from 'genesis/protypo';
 
 export type State = {
     readonly pending: boolean;
@@ -32,7 +29,6 @@ export type State = {
     readonly tableData: IDataResponse;
     readonly history: IHistoryResponse;
     readonly page: { id: number, name: string, menu: string, conditions: string, value: string };
-    readonly pageTreeCode: any;
     readonly interfaces: {
         pages: { id: string, name: string }[];
         blocks: { id: string, name: string }[];
@@ -40,26 +36,6 @@ export type State = {
     };
     readonly contract: { id: string, active: string, name: string, conditions: string, address: string, value: string };
     readonly contracts: { id: string, name: string, value: string, wallet_id: string, address: string, conditions: string, token_id: string, active: string }[];
-    readonly tabs: {
-        data: {
-            [key: string]: {
-                type: string,
-                data: any,
-                treeData?: any,
-                pageTemplate?: string,
-                selectedTag?: TProtypoElement
-            }
-        },
-        history: {
-            [key: string]: {
-                data: any,
-                position?: number,
-                canUndo?: boolean,
-                canRedo?: boolean
-            }
-        },
-        list: { id: string, type: string, name?: string, visible?: boolean }[]
-    };
     readonly language: { id: string, res: any, name: string, conditions: string };
     readonly languages: { id: string, res: any, name: string, conditions: string }[];
     readonly parameter: IParamResponse;
@@ -91,11 +67,9 @@ export const initialState: State = {
     tableData: null,
     history: null,
     page: null,
-    pageTreeCode: null,
     interfaces: null,
     contract: null,
     contracts: null,
-    tabs: { data: {}, history: {}, list: [] },
     language: null,
     languages: null,
     parameter: null,
@@ -140,16 +114,16 @@ export default (state: State = initialState, action: Action): State => {
             pending: false,
             page: action.payload.result.page,
             menus: action.payload.result.menus,
-            tabs: {
-                ...state.tabs,
-                data: {
-                    ...state.tabs.data,
-                    ['interfacePage' + action.payload.result.page.id]: {
-                        type: 'interfacePage',
-                        data: action.payload.result.page
-                    }
-                }
-            }
+            // tabs: {
+            //     ...state.tabs,
+            //     data: {
+            //         ...state.tabs.data,
+            //         ['interfacePage' + action.payload.result.page.id]: {
+            //             type: 'interfacePage',
+            //             data: action.payload.result.page
+            //         }
+            //     }
+            // }
         };
     }
     else if (isType(action, actions.getPage.failed)) {
@@ -159,620 +133,6 @@ export default (state: State = initialState, action: Action): State => {
             ['page']: null,
             ['menus']: null
         };
-    }
-
-    if (isType(action, actions.getPageTreeCode.started)) {
-        return {
-            ...state,
-            pending: true,
-            pageTreeCode: null
-        };
-    }
-    else if (isType(action, actions.getPageTreeCode.done)) {
-        let pageTreeCode = action.payload.result.pageTreeCode;
-        return {
-            ...state,
-            pending: false,
-            pageTreeCode: pageTreeCode
-        };
-    }
-    else if (isType(action, actions.getPageTreeCode.failed)) {
-        return {
-            ...state,
-            pending: false,
-            pageTreeCode: null
-        };
-    }
-
-    if (isType(action, actions.getPageTree.started)) {
-        return {
-            ...state,
-            pending: true,
-            tabs: {
-                ...state.tabs,
-                data: {
-                    ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.id]: null
-                }
-            }
-        };
-    }
-    else if (isType(action, actions.getPageTree.done)) {
-        return {
-            ...state,
-            pending: false,
-            tabs: {
-                ...state.tabs,
-                data: {
-                    ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.params.id]: {
-                        type: 'interfaceConstructor',
-                        data: action.payload.result.page.tree,
-                        treeData: convertToTreeData(action.payload.result.page.tree)
-                    }
-                }
-            }
-        };
-    }
-    else if (isType(action, actions.getPageTree.failed)) {
-        return {
-            ...state,
-            pending: false,
-            tabs: {
-                ...state.tabs,
-                data: {
-                    ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.params.id]: null
-                }
-            }
-        };
-    }
-
-    if (isType(action, actions.changePage)) {
-        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID];
-        const pageTreeOrig = tabData && tabData.data || null;
-        let selectedTag = tabData && tabData.selectedTag || null;
-
-        let pageTree = null;
-        if (pageTreeOrig) {
-            pageTree = _.cloneDeep(pageTreeOrig);
-        }
-
-        let tag = findTagById(pageTree, action.payload.tagID).el;
-        if (tag) {
-            if (typeof (action.payload.text) !== 'undefined') {
-                // todo: parse contentEditable tags and create children array
-
-                const regex = /(<[^\/>]+>[^<]*<\/[^>]+>)/ig; // remove tags
-                let plainText = action.payload.text.replace(regex, '');
-                const regex2 = /(<[^>]+>)/ig;    // remove empty tags
-                plainText = plainText.replace(regex2, '');
-
-                if (tag.children && tag.children.length) {
-                    for (let i = 0; i < tag.children.length; i++) {
-                        if (tag.children[i].tag === 'text') {
-                            tag.children[i].text = plainText;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (!tag.attr) {
-                tag.attr = {};
-            }
-
-            if ('string' === typeof action.payload.width) {
-                tag.attr.width = action.payload.width;
-            }
-
-            if ('string' === typeof action.payload.ratio) {
-                tag.attr.ratio = action.payload.ratio;
-            }
-
-            if ('string' === typeof action.payload.name) {
-                tag.attr.name = action.payload.name;
-            }
-
-            if ('string' === typeof action.payload.source) {
-                tag.attr.source = action.payload.source;
-            }
-
-            if ('string' === typeof action.payload.condition) {
-                tag.attr.condition = action.payload.condition;
-            }
-
-            if ('string' === typeof action.payload.class) {
-                tag.attr.class = action.payload.class || '';
-            }
-
-            let properties = new Properties();
-
-            if ('string' === typeof action.payload.align) {
-                tag.attr.class = properties.updateClassList(tag.attr.class || '', 'align', action.payload.align);
-            }
-
-            if ('string' === typeof action.payload.transform) {
-                tag.attr.class = properties.updateClassList(tag.attr.class || '', 'transform', action.payload.transform);
-            }
-
-            if ('string' === typeof action.payload.wrap) {
-                tag.attr.class = properties.updateClassList(tag.attr.class || '', 'wrap', action.payload.wrap);
-            }
-
-            if ('string' === typeof action.payload.color) {
-                tag.attr.class = properties.updateClassList(tag.attr.class || '', 'color', action.payload.color);
-            }
-
-            if ('string' === typeof action.payload.btn) {
-                tag.attr.class = properties.updateClassList(tag.attr.class || '', 'btn', action.payload.btn);
-            }
-        }
-
-        if (selectedTag && tag && selectedTag.id === tag.id) {
-            selectedTag = _.cloneDeep(tag);
-        }
-
-        return {
-            ...state,
-            pending: false,
-            tabs: {
-                ...state.tabs,
-                data: {
-                    ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.pageID]: {
-                        ...state.tabs.data['interfaceConstructor' + action.payload.pageID],
-                        type: 'interfaceConstructor',
-                        data: pageTree,
-                        treeData: convertToTreeData(pageTree),
-                        selectedTag: selectedTag
-                    }
-                }
-            }
-        };
-    }
-
-    if (isType(action, actions.selectTag)) {
-        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID];
-        const pageTree = tabData && tabData.data || null;
-
-        return {
-            ...state,
-            pending: false,
-            tabs: {
-                ...state.tabs,
-                data: {
-                    ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.pageID]: {
-                        ...state.tabs.data['interfaceConstructor' + action.payload.pageID],
-                        type: 'interfaceConstructor',
-                        data: pageTree,
-                        treeData: convertToTreeData(pageTree, action.payload.tag),
-                        selectedTag: action.payload.tag
-                    }
-                }
-            }
-        };
-    }
-
-    if (isType(action, actions.setTagCanDropPosition)) {
-        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID];
-        let pageTree = tabData && tabData.data || null;
-        pageTree = _.cloneDeep(pageTree);
-
-        let tag = findTagById(pageTree, action.payload.tagID).el;
-        if (tag) {
-            if (!tag.attr) {
-                tag.attr = {};
-            }
-            if ('string' === typeof action.payload.position) {
-                tag.attr.canDropPosition = action.payload.position;
-            }
-        }
-
-        return {
-            ...state,
-            pending: false,
-            tabs: {
-                ...state.tabs,
-                data: {
-                    ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.pageID]: {
-                        ...state.tabs.data['interfaceConstructor' + action.payload.pageID],
-                        type: 'interfaceConstructor',
-                        data: pageTree,
-                        treeData: convertToTreeData(pageTree)
-                    }
-                }
-            }
-        };
-    }
-
-    if (isType(action, actions.addTag)) {
-        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID];
-        let pageTree = tabData && tabData.data || null;
-        pageTree = _.cloneDeep(pageTree);
-        // destinationTagID
-        if (!pageTree) {
-            pageTree = [];
-        }
-
-        let Tag: any = null;
-        let treeJSON: any = null;
-
-        if (action.payload.tag.element) {
-            const Handler = resolveTagHandler(action.payload.tag.element);
-            if (Handler) {
-                Tag = new Handler();
-                treeJSON = Tag.generateTreeJSON(action.payload.tag.text);
-            }
-        }
-        else {
-            if (action.payload.tag.template) {
-                treeJSON = getConstructorTemplate(action.payload.tag.template);
-            }
-        }
-
-        if ('string' === typeof action.payload.destinationTagID &&
-            'string' === typeof action.payload.position) {
-            let tag = findTagById(pageTree, action.payload.destinationTagID);
-            if (tag.el) {
-                switch (action.payload.position) {
-                    case 'inside':
-                        if (!tag.el.children) {
-                            tag.el.children = [];
-                        }
-                        tag.el.children.push(treeJSON);
-                        break;
-                    case 'before':
-                        if (tag.parent && tag.parent.id && tag.parent.children) {
-                            tag.parent.children.splice(tag.parentPosition, 0, treeJSON);
-                        }
-                        else {
-                            pageTree.splice(tag.parentPosition, 0, treeJSON);
-                        }
-                        break;
-                    case 'after':
-                        if (tag.parent && tag.parent.id && tag.parent.children) {
-                            tag.parent.children.splice(tag.parentPosition + 1, 0, treeJSON);
-                        }
-                        else {
-                            pageTree.splice(tag.parentPosition + 1, 0, treeJSON);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-
-            }
-            // alert(tag.el.id + ' parent ' + (tag.parent && tag.parent.id || 'root') + " pos " + tag.parentPosition);
-        }
-        else {
-            pageTree = pageTree.concat(
-                treeJSON
-            );
-        }
-
-        return {
-            ...state,
-            pending: false,
-            tabs: {
-                ...state.tabs,
-                data: {
-                    ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.pageID]: {
-                        ...state.tabs.data['interfaceConstructor' + action.payload.pageID],
-                        type: 'interfaceConstructor',
-                        data: pageTree,
-                        treeData: convertToTreeData(pageTree)
-                    }
-                }
-            }
-        };
-    }
-
-    if (isType(action, actions.moveTag)) {
-        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID];
-        let pageTree = tabData && tabData.data || null;
-        pageTree = _.cloneDeep(pageTree);
-        if (!pageTree) {
-            pageTree = [];
-        }
-
-        let tagCopy = _.cloneDeep(action.payload.tag);
-        // generate new id for inserted tag
-        tagCopy.id = generateId();
-
-        let moved = false;
-
-        if ('string' === typeof action.payload.destinationTagID &&
-            'string' === typeof action.payload.position) {
-            let tag = findTagById(pageTree, action.payload.destinationTagID);
-            // alert(JSON.stringify(tag));
-            if (tag.el) {
-                switch (action.payload.position) {
-                    case 'inside':
-                        const Handler = resolveTagHandler(tag.el.tag);
-                        if (Handler) {
-                            const Tag = new Handler();
-                            if (Tag.canHaveChildren) {
-                                if (!tag.el.children) {
-                                    tag.el.children = [];
-                                }
-                                tag.el.children.push(tagCopy);
-                                moved = true;
-                            }
-                        }
-                        break;
-                    case 'before':
-                        if (tag.parent && tag.parent.id && tag.parent.children) {
-                            tag.parent.children.splice(tag.parentPosition, 0, tagCopy);
-                        }
-                        else {
-                            pageTree.splice(tag.parentPosition, 0, tagCopy);
-                        }
-                        moved = true;
-                        break;
-                    case 'after':
-                        if (tag.parent && tag.parent.id && tag.parent.children) {
-                            tag.parent.children.splice(tag.parentPosition + 1, 0, tagCopy);
-                        }
-                        else {
-                            pageTree.splice(tag.parentPosition + 1, 0, tagCopy);
-                        }
-                        moved = true;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            // alert(tag.el.id + ' parent ' + (tag.parent && tag.parent.id || 'root') + " pos " + tag.parentPosition);
-        }
-        else {
-            pageTree = pageTree.concat(
-                tagCopy
-            );
-            moved = true;
-        }
-
-        // delete moved element, skip for copying, todo: check ids
-        if (moved) {
-            let sourceTag = findTagById(pageTree.concat(), action.payload.tag.id);
-            if (sourceTag.parent) {
-                sourceTag.parent.children.splice(sourceTag.parentPosition, 1);
-            }
-            else {
-                // root
-                pageTree.splice(sourceTag.parentPosition, 1);
-            }
-        }
-
-        return {
-            ...state,
-            pending: false,
-            tabs: {
-                ...state.tabs,
-                data: {
-                    ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.pageID]: {
-                        ...state.tabs.data['interfaceConstructor' + action.payload.pageID],
-                        type: 'interfaceConstructor',
-                        data: pageTree,
-                        treeData: convertToTreeData(pageTree)
-                    }
-                }
-            }
-        };
-    }
-
-    if (isType(action, actions.copyTag)) {
-        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID];
-        let pageTree = tabData && tabData.data || null;
-        if (!pageTree) {
-            pageTree = [];
-        }
-
-        let tagCopy = _.cloneDeep(action.payload.tag);
-        // generate new id for inserted tag
-        tagCopy.id = generateId();
-        // generate subtags ids for copy function
-        if (tagCopy.children) {
-            setIds(tagCopy.children, true);
-        }
-        if (tagCopy.tail) {
-            setIds(tagCopy.tail, true);
-        }
-
-        if ('string' === typeof action.payload.destinationTagID &&
-            'string' === typeof action.payload.position) {
-            let tag = findTagById(pageTree, action.payload.destinationTagID);
-            // alert(JSON.stringify(tag));
-            if (tag.el) {
-                // generate new id for inserted tag
-                // tagCopy.id = generateId();
-
-                switch (action.payload.position) {
-                    case 'inside':
-                        if (tag.el.children) {
-                            tag.el.children = [];
-                        }
-                        tag.el.children.push(tagCopy);
-                        break;
-                    case 'before':
-                        if (tag.parent && tag.parent.id && tag.parent.children) {
-                            tag.parent.children.splice(tag.parentPosition, 0, tagCopy);
-                        }
-                        else {
-                            pageTree.splice(tag.parentPosition, 0, tagCopy);
-                        }
-                        break;
-                    case 'after':
-                        if (tag.parent && tag.parent.id && tag.parent.children) {
-                            tag.parent.children.splice(tag.parentPosition + 1, 0, tagCopy);
-                        }
-                        else {
-                            pageTree.splice(tag.parentPosition + 1, 0, tagCopy);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-
-            }
-            // alert(tag.el.id + ' parent ' + (tag.parent && tag.parent.id || 'root') + " pos " + tag.parentPosition);
-        }
-        else {
-            pageTree = pageTree.concat(
-                tagCopy
-            );
-        }
-
-        return {
-            ...state,
-            pending: false,
-            tabs: {
-                ...state.tabs,
-                data: {
-                    ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.pageID]: {
-                        ...state.tabs.data['interfaceConstructor' + action.payload.pageID],
-                        type: 'interfaceConstructor',
-                        data: pageTree,
-                        treeData: convertToTreeData(pageTree)
-                    }
-                }
-            }
-        };
-    }
-
-    if (isType(action, actions.removeTag)) {
-        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID];
-        let pageTree = tabData && tabData.data || null;
-        pageTree = _.cloneDeep(pageTree);
-        if (!pageTree) {
-            pageTree = [];
-        }
-
-        // delete moved element
-        let sourceTag = findTagById(pageTree.concat(), action.payload.tag.id);
-        if (sourceTag.parent) {
-            if (sourceTag.tail) {
-                sourceTag.parent.tail.splice(sourceTag.parentPosition, 1);
-            }
-            else {
-                sourceTag.parent.children.splice(sourceTag.parentPosition, 1);
-            }
-        }
-        else {
-            // root
-            pageTree.splice(sourceTag.parentPosition, 1);
-        }
-
-        return {
-            ...state,
-            pending: false,
-            tabs: {
-                ...state.tabs,
-                data: {
-                    ...state.tabs.data,
-                    ['interfaceConstructor' + action.payload.pageID]: {
-                        ...state.tabs.data['interfaceConstructor' + action.payload.pageID],
-                        type: 'interfaceConstructor',
-                        data: pageTree,
-                        treeData: convertToTreeData(pageTree)
-                    }
-                }
-            }
-        };
-    }
-
-    if (isType(action, actions.saveConstructorHistory)) {
-        const tabData = state.tabs.data['interfaceConstructor' + action.payload.pageID];
-        let pageTree = tabData && tabData.data || null;
-        pageTree = _.cloneDeep(pageTree);
-        let data = state.tabs.history['page' + action.payload.pageID] && state.tabs.history['page' + action.payload.pageID].data || [];
-        data = _.cloneDeep(data);
-        const position = state.tabs.history['page' + action.payload.pageID] && state.tabs.history['page' + action.payload.pageID].position || 0;
-
-        // alert(JSON.stringify(data));
-        if (position < data.length) {
-            data = [...data.slice(0, position)];
-        }
-
-        const canUndo = position > 0;
-        const canRedo = false;
-
-        return {
-            ...state,
-            tabs: {
-                ...state.tabs,
-                history: {
-                    ...state.tabs.history,
-                    ['page' + action.payload.pageID]: { data: data.concat([pageTree]), position: position + 1, canUndo, canRedo }
-                }
-            }
-        };
-    }
-
-    if (isType(action, actions.constructorUndo)) {
-        // alert('undo ' + action.payload.pageID);
-        let data = state.tabs.history['page' + action.payload.pageID] && state.tabs.history['page' + action.payload.pageID].data || [];
-        data = _.cloneDeep(data);
-        let position = state.tabs.history['page' + action.payload.pageID] && state.tabs.history['page' + action.payload.pageID].position || 0;
-        if (position > 1 && data.length > 1) {
-            position--;
-            const canUndo = position > 1;
-            const canRedo = true;
-            return {
-                ...state,
-                tabs: {
-                    ...state.tabs,
-                    history: {
-                        ...state.tabs.history,
-                        ['page' + action.payload.pageID]: { data: data, position: position, canUndo, canRedo }
-                    },
-                    data: {
-                        ...state.tabs.data,
-                        ['interfaceConstructor' + action.payload.pageID]: {
-                            ...state.tabs.data['interfaceConstructor' + action.payload.pageID],
-                            type: 'interfaceConstructor',
-                            data: data[position - 1],
-                            treeData: convertToTreeData(data[position - 1])
-                        }
-                    }
-                }
-            };
-        }
-    }
-
-    if (isType(action, actions.constructorRedo)) {
-        let data = state.tabs.history['page' + action.payload.pageID] && state.tabs.history['page' + action.payload.pageID].data || [];
-        data = _.cloneDeep(data);
-        let position = state.tabs.history['page' + action.payload.pageID] && state.tabs.history['page' + action.payload.pageID].position || 0;
-        if (position < data.length && data.length > 0) {
-            position++;
-            const canUndo = position > 1;
-            const canRedo = position < data.length;
-            return {
-                ...state,
-                tabs: {
-                    ...state.tabs,
-                    history: {
-                        ...state.tabs.history,
-                        ['page' + action.payload.pageID]: { data: data, position: position, canUndo, canRedo }
-                    },
-                    data: {
-                        ...state.tabs.data,
-                        ['interfaceConstructor' + action.payload.pageID]: {
-                            ...state.tabs.data['interfaceConstructor' + action.payload.pageID],
-                            type: 'interfaceConstructor',
-                            data: data[position - 1],
-                            treeData: convertToTreeData(data[position - 1])
-                        }
-                    }
-                }
-            };
-        }
     }
 
     if (isType(action, actions.getMenu.started)) {
@@ -786,17 +146,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            ['menu']: action.payload.result,
-            tabs: {
-                ...state.tabs,
-                data: {
-                    ...state.tabs.data,
-                    ['interfaceMenu' + action.payload.result.id]: {
-                        type: 'interfaceMenu',
-                        data: action.payload.result
-                    }
-                }
-            }
+            ['menu']: action.payload.result
         };
     }
     else if (isType(action, actions.getMenu.failed)) {
@@ -936,17 +286,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            ['contract']: action.payload.result,
-            tabs: {
-                ...state.tabs,
-                data: {
-                    ...state.tabs.data,
-                    ['contract' + action.payload.result.id]: {
-                        type: 'contract',
-                        data: action.payload.result
-                    }
-                }
-            }
+            ['contract']: action.payload.result
         };
     }
     else if (isType(action, actions.getContract.failed)) {
@@ -990,17 +330,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            ['block']: action.payload.result,
-            tabs: {
-                ...state.tabs,
-                data: {
-                    ...state.tabs.data,
-                    ['interfaceBlock' + action.payload.result.id]: {
-                        type: 'interfaceBlock',
-                        data: action.payload.result
-                    }
-                }
-            }
+            ['block']: action.payload.result
         };
     }
     else if (isType(action, actions.getBlock.failed)) {
@@ -1088,17 +418,7 @@ export default (state: State = initialState, action: Action): State => {
         return {
             ...state,
             pending: false,
-            ['parameter']: action.payload.result,
-            tabs: {
-                ...state.tabs,
-                data: {
-                    ...state.tabs.data,
-                    ['parameter' + action.payload.result.name]: {
-                        type: 'parameter',
-                        data: action.payload.result
-                    }
-                }
-            }
+            ['parameter']: action.payload.result
         };
     }
     else if (isType(action, actions.getParameter.failed)) {
@@ -1179,28 +499,6 @@ export default (state: State = initialState, action: Action): State => {
             ['importPayload']: {
                 ...statePayload,
                 [action.payload.name]: payload
-            }
-        };
-    }
-
-    if (isType(action, actions.getTabList.done)) {
-        let tabList = action.payload.result.tabList;
-        return {
-            ...state,
-            tabs: {
-                ...state.tabs,
-                list: tabList
-            }
-        };
-    }
-
-    if (isType(action, actions.removeTabList.done)) {
-        let tabList = action.payload.result.tabList;
-        return {
-            ...state,
-            tabs: {
-                ...state.tabs,
-                list: tabList
             }
         };
     }

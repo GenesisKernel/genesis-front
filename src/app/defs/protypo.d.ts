@@ -20,7 +20,8 @@ declare module 'genesis/protypo' {
         readonly id?: string;
         readonly text?: string;
         readonly attr?: { [key: string]: any };
-        readonly children?: TProtypoElement[];
-        readonly tail?: TProtypoElement[];
+        readonly children?: TProtypoElement[] | null;
+        readonly childrenText?: string | null;
+        readonly tail?: TProtypoElement[] | null;
     };
 }

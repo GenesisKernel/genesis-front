@@ -25,32 +25,13 @@ import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import LongText from 'components/Protypo/components/LongText';
 import BlobData from 'components/Protypo/components/BlobData';
+import { IConstructorElementProps } from 'genesis/editor';
 
-export interface ITableProps {
+export interface ITableProps extends IConstructorElementProps {
     id: string;
     className?: string;
     source?: string;
     columns?: { Name: string, Title: string }[];
-
-    'editable'?: boolean;
-    'changePage'?: any;
-    'setTagCanDropPosition'?: any;
-    'addTag'?: any;
-    'moveTag'?: any;
-    'copyTag'?: any;
-    'removeTag'?: any;
-    'selectTag'?: any;
-    'selected'?: boolean;
-    'tag'?: any;
-
-    'canDropPosition'?: string;
-
-    connectDropTarget?: any;
-    isOver?: boolean;
-
-    connectDragSource?: any;
-    connectDragPreview?: any;
-    isDragging?: boolean;
 }
 
 interface ITableContext {
@@ -76,7 +57,7 @@ class Table extends React.Component<ITableProps> {
         if (this.props.editable) {
             const onClick = (e: any) => {
                 e.stopPropagation();
-                this.props.selectTag({ tag: this.props.tag });
+                this.props.selectTag(this.props.tag);
             };
 
             const removeTag = () => {

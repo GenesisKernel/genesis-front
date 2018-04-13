@@ -22,30 +22,11 @@ import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
 import ValidatedForm from 'components/Validation/ValidatedForm';
+import { IConstructorElementProps } from 'genesis/editor';
 
-export interface IFormProps {
+export interface IFormProps extends IConstructorElementProps {
     'class'?: string;
     'className'?: string;
-
-    'editable'?: boolean;
-    'changePage'?: any;
-    'setTagCanDropPosition'?: any;
-    'addTag'?: any;
-    'moveTag'?: any;
-    'copyTag'?: any;
-    'removeTag'?: any;
-    'selectTag'?: any;
-    'selected'?: boolean;
-    'tag'?: any;
-
-    'canDropPosition'?: string;
-
-    connectDropTarget?: any;
-    isOver?: boolean;
-
-    connectDragSource?: any;
-    connectDragPreview?: any;
-    isDragging?: boolean;
 }
 
 interface IFormState {
@@ -76,7 +57,7 @@ class Form extends React.Component<IFormProps, IFormState> {
 
     onClick(e: any) {
         e.stopPropagation();
-        this.props.selectTag({ tag: this.props.tag });
+        this.props.selectTag(this.props.tag);
     }
 
     onSubmit(e: any) {

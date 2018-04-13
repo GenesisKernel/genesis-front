@@ -23,7 +23,8 @@ import ColorRadioButtons from './ColorRadioButtons';
 import BtnRadioButtons from './BtnRadioButtons';
 import Switch from './Switch';
 import PropertiesInput from './PropertiesInput';
-import { getInitialTagValue, resolveTagHandler } from 'lib/constructor';
+import { getInitialTagValue } from 'lib/constructor';
+import resolveTagHandler from 'lib/constructor/tags';
 
 interface IPropertiesProps {
     changePage?: any;
@@ -52,7 +53,7 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
             Handler = resolveTagHandler(this.props.tag.tag);
         }
         if (Handler) {
-            const Tag = new Handler();
+            const Tag = new Handler(this.props.tag);
 
             return (
                 <Panel title="Properties">
@@ -126,7 +127,7 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
                             { Tag.hasEditProp('name') && (
                                 <PropertiesInput
                                     name="name"
-                                    title="Table name"
+                                    title="Name"
                                     value={this.props.tag && this.props.tag.attr && this.props.tag.attr.name || ''}
                                     onChange={this.onChange.bind(this, 'name')}
                                 />

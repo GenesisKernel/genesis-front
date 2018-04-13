@@ -20,31 +20,11 @@ import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
 import Switch from 'components/Main/Admin/Interface/Constructor/Switch';
+import { IConstructorElementProps } from 'genesis/editor';
 
-export interface IElseIfProps {
+export interface IElseIfProps extends IConstructorElementProps {
     'className'?: string;
     'class'?: string;
-    'children': any;
-    'editable'?: boolean;
-    'changePage'?: any;
-    'setTagCanDropPosition'?: any;
-    'addTag'?: any;
-    'moveTag'?: any;
-    'copyTag'?: any;
-    'removeTag'?: any;
-    'selectTag'?: any;
-    'selected'?: boolean;
-    'tag'?: any;
-
-    'canDropPosition'?: string;
-
-    connectDropTarget?: any;
-    isOver?: boolean;
-
-    connectDragSource?: any;
-    connectDragPreview?: any;
-    isDragging?: boolean;
-    logic?: boolean;
 }
 
 interface IElseIfState {
@@ -61,7 +41,7 @@ class ElseIf extends React.Component<IElseIfProps, IElseIfState> {
 
     onClick(e: any) {
         e.stopPropagation();
-        this.props.selectTag({ tag: this.props.tag });
+        this.props.selectTag(this.props.tag);
     }
 
     removeTag() {

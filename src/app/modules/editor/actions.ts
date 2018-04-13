@@ -16,7 +16,11 @@
 
 import actionCreatorFactory from 'typescript-fsa';
 import { TProtypoElement } from 'genesis/protypo';
-import { IEditorTabCreateCall, ICreateEditorTabCall, ILoadEditorTabCall, IReloadEditorTabCall, TEditorTab } from 'genesis/editor';
+
+import { IEditorTabCreateCall, ILoadEditorTabCall, ICreateEditorTabCall, IReloadEditorTabCall, TEditorTab, IChangePageCall, IChangePageResult, ISaveConstructorHistoryResult,
+    IConstructorUndoRedoResult, ISetTagCanDropPositionCall, ISetTagCanDropPositionResult, IAddTagCall, IOperateTagCall, IOperateTagResult, IMoveTreeTag, ISelectTagResult,
+    IGetPageTreeResult
+} from 'genesis/editor';
 
 const actionCreator = actionCreatorFactory('editor');
 
@@ -31,4 +35,17 @@ export const reloadEditorTab = actionCreator<IReloadEditorTabCall>('RELOAD_EDITO
 export const changeEditorTool = actionCreator.async<string, TProtypoElement[]>('CHANGE_EDITOR_TOOL');
 
 // TODO: Pending refactoring
+export const setPageTemplate = actionCreator<string>('SET_PAGE_TEMPLATE');
+export const getPageTree = actionCreator.async<void, IGetPageTreeResult, string>('GET_PAGE_TREE');
+export const changePage = actionCreator.async<IChangePageCall, IChangePageResult>('CHANGE_PAGE');
+export const selectTag = actionCreator.async<TProtypoElement, ISelectTagResult>('SELECT_TAG');
+export const setTagCanDropPosition = actionCreator.async<ISetTagCanDropPositionCall, ISetTagCanDropPositionResult>('SET_TAG_CAN_DROP_POSITION');
+export const addTag = actionCreator.async<IAddTagCall, IOperateTagResult>('ADD_TAG');
+export const copyTag = actionCreator.async<IOperateTagCall, IOperateTagResult>('COPY_TAG');
+export const moveTag = actionCreator.async<IOperateTagCall, IOperateTagResult>('MOVE_TAG');
+export const removeTag = actionCreator.async<IOperateTagCall, IOperateTagResult>('REMOVE_TAG');
+export const moveTreeTag = actionCreator<IMoveTreeTag>('MOVE_TREE_TAG');
+export const saveConstructorHistory = actionCreator.async<void, ISaveConstructorHistoryResult>('SAVE_CONSTRUCTOR_HISTORY');
+export const constructorUndo = actionCreator.async<void, IConstructorUndoRedoResult>('CONSTRUCTOR_UNDO');
+export const constructorRedo = actionCreator.async<void, IConstructorUndoRedoResult>('CONSTRUCTOR_REDO');
 export const generatePageTemplate = actionCreator<string>('GENERATE_PAGE_TEMPLATE');

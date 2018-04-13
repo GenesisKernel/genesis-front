@@ -20,31 +20,11 @@ import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
 import Switch from 'components/Main/Admin/Interface/Constructor/Switch';
+import { IConstructorElementProps } from 'genesis/editor';
 
-export interface IIfProps {
-    'className'?: string;
-    'class'?: string;
-    'children': any;
-    'editable'?: boolean;
-    'changePage'?: any;
-    'setTagCanDropPosition'?: any;
-    'addTag'?: any;
-    'moveTag'?: any;
-    'copyTag'?: any;
-    'removeTag'?: any;
-    'selectTag'?: any;
-    'selected'?: boolean;
-    'tag'?: any;
-
-    'canDropPosition'?: string;
-
-    connectDropTarget?: any;
-    isOver?: boolean;
-
-    connectDragSource?: any;
-    connectDragPreview?: any;
-    isDragging?: boolean;
-    logic?: boolean;
+export interface IIfProps extends IConstructorElementProps {
+    className?: string;
+    class?: string;
     tail?: any;
 }
 
@@ -62,7 +42,7 @@ class If extends React.Component<IIfProps, IIfState> {
 
     onClick(e: any) {
         e.stopPropagation();
-        this.props.selectTag({ tag: this.props.tag });
+        this.props.selectTag(this.props.tag);
     }
 
     removeTag() {

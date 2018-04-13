@@ -20,31 +20,12 @@ import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
+import { IConstructorElementProps } from 'genesis/editor';
 
-export interface ILabelProps {
+export interface ILabelProps extends IConstructorElementProps {
     'className'?: string;
     'class'?: string;
     'for'?: string;
-
-    'editable'?: boolean;
-    'changePage'?: any;
-    'setTagCanDropPosition'?: any;
-    'addTag'?: any;
-    'moveTag'?: any;
-    'copyTag'?: any;
-    'removeTag'?: any;
-    'selectTag'?: any;
-    'selected'?: boolean;
-    'tag'?: any;
-
-    'canDropPosition'?: string;
-
-    connectDropTarget?: any;
-    isOver?: boolean;
-
-    connectDragSource?: any;
-    connectDragPreview?: any;
-    isDragging?: boolean;
 }
 
 class Label extends React.Component<ILabelProps> {
@@ -55,7 +36,7 @@ class Label extends React.Component<ILabelProps> {
 
     onClick(e: any) {
         e.stopPropagation();
-        this.props.selectTag({ tag: this.props.tag });
+        this.props.selectTag(this.props.tag);
     }
 
     onBlur(e: any) {

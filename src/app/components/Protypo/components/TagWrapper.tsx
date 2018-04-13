@@ -18,7 +18,7 @@ import * as React from 'react';
 import * as classnames from 'classnames';
 import styled from 'styled-components';
 
-const Wrapper = styled.div`
+const Wrapper = styled.span`
     display: block;
     padding: 0px;
     border: 2px solid transparent;
