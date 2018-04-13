@@ -29,6 +29,19 @@ import createEditorTabEpic from './epics/createEditorTabEpic';
 import changeEditorToolEpic from './epics/changeEditorToolEpic';
 import loadEditorTabEpic from './epics/loadEditorTabEpic';
 import generatePageTemplateEpic from './epics/generatePageTemplateEpic';
+import getPageTreeEpic from './epics/getPageTreeEpic';
+import getPageTreeDoneEpic from './epics/getPageTreeDoneEpic';
+import changePageEpic from './epics/changePageEpic';
+import selectTagEpic from './epics/selectTagEpic';
+import addTagEpic from './epics/addTagEpic';
+import moveTagEpic from './epics/moveTagEpic';
+import copyTagEpic from './epics/copyTagEpic';
+import removeTagEpic from './epics/removeTagEpic';
+import moveTreeTagEpic from './epics/moveTreeTagEpic';
+import saveConstructorHistoryEpic from './epics/saveConstructorHistoryEpic';
+import constructorUndoEpic from './epics/constructorUndoEpic';
+import constructorRedoEpic from './epics/constructorRedoEpic';
+import setTagCanDropPositionEpic from './epics/setTagCanDropPositionEpic';
 
 export default combineEpics(
     changeEditorToolEpic,
@@ -44,5 +57,18 @@ export default combineEpics(
     newContractEpic,
     newMenuEpic,
     newPageEpic,
-    generatePageTemplateEpic
+    generatePageTemplateEpic,
+    getPageTreeEpic,
+    getPageTreeDoneEpic,
+    changePageEpic,
+    selectTagEpic,
+    addTagEpic,
+    moveTagEpic,
+    copyTagEpic,
+    removeTagEpic,
+    moveTreeTagEpic,
+    saveConstructorHistoryEpic,
+    constructorUndoEpic,
+    constructorRedoEpic,
+    setTagCanDropPositionEpic
 );

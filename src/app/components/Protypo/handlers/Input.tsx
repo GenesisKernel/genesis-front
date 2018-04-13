@@ -23,8 +23,9 @@ import Validation from 'components/Validation';
 import { Validator, IValidatorGenerator } from 'components/Validation/Validators';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
+import { IConstructorElementProps } from 'genesis/editor';
 
-export interface IInputProps {
+export interface IInputProps extends IConstructorElementProps {
     'className'?: string;
     'class'?: string;
     'disabled'?: string;
@@ -35,26 +36,6 @@ export interface IInputProps {
     'validate'?: {
         [validator: string]: string
     };
-
-    'editable'?: boolean;
-    'changePage'?: any;
-    'setTagCanDropPosition'?: any;
-    'addTag'?: any;
-    'moveTag'?: any;
-    'copyTag'?: any;
-    'removeTag'?: any;
-    'selectTag'?: any;
-    'selected'?: boolean;
-    'tag'?: any;
-
-    'canDropPosition'?: string;
-
-    connectDropTarget?: any;
-    isOver?: boolean;
-
-    connectDragSource?: any;
-    connectDragPreview?: any;
-    isDragging?: boolean;
 }
 
 // TODO: type is not handled correctly
@@ -79,7 +60,7 @@ const Input: React.SFC<IInputProps> = (props) => {
         const onClick = (e: any) => {
             e.stopPropagation();
             e.preventDefault();
-            props.selectTag({ tag: props.tag });
+            props.selectTag(props.tag);
         };
 
         const removeTag = () => {

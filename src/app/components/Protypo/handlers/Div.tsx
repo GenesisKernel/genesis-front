@@ -20,30 +20,13 @@ import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
+import { IConstructorElementProps } from 'genesis/editor';
+import ContentEditable from 'react-contenteditable';
 
-export interface IDivProps {
+export interface IDivProps extends IConstructorElementProps {
     'className'?: string;
     'class'?: string;
-    'children': any;
-    'editable'?: boolean;
-    'changePage'?: any;
-    'setTagCanDropPosition'?: any;
-    'addTag'?: any;
-    'moveTag'?: any;
-    'copyTag'?: any;
-    'removeTag'?: any;
-    'selectTag'?: any;
-    'selected'?: boolean;
-    'tag'?: any;
-
-    'canDropPosition'?: string;
-
-    connectDropTarget?: any;
-    isOver?: boolean;
-
-    connectDragSource?: any;
-    connectDragPreview?: any;
-    isDragging?: boolean;
+    'childrenText'?: string;
 }
 
 interface IDivState {
@@ -60,12 +43,11 @@ class Div extends React.Component<IDivProps, IDivState> {
 
     onClick(e: any) {
         e.stopPropagation();
-        this.props.selectTag({ tag: this.props.tag });
+        this.props.selectTag(this.props.tag);
     }
 
-    onBlur(e: any) {
-        e.stopPropagation();
-        this.props.changePage({ text: e.target.innerHTML, tagID: this.props.tag.id });
+    handleChange(e: any) {
+        this.props.changePage({text: e.target.value, tagID: this.props.tag.id});
     }
 
     removeTag() {
@@ -94,14 +76,20 @@ class Div extends React.Component<IDivProps, IDivState> {
                         connectDragSource={connectDragSource}
                         canMove={true}
                     >
-                    <div
-                        className={classes}
-                        contentEditable={this.props.selected}
-                        onBlur={this.onBlur.bind(this)}
-                        onPaste={this.onPaste.bind(this)}
-                    >
-                        {this.props.children}
-                    </div>
+                    {(this.props.selected && this.props.childrenText !== null && this.props.childrenText.length >= 0) ? (
+                        <ContentEditable
+                            tagName="div"
+                            className={classes}
+                            html={this.props.childrenText}
+                            onChange={this.handleChange.bind(this)}
+                        />
+                    ) : (
+                        <div
+                            className={classes}
+                        >
+                            {this.props.children}
+                        </div>
+                    )}
                     </TagWrapper>
                 </span>
             ));

@@ -16,18 +16,23 @@
 
 import { Action } from 'redux';
 import { Epic } from 'redux-observable';
+import { Observable } from 'rxjs';
 import { IRootState } from 'modules';
-import { generatePageTemplate, updateEditorTab } from '../actions';
-import { CodeGenerator } from 'lib/constructor';
+import { generatePageTemplate, updateEditorTab, setPageTemplate } from '../actions';
 
 const generatePageTemplateEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(generatePageTemplate)
-        .map(action => {
-            const tabData = store.getState().admin.tabs.data['interfaceConstructor' + action.payload].data;
-            const codeGenerator = new CodeGenerator(tabData);
+    (action$, store, { constructorModule }) => action$.ofAction(generatePageTemplate)
+        .flatMap(action => {
+            const state = store.getState().editor;
+            const tab = state.tabs[state.tabIndex].designer;
+            const jsonData = tab && tab.data && tab.data.jsonData;
+            const codeGenerator = new constructorModule.CodeGenerator(jsonData);
             const pageTemplate = codeGenerator.render();
 
-            return updateEditorTab(pageTemplate);
+            return Observable.concat([
+                updateEditorTab(pageTemplate),
+                setPageTemplate(pageTemplate),
+            ]);
         });
 
 export default generatePageTemplateEpic;

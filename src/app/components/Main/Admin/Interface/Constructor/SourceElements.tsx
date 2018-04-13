@@ -200,9 +200,9 @@ class SourceElements extends React.Component<ISourceElementsProps, ISourceElemen
                     <ul className="b-category-sublist">
                         { items.map(item =>
                             item.element ?
-                                (<SourceElement text={item.text} element={item.element} />)
+                                (<SourceElement text={item.text} element={item.element} key={item.element} />)
                                 :
-                                (<SourceElement text={item.text} template={item.template} />)
+                                (<SourceElement text={item.text} template={item.template} key={item.template} />)
                         ) }
                     </ul>
                 </div>
@@ -213,13 +213,13 @@ class SourceElements extends React.Component<ISourceElementsProps, ISourceElemen
         return (
             <ul className="b-category-list">
                 { this.groups.map(group => (
-                        <CollapsedListItem text={group.text} icon={group.icon}>
+                        <CollapsedListItem text={group.text} icon={group.icon} key={group.text}>
                             <ul className="b-category-sublist">
                             { group.items.map(item =>
                                 item.element ?
-                                    (<SourceElement text={item.text} element={item.element} />)
+                                    (<SourceElement text={item.text} element={item.element} key={item.element} />)
                                     :
-                                    (<SourceElement text={item.text} template={item.template} />)
+                                    (<SourceElement text={item.text} template={item.template} key={item.template} />)
                             ) }
                             </ul>
                         </CollapsedListItem>
@@ -227,26 +227,6 @@ class SourceElements extends React.Component<ISourceElementsProps, ISourceElemen
                 )}
             </ul>
         );
-
-        // <CollapsedListItem text="Lists" icon={imgGroup37}>
-        // <ul className="b-category-sublist">
-        // <li>Ordered</li>
-        // <li>Unordered</li>
-        // </ul>
-        // </CollapsedListItem>
-        // < CollapsedListItem text="Containers" icon={imgGroup36}>
-        // <ul className="b-category-sublist">
-        // <li>Wrapper</li>
-        // <li>Block</li>
-        // </ul>
-        // </CollapsedListItem>
-        //
-        // <CollapsedListItem text="Navigation" icon={imgStroke75}>
-        // <ul className="b-category-sublist">
-        // <li>Breadcrumps</li>
-        // <li>Link</li>
-        // </ul>
-        // </CollapsedListItem>
     }
 }
 

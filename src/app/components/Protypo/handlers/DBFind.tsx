@@ -21,35 +21,14 @@ import StyledComponent from './StyledComponent';
 import Protypo from '../';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
+import { IConstructorElementProps } from 'genesis/editor';
 
-export interface IDBFindProps {
+export interface IDBFindProps extends IConstructorElementProps {
     columns: string[];
     types: string[];
     data: string[][];
     name: string;
     source: string;
-
-    'editable'?: boolean;
-    'changePage'?: any;
-    'setTagCanDropPosition'?: any;
-    'addTag'?: any;
-    'moveTag'?: any;
-    'copyTag'?: any;
-    'removeTag'?: any;
-    'selectTag'?: any;
-    'selected'?: boolean;
-    'tag'?: any;
-
-    'canDropPosition'?: string;
-
-    connectDropTarget?: any;
-    isOver?: boolean;
-
-    connectDragSource?: any;
-    connectDragPreview?: any;
-    isDragging?: boolean;
-
-    logic?: boolean;
 }
 
 interface IDBFindContext {
@@ -64,7 +43,7 @@ const DBFind: React.SFC<IDBFindProps> = (props, context: IDBFindContext) => {
         }
         const onClick = (e: any) => {
             e.stopPropagation();
-            props.selectTag({tag: props.tag});
+            props.selectTag(props.tag);
         };
 
         const removeTag = () => {

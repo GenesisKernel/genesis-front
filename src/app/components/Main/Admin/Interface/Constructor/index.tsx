@@ -57,7 +57,7 @@ interface IConstructorProps {
     navigatePage?: (params: { name: string, params?: any }) => void;
     menus?: { id: string, name: string, conditions: string, value: string }[];
     onSave?: (block: string, error?: { type: string, error: string }) => void;
-    canSave: boolean;
+    canSave?: boolean;
 }
 
 interface IConstructorState {
@@ -166,7 +166,7 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                                     <span
                                         onClick={
                                             () => {
-                                                this.props.selectTag({ tag: node.tag });
+                                                this.props.selectTag(node.tag);
                                             }
                                         }
                                     >

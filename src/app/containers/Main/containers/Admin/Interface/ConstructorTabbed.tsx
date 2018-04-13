@@ -17,56 +17,43 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { getPageTree, getPage, changePage, setTagCanDropPosition, addTag, moveTag, moveTreeTag, copyTag, removeTag, selectTag, constructorUndo, constructorRedo, saveConstructorHistory } from 'modules/admin/actions';
-import { navigatePage } from 'modules/content/actions';
+import { getPageTree, selectTag, changePage, saveConstructorHistory, constructorUndo, constructorRedo, setTagCanDropPosition, addTag, copyTag, moveTag, removeTag, moveTreeTag } from 'modules/editor/actions';
 import Constructor from 'components/Main/Admin/Interface/Constructor';
 import { TProtypoElement } from 'genesis/protypo';
 import { generatePageTemplate } from 'modules/editor/actions';
+import { IChangePageCall, TConstructorData, IAddTagCall, IOperateTagCall, IMoveTreeTag, ISetTagCanDropPositionCall } from 'genesis/editor';
 
 export interface IConstructorTabbedContainerProps {
     pageID: string;
     pageName: string;
-    navigatePage?: (params: { name: string, params?: any }) => void;
     menus?: { id: string, name: string, conditions: string, value: string }[];
     onSave?: (pageID: string) => void;
     random?: number;
 }
 
 interface IConstructorTabbedContainerState {
-    session: string;
-    tabData: {
-        [key: string]: {
-            type: string,
-            data: any,
-            treeData?: any,
-            pageTemplate?: string,
-            selectedTag?: TProtypoElement
-        }
-    };
-    tabHistory: {
-        [key: string]: {
-            data: any,
-            position?: number,
-            canUndo?: boolean,
-            canRedo?: boolean
-        }
+    data?: TConstructorData;
+    history?: {
+        data: TProtypoElement[][],
+        position?: number,
+        canUndo?: boolean,
+        canRedo?: boolean
     };
 }
 
 interface IConstructorTabbedContainerDispatch {
     getPageTree: typeof getPageTree.started;
-    getPage?: typeof getPage.started;
-    changePage: typeof changePage;
-    setTagCanDropPosition: typeof setTagCanDropPosition;
-    addTag: typeof addTag;
-    moveTag: typeof moveTag;
+    changePage: typeof changePage.started;
+    setTagCanDropPosition: typeof setTagCanDropPosition.started;
+    addTag: typeof addTag.started;
+    moveTag: typeof moveTag.started;
     moveTreeTag: typeof moveTreeTag;
-    copyTag: typeof copyTag;
-    removeTag: typeof removeTag;
-    selectTag: typeof selectTag;
-    constructorUndo: typeof constructorUndo;
-    constructorRedo: typeof constructorRedo;
-    saveConstructorHistory: typeof saveConstructorHistory;
+    copyTag: typeof copyTag.started;
+    removeTag: typeof removeTag.started;
+    selectTag: typeof selectTag.started;
+    constructorUndo: typeof constructorUndo.started;
+    constructorRedo: typeof constructorRedo.started;
+    saveConstructorHistory: typeof saveConstructorHistory.started;
     generatePageTemplate: typeof generatePageTemplate;
 }
 
@@ -86,88 +73,47 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
         };
     }
 
-    componentWillMount() {
-        this.getPage();
-    }
-
-    componentWillReceiveProps(props: IConstructorTabbedContainerProps & IConstructorTabbedContainerState & IConstructorTabbedContainerDispatch) {
-        if (props.random && this.props.random !== props.random) {
-            this.getPage();
-        }
-
-        let canSave = true;
-        const tabData = props.tabData && props.tabData['interfaceConstructor' + props.pageID];
-        const pageTree = tabData && tabData.data || null;
-        if (!pageTree || pageTree && pageTree.length === 0) {
-            canSave = false;
-        }
-
-        this.setState({
-            ...this.state,
-            canSave
-        });
-    }
-
-    getPage() {
-        this.props.getPageTree({
-            id: this.props.pageID,
-            name: this.props.pageName
-        });
-        this.props.getPage({
-            name: this.props.pageName
-        });
-    }
-
-    changePage(payload?: any) {
-        payload.pageID = this.props.pageID;
+    changePage(payload: IChangePageCall) {
         this.props.changePage(payload);
-        this.props.saveConstructorHistory({ pageID: this.props.pageID });
+        this.props.saveConstructorHistory(null);
         this.generatePageTemplate();
     }
 
-    addTag(payload?: any) {
-        payload.pageID = this.props.pageID;
+    addTag(payload?: IAddTagCall) {
         this.props.addTag(payload);
-        this.props.saveConstructorHistory({ pageID: this.props.pageID });
+        this.props.saveConstructorHistory(null);
         this.generatePageTemplate();
     }
 
-    moveTag(payload?: any) {
-        payload.pageID = this.props.pageID;
+    moveTag(payload?: IOperateTagCall) {
         this.props.moveTag(payload);
-        this.props.saveConstructorHistory({ pageID: this.props.pageID });
+        this.props.saveConstructorHistory(null);
         this.generatePageTemplate();
     }
 
-    moveTreeTag(payload?: any) {
-        payload.pageID = this.props.pageID;
+    moveTreeTag(payload?: IMoveTreeTag) {
         this.props.moveTreeTag(payload);
+        this.generatePageTemplate();
     }
 
-    copyTag(payload?: any) {
-        payload.pageID = this.props.pageID;
+    copyTag(payload?: IOperateTagCall) {
         this.props.copyTag(payload);
-        this.props.saveConstructorHistory({ pageID: this.props.pageID });
+        this.props.saveConstructorHistory(null);
         this.generatePageTemplate();
     }
 
-    removeTag(payload?: any) {
-        payload.pageID = this.props.pageID;
+    removeTag(payload?: IOperateTagCall) {
         this.props.removeTag(payload);
-        this.props.saveConstructorHistory({ pageID: this.props.pageID });
+        this.props.saveConstructorHistory(null);
         this.generatePageTemplate();
     }
 
-    setTagCanDropPosition(payload?: any) {
-        payload.pageID = this.props.pageID;
+    setTagCanDropPosition(payload?: ISetTagCanDropPositionCall) {
         this.props.setTagCanDropPosition(payload);
     }
 
-    selectTag(payload?: any) {
-        this.props.selectTag({
-            pageID: this.props.pageID,
-            tag: payload.tag
-        });
+    selectTag(payload: any) {
+        this.props.selectTag(payload);
     }
 
     toggleGrid() {
@@ -185,12 +131,12 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     }
 
     undo() {
-        this.props.constructorUndo({ pageID: this.props.pageID });
+        this.props.constructorUndo(null);
         this.generatePageTemplate();
     }
 
     redo() {
-        this.props.constructorRedo({ pageID: this.props.pageID });
+        this.props.constructorRedo(null);
         this.generatePageTemplate();
     }
 
@@ -205,24 +151,20 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
     }
 
     render() {
-        const tabData = this.props.tabData && this.props.tabData['interfaceConstructor' + this.props.pageID];
-        const pageTree = tabData && tabData.data || null;
-        const treeData = tabData && tabData.treeData || null;
-        const pageTemplate = tabData && tabData.pageTemplate || null;
-        const selectedTag = tabData && tabData.selectedTag || null;
-        const tabHistory = this.props.tabHistory && this.props.tabHistory['page' + this.props.pageID];
-        const canUndo = tabHistory && tabHistory.canUndo || false;
-        const canRedo = tabHistory && tabHistory.canRedo || false;
+        const data = this.props.data;
+        const history = this.props.history;
 
-        const pageTab = this.props.tabData && this.props.tabData['interfacePage' + this.props.pageID] || null;
-        let page = null;
-        if (pageTab) {
-            page = pageTab.data;
-        }
+        const jsonData = data && data.jsonData || [];
+        const treeData = data && data.treeData || [];
+        const pageTemplate = data && data.pageTemplate || null;
+        const selectedTag = data && data.selectedTag || null;
+
+        const canUndo = history && history.canUndo || false;
+        const canRedo = history && history.canRedo || false;
 
         return (
             <Constructor
-                pageTree={pageTree}
+                pageTree={jsonData}
                 treeData={treeData}
                 changePage={this.changePage.bind(this)}
                 setTagCanDropPosition={this.setTagCanDropPosition.bind(this)}
@@ -241,39 +183,34 @@ class ConstructorTabbedContainer extends React.Component<IConstructorTabbedConta
                 redo={this.redo.bind(this)}
                 canUndo={canUndo}
                 canRedo={canRedo}
-                page={page}
                 pageTemplate={pageTemplate}
-                menus={this.props.menus}
-                navigatePage={this.props.navigatePage}
-                onSave={this.onSave.bind(this)}
-                canSave={this.state.canSave}
             />
         );
     }
 }
 
-const mapStateToProps = (state: IRootState) => ({
-    tabData: state.admin.tabs && state.admin.tabs.data || null,
-    tabHistory: state.admin.tabs && state.admin.tabs.history || null,
-    menus: state.admin.menus,
-    session: state.auth.sessionToken
-});
+const mapStateToProps = (state: IRootState) => {
+    const currentTab = state.editor.tabs[state.editor.tabIndex];
+
+    return {
+        data: currentTab.designer && currentTab.designer.data || null,
+        history: currentTab.designer && currentTab.designer.history || null
+    };
+};
 
 const mapDispatchToProps = {
     getPageTree: getPageTree.started,
-    getPage: getPage.started,
-    navigatePage: navigatePage.started,
-    changePage,
-    setTagCanDropPosition,
-    addTag,
-    moveTag,
+    changePage: changePage.started,
+    setTagCanDropPosition: setTagCanDropPosition.started,
+    addTag: addTag.started,
+    moveTag: moveTag.started,
     moveTreeTag,
-    copyTag,
-    removeTag,
-    selectTag,
-    constructorUndo,
-    constructorRedo,
-    saveConstructorHistory,
+    copyTag: copyTag.started,
+    removeTag: removeTag.started,
+    selectTag: selectTag.started,
+    constructorUndo: constructorUndo.started,
+    constructorRedo: constructorRedo.started,
+    saveConstructorHistory: saveConstructorHistory.started,
     generatePageTemplate
 };
 
