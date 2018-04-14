@@ -27,12 +27,12 @@ import { Observer } from 'rxjs';
 const connectEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(connect.started)
         .flatMap(action => {
-            if (action.payload.userID && action.payload.timestamp && action.payload.socketToken) {
+            if (action.payload.wsHost && action.payload.userID && action.payload.timestamp && action.payload.socketToken) {
                 return Observable.create((observer: Observer<Action>) => {
                     observer.next(disconnect.started(null));
 
                     const centrifuge = new Centrifuge({
-                        url: store.getState().engine.wsHost,
+                        url: action.payload.wsHost,
                         user: action.payload.userID,
                         timestamp: action.payload.timestamp,
                         token: action.payload.socketToken,

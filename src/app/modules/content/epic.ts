@@ -25,7 +25,7 @@ import renderLegacyPageEpic from './epics/renderLegacyPageEpic';
 import renderPageEpic from './epics/renderPageEpic';
 import renderSectionEpic from './epics/renderSectionEpic';
 import resetEpic from './epics/resetEpic';
-import resetOnAccountSelectEpic from './epics/resetOnAccountSelectEpic';
+import resetOnLoginEpic from './epics/resetOnLoginEpic';
 
 export default combineEpics(
     closeSectionEpic,
@@ -38,5 +38,5 @@ export default combineEpics(
     renderPageEpic,
     renderSectionEpic,
     resetEpic,
-    resetOnAccountSelectEpic
+    resetOnLoginEpic
 );

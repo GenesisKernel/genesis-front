@@ -17,12 +17,11 @@
 import { Epic } from 'modules';
 import { login } from '../actions';
 import { Observable } from 'rxjs/Observable';
+import NodeObservable from '../util/NodeObservable';
 import keyring from 'lib/keyring';
 
 const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.started)
     .flatMap(action => {
-        const state = store.getState();
-        const client = api(state.engine.apiHost);
         const privateKey = keyring.decryptAES(action.payload.account.encKey, action.payload.password);
 
         if (!keyring.validatePrivateKey(privateKey)) {
@@ -34,13 +33,20 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
 
         const publicKey = keyring.generatePublicKey(privateKey);
 
-        return Observable.from(
-            client.getUid().then(uid => {
-                const signature = keyring.sign(uid.uid, privateKey);
-                return client.authorize(uid.token)
-                    .login({
+        return NodeObservable({
+            nodes: store.getState().engine.fullNodes,
+            count: 1,
+            concurrency: 10,
+            timeout: 5000,
+            api
+
+        }).flatMap(l => {
+            const client = api({ apiHost: l });
+            return Observable.from(client.getUid())
+                .flatMap(uid =>
+                    client.authorize(uid.token).login({
                         publicKey,
-                        signature,
+                        signature: keyring.sign(uid.uid, privateKey),
                         ecosystem: action.payload.account.ecosystem
 
                     }).then(loginResult =>
@@ -60,9 +66,11 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
                                 avatar: null,
                                 username: null
                             }))
-                    );
-            })).map(payload =>
-                login.done({
+                    )
+                )
+
+                // Successful authentication. Yield the result
+                .map(payload => login.done({
                     params: action.payload,
                     result: {
                         account: {
@@ -72,28 +80,37 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
                             ecosystem: action.payload.account.ecosystem,
                             ecosystemName: null,
                             avatar: payload.avatar,
-                            username: payload.username,
-                            sessionToken: payload.token,
-                            refreshToken: payload.refresh,
-                            socketToken: payload.notify_key,
-                            timestamp: payload.timestamp
+                            username: payload.username
                         },
                         roles: payload.roles && payload.roles.map(role => ({
                             id: role.role_id,
                             name: role.role_name
                         })),
+                        session: {
+                            sessionToken: payload.token,
+                            refreshToken: payload.refresh,
+                            wsToken: payload.notify_key,
+                            timestamp: payload.timestamp,
+                            apiHost: l,
+                            wsHost: 'ws://127.0.0.1:8000'
+                        },
                         privateKey,
-                        publicKey,
+                        publicKey
                     }
-                })
-            ).catch(e =>
-                Observable.of(
+                }))
+
+                // Catch actual login error, yield result
+                .catch(e => Observable.of(
                     login.failed({
-                        params: null,
+                        params: action.payload,
                         error: e.error
                     })
-                )
-            );
+                ));
+
+        }).defaultIfEmpty(login.failed({
+            params: action.payload,
+            error: 'E_OFFLINE'
+        }));
     });
 
 export default loginEpic;

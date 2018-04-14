@@ -25,7 +25,7 @@ const newContractEpic: Epic = (action$, store, { api }) => action$.ofAction(edit
     .flatMap(action => {
         const id = uuid.v4();
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         return TxObservable(action$, {
             tx: {

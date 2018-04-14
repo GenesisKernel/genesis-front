@@ -24,8 +24,9 @@ const connectOnLoginEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(login.done)
         .map(action =>
             connect.started({
-                socketToken: action.payload.result.account.socketToken,
-                timestamp: action.payload.result.account.timestamp,
+                wsHost: action.payload.result.session.wsHost,
+                socketToken: action.payload.result.session.wsToken,
+                timestamp: action.payload.result.session.timestamp,
                 userID: action.payload.result.account.id
             })
         );

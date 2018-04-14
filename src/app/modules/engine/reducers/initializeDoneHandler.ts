@@ -14,16 +14,12 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
-import { reset } from '../actions';
-import { selectAccount } from 'modules/auth/actions';
+import { State } from '../reducer';
+import { Success } from 'typescript-fsa';
 
-const resetOnAccountSelectEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(selectAccount.done)
-        .map(action =>
-            reset.started(null)
-        );
-
-export default resetOnAccountSelectEpic;
+export default function (state: State, payload: Success<void, string[]>): State {
+    return {
+        ...state,
+        fullNodes: payload.result
+    };
+}

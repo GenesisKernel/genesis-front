@@ -23,7 +23,7 @@ import { logout, selectAccount } from 'modules/auth/actions';
 const ecosystemInitEpic: Epic = (action$, store, { api }) => action$.ofAction(ecosystemInit.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         return Observable.from(
             Promise.all([
@@ -47,7 +47,7 @@ const ecosystemInitEpic: Epic = (action$, store, { api }) => action$.ofAction(ec
 
                 return Observable.of<Action>(
                     logout.started(null),
-                    selectAccount.started(account),
+                    selectAccount(account),
                     ecosystemInit.failed({
                         params: action.payload,
                         error: e.error

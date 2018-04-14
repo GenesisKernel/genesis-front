@@ -26,15 +26,15 @@ export interface IStoreDependencies {
 }
 
 export interface IAPIDependency {
-    (apiURL: string, session?: string): GenesisAPI;
+    (options: { apiHost: string, sessionToken?: string }): GenesisAPI;
 }
 
 export default {
-    api: (apiHost: string, session?: string) => new GenesisAPI({
+    api: (options: { apiHost: string, sessionToken?: string }) => new GenesisAPI({
         transport: needle,
-        apiHost,
+        apiHost: options.apiHost,
         apiEndpoint,
-        session
+        session: options.sessionToken
     }),
     constructorModule
 } as IStoreDependencies;

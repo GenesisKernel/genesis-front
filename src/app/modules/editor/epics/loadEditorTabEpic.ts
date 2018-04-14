@@ -24,7 +24,7 @@ import { replace } from 'react-router-redux';
 const loadEditorTabEpic: Epic = (action$, store, { api }) => action$.ofAction(loadEditorTab.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
         const nameParser = /^(@[0-9]+)?(.*)$/i;
 
         switch (action.payload.type) {

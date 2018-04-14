@@ -27,7 +27,7 @@ import { ITableResponse, IDataResponse } from 'genesis/api';
 export const getTableEpic: Epic = (action$, store, { api }) => action$.ofAction(actions.getTable.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         return Observable.fromPromise(client.getTable({
             name: action.payload.table
@@ -63,7 +63,7 @@ export const getTableEpic: Epic = (action$, store, { api }) => action$.ofAction(
 export const getTableStructEpic: Epic = (action$, store, { api }) => action$.ofAction(actions.getTableStruct.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         return Observable.fromPromise(client.getTable({
             name: action.payload.name
@@ -85,7 +85,7 @@ export const getTableStructEpic: Epic = (action$, store, { api }) => action$.ofA
 export const getMenusEpic: Epic = (action$, store, { api }) => action$.ofAction(actions.getMenus.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         return Observable.fromPromise(client.getData({
             name: 'menu'
@@ -111,7 +111,7 @@ export const getMenusEpic: Epic = (action$, store, { api }) => action$.ofAction(
 export const getTablesEpic: Epic = (action$, store, { api }) => action$.ofAction(actions.getTables.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         return Observable.fromPromise(client.getTables({
             offset: action.payload.offset,
@@ -133,7 +133,7 @@ export const getTablesEpic: Epic = (action$, store, { api }) => action$.ofAction
 export const getHistoryEpic: Epic = (action$, store, { api }) => action$.ofAction(actions.getHistory.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         return Observable.fromPromise(client.getHistory({
             id: action.payload.id,
@@ -155,7 +155,7 @@ export const getHistoryEpic: Epic = (action$, store, { api }) => action$.ofActio
 export const getInterfaceEpic: Epic = (action$, store, { api }) => action$.ofAction(actions.getInterface.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         return Observable.fromPromise(Promise.all([
             client.getData({ name: 'pages', columns: ['name'] }),
@@ -183,7 +183,7 @@ export const getInterfaceEpic: Epic = (action$, store, { api }) => action$.ofAct
 export const getPageEpic: Epic = (action$, store, { api }) => action$.ofAction(actions.getPage.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         return Observable.fromPromise(Promise.all([
             client.getPage({ name: action.payload.name }),
@@ -208,7 +208,7 @@ export const getPageEpic: Epic = (action$, store, { api }) => action$.ofAction(a
 export const getMenuEpic: Epic = (action$, store, { api }) => action$.ofAction(actions.getMenu.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         return Observable.fromPromise(client.getMenu({
             name: action.payload.name
@@ -230,7 +230,7 @@ export const getMenuEpic: Epic = (action$, store, { api }) => action$.ofAction(a
 export const getContractEpic: Epic = (action$, store, { api }) => action$.ofAction(actions.getContract.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         return Observable.fromPromise(
             action.payload.id ?
@@ -262,7 +262,7 @@ export const getContractEpic: Epic = (action$, store, { api }) => action$.ofActi
 export const getContractsEpic: Epic = (action$, store, { api }) => action$.ofAction(actions.getContracts.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         return Observable.fromPromise(client.getContracts({
             offset: action.payload.offset,
@@ -283,7 +283,7 @@ export const getContractsEpic: Epic = (action$, store, { api }) => action$.ofAct
 export const getBlockEpic: Epic = (action$, store, { api }) => action$.ofAction(actions.getBlock.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         return Observable.fromPromise(client.getBlock({
             name: action.payload.name
@@ -303,7 +303,7 @@ export const getBlockEpic: Epic = (action$, store, { api }) => action$.ofAction(
 export const getLanguagesEpic: Epic = (action$, store, { api }) => action$.ofAction(actions.getLanguages.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         return Observable.fromPromise(client.getData({
             name: 'languages',
@@ -325,7 +325,7 @@ export const getLanguagesEpic: Epic = (action$, store, { api }) => action$.ofAct
 export const getLanguageEpic: Epic = (action$, store, { api }) => action$.ofAction(actions.getLanguage.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         return Observable.fromPromise(client.getRow({
             table: 'languages',
@@ -346,7 +346,7 @@ export const getLanguageEpic: Epic = (action$, store, { api }) => action$.ofActi
 export const getParametersEpic: Epic = (action$, store, { api }) => action$.ofAction(actions.getParameters.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         return Observable.fromPromise(client.getParams({
             names: action.payload.params
@@ -366,7 +366,7 @@ export const getParametersEpic: Epic = (action$, store, { api }) => action$.ofAc
 export const getParameterEpic: Epic = (action$, store, { api }) => action$.ofAction(actions.getParameter.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         return Observable.fromPromise(client.getParam({
             name: action.payload.name
@@ -386,7 +386,7 @@ export const getParameterEpic: Epic = (action$, store, { api }) => action$.ofAct
 export const exportDataEpic: Epic = (action$, store, { api }) => action$.ofAction(actions.exportData.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         const promise = Bluebird.all([
             Bluebird.map(action.payload.pages, page => client.getRow({ table: 'pages', id: page }), { concurrency: 3 }),

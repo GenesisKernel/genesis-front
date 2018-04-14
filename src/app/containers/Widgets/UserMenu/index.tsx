@@ -33,7 +33,7 @@ interface IUserMenuContainerState {
 
 interface IUserMenuContainerDispatch {
     logout: typeof logout.started;
-    selectAccount: typeof selectAccount.started;
+    selectAccount: typeof selectAccount;
 }
 
 const UserMenuContainer: React.SFC<IUserMenuContainerProps & IUserMenuContainerState & IUserMenuContainerDispatch> = (props) => (
@@ -56,7 +56,7 @@ const mapStateToProps = (state: IRootState) => ({
 
 const mapDispatchToProps = {
     logout: logout.started,
-    selectAccount: selectAccount.started
+    selectAccount: selectAccount
 };
 
 export default connect<IUserMenuContainerState, IUserMenuContainerDispatch, IUserMenuContainerProps>(mapStateToProps, mapDispatchToProps)(UserMenuContainer);

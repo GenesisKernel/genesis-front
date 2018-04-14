@@ -19,6 +19,6 @@ import { push } from 'react-router-redux';
 
 const actionCreator = actionCreatorFactory('engine');
 export const navigate = (url: string) => push(url);
-export const initialize = actionCreator.async<void, { apiHost: string, wsHost: string }>('INITIALIZE');
+export const initialize = actionCreator.async<void, string[]>('INITIALIZE');
 export const setCollapsed = actionCreator<boolean>('SET_COLLAPSED');
 export const setLocale = actionCreator.async<string, { [key: string]: string }>('SET_LOCALE');

@@ -16,7 +16,7 @@
 
 import * as actions from './actions';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import { IAccount, IRole } from 'genesis/auth';
+import { IAccount, IRole, ISession } from 'genesis/auth';
 import loginHandler from './reducers/loginHandler';
 import loginDoneHandler from './reducers/loginDoneHandler';
 import loginFailedHandler from './reducers/loginFailedHandler';
@@ -29,8 +29,6 @@ import importAccountDoneHandler from './reducers/importAccountDoneHandler';
 import importAccountFailedHandler from './reducers/importAccountFailedHandler';
 import importSeedDoneHandler from './reducers/importSeedDoneHandler';
 import selectAccountHandler from './reducers/selectAccountHandler';
-import selectAccountDoneHandler from './reducers/selectAccountDoneHandler';
-import selectAccountFailedHandler from './reducers/selectAccountFailedHandler';
 import authorizeHandler from './reducers/authorizeHandler';
 import deauthorizeHandler from './reducers/deauthorizeHandler';
 import generateSeedHandler from './reducers/generateSeedHandler';
@@ -46,10 +44,7 @@ export type State = {
     readonly isImportingAccount: boolean;
     readonly importAccountError: string;
     readonly id: string;
-    readonly sessionToken: string;
-    readonly refreshToken: string;
-    readonly socketToken: string;
-    readonly timestamp: string;
+    readonly session: ISession;
     readonly defaultAccount: string;
     readonly account: IAccount;
     readonly role: IRole;
@@ -68,10 +63,7 @@ export const initialState: State = {
     isImportingAccount: false,
     importAccountError: null,
     id: null,
-    sessionToken: null,
-    refreshToken: null,
-    socketToken: null,
-    timestamp: null,
+    session: null,
     defaultAccount: null,
     account: null,
     role: null,
@@ -92,9 +84,7 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.importAccount.done, importAccountDoneHandler)
     .case(actions.importAccount.failed, importAccountFailedHandler)
     .case(actions.importSeed.done, importSeedDoneHandler)
-    .case(actions.selectAccount.started, selectAccountHandler)
-    .case(actions.selectAccount.done, selectAccountDoneHandler)
-    .case(actions.selectAccount.failed, selectAccountFailedHandler)
+    .case(actions.selectAccount, selectAccountHandler)
     .case(actions.selectRole.done, selectRoleDoneHandler)
     .case(actions.authorize, authorizeHandler)
     .case(actions.deauthorize, deauthorizeHandler)

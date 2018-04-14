@@ -21,7 +21,7 @@ import { renderPage } from 'modules/content/actions';
 const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(renderPage.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         return Observable.fromPromise(client.content({
             type: 'page',

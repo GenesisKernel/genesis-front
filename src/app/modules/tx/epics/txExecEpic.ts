@@ -26,7 +26,7 @@ import { TTxError } from 'genesis/tx';
 export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(txExec.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
         const publicKey = keyring.generatePublicKey(action.payload.privateKey);
 
         if (!keyring.validatePrivateKey(action.payload.privateKey)) {

@@ -21,7 +21,7 @@ import { Observable } from 'rxjs/Observable';
 const getPageTreeEpic: Epic = (action$, store, { constructorModule, api }) => action$.ofAction(getPageTree.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         const template = state.editor.tabs[state.editor.tabIndex].value;
 

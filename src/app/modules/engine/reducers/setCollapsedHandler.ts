@@ -14,25 +14,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { IRootState } from 'modules';
-import { navigate } from 'modules/engine/actions';
-import { txCall } from 'modules/tx/actions';
+import { State } from '../reducer';
 
-import Debug, { IDebugProps } from 'components/Debug';
-
-const BackupContainer: React.SFC<IDebugProps> = (props) => (
-    <Debug {...props} />
-);
-
-const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.sessionToken
-});
-
-const mapDispatchToProps = {
-    navigate,
-    callContract: txCall
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(BackupContainer);
+export default function (state: State, isCollapsed: boolean): State {
+    return {
+        ...state,
+        isCollapsed
+    };
+}

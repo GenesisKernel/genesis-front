@@ -48,9 +48,7 @@ const storageAdapters = [
     filter([
         'storage',
         'auth.isAuthenticated',
-        'auth.sessionToken',
-        'auth.refreshToken',
-        'auth.socketToken',
+        'auth.session',
         'auth.id',
         'auth.role',
         'auth.account',

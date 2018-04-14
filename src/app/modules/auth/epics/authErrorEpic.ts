@@ -15,10 +15,10 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { Epic } from 'modules';
-import { login, importAccount, selectRole } from '../actions';
+import { login, importAccount, selectRole, createAccount } from '../actions';
 import { modalShow } from 'modules/modal/actions';
 
-const authErrorEpic: Epic = (action$, store) => action$.ofType(login.failed.type, importAccount.failed.type, selectRole.failed.type)
+const authErrorEpic: Epic = (action$, store) => action$.ofType(login.failed.type, importAccount.failed.type, createAccount.failed.type, selectRole.failed.type)
     .map(action =>
         modalShow({
             id: 'AUTH_ERROR',

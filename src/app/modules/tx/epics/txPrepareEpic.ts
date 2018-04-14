@@ -23,7 +23,7 @@ import ModalObservable from 'modules/modal/util/ModalObservable';
 const txPrepareEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrepare)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         if (!keyring.validatePrivateKey(action.payload.privateKey)) {
             Observable.of(txExec.failed({

@@ -59,7 +59,7 @@ const mapStateToProps = (state: IRootState) => {
     const section = state.content.sections[state.content.section];
 
     return {
-        apiHost: state.engine.apiHost,
+        apiHost: state.auth.session.apiHost,
         section: state.content.section,
         page: section.page && section.page.name
     };

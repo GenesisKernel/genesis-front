@@ -34,10 +34,6 @@ const newEcosystemEpic: Epic<Action, IRootState> =
                 address: account.address,
                 avatar: null,
                 username: null,
-                sessionToken: null,
-                refreshToken: null,
-                socketToken: null,
-                timestamp: null,
                 ecosystem,
                 ecosystemName
             });

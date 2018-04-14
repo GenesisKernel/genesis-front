@@ -21,9 +21,9 @@ import { saveAccount } from '../actions';
 import { selectAccount } from 'modules/auth/actions';
 
 const saveAccountOnSelectEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(selectAccount.done)
+    (action$, store) => action$.ofAction(selectAccount)
         .map(action =>
-            saveAccount(action.payload.params)
+            saveAccount(action.payload)
         );
 
 export default saveAccountOnSelectEpic;

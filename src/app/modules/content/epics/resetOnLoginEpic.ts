@@ -14,20 +14,16 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { State } from '../reducer';
-import { Success } from 'typescript-fsa';
-import { IAccount } from 'genesis/auth';
+import { Action } from 'redux';
+import { Epic } from 'redux-observable';
+import { IRootState } from 'modules';
+import { reset } from '../actions';
+import { login } from 'modules/auth/actions';
 
-export default function (state: State, payload: Success<IAccount, { sessionToken: string, refreshToken: string }>): State {
-    return {
-        ...state,
-        sessionToken: payload.result.sessionToken,
-        refreshToken: payload.result.refreshToken,
-        socketToken: payload.params.socketToken,
-        timestamp: payload.params.timestamp,
-        roles: null,
-        role: null,
-        account: payload.params,
-        id: payload.params.id
-    };
-}
+const resetOnAccountSelectEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(login.done)
+        .map(action =>
+            reset.started(null)
+        );
+
+export default resetOnAccountSelectEpic;

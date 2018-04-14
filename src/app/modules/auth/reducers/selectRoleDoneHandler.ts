@@ -21,10 +21,6 @@ import { IAccount } from 'genesis/auth';
 export default function (state: State, payload: Success<number, IAccount>): State {
     return {
         ...state,
-        sessionToken: payload.result.sessionToken,
-        refreshToken: payload.result.refreshToken,
-        socketToken: payload.result.socketToken,
-        timestamp: payload.result.timestamp,
         account: payload.result,
         isAuthenticated: true,
         isLoggingIn: false,

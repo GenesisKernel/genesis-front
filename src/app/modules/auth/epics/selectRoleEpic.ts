@@ -22,7 +22,7 @@ import keyring from 'lib/keyring';
 const selectRoleEpic: Epic = (action$, store, { api }) => action$.ofAction(selectRole.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost);
+        const client = api(state.auth.session);
         const privateKey = state.auth.privateKey;
         const publicKey = keyring.generatePublicKey(privateKey);
         const account = state.auth.account;
@@ -47,11 +47,7 @@ const selectRoleEpic: Epic = (action$, store, { api }) => action$.ofAction(selec
                     ecosystem: account.ecosystem,
                     ecosystemName: account.ecosystemName,
                     avatar: account.avatar,
-                    username: account.username,
-                    sessionToken: payload.token,
-                    refreshToken: payload.refresh,
-                    socketToken: payload.notify_key,
-                    timestamp: payload.timestamp
+                    username: account.username
                 },
             })
 

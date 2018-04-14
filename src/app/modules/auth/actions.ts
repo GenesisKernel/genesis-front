@@ -15,11 +15,11 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IAccount, ILoginCall, IRole } from 'genesis/auth';
+import { IAccount, ILoginCall, IRole, ISession } from 'genesis/auth';
 import { ICreateAccountCall, IImportAccountCall } from 'genesis/auth';
 
 const actionCreator = actionCreatorFactory('auth');
-export const login = actionCreator.async<ILoginCall, { account: IAccount, roles: IRole[], privateKey: string, publicKey: string }, string>('LOGIN');
+export const login = actionCreator.async<ILoginCall, { account: IAccount, roles: IRole[], privateKey: string, publicKey: string, session: ISession }, string>('LOGIN');
 export const logout = actionCreator.async('LOGOUT');
 export const createEcosystem = actionCreator<{ name: string, id: string }>('CREATE_ECOSYSTEM');
 export const generateSeed = actionCreator.async<void, string>('GENERATE_SEED');
@@ -27,7 +27,7 @@ export const importSeed = actionCreator.async<Blob, string, undefined>('IMPORT_S
 export const createAccount = actionCreator.async<ICreateAccountCall, IAccount, string>('CREATE_ACCOUNT');
 export const importAccount = actionCreator.async<IImportAccountCall, IAccount[], string>('IMPORT_ACCOUNT');
 export const removeAccount = actionCreator<IAccount>('REMOVE_ACCOUNT');
-export const selectAccount = actionCreator.async<IAccount, { sessionToken: string, refreshToken: string }, string>('SELECT_ACCOUNT');
+export const selectAccount = actionCreator<IAccount>('SELECT_ACCOUNT');
 export const selectRole = actionCreator.async<number, IAccount>('SELECT_ROLE');
 export const authorize = actionCreator<string>('AUTHORIZE');
 export const deauthorize = actionCreator('DEAUTHORIZE');

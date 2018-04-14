@@ -23,7 +23,7 @@ import { modalShow } from 'modules/modal/actions';
 const displayDataEpic: Epic = (action$, store, { api }) => action$.ofAction(displayData.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.engine.apiHost, state.auth.sessionToken);
+        const client = api(state.auth.session);
 
         return Observable.fromPromise(client.resolveTextData(action.payload))
             .flatMap(payload =>

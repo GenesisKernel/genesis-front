@@ -23,15 +23,20 @@ declare module 'genesis/auth' {
         ecosystemName: string;
         avatar: string;
         username: string;
-        sessionToken: string;
-        refreshToken: string;
-        socketToken: string;
-        timestamp: string;
     }
 
     interface IRole {
         id: number;
         name: string;
+    }
+
+    interface ISession {
+        apiHost: string;
+        sessionToken: string;
+        refreshToken: string;
+        wsHost: string;
+        wsToken: string;
+        timestamp: string;
     }
 
     interface ILoginCall {

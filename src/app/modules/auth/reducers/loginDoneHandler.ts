@@ -16,10 +16,10 @@
 
 import { State } from '../reducer';
 import { Success } from 'typescript-fsa';
-import { ILoginCall, IRole } from 'genesis/auth';
+import { ILoginCall, IRole, ISession } from 'genesis/auth';
 import { IAccount } from 'genesis/auth';
 
-export default function (state: State, payload: Success<ILoginCall, { account: IAccount, roles: IRole[], privateKey: string, publicKey: string }>): State {
+export default function (state: State, payload: Success<ILoginCall, { account: IAccount, roles: IRole[], privateKey: string, publicKey: string, session: ISession }>): State {
     const hasRoles = !!(payload.result.roles && payload.result.roles.length);
     return {
         ...state,
@@ -28,11 +28,8 @@ export default function (state: State, payload: Success<ILoginCall, { account: I
         account: payload.result.account,
         roles: payload.result.roles,
         ecosystem: payload.result.account.ecosystem,
-        sessionToken: payload.result.account.sessionToken,
-        refreshToken: payload.result.account.refreshToken,
+        session: payload.result.session,
         privateKey: payload.result.privateKey,
-        socketToken: payload.result.account.socketToken,
-        timestamp: payload.result.account.timestamp,
         id: payload.result.account.id
     };
 }

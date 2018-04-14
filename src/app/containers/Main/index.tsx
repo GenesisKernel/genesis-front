@@ -25,7 +25,6 @@ import DefaultPage from 'containers/Main/containers/DefaultPage';
 import PageHistory from 'components/Main/Admin/Interface/PageHistory';
 import MenuHistory from 'components/Main/Admin/Interface/MenuHistory';
 import Page from 'containers/Main/containers/Page';
-import Debug from 'containers/Main/containers/Debug';
 import Backup from 'containers/Main/containers/Backup';
 import NotFound from 'components/NotFound';
 import { AnimatedSwitch } from 'components/Animation';
@@ -34,7 +33,6 @@ const MainContainer: React.SFC<IMainProps> = props => (
     <Main {...props}>
         <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
             <Route exact path="/" component={DefaultPage} />
-            <Route exact path="/debug" component={Debug} />
             <Route exact path="/:section/:pageName?" component={Page} />
 
             <Route exact path="/admin/interface/page/history/:pageID-:pageName" render={routeProps => <PageHistory id={routeProps.match.params.pageID} name={routeProps.match.params.pageName} />} />
@@ -47,7 +45,7 @@ const MainContainer: React.SFC<IMainProps> = props => (
 );
 
 const mapStateToProps = (state: IRootState) => ({
-    nodeUrl: state.engine.apiHost,
+    nodeUrl: state.auth.session.apiHost,
     isAuthorized: !!state.auth.privateKey,
     stylesheet: state.content.stylesheet,
     section: state.content.section,

@@ -14,44 +14,44 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { Action } from 'redux';
 import { Epic } from 'modules';
 import { Observable } from 'rxjs';
 import { connect } from 'modules/socket/actions';
 import { initialize, setLocale } from '../actions';
 import urlJoin from 'url-join';
+import platform from 'lib/platform';
 
 const initializeEpic: Epic = (action$, store) => action$.ofAction(initialize.started)
     .flatMap(action => {
-        return Observable.ajax.getJSON<{ apiHost?: string, msgHost?: string }>(urlJoin(location.origin, 'settings.json'))
+        const requestUrl = platform.select({
+            web: urlJoin(location.origin, 'settings.json'),
+            desktop: './settings.json'
+        });
+
+        return Observable.ajax.getJSON<{ fullNodes?: string[] }>(requestUrl)
             .map(result =>
                 initialize.done({
                     params: action.payload,
-                    result: {
-                        apiHost: result.apiHost,
-                        wsHost: result.msgHost
-                    }
+                    result: result.fullNodes
                 })
 
             ).catch(result => Observable.of(initialize.done({
                 params: action.payload,
-                result: {
-                    apiHost: null,
-                    wsHost: null
-                }
+                result: ['http://127.0.0.1:7079']
             })));
 
     }).flatMap(result => {
         const state = store.getState();
-        return Observable.of<Action>(
+        return Observable.concat([
             result,
-            connect.started({
-                socketToken: state.auth.socketToken,
-                timestamp: state.auth.timestamp,
+            setLocale.started(state.storage.locale),
+            ...(state.auth.session && state.auth.session.wsToken) ? [connect.started({
+                wsHost: state.auth.session.wsHost,
+                socketToken: state.auth.session.wsToken,
+                timestamp: state.auth.session.timestamp,
                 userID: state.auth.id
-            }),
-            setLocale.started(state.storage.locale)
-        );
+            })] : []
+        ]);
     });
 
 export default initializeEpic;

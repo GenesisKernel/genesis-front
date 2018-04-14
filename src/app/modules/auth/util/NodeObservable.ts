@@ -14,14 +14,21 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { State } from '../reducer';
-import { Failure } from 'typescript-fsa';
-import { IAccount } from 'genesis/auth';
+import { Observable } from 'rxjs';
+import { IAPIDependency } from 'modules/dependencies';
 
-export default function (state: State, payload: Failure<IAccount, string>): State {
-    return {
-        ...state,
-        isAuthenticated: false,
-        account: payload.params
-    };
-}
+const NodeObservable = (params: { nodes: string[], count: number, timeout?: number, concurrency?: number, api: IAPIDependency }) =>
+    Observable.from(params.nodes)
+        .distinct()
+        .flatMap(l => {
+            const client = params.api({ apiHost: l });
+            return Observable.from(client.getUid())
+                .map(() => l)
+
+                // Set request timeout, try the next one
+                .timeout(params.timeout)
+                .catch(timeout => Observable.empty<never>());
+        }, params.concurrency)
+        .take(params.count);
+
+export default NodeObservable;

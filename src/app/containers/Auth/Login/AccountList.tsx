@@ -39,7 +39,7 @@ interface IAccountListContainerState {
 interface IAccountListContainerDispatch {
     onCreate: () => void;
     onRemove: typeof removeAccount;
-    onSelect: typeof selectAccount.started;
+    onSelect: typeof selectAccount;
     onLogin: typeof login.started;
 }
 
@@ -62,7 +62,7 @@ const mapStateToProps = (state: IRootState) => ({
 const mapDispatchToProps = {
     onRemove: removeAccount,
     onLogin: login.started,
-    onSelect: selectAccount.started,
+    onSelect: selectAccount,
     onCreate: () => navigate('/account')
 };
 
