@@ -15,6 +15,11 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import styled from 'styled-components';
+
+const Tab = styled.div`
+    overflow-y: auto;
+`;
 
 export interface ITabViewProps {
     tabs: string[];
@@ -45,7 +50,7 @@ export default class TabView extends React.Component<ITabViewProps, ITabViewStat
 
     render() {
         return (
-            <div className={`${this.props.wrapperClassName || ''}`}>
+            <Tab className={`${this.props.wrapperClassName || ''}`}>
                 <ul className={`nav nav-tabs ${this.props.tabsClassName || ''}`}>
                     {this.props.tabs.map((tab, index) => (
                         <li key={index} className={`uib-tab ${index === this.state.tabIndex ? 'active' : ''}`}>
@@ -60,7 +65,7 @@ export default class TabView extends React.Component<ITabViewProps, ITabViewStat
                         </div>
                     ))}
                 </div>
-            </div>
+            </Tab>
         );
     }
 }

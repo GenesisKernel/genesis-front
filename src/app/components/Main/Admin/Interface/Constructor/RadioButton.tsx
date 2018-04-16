@@ -16,6 +16,7 @@
 
 import * as React from 'react';
 import * as classnames from 'classnames';
+import styled from 'styled-components';
 
 interface IRadioButtonProps {
     src?: any;
@@ -29,6 +30,35 @@ interface IRadioButtonState {
 
 }
 
+const Wrapper = styled.div`
+    display: inline-block;
+    
+    .b-bullet {
+        display: inline-block;
+        position: relative;
+        width: 18px;
+        height: 18px;
+        border-radius: 2px;
+        border: 1px solid #9aa7b3;
+        margin-left: 1px;
+        margin-right: 1px;
+        cursor: pointer;
+    }
+    
+    .b-bullet_selected {
+        border-color: #62b2fc;
+        background-color: #62b2fc;
+    }
+    
+    .b-bullet>img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        padding: 2px;
+        box-sizing: border-box;
+    }
+`;
+
 export default class RadioButton extends React.Component<IRadioButtonProps, IRadioButtonState> {
 
     constructor(props: IRadioButtonProps) {
@@ -41,9 +71,11 @@ export default class RadioButton extends React.Component<IRadioButtonProps, IRad
             'b-bullet_selected': this.props.value === this.props.selectedValue
         });
         return (
-            <div className={classes} onClick={this.props.onClick.bind(this, this.props.value)}>
-                {this.props.children}
-            </div>
+            <Wrapper>
+                <div className={classes} onClick={this.props.onClick.bind(this, this.props.value)}>
+                    {this.props.children}
+                </div>
+            </Wrapper>
         );
     }
 }

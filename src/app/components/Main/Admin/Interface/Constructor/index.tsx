@@ -68,6 +68,10 @@ const ConstructorDiv = styled.div`
     min-height: 300px;
     position: relative;
     height: 100%;
+    
+    .g-fullheight {
+        height: 100%;
+    }
 
     .left-panel {
         position: absolute;
@@ -117,6 +121,128 @@ const ConstructorDiv = styled.div`
     .b-constructor-layout_can-drop {
         background-color: rgba(150, 190, 255, 0.3);
     }
+    
+    [class^="site-icon-"]:before, [class*=" site-icon-"]:before {
+        font-family: "Site Icons";
+        font-style: normal;
+        font-weight: normal;
+        speak: none;
+    
+        display: inline-block;
+        text-decoration: inherit;
+        width: 1em;
+        margin-right: .2em;
+        text-align: center;
+        
+        font-variant: normal;
+        text-transform: none;
+    
+        line-height: 1em;
+    
+        margin-left: .2em;
+    
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    
+    .site-icon_big {
+        font-size: 120%;
+    }
+    
+    .site-icon-undo:before { content: '\\e800'; }
+    .site-icon-redo:before { content: '\\e801'; }
+    
+    .btn-container, .btn-container:hover, .btn-container:active {
+        background: transparent;
+        padding: 0;
+        margin: 0;
+        border: none;
+    }
+    
+    .btn-container_active {
+        cursor: pointer;
+        color: #FFFFFF;
+    }
+    
+    .btn-container_disabled {
+        cursor: default;
+        color: #455568;
+    }
+    
+    .editable {
+        border: 1px dashed #7799FF;
+    }
+    
+    .can-drop {
+        background-color: rgba(150, 190, 255, 0.3);        
+        padding: 10px;
+    }
+    
+    .can-drop.can-drop_before {
+        border-top: 1px dashed blue;
+        border-left: 1px dashed blue;
+        background-color: rgba(150, 190, 255, 0.3);        
+    }
+    
+    .can-drop.can-drop_after {
+        border-bottom: 1px dashed blue;
+        border-right: 1px dashed blue;
+        background-color: rgba(150, 190, 255, 0.3);        
+    }
+
+    .b-icon-group {
+        margin: 0 10px;
+    }
+    
+    .b-switch {
+        display: inline-block;
+        min-width: 30px;
+        height: 18px;
+        cursor: pointer;
+    }
+    
+    .b-switch > span {
+        padding: 0 5px;
+        vertical-align: middle;
+    }
+    
+    .b-instrument-panel {
+        min-height: 34px;
+        background-color: #465669;
+    }
+    
+    .b-instrument-panel__inner {
+        padding: 4px;
+    }
+    
+    .b-instrument-panel__inner_dark {
+        background-color: #465669;
+    }
+    
+    .b-panel-light {
+        background-color: #707c91;
+        color: #FFF;
+    }
+    
+    .b-panel-light input {
+        background-color: #354454;
+        border-color: #4c6073;
+        color: #FFF;
+    }
+    
+    .b-panel-light input[readonly] {
+        background-color: #354454;
+        border-color: #4c6073;
+        color: #AAA;
+    }
+
+    .g-no-padding {
+        padding: 0;
+    }
+    
+    .g-padding-bottom {
+        padding-bottom: 10px;
+    }
 
 `;
 
@@ -139,7 +265,7 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
             <ConstructorDiv>
                 <div className="left-panel">
                     <TabView
-                        className="p0 b0 flex-stretch g-scrollable"
+                        className="p0 b0 flex-stretch"
                         wrapperClassName="g-fullheight flex-col"
                         paneClassName="g-fullheight"
                         tabsClassName="nav-tabs-dark nav-justified"
@@ -208,22 +334,6 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                             </button>
                         </div>
                         <div className="b-instrument-panel__inner pull-right">
-                            {/*
-                             <div className="b-icon-group pull-left">
-                             <div className="b-icon pull-left">
-                             <img src={imgViewMobile} />
-                             </div>
-                             <div className="b-icon pull-left">
-                             <img src={imgViewTablet} />
-                             </div>
-                             <div className="b-icon pull-left">
-                             <img src={imgViewLaptop} />
-                             </div>
-                             <div className="b-icon pull-left">
-                             <img src={imgViewDesktop} />
-                             </div>
-                             </div>
-                             */}
                             <div className="b-icon-group pull-left">
                                 <div className="b-switch">
                                     <span>GRID</span>
