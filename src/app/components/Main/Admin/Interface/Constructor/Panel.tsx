@@ -47,6 +47,39 @@ const PanelDiv = styled.div`
         background-color: #465669;
         min-height: 100px;
     }   
+    
+    .b-position-bullet {
+        display: inline-block;
+        position: relative;
+        width: 11px;
+        height: 11px;
+        border-radius: 2px;
+        border: 1px solid #9aa7b3;
+        margin-left: 1px;
+        margin-right: 1px;
+        cursor: pointer;
+    }
+    
+    .b-position-bullet_selected {
+        border-color: #62b2fc;
+        background-color: #62b2fc;
+    }
+    
+    .b-position-bullet_selected:after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        content: '';
+        display: block;
+        width: 4px;
+        height: 4px;
+        margin-left: -2px;
+        margin-top: -2px;
+        background-color: #FFF;
+        border-radius: 2px;
+    }
+
+
 `;
 
 interface IConstructorPanelProps {
