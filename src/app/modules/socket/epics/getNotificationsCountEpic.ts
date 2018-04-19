@@ -21,7 +21,7 @@ import { Observable } from 'rxjs/Observable';
 const getNotificationsCountEpic: Epic = (action$, store, { api }) => action$.ofAction(getNotificationsCount)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.auth.session);
+        const client = api({ apiHost: state.engine.nodeHost, sessionToken: state.socket.session });
 
         return Observable.fromPromise(client.requestNotifications(action.payload.ids))
             .flatMap(() => Observable.empty<never>())

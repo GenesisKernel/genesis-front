@@ -14,21 +14,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
-import { connect } from '../actions';
-import { login } from 'modules/auth/actions';
+import { State } from '../reducer';
 
-const connectOnLoginEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(login.done)
-        .map(action =>
-            connect.started({
-                wsHost: action.payload.result.session.wsHost,
-                socketToken: action.payload.result.session.wsToken,
-                timestamp: action.payload.result.session.timestamp,
-                userID: action.payload.result.account.id
-            })
-        );
-
-export default connectOnLoginEpic;
+export default function (state: State): State {
+    return {
+        ...state,
+        isConnecting: true
+    };
+}

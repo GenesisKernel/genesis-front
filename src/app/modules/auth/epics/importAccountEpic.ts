@@ -21,7 +21,6 @@ import { Observable } from 'rxjs/Observable';
 import { IAccount } from 'genesis/auth';
 import { navigate } from 'modules/engine/actions';
 import keyring from 'lib/keyring';
-import NodeObservable from '../util/NodeObservable';
 
 const importAccountEpic: Epic = (action$, store, { api }) => action$.ofAction(importAccount.started)
     .flatMap(action => {
@@ -36,17 +35,10 @@ const importAccountEpic: Epic = (action$, store, { api }) => action$.ofAction(im
         const ecosystems = ['1', ...backup.ecosystems];
         const publicKey = keyring.generatePublicKey(backup.privateKey);
 
-        return NodeObservable({
-            nodes: store.getState().engine.fullNodes,
-            count: 1,
-            timeout: 5000,
-            concurrency: 10,
-            api
-
-        }).flatMap(apiHost => Observable.from(ecosystems)
+        return Observable.from(ecosystems)
             .distinct()
             .flatMap(ecosystem => {
-                const client = api({ apiHost });
+                const client = api({ apiHost: store.getState().engine.nodeHost });
                 return Observable.from(client.getUid().then(uid =>
                     client.authorize(uid.token).login({
                         publicKey,
@@ -55,40 +47,39 @@ const importAccountEpic: Epic = (action$, store, { api }) => action$.ofAction(im
                     })
 
                 )).catch(e => Observable.empty<never>());
-            })
 
-        ).toArray().flatMap(results => {
-            const encKey = keyring.encryptAES(backup.privateKey, action.payload.password);
-            const accounts: IAccount[] = results.map(account => ({
-                id: account.key_id,
-                encKey,
-                address: account.address,
-                ecosystem: account.ecosystem_id,
-                ecosystemName: null,
-                username: account.key_id,
-                avatar: null
-            }));
-
-            if (accounts.length) {
-                return Observable.of<Action>(
-                    importAccount.done({
-                        params: action.payload,
-                        result: accounts
-                    }),
-                    navigate('/')
-                );
-            }
-            else {
-                return Observable.of(importAccount.failed({
-                    params: null,
-                    error: 'E_OFFLINE'
+            }).toArray().flatMap(results => {
+                const encKey = keyring.encryptAES(backup.privateKey, action.payload.password);
+                const accounts: IAccount[] = results.map(account => ({
+                    id: account.key_id,
+                    encKey,
+                    address: account.address,
+                    ecosystem: account.ecosystem_id,
+                    ecosystemName: null,
+                    username: account.key_id,
+                    avatar: null
                 }));
-            }
 
-        }).catch(e => Observable.of(importAccount.failed({
-            params: null,
-            error: 'E_IMPORT_FAILED'
-        })));
+                if (accounts.length) {
+                    return Observable.of<Action>(
+                        importAccount.done({
+                            params: action.payload,
+                            result: accounts
+                        }),
+                        navigate('/')
+                    );
+                }
+                else {
+                    return Observable.of(importAccount.failed({
+                        params: null,
+                        error: 'E_OFFLINE'
+                    }));
+                }
+
+            }).catch(e => Observable.of(importAccount.failed({
+                params: null,
+                error: 'E_IMPORT_FAILED'
+            })));
     });
 
 export default importAccountEpic;

@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import actionCreatorFactory from 'typescript-fsa';
-import { IAccount } from 'genesis/auth';
-import { INotificationsMessage, IConnectCall } from 'genesis/socket';
+import { State } from '../reducer';
+import { Failure } from 'typescript-fsa';
 
-const actionCreator = actionCreatorFactory('socket');
-export const connect = actionCreator.async<IConnectCall, { session: string, instance: ICentrifuge }, string>('CONNECT');
-export const disconnect = actionCreator.async('DISCONNECT');
-export const subscribe = actionCreator.async<IAccount, any, string>('SUBSCRIBE');
-export const unsubscribe = actionCreator.async<IAccount, void, void>('UNSUBSCRIBE');
-export const setNotificationsCount = actionCreator<INotificationsMessage>('SET_NOTIFICATIONS_COUNT');
-export const getNotificationsCount = actionCreator<{ ids: { id: string, ecosystem: string }[] }>('GET_NOTIFICATIONS_COUNT');
+export default function (state: State, payload: Failure<void, void>): State {
+    return {
+        ...state,
+        isOffline: true,
+        isConnecting: false,
+        isLoaded: true
+    };
+}

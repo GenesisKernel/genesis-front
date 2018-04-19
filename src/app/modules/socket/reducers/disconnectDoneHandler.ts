@@ -20,6 +20,7 @@ export default function (state: State): State {
     return {
         ...state,
         socket: null,
+        session: null,
         subscriptions: []
     };
 }

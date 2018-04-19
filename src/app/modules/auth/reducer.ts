@@ -35,7 +35,6 @@ import generateSeedHandler from './reducers/generateSeedHandler';
 import selectRoleDoneHandler from './reducers/selectRoleDoneHandler';
 
 export type State = {
-    readonly guestKey: string;
     readonly loadedSeed: string;
     readonly isAuthenticated: boolean;
     readonly isLoggingIn: boolean;
@@ -54,7 +53,6 @@ export type State = {
 };
 
 export const initialState: State = {
-    guestKey: 'e5a87a96a445cb55a214edaad3661018061ef2936e63a0a93bdb76eb28251c1f',
     loadedSeed: null,
     isAuthenticated: false,
     isLoggingIn: false,

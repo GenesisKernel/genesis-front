@@ -20,8 +20,12 @@ import { connect } from 'modules/socket/actions';
 import { initialize, setLocale } from '../actions';
 import urlJoin from 'url-join';
 import platform from 'lib/platform';
+import NodeObservable from '../util/NodeObservable';
+import keyring from 'lib/keyring';
 
-const initializeEpic: Epic = (action$, store) => action$.ofAction(initialize.started)
+const fullNodesFallback = ['http://127.0.0.1:7079'];
+
+const initializeEpic: Epic = (action$, store, { api, defaultKey }) => action$.ofAction(initialize.started)
     .flatMap(action => {
         const requestUrl = platform.select({
             web: urlJoin(location.origin, 'settings.json'),
@@ -29,29 +33,52 @@ const initializeEpic: Epic = (action$, store) => action$.ofAction(initialize.sta
         });
 
         return Observable.ajax.getJSON<{ fullNodes?: string[] }>(requestUrl)
-            .map(result =>
-                initialize.done({
+            .map(l => l.fullNodes)
+            .defaultIfEmpty(fullNodesFallback)
+            .catch(e => Observable.of(fullNodesFallback))
+            .flatMap(fullNodes =>
+                NodeObservable({
+                    nodes: fullNodes,
+                    count: 1,
+                    timeout: 5000,
+                    concurrency: 10,
+                    api
+                }).flatMap(node => {
+                    const state = store.getState();
+                    const client = api({ apiHost: node });
+
+                    return Observable.concat(
+                        Observable.of(initialize.done({
+                            params: action.payload,
+                            result: {
+                                fullNodes,
+                                nodeHost: node
+                            }
+                        })),
+                        Observable.of(setLocale.started(state.storage.locale)),
+                        Observable.from(client.getUid())
+                            .flatMap(uid => Observable.from(
+                                client.authorize(uid.token).login({
+                                    publicKey: keyring.generatePublicKey(defaultKey),
+                                    signature: keyring.sign(uid.uid, defaultKey)
+                                })
+
+                            )).map(loginResult =>
+                                connect.started({
+                                    session: loginResult.token,
+                                    wsHost: 'ws://127.0.0.1:8000',
+                                    socketToken: loginResult.notify_key,
+                                    timestamp: loginResult.timestamp,
+                                    userID: loginResult.key_id
+                                })
+                            )
+                    );
+
+                }).defaultIfEmpty(initialize.failed({
                     params: action.payload,
-                    result: result.fullNodes
-                })
-
-            ).catch(result => Observable.of(initialize.done({
-                params: action.payload,
-                result: ['http://127.0.0.1:7079']
-            })));
-
-    }).flatMap(result => {
-        const state = store.getState();
-        return Observable.concat([
-            result,
-            setLocale.started(state.storage.locale),
-            ...(state.auth.session && state.auth.session.wsToken) ? [connect.started({
-                wsHost: state.auth.session.wsHost,
-                socketToken: state.auth.session.wsToken,
-                timestamp: state.auth.session.timestamp,
-                userID: state.auth.id
-            })] : []
-        ]);
+                    error: 'E_OFFLINE'
+                }))
+            );
     });
 
 export default initializeEpic;

@@ -25,10 +25,12 @@ import Titlebar from 'components/Main/Titlebar';
 import Welcome from 'containers/Auth/Welcome';
 import Account from 'components/Auth/Account';
 import Login from 'containers/Auth/Login';
+import Offline from 'containers/Auth/Offline';
 
 export interface IAuthProps {
     className?: string;
     firstRun: boolean;
+    isOffline: boolean;
 }
 
 const Auth: React.SFC<IAuthProps> = props => (
@@ -40,6 +42,7 @@ const Auth: React.SFC<IAuthProps> = props => (
                     header={platform.select({ desktop: <Titlebar maximizable={false} /> })}
                 >
                     <Switch>
+                        {props.isOffline && (<Route path="/" component={Offline} />)}
                         <Route path="/account" component={Account} />
                         {props.firstRun && (<Route path="/" component={Welcome} />)}
                         {!props.firstRun && (<Route path="/" component={Login} />)}

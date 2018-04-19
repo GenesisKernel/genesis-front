@@ -25,6 +25,7 @@ import * as classnames from 'classnames';
 import { AnimatedSwitch } from 'components/Animation';
 import Main from 'containers/Main';
 import Auth from 'containers/Auth';
+import Splash from 'components/Splash';
 
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
@@ -35,7 +36,9 @@ import ModalProvider from 'containers/Modal/ModalProvider';
 interface IAppProps {
     locale: string;
     isAuthenticated: boolean;
+    isLoaded: boolean;
     isCollapsed: boolean;
+    isOffline: boolean;
     localeMessages: { [key: string]: string };
     switchWindow?: typeof switchWindow.started;
 }
@@ -63,6 +66,9 @@ class App extends React.Component<IAppProps> {
                     <InitHook />
                     <ModalProvider />
                     <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
+                        {!this.props.isLoaded && (
+                            <Route path="/" component={Splash} />
+                        )}
                         {!this.props.isAuthenticated && (
                             <Route path="/" component={Auth} />
                         )}
@@ -78,7 +84,9 @@ const mapStateToProps = (state: IRootState) => ({
     locale: state.storage.locale,
     localeMessages: state.engine.localeMessages,
     isAuthenticated: state.auth.isAuthenticated,
-    isCollapsed: state.engine.isCollapsed
+    isCollapsed: state.engine.isCollapsed,
+    isLoaded: state.engine.isLoaded,
+    isOffline: state.engine.isOffline
 });
 
 const mapDispatchToProps = {

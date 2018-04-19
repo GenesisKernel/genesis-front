@@ -52,7 +52,6 @@ const storageAdapters = [
         'auth.id',
         'auth.role',
         'auth.account',
-        'auth.timestamp'
     ])
 ];
 

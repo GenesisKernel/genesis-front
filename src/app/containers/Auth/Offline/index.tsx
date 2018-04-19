@@ -17,33 +17,34 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
+import { initialize } from 'modules/engine/actions';
 
-import Auth from 'components/Auth';
+import Offline from 'components/Auth/Offline';
 
-export interface IAuthContainerProps {
+export interface IOfflineContainerProps {
 
 }
 
-interface IAuthContainerState {
-    firstRun: boolean;
-    isOffline: boolean;
+interface IOfflineContainerState {
+    isConnecting: boolean;
+    isConnected: boolean;
 }
 
-interface IAuthContainerDispatch {
-
+interface IOfflineContainerDispatch {
+    checkOnline: () => void;
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    firstRun: !state.storage.accounts || 0 === state.storage.accounts.length,
-    isOffline: state.engine.isOffline
+    isConnected: !state.engine.isOffline,
+    isConnecting: state.engine.isConnecting
 });
 
 const mapDispatchToProps = {
-
+    checkOnline: () => initialize.started(null)
 };
 
-const AuthContainer: React.SFC<IAuthContainerProps & IAuthContainerState & IAuthContainerDispatch> = props => (
-    <Auth {...props} />
+const AccountListContainer: React.SFC<IOfflineContainerProps & IOfflineContainerState & IOfflineContainerDispatch> = props => (
+    <Offline {...props} />
 );
 
-export default connect<IAuthContainerState, IAuthContainerDispatch, IAuthContainerProps>(mapStateToProps, mapDispatchToProps)(AuthContainer);
+export default connect<IOfflineContainerState, IOfflineContainerDispatch, IOfflineContainerProps>(mapStateToProps, mapDispatchToProps)(AccountListContainer);

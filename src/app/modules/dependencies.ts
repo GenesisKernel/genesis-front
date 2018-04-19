@@ -22,6 +22,7 @@ export const apiEndpoint = 'api/v2';
 
 export interface IStoreDependencies {
     api: IAPIDependency;
+    defaultKey: string;
     constructorModule: typeof constructorModule;
 }
 
@@ -36,5 +37,6 @@ export default {
         apiEndpoint,
         session: options.sessionToken
     }),
+    defaultKey: '04e5a87a96a445cb55a214edaad3661018061ef2936e63a0a93bdb76eb28251c1f',
     constructorModule
 } as IStoreDependencies;

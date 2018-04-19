@@ -25,6 +25,7 @@ import setNotificationsCountHandler from './reducers/setNotificationsCountHandle
 import unsubscribeHandler from './reducers/unsubscribeHandler';
 
 export type State = {
+    readonly session: string;
     readonly socket: ICentrifuge;
     readonly notifications: INotificationsMessage[];
     readonly subscriptions: {
@@ -34,6 +35,7 @@ export type State = {
 };
 
 export const initialState: State = {
+    session: null,
     socket: null,
     notifications: [],
     subscriptions: []

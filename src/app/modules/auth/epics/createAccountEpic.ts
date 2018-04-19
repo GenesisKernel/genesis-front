@@ -19,20 +19,14 @@ import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
 import { createAccount } from '../actions';
 import { navigate } from 'modules/engine/actions';
-import NodeObservable from '../util/NodeObservable';
 import keyring from 'lib/keyring';
 
 const createAccountEpic: Epic = (action$, store, { api }) => action$.ofAction(createAccount.started)
-    .flatMap(action => NodeObservable({
-        nodes: store.getState().engine.fullNodes,
-        count: 1,
-        timeout: 5000,
-        concurrency: 10,
-        api
-
-    }).flatMap(apiHost => {
+    .flatMap(action => {
+        const state = store.getState();
         const keys = keyring.generateKeyPair(action.payload.seed);
-        const client = api({ apiHost });
+        const client = api({ apiHost: state.engine.nodeHost });
+
         return Observable.from(
             client.getUid().then(uid => {
                 const signature = keyring.sign(uid.uid, keys.private);
@@ -65,16 +59,6 @@ const createAccountEpic: Epic = (action$, store, { api }) => action$.ofAction(cr
                 error: e.error
             }))
         );
-
-    }).defaultIfEmpty(createAccount.failed({
-        params: null,
-        error: 'E_OFFLINE'
-
-    })).catch(e =>
-        Observable.of(createAccount.failed({
-            params: null,
-            error: e.error
-        }))
-    ));
+    });
 
 export default createAccountEpic;

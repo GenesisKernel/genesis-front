@@ -17,9 +17,13 @@
 import { State } from '../reducer';
 import { Success } from 'typescript-fsa';
 
-export default function (state: State, payload: Success<void, string[]>): State {
+export default function (state: State, payload: Success<void, { nodeHost: string, fullNodes: string[] }>): State {
     return {
         ...state,
-        fullNodes: payload.result
+        isLoaded: true,
+        isOffline: false,
+        isConnecting: false,
+        nodeHost: payload.result.nodeHost,
+        fullNodes: payload.result.fullNodes
     };
 }

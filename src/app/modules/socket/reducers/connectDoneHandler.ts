@@ -18,9 +18,10 @@ import { State } from '../reducer';
 import { Success } from 'typescript-fsa';
 import { IConnectCall } from 'genesis/socket';
 
-export default function (state: State, payload: Success<IConnectCall, ICentrifuge>): State {
+export default function (state: State, payload: Success<IConnectCall, { session: string, instance: ICentrifuge }>): State {
     return {
         ...state,
-        socket: payload.result
+        session: payload.result.session,
+        socket: payload.result.instance
     };
 }

@@ -42,7 +42,10 @@ const connectEpic: Epic<Action, IRootState> =
                     centrifuge.on('connect', context => {
                         observer.next(connect.done({
                             params: action.payload,
-                            result: centrifuge
+                            result: {
+                                session: action.payload.session,
+                                instance: centrifuge
+                            }
                         }));
 
                         _.uniqBy(store.getState().storage.accounts, 'id').forEach(account =>
