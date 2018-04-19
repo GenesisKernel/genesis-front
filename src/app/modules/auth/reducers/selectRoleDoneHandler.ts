@@ -16,18 +16,21 @@
 
 import { State } from '../reducer';
 import { Success } from 'typescript-fsa';
-import { IAccount } from 'genesis/auth';
 
-export default function (state: State, payload: Success<number, IAccount>): State {
+export default function (state: State, payload: Success<number, { sessionToken: string, refreshToken: string }>): State {
     return {
         ...state,
-        account: payload.result,
         isAuthenticated: true,
         isLoggingIn: false,
         roles: null,
         role: 'number' === typeof payload.params ? {
             id: payload.params,
             name: state.roles.find(l => l.id === payload.params).name
-        } : null
+        } : null,
+        session: {
+            ...state.session,
+            sessionToken: payload.result.sessionToken,
+            refreshToken: payload.result.refreshToken
+        }
     };
 }

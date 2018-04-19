@@ -41,13 +41,8 @@ const selectRoleEpic: Epic = (action$, store, { api }) => action$.ofAction(selec
             selectRole.done({
                 params: action.payload,
                 result: {
-                    id: payload.key_id,
-                    encKey: account.encKey,
-                    address: payload.address,
-                    ecosystem: account.ecosystem,
-                    ecosystemName: account.ecosystemName,
-                    avatar: account.avatar,
-                    username: account.username
+                    sessionToken: payload.token,
+                    refreshToken: payload.refresh,
                 },
             })
 

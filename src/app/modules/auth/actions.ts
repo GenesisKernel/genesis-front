@@ -28,6 +28,6 @@ export const createAccount = actionCreator.async<ICreateAccountCall, IAccount, s
 export const importAccount = actionCreator.async<IImportAccountCall, IAccount[], string>('IMPORT_ACCOUNT');
 export const removeAccount = actionCreator<IAccount>('REMOVE_ACCOUNT');
 export const selectAccount = actionCreator<IAccount>('SELECT_ACCOUNT');
-export const selectRole = actionCreator.async<number, IAccount>('SELECT_ROLE');
+export const selectRole = actionCreator.async<number, { sessionToken: string, refreshToken: string }>('SELECT_ROLE');
 export const authorize = actionCreator<string>('AUTHORIZE');
 export const deauthorize = actionCreator('DEAUTHORIZE');
