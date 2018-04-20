@@ -21,6 +21,7 @@ import styled from 'styled-components';
 interface IRadioButtonProps {
     src?: any;
     value: string;
+    title?: string;
     selectedValue?: string;
     onClick?: any;
 
@@ -50,13 +51,18 @@ const Wrapper = styled.div`
         background-color: #62b2fc;
     }
     
-    .b-bullet>img {
-        display: block;
+    .b-bullet>img, .b-bullet>span {
+        line-height: 100%;
+        text-align: center;
+        display: inline-block;
         width: 100%;
         height: 100%;
         padding: 2px;
         box-sizing: border-box;
+        vertical-align: top;
     }
+    
+    
 `;
 
 export default class RadioButton extends React.Component<IRadioButtonProps, IRadioButtonState> {
@@ -72,7 +78,7 @@ export default class RadioButton extends React.Component<IRadioButtonProps, IRad
         });
         return (
             <Wrapper>
-                <div className={classes} onClick={this.props.onClick.bind(this, this.props.value)}>
+                <div className={classes} onClick={this.props.onClick.bind(this, this.props.value)} title={this.props.title || ''}>
                     {this.props.children}
                 </div>
             </Wrapper>
