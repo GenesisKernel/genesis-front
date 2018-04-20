@@ -12,6 +12,7 @@
     "private": true,
     "main": "./electron/index.js",
     "dependencies": {
+        "axios": "^0.18.0",
         "bluebird": "^3.5.1",
         "centrifuge": "^1.4.6",
         "classnames": "^2.2.5",
@@ -27,7 +28,6 @@
         "jspolyfill-array.prototype.find": "^0.1.3",
         "jsrsasign": "^8.0.3",
         "lodash": "^4.17.4",
-        "needle": "^2.1.0",
         "prop-types": "^15.6.0",
         "qrcode.react": "^0.7.2",
         "query-string": "^5.1.0",
@@ -85,6 +85,7 @@
         "release": "electron-builder --config electron-builder.json"
     },
     "devDependencies": {
+        "@types/axios": "^0.14.0",
         "@types/bluebird": "^3.5.18",
         "@types/classnames": "^2.2.3",
         "@types/crypto-js": "^3.1.34",
@@ -94,7 +95,6 @@
         "@types/js-beautify": "^0.0.31",
         "@types/lodash": "^4.14.77",
         "@types/markerclustererplus": "^2.1.33",
-        "@types/needle": "^2.0.2",
         "@types/node": "^8.0.57",
         "@types/prop-types": "^15.5.2",
         "@types/qrcode.react": "^0.6.2",

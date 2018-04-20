@@ -30,7 +30,7 @@ const RoleButton: React.SFC<IRoleButtonProps> = props => (
     <Button className={props.className} block bsStyle="default" onClick={props.onSelect}>
         <div className="media-box text-left">
             <div>
-                <p className="m0">
+                <p className="pl m0">
                     {props.name}
                 </p>
             </div>

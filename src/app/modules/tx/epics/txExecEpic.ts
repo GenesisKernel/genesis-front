@@ -40,11 +40,10 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
         }
 
         return Observable.fromPromise(client.txCall({
-            name: action.payload.tx.name,
+            requestID: action.payload.requestID,
             pubkey: publicKey,
             signature: action.payload.signature,
-            time: action.payload.time,
-            params: action.payload.tx.params
+            time: action.payload.time
 
         })).flatMap(result => Observable.defer(() => client.txStatus({
             hash: result.hash

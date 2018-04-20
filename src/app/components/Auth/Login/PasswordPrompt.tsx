@@ -18,8 +18,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
 import { IAccount } from 'genesis/auth';
-import imgAvatar from 'images/avatar.svg';
 
+import Avatar from 'containers/Avatar';
 import Validation from 'components/Validation';
 import Heading from 'components/Auth/Heading';
 
@@ -45,7 +45,11 @@ const PasswordPrompt: React.SFC<IPasswordPromptProps & InjectedIntlProps> = prop
                 </Heading>
                 <div className="text-center desktop-flex-stretch">
                     <div className="avatar-holder">
-                        <img src={props.account.avatar || imgAvatar} />
+                        <Avatar
+                            size={100}
+                            keyID={props.account.id}
+                            ecosystem={props.account.ecosystem}
+                        />
                     </div>
                     <h4 className="text-center mt0">
                         {`${props.account.username || props.account.id} (${props.account.ecosystemName || props.account.ecosystem})`}
@@ -74,12 +78,6 @@ export default styled(injectIntl(PasswordPrompt)) `
         width: 100px;
         height: 100px;
         margin: 0 auto 15px auto;
-
-        > img {
-            max-width: 100%;
-            max-height: 100%;
-            border-radius: 100%;
-        }
     }
 
     .password-prompt {

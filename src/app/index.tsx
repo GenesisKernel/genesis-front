@@ -21,7 +21,6 @@ import { render } from 'react-dom';
 import store, { history } from 'store';
 
 import 'jspolyfill-array.prototype.find';
-import 'whatwg-fetch';
 import 'font-awesome/css/font-awesome.css';
 import 'simple-line-icons/css/simple-line-icons.css';
 import 'styles/built/sass.css';

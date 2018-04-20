@@ -47,8 +47,7 @@ const createAccountEpic: Epic = (action$, store, { api }) => action$.ofAction(cr
                         address: payload.address,
                         ecosystem: '1',
                         ecosystemName: null,
-                        username: payload.key_id,
-                        avatar: null
+                        username: payload.key_id
                     }
                 }),
                 navigate('/')

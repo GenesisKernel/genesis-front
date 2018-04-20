@@ -73,6 +73,7 @@ const txPrepareEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrep
                                     ...signParams
                                 }
                             },
+                            requestID: prepare.request_id,
                             time: prepare.time,
                             privateKey: action.payload.privateKey,
                             signature: keyring.sign(forSign, action.payload.privateKey)
@@ -86,6 +87,7 @@ const txPrepareEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrep
             else {
                 return Observable.of(txExec.started({
                     tx: txCall,
+                    requestID: prepare.request_id,
                     time: prepare.time,
                     privateKey: action.payload.privateKey,
                     signature: keyring.sign(forSign, action.payload.privateKey)

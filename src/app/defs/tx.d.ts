@@ -88,6 +88,7 @@ declare module 'genesis/tx' {
 
     interface IExecutionCall {
         tx: ITransactionCall;
+        requestID?: string;
         privateKey?: string;
         signature?: string;
         time?: string;

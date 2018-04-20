@@ -32,7 +32,6 @@ const newEcosystemEpic: Epic<Action, IRootState> =
                 id: account.id,
                 encKey: account.encKey,
                 address: account.address,
-                avatar: null,
                 username: null,
                 ecosystem,
                 ecosystemName

@@ -16,11 +16,11 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
-import imgAvatar from 'images/avatar.svg';
 import { FormattedMessage } from 'react-intl';
 import { IAccount } from 'genesis/auth';
 
 import { CloseDropdownButton } from 'components/DropdownButton';
+import Avatar from 'containers/Avatar';
 import PageLink from 'containers/Routing/PageLink';
 import SystemButton from './SystemButton';
 
@@ -60,8 +60,6 @@ const StyledUserMenu = styled.div`
 
     > .user-avatar {
         float: right;
-        max-height: 32px;
-        max-width: 32px;
         margin: 4px;
     }
 
@@ -158,7 +156,12 @@ class UserMenu extends React.Component<IUserMenuProps> {
                             )}
                         </div>
                     </div>
-                    <img className="user-avatar" src={this.props.account.avatar || imgAvatar} />
+                    <Avatar
+                        className="user-avatar"
+                        size={32}
+                        keyID={this.props.account.id}
+                        ecosystem={this.props.account.ecosystem}
+                    />
                 </StyledUserMenu>
             </SystemButton>
         ) : null;

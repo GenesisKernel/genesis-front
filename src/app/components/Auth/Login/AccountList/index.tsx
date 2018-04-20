@@ -69,7 +69,6 @@ class AccountList extends React.Component<IAccountListProps & InjectedIntlProps>
                                     key={index}
                                     onSelect={() => this.props.onSelect(l.account)}
                                     onRemove={() => this.props.onRemove(l.account)}
-                                    avatar={l.account.avatar}
                                     keyID={l.account.id}
                                     notifications={l.notifications}
                                     username={l.account.username}

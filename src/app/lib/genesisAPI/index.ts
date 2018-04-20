@@ -22,8 +22,21 @@ export type TRequestMethod =
     'get' |
     'post';
 
+export interface IRequest {
+    method: TRequestMethod;
+    url: string;
+    headers?: {
+        [key: string]: string;
+    };
+    query?: {
+        [key: string]: any;
+    };
+    body?: {
+        [key: string]: any;
+    };
+}
+
 export interface IRequestOptions<P, R> {
-    connection?: string;
     headers?: {
         [key: string]: string;
     };
@@ -45,8 +58,7 @@ export interface IParameterLessEndpoint<R> {
 }
 
 export interface IRequestTransport {
-    (method: TRequestMethod, endpoint: string, options?: IRequestOptions<any, any>): Promise<{ body: any }>;
-    (method: TRequestMethod, endpoint: string, body: { [key: string]: any }, options?: IRequestOptions<any, any>): Promise<{ body: any }>;
+    (request: IRequest): Promise<{ body: any }>;
 }
 
 export interface IRequestParams {
@@ -68,7 +80,7 @@ export interface IAPIOptions {
 class GenesisAPI {
     private _defaultOptions: IRequestOptions<any, any> = {
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            'Content-Type': 'multipart/form-data'
         }
     };
     private _options: IAPIOptions;
@@ -96,12 +108,20 @@ class GenesisAPI {
 
         let json: any = null;
 
+        const formData = new FormData();
+        for (let itr in params) {
+            if (params.hasOwnProperty(itr)) {
+                formData.append(itr, params[itr]);
+            }
+        }
+
         try {
-            const response = await this._options.transport(method, requestUrl, params, {
-                connection: 'Keep-Alive',
-                headers: {
-                    ...requestOptions.headers
-                }
+            const response = await this._options.transport({
+                method,
+                url: requestUrl,
+                body: 'get' === method ? {} : formData,
+                query: 'get' === method ? params : {},
+                headers: requestOptions.headers
             });
             json = requestOptions.responseTransformer ? requestOptions.responseTransformer(response.body) : response.body;
         }
@@ -230,23 +250,24 @@ class GenesisAPI {
     });
 
     // Transactions
-    public txCall = this.setSecuredEndpoint<ITxCallRequest, ITxCallResponse>('post', 'contract/{name}', {
+    public txCall = this.setSecuredEndpoint<ITxCallRequest, ITxCallResponse>('post', 'contract/{requestID}', {
         requestTransformer: request => ({
             time: request.time,
             signature: request.signature,
-            pubkey: request.pubkey,
-            ...request.params
+            pubkey: request.pubkey
         })
     });
     public txPrepare = this.setSecuredEndpoint<ITxPrepareRequest, ITxPrepareResponse>('post', 'prepare/{name}', {
-        requestTransformer: request => ({
-            ...request.params
-        })
+        requestTransformer: request => request.params
     });
     public txStatus = this.setSecuredEndpoint<ITxStatusRequest, ITxStatusResponse>('get', 'txstatus/{hash}', { requestTransformer: () => null });
 
     // Blob data getters
-    public resolveTextData = (link: string) => this._options.transport('get', urlJoin(this._options.apiHost, this._options.apiEndpoint, link)).then(res => res.body as string);
+    public resolveTextData = (link: string) => this._options.transport({
+        method: 'get',
+        url: urlJoin(this._options.apiHost, this._options.apiEndpoint, link)
+
+    }).then(res => res.body as string)
 }
 
 export default GenesisAPI;

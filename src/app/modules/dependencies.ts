@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import needle from 'needle';
+import axios from 'axios';
 import GenesisAPI from 'lib/genesisAPI';
 import constructorModule from 'lib/constructor';
 
@@ -30,13 +30,27 @@ export interface IAPIDependency {
     (options: { apiHost: string, sessionToken?: string }): GenesisAPI;
 }
 
-export default {
-    api: (options: { apiHost: string, sessionToken?: string }) => new GenesisAPI({
-        transport: needle,
-        apiHost: options.apiHost,
+const storeDependencies: IStoreDependencies = {
+    api: (params: { apiHost: string, sessionToken?: string }) => new GenesisAPI({
+        transport: request => axios({
+            url: request.url,
+            method: request.method,
+            headers: request.headers,
+            data: request.body,
+            params: request.query
+
+        }).then(l => {
+            return l ? { body: l.data } : null;
+
+        }).catch(e => {
+            throw e && e.response && e.response.data ? e.response.data.error : null;
+        }),
+        apiHost: params.apiHost,
         apiEndpoint,
-        session: options.sessionToken
+        session: params.sessionToken
     }),
     defaultKey: '04e5a87a96a445cb55a214edaad3661018061ef2936e63a0a93bdb76eb28251c1f',
     constructorModule
-} as IStoreDependencies;
+};
+
+export default storeDependencies;

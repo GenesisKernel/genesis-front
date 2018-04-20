@@ -24,14 +24,14 @@ import ValidatedForm, { IValidatedControl } from './ValidatedForm';
 
 export interface IValidatedFileProps {
     name: string;
-    value?: string;
+    value?: File;
     disabled?: boolean;
     placeholder?: string;
     validators?: Validator[];
 }
 
 interface IValidatedFileState {
-    value: string;
+    value: File;
     filename: string;
 }
 
@@ -41,7 +41,7 @@ export default class ValidatedFile extends React.Component<IValidatedFileProps, 
     constructor(props: IValidatedFileProps) {
         super(props);
         this.state = {
-            value: '',
+            value: null,
             filename: ''
         };
     }
@@ -61,7 +61,7 @@ export default class ValidatedFile extends React.Component<IValidatedFileProps, 
     componentWillReceiveProps(props: IValidatedFileProps) {
         if (this.props.value !== props.value) {
             this.setState({
-                value: props.value as string,
+                value: props.value,
                 filename: props.value ? this.state.filename : ''
             });
             (this.context.form as ValidatedForm).updateState(props.name, props.value);
@@ -77,7 +77,7 @@ export default class ValidatedFile extends React.Component<IValidatedFileProps, 
             const file = e.target.files[0];
             readBinaryFile(file).then(r => {
                 this.setState({
-                    value: r,
+                    value: file,
                     filename: file.name
                 });
             });

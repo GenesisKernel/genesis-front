@@ -46,11 +46,10 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
                         .getRow({
                             id: loginResult.key_id,
                             table: 'members',
-                            columns: ['avatar', 'member_name']
+                            columns: ['member_name']
                         })
                         .then(memberResult => ({
                             ...loginResult,
-                            avatar: memberResult.value.avatar,
                             username: memberResult.value.member_name
                         }))
                         .catch(e => ({
@@ -71,7 +70,6 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
                         address: payload.address,
                         ecosystem: action.payload.account.ecosystem,
                         ecosystemName: null,
-                        avatar: payload.avatar,
                         username: payload.username
                     },
                     roles: payload.roles && payload.roles.map(role => ({

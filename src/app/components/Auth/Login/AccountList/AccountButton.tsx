@@ -17,11 +17,11 @@
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
-import imgAvatar from 'images/avatar.svg';
+
+import Avatar from 'containers/Avatar';
 
 export interface IAccountButtonProps {
     className?: string;
-    avatar: string;
     keyID: string;
     address: string;
     username: string;
@@ -37,7 +37,11 @@ const AccountButton: React.SFC<IAccountButtonProps> = props => (
         <Button className="account-main" block bsStyle="default" onClick={props.onSelect}>
             <div className="media-box text-left">
                 <div className="pull-left">
-                    <img src={props.avatar || imgAvatar} className="avatar" />
+                    <Avatar
+                        size={44}
+                        keyID={props.keyID}
+                        ecosystem={props.ecosystemID}
+                    />
                 </div>
                 <div className="media-box-body clearfix">
                     <p className="m0">
@@ -71,11 +75,6 @@ export default styled(AccountButton) `
         height: 46px;
         overflow: hidden;
         padding-right: 45px;
-
-        .avatar {
-            max-width: 44px;
-            max-height: 44px;
-        }
 
         .notifications {
             text-align: center;

@@ -246,11 +246,10 @@ declare module 'genesis/api' {
     };
 
     interface ITxCallRequest {
-        name: string;
+        requestID: string;
         time: string;
         signature: string;
         pubkey: string;
-        params: TTxParams;
     }
 
     interface ITxCallResponse {
@@ -263,6 +262,7 @@ declare module 'genesis/api' {
     }
 
     interface ITxPrepareResponse {
+        request_id: string;
         forsign: string;
         time: string;
         signs?: {
