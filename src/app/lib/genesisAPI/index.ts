@@ -179,7 +179,12 @@ class GenesisAPI {
     }
 
     // Authorization
-    public getUid = this.setEndpoint<IUIDResponse>('get', 'getuid');
+    public getUid = this.setEndpoint<IUIDResponse>('get', 'getuid', {
+        responseTransformer: response => ({
+            token: response.token,
+            uid: 'LOGIN' + response.uid
+        })
+    });
     public login = this.setSecuredEndpoint<ILoginRequest, ILoginResponse>('post', 'login', {
         requestTransformer: request => ({
             pubkey: request.publicKey.slice(2),
