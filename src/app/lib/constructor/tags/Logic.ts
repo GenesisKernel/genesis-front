@@ -16,45 +16,12 @@
 
 import { TProtypoElement } from 'genesis/protypo';
 import Tag from './Tag';
-
-const LogicTagNames = {
-    'getvar': 'GetVar',
-    'setvar': 'SetVar',
-    'addtoolbutton': 'AddToolButton',
-    'linkpage': 'LinkPage',
-    'and': 'And',
-    'calculate': 'Calculate',
-    'cmptime': 'CmpTime',
-    'datetime': 'DateTime',
-    'now': 'Now',
-    'or': 'Or',
-    'code': 'Code',
-    'chart': 'Chart',
-    'forlist': 'ForList',
-    'menugroup': 'MenuGroup',
-    'menuitem': 'MenuItem',
-    'qrcode': 'QRcode',
-    'address': 'Address',
-    'appparam': 'AppParam',
-    'data': 'Data',
-    'ecosysparam': 'EcosysParam',
-    'jsontosource': 'JsonToSource',
-    'langres': 'LangRes',
-    'range': 'Range',
-    'sysparam': 'SysParam',
-    'binary': 'Binary',
-    'settitle': 'SetTitle',
-    'inputerr': 'InputErr',
-    'select': 'Select',
-    'inputmap': 'InputMap',
-    'map': 'Map',
-    'include': 'Include'
-};
+import getParamName, { getLogicTagName } from 'lib/constructor/tags/params';
 
 class Logic extends Tag {
     constructor(element: TProtypoElement) {
         super(element);
-        this.tagName = LogicTagNames[element.tag] || element.tag;
+        this.tagName = getLogicTagName(element.tag);
         this.canHaveChildren = false;
         this.logic = true;
         this.attr = {
@@ -62,7 +29,8 @@ class Logic extends Tag {
         this.editProps = [];
         for (let attr in element.attr) {
             if (element.attr.hasOwnProperty(attr)) {
-                this.attr[attr] = attr;
+                this.attr[attr] = getParamName(attr);
+                this.editProps.push(attr);
             }
         }
     }

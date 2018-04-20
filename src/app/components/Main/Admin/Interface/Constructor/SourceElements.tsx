@@ -240,10 +240,6 @@ class SourceElements extends React.Component<ISourceElementsProps, ISourceElemen
                 icon: imgGroup2,
                 items: [
                     {
-                        text: 'DBFind',
-                        element: 'dbfind'
-                    },
-                    {
                         text: 'If .. Else',
                         element: 'if'
                     }

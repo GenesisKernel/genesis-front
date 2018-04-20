@@ -17,6 +17,7 @@
 import { TProtypoElement } from 'genesis/protypo';
 import constructorModule from 'lib/constructor';
 import resolveTagHandler from 'lib/constructor/tags';
+import getParamName, { getTailTagName } from 'lib/constructor/tags/params';
 
 class Tag {
     protected element: TProtypoElement;
@@ -52,7 +53,13 @@ class Tag {
             if (this.attr.hasOwnProperty(attr)) {
                 let value = this.element && this.element.attr && this.element.attr[attr] || '';
                 if (value) {
-                    params.push(this.attr[attr] + ': ' + value);
+                    if (typeof value === 'string') {
+                        const quote = value.indexOf(',') >= 0;
+                        params.push(this.attr[attr] + ': ' + (quote ? '"' : '') + value + (quote ? '"' : ''));
+                    }
+                    if (typeof value === 'object') {
+                        params.push(this.getParamsStr(this.attr[attr], value));
+                    }
                 }
             }
         }
@@ -62,45 +69,25 @@ class Tag {
             params.push('Body:\n' + body);
         }
 
-        if (this.element && this.element.attr) {
-            if (this.element.attr.params) {
-                params.push(this.getParamsStr('Params', this.element.attr.params));
-            }
-            if (this.element.attr.pageparams) {
-                params.push(this.getParamsStr('PageParams', this.element.attr.pageparams));
-            }
-            if (this.element.attr.columns) {
-                params.push('Columns: "' + this.element.attr.columns + '"');
-            }
-        }
-
         result += params.join(', ');
         result += ((this.element.children && this.element.children.length === 1) ? ('\n' + this.renderOffset()) : '') + ')';
 
-        if (this.element && this.element.attr && this.element.attr.validate) {
-            result += this.getValidationParams(this.element.attr.validate);
-        }
-
-        if (this.element && this.element.attr) {
-            if (this.element.attr.style) {
-                result += '.Style(' + this.element.attr.style + ')';
-            }
-            if (this.element.attr.alert && typeof this.element.attr.alert === 'object') {
-                let alertParamsArr = [];
-                if (this.element.attr.alert.text) {
-                    alertParamsArr.push('Text: ' + this.element.attr.alert.text);
+        if (this.element.tail && this.element.tail.length) {
+            result += this.element.tail.map((element) => {
+                const tagName = getTailTagName(element.tag);
+                if (tagName) {
+                    let attrs: string[] = [];
+                    for (let attr in element.attr) {
+                        if (element.attr.hasOwnProperty(attr)) {
+                            const val = element.attr[attr];
+                            const quote = val.indexOf(',') >= 0;
+                            attrs.push(getParamName(attr) + ': ' + (quote ? '"' : '') + val + (quote ? '"' : ''));
+                        }
+                    }
+                    return '.' + tagName + '(' + attrs.join(', ') + ')';
                 }
-                if (this.element.attr.alert.confirmbutton) {
-                    alertParamsArr.push('ConfirmButton: ' + this.element.attr.alert.confirmbutton);
-                }
-                if (this.element.attr.alert.cancelbutton) {
-                    alertParamsArr.push('CancelButton: ' + this.element.attr.alert.cancelbutton);
-                }
-                if (this.element.attr.alert.icon) {
-                    alertParamsArr.push('Icon: ' + this.element.attr.alert.icon);
-                }
-                result += '.Alert(' + alertParamsArr.join(', ') + ')';
-            }
+                return '';
+            }).join('');
         }
 
         if (this.element.children && this.element.children.length > 1) {
@@ -109,6 +96,7 @@ class Tag {
 
         return this.renderOffset() + result;
     }
+
     renderChildren(): string {
         if (!this.element.children) {
             return '';
@@ -204,19 +192,6 @@ class Tag {
             }
         }
         return name + ': ' + '"' + paramsArr.join(',') + '"';
-    }
-
-    getParamsArrStr(name: string, obj: { Name: string, Title: string }[]) {
-        let paramsArr = [];
-        if (name && obj) {
-            for (let param of obj) {
-                if (param && param.Title) {
-                    paramsArr.push(param.Title + '=' + param.Name);
-                }
-            }
-            return name + ': ' + '"' + paramsArr.join(',') + '"';
-        }
-        return '';
     }
 
     getValidationParams(obj: Object) {

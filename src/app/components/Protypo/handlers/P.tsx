@@ -77,7 +77,7 @@ class P extends React.Component<IPProps, IPState> {
                         connectDragSource={connectDragSource}
                         canMove={true}
                     >
-                    {(this.props.selected && this.props.childrenText !== null && this.props.childrenText.length >= 0) ? (
+                    {(this.props.selected && this.props.childrenText !== undefined && this.props.childrenText !== null && this.props.childrenText.length >= 0) ? (
                         <ContentEditable
                             tagName="p"
                             className={classes}

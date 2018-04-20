@@ -76,7 +76,7 @@ class Div extends React.Component<IDivProps, IDivState> {
                         connectDragSource={connectDragSource}
                         canMove={true}
                     >
-                    {(this.props.selected && this.props.childrenText !== null && this.props.childrenText.length >= 0) ? (
+                    {(this.props.selected && this.props.childrenText !== undefined && this.props.childrenText !== null && this.props.childrenText.length >= 0) ? (
                         <ContentEditable
                             tagName="div"
                             className={classes}
