@@ -15,12 +15,14 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
+import { logout } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State): State {
-    return {
-        ...state,
-        account: null,
-        isAuthenticated: false,
-        isLoggingIn: false
-    };
-}
+const logoutDoneHandler: Reducer<typeof logout.done, State> = (state, payload) => ({
+    ...state,
+    account: null,
+    isAuthenticated: false,
+    isLoggingIn: false
+});
+
+export default logoutDoneHandler;

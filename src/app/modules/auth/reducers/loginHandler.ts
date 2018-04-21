@@ -15,11 +15,12 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { ILoginCall } from 'genesis/auth';
+import { login } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: ILoginCall): State {
-    return {
-        ...state,
-        isLoggingIn: true
-    };
-}
+const loginHandler: Reducer<typeof login.started, State> = (state, payload) => ({
+    ...state,
+    isLoggingIn: true
+});
+
+export default loginHandler;

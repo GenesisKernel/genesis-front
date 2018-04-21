@@ -15,11 +15,12 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { Success } from 'typescript-fsa';
+import { importSeed } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: Success<Blob, string>): State {
-    return {
-        ...state,
-        loadedSeed: payload.result
-    };
-}
+const importSeedDoneHandler: Reducer<typeof importSeed.done, State> = (state, payload) => ({
+    ...state,
+    loadedSeed: payload.result
+});
+
+export default importSeedDoneHandler;

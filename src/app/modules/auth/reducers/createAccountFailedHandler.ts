@@ -15,13 +15,13 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { ICreateAccountCall } from 'genesis/auth';
-import { Failure } from 'typescript-fsa';
+import { createAccount } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: Failure<ICreateAccountCall, string>): State {
-    return {
-        ...state,
-        isCreatingAccount: false,
-        createAccountError: payload.error
-    };
-}
+const createAccountFailedHandler: Reducer<typeof createAccount.failed, State> = (state, payload) => ({
+    ...state,
+    isCreatingAccount: false,
+    createAccountError: payload.error
+});
+
+export default createAccountFailedHandler;

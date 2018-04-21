@@ -15,11 +15,10 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { Success } from 'typescript-fsa';
-import { ILoginCall, IRole, ISession } from 'genesis/auth';
-import { IAccount } from 'genesis/auth';
+import { login } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: Success<ILoginCall, { account: IAccount, roles: IRole[], privateKey: string, publicKey: string, session: ISession }>): State {
+const loginDoneHandler: Reducer<typeof login.done, State> = (state, payload) => {
     const hasRoles = !!(payload.result.roles && payload.result.roles.length);
     return {
         ...state,
@@ -32,4 +31,6 @@ export default function (state: State, payload: Success<ILoginCall, { account: I
         privateKey: payload.result.privateKey,
         id: payload.result.account.id
     };
-}
+};
+
+export default loginDoneHandler;

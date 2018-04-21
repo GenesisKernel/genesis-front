@@ -15,11 +15,13 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
+import { createAccount } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State): State {
-    return {
-        ...state,
-        isCreatingAccount: true,
-        createAccountError: null
-    };
-}
+const createAccountHandler: Reducer<typeof createAccount.started, State> = (state, payload) => ({
+    ...state,
+    isCreatingAccount: true,
+    createAccountError: null
+});
+
+export default createAccountHandler;
