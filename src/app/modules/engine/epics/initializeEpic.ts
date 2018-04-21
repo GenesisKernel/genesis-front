@@ -58,18 +58,21 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey }) => action$.of
                         Observable.of(setLocale.started(state.storage.locale)),
                         Observable.from(client.getUid())
                             .flatMap(uid => Observable.from(
-                                client.authorize(uid.token).login({
-                                    publicKey: keyring.generatePublicKey(defaultKey),
-                                    signature: keyring.sign(uid.uid, defaultKey)
-                                })
+                                Promise.all([
+                                    client.getConfig({ name: 'centrifugo' }),
+                                    client.authorize(uid.token).login({
+                                        publicKey: keyring.generatePublicKey(defaultKey),
+                                        signature: keyring.sign(uid.uid, defaultKey)
+                                    })
+                                ])
 
-                            )).map(loginResult =>
+                            )).map(result =>
                                 connect.started({
-                                    session: loginResult.token,
-                                    wsHost: 'ws://127.0.0.1:8000',
-                                    socketToken: loginResult.notify_key,
-                                    timestamp: loginResult.timestamp,
-                                    userID: loginResult.key_id
+                                    wsHost: result[0],
+                                    session: result[1].token,
+                                    socketToken: result[1].notify_key,
+                                    timestamp: result[1].timestamp,
+                                    userID: result[1].key_id
                                 })
                             )
                     );

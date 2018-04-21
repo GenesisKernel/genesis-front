@@ -79,10 +79,7 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
                     session: {
                         sessionToken: payload.token,
                         refreshToken: payload.refresh,
-                        wsToken: payload.notify_key,
-                        timestamp: payload.timestamp,
-                        apiHost: nodeHost,
-                        wsHost: 'ws://127.0.0.1:8000'
+                        apiHost: nodeHost
                     },
                     privateKey,
                     publicKey

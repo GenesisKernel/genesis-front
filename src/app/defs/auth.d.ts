@@ -33,9 +33,6 @@ declare module 'genesis/auth' {
         apiHost: string;
         sessionToken: string;
         refreshToken: string;
-        wsHost: string;
-        wsToken: string;
-        timestamp: string;
     }
 
     interface ILoginCall {
