@@ -15,13 +15,15 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
+import { saveNavigationSize } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, navigationSize: number): State {
-    return {
-        ...state,
-        navigationSize: Math.max(
-            navigationSize,
-            200
-        )
-    };
-}
+const saveNavigationSizeHandler: Reducer<typeof saveNavigationSize, State> = (state, payload) => ({
+    ...state,
+    navigationSize: Math.max(
+        payload,
+        200
+    )
+});
+
+export default saveNavigationSizeHandler;
