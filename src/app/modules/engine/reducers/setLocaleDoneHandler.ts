@@ -15,11 +15,12 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { Success } from 'typescript-fsa';
+import { setLocale } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: Success<string, { [key: string]: string }>): State {
-    return {
-        ...state,
-        localeMessages: payload.result
-    };
-}
+const setLocaleDoneHandler: Reducer<typeof setLocale.done, State> = (state, payload) => ({
+    ...state,
+    localeMessages: payload.result
+});
+
+export default setLocaleDoneHandler;

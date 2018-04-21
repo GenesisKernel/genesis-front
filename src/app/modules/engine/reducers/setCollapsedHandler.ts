@@ -15,10 +15,12 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
+import { setCollapsed } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, isCollapsed: boolean): State {
-    return {
-        ...state,
-        isCollapsed
-    };
-}
+const setCollapsedHandler: Reducer<typeof setCollapsed, State> = (state, payload) => ({
+    ...state,
+    isCollapsed: payload
+});
+
+export default setCollapsedHandler;

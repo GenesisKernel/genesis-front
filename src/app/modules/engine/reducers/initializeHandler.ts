@@ -15,10 +15,12 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
+import { initialize } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State): State {
-    return {
-        ...state,
-        isConnecting: true
-    };
-}
+const initializeHandler: Reducer<typeof initialize.started, State> = (state, payload) => ({
+    ...state,
+    isConnecting: true
+});
+
+export default initializeHandler;
