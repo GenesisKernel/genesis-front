@@ -39,6 +39,7 @@ import resetFailedHandler from './reducers/resetFailedHandler';
 import setResizingHandler from './reducers/setResizingHandler';
 import switchSectionHandler from './reducers/switchSectionHandler';
 import updateSectionHandler from './reducers/updateSectionHandler';
+import ecosystemInitHandler from './reducers/ecosystemInitHandler';
 
 export type State = {
     readonly preloading: boolean;
@@ -102,6 +103,7 @@ export default reducerWithInitialState(initialState)
     .case(actions.closeSection, closeSectionHandler)
     .case(actions.ecosystemInit.done, ecosystemInitDoneHandler)
     .case(actions.ecosystemInit.failed, ecosystemInitFailedHandler)
+    .case(actions.ecosystemInit.started, ecosystemInitHandler)
     .case(actions.fetchNotifications.done, fetchNotificationsDoneHandler)
     .case(actions.menuPop, menuPopHandler)
     .case(actions.menuPush, menuPushHandler)
