@@ -74,7 +74,10 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey }) => action$.of
                                     timestamp: result[1].timestamp,
                                     userID: result[1].key_id
                                 })
-                            )
+                            ).catch(e => Observable.of(connect.failed({
+                                params: null,
+                                error: 'E_SOCKET_OFFLINE'
+                            })))
                     );
 
                 }).defaultIfEmpty(initialize.failed({
