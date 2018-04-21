@@ -33,8 +33,14 @@ import * as gui from './gui';
 import * as io from './io';
 import * as storage from './storage';
 import * as socket from './socket';
+import { ActionCreator, Failure, Success } from 'typescript-fsa';
 
 export type Epic = NativeEpic<Action, IRootState, IStoreDependencies>;
+export type Reducer<T, S> =
+    T extends ActionCreator<Failure<infer P, infer E>> ? (state: S, payload: Failure<P, E>) => S :
+    T extends ActionCreator<Success<infer P, infer R>> ? (state: S, payload: Success<P, R>) => S :
+    T extends ActionCreator<infer R> ? (state: S, payload: R) => S :
+    (state: S, payload: T) => S;
 
 export interface IRootState {
     auth: auth.State;
