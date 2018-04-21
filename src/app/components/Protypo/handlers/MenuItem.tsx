@@ -83,7 +83,6 @@ export const StyledMenuItem = styled.div`
 
 interface IMenuItemContext {
     protypo: Protypo;
-    navigatePage: (params: { name: string, params: any, force?: boolean }) => void;
 }
 
 const MenuItem: React.SFC<IMenuItemProps> = (props, context: IMenuItemContext) => {
@@ -94,7 +93,7 @@ const MenuItem: React.SFC<IMenuItemProps> = (props, context: IMenuItemContext) =
 
     return (
         <StyledMenuItem className={classes}>
-            <PageLink page={props.page} params={context.protypo.resolveParams(props.params)} section="home">
+            <PageLink page={props.page} params={context.protypo.resolveParams(props.params)}>
                 <span className="link-active-decorator" />
                 <span className="link-body">
                     {props.icon && (<em className={`icon ${props.icon}`} />)}
