@@ -15,12 +15,12 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { Success } from 'typescript-fsa';
-import { IExecutionCall, ITxResult } from 'genesis/tx';
+import { txExec } from '../actions';
+import { Reducer } from 'modules';
 import setTxData from './setTxData';
 
-export default function (state: State, payload: Success<IExecutionCall, ITxResult>): State {
-    return setTxData(state, {
+const txExecDoneHandler: Reducer<typeof txExec.done, State> = (state, payload) =>
+    setTxData(state, {
         tx: payload.params.tx,
         data: {
             block: payload.result.block,
@@ -28,4 +28,5 @@ export default function (state: State, payload: Success<IExecutionCall, ITxResul
             error: null
         }
     });
-}
+
+export default txExecDoneHandler;
