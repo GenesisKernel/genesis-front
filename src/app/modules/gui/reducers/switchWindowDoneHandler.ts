@@ -15,12 +15,12 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { Success } from 'typescript-fsa';
-import { TWindowType } from 'genesis/gui';
+import { switchWindow } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: Success<TWindowType, TWindowType>): State {
-    return {
-        ...state,
-        window: payload.result
-    };
-}
+const switchWindowDoneHandler: Reducer<typeof switchWindow.done, State> = (state, payload) => ({
+    ...state,
+    window: payload.result
+});
+
+export default switchWindowDoneHandler;
