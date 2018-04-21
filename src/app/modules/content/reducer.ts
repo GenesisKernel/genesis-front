@@ -15,10 +15,29 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as actions from './actions';
-import { Action } from 'redux';
-import { isType } from 'typescript-fsa';
+import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { TProtypoElement } from 'genesis/protypo';
 import { TSection } from 'genesis/content';
+import closeSectionHandler from './reducers/closeSectionHandler';
+import ecosystemInitDoneHandler from './reducers/ecosystemInitDoneHandler';
+import ecosystemInitFailedHandler from './reducers/ecosystemInitFailedHandler';
+import fetchNotificationsDoneHandler from './reducers/fetchNotificationsDoneHandler';
+import menuPopHandler from './reducers/menuPopHandler';
+import menuPushHandler from './reducers/menuPushHandler';
+import navigatePageDoneHandler from './reducers/navigatePageDoneHandler';
+import navigationToggleHandler from './reducers/navigationToggleHandler';
+import reloadPageDoneHandler from './reducers/reloadPageDoneHandler';
+import reloadPageHandler from './reducers/reloadPageHandler';
+import renderLegacyPageDoneHandler from './reducers/renderLegacyPageDoneHandler';
+import renderLegacyPageHandler from './reducers/renderLegacyPageHandler';
+import renderPageDoneHandler from './reducers/renderPageDoneHandler';
+import renderPageFailedHandler from './reducers/renderPageFailedHandler';
+import renderPageHandler from './reducers/renderPageHandler';
+import renderSectionHandler from './reducers/renderSectionHandler';
+import resetDoneHandler from './reducers/resetDoneHandler';
+import resetFailedHandler from './reducers/resetFailedHandler';
+import setResizingHandler from './reducers/setResizingHandler';
+import switchSectionHandler from './reducers/switchSectionHandler';
 import updateSectionHandler from './reducers/updateSectionHandler';
 
 export type State = {
@@ -79,421 +98,25 @@ export const initialState: State = {
     notifications: null
 };
 
-export default (state: State = initialState, action: Action): State => {
-    if (isType(action, actions.setResizing)) {
-        return {
-            ...state,
-            navigationResizing: action.payload
-        };
-    }
-
-    if (isType(action, actions.navigationToggle)) {
-        return {
-            ...state,
-            sections: {
-                ...state.sections,
-                [state.section]: {
-                    ...state.sections[state.section],
-                    menuVisible: !state.sections[state.section].menuVisible
-                }
-            }
-        };
-    }
-
-    if (isType(action, actions.navigatePage.done)) {
-        return {
-            ...state,
-            section: action.payload.result.section,
-            sections: {
-                ...state.sections,
-                [action.payload.result.section]: {
-                    ...state.sections[action.payload.result.section],
-                    page: state.sections[action.payload.result.section].page,
-                    force: action.payload.params.force,
-                    pending: false
-                }
-            }
-        };
-    }
-
-    if (isType(action, actions.renderPage.started)) {
-        return {
-            ...state,
-            sections: {
-                ...state.sections,
-                [action.payload.section]: {
-                    ...state.sections[action.payload.section],
-                    force: false,
-                    pending: true,
-                    visible: true
-                }
-            }
-        };
-    }
-    else if (isType(action, actions.renderPage.done)) {
-        const section = action.payload.params.section;
-        const menuIndex = state.sections[section].menus.findIndex(l =>
-            l.name === action.payload.result.menu.name);
-
-        if (-1 === menuIndex) {
-            return {
-                ...state,
-                sections: {
-                    ...state.sections,
-                    [section]: {
-                        ...state.sections[section],
-                        menus: [...state.sections[section].menus, action.payload.result.menu],
-                        page: {
-                            ...action.payload.result.page,
-                            params: action.payload.params.params
-                        },
-                        pending: false
-                    }
-                }
-            };
-        }
-        else {
-            return {
-                ...state,
-                sections: {
-                    ...state.sections,
-                    [section]: {
-                        ...state.sections[section],
-                        menus: [
-                            ...state.sections[section].menus.slice(0, menuIndex),
-                            action.payload.result.menu,
-                            ...state.sections[section].menus.slice(menuIndex + 1),
-                        ],
-                        page: {
-                            ...action.payload.result.page,
-                            params: action.payload.params.params
-                        },
-                        pending: false
-                    }
-                }
-            };
-        }
-    }
-    else if (isType(action, actions.renderPage.failed)) {
-        return {
-            ...state,
-            sections: {
-                ...state.sections,
-                [action.payload.params.section]: {
-                    ...state.sections[action.payload.params.section],
-                    page: {
-                        params: action.payload.params.params,
-                        name: action.payload.params.name,
-                        content: null,
-                        error: action.payload.error
-                    },
-                    pending: false
-                }
-            }
-        };
-    }
-
-    if (isType(action, actions.renderLegacyPage.started)) {
-        return {
-            ...state,
-            sections: {
-                ...state.sections,
-                [action.payload.section]: {
-                    ...state.sections[action.payload.section],
-                    force: false,
-                    pending: true
-                }
-            }
-        };
-    }
-    else if (isType(action, actions.renderLegacyPage.done)) {
-        const section = action.payload.params.section;
-        const menuIndex = action.payload.result.menu ? state.sections[section].menus.findIndex(l =>
-            l.name === action.payload.result.menu.name) : -1;
-
-        if (-1 === menuIndex) {
-            return {
-                ...state,
-                sections: {
-                    ...state.sections,
-                    [section]: {
-                        ...state.sections[section],
-                        menus: action.payload.params.menu ? [
-                            ...state.sections[section].menus,
-                            action.payload.result.menu
-                        ] : state.sections[section].menus,
-                        page: {
-                            name: action.payload.params.name,
-                            content: [],
-                            legacy: true,
-                            params: action.payload.params.params
-                        },
-                        pending: false
-                    }
-                }
-            };
-        }
-        else {
-            return {
-                ...state,
-                sections: {
-                    ...state.sections,
-                    [section]: {
-                        ...state.sections[section],
-                        menus: [
-                            ...state.sections[section].menus.slice(0, menuIndex),
-                            action.payload.result.menu,
-                            ...state.sections[section].menus.slice(menuIndex + 1),
-                        ],
-                        page: {
-                            name: action.payload.params.name,
-                            content: [],
-                            legacy: true,
-                            params: action.payload.params.params
-                        },
-                        pending: false
-                    }
-                }
-            };
-        }
-    }
-
-    if (isType(action, actions.reloadPage.started)) {
-        return {
-            ...state,
-            sections: {
-                ...state.sections,
-                [state.section]: {
-                    ...state.sections[state.section],
-                    pending: true
-                }
-            }
-        };
-    }
-    else if (isType(action, actions.reloadPage.done)) {
-        const menuIndex = state.sections[state.section].menus.findIndex(l =>
-            l.name === action.payload.result.menu.name);
-
-        if (-1 === menuIndex) {
-            return {
-                ...state,
-                sections: {
-                    ...state.sections,
-                    [state.section]: {
-                        ...state.sections[state.section],
-                        menus: [...state.sections[state.section].menus, action.payload.result.menu],
-                        page: {
-                            ...action.payload.result.page,
-                            params: action.payload.result.params
-                        },
-                        pending: false
-                    }
-                }
-            };
-        }
-        else {
-            return {
-                ...state,
-                sections: {
-                    ...state.sections,
-                    [state.section]: {
-                        ...state.sections[state.section],
-                        menus: [
-                            ...state.sections[state.section].menus.slice(0, menuIndex),
-                            action.payload.result.menu,
-                            ...state.sections[state.section].menus.slice(menuIndex + 1),
-                        ],
-                        page: {
-                            ...action.payload.result.page,
-                            params: action.payload.result.params
-                        },
-                        pending: false
-                    }
-                }
-            };
-        }
-    }
-
-    if (isType(action, actions.menuPop)) {
-        if (1 >= state.sections[state.section].menus.length) {
-            return state;
-        }
-        else {
-            return {
-                ...state,
-                sections: {
-                    ...state.sections,
-                    [state.section]: {
-                        ...state.sections[state.section],
-                        menus: state.sections[state.section].menus.slice(0, -1)
-                    }
-                }
-            };
-        }
-    }
-
-    if (isType(action, actions.menuPush)) {
-        const menuIndex = state.sections[state.section].menus.findIndex(l =>
-            l.name === action.payload.name);
-
-        if (-1 === menuIndex) {
-            return {
-                ...state,
-                sections: {
-                    ...state.sections,
-                    [state.section]: {
-                        ...state.sections[state.section],
-                        menus: [...state.sections[state.section].menus, action.payload]
-                    }
-                }
-            };
-        }
-        else {
-            return {
-                ...state,
-                sections: {
-                    ...state.sections,
-                    [state.section]: {
-                        ...state.sections[state.section],
-                        menus: [
-                            ...state.sections[state.section].menus.slice(0, menuIndex),
-                            action.payload,
-                            ...state.sections[state.section].menus.slice(menuIndex + 1),
-                        ]
-                    }
-                }
-            };
-        }
-    }
-
-    if (isType(action, actions.ecosystemInit.started)) {
-        const sections: { [key: string]: TSection } = {};
-        for (let itr in state.sections) {
-            if (state.sections.hasOwnProperty(itr)) {
-                sections[itr] = {
-                    ...state.sections[itr],
-                    pending: action.payload.section === itr ? true : false,
-                    page: null,
-                    menus: []
-                };
-            }
-        }
-
-        return {
-            ...state,
-            preloading: true,
-            preloadingError: null,
-            section: action.payload.section,
-            sections
-        };
-    }
-    else if (isType(action, actions.ecosystemInit.done)) {
-        return {
-            ...state,
-            stylesheet: action.payload.result.stylesheet,
-            sections: {
-                ...state.sections,
-                [action.payload.params.section]: {
-                    ...state.sections[action.payload.params.section],
-                    pending: false
-                }
-            }
-        };
-    }
-    else if (isType(action, actions.ecosystemInit.failed)) {
-        return {
-            ...state,
-            preloading: false,
-            preloadingError: action.payload.error
-        };
-    }
-
-    if (isType(action, actions.reset.started)) {
-        return {
-            ...state,
-            ...state,
-            sections: {
-                ...state.sections,
-                [state.section]: {
-                    ...state.sections[state.section],
-                    pending: true
-                }
-            }
-        };
-    }
-    else if (isType(action, actions.reset.done)) {
-        return {
-            ...state,
-            sections: {
-                ...state.sections,
-                [state.section]: {
-                    ...state.sections[state.section],
-                    menus: [action.payload.result.menu],
-                    page: {
-                        params: {},
-                        ...action.payload.result.page
-                    },
-                    pending: false
-                }
-            }
-        };
-    }
-    else if (isType(action, actions.reset.failed)) {
-        return {
-            ...state,
-            sections: {
-                ...state.sections,
-                [state.section]: {
-                    ...state.sections[state.section],
-                    page: {
-                        params: {},
-                        name: null,
-                        content: null,
-                        error: action.payload.error
-                    },
-                    pending: false
-                }
-            }
-        };
-    }
-
-    if (isType(action, actions.fetchNotifications.done)) {
-        return {
-            ...state,
-            notifications: action.payload.result
-        };
-    }
-
-    if (isType(action, actions.renderSection)) {
-        return state.sections[action.payload] ? {
-            ...state,
-            section: action.payload
-        } : state;
-    }
-
-    if (isType(action, actions.switchSection)) {
-        return state.sections[action.payload] ? {
-            ...state,
-            section: action.payload
-        } : state;
-    }
-
-    if (isType(action, actions.closeSection)) {
-        return state.sections[action.payload] ? {
-            ...state,
-            sections: {
-                ...state.sections,
-                [action.payload]: {
-                    ...state.sections[action.payload],
-                    visible: false
-                }
-            }
-        } : state;
-    }
-
-    if (isType(action, actions.updateSection)) {
-        return updateSectionHandler(state, action.payload);
-    }
-
-    return state;
-};
+export default reducerWithInitialState(initialState)
+    .case(actions.closeSection, closeSectionHandler)
+    .case(actions.ecosystemInit.done, ecosystemInitDoneHandler)
+    .case(actions.ecosystemInit.failed, ecosystemInitFailedHandler)
+    .case(actions.fetchNotifications.done, fetchNotificationsDoneHandler)
+    .case(actions.menuPop, menuPopHandler)
+    .case(actions.menuPush, menuPushHandler)
+    .case(actions.navigatePage.done, navigatePageDoneHandler)
+    .case(actions.navigationToggle, navigationToggleHandler)
+    .case(actions.reloadPage.done, reloadPageDoneHandler)
+    .case(actions.reloadPage.started, reloadPageHandler)
+    .case(actions.renderLegacyPage.done, renderLegacyPageDoneHandler)
+    .case(actions.renderLegacyPage.started, renderLegacyPageHandler)
+    .case(actions.renderPage.done, renderPageDoneHandler)
+    .case(actions.renderPage.failed, renderPageFailedHandler)
+    .case(actions.renderPage.started, renderPageHandler)
+    .case(actions.renderSection, renderSectionHandler)
+    .case(actions.reset.done, resetDoneHandler)
+    .case(actions.reset.failed, resetFailedHandler)
+    .case(actions.setResizing, setResizingHandler)
+    .case(actions.switchSection, switchSectionHandler)
+    .case(actions.updateSection, updateSectionHandler);

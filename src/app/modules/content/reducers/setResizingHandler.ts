@@ -15,18 +15,12 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { updateSection } from '../actions';
+import { setResizing } from '../actions';
 import { Reducer } from 'modules';
 
-const updateSectionHandler: Reducer<typeof updateSection, State> = (state, payload) => ({
+const setResizingHandler: Reducer<typeof setResizing, State> = (state, payload) => ({
     ...state,
-    sections: {
-        ...state.sections,
-        [payload.name]: {
-            ...state.sections[payload.name],
-            ...payload
-        }
-    }
+    navigationResizing: payload
 });
 
-export default updateSectionHandler;
+export default setResizingHandler;

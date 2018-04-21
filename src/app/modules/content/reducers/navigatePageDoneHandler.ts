@@ -15,18 +15,21 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { updateSection } from '../actions';
+import { navigatePage } from '../actions';
 import { Reducer } from 'modules';
 
-const updateSectionHandler: Reducer<typeof updateSection, State> = (state, payload) => ({
+const navigatePageDoneHandler: Reducer<typeof navigatePage.done, State> = (state, payload) => ({
     ...state,
+    section: payload.result.section,
     sections: {
         ...state.sections,
-        [payload.name]: {
-            ...state.sections[payload.name],
-            ...payload
+        [payload.result.section]: {
+            ...state.sections[payload.result.section],
+            page: state.sections[payload.result.section].page,
+            force: payload.params.force,
+            pending: false
         }
     }
 });
 
-export default updateSectionHandler;
+export default navigatePageDoneHandler;

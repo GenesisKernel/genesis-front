@@ -15,18 +15,12 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { updateSection } from '../actions';
+import { fetchNotifications } from '../actions';
 import { Reducer } from 'modules';
 
-const updateSectionHandler: Reducer<typeof updateSection, State> = (state, payload) => ({
+const fetchNotificationsDoneHandler: Reducer<typeof fetchNotifications.done, State> = (state, payload) => ({
     ...state,
-    sections: {
-        ...state.sections,
-        [payload.name]: {
-            ...state.sections[payload.name],
-            ...payload
-        }
-    }
+    notifications: payload.result
 });
 
-export default updateSectionHandler;
+export default fetchNotificationsDoneHandler;

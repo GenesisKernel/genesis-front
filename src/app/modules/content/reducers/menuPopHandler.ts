@@ -15,18 +15,25 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { updateSection } from '../actions';
+import { menuPop } from '../actions';
 import { Reducer } from 'modules';
 
-const updateSectionHandler: Reducer<typeof updateSection, State> = (state, payload) => ({
-    ...state,
-    sections: {
-        ...state.sections,
-        [payload.name]: {
-            ...state.sections[payload.name],
-            ...payload
-        }
+const menuPopHandler: Reducer<typeof menuPop, State> = (state, payload) => {
+    if (1 >= state.sections[state.section].menus.length) {
+        return state;
     }
-});
+    else {
+        return {
+            ...state,
+            sections: {
+                ...state.sections,
+                [state.section]: {
+                    ...state.sections[state.section],
+                    menus: state.sections[state.section].menus.slice(0, -1)
+                }
+            }
+        };
+    }
+};
 
-export default updateSectionHandler;
+export default menuPopHandler;

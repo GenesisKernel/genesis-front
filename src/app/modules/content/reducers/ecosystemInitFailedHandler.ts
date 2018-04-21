@@ -15,18 +15,13 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { updateSection } from '../actions';
+import { ecosystemInit } from '../actions';
 import { Reducer } from 'modules';
 
-const updateSectionHandler: Reducer<typeof updateSection, State> = (state, payload) => ({
+const ecosystemInitFailedHandler: Reducer<typeof ecosystemInit.failed, State> = (state, payload) => ({
     ...state,
-    sections: {
-        ...state.sections,
-        [payload.name]: {
-            ...state.sections[payload.name],
-            ...payload
-        }
-    }
+    preloading: false,
+    preloadingError: payload.error
 });
 
-export default updateSectionHandler;
+export default ecosystemInitFailedHandler;

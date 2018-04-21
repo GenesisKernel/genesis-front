@@ -15,18 +15,27 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { updateSection } from '../actions';
+import { menuPush } from '../actions';
 import { Reducer } from 'modules';
 
-const updateSectionHandler: Reducer<typeof updateSection, State> = (state, payload) => ({
-    ...state,
-    sections: {
-        ...state.sections,
-        [payload.name]: {
-            ...state.sections[payload.name],
-            ...payload
-        }
-    }
-});
+const menuPushHandler: Reducer<typeof menuPush, State> = (state, payload) => {
+    const menuIndex = state.sections[state.section].menus.findIndex(l =>
+        l.name === payload.name);
 
-export default updateSectionHandler;
+    return {
+        ...state,
+        sections: {
+            ...state.sections,
+            [state.section]: {
+                ...state.sections[state.section],
+                menus: -1 === menuIndex ? [...state.sections[state.section].menus, payload] : [
+                    ...state.sections[state.section].menus.slice(0, menuIndex),
+                    payload,
+                    ...state.sections[state.section].menus.slice(menuIndex + 1)
+                ]
+            }
+        }
+    };
+};
+
+export default menuPushHandler;
