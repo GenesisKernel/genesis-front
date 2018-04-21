@@ -15,14 +15,16 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
+import { closeEditorTab } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: number): State {
-    return {
-        ...state,
-        tabIndex: state.tabIndex >= state.tabs.length - 1 ? state.tabs.length - 2 : state.tabIndex,
-        tabs: [
-            ...state.tabs.slice(0, payload),
-            ...state.tabs.slice(payload + 1),
-        ]
-    };
-}
+const closeEditorTabHandler: Reducer<typeof closeEditorTab, State> = (state, payload) => ({
+    ...state,
+    tabIndex: state.tabIndex >= state.tabs.length - 1 ? state.tabs.length - 2 : state.tabIndex,
+    tabs: [
+        ...state.tabs.slice(0, payload),
+        ...state.tabs.slice(payload + 1),
+    ]
+});
+
+export default closeEditorTabHandler;

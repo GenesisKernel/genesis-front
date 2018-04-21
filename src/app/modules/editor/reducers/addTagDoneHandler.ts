@@ -15,27 +15,27 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { IAddTagCall, IOperateTagResult } from 'genesis/editor';
-import { Success } from 'typescript-fsa';
+import { addTag } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: Success<IAddTagCall, IOperateTagResult>): State {
-    return {
-        ...state,
-        tabs: [
-            ...state.tabs.slice(0, state.tabIndex),
-            {
-                ...state.tabs[state.tabIndex],
-                designer: {
-                    ...state.tabs[state.tabIndex].designer,
-                    data: {
-                        ...state.tabs[state.tabIndex].designer.data,
-                        jsonData: payload.result.jsonData,
-                        treeData: payload.result.treeData
-                    }
+const addTagDoneHandler: Reducer<typeof addTag.done, State> = (state, payload) => ({
+    ...state,
+    tabs: [
+        ...state.tabs.slice(0, state.tabIndex),
+        {
+            ...state.tabs[state.tabIndex],
+            designer: {
+                ...state.tabs[state.tabIndex].designer,
+                data: {
+                    ...state.tabs[state.tabIndex].designer.data,
+                    jsonData: payload.result.jsonData,
+                    treeData: payload.result.treeData
                 }
+            }
 
-            },
-            ...state.tabs.slice(state.tabIndex + 1),
-        ]
-    };
-}
+        },
+        ...state.tabs.slice(state.tabIndex + 1),
+    ]
+});
+
+export default addTagDoneHandler;

@@ -15,8 +15,10 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
+import { getPageTree } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State): State {
+const getPageTreeFailedHandler: Reducer<typeof getPageTree.failed, State> = (state, payload) => {
     const data = state.tabs[state.tabIndex] && state.tabs[state.tabIndex].designer && state.tabs[state.tabIndex].designer.data;
     return {
         ...state,
@@ -37,4 +39,6 @@ export default function (state: State): State {
             ...state.tabs.slice(state.tabIndex + 1),
         ]
     };
-}
+};
+
+export default getPageTreeFailedHandler;

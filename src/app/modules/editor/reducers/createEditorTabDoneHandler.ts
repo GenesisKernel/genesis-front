@@ -15,26 +15,26 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { IEditorTabCreateCall, ICreateEditorTabCall } from 'genesis/editor';
-import { Success } from 'typescript-fsa';
+import { createEditorTab } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: Success<ICreateEditorTabCall, IEditorTabCreateCall>): State {
-    return {
-        ...state,
-        tabs: [
-            ...state.tabs,
-            {
-                type: payload.params.type,
-                id: payload.result.id,
-                new: true,
-                name: payload.result.name,
-                tool: 'editor',
-                value: payload.result.value,
-                initialValue: payload.result.value,
-                dirty: false,
-                appId: payload.params.appId
-            }
-        ],
-        tabIndex: state.tabs.length
-    };
-}
+const createEditorTabDoneHandler: Reducer<typeof createEditorTab.done, State> = (state, payload) => ({
+    ...state,
+    tabs: [
+        ...state.tabs,
+        {
+            type: payload.params.type,
+            id: payload.result.id,
+            new: true,
+            name: payload.result.name,
+            tool: 'editor',
+            value: payload.result.value,
+            initialValue: payload.result.value,
+            dirty: false,
+            appId: payload.params.appId
+        }
+    ],
+    tabIndex: state.tabs.length
+});
+
+export default createEditorTabDoneHandler;

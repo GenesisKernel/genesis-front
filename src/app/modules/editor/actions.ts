@@ -33,8 +33,6 @@ export const updateEditorTab = actionCreator<string>('UPDATE_EDITOR_TAB');
 export const revertEditorTab = actionCreator<number>('REVERT_EDITOR_TAB');
 export const reloadEditorTab = actionCreator<IReloadEditorTabCall>('RELOAD_EDITOR_TAB');
 export const changeEditorTool = actionCreator.async<string, TProtypoElement[]>('CHANGE_EDITOR_TOOL');
-
-// TODO: Pending refactoring
 export const setPageTemplate = actionCreator<string>('SET_PAGE_TEMPLATE');
 export const getPageTree = actionCreator.async<void, IGetPageTreeResult, string>('GET_PAGE_TREE');
 export const changePage = actionCreator.async<IChangePageCall, IChangePageResult>('CHANGE_PAGE');

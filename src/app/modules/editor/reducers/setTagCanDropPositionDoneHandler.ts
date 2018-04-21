@@ -15,26 +15,26 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { ISetTagCanDropPositionCall, ISetTagCanDropPositionResult } from 'genesis/editor';
-import { Success } from 'typescript-fsa';
+import { setTagCanDropPosition } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: Success<ISetTagCanDropPositionCall, ISetTagCanDropPositionResult>): State {
-    return {
-        ...state,
-        tabs: [
-            ...state.tabs.slice(0, state.tabIndex),
-            {
-                ...state.tabs[state.tabIndex],
-                designer: {
-                    ...state.tabs[state.tabIndex].designer,
-                    data: {
-                        ...state.tabs[state.tabIndex].designer.data,
-                        jsonData: payload.result.jsonData,
-                        treeData: payload.result.treeData
-                    }
+const setTagCanDropPositionDoneHandler: Reducer<typeof setTagCanDropPosition.done, State> = (state, payload) => ({
+    ...state,
+    tabs: [
+        ...state.tabs.slice(0, state.tabIndex),
+        {
+            ...state.tabs[state.tabIndex],
+            designer: {
+                ...state.tabs[state.tabIndex].designer,
+                data: {
+                    ...state.tabs[state.tabIndex].designer.data,
+                    jsonData: payload.result.jsonData,
+                    treeData: payload.result.treeData
                 }
-            },
-            ...state.tabs.slice(state.tabIndex + 1),
-        ]
-    };
-}
+            }
+        },
+        ...state.tabs.slice(state.tabIndex + 1),
+    ]
+});
+
+export default setTagCanDropPositionDoneHandler;
