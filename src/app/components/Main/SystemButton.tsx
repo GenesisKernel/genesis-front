@@ -14,11 +14,35 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
+import React from 'react';
+import classNames from 'classnames';
 import styled from 'styled-components';
 
-import DropdownButton from 'components/DropdownButton';
+import DropdownButton, { IDropdownButtonProps } from 'components/DropdownButton';
 
-const StyledSystemButton = styled(DropdownButton) `
+export interface ISystemButtonProps extends IDropdownButtonProps {
+    warning?: boolean;
+}
+
+const SystemButton: React.SFC<ISystemButtonProps> = props => (
+    <DropdownButton
+        className={classNames(props.className, {
+            _warning: props.warning
+        })}
+        content={props.content}
+        leftMost={props.leftMost}
+        rightMost={props.rightMost}
+        align={props.align}
+        width={props.width}
+        badge={props.badge}
+        disabled={props.disabled}
+        onClick={props.onClick}
+    >
+        {props.children}
+    </DropdownButton>
+);
+
+const StyledSystemButton = styled(SystemButton) `
     background: 0;
     padding: 0;
     border: 0;
@@ -27,6 +51,10 @@ const StyledSystemButton = styled(DropdownButton) `
 
     &:hover {
         background: rgba(0,0,0,0.1);
+    }
+
+    &._warning {
+        background: #ffa500;
     }
 `;
 

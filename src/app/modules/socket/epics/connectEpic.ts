@@ -18,7 +18,7 @@ import { Action } from 'redux';
 import { Observable } from 'rxjs/Observable';
 import { Epic } from 'redux-observable';
 import { IRootState } from 'modules';
-import { connect, disconnect, subscribe } from '../actions';
+import { connect, disconnect, subscribe, setConnected } from '../actions';
 import * as _ from 'lodash';
 import * as Centrifuge from 'centrifuge';
 import * as SockJS from 'sockjs-client';
@@ -51,8 +51,12 @@ const connectEpic: Epic<Action, IRootState> =
                         _.uniqBy(store.getState().storage.accounts, 'id').forEach(account =>
                             observer.next(subscribe.started(account))
                         );
+                    });
 
-                        observer.complete();
+                    centrifuge.on('disconnect', context => {
+                        // tslint:disable-next-line:no-console
+                        console.log('DC!');
+                        observer.next(setConnected(false));
                     });
 
                     centrifuge.on('error', error => {
@@ -60,11 +64,11 @@ const connectEpic: Epic<Action, IRootState> =
                             params: action.payload,
                             error: error.message.error
                         }));
-                        observer.complete();
                     });
 
                     centrifuge.connect();
-                });
+
+                }).takeUntil(action$.ofAction(connect.started));
             }
             else {
                 return Observable.of(connect.failed({
@@ -72,6 +76,7 @@ const connectEpic: Epic<Action, IRootState> =
                     error: null
                 }));
             }
+
         });
 
 export default connectEpic;

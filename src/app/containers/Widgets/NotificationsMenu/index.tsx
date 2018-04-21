@@ -27,6 +27,7 @@ export interface INotificationsMenuContainerProps {
 }
 
 interface INotificationsMenuContainerState {
+    offline: boolean;
     count: number;
     notificationsBody: TProtypoElement[];
 }
@@ -58,6 +59,7 @@ const mapStateToProps = (state: IRootState) => {
 
     return {
         count,
+        offline: !state.socket.connected,
         notificationsBody: state.content.notifications
     };
 };

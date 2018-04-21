@@ -21,7 +21,8 @@ import { Reducer } from 'modules';
 const connectDoneHandler: Reducer<typeof connect.done, State> = (state, payload) => ({
     ...state,
     session: payload.result.session,
-    socket: payload.result.instance
+    socket: payload.result.instance,
+    connected: true
 });
 
 export default connectDoneHandler;
