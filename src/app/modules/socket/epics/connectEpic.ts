@@ -54,8 +54,6 @@ const connectEpic: Epic<Action, IRootState> =
                     });
 
                     centrifuge.on('disconnect', context => {
-                        // tslint:disable-next-line:no-console
-                        console.log('DC!');
                         observer.next(setConnected(false));
                     });
 
