@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import axios from 'axios';
 import GenesisAPI from 'lib/genesisAPI';
 import constructorModule from 'lib/constructor';
+import 'whatwg-fetch';
 
 export const apiEndpoint = 'api/v2';
 
@@ -32,17 +32,12 @@ export interface IAPIDependency {
 
 const storeDependencies: IStoreDependencies = {
     api: (params: { apiHost: string, sessionToken?: string }) => new GenesisAPI({
-        transport: request => axios({
-            url: request.url,
+        transport: request => fetch(request.url, {
             method: request.method,
             headers: request.headers,
-            data: request.body,
-            params: request.query
+            body: request.body
 
-        }).then(l => {
-            return l ? { body: l.data } : null;
-
-        }).catch(e => {
+        }).then(response => response.json()).then(body => ({ body })).catch(e => {
             throw e && e.response && e.response.data ? e.response.data.error : null;
         }),
         apiHost: params.apiHost,

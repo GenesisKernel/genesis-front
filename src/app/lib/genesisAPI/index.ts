@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
+import queryString from 'query-string';
 import urlJoin from 'url-join';
 import urlTemplate from 'url-template';
 import { IUIDResponse, ILoginRequest, ILoginResponse, IRefreshResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, IContentJsonRequest, IContentJsonResponse, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IRefreshRequest, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse, ITxCallRequest, ITxCallResponse, ITxPrepareRequest, ITxPrepareResponse, ITxStatusRequest, ITxStatusResponse, ITableRequest, TConfigRequest } from 'genesis/api';
@@ -28,12 +29,7 @@ export interface IRequest {
     headers?: {
         [key: string]: string;
     };
-    query?: {
-        [key: string]: any;
-    };
-    body?: {
-        [key: string]: any;
-    };
+    body?: FormData;
 }
 
 export interface IRequestOptions<P, R> {
@@ -95,6 +91,16 @@ class GenesisAPI {
         }
     }
 
+    protected serializeFormData(values: { [key: string]: any }) {
+        const formData = new FormData();
+        for (let itr in values) {
+            if (values.hasOwnProperty(itr) && values[itr]) {
+                formData.append(itr, values[itr]);
+            }
+        }
+        return formData;
+    }
+
     protected request = async <P, R>(method: TRequestMethod, endpoint: string, requestParams: P, options: IRequestOptions<P, R> = {}) => {
         const requestEndpoint = urlTemplate.parse(endpoint).expand(requestParams);
         const requestUrl = urlJoin(this._options.apiHost, this._options.apiEndpoint, requestEndpoint);
@@ -110,17 +116,19 @@ class GenesisAPI {
 
         const formData = new FormData();
         for (let itr in params) {
-            if (params.hasOwnProperty(itr)) {
+            if (params.hasOwnProperty(itr) && params[itr]) {
                 formData.append(itr, params[itr]);
             }
         }
 
+        const query = 'get' === method ? queryString.stringify(params) : '';
+        const body = 'get' === method ? null : this.serializeFormData(params);
+
         try {
             const response = await this._options.transport({
                 method,
-                url: requestUrl,
-                body: 'get' === method ? {} : formData,
-                query: 'get' === method ? params : {},
+                url: requestUrl + (query ? '?' + query : ''),
+                body,
                 headers: requestOptions.headers
             });
             json = requestOptions.responseTransformer ? requestOptions.responseTransformer(response.body) : response.body;
