@@ -21,6 +21,7 @@ import AlignRadioButtons from './AlignRadioButtons';
 import TransformRadioButtons from './TransformRadioButtons';
 import ColorRadioButtons from './ColorRadioButtons';
 import BtnRadioButtons from './BtnRadioButtons';
+import FormatButtons from './FormatButtons';
 import Switch from './Switch';
 import PropertiesInput from './PropertiesInput';
 import { getInitialTagValue } from 'lib/constructor';
@@ -47,11 +48,12 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
         }
     }
 
+    onToggleFormat(format: string) {
+        document.execCommand(format);
+    }
+
     render() {
-        let Handler: any = null;
-        if (this.props.tag) {
-            Handler = resolveTagHandler(this.props.tag.tag);
-        }
+        const Handler = this.props.tag && resolveTagHandler(this.props.tag.tag) || null;
         if (Handler) {
             const Tag = new Handler(this.props.tag);
 
@@ -218,6 +220,15 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
                                 </div>
                             )}
                         </Row>
+                        {this.props.tag && this.props.tag.childrenText && this.props.tag.childrenText.length >= 0 && (
+                            <Row className="g-padding-bottom">
+                                <Col xs={12}>
+                                    <FormatButtons
+                                        onClick={this.onToggleFormat.bind(this)}
+                                    />
+                                </Col>
+                            </Row>
+                        )}
                     </div>
                 </Panel>
             );
