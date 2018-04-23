@@ -49,7 +49,12 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
     }
 
     onToggleFormat(format: string) {
-        document.execCommand(format);
+        if (format === 'removeFormat') {
+            this.props.changePage({text: this.props.tag.childrenText.replace(/<\/?[^>]+(>|$)/g, ''), tagID: this.props.tag.id});
+        }
+        else {
+            document.execCommand(format);
+        }
     }
 
     render() {
@@ -220,7 +225,7 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
                                 </div>
                             )}
                         </Row>
-                        {this.props.tag && this.props.tag.childrenText && this.props.tag.childrenText.length >= 0 && (
+                        {this.props.tag && this.props.tag.childrenText !== null && this.props.tag.childrenText !== undefined && this.props.tag.childrenText.length >= 0 && (
                             <Row className="g-padding-bottom">
                                 <Col xs={12}>
                                     <FormatButtons

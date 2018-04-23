@@ -28,11 +28,14 @@ export default class FormatButtons extends React.Component<IFormatButtonsProps> 
     render() {
         return (
             <div>
-                <RadioButton onClick={this.props.onClick.bind(this, 'bold')} value="bold">
-                    <img src={imgBold} title="make selected text bold"/>
+                <RadioButton onClick={this.props.onClick.bind(this, 'bold')} value="bold" title="make selected text bold">
+                    <img src={imgBold}/>
                 </RadioButton>
-                <RadioButton onClick={this.props.onClick.bind(this, 'italic')} value="bold">
-                    <img src={imgItalic} title="make selected text italic"/>
+                <RadioButton onClick={this.props.onClick.bind(this, 'italic')} value="bold" title="make selected text italic">
+                    <img src={imgItalic}/>
+                </RadioButton>
+                <RadioButton onClick={this.props.onClick.bind(this, 'removeFormat')} value="removeFormat" title="remove formatting on selected text">
+                    <span>&times;</span>
                 </RadioButton>
             </div>
         );
