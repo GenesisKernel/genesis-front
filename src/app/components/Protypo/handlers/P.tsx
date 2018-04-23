@@ -38,6 +38,28 @@ class P extends React.Component<IPProps, IPState> {
         super(props);
     }
 
+    shouldComponentUpdate(nextProps: IPProps, nextState: IPState) {
+        if (!nextProps.selected) {
+            return true;
+        }
+        if (this.props.selected) {
+            // alert(nextProps.childrenText + ' ? ' + this.props.childrenText);
+            if (this.props.selected && this.props.childrenText !== undefined && this.props.childrenText !== null && this.props.childrenText.length >= 0
+            && nextProps.selected && nextProps.childrenText !== undefined && nextProps.childrenText !== null && nextProps.childrenText.length >= 0) {
+                if (nextProps.childrenText.indexOf('<') === -1) {
+                    return true;
+                }
+                return this.props.class !== nextProps.class;
+            }
+        }
+        // if (this.props.selected && this.props.childrenText !== undefined && this.props.childrenText !== null && this.props.childrenText.length >= 0) {
+            // if (nextProps.selected && nextProps.childrenText !== undefined && nextProps.childrenText !== null && nextProps.childrenText.length >= 0) {
+        //        return nextProps.childrenText !== this.props.childrenText;
+            // }
+        // }
+        return true;
+    }
+
     onPaste(e: any) {
         OnPasteStripFormatting(this, e);
     }
@@ -77,7 +99,7 @@ class P extends React.Component<IPProps, IPState> {
                         connectDragSource={connectDragSource}
                         canMove={true}
                     >
-                    {(this.props.selected && this.props.childrenText !== null && this.props.childrenText.length >= 0) ? (
+                    {(this.props.selected && this.props.childrenText !== undefined && this.props.childrenText !== null && this.props.childrenText.length >= 0) ? (
                         <ContentEditable
                             tagName="p"
                             className={classes}

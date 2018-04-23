@@ -73,7 +73,7 @@ class Strong extends React.Component<IStrongProps, IStrongState> {
                         connectDragSource={connectDragSource}
                         canMove={true}
                     >
-                    {(this.props.selected && this.props.childrenText !== null && this.props.childrenText.length >= 0) ? (
+                    {(this.props.selected && this.props.childrenText !== undefined && this.props.childrenText !== null && this.props.childrenText.length >= 0) ? (
                         <ContentEditable
                             tagName="b"
                             className={classes}
