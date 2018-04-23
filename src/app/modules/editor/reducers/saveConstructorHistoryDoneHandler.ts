@@ -15,27 +15,27 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { ISaveConstructorHistoryResult } from 'genesis/editor';
-import { Success } from 'typescript-fsa';
+import { saveConstructorHistory } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: Success<void, ISaveConstructorHistoryResult>): State {
-    return {
-        ...state,
-        tabs: [
-            ...state.tabs.slice(0, state.tabIndex),
-            {
-                ...state.tabs[state.tabIndex],
-                designer: {
-                    ...state.tabs[state.tabIndex].designer,
-                    history: {
-                        data: payload.result.data,
-                        position: payload.result.position,
-                        canUndo: payload.result.canUndo,
-                        canRedo: payload.result.canRedo
-                    }
+const saveConstructorHistoryDoneHandler: Reducer<typeof saveConstructorHistory.done, State> = (state, payload) => ({
+    ...state,
+    tabs: [
+        ...state.tabs.slice(0, state.tabIndex),
+        {
+            ...state.tabs[state.tabIndex],
+            designer: {
+                ...state.tabs[state.tabIndex].designer,
+                history: {
+                    data: payload.result.data,
+                    position: payload.result.position,
+                    canUndo: payload.result.canUndo,
+                    canRedo: payload.result.canRedo
                 }
-            },
-            ...state.tabs.slice(state.tabIndex + 1),
-        ]
-    };
-}
+            }
+        },
+        ...state.tabs.slice(state.tabIndex + 1),
+    ]
+});
+
+export default saveConstructorHistoryDoneHandler;

@@ -31,7 +31,7 @@ import importSeedDoneHandler from './reducers/importSeedDoneHandler';
 import selectAccountHandler from './reducers/selectAccountHandler';
 import authorizeHandler from './reducers/authorizeHandler';
 import deauthorizeHandler from './reducers/deauthorizeHandler';
-import generateSeedHandler from './reducers/generateSeedHandler';
+import generateSeedDoneHandler from './reducers/generateSeedDoneHandler';
 import selectRoleDoneHandler from './reducers/selectRoleDoneHandler';
 
 export type State = {
@@ -86,4 +86,4 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.selectRole.done, selectRoleDoneHandler)
     .case(actions.authorize, authorizeHandler)
     .case(actions.deauthorize, deauthorizeHandler)
-    .case(actions.generateSeed.done, generateSeedHandler);
+    .case(actions.generateSeed.done, generateSeedDoneHandler);

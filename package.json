@@ -63,7 +63,7 @@
         "simple-line-icons": "^2.4.1",
         "sockjs-client": "^1.1.4",
         "styled-components": "^2.1.2",
-        "typescript-fsa": "^2.5.0",
+        "typescript-fsa": "2.5.0",
         "typescript-fsa-reducers": "^0.4.4",
         "url-join": "^4.0.0",
         "url-template": "^2.0.8",
@@ -85,7 +85,6 @@
         "release": "electron-builder --config electron-builder.json"
     },
     "devDependencies": {
-        "@types/axios": "^0.14.0",
         "@types/bluebird": "^3.5.18",
         "@types/classnames": "^2.2.3",
         "@types/crypto-js": "^3.1.34",
@@ -93,7 +92,7 @@
         "@types/googlemaps": "^3.30.5",
         "@types/jest": "^21.1.8",
         "@types/js-beautify": "^0.0.31",
-        "@types/lodash": "^4.14.77",
+        "@types/lodash": "^4.14.107",
         "@types/markerclustererplus": "^2.1.33",
         "@types/node": "^8.0.57",
         "@types/prop-types": "^15.5.2",
@@ -135,7 +134,7 @@
         "react-scripts-ts": "^2.13.0",
         "react-scripts-ts-electron": "^0.2.1",
         "tslint-react": "^3.2.0",
-        "typescript": "^2.6.2",
+        "typescript": "^2.8.3",
         "typescript-react-intl": "^0.1.7"
     }
 }

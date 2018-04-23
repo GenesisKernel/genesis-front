@@ -15,9 +15,10 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
+import { Reducer } from 'modules';
 import { ITransaction, ITransactionCollection, ITransactionCall } from 'genesis/tx';
 
-export default function (state: State, payload: { tx: ITransactionCall, data: Partial<ITransaction> }): State {
+const setTxData: Reducer<{ tx: ITransactionCall, data: Partial<ITransaction> }, State> = (state, payload) => {
     if (payload.tx.parent) {
         const parent = state.transactions.get(payload.tx.parent) as ITransactionCollection;
         const txIndex = parent && parent.transactions && parent.transactions.findIndex(l => payload.tx.uuid === l.uuid);
@@ -66,4 +67,6 @@ export default function (state: State, payload: { tx: ITransactionCall, data: Pa
             })
         };
     }
-}
+};
+
+export default setTxData;

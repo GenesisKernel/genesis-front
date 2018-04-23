@@ -15,18 +15,20 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
+import { updateEditorTab } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: string): State {
-    return {
-        ...state,
-        tabs: [
-            ...state.tabs.slice(0, state.tabIndex),
-            {
-                ...state.tabs[state.tabIndex],
-                value: payload,
-                dirty: state.tabs[state.tabIndex].initialValue !== payload
-            },
-            ...state.tabs.slice(state.tabIndex + 1),
-        ]
-    };
-}
+const updateEditorTabHandler: Reducer<typeof updateEditorTab, State> = (state, payload) => ({
+    ...state,
+    tabs: [
+        ...state.tabs.slice(0, state.tabIndex),
+        {
+            ...state.tabs[state.tabIndex],
+            value: payload,
+            dirty: state.tabs[state.tabIndex].initialValue !== payload
+        },
+        ...state.tabs.slice(state.tabIndex + 1),
+    ]
+});
+
+export default updateEditorTabHandler;

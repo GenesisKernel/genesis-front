@@ -15,15 +15,17 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { IExecutionCall } from 'genesis/tx';
+import { txExec } from '../actions';
+import { Reducer } from 'modules';
 import setTxData from './setTxData';
 
-export default function (state: State, payload: IExecutionCall): State {
-    return setTxData(state, {
+const txExecHandler: Reducer<typeof txExec.started, State> = (state, payload) =>
+    setTxData(state, {
         tx: payload.tx,
         data: {
             block: null,
             error: null
         }
     });
-}
+
+export default txExecHandler;

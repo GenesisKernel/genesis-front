@@ -15,11 +15,11 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { Success } from 'typescript-fsa';
-import { TEditorTab, ILoadEditorTabCall } from 'genesis/editor';
+import { loadEditorTab } from '../actions';
+import { Reducer } from 'modules';
 import findTabIndex from './findTabIndex';
 
-export default function (state: State, payload: Success<ILoadEditorTabCall, TEditorTab>): State {
+const loadEditorTabDoneHandler: Reducer<typeof loadEditorTab.done, State> = (state, payload) => {
     const tabIndex = findTabIndex(state, payload.result);
 
     const tabs = -1 === tabIndex ?
@@ -43,4 +43,6 @@ export default function (state: State, payload: Success<ILoadEditorTabCall, TEdi
         tabIndex: -1 === tabIndex ? tabs.length - 1 : tabIndex,
         tabs
     };
-}
+};
+
+export default loadEditorTabDoneHandler;

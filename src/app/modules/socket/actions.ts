@@ -25,3 +25,4 @@ export const subscribe = actionCreator.async<IAccount, any, string>('SUBSCRIBE')
 export const unsubscribe = actionCreator.async<IAccount, void, void>('UNSUBSCRIBE');
 export const setNotificationsCount = actionCreator<INotificationsMessage>('SET_NOTIFICATIONS_COUNT');
 export const getNotificationsCount = actionCreator<{ ids: { id: string, ecosystem: string }[] }>('GET_NOTIFICATIONS_COUNT');
+export const setConnected = actionCreator<boolean>('SET_CONNECTED');

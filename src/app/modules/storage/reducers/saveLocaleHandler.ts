@@ -15,10 +15,12 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
+import { saveLocale } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, locale: string): State {
-    return {
-        ...state,
-        locale
-    };
-}
+const saveLocaleHandler: Reducer<typeof saveLocale, State> = (state, payload) => ({
+    ...state,
+    locale: payload
+});
+
+export default saveLocaleHandler;

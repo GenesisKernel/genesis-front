@@ -15,23 +15,25 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
+import { setPageTemplate } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: string): State {
-    return {
-        ...state,
-        tabs: [
-            ...state.tabs.slice(0, state.tabIndex),
-            {
-                ...state.tabs[state.tabIndex],
-                designer: {
-                    ...state.tabs[state.tabIndex].designer,
-                    data: {
-                        ...state.tabs[state.tabIndex].designer.data,
-                        pageTemplate: payload
-                    }
+const setPageTemplateHandler: Reducer<typeof setPageTemplate, State> = (state, payload) => ({
+    ...state,
+    tabs: [
+        ...state.tabs.slice(0, state.tabIndex),
+        {
+            ...state.tabs[state.tabIndex],
+            designer: {
+                ...state.tabs[state.tabIndex].designer,
+                data: {
+                    ...state.tabs[state.tabIndex].designer.data,
+                    pageTemplate: payload
                 }
-            },
-            ...state.tabs.slice(state.tabIndex + 1),
-        ]
-    };
-}
+            }
+        },
+        ...state.tabs.slice(state.tabIndex + 1),
+    ]
+});
+
+export default setPageTemplateHandler;

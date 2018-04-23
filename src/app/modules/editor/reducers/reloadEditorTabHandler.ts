@@ -15,10 +15,11 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { IReloadEditorTabCall } from 'genesis/editor';
+import { reloadEditorTab } from '../actions';
+import { Reducer } from 'modules';
 import findTabIndex from './findTabIndex';
 
-export default function (state: State, payload: IReloadEditorTabCall): State {
+const reloadEditorTabHandler: Reducer<typeof reloadEditorTab, State> = (state, payload) => {
     const index = findTabIndex(state, payload);
     const value = state.tabs[index];
 
@@ -41,4 +42,6 @@ export default function (state: State, payload: IReloadEditorTabCall): State {
             ]
         };
     }
-}
+};
+
+export default reloadEditorTabHandler;

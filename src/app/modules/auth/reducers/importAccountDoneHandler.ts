@@ -15,15 +15,14 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { Success } from 'typescript-fsa';
-import { IImportAccountCall } from 'genesis/auth';
-import { IAccount } from 'genesis/auth';
+import { importAccount } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: Success<IImportAccountCall, IAccount[]>): State {
-    return {
-        ...state,
-        defaultAccount: payload.params.isDefault && payload.result[0] ? payload.result[0].id : state.defaultAccount,
-        isImportingAccount: false,
-        importAccountError: null
-    };
-}
+const importAccountDoneHandler: Reducer<typeof importAccount.done, State> = (state, payload) => ({
+    ...state,
+    defaultAccount: payload.params.isDefault && payload.result[0] ? payload.result[0].id : state.defaultAccount,
+    isImportingAccount: false,
+    importAccountError: null
+});
+
+export default importAccountDoneHandler;

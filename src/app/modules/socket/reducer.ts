@@ -22,11 +22,13 @@ import connectDoneHandler from './reducers/connectDoneHandler';
 import disconnectDoneHandler from './reducers/disconnectDoneHandler';
 import subscribeDoneHandler from './reducers/subscribeDoneHandler';
 import setNotificationsCountHandler from './reducers/setNotificationsCountHandler';
-import unsubscribeHandler from './reducers/unsubscribeHandler';
+import unsubscribeDoneHandler from './reducers/unsubscribeDoneHandler';
+import setConnectedHandler from './reducers/setConnectedHandler';
 
 export type State = {
     readonly session: string;
     readonly socket: ICentrifuge;
+    readonly connected: boolean;
     readonly notifications: INotificationsMessage[];
     readonly subscriptions: {
         account: IAccount;
@@ -37,6 +39,7 @@ export type State = {
 export const initialState: State = {
     session: null,
     socket: null,
+    connected: false,
     notifications: [],
     subscriptions: []
 };
@@ -45,5 +48,6 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.connect.done, connectDoneHandler)
     .case(actions.disconnect.done, disconnectDoneHandler)
     .case(actions.setNotificationsCount, setNotificationsCountHandler)
+    .case(actions.setConnected, setConnectedHandler)
     .case(actions.subscribe.done, subscribeDoneHandler)
-    .case(actions.unsubscribe.done, unsubscribeHandler);
+    .case(actions.unsubscribe.done, unsubscribeDoneHandler);

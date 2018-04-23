@@ -15,14 +15,15 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { IAccount } from 'genesis/auth';
+import { saveAccount } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, account: IAccount): State {
-    return {
-        ...state,
-        accounts: [
-            ...state.accounts.filter(l => l.id !== account.id || l.ecosystem !== account.ecosystem),
-            account
-        ]
-    };
-}
+const saveAccountHandler: Reducer<typeof saveAccount, State> = (state, payload) => ({
+    ...state,
+    accounts: [
+        ...state.accounts.filter(l => l.id !== payload.id || l.ecosystem !== payload.ecosystem),
+        payload
+    ]
+});
+
+export default saveAccountHandler;

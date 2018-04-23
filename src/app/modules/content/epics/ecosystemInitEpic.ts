@@ -27,7 +27,7 @@ const ecosystemInitEpic: Epic = (action$, store, { api }) => action$.ofAction(ec
 
         return Observable.from(
             Promise.all([
-                client.getParam({ name: 'stylesheet' }).then(l => l.value).catch(e => ''),
+                client.getParam({ name: 'stylesheet' }).then(l => l.value),
                 client.getParam({ name: 'ecosystem_name' }).then(l => l.value).catch(e => '')
             ])
         ).flatMap(payload =>

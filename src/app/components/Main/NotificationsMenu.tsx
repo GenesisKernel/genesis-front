@@ -22,6 +22,7 @@ import { TProtypoElement } from 'genesis/protypo';
 import SystemButton from './SystemButton';
 
 export interface INotificationsMenuProps {
+    offline: boolean;
     count: number;
     notificationsBody: TProtypoElement[];
 }
@@ -31,18 +32,39 @@ const NotificationsMenu: React.SFC<INotificationsMenuProps> = props => (
         align="right"
         width={250}
         badge={props.count}
+        warning={props.offline}
         content={(
             <div style={{ color: '#000', overflow: 'hidden' }}>
                 <div className="dropdown-heading">
-                    <FormattedMessage id="notifications" defaultMessage="Notifications" />
+                    {props.offline ?
+                        (
+                            <FormattedMessage id="general.error.socket" defaultMessage="Notifications are unavailable" />
+                        ) : (
+                            <FormattedMessage id="notifications" defaultMessage="Notifications" />
+                        )
+                    }
                 </div>
                 <div>
-                    <Protypo context="menu" content={props.notificationsBody} />
+                    {props.offline ?
+                        (
+                            <p style={{ fontSize: 14, padding: '0 15px', color: '#4b7dbd' }}>
+                                <FormattedMessage id="general.error.socket.desc" defaultMessage="Failed to establish connection to the WebSocket server. Check your configuration" />
+                            </p>
+                        ) : (
+                            <Protypo context="menu" content={props.notificationsBody} />
+                        )
+                    }
                 </div>
             </div>
         )}
     >
-        <em className="icon icon-flag" />
+        {props.offline ?
+            (
+                <em className="icon fa fa-exclamation" />
+            ) : (
+                <em className="icon icon-flag" />
+            )
+        }
     </SystemButton>
 );
 

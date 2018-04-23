@@ -177,6 +177,8 @@
     "general.error.notfound": "The page you are looking for does not exists",
     "general.error.page": "The page you are looking for could not be processed",
     "general.error.timeout": "The page you are looking for is too heavy to be processed. Consider reducing number of database queries",
+    "general.error.socket": "Notifications are unavailable",
+    "general.error.socket.desc": "Failed to establish connection to the WebSocket server. Check your configuration",
     "general.home": "Home",
     "general.key.private": "Private key",
     "general.key.public": "Public key",

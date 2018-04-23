@@ -15,10 +15,12 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
+import { changeEditorTab } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: number): State {
-    return {
-        ...state,
-        tabIndex: payload
-    };
-}
+const changeEditorTabHandler: Reducer<typeof changeEditorTab, State> = (state, payload) => ({
+    ...state,
+    tabIndex: payload
+});
+
+export default changeEditorTabHandler;

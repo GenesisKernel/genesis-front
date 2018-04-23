@@ -15,22 +15,24 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { Success } from 'typescript-fsa';
+import { selectRole } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: Success<number, { sessionToken: string, refreshToken: string }>): State {
-    return {
-        ...state,
-        isAuthenticated: true,
-        isLoggingIn: false,
-        roles: null,
-        role: 'number' === typeof payload.params ? {
-            id: payload.params,
-            name: state.roles.find(l => l.id === payload.params).name
-        } : null,
-        session: {
-            ...state.session,
-            sessionToken: payload.result.sessionToken,
-            refreshToken: payload.result.refreshToken
-        }
-    };
-}
+const selectRoleDoneHandler: Reducer<typeof selectRole.done, State> = (state, payload) => ({
+    ...state,
+    ...state,
+    isAuthenticated: true,
+    isLoggingIn: false,
+    roles: null,
+    role: 'number' === typeof payload.params ? {
+        id: payload.params,
+        name: state.roles.find(l => l.id === payload.params).name
+    } : null,
+    session: {
+        ...state.session,
+        sessionToken: payload.result.sessionToken,
+        refreshToken: payload.result.refreshToken
+    }
+});
+
+export default selectRoleDoneHandler;

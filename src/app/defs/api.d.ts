@@ -63,6 +63,9 @@ declare module 'genesis/api' {
         ecosystem: string;
     }
 
+    type TConfigRequest =
+        'centrifugo'
+
     interface IContractRequest {
         name: string;
     }

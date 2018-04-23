@@ -15,13 +15,14 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { Success } from 'typescript-fsa';
-import { IConnectCall } from 'genesis/socket';
+import { connect } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: Success<IConnectCall, { session: string, instance: ICentrifuge }>): State {
-    return {
-        ...state,
-        session: payload.result.session,
-        socket: payload.result.instance
-    };
-}
+const connectDoneHandler: Reducer<typeof connect.done, State> = (state, payload) => ({
+    ...state,
+    session: payload.result.session,
+    socket: payload.result.instance,
+    connected: true
+});
+
+export default connectDoneHandler;

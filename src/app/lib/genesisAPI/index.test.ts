@@ -215,6 +215,18 @@ test('RequestNotifications', () => {
     });
 });
 
+test('GetConfig', () => {
+    const testRequest = 'centrifugo';
+
+    return paramTestingAPIMock().getConfig({ name: 'centrifugo' }).then((response: any) => {
+        expect(response).toEqual({
+            __requestUrl: `${paramTestingAPIHost}/${paramTestingAPIEndpoint}/config/${testRequest}`,
+            body: {},
+            query: {}
+        });
+    });
+});
+
 test('GetContract', () => {
     const testRequest = {
         name: 'TEST_CONTRACT',

@@ -15,15 +15,16 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { Success } from 'typescript-fsa';
+import { initialize } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: Success<void, { nodeHost: string, fullNodes: string[] }>): State {
-    return {
-        ...state,
-        isLoaded: true,
-        isOffline: false,
-        isConnecting: false,
-        nodeHost: payload.result.nodeHost,
-        fullNodes: payload.result.fullNodes
-    };
-}
+const initializeDoneHandler: Reducer<typeof initialize.done, State> = (state, payload) => ({
+    ...state,
+    isLoaded: true,
+    isOffline: false,
+    isConnecting: false,
+    nodeHost: payload.result.nodeHost,
+    fullNodes: payload.result.fullNodes
+});
+
+export default initializeDoneHandler;

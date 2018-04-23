@@ -15,18 +15,18 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { IAccount } from 'genesis/auth';
-import { Success } from 'typescript-fsa';
+import { subscribe } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: Success<IAccount, ISubscription>): State {
-    return {
-        ...state,
-        subscriptions: [
-            ...state.subscriptions,
-            {
-                account: payload.params,
-                instance: payload.result
-            }
-        ]
-    };
-}
+const subscribeDoneHandler: Reducer<typeof subscribe.done, State> = (state, payload) => ({
+    ...state,
+    subscriptions: [
+        ...state.subscriptions,
+        {
+            account: payload.params,
+            instance: payload.result
+        }
+    ]
+});
+
+export default subscribeDoneHandler;

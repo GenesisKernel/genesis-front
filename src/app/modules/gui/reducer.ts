@@ -17,7 +17,7 @@
 import * as actions from './actions';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { TWindowType } from 'genesis/gui';
-import switchWindowHandler from './reducers/switchWindowHandler';
+import switchWindowDoneHandler from './reducers/switchWindowDoneHandler';
 
 export type State = {
     readonly window: TWindowType;
@@ -28,4 +28,4 @@ export const initialState: State = {
 };
 
 export default reducerWithInitialState(initialState)
-    .case(actions.switchWindow.done, switchWindowHandler);
+    .case(actions.switchWindow.done, switchWindowDoneHandler);

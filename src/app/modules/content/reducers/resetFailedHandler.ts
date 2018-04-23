@@ -15,14 +15,24 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { IAccount } from 'genesis/auth';
-import { Success } from 'typescript-fsa';
+import { reset } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: Success<IAccount, void>): State {
-    return {
-        ...state,
-        subscriptions: state.subscriptions.filter(l =>
-            l.account.id !== payload.params.id
-        )
-    };
-}
+const resetFailedHandler: Reducer<typeof reset.failed, State> = (state, payload) => ({
+    ...state,
+    sections: {
+        ...state.sections,
+        [state.section]: {
+            ...state.sections[state.section],
+            page: {
+                params: {},
+                name: null,
+                content: null,
+                error: payload.error
+            },
+            pending: false
+        }
+    }
+});
+
+export default resetFailedHandler;

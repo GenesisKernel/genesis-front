@@ -15,11 +15,21 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { Success } from 'typescript-fsa';
+import { navigatePage } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: Success<void, string>): State {
-    return {
-        ...state,
-        loadedSeed: payload.result
-    };
-}
+const navigatePageDoneHandler: Reducer<typeof navigatePage.done, State> = (state, payload) => ({
+    ...state,
+    section: payload.result.section,
+    sections: {
+        ...state.sections,
+        [payload.result.section]: {
+            ...state.sections[payload.result.section],
+            page: state.sections[payload.result.section].page,
+            force: payload.params.force,
+            pending: false
+        }
+    }
+});
+
+export default navigatePageDoneHandler;

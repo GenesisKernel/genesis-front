@@ -15,12 +15,15 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
+import { disconnect } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State): State {
-    return {
-        ...state,
-        socket: null,
-        session: null,
-        subscriptions: []
-    };
-}
+const disconnectDone: Reducer<typeof disconnect.done, State> = (state, payload) => ({
+    ...state,
+    socket: null,
+    session: null,
+    subscriptions: [],
+    connected: false
+});
+
+export default disconnectDone;

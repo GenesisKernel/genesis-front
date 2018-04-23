@@ -15,10 +15,12 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
+import { authorize } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, privateKey: string): State {
-    return {
-        ...state,
-        privateKey
-    };
-}
+const authorizeHandler: Reducer<typeof authorize, State> = (state, payload) => ({
+    ...state,
+    privateKey: payload
+});
+
+export default authorizeHandler;
