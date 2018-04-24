@@ -15,68 +15,14 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
-import { IConstructorElementProps } from 'genesis/editor';
 import ContentEditable from 'react-contenteditable';
+import EditableBlock from './EditableBlock';
 
-export interface IPProps extends IConstructorElementProps {
-    'className'?: string;
-    'class'?: string;
-    'childrenText'?: string;
-}
-
-interface IPState {
-}
-
-class P extends React.Component<IPProps, IPState> {
-
-    constructor(props: IPProps) {
-        super(props);
-    }
-
-    shouldComponentUpdate(nextProps: IPProps, nextState: IPState) {
-        if (!nextProps.selected) {
-            return true;
-        }
-        if (this.props.selected) {
-            // alert(nextProps.childrenText + ' ? ' + this.props.childrenText);
-            if (this.props.selected && this.props.childrenText !== undefined && this.props.childrenText !== null && this.props.childrenText.length >= 0
-            && nextProps.selected && nextProps.childrenText !== undefined && nextProps.childrenText !== null && nextProps.childrenText.length >= 0) {
-                if (nextProps.childrenText.indexOf('<') === -1) {
-                    return true;
-                }
-                return this.props.class !== nextProps.class;
-            }
-        }
-        // if (this.props.selected && this.props.childrenText !== undefined && this.props.childrenText !== null && this.props.childrenText.length >= 0) {
-            // if (nextProps.selected && nextProps.childrenText !== undefined && nextProps.childrenText !== null && nextProps.childrenText.length >= 0) {
-        //        return nextProps.childrenText !== this.props.childrenText;
-            // }
-        // }
-        return true;
-    }
-
-    onPaste(e: any) {
-        OnPasteStripFormatting(this, e);
-    }
-
-    onClick(e: any) {
-        e.stopPropagation();
-        this.props.selectTag(this.props.tag);
-    }
-
-    handleChange(e: any) {
-        this.props.changePage({text: e.target.value, tagID: this.props.tag.id});
-    }
-
-    removeTag() {
-        this.props.removeTag({ tag: this.props.tag });
-    }
-
+class P extends EditableBlock {
     render() {
         if (this.props.editable) {
             const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
