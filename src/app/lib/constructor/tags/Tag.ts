@@ -64,7 +64,7 @@ class Tag {
             }
         }
 
-        let body = this.renderChildren();
+        let body = this.renderChildren(this.element.children, this.offset);
         if (this.element.children && this.element.children.length === 1) {
             params.push('Body:\n' + body);
         }
@@ -84,7 +84,8 @@ class Tag {
                             attrs.push(getParamName(attr) + ': ' + (quote ? '"' : '') + val + (quote ? '"' : ''));
                         }
                     }
-                    return '.' + tagName + '(' + attrs.join(', ') + ')';
+                    const children = this.renderChildren(element.children, this.offset);
+                    return '.' + tagName + '(' + attrs.join(', ') + ')' + (children ? ('{\n' + children + '\n' + this.renderOffset() + '}') : '');
                 }
                 return '';
             }).join('');
@@ -97,11 +98,11 @@ class Tag {
         return this.renderOffset() + result;
     }
 
-    renderChildren(): string {
-        if (!this.element.children) {
+    renderChildren(children: TProtypoElement[], offset: number): string {
+        if (!children) {
             return '';
         }
-        let result = this.element.children.map((element, index) => {
+        let result = children.map((element, index) => {
             switch (element.tag) {
                 case 'text':
                     return this.renderOffset() + ' ' + element.text;
@@ -109,7 +110,7 @@ class Tag {
                     const Handler = resolveTagHandler(element.tag);
                     if (Handler) {
                         let tag = new Handler(element);
-                        tag.setOffset(this.offset + 1);
+                        tag.setOffset(offset + 1);
                         return tag.renderCode();
                     }
                     return '';
