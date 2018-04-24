@@ -2,23 +2,23 @@ plugins:
   rubocop:
     enabled: true
     exclude_patterns:
-    - config/
-    - db/
-    - dist/
-    - features/
-    - **/node_modules/
-    - script/
-    - **/spec/
-    - **/test/
-    - **/tests/
-    - Tests/
-    - **/vendor/
-    - **/*_test.go
-    - **/*.d.ts
-    - public/vs
-    - src/app/styles/built
-    - src/app/components/Main/Admin
-    - src/app/containers/Main/containers/Admin
-    - src/app/modules/admin
+    - "config/"
+    - "db/"
+    - "dist/"
+    - "features/"
+    - "**/node_modules/"
+    - "script/"
+    - "**/spec/"
+    - "**/test/"
+    - "**/tests/"
+    - "Tests/"
+    - "**/vendor/"
+    - "**/*_test.go"
+    - "**/*.d.ts"
+    - "public/vs"
+    - "src/app/styles/built"
+    - "src/app/components/Main/Admin"
+    - "src/app/containers/Main/containers/Admin"
+    - "src/app/modules/admin"
   eslint:
    	enabled: true
