@@ -61,4 +61,8 @@ export default class EditableBlock extends React.Component<IEditableBlockProps, 
     removeTag() {
         this.props.removeTag({ tag: this.props.tag });
     }
+
+    hasChildrenText() {
+        return this.props.selected && this.props.childrenText !== undefined && this.props.childrenText !== null && this.props.childrenText.length >= 0;
+    }
 }

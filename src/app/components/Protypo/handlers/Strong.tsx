@@ -45,7 +45,7 @@ class Strong extends EditableBlock {
                         connectDragSource={connectDragSource}
                         canMove={true}
                     >
-                    {(this.props.selected && this.props.childrenText !== undefined && this.props.childrenText !== null && this.props.childrenText.length >= 0) ? (
+                    {this.hasChildrenText() ? (
                         <ContentEditable
                             tagName="b"
                             className={classes}
