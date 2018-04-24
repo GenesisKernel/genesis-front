@@ -26,6 +26,7 @@ import Switch from './Switch';
 import PropertiesInput from './PropertiesInput';
 import { getInitialTagValue } from 'lib/constructor';
 import resolveTagHandler from 'lib/constructor/tags';
+import { params } from 'lib/constructor/tags/params';
 
 interface IPropertiesProps {
     changePage?: any;
@@ -38,13 +39,13 @@ interface IPropertiesState {
 export default class Properties extends React.Component<IPropertiesProps, IPropertiesState> {
     onChange(attr: string, e: React.ChangeEvent<HTMLInputElement>) {
         if (this.props && this.props.tag) {
-            this.props.changePage({[attr]: e.target.value, tagID: this.props.tag.id});
+            this.props.changePage({attrName: attr, attrValue: e.target.value, tagID: this.props.tag.id});
         }
     }
 
     onAttrChange(attr: string, value: string) {
         if (this.props && this.props.tag) {
-            this.props.changePage({[attr]: value, tagID: this.props.tag.id});
+            this.props.changePage({attrName: attr, attrValue: value, tagID: this.props.tag.id});
         }
     }
 
@@ -55,6 +56,37 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
         else {
             document.execCommand(format);
         }
+    }
+    getExtraParams() {
+        const Handler = resolveTagHandler(this.props.tag.tag);
+        const Tag = new Handler(this.props.tag);
+
+        let result = [];
+        for (let attr in params) {
+            if (params.hasOwnProperty(attr)
+                && Tag.hasEditProp(attr)
+                && attr !== 'class'
+                && attr !== 'align'
+                && attr !== 'transform'
+                && attr !== 'wrap'
+                && attr !== 'btn'
+            ) {
+                result.push({attr: attr, name: params[attr]});
+            }
+        }
+        return result;
+    }
+
+    renderParams() {
+        return this.getExtraParams().map((attr, index) => (
+            <PropertiesInput
+                name={attr.attr}
+                title={attr.name}
+                placeholder={attr.name}
+                value={this.props.tag && this.props.tag.attr && this.props.tag.attr[attr.attr] || ''}
+                onChange={this.onChange.bind(this, attr.attr)}
+            />
+        ));
     }
 
     render() {
@@ -113,48 +145,7 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
                             </Col>
                         </Row>
                         <form className="form-horizontal">
-                            { Tag.hasEditProp('width') && (
-                                <PropertiesInput
-                                    name="width"
-                                    title="Width"
-                                    placeholder="Image width"
-                                    value={this.props.tag && this.props.tag.attr && this.props.tag.attr.width || ''}
-                                    onChange={this.onChange.bind(this, 'width')}
-                                />
-                            )}
-                            { Tag.hasEditProp('ratio') && (
-                                <PropertiesInput
-                                    name="ratio"
-                                    title="Height / ratio"
-                                    placeholder="Image height or ratio"
-                                    value={this.props.tag && this.props.tag.attr && this.props.tag.attr.ratio || ''}
-                                    onChange={this.onChange.bind(this, 'ratio')}
-                                />
-                            )}
-                            { Tag.hasEditProp('name') && (
-                                <PropertiesInput
-                                    name="name"
-                                    title="Name"
-                                    value={this.props.tag && this.props.tag.attr && this.props.tag.attr.name || ''}
-                                    onChange={this.onChange.bind(this, 'name')}
-                                />
-                            )}
-                            { Tag.hasEditProp('source') && (
-                                <PropertiesInput
-                                    name="source"
-                                    title="Source"
-                                    value={this.props.tag && this.props.tag.attr && this.props.tag.attr.source || ''}
-                                    onChange={this.onChange.bind(this, 'source')}
-                                />
-                            )}
-                            { Tag.hasEditProp('condition') && (
-                                <PropertiesInput
-                                    name="condition"
-                                    title="Condition"
-                                    value={this.props.tag && this.props.tag.attr && this.props.tag.attr.condition || ''}
-                                    onChange={this.onChange.bind(this, 'condition')}
-                                />
-                            )}
+                            {this.renderParams()}
                         </form>
                         <Row className="g-padding-bottom">
                             { Tag.hasEditProp('align') && (

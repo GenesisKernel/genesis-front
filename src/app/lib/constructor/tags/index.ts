@@ -15,7 +15,6 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import Button from './Button';
-import DBFind from './DBFind';
 import Div from './Div';
 import Em from './Em';
 import Form from './Form';
@@ -36,7 +35,6 @@ import Logic from './Logic';
 const tagHandlers = {
     list: {
         'button': Button,
-        'dbfind': DBFind,
         'div': Div,
         'em': Em,
         'form': Form,
