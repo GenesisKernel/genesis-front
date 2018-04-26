@@ -547,6 +547,19 @@ const register = (editor: typeof monaco) => {
                 staticParamTypes.Class
             ]
         },
+        QRcode: {
+            label: 'QRcode',
+            documentation: 'Generate QRCode image from text payload',
+            kind: monaco.languages.CompletionItemKind.Method,
+            insertText: 'QRcode(',
+            params: [
+                {
+                    label: 'Text',
+                    documentation: 'Text payload to encode',
+                    insertText: 'Text: '
+                }
+            ]
+        },
         RadioGroup: {
             label: 'RadioGroup',
             documentation: 'List of options represented with radio buttons',
