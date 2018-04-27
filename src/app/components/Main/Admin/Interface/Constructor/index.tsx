@@ -17,7 +17,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import Protypo from 'containers/Widgets/Protypo';
+// import Protypo from 'containers/Widgets/Protypo';
+import ProtypoConstructor from 'containers/Widgets/ProtypoConstructor';
 import Layout from './Layout';
 
 import TabView from 'components/TabView';
@@ -353,20 +354,13 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                                         onChange={this.props.toggleLogic}
                                     />
                                 </div>
-                                {/*
-                                 <div className="b-switch">
-                                 <span>SNAP</span>
-                                 <Switch initialValue="snap" onValue="snap" offValue="" />
-                                 </div>
-                                 */
-                                }
                             </div>
 
                         </div>
                     </div>
 
                     <Layout grid={this.props.grid} addTag={this.props.addTag} moveTag={this.props.moveTag} copyTag={this.props.copyTag}>
-                        <Protypo
+                        <ProtypoConstructor
                             context="page"
                             content={this.props.pageTree}
                             editable={true}
@@ -390,16 +384,6 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                             changePage={this.props.changePage}
                         />
                     </div>
-                    {/*<EditPage
-                        page={this.props.page}
-                        pageTemplate={this.props.pageTemplate}
-                        menus={this.props.menus}
-                        tabView={true}
-                        saveButton={true}
-                        canSave={this.props.canSave}
-                        navigatePage={this.props.navigatePage}
-                        onExec={this.props.onSave}
-                    />*/}
                 </div>
             </ConstructorDiv>
         );

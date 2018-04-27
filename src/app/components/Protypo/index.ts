@@ -38,7 +38,7 @@ import LinkPage from './handlers/LinkPage';
 import Map from './handlers/Map';
 import MenuItem from './handlers/MenuItem';
 import MenuGroup from './handlers/MenuGroup';
-import P, { PDnD } from './handlers/P';
+import P from './handlers/P';
 import QRCode from './handlers/QRCode';
 import RadioGroup, { RadioGroupDnD } from './handlers/RadioGroup';
 import Range from './handlers/Range';
@@ -93,7 +93,7 @@ const handlersDnD = {
     'imageinput': ImageInputDnD,
     'input': InputDnD,
     'label': LabelDnD,
-    'p': PDnD,
+    // 'p': PDnD,
     'radiogroup': RadioGroupDnD,
     'span': SpanDnD,
     'strong': StrongDnD,
