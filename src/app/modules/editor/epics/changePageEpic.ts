@@ -37,50 +37,29 @@ const changePageEpic: Epic<Action, IRootState> =
                     tag.attr = {};
                 }
 
-                if ('string' === typeof action.payload.width) {
-                    tag.attr.width = action.payload.width;
-                }
-
-                if ('string' === typeof action.payload.ratio) {
-                    tag.attr.ratio = action.payload.ratio;
-                }
-
-                if ('string' === typeof action.payload.name) {
-                    tag.attr.name = action.payload.name;
-                }
-
-                if ('string' === typeof action.payload.source) {
-                    tag.attr.source = action.payload.source;
-                }
-
-                if ('string' === typeof action.payload.condition) {
-                    tag.attr.condition = action.payload.condition;
-                }
-
-                if ('string' === typeof action.payload.class) {
-                    tag.attr.class = action.payload.class || '';
-                }
-
-                let properties = new constructorModule.Properties();
-
-                if ('string' === typeof action.payload.align) {
-                    tag.attr.class = properties.updateClassList(tag.attr.class || '', 'align', action.payload.align);
-                }
-
-                if ('string' === typeof action.payload.transform) {
-                    tag.attr.class = properties.updateClassList(tag.attr.class || '', 'transform', action.payload.transform);
-                }
-
-                if ('string' === typeof action.payload.wrap) {
-                    tag.attr.class = properties.updateClassList(tag.attr.class || '', 'wrap', action.payload.wrap);
-                }
-
-                if ('string' === typeof action.payload.color) {
-                    tag.attr.class = properties.updateClassList(tag.attr.class || '', 'color', action.payload.color);
-                }
-
-                if ('string' === typeof action.payload.btn) {
-                    tag.attr.class = properties.updateClassList(tag.attr.class || '', 'btn', action.payload.btn);
+                if ('string' === typeof action.payload.attrName) {
+                    let properties = new constructorModule.Properties();
+                    const value = action.payload.attrValue;
+                    switch (action.payload.attrName) {
+                        case 'align':
+                            tag.attr.class = properties.updateClassList(tag.attr.class || '', 'align', value);
+                            break;
+                        case 'transform':
+                            tag.attr.class = properties.updateClassList(tag.attr.class || '', 'transform', value);
+                            break;
+                        case 'wrap':
+                            tag.attr.class = properties.updateClassList(tag.attr.class || '', 'wrap', value);
+                            break;
+                        case 'color':
+                            tag.attr.class = properties.updateClassList(tag.attr.class || '', 'color', value);
+                            break;
+                        case 'btn':
+                            tag.attr.class = properties.updateClassList(tag.attr.class || '', 'btn', value);
+                            break;
+                        default:
+                            tag.attr[action.payload.attrName] = value;
+                            break;
+                    }
                 }
             }
 

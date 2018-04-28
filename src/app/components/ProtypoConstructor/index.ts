@@ -15,12 +15,12 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import ProtypoConstructor from './ProtypoConstructor';
-// import { ButtonDnD } from './handlers/Button';
+import Button from './handlers/Button';
 // import { DBFindDnD } from './handlers/DBFind';
 // import IfDnD from './handlers/If';
 // import ElseIfDnD from './handlers/ElseIf';
 // import ElseDnD from './handlers/Else';
-// import { DivDnD } from './handlers/Div';
+import Div from './handlers/Div';
 // import { EmDnD } from './handlers/Em';
 // import { FormDnD } from './handlers/Form';
 // import { ImageDnD } from './handlers/Image';
@@ -35,12 +35,12 @@ import P from './handlers/P';
 import Logic from './handlers/Logic';
 
 const handlers = {
-    // 'button': ButtonDnD,
+    'button': Button,
     // 'dbfind': DBFindDnD,
     // 'if': IfDnD,
     // 'elseif': ElseIfDnD,
     // 'else': ElseDnD,
-    // 'div': DivDnD,
+    'div': Div,
     // 'em': EmDnD,
     // 'form': FormDnD,
     // 'image': ImageDnD,

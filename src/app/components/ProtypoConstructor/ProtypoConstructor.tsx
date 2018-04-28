@@ -18,9 +18,6 @@ import * as React from 'react';
 import { resolveHandler } from 'components/ProtypoConstructor';
 import * as propTypes from 'prop-types';
 import { TProtypoElement } from 'genesis/protypo';
-import { IValidationResult } from 'components/Validation/ValidatedForm';
-import Heading from 'components/Heading';
-import ToolButton, { IToolButtonProps } from 'components/Protypo/components/ToolButton';
 import { IConstructorElementProps } from 'genesis/editor';
 
 export interface IProtypoConstructorProps extends IConstructorElementProps {
@@ -30,10 +27,6 @@ export interface IProtypoConstructorProps extends IConstructorElementProps {
     context: string;
     page: string;
     content: TProtypoElement[];
-    // menuPush: (params: { name: string, content: TProtypoElement[] }) => void;
-    // navigatePage: (params: { name: string, params: any, force?: boolean }) => void;
-    // navigate: (url: string) => void;
-    // displayData: (link: string) => void;
 }
 
 export interface IParamsSpec {
@@ -48,32 +41,17 @@ export interface IParamSpec {
 
 class ProtypoConstructor extends React.Component<IProtypoConstructorProps> {
     private _lastID: number;
-    // private _menuPushBind: Function;
-    // private _navigatePageBind: Function;
-    // private _navigateBind: Function;
-    private _resolveSourceBind: Function;
     private _renderElementsBind: Function;
-    private _title: string;
-    private _toolButtons: IToolButtonProps[];
-    private _sources: { [key: string]: { columns: string[], types: string[], data: string[][] } };
     private _errors: { name: string, description: string }[];
 
     constructor(props: IProtypoConstructorProps) {
         super(props);
-        // this._menuPushBind = props.menuPush.bind(this);
-        // this._navigatePageBind = props.navigatePage.bind(this);
-        // this._navigateBind = props.navigate.bind(this);
-        this._resolveSourceBind = this.resolveSource.bind(this);
         this._renderElementsBind = this.renderElements.bind(this);
     }
 
     getChildContext() {
         return {
             protypo: this,
-            // menuPush: this._menuPushBind,
-            // navigatePage: this._navigatePageBind,
-            // navigate: this._navigateBind,
-            resolveSource: this._resolveSourceBind,
             renderElements: this._renderElementsBind
         };
     }
@@ -82,47 +60,8 @@ class ProtypoConstructor extends React.Component<IProtypoConstructorProps> {
         return this.props.page;
     }
 
-    setTitle(title: string) {
-        this._title = title;
-    }
-
-    addToolButton(props: IToolButtonProps) {
-        this._toolButtons.push(props);
-    }
-
-    // displayData(link: string) {
-    //     // this.props.displayData(link);
-    // }
-
-    registerSource(name: string, payload: { columns: string[], types: string[], data: string[][] }) {
-        this._sources[name] = payload;
-    }
-
-    resolveSource(name: string) {
-        return this._sources[name];
-    }
-
     resolveData(name: string) {
         return `${this.props.apiHost}${name}`;
-    }
-
-    resolveParams(values: IParamsSpec, formValues?: { [key: string]: IValidationResult }) {
-        const result: { [key: string]: string } = {};
-        for (let itr in values) {
-            if (values.hasOwnProperty(itr)) {
-                const param = values[itr];
-                switch (param.type) {
-                    case 'text': result[itr] = param.text; break;
-                    case 'Val':
-                        const inputName = param.params[0];
-                        const inputValue = formValues && formValues[inputName] && formValues[inputName].value;
-                        result[itr] = inputValue;
-                        break;
-                    default: break;
-                }
-            }
-        }
-        return result;
     }
 
     renderElement(element: TProtypoElement, optionalKey?: string): React.ReactNode {
@@ -208,28 +147,11 @@ class ProtypoConstructor extends React.Component<IProtypoConstructorProps> {
         ));
     }
 
-    renderHeading() {
-        return (this.props.context === 'page' && !this.props.editable) ? (
-            <Heading key="func_heading">
-                <span>{this._title}</span>
-                <div className="pull-right">
-                    {this._toolButtons.map((props, index) => (
-                        <ToolButton {...props} key={index} />
-                    ))}
-                </div>
-            </Heading>
-        ) : null;
-    }
-
     render() {
         this._lastID = 0;
-        this._sources = {};
-        this._toolButtons = [];
-        this._title = null;
         this._errors = [];
 
         const body = this.renderElements(this.props.content);
-        const head = this.renderHeading();
         const children = [
             this._errors.length ? (
                 <div key="errors">
@@ -242,7 +164,6 @@ class ProtypoConstructor extends React.Component<IProtypoConstructorProps> {
                     ))}
                 </div>
             ) : null,
-            head,
             ...body
         ];
 
@@ -268,10 +189,6 @@ class ProtypoConstructor extends React.Component<IProtypoConstructorProps> {
 
 (ProtypoConstructor as any).childContextTypes = {
     protypo: propTypes.object.isRequired,
-    // navigatePage: propTypes.func.isRequired,
-    // navigate: propTypes.func.isRequired,
-    // menuPush: propTypes.func.isRequired,
-    resolveSource: propTypes.func.isRequired,
     renderElements: propTypes.func.isRequired
 };
 

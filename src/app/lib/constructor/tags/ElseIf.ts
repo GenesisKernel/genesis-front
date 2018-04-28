@@ -42,13 +42,13 @@ class ElseIf extends Tag {
 
         result += ')';
 
-        let body = this.renderChildren();
+        let body = this.renderChildren(this.element.children, this.offset);
         result += '{\n';
         if (this.element.children && this.element.children.length) {
             result += body + '\n' + this.renderOffset();
         }
         result += '}';
-        return this.renderOffset() + result;
+        return result;
     }
 
     generateTreeJSON(text: string): any {
