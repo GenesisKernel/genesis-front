@@ -18,7 +18,7 @@ import React from 'react';
 import moment from 'moment';
 
 const parseInterval = (interval: string) => {
-    const matches = /([-+])([0-9]+) ([a-z]+)/.exec(interval);
+    const matches = /([-+])([0-9]+) ([a-z]+)/.exec(String(interval).trim());
     if (matches && matches.length) {
         const value = parseInt(matches[2], 10);
         const op = '-' === matches[1] ? 'sub' : 'add';
@@ -51,7 +51,7 @@ const Now: React.SFC<INowProps> = (props) => {
         );
     }
     else {
-        const interval = parseInterval(props.format);
+        const interval = parseInterval(props.interval);
         const now = moment();
         switch (interval.op) {
             case 'add': now.add(interval.value, interval.type as any); break;
