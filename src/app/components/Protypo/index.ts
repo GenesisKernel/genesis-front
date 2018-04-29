@@ -38,6 +38,7 @@ import LinkPage from './handlers/LinkPage';
 import Map from './handlers/Map';
 import MenuItem from './handlers/MenuItem';
 import MenuGroup from './handlers/MenuGroup';
+import Now from './handlers/Now';
 import P, { PDnD } from './handlers/P';
 import RadioGroup, { RadioGroupDnD } from './handlers/RadioGroup';
 import Range from './handlers/Range';
@@ -69,6 +70,7 @@ const handlers = {
     'map': Map,
     'menuitem': MenuItem,
     'menugroup': MenuGroup,
+    'now': Now,
     'p': P,
     'radiogroup': RadioGroup,
     'range': Range,
