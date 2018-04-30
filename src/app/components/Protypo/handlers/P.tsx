@@ -15,46 +15,14 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import * as classnames from 'classnames';
-import { IConstructorElementProps } from 'genesis/editor';
 import ContentEditable from 'react-contenteditable';
+import EditableBlock from './EditableBlock';
 
-export interface IPProps extends IConstructorElementProps {
-    'className'?: string;
-    'class'?: string;
-    'childrenText'?: string;
-}
-
-interface IPState {
-}
-
-class P extends React.Component<IPProps, IPState> {
-
-    constructor(props: IPProps) {
-        super(props);
-    }
-
-    onPaste(e: any) {
-        OnPasteStripFormatting(this, e);
-    }
-
-    onClick(e: any) {
-        e.stopPropagation();
-        this.props.selectTag(this.props.tag);
-    }
-
-    handleChange(e: any) {
-        this.props.changePage({text: e.target.value, tagID: this.props.tag.id});
-    }
-
-    removeTag() {
-        this.props.removeTag({ tag: this.props.tag });
-    }
-
+class P extends EditableBlock {
     render() {
         if (this.props.editable) {
             const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
@@ -77,7 +45,7 @@ class P extends React.Component<IPProps, IPState> {
                         connectDragSource={connectDragSource}
                         canMove={true}
                     >
-                    {(this.props.selected && this.props.childrenText !== null && this.props.childrenText.length >= 0) ? (
+                    {this.hasChildrenText() ? (
                         <ContentEditable
                             tagName="p"
                             className={classes}
