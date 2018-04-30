@@ -26,7 +26,7 @@ const NodeObservable = (params: { nodes: string[], count: number, timeout?: numb
                 .map(() => l)
 
                 // Set request timeout, try the next one
-                .timeout(params.timeout)
+                .timeout(params.timeout || 60000)
                 .catch(timeout => Observable.empty<never>());
         }, params.concurrency)
         .take(params.count);
