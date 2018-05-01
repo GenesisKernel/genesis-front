@@ -20,9 +20,9 @@ import { Reducer } from 'modules';
 
 const mergeFullNodesHandler: Reducer<typeof mergeFullNodes, State> = (state, payload) => ({
     ...state,
-    fullNodes: state.fullNodes ? payload.filter(l =>
-        -1 === state.fullNodes.indexOf(l)
-    ) : payload
+    fullNodes: ([...(state.fullNodes || []), ...payload]).filter((value, index, self) => {
+        return self.indexOf(value) === index;
+    })
 });
 
 export default mergeFullNodesHandler;

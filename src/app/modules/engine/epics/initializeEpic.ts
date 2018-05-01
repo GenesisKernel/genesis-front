@@ -40,7 +40,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey }) => action$.of
             .catch(e => Observable.of(fullNodesFallback))
             .flatMap(fullNodes =>
                 NodeObservable({
-                    nodes: [...store.getState().storage.fullNodes, ...fullNodes],
+                    nodes: [...(store.getState().storage.fullNodes || []), ...fullNodes],
                     count: 1,
                     timeout: 5000,
                     concurrency: 10,
