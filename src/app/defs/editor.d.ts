@@ -82,17 +82,8 @@ declare module 'genesis/editor' {
 
     interface IChangePageCall {
         text?: string;
-        class?: string;
-        name?: string;
-        source?: string;
-        align?: string;
-        transform?: string;
-        wrap?: string;
-        color?: string;
-        btn?: string;
-        width?: string;
-        ratio?: string;
-        condition?: string;
+        attrName?: string;
+        attrValue?: string;
         canDropPosition?: string;
         tagID: string;
         pageID?: string;
