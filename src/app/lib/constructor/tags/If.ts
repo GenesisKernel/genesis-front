@@ -39,7 +39,7 @@ class If extends Tag {
         }
         result += ')';
 
-        let body = this.renderChildren();
+        let body = this.renderChildren(this.element.children, this.offset);
         result += '{\n';
         if (this.element.children && this.element.children.length) {
             result += body + '\n' + this.renderOffset();
@@ -51,7 +51,7 @@ class If extends Tag {
                 const TailHandler = resolveTagHandler(element.tag);
                 if (TailHandler) {
                     let tag = new TailHandler(element);
-                    // tag.setOffset(this.offset + 1);
+                    tag.setOffset(this.offset);
                     return tag.renderCode();
                 }
                 return '';
