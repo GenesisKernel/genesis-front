@@ -54,10 +54,10 @@ const txPrepareEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrep
             const validatingHeader = stripHeader(forSign, prepare.request_id, prepare.time);
             const signParams = {};
 
-            const validatingNodesCount = Math.min(state.engine.fullNodes.length, 3);
+            const validatingNodesCount = Math.min(state.storage.fullNodes.length, 3);
 
             return NodeObservable({
-                nodes: state.engine.fullNodes,
+                nodes: state.storage.fullNodes,
                 count: validatingNodesCount,
                 concurrency: 3,
                 api
