@@ -17,6 +17,45 @@
 import GenesisAPI, { IRequestTransport, TRequestMethod } from './';
 import { IContentRequest } from 'genesis/api';
 
+class FormDataMock implements FormData {
+    private _values: { [key: string]: any } = {};
+
+    public append(name: string, value: string | Blob, fileName?: string) {
+        this.set(name, value, fileName);
+    }
+
+    delete(name: string) {
+        delete this._values[name];
+    }
+
+    get(name: string) {
+        return this._values[name];
+    }
+
+    getAll(name: string) {
+        return this._values[name];
+    }
+
+    has(name: string) {
+        return !!this._values[name];
+    }
+
+    set(name: string, value: string | Blob, fileName?: string) {
+        if (value instanceof Blob) {
+            this._values[name] = {
+                type: 'file',
+                value,
+                fileName
+            };
+        }
+        else {
+            this._values[name] = String(value);
+        }
+    }
+}
+
+(window as any).FormData = FormDataMock;
+
 interface IMockTransportResponse {
     __requestUrl: string;
     method: TRequestMethod;

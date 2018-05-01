@@ -14,12 +14,15 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import actionCreatorFactory from 'typescript-fsa';
-import { IAccount } from 'genesis/auth';
+import React from 'react';
+import QRCodeNative from 'qrcode.react';
 
-const actionCreator = actionCreatorFactory('storage');
-export const saveLocale = actionCreator<string>('SAVE_LOCALE');
-export const saveAccount = actionCreator<IAccount>('SAVE_ACCOUNT');
-export const removeAccount = actionCreator<IAccount>('REMOVE_ACCOUNT');
-export const saveNavigationSize = actionCreator<number>('SAVE_NAVIGATION_SIZE');
-export const mergeFullNodes = actionCreator<string[]>('MERGE_FULL_NODES');
+export interface IQRCodeProps {
+    text?: string;
+}
+
+const QRCode: React.SFC<IQRCodeProps> = props => (
+    <QRCodeNative value={props.text || ''} />
+);
+
+export default QRCode;

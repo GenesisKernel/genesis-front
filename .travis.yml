@@ -6,5 +6,5 @@ cache:
   - node_modules
 script:
   - yarn install
-  - yarn test
+  - CI=true yarn test --passWithNoTests --ci
   - REACT_APP_API_URL=159.65.200.225:7001 yarn build

@@ -39,6 +39,7 @@ import Map from './handlers/Map';
 import MenuItem from './handlers/MenuItem';
 import MenuGroup from './handlers/MenuGroup';
 import P, { PDnD } from './handlers/P';
+import QRCode from './handlers/QRCode';
 import RadioGroup, { RadioGroupDnD } from './handlers/RadioGroup';
 import Range from './handlers/Range';
 import Select from './handlers/Select';
@@ -70,6 +71,7 @@ const handlers = {
     'menuitem': MenuItem,
     'menugroup': MenuGroup,
     'p': P,
+    'qrcode': QRCode,
     'radiogroup': RadioGroup,
     'range': Range,
     'select': Select,

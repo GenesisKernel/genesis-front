@@ -14,12 +14,15 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import actionCreatorFactory from 'typescript-fsa';
-import { IAccount } from 'genesis/auth';
+import { State } from '../reducer';
+import { mergeFullNodes } from '../actions';
+import { Reducer } from 'modules';
 
-const actionCreator = actionCreatorFactory('storage');
-export const saveLocale = actionCreator<string>('SAVE_LOCALE');
-export const saveAccount = actionCreator<IAccount>('SAVE_ACCOUNT');
-export const removeAccount = actionCreator<IAccount>('REMOVE_ACCOUNT');
-export const saveNavigationSize = actionCreator<number>('SAVE_NAVIGATION_SIZE');
-export const mergeFullNodes = actionCreator<string[]>('MERGE_FULL_NODES');
+const mergeFullNodesHandler: Reducer<typeof mergeFullNodes, State> = (state, payload) => ({
+    ...state,
+    fullNodes: state.fullNodes ? payload.filter(l =>
+        -1 === state.fullNodes.indexOf(l)
+    ) : payload
+});
+
+export default mergeFullNodesHandler;
