@@ -21,10 +21,17 @@ import { txExec, txPrepare } from '../actions';
 import ModalObservable from 'modules/modal/util/ModalObservable';
 import NodeObservable from 'modules/engine/util/NodeObservable';
 
-const stripHeader = (forsign: string, requestID: string, timestamp: string) =>
-    forsign
-        .replace(requestID, 'REQUEST_ID')
-        .replace(new RegExp(timestamp, 'g'), 'REQUEST_TS');
+// 10 seconds max jitter between tx header validation
+const MAX_FAULT_TIME = 10;
+
+const dissectHeader = (forsign: string) => {
+    const matches = /([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}),[0-9]+,([0-9]+),(.*)/i.exec(forsign);
+    return {
+        requestID: matches[1],
+        timestamp: parseInt(matches[2], 10),
+        body: matches[3]
+    };
+};
 
 const txPrepareEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrepare)
     .flatMap(action => {
@@ -51,7 +58,7 @@ const txPrepareEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrep
 
         return Observable.fromPromise(client.txPrepare(txCall)).flatMap(prepare => {
             let forSign = prepare.forsign;
-            const validatingHeader = stripHeader(forSign, prepare.request_id, prepare.time);
+            const validatingHeader = dissectHeader(forSign);
             const signParams = {};
 
             const validatingNodesCount = Math.min(state.storage.fullNodes.length, 3);
@@ -60,6 +67,7 @@ const txPrepareEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrep
                 nodes: state.storage.fullNodes,
                 count: validatingNodesCount,
                 concurrency: 3,
+                timeout: MAX_FAULT_TIME * 1000,
                 api
 
             }).toArray().flatMap(nodes =>
@@ -81,9 +89,8 @@ const txPrepareEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrep
 
                 ).toArray().flatMap(headers => {
                     for (let i = 0; i < headers.length; i++) {
-                        const header = headers[i];
-
-                        if (validatingHeader !== stripHeader(header.forsign, header.request_id, header.time)) {
+                        const header = dissectHeader(headers[i].forsign);
+                        if (header.body !== validatingHeader.body || MAX_FAULT_TIME < Math.abs(header.timestamp - validatingHeader.timestamp)) {
                             return Observable.throw({
                                 error: 'E_INVALIDATED'
                             });
