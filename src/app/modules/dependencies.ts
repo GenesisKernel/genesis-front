@@ -44,7 +44,7 @@ const storeDependencies: IStoreDependencies = {
         apiEndpoint,
         session: params.sessionToken
     }),
-    defaultKey: '04e5a87a96a445cb55a214edaad3661018061ef2936e63a0a93bdb76eb28251c1f',
+    defaultKey: 'e5a87a96a445cb55a214edaad3661018061ef2936e63a0a93bdb76eb28251c1f',
     constructorModule
 };
 
