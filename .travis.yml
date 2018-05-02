@@ -7,4 +7,12 @@ cache:
 script:
   - yarn install
   - CI=true yarn test --passWithNoTests --ci
-  - REACT_APP_API_URL=159.65.200.225:7001 yarn build
+  - yarn build
+deploy:
+  provider: pages
+  skip-cleanup: true
+  keep-history: true
+  target-branch: gh-pages
+  github-token: $GITHUB_TOKEN
+  on:
+    branch: master
