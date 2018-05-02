@@ -30,7 +30,7 @@ const fullNodesFallback = ['http://127.0.0.1:7079'];
 const initializeEpic: Epic = (action$, store, { api, defaultKey }) => action$.ofAction(initialize.started)
     .flatMap(action => {
         const requestUrl = platform.select({
-            web: urlJoin(location.origin, 'settings.json'),
+            web: urlJoin(process.env.PUBLIC_URL || location.origin, 'settings.json'),
             desktop: './settings.json'
         });
 
