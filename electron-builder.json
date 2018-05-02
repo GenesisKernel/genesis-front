@@ -1,0 +1,13 @@
+{
+    "productName": "Genesis",
+    "appId": "space.genesis.molis",
+    "files": [
+        "app/",
+        "electron/"
+    ],
+    "directories": {
+        "app": "build",
+        "buildResources": "src/resources",
+        "output": "releases"
+    }
+}
