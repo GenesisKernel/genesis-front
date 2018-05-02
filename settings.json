@@ -1,1 +1,1 @@
-front.apla.io - echo {"fullNodes":["https://testnet0.apla.io:7079","https://testnet1.apla.io:7079","https://testnet2.apla.io:7079"]}
+{"fullNodes":["https://testnet0.apla.io:7079","https://testnet1.apla.io:7079","https://testnet2.apla.io:7079"]}
