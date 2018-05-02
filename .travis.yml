@@ -9,7 +9,7 @@ script:
   - CI=true yarn test --passWithNoTests --ci
   - yarn build
 before_deploy:
-  - echo "front.apla.io" > ./build/CNAME
+  - echo '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Genesis</title><script type="text/javascript">var segmentCount=0;var l=window.location;l.replace(l.protocol+'\''//'\''+l.hostname+(l.port ? '\'':'\'' + l.port : '\'''\'')+l.pathname.split('\''/'\'').slice(0,1+segmentCount).join('\''/'\'')+'\''/?p=/'\''+l.pathname.slice(1).split('\''/'\'').slice(segmentCount).join('\''/'\'').replace(/&/g,'\''~and~'\'')+(l.search ? '\''&q='\''+l.search.slice(1).replace(/&/g,'\''~and~'\'') : '\'''\'')+l.hash);</script></head><body></body></html>' > ./build/404.html
   - echo \{\"fullNodes\":[\"https://testnet0.apla.io:7079\",\"https://testnet1.apla.io:7079\",\"https://testnet2.apla.io:7079\"]\} > ./build/settings.json
 deploy:
   provider: pages
@@ -17,6 +17,7 @@ deploy:
   keep-history: true
   target-branch: gh-pages
   local-dir: build
+  fqdn: front.apla.io
   github-token: $GITHUB_TOKEN
   on:
     branch: master
