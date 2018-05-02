@@ -7,7 +7,7 @@ cache:
 script:
   - yarn install
   - CI=true yarn test --passWithNoTests --ci
-  - yarn build
+  - PUBLIC_URL=https://genesiskernel.github.io/genesis-front/ yarn build
 deploy:
   provider: pages
   skip-cleanup: true
