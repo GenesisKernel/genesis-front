@@ -8,6 +8,8 @@ script:
   - yarn install
   - CI=true yarn test --passWithNoTests --ci
   - PUBLIC_URL=https://genesiskernel.github.io/genesis-front/ yarn build
+before_deploy:
+  - echo \{\"fullNodes\":[\"https://testnet0.apla.io:7079\",\"https://testnet1.apla.io:7079\",\"https://testnet2.apla.io:7079\"]\} > ./build/settings.json
 deploy:
   provider: pages
   skip-cleanup: true
