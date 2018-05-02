@@ -25,6 +25,7 @@ import generateSeedEpic from './epics/generateSeedEpic';
 import authErrorEpic from './epics/authErrorEpic';
 import removeAccountEpic from './epics/removeAccountEpic';
 import selectRoleEpic from './epics/selectRoleEpic';
+import logoutEmptySessionEpic from './epics/logoutEmptySessionEpic';
 
 export default combineEpics(
     authorizeEpic,
@@ -34,6 +35,7 @@ export default combineEpics(
     importSeedEpic,
     loginEpic,
     authErrorEpic,
+    logoutEmptySessionEpic,
     logoutEpic,
     removeAccountEpic,
     selectRoleEpic

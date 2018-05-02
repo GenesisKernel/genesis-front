@@ -14,15 +14,20 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { State } from '../reducer';
-import { mergeFullNodes } from '../actions';
-import { Reducer } from 'modules';
+import { Epic } from 'modules';
+import { logout } from '../actions';
+import { Observable } from 'rxjs/Observable';
+import { initialize } from 'modules/engine/actions';
 
-const mergeFullNodesHandler: Reducer<typeof mergeFullNodes, State> = (state, payload) => ({
-    ...state,
-    fullNodes: payload.filter((value, index, self) => {
-        return self.indexOf(value) === index;
-    })
-});
+const logoutEmptySessionEpic: Epic = (action$, store) => action$.ofAction(initialize.done)
+    .flatMap(action => {
+        const state = store.getState();
+        if (!state.auth.session && state.auth.isAuthenticated) {
+            return Observable.of(logout.started(null));
+        }
+        else {
+            return Observable.empty<never>();
+        }
+    });
 
-export default mergeFullNodesHandler;
+export default logoutEmptySessionEpic;
