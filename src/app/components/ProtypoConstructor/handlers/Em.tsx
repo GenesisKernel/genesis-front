@@ -22,7 +22,7 @@ import * as classnames from 'classnames';
 import ContentEditable from 'react-contenteditable';
 import EditableBlock from './EditableBlock';
 
-class P extends EditableBlock {
+class Em extends EditableBlock {
     render() {
         const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
 
@@ -33,7 +33,7 @@ class P extends EditableBlock {
         });
 
         return connectDragPreview(connectDropTarget(
-            <span>
+            <span style={{display: 'inline-block'}}>
                 <TagWrapper
                     display="inline"
                     selected={this.props.selected}
@@ -46,17 +46,17 @@ class P extends EditableBlock {
                 >
                 {this.hasChildrenText() ? (
                     <ContentEditable
-                        tagName="p"
+                        tagName="em"
                         className={classes}
                         html={this.props.childrenText}
                         onChange={this.handleChange.bind(this)}
                     />
                 ) : (
-                    <div
+                    <em
                         className={classes}
                     >
                         {this.props.children}
-                    </div>
+                    </em>
                 )}
                 </TagWrapper>
             </span>
@@ -64,4 +64,4 @@ class P extends EditableBlock {
     }
 }
 
-export default DnDComponent(StyledComponent(P));
+export default DnDComponent(StyledComponent(Em));

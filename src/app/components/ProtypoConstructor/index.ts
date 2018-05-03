@@ -16,12 +16,13 @@
 
 import ProtypoConstructor from './ProtypoConstructor';
 import Button from './handlers/Button';
-// import { DBFindDnD } from './handlers/DBFind';
-// import IfDnD from './handlers/If';
-// import ElseIfDnD from './handlers/ElseIf';
-// import ElseDnD from './handlers/Else';
+import If from './handlers/If';
+import ElseIf from './handlers/ElseIf';
+import Else from './handlers/Else';
 import Div from './handlers/Div';
-// import { EmDnD } from './handlers/Em';
+import Span from './handlers/Span';
+import Strong from './handlers/Strong';
+import Em from './handlers/Em';
 // import { FormDnD } from './handlers/Form';
 // import { ImageDnD } from './handlers/Image';
 // import { ImageInputDnD } from './handlers/ImageInput';
@@ -29,19 +30,19 @@ import Div from './handlers/Div';
 // import { LabelDnD } from './handlers/Label';
 import P from './handlers/P';
 // import { RadioGroupDnD } from './handlers/RadioGroup';
-// import { SpanDnD } from './handlers/Span';
-// import { StrongDnD } from './handlers/Strong';
+
 // import { TableDnD } from './handlers/Table';
 import Logic from './handlers/Logic';
 
 const handlers = {
     'button': Button,
-    // 'dbfind': DBFindDnD,
-    // 'if': IfDnD,
-    // 'elseif': ElseIfDnD,
-    // 'else': ElseDnD,
+    'if': If,
+    'elseif': ElseIf,
+    'else': Else,
     'div': Div,
-    // 'em': EmDnD,
+    'span': Span,
+    'strong': Strong,
+    'em': Em,
     // 'form': FormDnD,
     // 'image': ImageDnD,
     // 'imageinput': ImageInputDnD,
@@ -49,8 +50,7 @@ const handlers = {
     // 'label': LabelDnD,
     'p': P,
     // 'radiogroup': RadioGroupDnD,
-    // 'span': SpanDnD,
-    // 'strong': StrongDnD,
+
     // 'table': TableDnD
 };
 

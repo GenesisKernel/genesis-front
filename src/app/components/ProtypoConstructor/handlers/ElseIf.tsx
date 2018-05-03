@@ -15,38 +15,19 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
+import * as classnames from 'classnames';
 import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
-import * as classnames from 'classnames';
+import EditableBlock, { IEditableBlockProps } from './EditableBlock';
 import Switch from 'components/Main/Admin/Interface/Constructor/Switch';
-import { IConstructorElementProps } from 'genesis/editor';
 
-export interface IIfProps extends IConstructorElementProps {
-    className?: string;
-    class?: string;
-    tail?: any;
-}
-
-interface IIfState {
-    condition: boolean;
-}
-
-class If extends React.Component<IIfProps, IIfState> {
-    constructor(props: IIfProps) {
+class ElseIf extends EditableBlock {
+    constructor(props: IEditableBlockProps) {
         super(props);
         this.state = {
             condition: true
         };
-    }
-
-    onClick(e: any) {
-        e.stopPropagation();
-        this.props.selectTag(this.props.tag);
-    }
-
-    removeTag() {
-        this.props.removeTag({ tag: this.props.tag });
     }
 
     toggleCondition() {
@@ -56,9 +37,7 @@ class If extends React.Component<IIfProps, IIfState> {
     }
 
     render() {
-        if (!this.props.logic) {
-            return null;
-        }
+
         const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
 
         const classes = classnames({
@@ -75,12 +54,12 @@ class If extends React.Component<IIfProps, IIfState> {
                     onClick={this.onClick.bind(this)}
                     removeTag={this.removeTag.bind(this)}
                     connectDragSource={connectDragSource}
-                    canMove={true}
+                    canMove={false}
                 >
                 <div
                     className={classes}
                 >
-                    <span style={{'backgroundColor': '#FFCC66'}}>If
+                    <span style={{'backgroundColor': '#FFCC66'}}>ElseIf
                         <Switch
                             initialValue={this.state.condition}
                             onValue={true}
@@ -88,9 +67,10 @@ class If extends React.Component<IIfProps, IIfState> {
                             onChange={this.toggleCondition.bind(this)}
                         /> &#123;
                     </span>
-                    {this.state.condition && (<div>{this.props.children} </div>) || (<span>...</span>)}
+                    <div>
+                        {this.state.condition && this.props.children}
+                    </div>
                     <span style={{'backgroundColor': '#FFCC66'}}>&#125;</span>
-                    {!this.state.condition && this.props.tail}
                 </div>
                 </TagWrapper>
             </span>
@@ -98,4 +78,4 @@ class If extends React.Component<IIfProps, IIfState> {
     }
 }
 
-export default DnDComponent(StyledComponent(If));
+export default DnDComponent(StyledComponent(ElseIf));

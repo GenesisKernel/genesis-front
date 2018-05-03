@@ -132,43 +132,14 @@ class Protypo extends React.Component<IProtypoProps> {
                 return element.text;
 
             default:
-                const Handler = resolveHandler(element.tag, this.props.editable);
+                const Handler = resolveHandler(element.tag);
                 const func = resolveFunction(element.tag);
                 if (Handler) {
-                    const selected = this.props.selectedTag && this.props.selectedTag.id === element.id;
-
                     if (-1 !== contextDefinitions[this.props.context].disabledHandlers.indexOf(element.tag)) {
                         return null;
                     }
                     else {
                         const key = optionalKey || (this._lastID++).toString();
-
-                        if (element.tag === 'if') {
-                            return (
-                                <Handler
-                                    {...element.attr}
-                                    key={key}
-                                    id={key}
-                                    tag={element}
-                                    childrenTree={element.children}
-                                    childrenText={element.childrenText}
-                                    editable={this.props.editable}
-                                    changePage={this.props.changePage}
-                                    setTagCanDropPosition={this.props.setTagCanDropPosition}
-                                    addTag={this.props.addTag}
-                                    moveTag={this.props.moveTag}
-                                    copyTag={this.props.copyTag}
-                                    removeTag={this.props.removeTag}
-                                    selectTag={this.props.selectTag}
-                                    selected={selected}
-                                    logic={this.props.logic}
-                                    tail={this.renderElements(element.tail)}
-                                >
-
-                                    {this.renderElements(element.children)}
-                                </Handler>
-                            );
-                        }
 
                         return (
                             <Handler
@@ -177,17 +148,6 @@ class Protypo extends React.Component<IProtypoProps> {
                                 id={key}
                                 tag={element}
                                 childrenTree={element.children}
-                                childrenText={element.childrenText}
-                                editable={this.props.editable}
-                                changePage={this.props.changePage}
-                                setTagCanDropPosition={this.props.setTagCanDropPosition}
-                                addTag={this.props.addTag}
-                                moveTag={this.props.moveTag}
-                                copyTag={this.props.copyTag}
-                                removeTag={this.props.removeTag}
-                                selectTag={this.props.selectTag}
-                                selected={selected}
-                                logic={this.props.logic}
                             >
                                 {this.renderElements(element.children)}
                             </Handler>
@@ -265,13 +225,6 @@ class Protypo extends React.Component<IProtypoProps> {
             return React.cloneElement(this.props.wrapper, this.props.wrapper.props, children);
         }
         else {
-            if (this.props.editable) {
-                return (
-                    <div>
-                        {children}
-                    </div>
-                );
-            }
             return (
                 <div className="fullscreen">
                     {children}

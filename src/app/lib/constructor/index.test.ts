@@ -79,7 +79,9 @@ test('Constructor module', () => {
         {
             tag: 'div',
             attr: {
-                'class': 'classname',
+                'class': 'classname'
+            },
+            sysAttr: {
                 canDropPosition: 'inside'
             },
             children: [
@@ -164,7 +166,9 @@ test('Constructor module', () => {
         {
             tag: 'div',
             attr: {
-                'class': 'classname',
+                'class': 'classname'
+            },
+            sysAttr: {
                 canDropPosition: 'inside'
             },
             children: [
@@ -212,8 +216,10 @@ test('Constructor module', () => {
         },
         parent: {
             attr: {
-                canDropPosition: 'inside',
                 class: 'classname'
+            },
+            sysAttr: {
+                canDropPosition: 'inside'
             },
             children: [
                 {
@@ -440,7 +446,9 @@ test('Constructor module', () => {
             tag: {
                 tag: 'div',
                 attr: {
-                    'class': 'classname',
+                    'class': 'classname'
+                },
+                sysAttr: {
                     canDropPosition: 'inside'
                 },
                 children: [

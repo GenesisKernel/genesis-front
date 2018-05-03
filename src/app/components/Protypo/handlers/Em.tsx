@@ -15,94 +15,23 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
-import TagWrapper from '../components/TagWrapper';
-import DnDComponent from './DnDComponent';
-import * as classnames from 'classnames';
-import { IConstructorElementProps } from 'genesis/editor';
-import ContentEditable from 'react-contenteditable';
 
-export interface IEmProps extends IConstructorElementProps {
+export interface IEmProps {
     'className'?: string;
     'class'?: string;
-    'childrenText'?: string;
 }
 
-interface IEmState {
-}
-
-class Em extends React.Component<IEmProps, IEmState> {
-
-    constructor(props: IEmProps) {
-        super(props);
-    }
-
-    onPaste(e: any) {
-        OnPasteStripFormatting(this, e);
-    }
-
-    onClick(e: any) {
-        e.stopPropagation();
-        this.props.selectTag(this.props.tag);
-    }
-
-    handleChange(e: any) {
-        this.props.changePage({text: e.target.value, tagID: this.props.tag.id});
-    }
-
-    removeTag() {
-        this.props.removeTag({ tag: this.props.tag });
-    }
-
+class Em extends React.Component<IEmProps> {
     render() {
-        if (this.props.editable) {
-            const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
-
-            const classes = classnames({
-                [this.props.class]: true,
-                [this.props.className]: true,
-                'b-selected': this.props.selected
-            });
-
-            return connectDragPreview(connectDropTarget(
-                <span style={{display: 'inline-block'}}>
-                    <TagWrapper
-                        display="inline"
-                        selected={this.props.selected}
-                        canDrop={isOver}
-                        canDropPosition={this.props.canDropPosition}
-                        onClick={this.onClick.bind(this)}
-                        removeTag={this.removeTag.bind(this)}
-                        connectDragSource={connectDragSource}
-                        canMove={true}
-                    >
-                    {(this.props.selected && this.props.childrenText !== null && this.props.childrenText.length >= 0) ? (
-                        <ContentEditable
-                            tagName="em"
-                            className={classes}
-                            html={this.props.childrenText}
-                            onChange={this.handleChange.bind(this)}
-                        />
-                    ) : (
-                        <em
-                            className={classes}
-                        >
-                            {this.props.children}
-                        </em>
-                    )}
-                    </TagWrapper>
-                </span>
-            ));
-        }
         return (
-            <em className={[this.props.class, this.props.className].join(' ')}>
+            <em
+                className={[this.props.class, this.props.className].join(' ')}
+            >
                 {this.props.children}
             </em>
         );
-
     }
 }
 
 export default StyledComponent(Em);
-export const EmDnD = DnDComponent(StyledComponent(Em));

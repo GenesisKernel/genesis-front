@@ -17,14 +17,17 @@
 import * as React from 'react';
 import { OnPasteStripFormatting } from 'lib/constructor';
 import { IConstructorElementProps } from 'genesis/editor';
+import { TProtypoElement } from 'genesis/protypo';
 
 export interface IEditableBlockProps extends IConstructorElementProps {
     'className'?: string;
     'class'?: string;
     'childrenText'?: string;
+    'tail'?: TProtypoElement[];
 }
 
 interface IEditableBlockState {
+    condition: boolean;
 }
 
 export default class EditableBlock extends React.Component<IEditableBlockProps, IEditableBlockState> {
@@ -39,7 +42,9 @@ export default class EditableBlock extends React.Component<IEditableBlockProps, 
                 if (nextProps.childrenText.indexOf('<') === -1) {
                     return true;
                 }
-                return this.props.class !== nextProps.class;
+                return (this.props.class !== nextProps.class
+                || this.props.tail !== nextProps.tail
+                || (this.state && nextState && this.state.condition !== nextState.condition));
             }
         }
         return true;

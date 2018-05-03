@@ -86,6 +86,7 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
                 placeholder={attr.name}
                 value={this.props.tag && this.props.tag.attr && this.props.tag.attr[attr.attr] || ''}
                 onChange={this.onChange.bind(this, attr.attr)}
+                key={index}
             />
         ));
     }
