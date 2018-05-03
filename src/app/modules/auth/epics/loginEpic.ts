@@ -39,7 +39,8 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
                 client.authorize(uid.token).login({
                     publicKey,
                     signature: keyring.sign(uid.uid, privateKey),
-                    ecosystem: action.payload.account.ecosystem
+                    ecosystem: action.payload.account.ecosystem,
+                    expire: 60 * 60 * 24 * 90
 
                 }).then(loginResult =>
                     client.authorize(loginResult.token)
