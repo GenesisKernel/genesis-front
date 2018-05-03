@@ -19,7 +19,7 @@ import Button, { ButtonDnD } from './handlers/Button';
 import Code from 'components/Protypo/handlers/Code';
 import Data from './handlers/Data';
 import LogicDnD from './handlers/Logic';
-import DBFind, { DBFindDnD } from './handlers/DBFind';
+import DBFind from './handlers/DBFind';
 import IfDnD from './handlers/If';
 import ElseIfDnD from './handlers/ElseIf';
 import ElseDnD from './handlers/Else';
@@ -82,7 +82,6 @@ const handlers = {
 
 const handlersDnD = {
     'button': ButtonDnD,
-    'dbfind': DBFindDnD,
     'if': IfDnD,
     'elseif': ElseIfDnD,
     'else': ElseDnD,
