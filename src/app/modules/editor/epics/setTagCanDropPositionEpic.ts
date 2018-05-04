@@ -29,11 +29,11 @@ const setTagCanDropPositionEpic: Epic<Action, IRootState> =
 
             let tag = constructorModule.findTagById(jsonData, action.payload.tagID).el;
             if (tag) {
-                if (!tag.attr) {
-                    tag.attr = {};
+                if (!tag.sysAttr) {
+                    tag.sysAttr = {};
                 }
                 if ('string' === typeof action.payload.position) {
-                    tag.attr.canDropPosition = action.payload.position;
+                    tag.sysAttr.canDropPosition = action.payload.position;
                 }
             }
 
