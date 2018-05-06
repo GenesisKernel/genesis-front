@@ -1,3 +1,4 @@
+version: "2"
 plugins:
   rubocop:
     enabled: true
@@ -17,8 +18,5 @@ plugins:
     - "**/*.d.ts"
     - "public/vs"
     - "src/app/styles/built"
-    - "src/app/components/Main/Admin"
-    - "src/app/containers/Main/containers/Admin"
-    - "src/app/modules/admin"
   eslint:
-   	enabled: true
+    enabled: true
