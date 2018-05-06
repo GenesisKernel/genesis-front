@@ -14,20 +14,30 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
+import { Action } from 'typescript-fsa';
 import { Epic } from 'modules';
 import { logout } from '../actions';
-import { Observable } from 'rxjs/Observable';
-import { initialize } from 'modules/engine/actions';
 
-const logoutEmptySessionEpic: Epic = (action$, store) => action$.ofAction(initialize.done)
-    .flatMap(action => {
-        const state = store.getState();
-        if (!state.auth.session && state.auth.isAuthenticated) {
-            return Observable.of(logout.started(null));
+const logoutEmptySessionEpic: Epic = (action$, store) => action$
+    .filter(l => {
+        const action = l as Action<any>;
+
+        if (store.getState().auth.isAuthenticated && action.payload && action.payload.error) {
+            switch (action.payload.error) {
+                case 'E_OFFLINE':
+                case 'E_TOKENEXPIRED':
+                    return true;
+
+                default:
+                    return false;
+            }
         }
         else {
-            return Observable.empty<never>();
+            return false;
         }
-    });
+
+    }).map(action =>
+        logout.started(null)
+    );
 
 export default logoutEmptySessionEpic;
