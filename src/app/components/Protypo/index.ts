@@ -18,11 +18,7 @@ import Protypo from './Protypo';
 import Button from './handlers/Button';
 import Code from 'components/Protypo/handlers/Code';
 import Data from './handlers/Data';
-// import LogicDnD from './handlers/Logic';
 import DBFind from './handlers/DBFind';
-// import IfDnD from './handlers/If';
-// import ElseIfDnD from './handlers/ElseIf';
-// import ElseDnD from './handlers/Else';
 import Div from './handlers/Div';
 import Em from './handlers/Em';
 import ForList from './handlers/ForList';
@@ -79,25 +75,6 @@ const handlers = {
     'strong': Strong,
     'table': Table
 };
-
-// const handlersDnD = {
-//     'button': ButtonDnD,
-//     'if': IfDnD,
-//     'elseif': ElseIfDnD,
-//     'else': ElseDnD,
-//     'div': DivDnD,
-//     'em': EmDnD,
-//     'form': FormDnD,
-//     'image': ImageDnD,
-//     'imageinput': ImageInputDnD,
-//     'input': InputDnD,
-//     'label': LabelDnD,
-//     // 'p': PDnD,
-//     'radiogroup': RadioGroupDnD,
-//     'span': SpanDnD,
-//     'strong': StrongDnD,
-//     'table': TableDnD
-// };
 
 const functions = {
     'settitle': setTitle,

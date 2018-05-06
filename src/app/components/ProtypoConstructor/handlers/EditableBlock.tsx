@@ -24,6 +24,14 @@ export interface IEditableBlockProps extends IConstructorElementProps {
     'class'?: string;
     'childrenText'?: string;
     'tail'?: TProtypoElement[];
+
+    'src'?: string;
+    'alt'?: string;
+    'for'?: string;
+    'name'?: string;
+    'disabled'?: string;
+    'placeholder'?: string;
+    'type'?: string;
 }
 
 interface IEditableBlockState {

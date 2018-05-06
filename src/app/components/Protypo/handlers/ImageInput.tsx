@@ -15,14 +15,10 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import * as classnames from 'classnames';
 
 import Validation from 'components/Validation';
-import TagWrapper from '../components/TagWrapper';
-import DnDComponent from './DnDComponent';
-import { IConstructorElementProps } from 'genesis/editor';
 
-export interface IInputProps extends IConstructorElementProps {
+export interface IInputProps {
     'format'?: string;
     'name'?: string;
     'width'?: string;
@@ -52,53 +48,6 @@ const ImageInput: React.SFC<IInputProps> = (props) => {
         width = null;
     }
 
-    const onClick = (e: any) => {
-        e.stopPropagation();
-        e.preventDefault();
-        props.selectTag(props.tag);
-    };
-
-    const removeTag = () => {
-        props.removeTag({ tag: props.tag });
-    };
-
-    if (props.editable) {
-
-        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = props;
-
-        const classes = classnames({
-            'b-selected': props.selected,
-            'input-group': true
-        });
-
-        return connectDragPreview(connectDropTarget(
-            <span>
-                <TagWrapper
-                    display="block"
-                    selected={props.selected}
-                    canDrop={isOver}
-                    canDropPosition={props.canDropPosition}
-                    onClick={onClick}
-                    removeTag={removeTag}
-                    connectDragSource={connectDragSource}
-                    canMove={true}
-                >
-                    <div
-                        className={classes}
-                    >
-                        <input type="text" className="form-control" readOnly={true}/>
-                        <div className="group-span-filestyle input-group-btn">
-                            <button className="btn btn-default" type="button">
-                                <span className="icon-span-filestyle glyphicon glyphicon-folder-open" />
-                                <span className="buttonText" />
-                            </button>
-                        </div>
-                    </div>
-                </TagWrapper>
-            </span>
-        ));
-    }
-
     return (
         <Validation.components.ValidatedImage
             format={props.format as any}
@@ -110,4 +59,3 @@ const ImageInput: React.SFC<IInputProps> = (props) => {
 };
 
 export default ImageInput;
-export const ImageInputDnD = DnDComponent(ImageInput);

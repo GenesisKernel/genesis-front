@@ -23,11 +23,11 @@ import Div from './handlers/Div';
 import Span from './handlers/Span';
 import Strong from './handlers/Strong';
 import Em from './handlers/Em';
-// import { FormDnD } from './handlers/Form';
-// import { ImageDnD } from './handlers/Image';
-// import { ImageInputDnD } from './handlers/ImageInput';
-// import { InputDnD } from './handlers/Input';
-// import { LabelDnD } from './handlers/Label';
+import Form from './handlers/Form';
+import Image from './handlers/Image';
+import ImageInput from './handlers/ImageInput';
+import Input from './handlers/Input';
+import Label from './handlers/Label';
 import P from './handlers/P';
 // import { RadioGroupDnD } from './handlers/RadioGroup';
 
@@ -43,11 +43,11 @@ const handlers = {
     'span': Span,
     'strong': Strong,
     'em': Em,
-    // 'form': FormDnD,
-    // 'image': ImageDnD,
-    // 'imageinput': ImageInputDnD,
-    // 'input': InputDnD,
-    // 'label': LabelDnD,
+    'form': Form,
+    'image': Image,
+    'imageinput': ImageInput,
+    'input': Input,
+    'label': Label,
     'p': P,
     // 'radiogroup': RadioGroupDnD,
 
