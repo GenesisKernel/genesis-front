@@ -147,6 +147,7 @@ class Protypo extends React.Component<IProtypoProps> {
                             return (
                                 <Handler
                                     {...element.attr}
+                                    {...element.sysAttr}
                                     key={key}
                                     id={key}
                                     tag={element}
@@ -173,6 +174,7 @@ class Protypo extends React.Component<IProtypoProps> {
                         return (
                             <Handler
                                 {...element.attr}
+                                {...element.sysAttr}
                                 key={key}
                                 id={key}
                                 tag={element}

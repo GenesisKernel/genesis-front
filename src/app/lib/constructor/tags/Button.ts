@@ -25,6 +25,7 @@ class Button extends Tag {
         this.attr = {
             'class': 'Class',
             'page': 'Page',
+            'pageparams': 'PageParams',
             'contract': 'Contract'
         };
         this.editProps = ['class', 'btn', 'align', 'transform', 'wrap'];
