@@ -12,6 +12,7 @@
 # production
 /build
 /releases
+/public/settings.json
 config.json
 
 # build artifacts

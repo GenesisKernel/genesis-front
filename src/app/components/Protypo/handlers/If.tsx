@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import * as React from 'react';
+import React from 'react';
 import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
-import * as classnames from 'classnames';
-import Switch from 'components/Main/Admin/Interface/Constructor/Switch';
+import classnames from 'classnames';
+import Switch from 'components/Main/Editor/Designer/Switch';
 import { IConstructorElementProps } from 'genesis/editor';
 
 export interface IIfProps extends IConstructorElementProps {
@@ -77,10 +77,10 @@ class If extends React.Component<IIfProps, IIfState> {
                     connectDragSource={connectDragSource}
                     canMove={true}
                 >
-                <div
-                    className={classes}
-                >
-                    <span style={{'backgroundColor': '#FFCC66'}}>If
+                    <div
+                        className={classes}
+                    >
+                        <span style={{ 'backgroundColor': '#FFCC66' }}>If
                         <Switch
                             initialValue={this.state.condition}
                             onValue={true}
@@ -88,10 +88,10 @@ class If extends React.Component<IIfProps, IIfState> {
                             onChange={this.toggleCondition.bind(this)}
                         /> &#123;
                     </span>
-                    {this.state.condition && (<div>{this.props.children} </div>) || (<span>...</span>)}
-                    <span style={{'backgroundColor': '#FFCC66'}}>&#125;</span>
-                    {!this.state.condition && this.props.tail}
-                </div>
+                        {this.state.condition && (<div>{this.props.children} </div>) || (<span>...</span>)}
+                        <span style={{ 'backgroundColor': '#FFCC66' }}>&#125;</span>
+                        {!this.state.condition && this.props.tail}
+                    </div>
                 </TagWrapper>
             </span>
         ));

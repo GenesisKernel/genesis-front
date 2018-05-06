@@ -20,25 +20,17 @@ import { Route } from 'react-router-dom';
 import { IRootState } from 'modules';
 import { reloadPage, navigationToggle, renderSection, navigatePage, closeSection } from 'modules/content/actions';
 
-import Main, { IMainProps } from 'components/Main';
-import DefaultPage from 'containers/Main/containers/DefaultPage';
-import PageHistory from 'components/Main/Admin/Interface/PageHistory';
-import MenuHistory from 'components/Main/Admin/Interface/MenuHistory';
-import Page from 'containers/Main/containers/Page';
-import Backup from 'containers/Main/containers/Backup';
-import NotFound from 'components/NotFound';
 import { AnimatedSwitch } from 'components/Animation';
+import Main, { IMainProps } from 'components/Main';
+import DefaultPage from 'containers/Main/DefaultPage';
+import Page from 'containers/Main/Page';
+import NotFound from 'components/NotFound';
 
 const MainContainer: React.SFC<IMainProps> = props => (
     <Main {...props}>
         <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
             <Route exact path="/" component={DefaultPage} />
             <Route exact path="/:section/:pageName?" component={Page} />
-
-            <Route exact path="/admin/interface/page/history/:pageID-:pageName" render={routeProps => <PageHistory id={routeProps.match.params.pageID} name={routeProps.match.params.pageName} />} />
-            <Route exact path="/admin/interface/menu/history/:menuID-:menuName" render={routeProps => <MenuHistory id={routeProps.match.params.menuID} name={routeProps.match.params.menuName} />} />
-
-            <Route exact path="/backup" component={Backup} />
             <Route path="*" render={() => <NotFound main />} />
         </AnimatedSwitch>
     </Main>
