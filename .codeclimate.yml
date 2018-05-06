@@ -14,9 +14,8 @@ plugins:
     - "**/tests/"
     - "Tests/"
     - "**/vendor/"
-    - "**/*_test.go"
     - "**/*.d.ts"
-    - "public/vs"
-    - "src/app/styles/built"
+    - "public/vs/"
+    - "src/app/styles/built/"
   eslint:
     enabled: true
