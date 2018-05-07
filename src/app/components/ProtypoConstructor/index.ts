@@ -29,9 +29,9 @@ import ImageInput from './handlers/ImageInput';
 import Input from './handlers/Input';
 import Label from './handlers/Label';
 import P from './handlers/P';
-// import { RadioGroupDnD } from './handlers/RadioGroup';
+import RadioGroup from './handlers/RadioGroup';
 
-// import { TableDnD } from './handlers/Table';
+import Table from './handlers/Table';
 import Logic from './handlers/Logic';
 
 const handlers = {
@@ -49,9 +49,8 @@ const handlers = {
     'input': Input,
     'label': Label,
     'p': P,
-    // 'radiogroup': RadioGroupDnD,
-
-    // 'table': TableDnD
+    'radiogroup': RadioGroup,
+    'table': Table
 };
 
 export const resolveHandler = (name: string) => {
