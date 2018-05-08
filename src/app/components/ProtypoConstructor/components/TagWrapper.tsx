@@ -182,6 +182,83 @@ class TagWrapper extends React.Component<ITagWrapperProps, ITagWrapperState> {
         this.setState(props);
     }
 
+    getCaretPosition() {
+        if (this.props.canDrop) {
+            if (this.props.canDropPosition === 'before') {
+                if (this.props.display === 'block') {
+                    return 'up';
+                }
+                if (this.props.display === 'inline') {
+                    return 'left';
+                }
+            }
+            if (this.props.canDropPosition === 'after') {
+                if (this.props.display === 'block') {
+                    return 'down';
+                }
+                if (this.props.display === 'inline') {
+                    return 'right';
+                }
+            }
+        }
+        return null;
+    }
+
+    renderCanDropPosition() {
+        switch (this.getCaretPosition()) {
+            case 'up':
+                return this.renderUp();
+            case 'left':
+                return this.renderLeft();
+            case 'down':
+                return this.renderDown();
+            case 'right':
+                return this.renderRight();
+            default:
+                return null;
+        }
+    }
+
+    renderUp() {
+        return (
+            <div className="b-can-drop-position b-can-drop-position_before">
+                <div className="b-can-drop-position__arrow">
+                    <i className="fa fa-caret-up"/>
+                </div>
+            </div>
+        );
+    }
+
+    renderLeft() {
+        return (
+            <div className="b-can-drop-position b-can-drop-position_left">
+                <div className="b-can-drop-position__arrow">
+                    <i className="fa fa-caret-left"/>
+                </div>
+            </div>
+        );
+    }
+
+    renderDown() {
+        return (
+            <div className="b-can-drop-position b-can-drop-position_after">
+                <div className="b-can-drop-position__arrow">
+                    <i className="fa fa-caret-down"/>
+                </div>
+            </div>
+        );
+    }
+
+    renderRight() {
+        return (
+            <div className="b-can-drop-position b-can-drop-position_right">
+                <div className="b-can-drop-position__arrow">
+                    <i className="fa fa-caret-right"/>
+                </div>
+            </div>
+        );
+    }
+
     render() {
         const classes = classnames({
             'b-selected-wrapper': this.props.selected,
@@ -202,34 +279,7 @@ class TagWrapper extends React.Component<ITagWrapperProps, ITagWrapperState> {
                         {this.props.canMove && this.props.connectDragSource(<span><span className="b-control fa fa-arrows b-control_move" onMouseDown={this.setDropEffect.bind(this, 'move')}/> <span className="b-control fa fa-clone" onMouseDown={this.setDropEffect.bind(this, 'copy')}/></span>)} <span className="b-control fa fa-times" onClick={this.props.removeTag.bind(this)}/>
                     </div>
                 }
-                {this.props.canDrop && this.props.canDropPosition === 'before' && this.props.display === 'block' &&
-                    <div className="b-can-drop-position b-can-drop-position_before">
-                        <div className="b-can-drop-position__arrow">
-                            <i className="fa fa-caret-up"/>
-                        </div>
-                    </div>
-                }
-                {this.props.canDrop && this.props.canDropPosition === 'before' && this.props.display === 'inline' &&
-                    <div className="b-can-drop-position b-can-drop-position_left">
-                        <div className="b-can-drop-position__arrow">
-                            <i className="fa fa-caret-left"/>
-                        </div>
-                    </div>
-                }
-                {this.props.canDrop && this.props.canDropPosition === 'after' && this.props.display === 'block' &&
-                    <div className="b-can-drop-position b-can-drop-position_after">
-                        <div className="b-can-drop-position__arrow">
-                            <i className="fa fa-caret-down"/>
-                        </div>
-                    </div>
-                }
-                {this.props.canDrop && this.props.canDropPosition === 'after' && this.props.display === 'inline' &&
-                    <div className="b-can-drop-position b-can-drop-position_right">
-                        <div className="b-can-drop-position__arrow">
-                            <i className="fa fa-caret-right"/>
-                        </div>
-                    </div>
-                }
+                {this.renderCanDropPosition()}
                 {this.props.children}
             </Wrapper>
         );
