@@ -57,6 +57,7 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
             document.execCommand(format);
         }
     }
+
     getExtraParams() {
         const Handler = resolveTagHandler(this.props.tag.tag);
         const Tag = new Handler(this.props.tag);
@@ -85,6 +86,7 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
                 placeholder={attr.name}
                 value={this.props.tag && this.props.tag.attr && this.props.tag.attr[attr.attr] || ''}
                 onChange={this.onChange.bind(this, attr.attr)}
+                key={index}
             />
         ));
     }

@@ -16,16 +16,12 @@
 
 import * as React from 'react';
 import * as _ from 'lodash';
-import * as classnames from 'classnames';
 
 import StyledComponent from './StyledComponent';
 import Validation from 'components/Validation';
 import { Validator, IValidatorGenerator } from 'components/Validation/Validators';
-import TagWrapper from '../components/TagWrapper';
-import DnDComponent from './DnDComponent';
-import { IConstructorElementProps } from 'genesis/editor';
 
-export interface IInputProps extends IConstructorElementProps {
+export interface IInputProps {
     'className'?: string;
     'class'?: string;
     'disabled'?: string;
@@ -54,50 +50,6 @@ const Input: React.SFC<IInputProps> = (props) => {
             }
         }
     });
-
-    if (props.editable) {
-
-        const onClick = (e: any) => {
-            e.stopPropagation();
-            e.preventDefault();
-            props.selectTag(props.tag);
-        };
-
-        const removeTag = () => {
-            props.removeTag({ tag: props.tag });
-        };
-
-        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = props;
-
-        const classes = classnames({
-            [props.class]: true,
-            [props.className]: true,
-            'b-selected': props.selected
-        });
-
-        return connectDragPreview(connectDropTarget(
-            <span style={{ display: 'inline-block' }}>
-                <TagWrapper
-                    display="inline"
-                    selected={props.selected}
-                    canDrop={isOver}
-                    canDropPosition={props.canDropPosition}
-                    onClick={onClick}
-                    removeTag={removeTag}
-                    connectDragSource={connectDragSource}
-                    canMove={true}
-                >
-                    <input
-                        name={props.name}
-                        className={classes}
-                        disabled={!!props.disabled}
-                        type={props.type}
-                        placeholder={props.placeholder}
-                    />
-                </TagWrapper>
-            </span>
-        ));
-    }
 
     switch (props.type) {
         case 'file':
@@ -150,4 +102,3 @@ const Input: React.SFC<IInputProps> = (props) => {
 };
 
 export default StyledComponent(Input);
-export const InputDnD = DnDComponent(StyledComponent(Input));

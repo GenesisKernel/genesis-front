@@ -15,26 +15,14 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import StyledComponent from './StyledComponent';
+import styled from 'styled-components';
 
-export interface IPProps {
-    'className'?: string;
-    'class'?: string;
+type TComponentConstructor<T> = React.ComponentClass<T & IStyledComponentProps> | React.SFC<T & IStyledComponentProps>;
+
+interface IStyledComponentProps {
+    style?: string;
 }
 
-interface IPState {
+export default function styledComponent<T>(Component: TComponentConstructor<T & IStyledComponentProps>) {
+    return styled(Component) `${props => props.style}`;
 }
-
-class P extends React.Component<IPProps, IPState> {
-    render() {
-        return (
-            <p
-                className={[this.props.class, this.props.className].join(' ')}
-            >
-                {this.props.children}
-            </p>
-        );
-    }
-}
-
-export default StyledComponent(P);

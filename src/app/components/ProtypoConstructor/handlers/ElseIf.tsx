@@ -14,38 +14,20 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import React from 'react';
+import * as React from 'react';
+import * as classnames from 'classnames';
 import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
-import classnames from 'classnames';
+import EditableBlock, { IEditableBlockProps } from './EditableBlock';
 import Switch from 'components/Main/Editor/Designer/Switch';
-import { IConstructorElementProps } from 'genesis/editor';
 
-export interface IElseIfProps extends IConstructorElementProps {
-    'className'?: string;
-    'class'?: string;
-}
-
-interface IElseIfState {
-    condition: boolean;
-}
-
-class ElseIf extends React.Component<IElseIfProps, IElseIfState> {
-    constructor(props: IElseIfProps) {
+class ElseIf extends EditableBlock {
+    constructor(props: IEditableBlockProps) {
         super(props);
         this.state = {
             condition: true
         };
-    }
-
-    onClick(e: any) {
-        e.stopPropagation();
-        this.props.selectTag(this.props.tag);
-    }
-
-    removeTag() {
-        this.props.removeTag({ tag: this.props.tag });
     }
 
     toggleCondition() {
@@ -55,9 +37,7 @@ class ElseIf extends React.Component<IElseIfProps, IElseIfState> {
     }
 
     render() {
-        if (!this.props.logic) {
-            return null;
-        }
+
         const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
 
         const classes = classnames({

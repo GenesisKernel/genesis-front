@@ -16,53 +16,18 @@
 
 import * as React from 'react';
 import StyledComponent from './StyledComponent';
-import TagWrapper from '../components/TagWrapper';
-import DnDComponent from './DnDComponent';
-import * as classnames from 'classnames';
-import ContentEditable from 'react-contenteditable';
-import EditableBlock from './EditableBlock';
 
-class Div extends EditableBlock {
+export interface IDivProps {
+    'className'?: string;
+    'class'?: string;
+}
+
+class Div extends React.Component<IDivProps> {
+    constructor(props: IDivProps) {
+        super(props);
+    }
+
     render() {
-        if (this.props.editable) {
-            const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
-
-            const classes = classnames({
-                [this.props.class]: true,
-                [this.props.className]: true,
-                'b-selected': this.props.selected
-            });
-
-            return connectDragPreview(connectDropTarget(
-                <span>
-                    <TagWrapper
-                        display="block"
-                        selected={this.props.selected}
-                        canDrop={isOver}
-                        canDropPosition={this.props.canDropPosition}
-                        onClick={this.onClick.bind(this)}
-                        removeTag={this.removeTag.bind(this)}
-                        connectDragSource={connectDragSource}
-                        canMove={true}
-                    >
-                    {this.hasChildrenText() ? (
-                        <ContentEditable
-                            tagName="div"
-                            className={classes}
-                            html={this.props.childrenText}
-                            onChange={this.handleChange.bind(this)}
-                        />
-                    ) : (
-                        <div
-                            className={classes}
-                        >
-                            {this.props.children}
-                        </div>
-                    )}
-                    </TagWrapper>
-                </span>
-            ));
-        }
         return (
             <div
                 className={[this.props.class, this.props.className].join(' ')}
@@ -74,4 +39,3 @@ class Div extends EditableBlock {
 }
 
 export default StyledComponent(Div);
-export const DivDnD = DnDComponent(StyledComponent(Div));

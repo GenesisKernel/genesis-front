@@ -80,7 +80,6 @@ test('Constructor module', () => {
             tag: 'div',
             attr: {
                 'class': 'classname'
-
             },
             sysAttr: {
                 canDropPosition: 'inside'
@@ -167,7 +166,7 @@ test('Constructor module', () => {
         {
             tag: 'div',
             attr: {
-                'class': 'classname',
+                'class': 'classname'
             },
             sysAttr: {
                 canDropPosition: 'inside'
