@@ -21,9 +21,6 @@ import { startHoverTimer, getDropPosition } from 'lib/constructor';
 
 const Source = {
     beginDrag(props: any, monitor: any, component: any) {
-
-        // findDOMNode(component).getAttribute('data-dropeffect'); // does not work :(
-        // custom function
         let dropEffect = 'move';
         const el = findDOMNode(component);
         if (el) {
@@ -35,12 +32,11 @@ const Source = {
                 }
             }
         }
-
         return {
             tag: props.tag,
             dropEffect
         };
-    },
+    }
 };
 
 const Target = {

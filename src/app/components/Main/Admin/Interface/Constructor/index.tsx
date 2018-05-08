@@ -16,8 +16,6 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
-
-// import Protypo from 'containers/Widgets/Protypo';
 import ProtypoConstructor from 'containers/Widgets/ProtypoConstructor';
 import Layout from './Layout';
 
