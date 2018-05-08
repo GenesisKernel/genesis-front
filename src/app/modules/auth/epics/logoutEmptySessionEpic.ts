@@ -14,34 +14,30 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { IRootState } from 'modules';
+import { Action } from 'typescript-fsa';
+import { Epic } from 'modules';
+import { logout } from '../actions';
 
-import AddColumn from 'components/Main/Admin/Tables/AddColumn';
+const logoutEmptySessionEpic: Epic = (action$, store) => action$
+    .filter(l => {
+        const action = l as Action<any>;
 
-export interface IAddColumnContainerProps {
-    table: string;
-}
+        if (store.getState().auth.isAuthenticated && action.payload && action.payload.error) {
+            switch (action.payload.error) {
+                case 'E_OFFLINE':
+                case 'E_TOKENEXPIRED':
+                    return true;
 
-interface IAddColumnContainerState {
+                default:
+                    return false;
+            }
+        }
+        else {
+            return false;
+        }
 
-}
+    }).map(action =>
+        logout.started(null)
+    );
 
-interface IAddColumnContainerDispatch {
-
-}
-
-const AddColumnContainer: React.SFC<IAddColumnContainerProps & IAddColumnContainerState & IAddColumnContainerDispatch> = (props) => (
-    <AddColumn table={props.table} />
-);
-
-const mapStateToProps = (state: IRootState) => ({
-
-});
-
-const mapDispatchToProps = {
-
-};
-
-export default connect<IAddColumnContainerState, IAddColumnContainerDispatch, IAddColumnContainerProps>(mapStateToProps, mapDispatchToProps)(AddColumnContainer);
+export default logoutEmptySessionEpic;

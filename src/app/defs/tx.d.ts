@@ -22,6 +22,7 @@ declare module 'genesis/tx' {
         'panic' |
         'E_CONTRACT' |
         'E_INVALID_PASSWORD' |
+        'E_INVALIDATED' |
         'E_SERVER';
 
     interface ITxResult {

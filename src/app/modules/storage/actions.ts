@@ -22,3 +22,4 @@ export const saveLocale = actionCreator<string>('SAVE_LOCALE');
 export const saveAccount = actionCreator<IAccount>('SAVE_ACCOUNT');
 export const removeAccount = actionCreator<IAccount>('REMOVE_ACCOUNT');
 export const saveNavigationSize = actionCreator<number>('SAVE_NAVIGATION_SIZE');
+export const mergeFullNodes = actionCreator<string[]>('MERGE_FULL_NODES');

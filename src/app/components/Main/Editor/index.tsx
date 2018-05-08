@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import * as React from 'react';
+import React from 'react';
 import { TEditorTab } from 'genesis/editor';
 
 import CodeEditor from 'components/Editor';
 import EditorTabs from './EditorTabs';
 import Page from 'components/Main/Page';
-import ConstructorTabbed from 'containers/Main/containers/Admin/Interface/ConstructorTabbed';
+import ConstructorTabbed from 'containers/Main/Editor/ConstructorTabbed';
 
 export interface IEditorProps {
     tabIndex: number;

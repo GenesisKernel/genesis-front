@@ -31,7 +31,7 @@ export interface IAPIDependency {
 }
 
 const storeDependencies: IStoreDependencies = {
-    api: (params: { apiHost: string, sessionToken?: string }) => new GenesisAPI({
+    api: (params: { apiHost: string, sessionToken?: string } = { apiHost: null }) => new GenesisAPI({
         transport: request => fetch(request.url, {
             method: request.method,
             headers: request.headers,
@@ -44,7 +44,7 @@ const storeDependencies: IStoreDependencies = {
         apiEndpoint,
         session: params.sessionToken
     }),
-    defaultKey: '04e5a87a96a445cb55a214edaad3661018061ef2936e63a0a93bdb76eb28251c1f',
+    defaultKey: 'e5a87a96a445cb55a214edaad3661018061ef2936e63a0a93bdb76eb28251c1f',
     constructorModule
 };
 

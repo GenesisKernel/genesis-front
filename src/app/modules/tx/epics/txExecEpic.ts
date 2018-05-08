@@ -60,14 +60,14 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
             errors.delay(2000)
 
         ).flatMap(txResult => {
-            if (!action.payload.tx.silent) {
-                toastr.success(
-                    action.payload.tx.name,
-                    `Imprinted in the blockchain (block #${txResult.blockid})`,
-                );
-            }
-
             if (txResult.blockid) {
+                if (!action.payload.tx.silent) {
+                    toastr.success(
+                        action.payload.tx.name,
+                        `Imprinted in the blockchain (block #${txResult.blockid})`,
+                    );
+                }
+
                 return Observable.of<Action>(
                     txExec.done({
                         params: action.payload,

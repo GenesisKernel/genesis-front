@@ -26,7 +26,6 @@ import { IConstructorElementProps } from 'genesis/editor';
 
 export interface IProtypoProps extends IConstructorElementProps {
     apiHost: string;
-    editable?: boolean;
     wrapper?: JSX.Element;
     context: string;
     page: string;
@@ -146,7 +145,6 @@ class Protypo extends React.Component<IProtypoProps> {
                                 {...element.attr}
                                 key={key}
                                 id={key}
-                                tag={element}
                                 childrenTree={element.children}
                             >
                                 {this.renderElements(element.children)}
@@ -184,7 +182,7 @@ class Protypo extends React.Component<IProtypoProps> {
     }
 
     renderHeading() {
-        return (this.props.context === 'page' && !this.props.editable) ? (
+        return (this.props.context === 'page') ? (
             <Heading key="func_heading">
                 <span>{this._title}</span>
                 <div className="pull-right">

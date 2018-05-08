@@ -22,7 +22,6 @@ import { reducer as toastrReducer } from 'react-redux-toastr';
 import { combineEpics } from 'redux-observable';
 import { routerReducer as router, RouterState } from 'react-router-redux';
 import { loadingBarReducer } from 'react-redux-loading-bar';
-import * as admin from './admin';
 import * as auth from './auth';
 import * as content from './content';
 import * as modal from './modal';
@@ -44,7 +43,6 @@ export type Reducer<T, S> =
 
 export interface IRootState {
     auth: auth.State;
-    admin: admin.State;
     content: content.State;
     modal: modal.State;
     engine: engine.State;
@@ -59,7 +57,6 @@ export interface IRootState {
 }
 
 export const rootEpic = combineEpics(
-    admin.epic,
     auth.epic,
     content.epic,
     engine.epic,
@@ -72,7 +69,6 @@ export const rootEpic = combineEpics(
 );
 
 export default combineReducers<IRootState>({
-    admin: admin.reducer,
     auth: auth.reducer,
     content: content.reducer,
     modal: modal.reducer,

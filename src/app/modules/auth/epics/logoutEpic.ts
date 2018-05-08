@@ -18,12 +18,10 @@ import { Action } from 'redux';
 import { Epic } from 'modules';
 import { logout, deauthorize } from '../actions';
 import { Observable } from 'rxjs/Observable';
-import { navigate } from 'modules/engine/actions';
 
 const logoutEpic: Epic = (action$, store) => action$.ofAction(logout.started)
     .flatMap(action =>
         Observable.of<Action>(
-            navigate('/'),
             deauthorize(null),
             logout.done({
                 params: action.payload,

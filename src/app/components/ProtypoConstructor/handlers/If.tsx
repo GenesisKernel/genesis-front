@@ -20,7 +20,7 @@ import StyledComponent from './StyledComponent';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import EditableBlock, { IEditableBlockProps } from './EditableBlock';
-import Switch from 'components/Main/Admin/Interface/Constructor/Switch';
+import Switch from 'components/Main/Editor/Designer/Switch';
 
 class If extends EditableBlock {
     constructor(props: IEditableBlockProps) {

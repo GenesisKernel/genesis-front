@@ -14,35 +14,15 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { IRootState } from 'modules';
-import { navigatePage } from 'modules/content/actions';
+import { State } from '../reducer';
+import { mergeFullNodes } from '../actions';
+import { Reducer } from 'modules';
 
-import Create from 'components/Main/Admin/Languages/Create';
-
-export interface ICreateContainerProps {
-
-}
-
-interface ICreateContainerState {
-
-}
-
-interface ICreateContainerDispatch {
-    navigatePage: typeof navigatePage.started;
-}
-
-const CreateContainer: React.SFC<ICreateContainerState & ICreateContainerDispatch> = (props) => (
-    <Create {...props} />
-);
-
-const mapStateToProps = (state: IRootState) => ({
-
+const mergeFullNodesHandler: Reducer<typeof mergeFullNodes, State> = (state, payload) => ({
+    ...state,
+    fullNodes: payload.filter((value, index, self) => {
+        return self.indexOf(value) === index;
+    })
 });
 
-const mapDispatchToProps = {
-    navigatePage: navigatePage.started
-};
-
-export default connect<ICreateContainerState, ICreateContainerDispatch, ICreateContainerProps>(mapStateToProps, mapDispatchToProps)(CreateContainer);
+export default mergeFullNodesHandler;

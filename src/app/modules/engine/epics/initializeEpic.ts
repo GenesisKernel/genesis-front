@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
+import { Action } from 'redux';
 import { Epic } from 'modules';
 import { Observable } from 'rxjs';
 import { connect } from 'modules/socket/actions';
@@ -22,13 +23,14 @@ import urlJoin from 'url-join';
 import platform from 'lib/platform';
 import NodeObservable from '../util/NodeObservable';
 import keyring from 'lib/keyring';
+import { mergeFullNodes } from 'modules/storage/actions';
 
 const fullNodesFallback = ['http://127.0.0.1:7079'];
 
 const initializeEpic: Epic = (action$, store, { api, defaultKey }) => action$.ofAction(initialize.started)
     .flatMap(action => {
         const requestUrl = platform.select({
-            web: urlJoin(location.origin, 'settings.json'),
+            web: urlJoin(process.env.PUBLIC_URL || location.origin, 'settings.json'),
             desktop: './settings.json'
         });
 
@@ -38,7 +40,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey }) => action$.of
             .catch(e => Observable.of(fullNodesFallback))
             .flatMap(fullNodes =>
                 NodeObservable({
-                    nodes: fullNodes,
+                    nodes: [...(store.getState().storage.fullNodes || []), ...fullNodes],
                     count: 1,
                     timeout: 5000,
                     concurrency: 10,
@@ -57,24 +59,40 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey }) => action$.of
                         })),
                         Observable.of(setLocale.started(state.storage.locale)),
                         Observable.from(client.getUid())
-                            .flatMap(uid => Observable.from(
-                                Promise.all([
-                                    client.getConfig({ name: 'centrifugo' }),
-                                    client.authorize(uid.token).login({
-                                        publicKey: keyring.generatePublicKey(defaultKey),
-                                        signature: keyring.sign(uid.uid, defaultKey)
-                                    })
-                                ])
+                            .flatMap(uid => {
+                                return client.authorize(uid.token).login({
+                                    publicKey: keyring.generatePublicKey(defaultKey),
+                                    signature: keyring.sign(uid.uid, defaultKey)
 
-                            )).map(result =>
+                                }).then(loginResult => {
+                                    const securedClient = client.authorize(loginResult.token);
+
+                                    return Promise.all([
+                                        client.getConfig({ name: 'centrifugo' }).catch(e => null),
+                                        securedClient.getSystemParams({ names: ['full_nodes'] })
+                                            .then(l =>
+                                                JSON.parse(l.list.find(p => p.name === 'full_nodes').value)
+                                                    .map((n: any) => n.api_address)
+                                            ).catch(e =>
+                                                []
+                                            )
+                                    ]).then(result => ({
+                                        centrifugo: result[0],
+                                        login: loginResult,
+                                        fullNodes: result[1]
+                                    }));
+                                });
+                            }).flatMap(result => Observable.of<Action>(
                                 connect.started({
-                                    wsHost: result[0],
-                                    session: result[1].token,
-                                    socketToken: result[1].notify_key,
-                                    timestamp: result[1].timestamp,
-                                    userID: result[1].key_id
-                                })
-                            ).catch(e => Observable.of(connect.failed({
+                                    wsHost: result.centrifugo,
+                                    session: result.login.token,
+                                    socketToken: result.login.notify_key,
+                                    timestamp: result.login.timestamp,
+                                    userID: result.login.key_id
+                                }),
+                                mergeFullNodes([...result.fullNodes, ...fullNodes])
+
+                            )).catch(e => Observable.of(connect.failed({
                                 params: null,
                                 error: 'E_SOCKET_OFFLINE'
                             })))

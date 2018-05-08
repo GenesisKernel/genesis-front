@@ -25,7 +25,6 @@ import initializeHandler from './reducers/initializeHandler';
 
 export type State = {
     readonly nodeHost: string;
-    readonly fullNodes: string[];
     readonly localeMessages: { [key: string]: string };
     readonly isCollapsed: boolean;
     readonly isLoaded: boolean;
@@ -35,7 +34,6 @@ export type State = {
 
 export const initialState: State = {
     nodeHost: null,
-    fullNodes: [],
     localeMessages: defaultLocale,
     isCollapsed: true,
     isLoaded: false,

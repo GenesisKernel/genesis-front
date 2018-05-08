@@ -21,21 +21,25 @@ import saveLocaleHandler from './reducers/saveLocaleHandler';
 import saveAccountHandler from './reducers/saveAccountHandler';
 import removeAccountHandler from './reducers/removeAccountHandler';
 import saveNavigationSizeHandler from './reducers/saveNavigationSizeHandler';
+import mergeFullNodesHandler from './reducers/mergeFullNodesHandler';
 
 export type State = {
     readonly locale: string;
     readonly accounts: IAccount[];
     readonly navigationSize: number;
+    readonly fullNodes: string[];
 };
 
 export const initialState: State = {
     locale: 'en-US',
     accounts: [],
-    navigationSize: 230
+    navigationSize: 230,
+    fullNodes: []
 };
 
 export default reducerWithInitialState<State>(initialState)
     .case(actions.saveLocale, saveLocaleHandler)
     .case(actions.saveAccount, saveAccountHandler)
     .case(actions.removeAccount, removeAccountHandler)
-    .case(actions.saveNavigationSize, saveNavigationSizeHandler);
+    .case(actions.saveNavigationSize, saveNavigationSizeHandler)
+    .case(actions.mergeFullNodes, mergeFullNodesHandler);
