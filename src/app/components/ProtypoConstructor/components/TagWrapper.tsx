@@ -183,68 +183,35 @@ class TagWrapper extends React.Component<ITagWrapperProps, ITagWrapperState> {
     }
 
     getCaretPosition() {
-        let position = null;
-        if (this.props.canDrop) {
-            if (this.props.canDropPosition === 'before') {
-                position = (this.props.display === 'block') ? 'up' : 'left';
-            }
-            if (this.props.canDropPosition === 'after') {
-                position = (this.props.display === 'block') ? 'down' : 'right';
-            }
+        if (!this.props.canDrop) {
+            return null;
         }
-        return position;
+        let result = {
+            position: '',
+            caret: ''
+        };
+        if (this.props.canDropPosition === 'before') {
+            result.caret = (this.props.display === 'block') ? 'up' : 'left';
+            result.position = (result.caret === 'up') && 'before' || 'left';
+        }
+        if (this.props.canDropPosition === 'after') {
+            result.caret = (this.props.display === 'block') ? 'down' : 'right';
+            result.position = (result.caret === 'down') && 'after' || 'right';
+        }
+        return result;
     }
 
     renderCanDropPosition() {
-        switch (this.getCaretPosition()) {
-            case 'up':
-                return this.renderUp();
-            case 'left':
-                return this.renderLeft();
-            case 'down':
-                return this.renderDown();
-            case 'right':
-                return this.renderRight();
-            default:
-                return null;
+        const caretPosition = this.getCaretPosition();
+        if (caretPosition === null) {
+            return null;
         }
-    }
-
-    renderUp() {
+        const positionClass = 'b-can-drop-position b-can-drop-position_' + caretPosition.position;
+        const caretClass = 'fa fa-caret-' + caretPosition.caret;
         return (
-            <div className="b-can-drop-position b-can-drop-position_before">
+            <div className={positionClass}>
                 <div className="b-can-drop-position__arrow">
-                    <i className="fa fa-caret-up"/>
-                </div>
-            </div>
-        );
-    }
-
-    renderLeft() {
-        return (
-            <div className="b-can-drop-position b-can-drop-position_left">
-                <div className="b-can-drop-position__arrow">
-                    <i className="fa fa-caret-left"/>
-                </div>
-            </div>
-        );
-    }
-
-    renderDown() {
-        return (
-            <div className="b-can-drop-position b-can-drop-position_after">
-                <div className="b-can-drop-position__arrow">
-                    <i className="fa fa-caret-down"/>
-                </div>
-            </div>
-        );
-    }
-
-    renderRight() {
-        return (
-            <div className="b-can-drop-position b-can-drop-position_right">
-                <div className="b-can-drop-position__arrow">
-                    <i className="fa fa-caret-right"/>
+                    <i className={caretClass}/>
                 </div>
             </div>
         );
