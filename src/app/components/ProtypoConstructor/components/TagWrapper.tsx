@@ -182,23 +182,40 @@ class TagWrapper extends React.Component<ITagWrapperProps, ITagWrapperState> {
         this.setState(props);
     }
 
+    getCaret() {
+        if (this.props.canDropPosition === 'before') {
+            return (this.props.display === 'block') ? 'up' : 'left';
+        }
+        else {
+            return (this.props.display === 'block') ? 'down' : 'right';
+        }
+    }
+
+    getPosition(caret: string) {
+        switch (caret) {
+            case 'up':
+                return 'before';
+            case 'left':
+                return 'left';
+            case 'down':
+                return 'after';
+            case 'right':
+                return 'right';
+            default:
+                return null;
+        }
+    }
+
     getCaretPosition() {
-        if (!this.props.canDrop) {
+        if (!this.props.canDrop || this.props.canDropPosition === 'inside') {
             return null;
         }
-        let result = {
-            position: '',
-            caret: ''
+        const caret = this.getCaret();
+        const position = this.getPosition(caret);
+        return {
+            position,
+            caret
         };
-        if (this.props.canDropPosition === 'before') {
-            result.caret = (this.props.display === 'block') ? 'up' : 'left';
-            result.position = (result.caret === 'up') && 'before' || 'left';
-        }
-        if (this.props.canDropPosition === 'after') {
-            result.caret = (this.props.display === 'block') ? 'down' : 'right';
-            result.position = (result.caret === 'down') && 'after' || 'right';
-        }
-        return result;
     }
 
     renderCanDropPosition() {
@@ -220,7 +237,7 @@ class TagWrapper extends React.Component<ITagWrapperProps, ITagWrapperState> {
     render() {
         const classes = classnames({
             'b-selected-wrapper': this.props.selected,
-            'b-hover': this.state.hover || this.props.canDrop, // (this.state.hover && !this.props.canDrop) || (this.props.canDrop && this.props.canDropPosition === 'inside')
+            'b-hover': this.state.hover || this.props.canDrop,
             ['b-display-' + this.props.display]: true
         });
 
