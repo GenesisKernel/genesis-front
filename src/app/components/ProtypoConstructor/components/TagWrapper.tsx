@@ -183,11 +183,12 @@ class TagWrapper extends React.Component<ITagWrapperProps, ITagWrapperState> {
     }
 
     getCaret() {
+        const block = this.props.display === 'block';
         if (this.props.canDropPosition === 'before') {
-            return (this.props.display === 'block') ? 'up' : 'left';
+            return block ? 'up' : 'left';
         }
         else {
-            return (this.props.display === 'block') ? 'down' : 'right';
+            return block ? 'down' : 'right';
         }
     }
 
