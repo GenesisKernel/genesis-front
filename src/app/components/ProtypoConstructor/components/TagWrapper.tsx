@@ -165,16 +165,18 @@ class TagWrapper extends React.Component<ITagWrapperProps, ITagWrapperState> {
         };
     }
 
-    setOver(e: React.MouseEvent<HTMLElement>) {
+    setPos(e: React.MouseEvent<HTMLElement>, hover: boolean) {
         e.stopPropagation();
-        const state = Object.assign(this.state, { hover: true });
+        const state = Object.assign(this.state, { hover });
         this.setState(state);
     }
 
+    setOver(e: React.MouseEvent<HTMLElement>) {
+        this.setPos(e, true);
+    }
+
     setOut(e: React.MouseEvent<HTMLElement>) {
-        e.stopPropagation();
-        const state = Object.assign(this.state, { hover: false });
-        this.setState(state);
+        this.setPos(e, false);
     }
 
     setDropEffect(effect: string) {
@@ -182,13 +184,16 @@ class TagWrapper extends React.Component<ITagWrapperProps, ITagWrapperState> {
         this.setState(props);
     }
 
+    isBlock() {
+        return this.props.display === 'block';
+    }
+
     getCaret() {
-        const block = this.props.display === 'block';
         if (this.props.canDropPosition === 'before') {
-            return block ? 'up' : 'left';
+            return this.isBlock() ? 'up' : 'left';
         }
         else {
-            return block ? 'down' : 'right';
+            return this.isBlock() ? 'down' : 'right';
         }
     }
 

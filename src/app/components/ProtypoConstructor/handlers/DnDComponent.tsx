@@ -54,9 +54,6 @@ const Target = {
         if (isSameTag(droppedItem, props.tag.id)) {
             return;
         }
-        // if (droppedItem.tag && droppedItem.tag.id && props.tag.id === droppedItem.tag.id) {
-        //     return;
-        // }
 
         if (droppedItem.new) {
             props.addTag({
@@ -66,20 +63,17 @@ const Target = {
             });
         }
         else {
+            const tagInfo = {
+                tag: droppedItem.tag,
+                destinationTagID: props.tag.id,
+                position: getDropPosition(monitor, component, props.tag)
+            };
             switch (droppedItem.dropEffect) {
                 case 'move':
-                    props.moveTag({
-                        tag: droppedItem.tag,
-                        destinationTagID: props.tag.id,
-                        position: getDropPosition(monitor, component, props.tag)
-                    });
+                    props.moveTag(tagInfo);
                     break;
                 case 'copy':
-                    props.copyTag({
-                        tag: droppedItem.tag,
-                        destinationTagID: props.tag.id,
-                        position: getDropPosition(monitor, component, props.tag)
-                    });
+                    props.copyTag(tagInfo);
                     break;
                 default:
                     break;
