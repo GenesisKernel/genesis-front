@@ -39,6 +39,10 @@ const Source = {
     }
 };
 
+const isSameTag = (droppedItem: any, id: string): boolean => {
+    return droppedItem.tag && droppedItem.tag.id && droppedItem.tag.id === id;
+};
+
 const Target = {
     drop(props: any, monitor: any, component: any) {
         if (monitor.didDrop()) {
@@ -47,7 +51,7 @@ const Target = {
 
         const droppedItem = monitor.getItem();
 
-        if (droppedItem.tag && droppedItem.tag.id && props.tag.id === droppedItem.tag.id) {
+        if (isSameTag(droppedItem, props.tag.id)) {
             return;
         }
 
@@ -59,20 +63,17 @@ const Target = {
             });
         }
         else {
+            const tagInfo = {
+                tag: droppedItem.tag,
+                destinationTagID: props.tag.id,
+                position: getDropPosition(monitor, component, props.tag)
+            };
             switch (droppedItem.dropEffect) {
                 case 'move':
-                    props.moveTag({
-                        tag: droppedItem.tag,
-                        destinationTagID: props.tag.id,
-                        position: getDropPosition(monitor, component, props.tag)
-                    });
+                    props.moveTag(tagInfo);
                     break;
                 case 'copy':
-                    props.copyTag({
-                        tag: droppedItem.tag,
-                        destinationTagID: props.tag.id,
-                        position: getDropPosition(monitor, component, props.tag)
-                    });
+                    props.copyTag(tagInfo);
                     break;
                 default:
                     break;
@@ -88,7 +89,7 @@ const Target = {
         }
         const droppedItem = monitor.getItem();
 
-        if (droppedItem.tag && droppedItem.tag.id && props.tag.id === droppedItem.tag.id) {
+        if (isSameTag(droppedItem, props.tag.id)) {
             return;
         }
         props.setTagCanDropPosition({ position: getDropPosition(monitor, component, props.tag), tagID: props.tag.id });
@@ -114,13 +115,9 @@ const ItemTypes = {
     SOURCE: 'element'
 };
 
-type TComponentConstructor<T> = React.ComponentClass<T & IStyledComponentProps> | React.SFC<T & IStyledComponentProps>;
+type TComponentConstructor<T> = React.ComponentClass<T> | React.SFC<T>;
 
-interface IStyledComponentProps {
-
-}
-
-export default function dndComponent<T>(Component: TComponentConstructor<T & IStyledComponentProps>) {
+export default function dndComponent<T>(Component: TComponentConstructor<T>) {
     return DragSource<T>(ItemTypes.SOURCE, Source, collectSource)(
         DropTarget<T>(ItemTypes.SOURCE, Target, collectTarget)(Component)
     );

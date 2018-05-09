@@ -16,7 +16,7 @@
 
 import * as React from 'react';
 import * as classnames from 'classnames';
-import StyledComponent from './StyledComponent';
+import StyledComponent from 'components/Protypo/handlers/StyledComponent';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import EditableBlock, { IEditableBlockProps } from './EditableBlock';
