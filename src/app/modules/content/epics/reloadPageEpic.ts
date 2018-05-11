@@ -28,7 +28,7 @@ const reloadPageEpic: Epic = (action$, store, { api }) => action$.ofAction(reloa
             type: 'page',
             name: section.page.name,
             params: section.page.params,
-            locale: state.storage.locale,
+            locale: state.content.locale,
 
         })).map(payload =>
             reloadPage.done({

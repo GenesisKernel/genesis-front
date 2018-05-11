@@ -26,6 +26,7 @@ import renderPageEpic from './epics/renderPageEpic';
 import renderSectionEpic from './epics/renderSectionEpic';
 import resetEpic from './epics/resetEpic';
 import resetOnLoginEpic from './epics/resetOnLoginEpic';
+import changeLocaleEpic from './epics/changeLocaleEpic';
 
 export default combineEpics(
     closeSectionEpic,
@@ -38,5 +39,6 @@ export default combineEpics(
     renderPageEpic,
     renderSectionEpic,
     resetEpic,
-    resetOnLoginEpic
+    resetOnLoginEpic,
+    changeLocaleEpic
 );

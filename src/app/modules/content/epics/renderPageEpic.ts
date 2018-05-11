@@ -27,7 +27,7 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
             type: 'page',
             name: action.payload.name,
             params: action.payload.params,
-            locale: state.storage.locale
+            locale: state.content.locale
 
         })).map(payload =>
             renderPage.done({

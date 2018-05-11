@@ -28,7 +28,7 @@ const resetEpic: Epic = (action$, store, { api }) => action$.ofAction(reset.star
             type: 'page',
             name: section.defaultPage,
             params: {},
-            locale: state.storage.locale
+            locale: state.content.locale
 
         })).map(payload => reset.done({
             params: action.payload,

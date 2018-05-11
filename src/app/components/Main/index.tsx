@@ -34,13 +34,15 @@ import SectionButton from 'components/Main/SectionButton';
 import ToolButton from 'components/Main/Toolbar/ToolButton';
 import EditorToolbar from 'containers/Main/Toolbar/EditorToolbar';
 import { TTransactionStatus } from 'genesis/tx';
+import DropdownToolButton from './Toolbar/DropdownToolButton';
+import { CloseDropdownButton } from '../DropdownButton';
 // import TransactionsMenu from './TransactionsMenu';
 
 export const styles = {
     headerHeight: platform.select({ desktop: 28, web: 0 }),
     menuHeight: 40,
     toolbarHeight: 40,
-    mainColor: '#4c7dbd',
+    mainColor: '#a8996d',
     toolColor: '#f3f3f3'
 };
 
@@ -49,6 +51,7 @@ const StyledWrapper = styled.div`
 `;
 
 export interface IMainProps {
+    locale: string;
     nodeUrl: string;
     isAuthorized: boolean;
     pending: boolean;
@@ -64,6 +67,7 @@ export interface IMainProps {
     onNavigationToggle: () => void;
     onSwitchSection: (section: string) => void;
     onCloseSection: (section: string) => void;
+    onChangeLocale: (locale: string) => void;
 }
 
 const StyledControls = styled.div`
@@ -171,6 +175,25 @@ class Main extends React.Component<IMainProps> {
                         </li>
                     </StyledMenu>
                     <Toolbar>
+                        <DropdownToolButton
+                            content={
+                                <ul className="dropdown-group">
+                                    <li>
+                                        <CloseDropdownButton onClick={this.props.onChangeLocale.bind(this, 'en')} disabled={'en' === this.props.locale}>
+                                            <span>English</span>
+                                        </CloseDropdownButton>
+                                    </li>
+                                    <li>
+                                        <CloseDropdownButton onClick={this.props.onChangeLocale.bind(this, 'ar')} disabled={'ar' === this.props.locale}>
+                                            <span>Arabic</span>
+                                        </CloseDropdownButton>
+                                    </li>
+                                </ul>
+                            }
+                            right
+                        >
+                            Language
+                        </DropdownToolButton>
                         {this.props.isAuthorized && (
                             <ToolButton right icon="icon-key" />
                         )}

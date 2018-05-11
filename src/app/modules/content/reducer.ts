@@ -40,6 +40,7 @@ import setResizingHandler from './reducers/setResizingHandler';
 import switchSectionHandler from './reducers/switchSectionHandler';
 import updateSectionHandler from './reducers/updateSectionHandler';
 import ecosystemInitHandler from './reducers/ecosystemInitHandler';
+import changeLocaleHandler from './reducers/changeLocaleHandler';
 
 export type State = {
     readonly preloading: boolean;
@@ -51,6 +52,7 @@ export type State = {
         readonly [name: string]: TSection;
     };
     readonly notifications: TProtypoElement[];
+    readonly locale: string;
 };
 
 export const initialState: State = {
@@ -96,7 +98,8 @@ export const initialState: State = {
             page: null
         }
     },
-    notifications: null
+    notifications: null,
+    locale: 'en'
 };
 
 export default reducerWithInitialState(initialState)
@@ -121,4 +124,5 @@ export default reducerWithInitialState(initialState)
     .case(actions.reset.failed, resetFailedHandler)
     .case(actions.setResizing, setResizingHandler)
     .case(actions.switchSection, switchSectionHandler)
-    .case(actions.updateSection, updateSectionHandler);
+    .case(actions.updateSection, updateSectionHandler)
+    .case(actions.changeLocale, changeLocaleHandler);

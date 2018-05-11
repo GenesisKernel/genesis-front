@@ -22,7 +22,7 @@ const containerAnimationDef = {
     defaultStyle: {
         position: 'absolute',
         overflow: 'hidden',
-        zIndex: 600
+        zIndex: 1100
     },
 
     alignStyle: {

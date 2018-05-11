@@ -28,7 +28,7 @@ const renderLegacyPageEpic: Epic = (action$, store, { api }) => action$.ofAction
                 type: 'menu',
                 name: action.payload.menu,
                 params: {},
-                locale: state.storage.locale
+                locale: state.content.locale
 
             })).map(payload =>
                 renderLegacyPage.done({

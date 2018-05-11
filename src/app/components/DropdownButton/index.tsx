@@ -57,7 +57,7 @@ const StyledDropdown = styled.div`
         line-height: normal;
         background: #fff;
         box-shadow: 0 0 25px rgba(0,0,0,.15);
-        border: solid 1px #add1ff;
+        border: solid 1px #d2c6a3;
         border-top: none;
         text-align: left;
 

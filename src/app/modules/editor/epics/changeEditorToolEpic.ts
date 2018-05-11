@@ -29,7 +29,7 @@ const changeEditorToolEpic: Epic = (action$, store, { api }) => action$.ofAction
                 const payload = state.editor.tabs[state.editor.tabIndex].value;
                 return Observable.fromPromise(client.contentTest({
                     template: payload,
-                    locale: state.storage.locale,
+                    locale: state.content.locale,
                     params: {}
 
                 })).map(result => changeEditorTool.done({

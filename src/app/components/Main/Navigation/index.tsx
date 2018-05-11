@@ -43,7 +43,7 @@ const StyledBackButton = styled.button`
     width: 100%;
     height: 58px;
     padding: 10px 25px;
-    color: #2886ff;
+    color: #fff;
     font-weight: 300;
     text-decoration: none;
     outline: none;
@@ -53,12 +53,12 @@ const StyledBackButton = styled.button`
     
     &.disabled {
         &:hover {
-            color: #2886ff;
+            color: #fff;
         }
     }
 
     &:hover {
-        color: #7bb0f5;
+        color: #fff0c5;
     }
 
     .icon {
@@ -80,14 +80,14 @@ const StyledBackButton = styled.button`
 const StyledMenu = styled.div`
     overflow: hidden;
     position: absolute;
-    bottom: 50px;
+    bottom: 0;
     left: 0;
     right: 0;
     top: 80px;
 `;
 
 const StyledMenuContent = styled.div`
-    background: #fff;
+    background: #323639;
     position: absolute;
     bottom: 0;
     left: 0;

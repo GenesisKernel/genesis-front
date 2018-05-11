@@ -66,7 +66,7 @@ const StyledToolButton = styled(ToolButton) `
         transition: background .15s;
 
         > em.icon {
-            color: #5b97e4;
+            color: #b19548;
             vertical-align: middle;
             height: 18px;
             display: inline-block;
@@ -74,7 +74,7 @@ const StyledToolButton = styled(ToolButton) `
 
         > span.button-label {
             margin-left: 8px;
-            color: #194a8a;
+            color: #292416;
         }
 
         &:hover {

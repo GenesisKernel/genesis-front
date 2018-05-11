@@ -27,7 +27,7 @@ const fetchNotificationsEpic: Epic = (action$, store, { api }) => action$.ofActi
             type: 'page',
             name: 'notifications',
             params: {},
-            locale: state.storage.locale
+            locale: state.content.locale
 
         })).map(payload =>
             fetchNotifications.done({

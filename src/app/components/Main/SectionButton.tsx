@@ -38,7 +38,7 @@ const StyledSectionButton = styled.button`
 
     &.active {
         background: #f3f3f3;
-        color: #194a8a;
+        color: #292416;
     }
 
     &.closeable {

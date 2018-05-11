@@ -18,7 +18,7 @@ import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Route } from 'react-router-dom';
 import { IRootState } from 'modules';
-import { reloadPage, navigationToggle, renderSection, navigatePage, closeSection } from 'modules/content/actions';
+import { reloadPage, navigationToggle, renderSection, navigatePage, closeSection, changeLocale } from 'modules/content/actions';
 
 import { AnimatedSwitch } from 'components/Animation';
 import Main, { IMainProps } from 'components/Main';
@@ -37,6 +37,7 @@ const MainContainer: React.SFC<IMainProps> = props => (
 );
 
 const mapStateToProps = (state: IRootState) => ({
+    locale: state.content.locale,
     nodeUrl: state.auth.session && state.auth.session.apiHost,
     isAuthorized: !!state.auth.privateKey,
     stylesheet: state.content.stylesheet,
@@ -49,6 +50,9 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+    onChangeLocale: (locale: string) => {
+        dispatch(changeLocale(locale));
+    },
     onNavigationToggle: () => {
         dispatch(navigationToggle());
     },

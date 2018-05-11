@@ -21,7 +21,7 @@ import classNames from 'classnames';
 import DropdownButton from 'components/DropdownButton';
 
 export interface IDropdownToolButtonProps {
-    icon: string;
+    icon?: string;
     className?: string;
     disabled?: boolean;
     right?: boolean;
@@ -39,7 +39,7 @@ const DropdownToolButton: React.SFC<IDropdownToolButtonProps> = props => (
             content={props.content}
             className="icon-left"
         >
-            <em className={`icon ${props.icon}`} />
+            {props.icon && <em className={`icon ${props.icon}`} />}
             {props.children && (<span className="button-label">{props.children}</span>)}
             <em className="icon-chevron icon-arrow-down" />
         </DropdownButton>
@@ -64,7 +64,6 @@ const StyledDropdownToolButton = styled(DropdownToolButton) `
 
     .dropdown-active .dropdown-toggle {
         background: #e4e4e4 !important;
-        ${props => !props.leftMost && 'border-left: solid 1px #add1ff;padding-left: 9px;'}
     }
 
     .dropdown-toggle {
@@ -82,7 +81,7 @@ const StyledDropdownToolButton = styled(DropdownToolButton) `
         transition: background .15s;
 
         > em.icon, .icon-chevron {
-            color: #5b97e4;
+            color: #b19548;
             vertical-align: middle;
             height: 18px;
             display: inline-block;
@@ -96,7 +95,7 @@ const StyledDropdownToolButton = styled(DropdownToolButton) `
 
         > span.button-label {
             margin-left: 8px;
-            color: #194a8a;
+            color: #292416;
         }
 
         &:hover {

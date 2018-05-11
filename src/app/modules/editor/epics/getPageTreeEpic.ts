@@ -27,7 +27,7 @@ const getPageTreeEpic: Epic = (action$, store, { constructorModule, api }) => ac
 
         return Observable.fromPromise(client.contentJson({
             template,
-            locale: state.storage.locale,
+            locale: state.content.locale,
             source: true
 
         })).map(payload => {
