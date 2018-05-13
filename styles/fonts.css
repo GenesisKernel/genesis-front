@@ -1,0 +1,66 @@
+/**
+ *Copyright 2017 The genesis-front Authors
+ *This file is part of the genesis-front library.
+ *
+ *The genesis-front library is free software: you can redistribute it and/or modify
+ *it under the terms of the GNU Lesser General Public License as published by
+ *the Free Software Foundation, either version 3 of the License, or
+ *(at your option) any later version.
+ *
+ *The genesis-front library is distributed in the hope that it will be useful,
+ *but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *GNU Lesser General Public License for more details.
+ *
+ *You should have received a copy of the GNU Lesser General Public License
+ *along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Source Sans Pro Light'), local('SourceSansPro-Light'), url(../fonts/SourceSansPro-Light.otf) format('opentype');
+}
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: italic;
+    font-weight: 300;
+    src: local('Source Sans Pro Light Italic'), local('SourceSansPro-Light-Italic'), url(../fonts/SourceSansPro-LightIt.otf) format('opentype');
+}
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Source Sans Pro Regular'), local('SourceSansPro-Regular'), url(../fonts/SourceSansPro-Regular.otf) format('opentype');
+}
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: italic;
+    font-weight: 400;
+    src: local('Source Sans Pro Italic'), local('SourceSansPro-Italic'), url(../fonts/SourceSansPro-It.otf) format('opentype');
+}
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 600;
+    src: local('Source Sans Pro SemiBold'), local('SourceSansPro-SemiBold'), url(../fonts/SourceSansPro-Semibold.otf) format('opentype');
+}
+
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: italic;
+    font-weight: 600;
+    src: local('Source Sans Pro SemiBold Italic'), local('SourceSansPro-SemiBold-Italic'), url(../fonts/SourceSansPro-SemiboldIt.otf) format('opentype');
+}
+
+@font-face {
+    font-family: 'Site Icons';
+    font-style: normal;
+    font-weight: normal;
+    src: url(../fonts/site-icons.otf) format('opentype');
+}
