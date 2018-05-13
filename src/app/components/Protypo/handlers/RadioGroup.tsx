@@ -23,12 +23,7 @@ import StyledComponent from './StyledComponent';
 import Validation from 'components/Validation';
 import { Validator } from 'components/Validation/Validators';
 
-import * as classnames from 'classnames';
-import TagWrapper from '../components/TagWrapper';
-import DnDComponent from './DnDComponent';
-import { IConstructorElementProps } from 'genesis/editor';
-
-export interface IRadioGroupProps extends IConstructorElementProps {
+export interface IRadioGroupProps {
     'className'?: string;
     'class'?: string;
     'source'?: string;
@@ -46,71 +41,6 @@ interface IRadioGroupContext {
 }
 
 const RadioGroup: React.SFC<IRadioGroupProps> = (props, context: IRadioGroupContext) => {
-    const onClick = (e: any) => {
-        e.stopPropagation();
-        props.selectTag(props.tag);
-    };
-
-    const removeTag = () => {
-        props.removeTag({ tag: props.tag });
-    };
-
-    if (props.editable) {
-        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = props;
-
-        const classes = classnames({
-            [props.class]: true,
-            [props.className]: true,
-            'radio': true,
-            'c-radio': true,
-            'c-radio-nofont': true,
-            'b-selected': props.selected
-        });
-
-        return connectDragPreview(connectDropTarget(
-            <span style={{display: 'block'}}>
-                <TagWrapper
-                    display="block"
-                    selected={props.selected}
-                    canDrop={isOver}
-                    canDropPosition={props.canDropPosition}
-                    onClick={onClick}
-                    removeTag={removeTag}
-                    connectDragSource={connectDragSource}
-                    canMove={true}
-                >
-                    <div className={classes}>
-                        <label>
-                            <input
-                                type="radio"
-                                name="radio"
-                            />
-                            <em className="fa fa-circle" />
-                            Option 1
-                        </label>
-                        <br/>
-                        <label>
-                            <input
-                                type="radio"
-                                name="radio"
-                            />
-                            <em className="fa fa-circle" />
-                            Option 2
-                        </label>
-                        <br/>
-                        <label>
-                            <input
-                                type="radio"
-                                name="radio"
-                            />
-                            <em className="fa fa-circle" />
-                            Option 3
-                        </label>
-                    </div>
-                </TagWrapper>
-            </span>
-        ));
-    }
 
     const compiledValidators: Validator[] = [];
     _.forEach(props.validate, (value, name) => {
@@ -174,4 +104,3 @@ RadioGroup.contextTypes = {
 };
 
 export default StyledComponent(RadioGroup);
-export const RadioGroupDnD = DnDComponent(StyledComponent(RadioGroup));

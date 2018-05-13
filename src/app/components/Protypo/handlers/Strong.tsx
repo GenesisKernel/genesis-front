@@ -16,63 +16,22 @@
 
 import * as React from 'react';
 import StyledComponent from './StyledComponent';
-import TagWrapper from '../components/TagWrapper';
-import DnDComponent from './DnDComponent';
-import * as classnames from 'classnames';
-import ContentEditable from 'react-contenteditable';
-import EditableBlock from './EditableBlock';
 
-class Strong extends EditableBlock {
+export interface IStrongProps {
+    'className'?: string;
+    'class'?: string;
+}
+
+class Strong extends React.Component<IStrongProps> {
     render() {
-        if (this.props.editable) {
-            const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
-
-            const classes = classnames({
-                [this.props.class]: true,
-                [this.props.className]: true,
-                'b-selected': this.props.selected
-            });
-
-            return connectDragPreview(connectDropTarget(
-                <span style={{display: 'inline-block'}}>
-                    <TagWrapper
-                        display="inline"
-                        selected={this.props.selected}
-                        canDrop={isOver}
-                        canDropPosition={this.props.canDropPosition}
-                        onClick={this.onClick.bind(this)}
-                        removeTag={this.removeTag.bind(this)}
-                        connectDragSource={connectDragSource}
-                        canMove={true}
-                    >
-                    {this.hasChildrenText() ? (
-                        <ContentEditable
-                            tagName="b"
-                            className={classes}
-                            html={this.props.childrenText}
-                            onChange={this.handleChange.bind(this)}
-                        />
-                    ) : (
-                        <b
-                            className={classes}
-                        >
-                            {this.props.children}
-                        </b>
-                    )}
-                    </TagWrapper>
-                </span>
-            ));
-        }
         return (
-            <strong
+            <b
                 className={[this.props.class, this.props.className].join(' ')}
             >
                 {this.props.children}
-            </strong>
+            </b>
         );
-
     }
 }
 
 export default StyledComponent(Strong);
-export const StrongDnD = DnDComponent(StyledComponent(Strong));

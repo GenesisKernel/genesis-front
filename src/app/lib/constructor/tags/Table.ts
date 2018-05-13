@@ -24,9 +24,10 @@ class Table extends Tag {
         this.tagName = 'Table';
         this.canHaveChildren = false;
         this.attr = {
-            'source': 'Source'
+            'source': 'Source',
+            'columns': 'Columns'
         };
-        this.editProps = ['class'];
+        this.editProps = ['class', 'source', 'columns'];
     }
 
     generateTreeJSON(text: string): any {

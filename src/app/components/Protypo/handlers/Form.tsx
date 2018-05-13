@@ -16,15 +16,10 @@
 
 import * as React from 'react';
 import * as propTypes from 'prop-types';
-
 import StyledComponent from './StyledComponent';
-import TagWrapper from '../components/TagWrapper';
-import DnDComponent from './DnDComponent';
-import * as classnames from 'classnames';
 import ValidatedForm from 'components/Validation/ValidatedForm';
-import { IConstructorElementProps } from 'genesis/editor';
 
-export interface IFormProps extends IConstructorElementProps {
+export interface IFormProps {
     'class'?: string;
     'className'?: string;
 }
@@ -55,53 +50,7 @@ class Form extends React.Component<IFormProps, IFormState> {
         }
     }
 
-    onClick(e: any) {
-        e.stopPropagation();
-        this.props.selectTag(this.props.tag);
-    }
-
-    onSubmit(e: any) {
-        e.stopPropagation();
-        e.preventDefault();
-    }
-
-    removeTag() {
-        this.props.removeTag({ tag: this.props.tag });
-    }
-
     render() {
-        if (this.props.editable) {
-            const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
-
-            const classes = classnames({
-                [this.props.class]: true,
-                [this.props.className]: true,
-                'b-selected': this.props.selected
-            });
-
-            return connectDragPreview(connectDropTarget(
-                <span>
-                    <TagWrapper
-                        display="block"
-                        selected={this.props.selected}
-                        canDrop={isOver}
-                        canDropPosition={this.props.canDropPosition}
-                        onClick={this.onClick.bind(this)}
-                        removeTag={this.removeTag.bind(this)}
-                        connectDragSource={connectDragSource}
-                        canMove={true}
-                    >
-                        <form
-                            className={classes}
-                            contentEditable={false}
-                            onSubmit={this.onSubmit.bind(this)}
-                        >
-                            {this.props.children}
-                        </form>
-                    </TagWrapper>
-                </span>
-            ));
-        }
         return (
             <ValidatedForm ref={this.bindForm.bind(this)} className={[this.props.class, this.props.className].join(' ')}>
                 {this.props.children}
@@ -115,4 +64,3 @@ class Form extends React.Component<IFormProps, IFormState> {
 };
 
 export default StyledComponent(Form);
-export const FormDnD = DnDComponent(StyledComponent(Form));

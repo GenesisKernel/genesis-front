@@ -19,12 +19,8 @@ import * as propTypes from 'prop-types';
 
 import Protypo from '../Protypo';
 import StyledComponent from './StyledComponent';
-import * as classnames from 'classnames';
-import TagWrapper from '../components/TagWrapper';
-import DnDComponent from './DnDComponent';
-import { IConstructorElementProps } from 'genesis/editor';
 
-export interface IImageProps extends IConstructorElementProps {
+export interface IImageProps {
     'className'?: string;
     'class'?: string;
     'src'?: string;
@@ -36,46 +32,6 @@ interface IImageContext {
 }
 
 const Image: React.SFC<IImageProps> = (props, context: IImageContext) => {
-    const onClick = (e: any) => {
-        e.stopPropagation();
-        props.selectTag(props.tag);
-    };
-
-    const removeTag = () => {
-        props.removeTag({ tag: props.tag });
-    };
-
-    if (props.editable) {
-        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = props;
-
-        const classes = classnames({
-            [props.class]: true,
-            // [props.className]: true,
-            'b-selected': props.selected
-        });
-
-        return connectDragPreview(connectDropTarget(
-            <span style={{ display: 'inline-block' }}>
-                <TagWrapper
-                    display="inline"
-                    selected={props.selected}
-                    canDrop={isOver}
-                    canDropPosition={props.canDropPosition}
-                    onClick={onClick}
-                    removeTag={removeTag}
-                    connectDragSource={connectDragSource}
-                    canMove={true}
-                >
-                    <img
-                        className={classes}
-                        src={props.src}
-                        alt={props.alt}
-                    />
-                </TagWrapper>
-            </span>
-        ));
-    }
-
     return (
         <img className={[props.class, props.className].join(' ')} src={context.protypo.resolveData(props.src)} alt={props.alt} />
     );
@@ -86,4 +42,3 @@ Image.contextTypes = {
 };
 
 export default StyledComponent(Image);
-export const ImageDnD = DnDComponent(StyledComponent(Image));

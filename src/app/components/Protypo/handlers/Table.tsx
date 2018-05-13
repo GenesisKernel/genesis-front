@@ -17,17 +17,13 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import * as propTypes from 'prop-types';
-import * as classnames from 'classnames';
 import { TProtypoElement } from 'genesis/protypo';
 
 import StyledComponent from './StyledComponent';
-import TagWrapper from '../components/TagWrapper';
-import DnDComponent from './DnDComponent';
 import LongText from 'components/Protypo/components/LongText';
 import BlobData from 'components/Protypo/components/BlobData';
-import { IConstructorElementProps } from 'genesis/editor';
 
-export interface ITableProps extends IConstructorElementProps {
+export interface ITableProps {
     id: string;
     className?: string;
     source?: string;
@@ -54,75 +50,6 @@ class Table extends React.Component<ITableProps> {
 
     render() {
         const context = this.context as ITableContext;
-        if (this.props.editable) {
-            const onClick = (e: any) => {
-                e.stopPropagation();
-                this.props.selectTag(this.props.tag);
-            };
-
-            const removeTag = () => {
-                this.props.removeTag({ tag: this.props.tag });
-            };
-
-            const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
-
-            const classes = classnames({
-                'table': true,
-                [this.props.className]: true,
-                'b-selected': this.props.selected
-            });
-
-            return connectDragPreview(connectDropTarget(
-                <span>
-                    <TagWrapper
-                        display="block"
-                        selected={this.props.selected}
-                        canDrop={isOver}
-                        canDropPosition={this.props.canDropPosition}
-                        onClick={onClick}
-                        removeTag={removeTag}
-                        connectDragSource={connectDragSource}
-                        canMove={true}
-                    >
-                        <table
-                            className={classes}
-                        >
-                            <thead>
-                                <tr>
-                                    <th>Column 1</th>
-                                    <th>Column 2</th>
-                                    <th>Column 3</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        Row 1
-                            </td>
-                                    <td>
-                                        Value
-                            </td>
-                                    <td>
-                                        Value
-                            </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Row 2
-                            </td>
-                                    <td>
-                                        Value
-                            </td>
-                                    <td>
-                                        Value
-                            </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </TagWrapper>
-                </span>
-            ));
-        }
 
         this._cachedSourceData = context.resolveSource(this.props.source);
 
@@ -219,4 +146,3 @@ class Table extends React.Component<ITableProps> {
 }
 
 export default StyledComponent(Table);
-export const TableDnD = DnDComponent(StyledComponent(Table));

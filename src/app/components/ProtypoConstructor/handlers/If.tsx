@@ -14,38 +14,20 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import React from 'react';
-import StyledComponent from './StyledComponent';
+import * as React from 'react';
+import * as classnames from 'classnames';
+import StyledComponent from 'components/Protypo/handlers/StyledComponent';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
-import classnames from 'classnames';
+import EditableBlock, { IEditableBlockProps } from './EditableBlock';
 import Switch from 'components/Main/Editor/Designer/Switch';
-import { IConstructorElementProps } from 'genesis/editor';
 
-export interface IElseIfProps extends IConstructorElementProps {
-    'className'?: string;
-    'class'?: string;
-}
-
-interface IElseIfState {
-    condition: boolean;
-}
-
-class ElseIf extends React.Component<IElseIfProps, IElseIfState> {
-    constructor(props: IElseIfProps) {
+class If extends EditableBlock {
+    constructor(props: IEditableBlockProps) {
         super(props);
         this.state = {
             condition: true
         };
-    }
-
-    onClick(e: any) {
-        e.stopPropagation();
-        this.props.selectTag(this.props.tag);
-    }
-
-    removeTag() {
-        this.props.removeTag({ tag: this.props.tag });
     }
 
     toggleCondition() {
@@ -55,9 +37,6 @@ class ElseIf extends React.Component<IElseIfProps, IElseIfState> {
     }
 
     render() {
-        if (!this.props.logic) {
-            return null;
-        }
         const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
 
         const classes = classnames({
@@ -74,12 +53,12 @@ class ElseIf extends React.Component<IElseIfProps, IElseIfState> {
                     onClick={this.onClick.bind(this)}
                     removeTag={this.removeTag.bind(this)}
                     connectDragSource={connectDragSource}
-                    canMove={false}
+                    canMove={true}
                 >
                 <div
                     className={classes}
                 >
-                    <span style={{'backgroundColor': '#FFCC66'}}>ElseIf
+                    <span style={{'backgroundColor': '#FFCC66'}}>If
                         <Switch
                             initialValue={this.state.condition}
                             onValue={true}
@@ -87,10 +66,9 @@ class ElseIf extends React.Component<IElseIfProps, IElseIfState> {
                             onChange={this.toggleCondition.bind(this)}
                         /> &#123;
                     </span>
-                    <div>
-                        {this.state.condition && this.props.children}
-                    </div>
+                    {this.state.condition && (<div>{this.props.children} </div>) || (<span>...</span>)}
                     <span style={{'backgroundColor': '#FFCC66'}}>&#125;</span>
+                    {!this.state.condition && this.props.tail}
                 </div>
                 </TagWrapper>
             </span>
@@ -98,4 +76,4 @@ class ElseIf extends React.Component<IElseIfProps, IElseIfState> {
     }
 }
 
-export default DnDComponent(StyledComponent(ElseIf));
+export default DnDComponent(StyledComponent(If));

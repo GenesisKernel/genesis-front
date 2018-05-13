@@ -1,67 +1,33 @@
 // Copyright 2017 The genesis-front Authors
 // This file is part of the genesis-front library.
-//
+// 
 // The genesis-front library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-//
+// 
 // The genesis-front library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
-//
+// 
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import React from 'react';
-import StyledComponent from './StyledComponent';
+import * as React from 'react';
+import * as classnames from 'classnames';
+import StyledComponent from 'components/Protypo/handlers/StyledComponent';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
-import classnames from 'classnames';
-import Switch from 'components/Main/Editor/Designer/Switch';
-import { IConstructorElementProps } from 'genesis/editor';
+import EditableBlock from './EditableBlock';
 
-export interface IIfProps extends IConstructorElementProps {
-    className?: string;
-    class?: string;
-    tail?: any;
-}
-
-interface IIfState {
-    condition: boolean;
-}
-
-class If extends React.Component<IIfProps, IIfState> {
-    constructor(props: IIfProps) {
-        super(props);
-        this.state = {
-            condition: true
-        };
-    }
-
-    onClick(e: any) {
-        e.stopPropagation();
-        this.props.selectTag(this.props.tag);
-    }
-
-    removeTag() {
-        this.props.removeTag({ tag: this.props.tag });
-    }
-
-    toggleCondition() {
-        this.setState({
-            condition: !this.state.condition
-        });
-    }
-
+class Table extends EditableBlock {
     render() {
-        if (!this.props.logic) {
-            return null;
-        }
         const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
 
         const classes = classnames({
+            'table': true,
+            [this.props.className]: true,
             'b-selected': this.props.selected
         });
 
@@ -77,25 +43,45 @@ class If extends React.Component<IIfProps, IIfState> {
                     connectDragSource={connectDragSource}
                     canMove={true}
                 >
-                    <div
+                    <table
                         className={classes}
                     >
-                        <span style={{ 'backgroundColor': '#FFCC66' }}>If
-                        <Switch
-                            initialValue={this.state.condition}
-                            onValue={true}
-                            offValue={false}
-                            onChange={this.toggleCondition.bind(this)}
-                        /> &#123;
-                    </span>
-                        {this.state.condition && (<div>{this.props.children} </div>) || (<span>...</span>)}
-                        <span style={{ 'backgroundColor': '#FFCC66' }}>&#125;</span>
-                        {!this.state.condition && this.props.tail}
-                    </div>
+                        <thead>
+                            <tr>
+                                <th>Column 1</th>
+                                <th>Column 2</th>
+                                <th>Column 3</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    Row 1
+                        </td>
+                                <td>
+                                    Value
+                        </td>
+                                <td>
+                                    Value
+                        </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Row 2
+                        </td>
+                                <td>
+                                    Value
+                        </td>
+                                <td>
+                                    Value
+                        </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </TagWrapper>
             </span>
         ));
     }
 }
 
-export default DnDComponent(StyledComponent(If));
+export default DnDComponent(StyledComponent(Table));
