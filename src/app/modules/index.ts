@@ -18,7 +18,6 @@ import { Action } from 'redux';
 import { Epic as NativeEpic } from 'redux-observable';
 import { IStoreDependencies } from './dependencies';
 import { combineReducers } from 'redux';
-import { reducer as toastrReducer } from 'react-redux-toastr';
 import { combineEpics } from 'redux-observable';
 import { routerReducer as router, RouterState } from 'react-router-redux';
 import { loadingBarReducer } from 'react-redux-loading-bar';
@@ -30,6 +29,7 @@ import * as editor from './editor';
 import * as tx from './tx';
 import * as gui from './gui';
 import * as io from './io';
+import * as notifications from './notifications';
 import * as storage from './storage';
 import * as socket from './socket';
 import { ActionCreator, Failure, Success } from 'typescript-fsa';
@@ -50,6 +50,7 @@ export interface IRootState {
     tx: tx.State;
     gui: gui.State;
     io: io.State;
+    notifications: notifications.State;
     storage: storage.State;
     socket: socket.State;
     loadingBar: number;
@@ -64,6 +65,7 @@ export const rootEpic = combineEpics(
     tx.epic,
     gui.epic,
     io.epic,
+    notifications.epic,
     storage.epic,
     socket.epic
 );
@@ -76,9 +78,9 @@ export default combineReducers<IRootState>({
     editor: editor.reducer,
     tx: tx.reducer,
     gui: gui.reducer,
+    notifications: notifications.reducer,
     storage: storage.reducer,
     socket: socket.reducer,
     loadingBar: loadingBarReducer,
-    toastr: toastrReducer,
     router
 });

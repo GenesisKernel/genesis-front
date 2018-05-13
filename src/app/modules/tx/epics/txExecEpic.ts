@@ -14,14 +14,15 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
+import uuid from 'uuid';
 import { Action } from 'redux';
 import { Epic } from 'modules';
 import { Observable } from 'rxjs';
 import { txExec } from '../actions';
 import keyring from 'lib/keyring';
-import { toastr } from 'react-redux-toastr';
 import { authorize } from 'modules/auth/actions';
 import { TTxError } from 'genesis/tx';
+import { enqueueNotification } from '../../notifications/actions';
 
 export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(txExec.started)
     .flatMap(action => {
@@ -61,14 +62,7 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
 
         ).flatMap(txResult => {
             if (txResult.blockid) {
-                if (!action.payload.tx.silent) {
-                    toastr.success(
-                        action.payload.tx.name,
-                        `Imprinted in the blockchain (block #${txResult.blockid})`,
-                    );
-                }
-
-                return Observable.of<Action>(
+                const actions = Observable.of<Action>(
                     txExec.done({
                         params: action.payload,
                         result: {
@@ -78,6 +72,20 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                     }),
                     authorize(action.payload.privateKey)
                 );
+
+                if (action.payload.tx.silent) {
+                    return actions;
+                }
+                else {
+                    return actions.concat(Observable.of(enqueueNotification({
+                        id: uuid.v4(),
+                        type: 'TX_SUCCESS',
+                        params: {
+                            block: txResult.blockid,
+                            tx: action.payload.tx
+                        }
+                    })));
+                }
             }
             else {
                 return Observable.of(txExec.failed({

@@ -14,22 +14,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import uuid from 'uuid';
-import { IRootState } from 'modules';
-import { Epic } from 'redux-observable';
-import { Action } from 'redux';
-import { txCallBatch } from '../actions';
-import { enqueueNotification } from 'modules/notifications/actions';
+import reducer, { State } from './reducer';
+import epic from './epic';
+import * as actions from './actions';
 
-export const txCallBatchDoneEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(txCallBatch.done)
-        .filter(l => !l.payload.params.silent)
-        .map(action =>
-            enqueueNotification({
-                id: uuid.v4(),
-                type: 'TX_BATCH',
-                params: {}
-            })
-        );
-
-export default txCallBatchDoneEpic;
+export type State = State;
+export {
+    actions,
+    reducer,
+    epic
+};
