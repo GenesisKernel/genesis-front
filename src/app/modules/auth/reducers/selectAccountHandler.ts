@@ -20,7 +20,9 @@ import { Reducer } from 'modules';
 
 const selectAccountHandler: Reducer<typeof selectAccount, State> = (state, payload) => ({
     ...state,
-    account: payload
+    account: payload,
+    role: null,
+    roles: null
 });
 
 export default selectAccountHandler;
