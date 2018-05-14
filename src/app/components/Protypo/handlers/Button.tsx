@@ -17,18 +17,13 @@
 import * as React from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import * as propTypes from 'prop-types';
-import * as classnames from 'classnames';
 
 import Protypo, { IParamsSpec } from '../Protypo';
 import ValidatedForm from 'components/Validation/ValidatedForm';
 import TxButton from 'containers/Widgets/TxButton';
 import TxBatchButton from 'containers/Widgets/TxBatchButton';
 
-import TagWrapper from '../components/TagWrapper';
-import DnDComponent from './DnDComponent';
-import { IConstructorElementProps } from 'genesis/editor';
-
-export interface IButtonProps extends IConstructorElementProps {
+export interface IButtonProps {
     'class'?: string;
     'alert'?: {
         icon: string;
@@ -96,56 +91,6 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
         }
     };
 
-    const onClick = (e: any) => {
-        e.stopPropagation();
-        props.selectTag(props.tag);
-    };
-
-    const onBlur = (e: any) => {
-        e.stopPropagation();
-        props.changePage({ text: e.target.innerHTML, tagID: props.tag.id });
-    };
-
-    const removeTag = () => {
-        props.removeTag({ tag: props.tag });
-    };
-
-    if (props.editable) {
-        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = props;
-
-        const classes = classnames({
-            [props.class]: true,
-            // [props.className]: true,
-            'b-selected': props.selected
-        });
-
-        return connectDragPreview(connectDropTarget(
-            <span style={{ display: 'inline-block' }}>
-                <TagWrapper
-                    display="inline"
-                    selected={props.selected}
-                    canDrop={isOver}
-                    canDropPosition={props.canDropPosition}
-                    onClick={onClick}
-                    removeTag={removeTag}
-                    connectDragSource={connectDragSource}
-                    canMove={true}
-                >
-                    <button
-                        className={classes}
-                    >
-                        <span
-                            contentEditable={props.selected}
-                            onBlur={onBlur}
-                        >
-                            {props.children}
-                        </span>
-                    </button>
-                </TagWrapper>
-            </span>
-        ));
-    }
-
     if (props.composite) {
         return (
             <TxBatchButton
@@ -193,4 +138,3 @@ Button.contextTypes = {
 };
 
 export default injectIntl(Button);
-export const ButtonDnD = DnDComponent(injectIntl(Button));

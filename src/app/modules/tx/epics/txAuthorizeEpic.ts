@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
+import uuid from 'uuid';
 import { IRootState } from 'modules';
 import { Epic } from 'redux-observable';
 import { Action } from 'redux';
@@ -22,6 +23,7 @@ import { modalShow, modalClose } from 'modules/modal/actions';
 import { txAuthorize } from '../actions';
 import { authorize } from 'modules/auth/actions';
 import keyring from 'lib/keyring';
+import { enqueueNotification } from 'modules/notifications/actions';
 
 const txAuthorizeEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(txAuthorize.started)
@@ -57,10 +59,17 @@ const txAuthorizeEpic: Epic<Action, IRootState> =
                                     );
                                 }
                                 else {
-                                    return Observable.of(txAuthorize.failed({
-                                        params: action.payload,
-                                        error: null
-                                    }));
+                                    return Observable.of<Action>(
+                                        txAuthorize.failed({
+                                            params: action.payload,
+                                            error: null
+                                        }),
+                                        enqueueNotification({
+                                            id: uuid.v4(),
+                                            type: 'INVALID_PASSWORD',
+                                            params: {}
+                                        })
+                                    );
                                 }
                             }
                             else {

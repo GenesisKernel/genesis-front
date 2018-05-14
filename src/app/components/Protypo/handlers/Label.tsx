@@ -15,74 +15,16 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from 'react';
-import * as classnames from 'classnames';
-import { OnPasteStripFormatting } from 'lib/constructor';
 import StyledComponent from './StyledComponent';
-import TagWrapper from '../components/TagWrapper';
-import DnDComponent from './DnDComponent';
-import { IConstructorElementProps } from 'genesis/editor';
 
-export interface ILabelProps extends IConstructorElementProps {
+export interface ILabelProps {
     'className'?: string;
     'class'?: string;
     'for'?: string;
 }
 
 class Label extends React.Component<ILabelProps> {
-
-    onPaste(e: any) {
-        OnPasteStripFormatting(this, e);
-    }
-
-    onClick(e: any) {
-        e.stopPropagation();
-        this.props.selectTag(this.props.tag);
-    }
-
-    onBlur(e: any) {
-        e.stopPropagation();
-        this.props.changePage({ text: e.target.innerHTML, tagID: this.props.tag.id });
-    }
-
-    removeTag() {
-        this.props.removeTag({ tag: this.props.tag });
-    }
-
     render() {
-        if (this.props.editable) {
-            const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
-
-            const classes = classnames({
-                [this.props.class]: true,
-                [this.props.className]: true,
-                'b-selected': this.props.selected
-            });
-
-            return connectDragPreview(connectDropTarget(
-                <span style={{display: 'inline-block'}}>
-                    <TagWrapper
-                        display="inline"
-                        selected={this.props.selected}
-                        canDrop={isOver}
-                        canDropPosition={this.props.canDropPosition}
-                        onClick={this.onClick.bind(this)}
-                        removeTag={this.removeTag.bind(this)}
-                        connectDragSource={connectDragSource}
-                        canMove={true}
-                    >
-                    <label
-                        className={classes}
-                        contentEditable={this.props.selected}
-                        onBlur={this.onBlur.bind(this)}
-                        onPaste={this.onPaste.bind(this)}
-                    >
-                        {this.props.children}
-                    </label>
-                    </TagWrapper>
-                </span>
-            ));
-        }
-
         return (
             <label htmlFor={this.props.for} className={[this.props.class, this.props.className].join(' ')}>{this.props.children}</label>
         );
@@ -90,4 +32,3 @@ class Label extends React.Component<ILabelProps> {
 }
 
 export default StyledComponent(Label);
-export const LabelDnD = DnDComponent(StyledComponent(Label));

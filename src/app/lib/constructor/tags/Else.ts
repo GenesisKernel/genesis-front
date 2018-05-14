@@ -41,6 +41,7 @@ class Else extends Tag {
         let result: string = '.' + this.tagName;
         result += '{\n';
         let body = this.renderChildren(this.element.children, this.offset);
+
         if (this.element.children && this.element.children.length) {
             result += body + '\n' + this.renderOffset();
         }

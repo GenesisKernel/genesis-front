@@ -227,6 +227,8 @@
     "navigation.home": "Домашнаяя страница",
     "navigation.refresh": "Обновить",
     "notifications": "Уведомления",
+    "notification.tx_batch": "Пакетная обработка завершена",
+    "notification.tx_imprinted": "Транзакция исполнена (блок {block})",
     "pending": "Загрузка",
     "process.confirm": "Подтвердить",
     "process.continue": "Далее",

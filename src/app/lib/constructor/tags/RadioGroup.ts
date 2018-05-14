@@ -31,6 +31,7 @@ class RadioGroup extends Tag {
             'value': 'Value',
             'class': 'Class'
         };
+        this.editProps = ['class', 'name', 'source', 'namecolumn', 'valuecolumn', 'value'];
     }
 
     generateTreeJSON(text: string): any {

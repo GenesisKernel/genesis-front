@@ -16,62 +16,22 @@
 
 import * as React from 'react';
 import StyledComponent from './StyledComponent';
-import TagWrapper from '../components/TagWrapper';
-import DnDComponent from './DnDComponent';
-import * as classnames from 'classnames';
-import ContentEditable from 'react-contenteditable';
-import EditableBlock from './EditableBlock';
 
-class Span extends EditableBlock {
+export interface ISpanProps {
+    'className'?: string;
+    'class'?: string;
+}
 
+class Span extends React.Component<ISpanProps> {
     render() {
-        if (this.props.editable) {
-            const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
-
-            const classes = classnames({
-                [this.props.class]: true,
-                [this.props.className]: true,
-                'b-selected': this.props.selected
-            });
-
-            return connectDragPreview(connectDropTarget(
-                <span style={{display: 'inline-block'}}>
-                    <TagWrapper
-                        display="inline"
-                        selected={this.props.selected}
-                        canDrop={isOver}
-                        canDropPosition={this.props.canDropPosition}
-                        onClick={this.onClick.bind(this)}
-                        removeTag={this.removeTag.bind(this)}
-                        connectDragSource={connectDragSource}
-                        canMove={true}
-                    >
-                    {this.hasChildrenText() ? (
-                        <ContentEditable
-                            tagName="span"
-                            className={classes}
-                            html={this.props.childrenText}
-                            onChange={this.handleChange.bind(this)}
-                        />
-                    ) : (
-                        <span
-                            className={classes}
-                        >
-                            {this.props.children}
-                        </span>
-                    )}
-                    </TagWrapper>
-                </span>
-            ));
-        }
         return (
-            <span className={[this.props.class, this.props.className].join(' ')}>
+            <span
+                className={[this.props.class, this.props.className].join(' ')}
+            >
                 {this.props.children}
             </span>
         );
-
     }
 }
 
 export default StyledComponent(Span);
-export const SpanDnD = DnDComponent(StyledComponent(Span));

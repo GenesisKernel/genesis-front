@@ -15,37 +15,33 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import Protypo from './Protypo';
-import Button, { ButtonDnD } from './handlers/Button';
+import Button from './handlers/Button';
 import Code from 'components/Protypo/handlers/Code';
 import Data from './handlers/Data';
 import DBFind from './handlers/DBFind';
-import LogicDnD from './handlers/Logic';
-import IfDnD from './handlers/If';
-import ElseIfDnD from './handlers/ElseIf';
-import ElseDnD from './handlers/Else';
-import Div, { DivDnD } from './handlers/Div';
-import Em, { EmDnD } from './handlers/Em';
+import Div from './handlers/Div';
+import Em from './handlers/Em';
 import ForList from './handlers/ForList';
-import Form, { FormDnD } from './handlers/Form';
-import Image, { ImageDnD } from './handlers/Image';
-import ImageInput, { ImageInputDnD } from './handlers/ImageInput';
-import Input, { InputDnD } from './handlers/Input';
+import Form from './handlers/Form';
+import Image from './handlers/Image';
+import ImageInput from './handlers/ImageInput';
+import Input from './handlers/Input';
 import InputErr from './handlers/InputErr';
 import InputMap from './handlers/InputMap';
 import JsonToSource from './handlers/JsonToSource';
-import Label, { LabelDnD } from './handlers/Label';
+import Label from './handlers/Label';
 import LinkPage from './handlers/LinkPage';
 import Map from './handlers/Map';
 import MenuItem from './handlers/MenuItem';
 import MenuGroup from './handlers/MenuGroup';
-import P, { PDnD } from './handlers/P';
+import P from './handlers/P';
 import QRCode from './handlers/QRCode';
-import RadioGroup, { RadioGroupDnD } from './handlers/RadioGroup';
+import RadioGroup from './handlers/RadioGroup';
 import Range from './handlers/Range';
 import Select from './handlers/Select';
-import Span, { SpanDnD } from './handlers/Span';
-import Strong, { StrongDnD } from './handlers/Strong';
-import Table, { TableDnD } from './handlers/Table';
+import Span from './handlers/Span';
+import Strong from './handlers/Strong';
+import Table from './handlers/Table';
 
 import setTitle from './functions/setTitle';
 import addToolButton from './functions/addToolButton';
@@ -54,8 +50,8 @@ const handlers = {
     'button': Button,
     'code': Code,
     'data': Data,
-    'div': Div,
     'dbfind': DBFind,
+    'div': Div,
     'em': Em,
     'forlist': ForList,
     'form': Form,
@@ -80,34 +76,12 @@ const handlers = {
     'table': Table
 };
 
-const handlersDnD = {
-    'button': ButtonDnD,
-    'if': IfDnD,
-    'elseif': ElseIfDnD,
-    'else': ElseDnD,
-    'div': DivDnD,
-    'em': EmDnD,
-    'form': FormDnD,
-    'image': ImageDnD,
-    'imageinput': ImageInputDnD,
-    'input': InputDnD,
-    'label': LabelDnD,
-    'p': PDnD,
-    'radiogroup': RadioGroupDnD,
-    'span': SpanDnD,
-    'strong': StrongDnD,
-    'table': TableDnD
-};
-
 const functions = {
     'settitle': setTitle,
     'addtoolbutton': addToolButton
 };
 
-export const resolveHandler = (name: string, DnD?: boolean) => {
-    if (DnD) {
-        return handlersDnD[name] || LogicDnD;
-    }
+export const resolveHandler = (name: string) => {
     return handlers[name];
 };
 

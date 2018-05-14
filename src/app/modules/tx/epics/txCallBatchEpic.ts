@@ -47,7 +47,7 @@ const txCallBatchEpic: Epic<Action, IRootState> =
                                         .flatMap(tx => {
                                             if (isType(tx, txExec.done)) {
                                                 const parent = store.getState().tx.transactions.get(tx.payload.params.tx.parent) as ITransactionCollection;
-                                                if (totalCount === parent.transactions.length && !parent.transactions.find(l => !!l.error)) {
+                                                if (totalCount === parent.transactions.length && !parent.transactions.find(l => !!l.error || !l.block)) {
                                                     return Observable.of(txCallBatch.done({
                                                         params: action.payload,
                                                         result: true

@@ -14,23 +14,22 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
+import uuid from 'uuid';
 import { IRootState } from 'modules';
 import { Epic } from 'redux-observable';
 import { Action } from 'redux';
 import { txCallBatch } from '../actions';
-import { Observable } from 'rxjs/Observable';
-import { toastr } from 'react-redux-toastr';
+import { enqueueNotification } from 'modules/notifications/actions';
 
-export const txCallBatchFailedEpic: Epic<Action, IRootState> =
+export const txCallBatchDoneEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(txCallBatch.done)
         .filter(l => !l.payload.params.silent)
-        .flatMap(action => {
-            toastr.success(
-                action.payload.params.uuid,
-                'Batch processing completed',
-            );
+        .map(action =>
+            enqueueNotification({
+                id: uuid.v4(),
+                type: 'TX_BATCH',
+                params: {}
+            })
+        );
 
-            return Observable.empty();
-        });
-
-export default txCallBatchFailedEpic;
+export default txCallBatchDoneEpic;

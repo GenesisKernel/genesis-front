@@ -26,7 +26,6 @@ import { IConstructorElementProps } from 'genesis/editor';
 
 export interface IProtypoProps extends IConstructorElementProps {
     apiHost: string;
-    editable?: boolean;
     wrapper?: JSX.Element;
     context: string;
     page: string;
@@ -132,64 +131,21 @@ class Protypo extends React.Component<IProtypoProps> {
                 return element.text;
 
             default:
-                const Handler = resolveHandler(element.tag, this.props.editable);
+                const Handler = resolveHandler(element.tag);
                 const func = resolveFunction(element.tag);
                 if (Handler) {
-                    const selected = this.props.selectedTag && this.props.selectedTag.id === element.id;
-
                     if (-1 !== contextDefinitions[this.props.context].disabledHandlers.indexOf(element.tag)) {
                         return null;
                     }
                     else {
                         const key = optionalKey || (this._lastID++).toString();
 
-                        if (element.tag === 'if') {
-                            return (
-                                <Handler
-                                    {...element.attr}
-                                    {...element.sysAttr}
-                                    key={key}
-                                    id={key}
-                                    tag={element}
-                                    childrenTree={element.children}
-                                    childrenText={element.childrenText}
-                                    editable={this.props.editable}
-                                    changePage={this.props.changePage}
-                                    setTagCanDropPosition={this.props.setTagCanDropPosition}
-                                    addTag={this.props.addTag}
-                                    moveTag={this.props.moveTag}
-                                    copyTag={this.props.copyTag}
-                                    removeTag={this.props.removeTag}
-                                    selectTag={this.props.selectTag}
-                                    selected={selected}
-                                    logic={this.props.logic}
-                                    tail={this.renderElements(element.tail)}
-                                >
-
-                                    {this.renderElements(element.children)}
-                                </Handler>
-                            );
-                        }
-
                         return (
                             <Handler
                                 {...element.attr}
-                                {...element.sysAttr}
                                 key={key}
                                 id={key}
-                                tag={element}
                                 childrenTree={element.children}
-                                childrenText={element.childrenText}
-                                editable={this.props.editable}
-                                changePage={this.props.changePage}
-                                setTagCanDropPosition={this.props.setTagCanDropPosition}
-                                addTag={this.props.addTag}
-                                moveTag={this.props.moveTag}
-                                copyTag={this.props.copyTag}
-                                removeTag={this.props.removeTag}
-                                selectTag={this.props.selectTag}
-                                selected={selected}
-                                logic={this.props.logic}
                             >
                                 {this.renderElements(element.children)}
                             </Handler>
@@ -226,7 +182,7 @@ class Protypo extends React.Component<IProtypoProps> {
     }
 
     renderHeading() {
-        return (this.props.context === 'page' && !this.props.editable) ? (
+        return (this.props.context === 'page') ? (
             <Heading key="func_heading">
                 <span>{this._title}</span>
                 <div className="pull-right">
@@ -267,13 +223,6 @@ class Protypo extends React.Component<IProtypoProps> {
             return React.cloneElement(this.props.wrapper, this.props.wrapper.props, children);
         }
         else {
-            if (this.props.editable) {
-                return (
-                    <div>
-                        {children}
-                    </div>
-                );
-            }
             return (
                 <div className="fullscreen">
                     {children}

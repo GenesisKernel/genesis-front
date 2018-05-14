@@ -16,53 +16,17 @@
 
 import * as React from 'react';
 import StyledComponent from './StyledComponent';
-import TagWrapper from '../components/TagWrapper';
-import DnDComponent from './DnDComponent';
-import * as classnames from 'classnames';
-import ContentEditable from 'react-contenteditable';
-import EditableBlock from './EditableBlock';
 
-class P extends EditableBlock {
+export interface IPProps {
+    'className'?: string;
+    'class'?: string;
+}
+
+interface IPState {
+}
+
+class P extends React.Component<IPProps, IPState> {
     render() {
-        if (this.props.editable) {
-            const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
-
-            const classes = classnames({
-                [this.props.class]: true,
-                [this.props.className]: true,
-                'b-selected': this.props.selected
-            });
-
-            return connectDragPreview(connectDropTarget(
-                <span>
-                    <TagWrapper
-                        display="block"
-                        selected={this.props.selected}
-                        canDrop={isOver}
-                        canDropPosition={this.props.canDropPosition}
-                        onClick={this.onClick.bind(this)}
-                        removeTag={this.removeTag.bind(this)}
-                        connectDragSource={connectDragSource}
-                        canMove={true}
-                    >
-                    {this.hasChildrenText() ? (
-                        <ContentEditable
-                            tagName="p"
-                            className={classes}
-                            html={this.props.childrenText}
-                            onChange={this.handleChange.bind(this)}
-                        />
-                        ) : (
-                        <p
-                            className={classes}
-                        >
-                            {this.props.children}
-                        </p>
-                        )}
-                    </TagWrapper>
-                </span>
-            ));
-        }
         return (
             <p
                 className={[this.props.class, this.props.className].join(' ')}
@@ -70,9 +34,7 @@ class P extends EditableBlock {
                 {this.props.children}
             </p>
         );
-
     }
 }
 
 export default StyledComponent(P);
-export const PDnD = DnDComponent(StyledComponent(P));

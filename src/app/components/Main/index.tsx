@@ -17,7 +17,6 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
-import ReduxToastr from 'react-redux-toastr';
 import LoadingBar from 'react-redux-loading-bar';
 import { OrderedMap } from 'immutable';
 import styled from 'styled-components';
@@ -229,13 +228,6 @@ class Main extends React.Component<IMainProps> {
                 </StyledControls >
                 <Navigation topOffset={styles.headerHeight + styles.menuHeight + styles.toolbarHeight} />
                 <StyledContent style={{ marginLeft: this.props.navigationVisible ? this.props.navigationSize : 0 }}>
-                    <ReduxToastr
-                        timeOut={3000}
-                        newestOnTop
-                        position="top-center"
-                        transitionIn="fadeIn"
-                        transitionOut="fadeOut"
-                    />
                     {this.props.children}
                 </StyledContent>
             </StyledWrapper >

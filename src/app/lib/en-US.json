@@ -227,6 +227,8 @@
     "navigation.home": "Home",
     "navigation.refresh": "Refresh",
     "notifications": "Notifications",
+    "notification.tx_batch": "Batch processing completed",
+    "notification.tx_imprinted": "Imprinted in the blockchain (block {block})",
     "pending": "Pending",
     "process.confirm": "Confirm",
     "process.continue": "Continue",
