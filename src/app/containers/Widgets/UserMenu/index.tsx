@@ -14,7 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import * as React from 'react';
+import React from 'react';
+import { Dispatch, Action } from 'redux';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
 import { logout, selectAccount } from 'modules/auth/actions';
@@ -54,9 +55,14 @@ const mapStateToProps = (state: IRootState) => ({
     ecosystem: state.auth.ecosystem
 });
 
-const mapDispatchToProps = {
-    logout: logout.started,
-    selectAccount: selectAccount
-};
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
+    logout: () => {
+        dispatch(logout.started(null));
+    },
+    selectAccount: (account: IAccount) => {
+        dispatch(logout.started(null));
+        dispatch(selectAccount(account));
+    }
+});
 
 export default connect<IUserMenuContainerState, IUserMenuContainerDispatch, IUserMenuContainerProps>(mapStateToProps, mapDispatchToProps)(UserMenuContainer);
