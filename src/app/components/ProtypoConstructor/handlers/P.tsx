@@ -35,7 +35,7 @@ class P extends EditableBlock {
         return connectDragPreview(connectDropTarget(
             <span>
                 <TagWrapper
-                    display="inline"
+                    display="block"
                     selected={this.props.selected}
                     canDrop={isOver}
                     canDropPosition={this.props.canDropPosition}

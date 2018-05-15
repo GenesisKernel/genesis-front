@@ -28,8 +28,7 @@ const copyTagEpic: Epic<Action, IRootState> =
             let jsonData = tabData.jsonData && constructorModule.copyObject(tabData.jsonData) || null;
 
             let tagCopy = constructorModule.copyObject(action.payload.tag);
-            // generate new id for inserted tag
-            tagCopy.id = constructorModule.generateId();
+            tagCopy.id = (constructorModule.IdGenerator.Instance).generateId();
 
             if (tagCopy.children) {
                 constructorModule.setIds(tagCopy.children, true);

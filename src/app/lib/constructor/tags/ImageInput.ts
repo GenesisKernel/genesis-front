@@ -36,7 +36,7 @@ class ImageInput extends Tag {
     generateTreeJSON(text: string): any {
         return {
             tag: this.tagName.toLowerCase(),
-            id: constructorModule.generateId(),
+            id: (constructorModule.IdGenerator.Instance).generateId(),
             attr: {
                 format: 'jpg',
                 name: 'sample image',

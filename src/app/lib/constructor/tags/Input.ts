@@ -36,7 +36,7 @@ class Input extends Tag {
     generateTreeJSON(text: string): any {
         return {
             tag: this.tagName.toLowerCase(),
-            id: constructorModule.generateId(),
+            id: (constructorModule.IdGenerator.Instance).generateId(),
             attr: {
                 name: 'sample input',
                 class: 'form-control'

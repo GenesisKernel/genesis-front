@@ -176,11 +176,11 @@ class Tag {
     generateTreeJSON(text: string): any {
         return {
             tag: this.tagName.toLowerCase(),
-            id: constructorModule.generateId(),
+            id: (constructorModule.IdGenerator.Instance).generateId(),
             children: this.generateTextElement ? [{
                 tag: 'text',
                 text: text,
-                id: constructorModule.generateId()
+                id: (constructorModule.IdGenerator.Instance).generateId()
             }] : []
         };
     }

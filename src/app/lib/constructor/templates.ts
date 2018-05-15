@@ -522,7 +522,7 @@ const constructorTemplates: any = {
 
 export default function getConstructorTemplate(name: string) {
     let template = constructorModule.copyObject(constructorTemplates[name]);
-    template.id = constructorModule.generateId();
+    template.id = (constructorModule.IdGenerator.Instance).generateId();
     if (template.children) {
         constructorModule.setIds(template.children, true);
     }

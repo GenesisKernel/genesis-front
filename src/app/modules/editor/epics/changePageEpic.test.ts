@@ -18,21 +18,20 @@ import 'rxjs';
 import 'lib/external/fsa';
 import { Action } from 'redux';
 import { ActionsObservable } from 'redux-observable';
-import { addTag } from '../actions';
-import addTagEpic from './addTagEpic';
+import { changePage } from '../actions';
+import changePageEpic from './changePageEpic';
 import constructorModule from 'lib/constructor';
 import { TProtypoElement } from 'genesis/protypo';
 import { TConstructorTreeElement } from 'genesis/editor';
 import mockStore from './mockStore';
 
-describe('addTagEpic', () => {
-    it('adds tag to tree json', () => {
+describe('changeTagEpic', () => {
+    it('change tag transform props', () => {
 
-        const action$ = ActionsObservable.of<Action>(addTag.started({
-            tag: {
-                new: true,
-                element: 'div'
-            }
+        const action$ = ActionsObservable.of<Action>(changePage.started({
+            attrName: 'transform',
+            attrValue: 'uppercase',
+            tagID: 'tag_1'
         }));
 
         const jsonData: TProtypoElement[] = [
@@ -47,7 +46,7 @@ describe('addTagEpic', () => {
             {
                 tag: 'p',
                 attr: {
-                    'class': 'text-primary'
+                    'class': 'text-primary text-uppercase'
                 },
                 children: [
                     {
@@ -124,12 +123,6 @@ describe('addTagEpic', () => {
                 ],
                 id: 'tag_7',
                 childrenText: null
-            },
-            {
-                tag: 'div',
-                id: 'tag_13',
-                children: [],
-                childrenText: ''
             }
         ];
 
@@ -164,7 +157,7 @@ describe('addTagEpic', () => {
                 tag: {
                     tag: 'p',
                     attr: {
-                        'class': 'text-primary'
+                        'class': 'text-primary text-uppercase'
                     },
                     children: [
                         {
@@ -366,46 +359,28 @@ describe('addTagEpic', () => {
                     id: 'tag_7',
                     childrenText: null
                 }
-            },
-            {
-                title: 'div',
-                children: [],
-                expanded: true,
-                id: 'tag_13',
-                selected: false,
-                logic: false,
-                canMove: true,
-                canDrop: true,
-                tag: {
-                    tag: 'div',
-                    id: 'tag_13',
-                    children: [],
-                    childrenText: ''
-                }
             }
         ];
 
-        const expectedOutput = [
+        const expectedOutput: any = [
             {
                 payload: {
                     params: {
-                        tag: {
-                            element: 'div',
-                            new: true
-                        }
+                        attrName: 'transform',
+                        attrValue: 'uppercase',
+                        tagID: 'tag_1'
                     },
                     result: {
+                        selectedTag: null,
                         jsonData: jsonData,
                         treeData: treeData
                     }
                 },
-                type: 'editor/ADD_TAG_DONE'
+                type: 'editor/CHANGE_PAGE_DONE'
             }
         ];
 
-        (constructorModule.IdGenerator.Instance).setCounter(13);
-
-        addTagEpic(action$, mockStore, { constructorModule })
+        changePageEpic(action$, mockStore, { constructorModule })
             .toArray()
             .subscribe(actualOutput => {
                 expect(actualOutput).toEqual(expectedOutput);

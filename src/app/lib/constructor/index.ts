@@ -87,8 +87,21 @@ export function copyObject(item: any) {
     return result || item;
 }
 
-export function generateId() {
-    return 'tag_' + (10000000 + Math.floor(Math.random() * 89999999));
+class IdGenerator {
+    private counter: number = 0;
+    private static _instance: IdGenerator;
+    public static get Instance() {
+        return this._instance || (this._instance = new this());
+    }
+    setCounter(counter: number) {
+        this.counter = counter;
+    }
+    generateId() {
+        return 'tag_' + this.counter++;
+    }
+    generateRandId() {
+        return 'tag_' + (10000000 + Math.floor(Math.random() * 89999999));
+    }
 }
 
 export function setIds(children: any[], force: boolean = false) {
@@ -97,7 +110,7 @@ export function setIds(children: any[], force: boolean = false) {
             continue;
         }
         if (!tag.id || force) {
-            tag.id = generateId();
+            tag.id = (IdGenerator.Instance).generateId();
         }
         if (tag.children) {
             setIds(tag.children, force);
@@ -437,17 +450,17 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                 return {
                     tag: 'text',
                     text: clearHtml(node.text),
-                    id: generateId()
+                    id: (IdGenerator.Instance).generateId()
                 };
             }
             else {
                 return {
                     tag: 'span',
-                    id: generateId(),
+                    id: (IdGenerator.Instance).generateId(),
                     children: [{
                         tag: 'text',
                         text: clearHtml(node.text),
-                        id: generateId()
+                        id: (IdGenerator.Instance).generateId()
                     }]
                 };
             }
@@ -457,7 +470,7 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                 case 'p':
                     return {
                         tag: 'p',
-                        id: generateId(),
+                        id: (IdGenerator.Instance).generateId(),
                         attr: {
                             className: className
                         },
@@ -466,7 +479,7 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                 case 'i':
                     return {
                         tag: 'em',
-                        id: generateId(),
+                        id: (IdGenerator.Instance).generateId(),
                         attr: {
                             className: className
                         },
@@ -476,7 +489,7 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                 case 'strong':
                     return {
                         tag: 'strong',
-                        id: generateId(),
+                        id: (IdGenerator.Instance).generateId(),
                         attr: {
                             className: className
                         },
@@ -485,7 +498,7 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                 case 'span':
                     return {
                         tag: 'span',
-                        id: generateId(),
+                        id: (IdGenerator.Instance).generateId(),
                         attr: {
                             className: className
                         },
@@ -494,7 +507,7 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                 case 'div':
                     return {
                         tag: 'div',
-                        id: generateId(),
+                        id: (IdGenerator.Instance).generateId(),
                         attr: {
                             className: className
                         },
@@ -526,7 +539,7 @@ export default {
     findTagById,
     copyObject,
     getConstructorTemplate,
-    generateId,
+    IdGenerator,
     updateChildrenText,
     html2childrenTags,
     resolveTagHandler,

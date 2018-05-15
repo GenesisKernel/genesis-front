@@ -54,7 +54,7 @@ class ElseIf extends Tag {
     generateTreeJSON(text: string): any {
         return {
             tag: this.tagName.toLowerCase(),
-            id: constructorModule.generateId(),
+            id: (constructorModule.IdGenerator.Instance).generateId(),
             attr: {
                 condition: '#value#'
             }

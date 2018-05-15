@@ -34,7 +34,7 @@ class Image extends Tag {
     generateTreeJSON(text: string): any {
         return {
             tag: this.tagName.toLowerCase(),
-            id: constructorModule.generateId(),
+            id: (constructorModule.IdGenerator.Instance).generateId(),
             attr: {
                 alt: 'Image',
                 src: '/img/dummy.png'
