@@ -18,6 +18,7 @@ import { TProtypoElement } from 'genesis/protypo';
 import constructorModule from 'lib/constructor';
 import resolveTagHandler from 'lib/constructor/tags';
 import getParamName, { getTailTagName } from 'lib/constructor/tags/params';
+import { isSimpleBody, quoteValueIfNeeded } from 'lib/constructor/helpers';
 
 class Tag {
     protected element: TProtypoElement;
@@ -49,42 +50,12 @@ class Tag {
     renderOffset(): string {
         return Array(this.offset + 1).join(' ');
     }
-    isSimpleBody(body: string): boolean {
-        return typeof body === 'string' && body.indexOf('(') === -1;
-    }
-    renderParamsOld(element: any, body: string): string {
-        let params = [];
 
-        for (let attr in element.attr) {
-            if (element.attr.hasOwnProperty(attr)) {
-                let value = element && element.attr && element.attr[attr] || '';
-                if (value) {
-                    if (typeof value === 'string') {
-                        const quote = value.indexOf(',') >= 0;
-                        params.push(getParamName(attr) + ': ' + (quote ? '"' : '') + value + (quote ? '"' : ''));
-                    }
-                    if (typeof value === 'object') {
-                        params.push(this.getParamsStr(getParamName(attr), value));
-                    }
-                }
-            }
-        }
-
-        if (body && this.bodyInline && this.isSimpleBody(body)) {
-            params.push('Body: ' + body);
-        }
-
-        return params.join(', ');
-    }
-    quoteValueIfNeeded(value: string): string {
-        const quote = value.indexOf(',') >= 0;
-        return (quote ? '"' : '') + value + (quote ? '"' : '');
-    }
     getParam(element: TProtypoElement, attr: string): string {
         let value = element && element.attr && element.attr[attr] || '';
         if (value) {
             if (typeof value === 'string') {
-                return getParamName(attr) + ': ' + this.quoteValueIfNeeded(value);
+                return getParamName(attr) + ': ' + quoteValueIfNeeded(value);
             }
             if (typeof value === 'object') {
                 return this.getParamsStr(getParamName(attr), value);
@@ -92,8 +63,8 @@ class Tag {
         }
         return '';
     }
-    renderParams(element: any, body: string): string {
-        let params = [];
+    getBasicParamsArr(element: TProtypoElement) {
+        let params: string[] = [];
 
         for (let attr in element.attr) {
             if (element.attr.hasOwnProperty(attr)) {
@@ -103,8 +74,12 @@ class Tag {
                 }
             }
         }
+        return params;
+    }
+    renderParams(element: TProtypoElement, body: string): string {
+        let params: string[] = this.getBasicParamsArr(element);
 
-        if (body && this.bodyInline && this.isSimpleBody(body)) {
+        if (body && this.bodyInline && isSimpleBody(body)) {
             params.push('Body: ' + body);
         }
 
@@ -148,7 +123,7 @@ class Tag {
     }
     renderBody(body: string): string {
         let result = '';
-        if (body && (!this.bodyInline || !this.isSimpleBody(body))) {
+        if (body && (!this.bodyInline || !isSimpleBody(body))) {
             result = ' {\n' + body + '\n' + this.renderOffset() + '}';
         }
         return result;
@@ -173,7 +148,7 @@ class Tag {
         let result = children.map((element, index) => {
             switch (element.tag) {
                 case 'text':
-                    return this.quoteValueIfNeeded(element.text);
+                    return quoteValueIfNeeded(element.text);
                 default:
                     const Handler = resolveTagHandler(element.tag);
                     if (Handler) {
