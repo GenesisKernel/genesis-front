@@ -28,3 +28,13 @@ export function quoteValueIfNeeded(value: string): string {
 //         params.push(value);
 //     }
 // }
+
+export function getParamsStr(name: string, obj: Object) {
+    let paramsArr = [];
+    for (let param in obj) {
+        if (obj.hasOwnProperty(param)) {
+            paramsArr.push(param + '=' + (obj[param] && obj[param].text || ''));
+        }
+    }
+    return name + ': ' + '"' + paramsArr.join(',') + '"';
+}

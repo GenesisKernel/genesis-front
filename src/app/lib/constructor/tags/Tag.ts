@@ -18,7 +18,7 @@ import { TProtypoElement } from 'genesis/protypo';
 import constructorModule from 'lib/constructor';
 import resolveTagHandler from 'lib/constructor/tags';
 import getParamName, { getTailTagName } from 'lib/constructor/tags/params';
-import { isSimpleBody, quoteValueIfNeeded } from 'lib/constructor/helpers';
+import { isSimpleBody, quoteValueIfNeeded, getParamsStr } from 'lib/constructor/helpers';
 
 class Tag {
     protected element: TProtypoElement;
@@ -51,26 +51,26 @@ class Tag {
         return Array(this.offset + 1).join(' ');
     }
 
-    getParam(element: TProtypoElement, attr: string): string {
-        let value = element && element.attr && element.attr[attr] || '';
+    getParam(value: string, attr: string): string {
+        let param = '';
         if (value) {
             if (typeof value === 'string') {
-                return getParamName(attr) + ': ' + quoteValueIfNeeded(value);
+                param = getParamName(attr) + ': ' + quoteValueIfNeeded(value);
             }
             if (typeof value === 'object') {
-                return this.getParamsStr(getParamName(attr), value);
+                param = getParamsStr(getParamName(attr), value);
             }
         }
-        return '';
+        return param;
     }
     getBasicParamsArr(element: TProtypoElement) {
         let params: string[] = [];
 
         for (let attr in element.attr) {
             if (element.attr.hasOwnProperty(attr)) {
-                let value = this.getParam(element, attr);
-                if (value) {
-                    params.push(value);
+                let param = this.getParam(element.attr[attr], attr);
+                if (param) {
+                    params.push(param);
                 }
             }
         }
