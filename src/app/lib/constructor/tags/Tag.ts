@@ -52,7 +52,7 @@ class Tag {
     isSimpleBody(body: string): boolean {
         return typeof body === 'string' && body.indexOf('(') === -1;
     }
-    renderParams(element: any, body: string): string {
+    renderParamsOld(element: any, body: string): string {
         let params = [];
 
         for (let attr in element.attr) {
@@ -66,6 +66,40 @@ class Tag {
                     if (typeof value === 'object') {
                         params.push(this.getParamsStr(getParamName(attr), value));
                     }
+                }
+            }
+        }
+
+        if (body && this.bodyInline && this.isSimpleBody(body)) {
+            params.push('Body: ' + body);
+        }
+
+        return params.join(', ');
+    }
+    quoteValueIfNeeded(value: string): string {
+        const quote = value.indexOf(',') >= 0;
+        return (quote ? '"' : '') + value + (quote ? '"' : '');
+    }
+    getParam(element: TProtypoElement, attr: string): string {
+        let value = element && element.attr && element.attr[attr] || '';
+        if (value) {
+            if (typeof value === 'string') {
+                return getParamName(attr) + ': ' + this.quoteValueIfNeeded(value);
+            }
+            if (typeof value === 'object') {
+                return this.getParamsStr(getParamName(attr), value);
+            }
+        }
+        return '';
+    }
+    renderParams(element: any, body: string): string {
+        let params = [];
+
+        for (let attr in element.attr) {
+            if (element.attr.hasOwnProperty(attr)) {
+                let value = this.getParam(element, attr);
+                if (value) {
+                    params.push(value);
                 }
             }
         }
@@ -139,7 +173,7 @@ class Tag {
         let result = children.map((element, index) => {
             switch (element.tag) {
                 case 'text':
-                    return element.text;
+                    return this.quoteValueIfNeeded(element.text);
                 default:
                     const Handler = resolveTagHandler(element.tag);
                     if (Handler) {
