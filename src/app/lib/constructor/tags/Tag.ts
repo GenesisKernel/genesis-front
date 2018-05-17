@@ -66,13 +66,13 @@ class Tag {
     getBasicParamsArr(element: TProtypoElement) {
         let params: string[] = [];
 
-        for (let attr in element.attr) {
-            if (element.attr.hasOwnProperty(attr)) {
+        if (element.attr) {
+            Object.keys(element.attr).forEach(attr => {
                 let param = this.getParam(element.attr[attr], attr);
                 if (param) {
                     params.push(param);
                 }
-            }
+            });
         }
         return params;
     }
@@ -226,16 +226,6 @@ class Tag {
                 id: constructorModule.generateId()
             }] : []
         };
-    }
-
-    getParamsStr(name: string, obj: Object) {
-        let paramsArr = [];
-        for (let param in obj) {
-            if (obj.hasOwnProperty(param)) {
-                paramsArr.push(param + '=' + (obj[param] && obj[param].text || ''));
-            }
-        }
-        return name + ': ' + '"' + paramsArr.join(',') + '"';
     }
 
     getValidationParams(obj: Object) {
