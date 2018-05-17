@@ -18,22 +18,17 @@ import 'rxjs';
 import 'lib/external/fsa';
 import { Action } from 'redux';
 import { ActionsObservable } from 'redux-observable';
-import { addTag } from '../actions';
-import addTagEpic from './addTagEpic';
+import { constructorUndo } from '../actions';
+import constructorUndoEpic from './constructorUndoEpic';
 import constructorModule from 'lib/constructor';
 import { TProtypoElement } from 'genesis/protypo';
 import { TConstructorTreeElement } from 'genesis/editor';
 import mockStore from './mockStore';
 
-describe('addTagEpic', () => {
-    it('adds tag to tree json', () => {
+describe('constructorUndoEpic', () => {
+    it('undo', () => {
 
-        const action$ = ActionsObservable.of<Action>(addTag.started({
-            tag: {
-                new: true,
-                element: 'div'
-            }
-        }));
+        const action$ = ActionsObservable.of<Action>(constructorUndo.started(null));
 
         const jsonData: TProtypoElement[] = [
             {
@@ -124,20 +119,6 @@ describe('addTagEpic', () => {
                 ],
                 id: 'tag_7',
                 childrenText: null
-            },
-            {
-                tag: 'table',
-                id: 'tag_13',
-                attr: {
-                    source: 'keysStr',
-                    columns: 'KEY_ID=id,MONEY=amount'
-                }
-            },
-            {
-                tag: 'div',
-                id: 'tag_14',
-                children: [],
-                childrenText: ''
             }
         ];
 
@@ -374,64 +355,26 @@ describe('addTagEpic', () => {
                     id: 'tag_7',
                     childrenText: null
                 }
-            },
-            {
-                title: 'table',
-                children: null,
-                expanded: true,
-                id: 'tag_13',
-                selected: false,
-                logic: false,
-                canMove: true,
-                canDrop: false,
-                tag: {
-                    tag: 'table',
-                    id: 'tag_13',
-                    attr: {
-                        source: 'keysStr',
-                        columns: 'KEY_ID=id,MONEY=amount'
-                    }
-                }
-            },
-            {
-                title: 'div',
-                children: [],
-                expanded: true,
-                id: 'tag_14',
-                selected: false,
-                logic: false,
-                canMove: true,
-                canDrop: true,
-                tag: {
-                    tag: 'div',
-                    id: 'tag_14',
-                    children: [],
-                    childrenText: ''
-                }
             }
         ];
 
-        const expectedOutput = [
+        const expectedOutput: any = [
             {
                 payload: {
-                    params: {
-                        tag: {
-                            element: 'div',
-                            new: true
-                        }
-                    },
+                    params: null,
                     result: {
                         jsonData: jsonData,
-                        treeData: treeData
+                        treeData: treeData,
+                        position: 1,
+                        canUndo: false,
+                        canRedo: true
                     }
                 },
-                type: 'editor/ADD_TAG_DONE'
+                type: 'editor/CONSTRUCTOR_UNDO_DONE'
             }
         ];
 
-        (constructorModule.IdGenerator.Instance).setCounter(14);
-
-        addTagEpic(action$, mockStore, { constructorModule })
+        constructorUndoEpic(action$, mockStore, { constructorModule })
             .toArray()
             .subscribe(actualOutput => {
                 expect(actualOutput).toEqual(expectedOutput);

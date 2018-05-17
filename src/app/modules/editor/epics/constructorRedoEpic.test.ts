@@ -18,22 +18,17 @@ import 'rxjs';
 import 'lib/external/fsa';
 import { Action } from 'redux';
 import { ActionsObservable } from 'redux-observable';
-import { addTag } from '../actions';
-import addTagEpic from './addTagEpic';
+import { constructorRedo } from '../actions';
+import constructorRedoEpic from './constructorRedoEpic';
 import constructorModule from 'lib/constructor';
 import { TProtypoElement } from 'genesis/protypo';
 import { TConstructorTreeElement } from 'genesis/editor';
 import mockStore from './mockStore';
 
-describe('addTagEpic', () => {
-    it('adds tag to tree json', () => {
+describe('constructorRedoEpic', () => {
+    it('undo test', () => {
 
-        const action$ = ActionsObservable.of<Action>(addTag.started({
-            tag: {
-                new: true,
-                element: 'div'
-            }
-        }));
+        const action$ = ActionsObservable.of<Action>(constructorRedo.started(null));
 
         const jsonData: TProtypoElement[] = [
             {
@@ -134,10 +129,14 @@ describe('addTagEpic', () => {
                 }
             },
             {
-                tag: 'div',
+                tag: 'imageinput',
                 id: 'tag_14',
-                children: [],
-                childrenText: ''
+                attr: {
+                    format: 'jpg',
+                    name: 'sample image',
+                    ratio: '2/1',
+                    width: '100'
+                }
             }
         ];
 
@@ -394,44 +393,44 @@ describe('addTagEpic', () => {
                 }
             },
             {
-                title: 'div',
-                children: [],
+                title: 'imageinput',
+                children: null,
                 expanded: true,
                 id: 'tag_14',
                 selected: false,
                 logic: false,
                 canMove: true,
-                canDrop: true,
+                canDrop: false,
                 tag: {
-                    tag: 'div',
+                    tag: 'imageinput',
                     id: 'tag_14',
-                    children: [],
-                    childrenText: ''
+                    attr: {
+                        format: 'jpg',
+                        name: 'sample image',
+                        ratio: '2/1',
+                        width: '100'
+                    }
                 }
             }
         ];
 
-        const expectedOutput = [
+        const expectedOutput: any = [
             {
                 payload: {
-                    params: {
-                        tag: {
-                            element: 'div',
-                            new: true
-                        }
-                    },
+                    params: null,
                     result: {
                         jsonData: jsonData,
-                        treeData: treeData
+                        treeData: treeData,
+                        position: 3,
+                        canUndo: true,
+                        canRedo: false
                     }
                 },
-                type: 'editor/ADD_TAG_DONE'
+                type: 'editor/CONSTRUCTOR_REDO_DONE'
             }
         ];
 
-        (constructorModule.IdGenerator.Instance).setCounter(14);
-
-        addTagEpic(action$, mockStore, { constructorModule })
+        constructorRedoEpic(action$, mockStore, { constructorModule })
             .toArray()
             .subscribe(actualOutput => {
                 expect(actualOutput).toEqual(expectedOutput);

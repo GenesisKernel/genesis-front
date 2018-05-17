@@ -123,6 +123,14 @@ describe('changeTagEpic', () => {
                 ],
                 id: 'tag_7',
                 childrenText: null
+            },
+            {
+                tag: 'table',
+                id: 'tag_13',
+                attr: {
+                    source: 'keysStr',
+                    columns: 'KEY_ID=id,MONEY=amount'
+                }
             }
         ];
 
@@ -358,6 +366,24 @@ describe('changeTagEpic', () => {
                     ],
                     id: 'tag_7',
                     childrenText: null
+                }
+            },
+            {
+                title: 'table',
+                children: null,
+                expanded: true,
+                id: 'tag_13',
+                selected: false,
+                logic: false,
+                canMove: true,
+                canDrop: false,
+                tag: {
+                    tag: 'table',
+                    id: 'tag_13',
+                    attr: {
+                        source: 'keysStr',
+                        columns: 'KEY_ID=id,MONEY=amount'
+                    }
                 }
             }
         ];

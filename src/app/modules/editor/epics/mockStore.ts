@@ -5777,6 +5777,14 @@ const state: IRootState = {
                                 ],
                                 id: 'tag_7',
                                 childrenText: null
+                            },
+                            {
+                                tag: 'table',
+                                id: 'tag_13',
+                                attr: {
+                                    source: 'keysStr',
+                                    columns: 'KEY_ID=id,MONEY=amount'
+                                }
                             }
                         ],
                         treeData: [
@@ -6012,9 +6020,28 @@ const state: IRootState = {
                                     id: 'tag_7',
                                     childrenText: null
                                 }
+                            },
+                            {
+                                title: 'table',
+                                children: null,
+                                expanded: true,
+                                id: 'tag_13',
+                                selected: false,
+                                logic: false,
+                                canMove: true,
+                                canDrop: false,
+                                tag: {
+                                    tag: 'table',
+                                    id: 'tag_13',
+                                    attr: {
+                                        source: 'keysStr',
+                                        columns: 'KEY_ID=id,MONEY=amount'
+                                    }
+                                }
                             }
                         ],
-                        selectedTag: null
+                        selectedTag: null,
+                        pageTemplate: 'Image(Src: /img/dummy.png, Alt: Image)\nP(Class: text-primary, Body:\n Paragraph text here\n)\nForm() {\n Label(Body:\n  Firstname:\n )\n Input(Class: form-control, Name: sample input)\n}\nForm() {\n Label(Body:\n  Lastname:\n )\n Input(Class: form-control, Name: sample input)\n Button(Body:\n  Submit\n )\n}\nTable(Source: keysStr, Columns: "KEY_ID=id,MONEY=amount")'
                     },
                     history: {
                         data: [
@@ -6108,11 +6135,219 @@ const state: IRootState = {
                                     id: 'tag_7',
                                     childrenText: null
                                 }
+                            ],
+                            [
+                                {
+                                    tag: 'image',
+                                    attr: {
+                                        alt: 'Image',
+                                        src: '/img/dummy.png'
+                                    },
+                                    id: 'tag_0'
+                                },
+                                {
+                                    tag: 'p',
+                                    attr: {
+                                        'class': 'text-primary'
+                                    },
+                                    children: [
+                                        {
+                                            tag: 'text',
+                                            text: 'Paragraph text here',
+                                            id: 'tag_2'
+                                        }
+                                    ],
+                                    id: 'tag_1',
+                                    childrenText: 'Paragraph text here'
+                                },
+                                {
+                                    tag: 'form',
+                                    children: [
+                                        {
+                                            tag: 'label',
+                                            children: [
+                                                {
+                                                    tag: 'text',
+                                                    text: 'Firstname:',
+                                                    id: 'tag_5'
+                                                }
+                                            ],
+                                            id: 'tag_4',
+                                            childrenText: 'Firstname:'
+                                        },
+                                        {
+                                            tag: 'input',
+                                            attr: {
+                                                'class': 'form-control',
+                                                name: 'sample input'
+                                            },
+                                            id: 'tag_6'
+                                        }
+                                    ],
+                                    id: 'tag_3',
+                                    childrenText: null
+                                },
+                                {
+                                    tag: 'form',
+                                    children: [
+                                        {
+                                            tag: 'label',
+                                            children: [
+                                                {
+                                                    tag: 'text',
+                                                    text: 'Lastname:',
+                                                    id: 'tag_9'
+                                                }
+                                            ],
+                                            id: 'tag_8',
+                                            childrenText: 'Lastname:'
+                                        },
+                                        {
+                                            tag: 'input',
+                                            attr: {
+                                                'class': 'form-control',
+                                                name: 'sample input'
+                                            },
+                                            id: 'tag_10'
+                                        },
+                                        {
+                                            tag: 'button',
+                                            children: [
+                                                {
+                                                    tag: 'text',
+                                                    text: 'Submit',
+                                                    id: 'tag_12'
+                                                }
+                                            ],
+                                            id: 'tag_11',
+                                            childrenText: 'Submit'
+                                        }
+                                    ],
+                                    id: 'tag_7',
+                                    childrenText: null
+                                },
+                                {
+                                    tag: 'table',
+                                    id: 'tag_13',
+                                    attr: {
+                                        source: 'keysStr',
+                                        columns: 'KEY_ID=id,MONEY=amount'
+                                    }
+                                }
+                            ],
+                            [
+                                {
+                                    tag: 'image',
+                                    attr: {
+                                        alt: 'Image',
+                                        src: '/img/dummy.png'
+                                    },
+                                    id: 'tag_0'
+                                },
+                                {
+                                    tag: 'p',
+                                    attr: {
+                                        'class': 'text-primary'
+                                    },
+                                    children: [
+                                        {
+                                            tag: 'text',
+                                            text: 'Paragraph text here',
+                                            id: 'tag_2'
+                                        }
+                                    ],
+                                    id: 'tag_1',
+                                    childrenText: 'Paragraph text here'
+                                },
+                                {
+                                    tag: 'form',
+                                    children: [
+                                        {
+                                            tag: 'label',
+                                            children: [
+                                                {
+                                                    tag: 'text',
+                                                    text: 'Firstname:',
+                                                    id: 'tag_5'
+                                                }
+                                            ],
+                                            id: 'tag_4',
+                                            childrenText: 'Firstname:'
+                                        },
+                                        {
+                                            tag: 'input',
+                                            attr: {
+                                                'class': 'form-control',
+                                                name: 'sample input'
+                                            },
+                                            id: 'tag_6'
+                                        }
+                                    ],
+                                    id: 'tag_3',
+                                    childrenText: null
+                                },
+                                {
+                                    tag: 'form',
+                                    children: [
+                                        {
+                                            tag: 'label',
+                                            children: [
+                                                {
+                                                    tag: 'text',
+                                                    text: 'Lastname:',
+                                                    id: 'tag_9'
+                                                }
+                                            ],
+                                            id: 'tag_8',
+                                            childrenText: 'Lastname:'
+                                        },
+                                        {
+                                            tag: 'input',
+                                            attr: {
+                                                'class': 'form-control',
+                                                name: 'sample input'
+                                            },
+                                            id: 'tag_10'
+                                        },
+                                        {
+                                            tag: 'button',
+                                            children: [
+                                                {
+                                                    tag: 'text',
+                                                    text: 'Submit',
+                                                    id: 'tag_12'
+                                                }
+                                            ],
+                                            id: 'tag_11',
+                                            childrenText: 'Submit'
+                                        }
+                                    ],
+                                    id: 'tag_7',
+                                    childrenText: null
+                                },
+                                {
+                                    tag: 'table',
+                                    id: 'tag_13',
+                                    attr: {
+                                        source: 'keysStr',
+                                        columns: 'KEY_ID=id,MONEY=amount'
+                                    }
+                                },
+                                {
+                                    tag: 'imageinput',
+                                    id: 'tag_14',
+                                    attr: {
+                                        format: 'jpg',
+                                        name: 'sample image',
+                                        ratio: '2/1',
+                                        width: '100'
+                                    }
+                                }
                             ]
                         ],
-                        position: 1,
-                        canUndo: false,
-                        canRedo: false
+                        position: 2,
+                        canUndo: true,
+                        canRedo: true
                     }
                 }
             }

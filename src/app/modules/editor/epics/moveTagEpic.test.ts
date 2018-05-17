@@ -18,24 +18,100 @@ import 'rxjs';
 import 'lib/external/fsa';
 import { Action } from 'redux';
 import { ActionsObservable } from 'redux-observable';
-import { addTag } from '../actions';
-import addTagEpic from './addTagEpic';
+import { moveTag } from '../actions';
+import moveTagEpic from './moveTagEpic';
 import constructorModule from 'lib/constructor';
 import { TProtypoElement } from 'genesis/protypo';
 import { TConstructorTreeElement } from 'genesis/editor';
 import mockStore from './mockStore';
 
-describe('addTagEpic', () => {
-    it('adds tag to tree json', () => {
+describe('moveTagEpic', () => {
+    it('move tag', () => {
 
-        const action$ = ActionsObservable.of<Action>(addTag.started({
+        const action$ = ActionsObservable.of<Action>(moveTag.started({
             tag: {
-                new: true,
-                element: 'div'
-            }
+                tag: 'form',
+                children: [
+                    {
+                        tag: 'label',
+                        children: [
+                            {
+                                tag: 'text',
+                                text: 'Lastname:',
+                                id: 'tag_9'
+                            }
+                        ],
+                        id: 'tag_8',
+                        childrenText: 'Lastname:'
+                    },
+                    {
+                        tag: 'input',
+                        attr: {
+                            'class': 'form-control',
+                            name: 'sample input'
+                        },
+                        id: 'tag_10'
+                    },
+                    {
+                        tag: 'button',
+                        children: [
+                            {
+                                tag: 'text',
+                                text: 'Submit',
+                                id: 'tag_12'
+                            }
+                        ],
+                        id: 'tag_11',
+                        childrenText: 'Submit'
+                    }
+                ],
+                id: 'tag_7',
+                childrenText: null
+            },
+            destinationTagID: 'tag_0',
+            position: 'before'
         }));
 
         const jsonData: TProtypoElement[] = [
+            {
+                tag: 'form',
+                children: [
+                    {
+                        tag: 'label',
+                        children: [
+                            {
+                                tag: 'text',
+                                text: 'Lastname:',
+                                id: 'tag_9'
+                            }
+                        ],
+                        id: 'tag_8',
+                        childrenText: 'Lastname:'
+                    },
+                    {
+                        tag: 'input',
+                        attr: {
+                            'class': 'form-control',
+                            name: 'sample input'
+                        },
+                        id: 'tag_10'
+                    },
+                    {
+                        tag: 'button',
+                        children: [
+                            {
+                                tag: 'text',
+                                text: 'Submit',
+                                id: 'tag_12'
+                            }
+                        ],
+                        id: 'tag_11',
+                        childrenText: 'Submit'
+                    }
+                ],
+                id: 'tag_15',
+                childrenText: null
+            },
             {
                 tag: 'image',
                 attr: {
@@ -87,61 +163,128 @@ describe('addTagEpic', () => {
                 childrenText: null
             },
             {
-                tag: 'form',
-                children: [
-                    {
-                        tag: 'label',
-                        children: [
-                            {
-                                tag: 'text',
-                                text: 'Lastname:',
-                                id: 'tag_9'
-                            }
-                        ],
-                        id: 'tag_8',
-                        childrenText: 'Lastname:'
-                    },
-                    {
-                        tag: 'input',
-                        attr: {
-                            'class': 'form-control',
-                            name: 'sample input'
-                        },
-                        id: 'tag_10'
-                    },
-                    {
-                        tag: 'button',
-                        children: [
-                            {
-                                tag: 'text',
-                                text: 'Submit',
-                                id: 'tag_12'
-                            }
-                        ],
-                        id: 'tag_11',
-                        childrenText: 'Submit'
-                    }
-                ],
-                id: 'tag_7',
-                childrenText: null
-            },
-            {
                 tag: 'table',
                 id: 'tag_13',
                 attr: {
                     source: 'keysStr',
                     columns: 'KEY_ID=id,MONEY=amount'
                 }
-            },
-            {
-                tag: 'div',
-                id: 'tag_14',
-                children: [],
-                childrenText: ''
             }
         ];
 
         const treeData: TConstructorTreeElement[] = [
+            {
+                title: 'form',
+                children: [
+                    {
+                        title: 'label: Lastname:',
+                        children: null,
+                        expanded: true,
+                        id: 'tag_8',
+                        selected: false,
+                        logic: false,
+                        canMove: true,
+                        canDrop: true,
+                        tag: {
+                            tag: 'label',
+                            children: [
+                                {
+                                    tag: 'text',
+                                    text: 'Lastname:',
+                                    id: 'tag_9'
+                                }
+                            ],
+                            id: 'tag_8',
+                            childrenText: 'Lastname:'
+                        }
+                    },
+                    {
+                        title: 'input',
+                        children: null,
+                        expanded: true,
+                        id: 'tag_10',
+                        selected: false,
+                        logic: false,
+                        canMove: true,
+                        canDrop: false,
+                        tag: {
+                            tag: 'input',
+                            attr: {
+                                'class': 'form-control',
+                                name: 'sample input'
+                            },
+                            id: 'tag_10'
+                        }
+                    },
+                    {
+                        title: 'button: Submit',
+                        children: null,
+                        expanded: true,
+                        id: 'tag_11',
+                        selected: false,
+                        logic: false,
+                        canMove: true,
+                        canDrop: true,
+                        tag: {
+                            tag: 'button',
+                            children: [
+                                {
+                                    tag: 'text',
+                                    text: 'Submit',
+                                    id: 'tag_12'
+                                }
+                            ],
+                            id: 'tag_11',
+                            childrenText: 'Submit'
+                        }
+                    }
+                ],
+                expanded: true,
+                id: 'tag_15',
+                selected: false,
+                logic: false,
+                canMove: true,
+                canDrop: true,
+                tag: {
+                    tag: 'form',
+                    children: [
+                        {
+                            tag: 'label',
+                            children: [
+                                {
+                                    tag: 'text',
+                                    text: 'Lastname:',
+                                    id: 'tag_9'
+                                }
+                            ],
+                            id: 'tag_8',
+                            childrenText: 'Lastname:'
+                        },
+                        {
+                            tag: 'input',
+                            attr: {
+                                'class': 'form-control',
+                                name: 'sample input'
+                            },
+                            id: 'tag_10'
+                        },
+                        {
+                            tag: 'button',
+                            children: [
+                                {
+                                    tag: 'text',
+                                    text: 'Submit',
+                                    id: 'tag_12'
+                                }
+                            ],
+                            id: 'tag_11',
+                            childrenText: 'Submit'
+                        }
+                    ],
+                    id: 'tag_15',
+                    childrenText: null
+                }
+            },
             {
                 title: 'image',
                 children: null,
@@ -264,118 +407,6 @@ describe('addTagEpic', () => {
                 }
             },
             {
-                title: 'form',
-                children: [
-                    {
-                        title: 'label: Lastname:',
-                        children: null,
-                        expanded: true,
-                        id: 'tag_8',
-                        selected: false,
-                        logic: false,
-                        canMove: true,
-                        canDrop: true,
-                        tag: {
-                            tag: 'label',
-                            children: [
-                                {
-                                    tag: 'text',
-                                    text: 'Lastname:',
-                                    id: 'tag_9'
-                                }
-                            ],
-                            id: 'tag_8',
-                            childrenText: 'Lastname:'
-                        }
-                    },
-                    {
-                        title: 'input',
-                        children: null,
-                        expanded: true,
-                        id: 'tag_10',
-                        selected: false,
-                        logic: false,
-                        canMove: true,
-                        canDrop: false,
-                        tag: {
-                            tag: 'input',
-                            attr: {
-                                'class': 'form-control',
-                                name: 'sample input'
-                            },
-                            id: 'tag_10'
-                        }
-                    },
-                    {
-                        title: 'button: Submit',
-                        children: null,
-                        expanded: true,
-                        id: 'tag_11',
-                        selected: false,
-                        logic: false,
-                        canMove: true,
-                        canDrop: true,
-                        tag: {
-                            tag: 'button',
-                            children: [
-                                {
-                                    tag: 'text',
-                                    text: 'Submit',
-                                    id: 'tag_12'
-                                }
-                            ],
-                            id: 'tag_11',
-                            childrenText: 'Submit'
-                        }
-                    }
-                ],
-                expanded: true,
-                id: 'tag_7',
-                selected: false,
-                logic: false,
-                canMove: true,
-                canDrop: true,
-                tag: {
-                    tag: 'form',
-                    children: [
-                        {
-                            tag: 'label',
-                            children: [
-                                {
-                                    tag: 'text',
-                                    text: 'Lastname:',
-                                    id: 'tag_9'
-                                }
-                            ],
-                            id: 'tag_8',
-                            childrenText: 'Lastname:'
-                        },
-                        {
-                            tag: 'input',
-                            attr: {
-                                'class': 'form-control',
-                                name: 'sample input'
-                            },
-                            id: 'tag_10'
-                        },
-                        {
-                            tag: 'button',
-                            children: [
-                                {
-                                    tag: 'text',
-                                    text: 'Submit',
-                                    id: 'tag_12'
-                                }
-                            ],
-                            id: 'tag_11',
-                            childrenText: 'Submit'
-                        }
-                    ],
-                    id: 'tag_7',
-                    childrenText: null
-                }
-            },
-            {
                 title: 'table',
                 children: null,
                 expanded: true,
@@ -392,46 +423,67 @@ describe('addTagEpic', () => {
                         columns: 'KEY_ID=id,MONEY=amount'
                     }
                 }
-            },
-            {
-                title: 'div',
-                children: [],
-                expanded: true,
-                id: 'tag_14',
-                selected: false,
-                logic: false,
-                canMove: true,
-                canDrop: true,
-                tag: {
-                    tag: 'div',
-                    id: 'tag_14',
-                    children: [],
-                    childrenText: ''
-                }
             }
         ];
 
-        const expectedOutput = [
+        const expectedOutput: any = [
             {
                 payload: {
                     params: {
                         tag: {
-                            element: 'div',
-                            new: true
-                        }
+                            tag: 'form',
+                            children: [
+                                {
+                                    tag: 'label',
+                                    children: [
+                                        {
+                                            tag: 'text',
+                                            text: 'Lastname:',
+                                            id: 'tag_9'
+                                        }
+                                    ],
+                                    id: 'tag_8',
+                                    childrenText: 'Lastname:'
+                                },
+                                {
+                                    tag: 'input',
+                                    attr: {
+                                        'class': 'form-control',
+                                        name: 'sample input'
+                                    },
+                                    id: 'tag_10'
+                                },
+                                {
+                                    tag: 'button',
+                                    children: [
+                                        {
+                                            tag: 'text',
+                                            text: 'Submit',
+                                            id: 'tag_12'
+                                        }
+                                    ],
+                                    id: 'tag_11',
+                                    childrenText: 'Submit'
+                                }
+                            ],
+                            id: 'tag_7',
+                            childrenText: null
+                        },
+                        destinationTagID: 'tag_0',
+                        position: 'before'
                     },
                     result: {
                         jsonData: jsonData,
                         treeData: treeData
                     }
                 },
-                type: 'editor/ADD_TAG_DONE'
+                type: 'editor/MOVE_TAG_DONE'
             }
         ];
 
-        (constructorModule.IdGenerator.Instance).setCounter(14);
+        (constructorModule.IdGenerator.Instance).setCounter(15);
 
-        addTagEpic(action$, mockStore, { constructorModule })
+        moveTagEpic(action$, mockStore, { constructorModule })
             .toArray()
             .subscribe(actualOutput => {
                 expect(actualOutput).toEqual(expectedOutput);

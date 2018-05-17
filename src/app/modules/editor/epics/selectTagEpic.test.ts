@@ -18,128 +18,27 @@ import 'rxjs';
 import 'lib/external/fsa';
 import { Action } from 'redux';
 import { ActionsObservable } from 'redux-observable';
-import { addTag } from '../actions';
-import addTagEpic from './addTagEpic';
+import { selectTag } from '../actions';
+import selectTagEpic from './selectTagEpic';
 import constructorModule from 'lib/constructor';
-import { TProtypoElement } from 'genesis/protypo';
 import { TConstructorTreeElement } from 'genesis/editor';
 import mockStore from './mockStore';
 
-describe('addTagEpic', () => {
+describe('selectTagEpic', () => {
     it('adds tag to tree json', () => {
 
-        const action$ = ActionsObservable.of<Action>(addTag.started({
-            tag: {
-                new: true,
-                element: 'div'
-            }
-        }));
-
-        const jsonData: TProtypoElement[] = [
-            {
-                tag: 'image',
-                attr: {
-                    alt: 'Image',
-                    src: '/img/dummy.png'
-                },
-                id: 'tag_0'
-            },
-            {
-                tag: 'p',
-                attr: {
-                    'class': 'text-primary'
-                },
-                children: [
-                    {
-                        tag: 'text',
-                        text: 'Paragraph text here',
-                        id: 'tag_2'
-                    }
-                ],
-                id: 'tag_1',
-                childrenText: 'Paragraph text here'
-            },
-            {
-                tag: 'form',
-                children: [
-                    {
-                        tag: 'label',
-                        children: [
-                            {
-                                tag: 'text',
-                                text: 'Firstname:',
-                                id: 'tag_5'
-                            }
-                        ],
-                        id: 'tag_4',
-                        childrenText: 'Firstname:'
-                    },
-                    {
-                        tag: 'input',
-                        attr: {
-                            'class': 'form-control',
-                            name: 'sample input'
-                        },
-                        id: 'tag_6'
-                    }
-                ],
-                id: 'tag_3',
-                childrenText: null
-            },
-            {
-                tag: 'form',
-                children: [
-                    {
-                        tag: 'label',
-                        children: [
-                            {
-                                tag: 'text',
-                                text: 'Lastname:',
-                                id: 'tag_9'
-                            }
-                        ],
-                        id: 'tag_8',
-                        childrenText: 'Lastname:'
-                    },
-                    {
-                        tag: 'input',
-                        attr: {
-                            'class': 'form-control',
-                            name: 'sample input'
-                        },
-                        id: 'tag_10'
-                    },
-                    {
-                        tag: 'button',
-                        children: [
-                            {
-                                tag: 'text',
-                                text: 'Submit',
-                                id: 'tag_12'
-                            }
-                        ],
-                        id: 'tag_11',
-                        childrenText: 'Submit'
-                    }
-                ],
-                id: 'tag_7',
-                childrenText: null
-            },
-            {
-                tag: 'table',
-                id: 'tag_13',
-                attr: {
-                    source: 'keysStr',
-                    columns: 'KEY_ID=id,MONEY=amount'
+        const action$ = ActionsObservable.of<Action>(selectTag.started({
+            tag: 'button',
+            children: [
+                {
+                    tag: 'text',
+                    text: 'Submit',
+                    id: 'tag_12'
                 }
-            },
-            {
-                tag: 'div',
-                id: 'tag_14',
-                children: [],
-                childrenText: ''
-            }
-        ];
+            ],
+            id: 'tag_11',
+            childrenText: 'Submit'
+        }));
 
         const treeData: TConstructorTreeElement[] = [
             {
@@ -311,7 +210,7 @@ describe('addTagEpic', () => {
                         children: null,
                         expanded: true,
                         id: 'tag_11',
-                        selected: false,
+                        selected: true,
                         logic: false,
                         canMove: true,
                         canDrop: true,
@@ -392,22 +291,6 @@ describe('addTagEpic', () => {
                         columns: 'KEY_ID=id,MONEY=amount'
                     }
                 }
-            },
-            {
-                title: 'div',
-                children: [],
-                expanded: true,
-                id: 'tag_14',
-                selected: false,
-                logic: false,
-                canMove: true,
-                canDrop: true,
-                tag: {
-                    tag: 'div',
-                    id: 'tag_14',
-                    children: [],
-                    childrenText: ''
-                }
             }
         ];
 
@@ -415,23 +298,38 @@ describe('addTagEpic', () => {
             {
                 payload: {
                     params: {
-                        tag: {
-                            element: 'div',
-                            new: true
-                        }
+                        tag: 'button',
+                        children: [
+                            {
+                                tag: 'text',
+                                text: 'Submit',
+                                id: 'tag_12'
+                            }
+                        ],
+                        id: 'tag_11',
+                        childrenText: 'Submit'
                     },
                     result: {
-                        jsonData: jsonData,
-                        treeData: treeData
+                        treeData: treeData,
+                        selectedTag: {
+                            tag: 'button',
+                            children: [
+                                {
+                                    tag: 'text',
+                                    text: 'Submit',
+                                    id: 'tag_12'
+                                }
+                            ],
+                            id: 'tag_11',
+                            childrenText: 'Submit'
+                        }
                     }
                 },
-                type: 'editor/ADD_TAG_DONE'
+                type: 'editor/SELECT_TAG_DONE'
             }
         ];
 
-        (constructorModule.IdGenerator.Instance).setCounter(14);
-
-        addTagEpic(action$, mockStore, { constructorModule })
+        selectTagEpic(action$, mockStore, { constructorModule })
             .toArray()
             .subscribe(actualOutput => {
                 expect(actualOutput).toEqual(expectedOutput);

@@ -18,33 +18,18 @@ import 'rxjs';
 import 'lib/external/fsa';
 import { Action } from 'redux';
 import { ActionsObservable } from 'redux-observable';
-import { addTag } from '../actions';
-import addTagEpic from './addTagEpic';
+import { removeTag } from '../actions';
+import removeTagEpic from './removeTagEpic';
 import constructorModule from 'lib/constructor';
 import { TProtypoElement } from 'genesis/protypo';
 import { TConstructorTreeElement } from 'genesis/editor';
 import mockStore from './mockStore';
 
-describe('addTagEpic', () => {
-    it('adds tag to tree json', () => {
+describe('removeTagEpic', () => {
+    it('remove tag', () => {
 
-        const action$ = ActionsObservable.of<Action>(addTag.started({
+        const action$ = ActionsObservable.of<Action>(removeTag.started({
             tag: {
-                new: true,
-                element: 'div'
-            }
-        }));
-
-        const jsonData: TProtypoElement[] = [
-            {
-                tag: 'image',
-                attr: {
-                    alt: 'Image',
-                    src: '/img/dummy.png'
-                },
-                id: 'tag_0'
-            },
-            {
                 tag: 'p',
                 attr: {
                     'class': 'text-primary'
@@ -58,6 +43,17 @@ describe('addTagEpic', () => {
                 ],
                 id: 'tag_1',
                 childrenText: 'Paragraph text here'
+            }
+        }));
+
+        const jsonData: TProtypoElement[] = [
+            {
+                tag: 'image',
+                attr: {
+                    alt: 'Image',
+                    src: '/img/dummy.png'
+                },
+                id: 'tag_0'
             },
             {
                 tag: 'form',
@@ -132,12 +128,6 @@ describe('addTagEpic', () => {
                     source: 'keysStr',
                     columns: 'KEY_ID=id,MONEY=amount'
                 }
-            },
-            {
-                tag: 'div',
-                id: 'tag_14',
-                children: [],
-                childrenText: ''
             }
         ];
 
@@ -158,31 +148,6 @@ describe('addTagEpic', () => {
                         src: '/img/dummy.png'
                     },
                     id: 'tag_0'
-                }
-            },
-            {
-                title: 'p: Paragraph text here',
-                children: null,
-                expanded: true,
-                id: 'tag_1',
-                selected: false,
-                logic: false,
-                canMove: true,
-                canDrop: true,
-                tag: {
-                    tag: 'p',
-                    attr: {
-                        'class': 'text-primary'
-                    },
-                    children: [
-                        {
-                            tag: 'text',
-                            text: 'Paragraph text here',
-                            id: 'tag_2'
-                        }
-                    ],
-                    id: 'tag_1',
-                    childrenText: 'Paragraph text here'
                 }
             },
             {
@@ -392,22 +357,6 @@ describe('addTagEpic', () => {
                         columns: 'KEY_ID=id,MONEY=amount'
                     }
                 }
-            },
-            {
-                title: 'div',
-                children: [],
-                expanded: true,
-                id: 'tag_14',
-                selected: false,
-                logic: false,
-                canMove: true,
-                canDrop: true,
-                tag: {
-                    tag: 'div',
-                    id: 'tag_14',
-                    children: [],
-                    childrenText: ''
-                }
             }
         ];
 
@@ -416,8 +365,19 @@ describe('addTagEpic', () => {
                 payload: {
                     params: {
                         tag: {
-                            element: 'div',
-                            new: true
+                            tag: 'p',
+                            attr: {
+                                'class': 'text-primary'
+                            },
+                            children: [
+                                {
+                                    tag: 'text',
+                                    text: 'Paragraph text here',
+                                    id: 'tag_2'
+                                }
+                            ],
+                            id: 'tag_1',
+                            childrenText: 'Paragraph text here'
                         }
                     },
                     result: {
@@ -425,13 +385,11 @@ describe('addTagEpic', () => {
                         treeData: treeData
                     }
                 },
-                type: 'editor/ADD_TAG_DONE'
+                type: 'editor/REMOVE_TAG_DONE'
             }
         ];
 
-        (constructorModule.IdGenerator.Instance).setCounter(14);
-
-        addTagEpic(action$, mockStore, { constructorModule })
+        removeTagEpic(action$, mockStore, { constructorModule })
             .toArray()
             .subscribe(actualOutput => {
                 expect(actualOutput).toEqual(expectedOutput);

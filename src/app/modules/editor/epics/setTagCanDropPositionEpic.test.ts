@@ -18,21 +18,19 @@ import 'rxjs';
 import 'lib/external/fsa';
 import { Action } from 'redux';
 import { ActionsObservable } from 'redux-observable';
-import { addTag } from '../actions';
-import addTagEpic from './addTagEpic';
+import { setTagCanDropPosition } from '../actions';
+import setTagCanDropPositionEpic from './setTagCanDropPositionEpic';
 import constructorModule from 'lib/constructor';
 import { TProtypoElement } from 'genesis/protypo';
 import { TConstructorTreeElement } from 'genesis/editor';
 import mockStore from './mockStore';
 
-describe('addTagEpic', () => {
-    it('adds tag to tree json', () => {
+describe('setTagCanDropPositionEpic', () => {
+    it('set tag CanDropPosition', () => {
 
-        const action$ = ActionsObservable.of<Action>(addTag.started({
-            tag: {
-                new: true,
-                element: 'div'
-            }
+        const action$ = ActionsObservable.of<Action>(setTagCanDropPosition.started({
+            position: 'after',
+            tagID: 'tag_6'
         }));
 
         const jsonData: TProtypoElement[] = [
@@ -80,7 +78,10 @@ describe('addTagEpic', () => {
                             'class': 'form-control',
                             name: 'sample input'
                         },
-                        id: 'tag_6'
+                        id: 'tag_6',
+                        sysAttr: {
+                            canDropPosition: 'after'
+                        }
                     }
                 ],
                 id: 'tag_3',
@@ -132,12 +133,6 @@ describe('addTagEpic', () => {
                     source: 'keysStr',
                     columns: 'KEY_ID=id,MONEY=amount'
                 }
-            },
-            {
-                tag: 'div',
-                id: 'tag_14',
-                children: [],
-                childrenText: ''
             }
         ];
 
@@ -225,7 +220,10 @@ describe('addTagEpic', () => {
                                 'class': 'form-control',
                                 name: 'sample input'
                             },
-                            id: 'tag_6'
+                            id: 'tag_6',
+                            sysAttr: {
+                                canDropPosition: 'after'
+                            }
                         }
                     }
                 ],
@@ -256,7 +254,10 @@ describe('addTagEpic', () => {
                                 'class': 'form-control',
                                 name: 'sample input'
                             },
-                            id: 'tag_6'
+                            id: 'tag_6',
+                            sysAttr: {
+                                canDropPosition: 'after'
+                            }
                         }
                     ],
                     id: 'tag_3',
@@ -392,22 +393,6 @@ describe('addTagEpic', () => {
                         columns: 'KEY_ID=id,MONEY=amount'
                     }
                 }
-            },
-            {
-                title: 'div',
-                children: [],
-                expanded: true,
-                id: 'tag_14',
-                selected: false,
-                logic: false,
-                canMove: true,
-                canDrop: true,
-                tag: {
-                    tag: 'div',
-                    id: 'tag_14',
-                    children: [],
-                    childrenText: ''
-                }
             }
         ];
 
@@ -415,23 +400,21 @@ describe('addTagEpic', () => {
             {
                 payload: {
                     params: {
-                        tag: {
-                            element: 'div',
-                            new: true
-                        }
+                        position: 'after',
+                        tagID: 'tag_6'
                     },
                     result: {
                         jsonData: jsonData,
                         treeData: treeData
                     }
                 },
-                type: 'editor/ADD_TAG_DONE'
+                type: 'editor/SET_TAG_CAN_DROP_POSITION_DONE'
             }
         ];
 
         (constructorModule.IdGenerator.Instance).setCounter(14);
 
-        addTagEpic(action$, mockStore, { constructorModule })
+        setTagCanDropPositionEpic(action$, mockStore, { constructorModule })
             .toArray()
             .subscribe(actualOutput => {
                 expect(actualOutput).toEqual(expectedOutput);

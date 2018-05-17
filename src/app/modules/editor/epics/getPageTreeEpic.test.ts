@@ -15,13 +15,7 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 import 'rxjs';
 import 'lib/external/fsa';
-// import { Observable } from 'rxjs/Observable';
-// import getPageTreeEpic from './getPageTreeEpic';
-// import { getPageTree } from '../actions';
-// import { ActionsObservable } from 'redux-observable';
-// import constructorModule from 'lib/constructor';
 import GenesisAPI, { IRequestTransport,  } from 'lib/genesisAPI';
-// import { IContentTestRequest } from 'genesis/api';
 
 describe('getPageTreeEpic', () => {
     it('gets page tree json', () => {
@@ -62,47 +56,5 @@ describe('getPageTreeEpic', () => {
                 }
             });
         });
-
-        // const apiFail = (session: string) => {
-        //     return {
-        //         contentJson: ({
-        //             template: string,
-        //             locale: string,
-        //             source: boolean
-        //         }) => Observable.of({})
-        //     }
-        // };
-        //
-        // const action$ = ActionsObservable.of<Action>(getPageTree.started(null));
-        //
-        // const expectedOutputActionFail = getPageTree.failed({
-        //     params: null,
-        //     error: undefined
-        // });
-        //
-        // const state = {
-        //     editor: {
-        //         tabIndex: 0,
-        //         tabs: [{
-        //             value: ''
-        //         }]
-        //     },
-        //     storage: {
-        //         locale: 'en'
-        //     },
-        //     auth: {
-        //         session: ''
-        //     }
-        // };
-        //
-        // const store = {
-        //     getState: () => state
-        // };
-        //
-        // getPageTreeEpic(action$, store, { constructorModule, api: apiFail })
-        //     .toArray()
-        //     .subscribe(actualOutputActions => {
-        //         expect(actualOutputActions).toEqual([expectedOutputActionFail]);
-        //     });
     });
 });
