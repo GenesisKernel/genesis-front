@@ -37,6 +37,9 @@ class Tag {
 
     protected editProps = ['class', 'align', 'transform', 'wrap', 'color'];
 
+    protected bodyInline = true;
+    protected dataAttr = false;
+
     constructor(element: TProtypoElement) {
         this.element = element;
     }
@@ -46,56 +49,87 @@ class Tag {
     renderOffset(): string {
         return Array(this.offset + 1).join(' ');
     }
-    renderCode(): string {
-        let result: string = this.tagName + '(';
+    isSimpleBody(body: string): boolean {
+        return typeof body === 'string' && body.indexOf('(') === -1;
+    }
+    renderParams(element: any, body: string): string {
         let params = [];
-        for (let attr in this.attr) {
-            if (this.attr.hasOwnProperty(attr)) {
-                let value = this.element && this.element.attr && this.element.attr[attr] || '';
+
+        for (let attr in element.attr) {
+            if (element.attr.hasOwnProperty(attr)) {
+                let value = element && element.attr && element.attr[attr] || '';
                 if (value) {
                     if (typeof value === 'string') {
                         const quote = value.indexOf(',') >= 0;
-                        params.push(this.attr[attr] + ': ' + (quote ? '"' : '') + value + (quote ? '"' : ''));
+                        params.push(getParamName(attr) + ': ' + (quote ? '"' : '') + value + (quote ? '"' : ''));
                     }
                     if (typeof value === 'object') {
-                        params.push(this.getParamsStr(this.attr[attr], value));
+                        params.push(this.getParamsStr(getParamName(attr), value));
                     }
                 }
             }
         }
 
-        let body = this.renderChildren(this.element.children, this.offset);
-        if (this.element.children && this.element.children.length === 1) {
-            params.push('Body:\n' + body);
+        if (body && this.bodyInline && this.isSimpleBody(body)) {
+            params.push('Body: ' + body);
         }
 
-        result += params.join(', ');
-        result += ((this.element.children && this.element.children.length === 1) ? ('\n' + this.renderOffset()) : '') + ')';
-
+        return params.join(', ');
+    }
+    renderData(): string {
+        let result = '';
+        if (this.dataAttr && this.element && this.element.attr && this.element.attr.data) {
+             result += '{\n'
+                + this.renderOffset() + '   '
+                + this.element.attr.data
+                + '\n'
+                + this.renderOffset()
+                + '}';
+        }
+        return result;
+    }
+    renderTailTag(element: TProtypoElement): string {
+        const tagName = getTailTagName(element.tag);
+        if (tagName) {
+            const children = this.renderChildren(element.children, this.offset);
+            return '.' + tagName
+                + '('
+                + this.renderParams(element, children)
+                + ')'
+                + (children ?
+                    ('{\n' + children + '\n' + this.renderOffset() + '}')
+                    :
+                    '');
+        }
+        return '';
+    }
+    renderTail(): string {
+        let result = '';
         if (this.element.tail && this.element.tail.length) {
-            result += this.element.tail.map((element) => {
-                const tagName = getTailTagName(element.tag);
-                if (tagName) {
-                    let attrs: string[] = [];
-                    for (let attr in element.attr) {
-                        if (element.attr.hasOwnProperty(attr)) {
-                            const val = element.attr[attr];
-                            const quote = val.indexOf(',') >= 0;
-                            attrs.push(getParamName(attr) + ': ' + (quote ? '"' : '') + val + (quote ? '"' : ''));
-                        }
-                    }
-                    const children = this.renderChildren(element.children, this.offset);
-                    return '.' + tagName + '(' + attrs.join(', ') + ')' + (children ? ('{\n' + children + '\n' + this.renderOffset() + '}') : '');
-                }
-                return '';
+            result = this.element.tail.map((element) => {
+                return this.renderTailTag(element);
             }).join('');
         }
-
-        if (this.element.children && this.element.children.length > 1) {
-            result += ' {\n' + body + '\n' + this.renderOffset() + '}';
+        return result;
+    }
+    renderBody(body: string): string {
+        let result = '';
+        if (body && (!this.bodyInline || !this.isSimpleBody(body))) {
+            result = ' {\n' + body + '\n' + this.renderOffset() + '}';
         }
+        return result;
+    }
+    renderCode(): string {
+        const body = this.renderChildren(this.element.children, this.offset);
 
-        return this.renderOffset() + result;
+        let result: string = this.renderOffset();
+        result += this.tagName + '(';
+        result += this.renderParams(this.element, body) + ')';
+        result += this.renderData();
+        result += this.renderTail();
+        result += this.renderBody(body);
+
+        return result;
     }
 
     renderChildren(children: TProtypoElement[], offset: number): string {
@@ -105,7 +139,7 @@ class Tag {
         let result = children.map((element, index) => {
             switch (element.tag) {
                 case 'text':
-                    return this.renderOffset() + ' ' + element.text;
+                    return element.text;
                 default:
                     const Handler = resolveTagHandler(element.tag);
                     if (Handler) {

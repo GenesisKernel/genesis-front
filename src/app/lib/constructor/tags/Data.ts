@@ -16,7 +16,6 @@
 
 import { TProtypoElement } from 'genesis/protypo';
 import Tag from './Tag';
-import getParamName, { getTailTagName } from 'lib/constructor/tags/params';
 
 class Data extends Tag {
     constructor(element: TProtypoElement) {
@@ -29,64 +28,8 @@ class Data extends Tag {
             'columns': 'Columns'
         };
         this.editProps = ['source', 'columns', 'data'];
-    }
-
-    renderCode(): string {
-        let result: string = this.tagName + '(';
-        let params = [];
-        for (let attr in this.attr) {
-            if (this.attr.hasOwnProperty(attr)) {
-                let value = this.element && this.element.attr && this.element.attr[attr] || '';
-                if (value) {
-                    if (typeof value === 'string') {
-                        const quote = value.indexOf(',') >= 0;
-                        params.push(this.attr[attr] + ': ' + (quote ? '"' : '') + value + (quote ? '"' : ''));
-                    }
-                    if (typeof value === 'object') {
-                        params.push(this.getParamsStr(this.attr[attr], value));
-                    }
-                }
-            }
-        }
-
-        let body = this.renderChildren(this.element.children, this.offset);
-
-        result += params.join(', ');
-        result += ((this.element.children && this.element.children.length === 1) ? ('\n' + this.renderOffset()) : '') + ')';
-
-        if (this.element && this.element.attr && this.element.attr.data) {
-            result += '{\n'
-                + this.renderOffset() + '   '
-                + this.element.attr.data
-                + '\n'
-                + this.renderOffset()
-                + '}';
-        }
-
-        if (this.element.tail && this.element.tail.length) {
-            result += this.element.tail.map((element) => {
-                const tagName = getTailTagName(element.tag);
-                if (tagName) {
-                    let attrs: string[] = [];
-                    for (let attr in element.attr) {
-                        if (element.attr.hasOwnProperty(attr)) {
-                            const val = element.attr[attr];
-                            const quote = val.indexOf(',') >= 0;
-                            attrs.push(getParamName(attr) + ': ' + (quote ? '"' : '') + val + (quote ? '"' : ''));
-                        }
-                    }
-                    const children = this.renderChildren(element.children, this.offset);
-                    return '.' + tagName + '(' + attrs.join(', ') + ')' + (children ? ('{\n' + children + '\n' + this.renderOffset() + '}') : '');
-                }
-                return '';
-            }).join('');
-        }
-
-        if (this.element.children && this.element.children.length > 0) {
-            result += ' {\n' + body + '\n' + this.renderOffset() + '}';
-        }
-
-        return this.renderOffset() + result;
+        this.bodyInline = false;
+        this.dataAttr = true;
     }
 }
 
