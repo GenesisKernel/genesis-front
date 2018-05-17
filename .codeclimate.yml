@@ -15,6 +15,7 @@ plugins:
     - "Tests/"
     - "**/vendor/"
     - "**/*.d.ts"
+    - "*.test.ts"
     - "public/vs/"
     - "src/app/styles/built/"
   eslint:
