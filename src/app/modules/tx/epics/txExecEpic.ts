@@ -28,7 +28,7 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
     .flatMap(action => {
         const state = store.getState();
         const client = api(state.auth.session);
-        const publicKey = keyring.generatePublicKey(action.payload.privateKey);
+        const publicKey = keyring.generatePublicKey(action.payload.privateKey, true);
 
         if (!keyring.validatePrivateKey(action.payload.privateKey)) {
             return Observable.of(txExec.failed({

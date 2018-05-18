@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import * as React from 'react';
-import * as uuid from 'uuid';
+import React from 'react';
+import uuid from 'uuid';
 import { OrderedMap } from 'immutable';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { txCallBatch } from 'modules/tx/actions';
+import { txCall } from 'modules/tx/actions';
 import { TTransactionStatus, ITransactionCollection } from 'genesis/tx';
 import { navigatePage } from 'modules/content/actions';
 
@@ -46,7 +46,7 @@ interface ITxBatchButtonContainerState {
 }
 
 interface ITxBatchButtonContainerDispatch {
-    execContracts: typeof txCallBatch.started;
+    execContracts: typeof txCall;
     navigatePage: typeof navigatePage.started;
 }
 
@@ -110,7 +110,7 @@ class TxBatchButtonContainer extends React.Component<ITxBatchButtonContainerProp
 
     render() {
         const transaction = this.props.transactions.get(this._uuid) as ITransactionCollection;
-        const isPending = !!transaction && transaction.transactions.find(l => !l.block && !l.error);
+        const isPending = !!transaction && !!transaction.pending;
         const isError = !!transaction && transaction.transactions.find(l => !!l.error);
 
         return (
@@ -134,7 +134,7 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    execContracts: txCallBatch.started,
+    execContracts: txCall,
     navigatePage: navigatePage.started
 };
 

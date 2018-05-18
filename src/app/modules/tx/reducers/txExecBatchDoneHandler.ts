@@ -15,19 +15,17 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
+import { txExecBatch } from '../actions';
 import { Reducer } from 'modules';
-import { ITransaction, ITransactionCall } from 'genesis/tx';
 
-const setTxData: Reducer<{ tx: ITransactionCall, data: Partial<ITransaction> }, State> = (state, payload) => {
-    const tx = state.transactions.get(payload.tx.uuid) as ITransaction;
-    return {
-        ...state,
-        transactions: state.transactions.set(payload.tx.uuid, {
-            ...tx,
-            ...payload.data,
-            type: 'single'
-        })
-    };
-};
+const txExecBatchDoneHandler: Reducer<typeof txExecBatch.done, State> = (state, payload) => ({
+    ...state,
+    transactions: state.transactions.set(payload.params.uuid, {
+        type: 'collection',
+        uuid: payload.params.uuid,
+        pending: 0,
+        transactions: payload.result
+    })
+});
 
-export default setTxData;
+export default txExecBatchDoneHandler;

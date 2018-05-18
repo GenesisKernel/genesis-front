@@ -14,24 +14,19 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { IRootState } from 'modules';
-import { Epic } from 'redux-observable';
-import { Action } from 'redux';
-import { txCallBatch } from '../actions';
-import { modalShow } from '../../modal/actions';
+import { State } from '../reducer';
+import { txExecBatch } from '../actions';
+import { Reducer } from 'modules';
 
-export const txCallBatchFailedEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(txCallBatch.failed)
-        .filter(l => !l.payload.params.silent && !!l.payload.error)
-        .map(action =>
-            modalShow({
-                id: 'TX_ERROR',
-                type: 'TX_ERROR',
-                params: {
-                    tx: action.payload.error.tx,
-                    error: action.payload.error.error
-                }
-            })
-        );
+const txExecBatchFailedHandler: Reducer<typeof txExecBatch.failed, State> = (state, payload) => ({
+    ...state,
+    transactions: state.transactions.set(payload.params.uuid, {
+        type: 'collection',
+        uuid: payload.params.uuid,
+        pending: 0,
+        transactions: [],
+        error: payload.error.error
+    })
+});
 
-export default txCallBatchFailedEpic;
+export default txExecBatchFailedHandler;

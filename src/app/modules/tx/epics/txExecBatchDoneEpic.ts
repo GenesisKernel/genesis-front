@@ -14,20 +14,22 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import { State } from '../reducer';
-import { Reducer } from 'modules';
-import { ITransaction, ITransactionCall } from 'genesis/tx';
+import uuid from 'uuid';
+import { IRootState } from 'modules';
+import { Epic } from 'redux-observable';
+import { Action } from 'redux';
+import { txExecBatch } from '../actions';
+import { enqueueNotification } from 'modules/notifications/actions';
 
-const setTxData: Reducer<{ tx: ITransactionCall, data: Partial<ITransaction> }, State> = (state, payload) => {
-    const tx = state.transactions.get(payload.tx.uuid) as ITransaction;
-    return {
-        ...state,
-        transactions: state.transactions.set(payload.tx.uuid, {
-            ...tx,
-            ...payload.data,
-            type: 'single'
-        })
-    };
-};
+export const txExecBatchDoneEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(txExecBatch.done)
+        .filter(l => !l.payload.params.silent)
+        .map(action =>
+            enqueueNotification({
+                id: uuid.v4(),
+                type: 'TX_BATCH',
+                params: {}
+            })
+        );
 
-export default setTxData;
+export default txExecBatchDoneEpic;

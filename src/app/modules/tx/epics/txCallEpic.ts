@@ -18,30 +18,41 @@ import { Epic } from 'modules';
 import { Observable } from 'rxjs';
 import { isType } from 'typescript-fsa';
 import keyring from 'lib/keyring';
-import { txCall, txAuthorize, txPrepare } from '../actions';
-import { modalShow, modalClose } from '../../modal/actions';
+import { txCall, txAuthorize, txPrepare, txExecBatch } from '../actions';
+import { modalShow, modalClose } from 'modules/modal/actions';
 
 const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall)
     .flatMap(action => {
-        const execTx = () => {
-            const state = store.getState();
-            if (keyring.validatePrivateKey(state.auth.privateKey)) {
-                return Observable.of(txPrepare({
-                    tx: action.payload,
-                    privateKey: state.auth.privateKey
+        const execTx = (privateKey: string) => {
+            if ('contracts' in action.payload) {
+                return Observable.of(txExecBatch.started({
+                    ...action.payload,
+                    privateKey
                 }));
             }
             else {
+                return Observable.of(txPrepare({
+                    tx: action.payload,
+                    privateKey
+                }));
+            }
+        };
+
+        const validateTx = Observable.defer(() => {
+            const state = store.getState();
+            if (keyring.validatePrivateKey(state.auth.privateKey)) {
+                return execTx(state.auth.privateKey);
+            }
+            else {
+                const contractName = 'contracts' in action.payload ? null : action.payload.name;
+
                 return Observable.merge(
-                    Observable.of(txAuthorize.started({ contract: action.payload.name })),
+                    Observable.of(txAuthorize.started({ contract: contractName })),
                     action$.filter(l => txAuthorize.done.match(l) || txAuthorize.failed.match(l))
                         .take(1)
                         .flatMap(result => {
                             if (isType(result, txAuthorize.done)) {
-                                return Observable.of(txPrepare({
-                                    tx: action.payload,
-                                    privateKey: keyring.decryptAES(store.getState().auth.account.encKey, result.payload.result)
-                                }, action.meta));
+                                return execTx(keyring.decryptAES(store.getState().auth.account.encKey, result.payload.result));
                             }
                             else {
                                 return Observable.empty<never>();
@@ -49,7 +60,7 @@ const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall)
                         })
                 );
             }
-        };
+        });
 
         if (action.payload.confirm) {
             return Observable.merge(
@@ -62,7 +73,7 @@ const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall)
                     .take(1)
                     .flatMap(modalPayload => {
                         if ('RESULT' === modalPayload.payload.reason) {
-                            return execTx();
+                            return validateTx;
                         }
                         else {
                             return Observable.empty<never>();
@@ -71,7 +82,7 @@ const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall)
             );
         }
         else {
-            return execTx();
+            return validateTx;
         }
     });
 

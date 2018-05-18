@@ -44,27 +44,40 @@ declare module 'genesis/tx' {
         contract: string;
         block: string;
         result?: string;
-        error?: {
-            type: string;
-            error: string;
-        }
+        error?: ITxError;
     }
 
     interface ITransactionCollection {
         type: 'collection';
         uuid: string;
+        pending: number;
+        error?: ITxError;
         transactions: ITransaction[];
     }
 
-    interface ITransactionCall {
+    type TTransactionRequest =
+        ITransactionCall | ITransactionBatchCall;
+
+    interface ITransactionRequest {
         uuid: string;
-        name: string;
-        parent?: string;
         silent?: boolean;
+        confirm?: ITransactionConfirm;
+    }
+
+    interface ITransactionCall extends ITransactionRequest {
+        name: string;
         params: {
             [key: string]: any;
         };
-        confirm?: ITransactionConfirm;
+    }
+
+    interface ITransactionBatchCall extends ITransactionRequest {
+        contracts: {
+            name: string;
+            data: {
+                [key: string]: any;
+            }[];
+        }[];
     }
 
     interface ITransactionConfirm {
@@ -73,18 +86,6 @@ declare module 'genesis/tx' {
         text?: string;
         confirmButton?: string;
         cancelButton?: string;
-    }
-
-    interface ITransactionBatchCall {
-        uuid: string;
-        contracts: {
-            name: string;
-            data: {
-                [key: string]: any;
-            }[];
-        }[];
-        silent?: boolean;
-        confirm?: ITransactionConfirm;
     }
 
     interface IExecutionCall {

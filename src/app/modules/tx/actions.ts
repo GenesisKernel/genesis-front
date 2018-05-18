@@ -15,11 +15,12 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IExecutionCall, ITransactionCall, ITxResult, ITxError, ITransactionBatchCall } from 'genesis/tx';
+import { IExecutionCall, ITransactionCall, ITxResult, ITxError, ITransactionBatchCall, ITransaction, TTransactionRequest } from 'genesis/tx';
 
 const actionCreator = actionCreatorFactory('tx');
-export const txCall = actionCreator<ITransactionCall>('TX_CALL');
-export const txCallBatch = actionCreator.async<ITransactionBatchCall, boolean, { tx: ITransactionCall, error: ITxError }>('TX_CALL_BATCH');
+export const txCall = actionCreator<TTransactionRequest>('TX_CALL');
+export const txExecBatch = actionCreator.async<ITransactionBatchCall & { privateKey: string }, ITransaction[], { tx: ITransactionCall, error: ITxError }>('TX_EXEC_BATCH');
+export const txBatchStatus = actionCreator<{ id: string, pending: number }>('TX_BATCH_STATUS');
 export const txAuthorize = actionCreator.async<{ contract: string }, string, void>('TX_AUTHORIZE');
 export const txPrepare = actionCreator<{ tx: ITransactionCall, privateKey: string }>('TX_PREPARE');
 export const txExec = actionCreator.async<IExecutionCall, ITxResult, ITxError>('TX_EXEC');

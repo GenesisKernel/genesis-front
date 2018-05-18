@@ -303,4 +303,45 @@ declare module 'genesis/api' {
             error: string;
         };
     }
+
+    interface ITxCallBatchRequest {
+        requestID: string;
+        time: string;
+        signatures: string[];
+        pubkey: string;
+    }
+
+    interface ITxCallBatchResponse {
+        hashes: string[];
+    }
+
+    interface ITxPrepareBatchRequest {
+        name: string;
+        data: TTxParams[];
+    }
+
+    interface ITxPrepareBatchResponse {
+        request_id: string;
+        forsign: string[];
+        time: string;
+        signs?: {
+            forsign: string;
+            field: string;
+            title: string;
+            params: {
+                name: string;
+                text: string;
+            }[];
+        }[];
+    }
+
+    interface ITxStatusBatchRequest {
+        hashes: string[];
+    }
+
+    interface ITxStatusBatchResponse {
+        results: {
+            [hash: string]: ITxStatusResponse;
+        };
+    }
 }
