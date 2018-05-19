@@ -22,35 +22,31 @@ import { ITxStatusResponse } from 'genesis/api';
 import { ITransaction } from 'genesis/tx';
 
 const BATCH_COOLDOWN_TIMER = 3000;
+const BATCH_COUNT = 10;
+const BATCH_CONCURRENCY = 1;
 
-type TBatchExecStatus =
-    {
-        status: 'PENDING';
-        index: number;
-        data: number;
-    } | {
-        status: 'DONE';
-        index: number;
-        data: ITxStatusResponse[];
-    };
+interface IBatchExecStatus {
+    index: number;
+    data: ITxStatusResponse[];
+}
 
-const txExecBatchEpic: Epic =
-    (action$, store, { api }) => action$.ofAction(txExecBatch.started)
-        .flatMap(action => {
-            const state = store.getState();
-            const client = api(state.auth.session);
+const txExecBatchEpic: Epic = (action$, store, { api }) => action$.ofAction(txExecBatch.started)
+    .flatMap(action => {
+        const state = store.getState();
+        const client = api(state.auth.session);
 
-            const fullStatus: { contract: string, pending: number, results: ITxStatusResponse[] }[] = action.payload.contracts.map(contract => ({
-                contract: contract.name,
-                pending: contract.data.length,
-                results: []
-            }));
+        const fullStatus: { contract: string, pending: number, results: ITxStatusResponse[] }[] = action.payload.contracts.map(contract => ({
+            contract: contract.name,
+            pending: contract.data.length,
+            results: []
+        }));
 
-            return Observable.from(action.payload.contracts)
-                .flatMap((batch, index) => {
+        return Observable.from(action.payload.contracts)
+            .flatMap((batch, index) => {
+                return Observable.from(batch.data).bufferCount(BATCH_COUNT).flatMap(params => {
                     return Observable.from(client.txPrepareBatch({
                         name: batch.name,
-                        data: batch.data
+                        data: params
 
                     })).flatMap(prepare =>
                         client.txCallBatch({
@@ -62,8 +58,20 @@ const txExecBatchEpic: Epic =
                             )
                         })
 
-                    ).flatMap(tx => {
-                        const notifier: Observable<TBatchExecStatus> = Observable.defer(() => (
+                    ).catch(prepareError => Observable.throw({
+                        tx: {
+                            uuid: action.payload.uuid,
+                            name: batch.name,
+                            silent: action.payload.silent,
+                            params: batch.data[index],
+                        },
+                        error: {
+                            type: prepareError.error,
+                            error: prepareError.msg
+                        }
+
+                    })).flatMap(tx => {
+                        const notifier: Observable<IBatchExecStatus> = Observable.defer(() => (
                             client.txStatusBatch({
                                 hashes: tx.hashes
                             })
@@ -88,15 +96,8 @@ const txExecBatchEpic: Epic =
                             }
 
                             if (pending) {
-                                return Observable.merge(
-                                    Observable.of({
-                                        index,
-                                        status: 'PENDING',
-                                        data: pending
-                                    } as TBatchExecStatus),
-                                    Observable.timer(BATCH_COOLDOWN_TIMER).flatMap(() =>
-                                        notifier
-                                    )
+                                return Observable.timer(BATCH_COOLDOWN_TIMER).flatMap(() =>
+                                    notifier
                                 );
                             }
                             else {
@@ -104,66 +105,59 @@ const txExecBatchEpic: Epic =
                                     index,
                                     status: 'DONE',
                                     data: results
-                                } as TBatchExecStatus);
+                                });
                             }
                         });
 
-                        return notifier;
+                        return notifier.catch(childError => Observable.throw({
+                            tx: {
+                                uuid: action.payload.uuid,
+                                name: batch.name,
+                                silent: action.payload.silent,
+                                params: batch.data[index],
+                            },
+                            error: {
+                                type: childError.type,
+                                error: childError.error
+                            }
+                        }));
+                    });
+                });
 
-                    }).catch(childError => Observable.throw({
-                        tx: {
-                            uuid: action.payload.uuid,
-                            name: batch.name,
-                            silent: action.payload.silent,
-                            params: batch.data[index],
-                        },
-                        error: {
-                            type: childError.error,
-                            error: childError.msg
-                        }
-                    }));
+            }, BATCH_CONCURRENCY).map((status: IBatchExecStatus) => {
+                fullStatus[status.index].pending -= status.data.length;
+                fullStatus[status.index].results = status.data;
 
-                }, 2).map(status => {
-                    switch (status.status) {
-                        case 'PENDING': fullStatus[status.index].pending = status.data; break;
-                        case 'DONE':
-                            fullStatus[status.index].pending = 0;
-                            fullStatus[status.index].results = status.data;
-                            break;
+                const totalPending = fullStatus.map(v => v.pending).reduce((a, b) => a + b);
+                const results = fullStatus.map(v =>
+                    v.results.map(r => ({
+                        type: 'single',
+                        uuid: action.payload.uuid,
+                        contract: v.contract,
+                        block: r.blockid,
+                        result: r.result,
+                        error: r.errmsg
 
-                        default: break;
-                    }
+                    }) as ITransaction)
+                ).reduce((a, b) => a.concat(b));
 
-                    const totalPending = fullStatus.map(v => v.pending).reduce((a, b) => a + b);
-                    const results = fullStatus.map(v =>
-                        v.results.map(r => ({
-                            type: 'single',
-                            uuid: action.payload.uuid,
-                            contract: v.contract,
-                            block: r.blockid,
-                            result: r.result,
-                            error: r.errmsg
+                if (totalPending) {
+                    return txBatchStatus({
+                        id: action.payload.uuid,
+                        pending: totalPending
+                    });
+                }
+                else {
+                    return txExecBatch.done({
+                        params: action.payload,
+                        result: results
+                    });
+                }
 
-                        }) as ITransaction)
-                    ).reduce((a, b) => a.concat(b));
-
-                    if (totalPending) {
-                        return txBatchStatus({
-                            id: action.payload.uuid,
-                            pending: totalPending
-                        });
-                    }
-                    else {
-                        return txExecBatch.done({
-                            params: action.payload,
-                            result: results
-                        });
-                    }
-
-                }).catch(e => Observable.of(txExecBatch.failed({
-                    params: action.payload,
-                    error: e
-                })));
-        });
+            }).catch(e => Observable.of(txExecBatch.failed({
+                params: action.payload,
+                error: e
+            })));
+    });
 
 export default txExecBatchEpic;
