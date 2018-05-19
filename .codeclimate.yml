@@ -14,8 +14,10 @@ plugins:
     - "**/tests/"
     - "Tests/"
     - "**/vendor/"
-    - "**/*.d.ts"
     - "public/vs/"
     - "src/app/styles/built/"
+    - "**/*.js"
+    - "**/*.d.ts"
+    - "**/*.test.ts"
   eslint:
     enabled: true
