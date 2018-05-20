@@ -23,12 +23,6 @@ export function quoteValueIfNeeded(value: string): string {
     return (quote ? '"' : '') + value + (quote ? '"' : '');
 }
 
-// export function pushNotEmpty(arr: string[], value: string) {
-//     if (value) {
-//         params.push(value);
-//     }
-// }
-
 export function getParamsStr(name: string, obj: Object) {
     let paramsArr = [];
     for (let param in obj) {
