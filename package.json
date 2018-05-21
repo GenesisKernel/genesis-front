@@ -130,7 +130,7 @@
         "react": "^16.2.0",
         "react-dom": "^16.2.0",
         "react-scripts-ts": "^2.15.1",
-        "react-scripts-ts-electron": "^0.2.1",
+        "react-scripts-ts-electron": "git+https://git@github.com/GenesisKernel/cra-typescript-electron.git",
         "ts-jest": "^22.4.4",
         "tslint-react": "^3.2.0",
         "typescript": "^2.8.3",
