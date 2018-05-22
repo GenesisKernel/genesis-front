@@ -20,8 +20,8 @@ import { Action } from 'redux';
 import { ActionsObservable } from 'redux-observable';
 import { moveTreeTag } from '../actions';
 import moveTreeTagEpic from './moveTreeTagEpic';
-import constructorModule from 'lib/constructor';
-import mockStore from './mockStore';
+import dependencies from 'modules/dependencies';
+import mockStore from 'test/mockStore';
 
 describe('moveTreeTagEpic', () => {
     it('move tree tag', () => {
@@ -302,9 +302,9 @@ describe('moveTreeTagEpic', () => {
             }
         ];
 
-        (constructorModule.IdGenerator.Instance).setCounter(15);
+        dependencies.constructorModule.idGenerator.setCounter(15);
 
-        moveTreeTagEpic(action$, mockStore, { constructorModule })
+        moveTreeTagEpic(action$, mockStore, { constructorModule: dependencies.constructorModule })
             .toArray()
             .subscribe(actualOutput => {
                 expect(actualOutput).toEqual(expectedOutput);

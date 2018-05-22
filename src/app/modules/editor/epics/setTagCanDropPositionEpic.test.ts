@@ -20,10 +20,10 @@ import { Action } from 'redux';
 import { ActionsObservable } from 'redux-observable';
 import { setTagCanDropPosition } from '../actions';
 import setTagCanDropPositionEpic from './setTagCanDropPositionEpic';
-import constructorModule from 'lib/constructor';
+import dependencies from 'modules/dependencies';
 import { TProtypoElement } from 'genesis/protypo';
 import { TConstructorTreeElement } from 'genesis/editor';
-import mockStore from './mockStore';
+import mockStore from 'test/mockStore';
 
 describe('setTagCanDropPositionEpic', () => {
     it('set tag CanDropPosition', () => {
@@ -412,9 +412,9 @@ describe('setTagCanDropPositionEpic', () => {
             }
         ];
 
-        (constructorModule.IdGenerator.Instance).setCounter(14);
+        dependencies.constructorModule.idGenerator.setCounter(14);
 
-        setTagCanDropPositionEpic(action$, mockStore, { constructorModule })
+        setTagCanDropPositionEpic(action$, mockStore, { constructorModule: dependencies.constructorModule })
             .toArray()
             .subscribe(actualOutput => {
                 expect(actualOutput).toEqual(expectedOutput);

@@ -15,7 +15,7 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { TProtypoElement } from 'genesis/protypo';
-import constructorModule from 'lib/constructor';
+import { idGenerator } from 'lib/constructor';
 import resolveTagHandler from 'lib/constructor/tags';
 import Tag from './Tag';
 
@@ -64,7 +64,7 @@ class If extends Tag {
     generateTreeJSON(text: string): any {
         return {
             tag: this.tagName.toLowerCase(),
-            id: (constructorModule.IdGenerator.Instance).generateId(),
+            id: idGenerator.generateId(),
             attr: {
                 condition: '#value#'
             },
@@ -72,7 +72,7 @@ class If extends Tag {
             tail: [
                 {
                     tag: 'else',
-                    id: (constructorModule.IdGenerator.Instance).generateId(),
+                    id: idGenerator.generateId(),
                     children: []
                 }
             ]

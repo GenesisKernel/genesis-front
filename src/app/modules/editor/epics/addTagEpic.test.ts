@@ -20,10 +20,10 @@ import { Action } from 'redux';
 import { ActionsObservable } from 'redux-observable';
 import { addTag } from '../actions';
 import addTagEpic from './addTagEpic';
-import constructorModule from 'lib/constructor';
 import { TProtypoElement } from 'genesis/protypo';
 import { TConstructorTreeElement } from 'genesis/editor';
-import mockStore from './mockStore';
+import mockStore from 'test/mockStore';
+import dependencies from 'modules/dependencies';
 
 describe('addTagEpic', () => {
     it('adds tag to tree json', () => {
@@ -429,9 +429,9 @@ describe('addTagEpic', () => {
             }
         ];
 
-        (constructorModule.IdGenerator.Instance).setCounter(14);
+        dependencies.constructorModule.idGenerator.setCounter(14);
 
-        addTagEpic(action$, mockStore, { constructorModule })
+        addTagEpic(action$, mockStore, { constructorModule: dependencies.constructorModule })
             .toArray()
             .subscribe(actualOutput => {
                 expect(actualOutput).toEqual(expectedOutput);

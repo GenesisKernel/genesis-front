@@ -20,10 +20,10 @@ import { Action } from 'redux';
 import { ActionsObservable } from 'redux-observable';
 import { moveTag } from '../actions';
 import moveTagEpic from './moveTagEpic';
-import constructorModule from 'lib/constructor';
+import dependencies from 'modules/dependencies';
 import { TProtypoElement } from 'genesis/protypo';
 import { TConstructorTreeElement } from 'genesis/editor';
-import mockStore from './mockStore';
+import mockStore from 'test/mockStore';
 
 describe('moveTagEpic', () => {
     it('move tag', () => {
@@ -481,9 +481,9 @@ describe('moveTagEpic', () => {
             }
         ];
 
-        (constructorModule.IdGenerator.Instance).setCounter(15);
+        dependencies.constructorModule.idGenerator.setCounter(15);
 
-        moveTagEpic(action$, mockStore, { constructorModule })
+        moveTagEpic(action$, mockStore, { constructorModule: dependencies.constructorModule })
             .toArray()
             .subscribe(actualOutput => {
                 expect(actualOutput).toEqual(expectedOutput);

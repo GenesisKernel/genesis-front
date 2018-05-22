@@ -20,10 +20,10 @@ import { Action } from 'redux';
 import { ActionsObservable } from 'redux-observable';
 import { removeTag } from '../actions';
 import removeTagEpic from './removeTagEpic';
-import constructorModule from 'lib/constructor';
+import dependencies from 'modules/dependencies';
 import { TProtypoElement } from 'genesis/protypo';
 import { TConstructorTreeElement } from 'genesis/editor';
-import mockStore from './mockStore';
+import mockStore from 'test/mockStore';
 
 describe('removeTagEpic', () => {
     it('remove tag', () => {
@@ -389,7 +389,7 @@ describe('removeTagEpic', () => {
             }
         ];
 
-        removeTagEpic(action$, mockStore, { constructorModule })
+        removeTagEpic(action$, mockStore, { constructorModule: dependencies.constructorModule })
             .toArray()
             .subscribe(actualOutput => {
                 expect(actualOutput).toEqual(expectedOutput);

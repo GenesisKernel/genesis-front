@@ -20,10 +20,10 @@ import { Action } from 'redux';
 import { ActionsObservable } from 'redux-observable';
 import { constructorRedo } from '../actions';
 import constructorRedoEpic from './constructorRedoEpic';
-import constructorModule from 'lib/constructor';
+import dependencies from 'modules/dependencies';
 import { TProtypoElement } from 'genesis/protypo';
 import { TConstructorTreeElement } from 'genesis/editor';
-import mockStore from './mockStore';
+import mockStore from 'test/mockStore';
 
 describe('constructorRedoEpic', () => {
     it('undo test', () => {
@@ -430,7 +430,7 @@ describe('constructorRedoEpic', () => {
             }
         ];
 
-        constructorRedoEpic(action$, mockStore, { constructorModule })
+        constructorRedoEpic(action$, mockStore, { constructorModule: dependencies.constructorModule })
             .toArray()
             .subscribe(actualOutput => {
                 expect(actualOutput).toEqual(expectedOutput);

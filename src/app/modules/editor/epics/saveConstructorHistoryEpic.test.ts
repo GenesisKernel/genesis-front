@@ -20,8 +20,8 @@ import { Action } from 'redux';
 import { ActionsObservable } from 'redux-observable';
 import { saveConstructorHistory } from '../actions';
 import saveConstructorHistoryEpic from './saveConstructorHistoryEpic';
-import constructorModule from 'lib/constructor';
-import mockStore from './mockStore';
+import dependencies from 'modules/dependencies';
+import mockStore from 'test/mockStore';
 
 describe('saveConstructorHistory', () => {
     it('save constructor history', () => {
@@ -333,7 +333,7 @@ describe('saveConstructorHistory', () => {
             }
         ];
 
-        saveConstructorHistoryEpic(action$, mockStore, { constructorModule })
+        saveConstructorHistoryEpic(action$, mockStore, { constructorModule: dependencies.constructorModule })
             .toArray()
             .subscribe(actualOutput => {
                 expect(actualOutput).toEqual(expectedOutput);

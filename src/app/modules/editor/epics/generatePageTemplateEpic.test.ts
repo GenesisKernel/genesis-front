@@ -20,8 +20,8 @@ import { Action } from 'redux';
 import { ActionsObservable } from 'redux-observable';
 import { generatePageTemplate } from '../actions';
 import generatePageTemplateEpic from './generatePageTemplateEpic';
-import constructorModule from 'lib/constructor';
-import mockStore from './mockStore';
+import dependencies from 'modules/dependencies';
+import mockStore from 'test/mockStore';
 
 describe('generatePageTemplateEpic', () => {
     it('generate PageTemplate', () => {
@@ -38,7 +38,7 @@ describe('generatePageTemplateEpic', () => {
             }
         ];
 
-        generatePageTemplateEpic(action$, mockStore, { constructorModule })
+        generatePageTemplateEpic(action$, mockStore, { constructorModule: dependencies.constructorModule })
             .toArray()
             .subscribe(actualOutput => {
                 expect(actualOutput).toEqual(expectedOutput);

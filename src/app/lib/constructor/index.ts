@@ -20,7 +20,6 @@ import { IFindTagResult } from 'genesis/editor';
 import * as _ from 'lodash';
 import { html2json } from 'html2json';
 import resolveTagHandler from 'lib/constructor/tags';
-import getConstructorTemplate from 'lib/constructor/templates';
 
 declare const window: Window & { clipboardData: any };
 
@@ -87,12 +86,8 @@ export function copyObject(item: any) {
     return result || item;
 }
 
-class IdGenerator {
+export class IdGenerator {
     private counter: number = 0;
-    private static _instance: IdGenerator;
-    public static get Instance() {
-        return this._instance || (this._instance = new this());
-    }
     setCounter(counter: number) {
         this.counter = counter;
     }
@@ -104,13 +99,15 @@ class IdGenerator {
     }
 }
 
+export const idGenerator = new IdGenerator();
+
 export function setIds(children: any[], force: boolean = false) {
     for (let tag of children) {
         if (!tag) {
             continue;
         }
         if (!tag.id || force) {
-            tag.id = (IdGenerator.Instance).generateId();
+            tag.id = idGenerator.generateId();
         }
         if (tag.children) {
             setIds(tag.children, force);
@@ -215,7 +212,7 @@ export function convertToTreeData(data: TProtypoElement[], selectedTag?: TProtyp
     return result;
 }
 
-export class CodeGenerator {
+export default class CodeGenerator {
     private elements: TProtypoElement[];
     constructor(elements: TProtypoElement[]) {
         this.elements = elements;
@@ -411,7 +408,7 @@ export function updateChildrenText(tree: TProtypoElement[]): TProtypoElement[] {
     }
 }
 
-function html2childrenTags(html: string): TProtypoElement[] {
+export function html2childrenTags(html: string): TProtypoElement[] {
     const htmlJson = html2json(html);
     return htmlJsonChild2childrenTags(htmlJson.child);
 }
@@ -450,17 +447,17 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                 return {
                     tag: 'text',
                     text: clearHtml(node.text),
-                    id: (IdGenerator.Instance).generateId()
+                    id: idGenerator.generateId()
                 };
             }
             else {
                 return {
                     tag: 'span',
-                    id: (IdGenerator.Instance).generateId(),
+                    id: idGenerator.generateId(),
                     children: [{
                         tag: 'text',
                         text: clearHtml(node.text),
-                        id: (IdGenerator.Instance).generateId()
+                        id: idGenerator.generateId()
                     }]
                 };
             }
@@ -470,7 +467,7 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                 case 'p':
                     return {
                         tag: 'p',
-                        id: (IdGenerator.Instance).generateId(),
+                        id: idGenerator.generateId(),
                         attr: {
                             className: className
                         },
@@ -479,7 +476,7 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                 case 'i':
                     return {
                         tag: 'em',
-                        id: (IdGenerator.Instance).generateId(),
+                        id: idGenerator.generateId(),
                         attr: {
                             className: className
                         },
@@ -489,7 +486,7 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                 case 'strong':
                     return {
                         tag: 'strong',
-                        id: (IdGenerator.Instance).generateId(),
+                        id: idGenerator.generateId(),
                         attr: {
                             className: className
                         },
@@ -498,7 +495,7 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                 case 'span':
                     return {
                         tag: 'span',
-                        id: (IdGenerator.Instance).generateId(),
+                        id: idGenerator.generateId(),
                         attr: {
                             className: className
                         },
@@ -507,7 +504,7 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
                 case 'div':
                     return {
                         tag: 'div',
-                        id: (IdGenerator.Instance).generateId(),
+                        id: idGenerator.generateId(),
                         attr: {
                             className: className
                         },
@@ -532,17 +529,3 @@ export function startHoverTimer() {
     hoverTimer = setTimeout(() => { hoverTimer = null; }, 200);
     return true;
 }
-
-export default {
-    setIds,
-    convertToTreeData,
-    findTagById,
-    copyObject,
-    getConstructorTemplate,
-    IdGenerator,
-    updateChildrenText,
-    html2childrenTags,
-    resolveTagHandler,
-    CodeGenerator,
-    Properties
-};

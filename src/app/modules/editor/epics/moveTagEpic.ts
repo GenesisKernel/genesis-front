@@ -28,7 +28,7 @@ const moveTagEpic: Epic<Action, IRootState> =
             let jsonData = tabData.jsonData && constructorModule.copyObject(tabData.jsonData) || null;
 
             let tagCopy = constructorModule.copyObject(action.payload.tag);
-            tagCopy.id = (constructorModule.IdGenerator.Instance).generateId();
+            tagCopy.id = constructorModule.idGenerator.generateId();
 
             let moved = false;
 

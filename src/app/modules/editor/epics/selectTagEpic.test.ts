@@ -20,9 +20,9 @@ import { Action } from 'redux';
 import { ActionsObservable } from 'redux-observable';
 import { selectTag } from '../actions';
 import selectTagEpic from './selectTagEpic';
-import constructorModule from 'lib/constructor';
+import dependencies from 'modules/dependencies';
 import { TConstructorTreeElement } from 'genesis/editor';
-import mockStore from './mockStore';
+import mockStore from 'test/mockStore';
 
 describe('selectTagEpic', () => {
     it('adds tag to tree json', () => {
@@ -329,7 +329,7 @@ describe('selectTagEpic', () => {
             }
         ];
 
-        selectTagEpic(action$, mockStore, { constructorModule })
+        selectTagEpic(action$, mockStore, { constructorModule: dependencies.constructorModule })
             .toArray()
             .subscribe(actualOutput => {
                 expect(actualOutput).toEqual(expectedOutput);
