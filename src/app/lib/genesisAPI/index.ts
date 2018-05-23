@@ -131,7 +131,7 @@ class GenesisAPI {
                 body,
                 headers: requestOptions.headers
             });
-            json = requestOptions.responseTransformer ? requestOptions.responseTransformer(response.body) : response.body;
+            json = response.body;
         }
         catch (e) {
             // TODO: Not possible to catch with any other way
@@ -150,7 +150,7 @@ class GenesisAPI {
             throw json;
         }
         else {
-            return json as R;
+            return requestOptions.responseTransformer ? requestOptions.responseTransformer(json) : json;
         }
     }
 
