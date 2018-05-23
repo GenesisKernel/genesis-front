@@ -18,11 +18,19 @@
 
 * {
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     -webkit-text-size-adjust: none;
     -moz-text-size-adjust: none;
     -ms-text-size-adjust: none;
     text-size-adjust: none;
+}
+
+@-moz-document url-prefix() {
+    body {
+        font-weight: lighter !important;
+    }
 }
 
 html,
