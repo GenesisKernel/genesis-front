@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import styled from 'styled-components';
+import React from 'react';
 import platform from 'lib/platform';
 
+import themed from 'components/Theme/themed';
 import BackButton from './BackButton';
 
 export interface IHeadingProps {
@@ -47,8 +47,8 @@ const Heading: React.SFC<IHeadingProps> = props => (
     </div>
 );
 
-export default styled(Heading) `
-    background: ${platform.select({ web: '#4c7dbd', desktop: 'transparent' })};
+export default themed(Heading) `
+    background: ${props => platform.select({ web: props.theme.headerBackground, desktop: 'transparent' })};
     margin: -15px -15px ${platform.select({ desktop: '0', web: '15px' })};
     padding: 0 15px;
     height: 45px;
@@ -65,7 +65,7 @@ export default styled(Heading) `
         }
 
         .heading-title {
-            color: ${platform.select({ web: '#fff', desktop: '#000' })};
+            color: ${props => platform.select({ web: props.theme.headerForeground, desktop: '#000' })};
             font-size: 18px;
         }
     }

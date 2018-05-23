@@ -20,8 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import styled from 'styled-components';
+import React from 'react';
+
+import themed from 'components/Theme/themed';
 
 export interface IToolbarButton {
     icon: string;
@@ -38,10 +39,10 @@ const Toolbar: React.SFC<IToolbarProps> = props => (
     </ul>
 );
 
-const StyledToolbar = styled(Toolbar) `
-    background: #f3f3f3;
+const StyledToolbar = themed(Toolbar) `
+    background: ${props => props.theme.toolbarBackground};
+    border-bottom: solid 2px ${props => props.theme.toolbarOutline};
     height: 40px;
-    border-bottom: solid 2px #e5e5e5;
     list-style-type: none;
     margin: 0;
     padding: 0;

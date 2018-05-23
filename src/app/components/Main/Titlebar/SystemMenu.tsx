@@ -20,26 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import styled from 'styled-components';
+import React from 'react';
 import { remote } from 'electron';
-import { styles } from 'components/Main';
 
+import themed from 'components/Theme/themed';
 import DropdownButton, { CloseDropdownButton } from 'components/DropdownButton';
 import { FormattedMessage } from 'react-intl';
 
-const SystemButton = styled(DropdownButton) `
+const SystemButton = themed(DropdownButton) `
     background: 0;
     border: 0;
     outline: 0;
     color: #bad8ff;
-    width: ${styles.headerHeight}px !important;
-    height: ${styles.headerHeight}px !important;
+    width: ${props => props.theme.headerHeight}px !important;
+    height: ${props => props.theme.headerHeight}px !important;
     padding: 0 !important;
     margin: 0 !important;
     outline: 0 !important;
     min-width: 0 !important;
-    line-height: ${styles.headerHeight + 2}px !important;
+    line-height: ${props => props.theme.headerHeight + 2}px !important;
     transition: color ease-in-out .16s;
     cursor: pointer !important;
 

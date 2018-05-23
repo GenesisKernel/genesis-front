@@ -20,16 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import * as _ from 'lodash';
+import React from 'react';
+import _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import LoadingBar from 'react-redux-loading-bar';
 import { OrderedMap } from 'immutable';
-import styled from 'styled-components';
-import platform from 'lib/platform';
 import { TSection } from 'genesis/content';
 import { history } from 'store';
 
+import themed from 'components/Theme/themed';
 import Titlebar from './Titlebar';
 import UserMenu from 'containers/Widgets/UserMenu';
 import Navigation from 'containers/Main/Navigation';
@@ -41,15 +40,7 @@ import EditorToolbar from 'containers/Main/Toolbar/EditorToolbar';
 import { TTransactionStatus } from 'genesis/tx';
 // import TransactionsMenu from './TransactionsMenu';
 
-export const styles = {
-    headerHeight: platform.select({ desktop: 28, web: 0 }),
-    menuHeight: 40,
-    toolbarHeight: 40,
-    mainColor: '#4c7dbd',
-    toolColor: '#f3f3f3'
-};
-
-const StyledWrapper = styled.div`
+const StyledWrapper = themed.div`
     background-color: #f6f8fa;
 `;
 
@@ -71,7 +62,7 @@ export interface IMainProps {
     onCloseSection: (section: string) => void;
 }
 
-const StyledControls = styled.div`
+const StyledControls = themed.div`
     position: fixed;
     top: 0;
     left: 0;
@@ -79,21 +70,21 @@ const StyledControls = styled.div`
     z-index: 10000;
 `;
 
-const StyledTitlebar = styled.div`
-    background: ${styles.mainColor};
-    height: ${styles.headerHeight}px;
-    line-height: ${styles.headerHeight}px;
+const StyledTitlebar = themed.div`
+    background: ${props => props.theme.headerBackground};
+    height: ${props => props.theme.headerHeight}px;
+    line-height: ${props => props.theme.headerHeight}px;
     font-size: 15px;
     color: #fff;
     text-align: center;
 `;
 
-const StyledMenu = styled.ul`
-    background: ${styles.mainColor};
+const StyledMenu = themed.ul`
+    background: ${props => props.theme.headerBackground};
     list-style-type: none;
     padding: 0;
     margin: 0;
-    height: ${styles.menuHeight}px;
+    height: ${props => props.theme.menuHeight}px;
     position: relative;
 
     > li {
@@ -108,7 +99,7 @@ const StyledMenu = styled.ul`
 
         &.user-menu {
             margin-top: 0;
-            height: ${styles.menuHeight}px;
+            height: ${props => props.theme.menuHeight}px;
             line-height: normal;
             position: absolute;
             top: 0;
@@ -118,12 +109,14 @@ const StyledMenu = styled.ul`
     }
 `;
 
-const StyledContent = styled.section`
-    margin-top: ${styles.headerHeight + styles.menuHeight + styles.toolbarHeight}px !important;
+const StyledContent = themed.section`
+    && { background: ${props => props.theme.contentBackground}; }
+    color: ${props => props.theme.contentForeground};
+    margin-top: ${props => props.theme.headerHeight + props.theme.menuHeight + props.theme.toolbarHeight}px !important;
     transition: none !important;
 `;
 
-const StyledLoadingBar = styled(LoadingBar) `
+const StyledLoadingBar = themed(LoadingBar) `
     position: absolute;
     bottom: 0;
     right: 0;
@@ -209,7 +202,7 @@ class Main extends React.Component<IMainProps> {
                         }}
                     />
                 </StyledControls >
-                <Navigation topOffset={styles.headerHeight + styles.menuHeight + styles.toolbarHeight} />
+                <Navigation />
                 <StyledContent style={{ marginLeft: this.props.navigationVisible ? this.props.navigationSize : 0 }}>
                     {this.props.children}
                 </StyledContent>

@@ -21,11 +21,11 @@
 // SOFTWARE.
 
 import * as React from 'react';
-import styled from 'styled-components';
 import { TEditorTab } from 'genesis/editor';
 import imgSim from './sim.svg';
 import imgTpl from './tpl.svg';
 
+import themed from 'components/Theme/themed';
 import EditorTab from './EditorTab';
 
 export const TYPE_ICONS: { [type: string]: string } = {
@@ -59,8 +59,8 @@ const EditorTabs: React.SFC<IEditorTabsProps> = (props) => (
     </ul>
 );
 
-const StyledEditorTabs = styled(EditorTabs) `
-    background: #c3c7ce;
+const StyledEditorTabs = themed(EditorTabs) `
+    background: ${props => props.theme.editorBackground};
     height: 36px;
     list-style-type: none;
     padding: 1px 0 0;

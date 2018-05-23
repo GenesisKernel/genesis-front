@@ -20,12 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import classNames from 'classnames';
-import styled from 'styled-components';
 import imgClose from 'images/close.svg';
 import { FormattedMessage } from 'react-intl';
 import { TEditorTab } from 'genesis/editor';
+
+import themed from 'components/Theme/themed';
 
 export interface IEditorTabProps extends TEditorTab {
     icon: string;
@@ -74,7 +75,7 @@ const EditorTab: React.SFC<IEditorTabProps> = props => {
     );
 };
 
-const StyledEditorTab = styled(EditorTab) `
+const StyledEditorTab = themed(EditorTab) `
     position: relative;
     background: #ddd;
     color: #7a899c;

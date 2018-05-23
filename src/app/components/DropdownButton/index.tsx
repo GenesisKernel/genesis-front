@@ -20,14 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import * as classNames from 'classnames';
-import * as propTypes from 'prop-types';
-import styled from 'styled-components';
+import React from 'react';
+import classNames from 'classnames';
+import propTypes from 'prop-types';
+
+import themed from 'components/Theme/themed';
 import Dropdown from 'components/Animation/Dropdown';
 import onClickOutside, { InjectedOnClickOutProps } from 'react-onclickoutside';
 
-const StyledDropdown = styled.div`
+const StyledDropdown = themed.div`
     display: inline-block;
     position: relative;
 
@@ -61,9 +62,9 @@ const StyledDropdown = styled.div`
 
     .dropdown-content {
         line-height: normal;
-        background: #fff;
+        background: ${props => props.theme.dropdownMenuBackground};
         box-shadow: 0 0 25px rgba(0,0,0,.15);
-        border: solid 1px #add1ff;
+        border: solid 1px ${props => props.theme.dropdownMenuOutline};
         border-top: none;
         text-align: left;
 
@@ -81,17 +82,23 @@ const StyledDropdown = styled.div`
         }
 
         .dropdown-heading {
-            border-top: solid 1px #ddd;
+            border-top: solid 1px ${props => props.theme.dropdownMenuSeparator};
             height: 30px;
             line-height: 30px;
             padding: 0 15px;
             font-size: 11px;
             text-transform: uppercase;
-            color: #999;
+            color: ${props => props.theme.dropdownMenuSecondary};
 
             &:first-child {
                 border-top: none;
             }
+        }
+
+        .dropdown-info {
+            font-size: 14px;
+            padding: 0 15px;
+            color: ${props => props.theme.dropdownMenuPrimary};
         }
 
         .dropdown-group {
@@ -118,7 +125,7 @@ const StyledDropdown = styled.div`
                     font-size: 13px;
                     font-weight: 500;
                     text-decoration: none;
-                    color: #666;
+                    color: ${props => props.theme.dropdownMenuForeground};
                     cursor: pointer;
                     display: block;
                     text-align: left;
@@ -131,11 +138,11 @@ const StyledDropdown = styled.div`
                     }
 
                     &[disabled] {
-                        color: #ccc;
+                        color: ${props => props.theme.dropdownMenuDisabled};
                     }
 
                     &:hover {
-                        background: rgba(0,0,0,0.1);
+                        background: ${props => props.theme.dropdownMenuActive};
                     }
 
                     &:focus {

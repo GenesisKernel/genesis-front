@@ -29,6 +29,8 @@ import { switchWindow } from 'modules/gui/actions';
 import HTML5Backend from 'react-dnd-html5-backend';
 
 import App from 'components/App';
+import ThemeProvider from 'components/Theme/ThemeProvider';
+import baseTheme from 'components/Theme/baseTheme';
 
 export interface IAppContainerProps {
 }
@@ -47,12 +49,14 @@ interface IAppContainerDispatch {
 
 const AppContainer: React.SFC<IAppContainerProps & IAppContainerState & IAppContainerDispatch> = props => (
     <IntlProvider locale={props.locale} defaultLocale="en-US" messages={props.localeMessages}>
-        <App
-            isAuthenticated={props.isAuthenticated}
-            isLoaded={props.isLoaded}
-            isCollapsed={props.isCollapsed}
-            switchWindow={props.switchWindow}
-        />
+        <ThemeProvider theme={baseTheme}>
+            <App
+                isAuthenticated={props.isAuthenticated}
+                isLoaded={props.isLoaded}
+                isCollapsed={props.isCollapsed}
+                switchWindow={props.switchWindow}
+            />
+        </ThemeProvider>
     </IntlProvider>
 );
 

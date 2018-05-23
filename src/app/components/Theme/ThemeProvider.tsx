@@ -20,43 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
+import { ThemeProvider as ThemeProviderNative, ThemeProviderComponent } from 'styled-components';
+import { IThemeDefinition } from 'genesis/theme';
 
-import themed from 'components/Theme/themed';
+const ThemeProvider: ThemeProviderComponent<IThemeDefinition> = ThemeProviderNative as ThemeProviderComponent<IThemeDefinition>;
 
-export interface IModalProps<P, R> {
-    params: P;
-    onResult: (data: R) => void;
-    onCancel: () => void;
-    children: React.ReactNode[];
-}
-
-export type TModalComponentClass<P, R> =
-    React.ComponentType<IModalProps<P, R>> |
-    React.SFC<IModalProps<P, R>>;
-
-const StyledHeader = themed.div`
-    background: ${props => props.theme.modalHeaderBackground};
-    color: ${props => props.theme.modalHeaderForeground};
-    margin: -1px -1px 0 -1px;
-    height: 40px;
-    line-height: 40px;
-    padding: 0 15px;
-`;
-
-const StyledBody = themed.div`
-    padding: 15px;
-    min-width: 300px;
-`;
-
-const StyledFooter = themed.div`
-    padding: 15px;
-    background: #efefef;
-    border-top: solid 1px #d0dff3;
-`;
-
-export default abstract class Modal<P, R, S = {}> extends React.Component<IModalProps<P, R>, S> {
-    public static Header = StyledHeader;
-    public static Body = StyledBody;
-    public static Footer = StyledFooter;
-}
+export default ThemeProvider;

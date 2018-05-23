@@ -20,8 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import styled from 'styled-components';
+import React from 'react';
+
+import themed from 'components/Theme/themed';
 
 export interface ISectionToolButtonProps {
     className?: string;
@@ -45,14 +46,13 @@ const SectionToolButton: React.SFC<ISectionToolButtonProps> = props => (
     </li>
 );
 
-const StyledSectionToolButton = styled(SectionToolButton) `
-    display: inline-block;
+const StyledSectionToolButton = themed(SectionToolButton) `
     height: 40px;
     padding: 9px;
     float: right;
 
     ul.button-sections {
-        border: solid 1px #9eb4d0;
+        border: solid 1px ${props => props.theme.sectionButtonOutline};
         border-radius: 2px;
         list-style-type: none;
         padding: 0;
@@ -66,11 +66,11 @@ const StyledSectionToolButton = styled(SectionToolButton) `
                 background: 0;
                 outline: 0;
                 border: 0;
-                border-right: solid 1px #9eb4d0;
+                border-right: solid 1px ${props => props.theme.sectionButtonOutline};
                 height: 20px;
                 font-size: 13px;
                 padding: 0 10px;
-                color: #194a8a;
+                color: ${props => props.theme.sectionButtonForeground};
             }
 
             &:last-child button {
@@ -78,12 +78,12 @@ const StyledSectionToolButton = styled(SectionToolButton) `
             }
 
             &:hover button {
-                background: #e9eef5;
+                background: ${props => props.theme.sectionButtonBackground};
             }
-
+            
             &.active button {
-                background: #9eb4d1;
-                color: #fff;
+                background: ${props => props.theme.sectionButtonActive};
+                color: ${props => props.theme.sectionButtonPrimary};
             }
         }
     }

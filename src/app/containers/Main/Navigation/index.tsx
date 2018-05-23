@@ -29,7 +29,7 @@ import { TMenu } from 'genesis/content';
 import Navigation from 'components/Main/Navigation';
 
 interface INavigationContainerProps {
-    topOffset: number;
+
 }
 
 interface INavigationContainerState {

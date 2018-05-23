@@ -20,9 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import styled from 'styled-components';
-import * as classNames from 'classnames';
+import React from 'react';
+import classNames from 'classnames';
+
+import themed from 'components/Theme/themed';
 
 interface IResizeHandleProps {
     width: number;
@@ -39,7 +40,7 @@ export const styles = {
     extendWidth: 2
 };
 
-const StyledResizeHandle = styled.button`
+const StyledResizeHandle = themed.button`
     position: absolute;
     top: 0;
     bottom: 0;
@@ -65,7 +66,7 @@ const StyledResizeHandle = styled.button`
         right: ${(styles.hoverWidth / 2) - (styles.initialWidth / 2)}px;
         margin: 0;
         width: ${styles.initialWidth}px;
-        background: #e5e4e5;
+        background: ${props => props.theme.menuOutline};
         transition: all .16s;
     }
 

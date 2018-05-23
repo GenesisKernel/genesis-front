@@ -21,8 +21,9 @@
 // SOFTWARE.
 
 import React from 'react';
-import styled from 'styled-components';
 import { INotificationProto } from 'genesis/notifications';
+
+import themed from 'components/Theme/themed';
 
 export interface INotificationProps {
     className?: string;
@@ -48,8 +49,8 @@ const Notification: React.SFC<INotificationProps> = props => (
     </div>
 );
 
-export default styled(Notification) `
-    background: rgba(26, 91, 158, 0.9);
+export default themed(Notification) `
+    background: ${props => props.theme.notificationBackground};
     width: 350px;
     margin-bottom: 15px;
     padding: 15px;
@@ -57,7 +58,7 @@ export default styled(Notification) `
     .notification-icon {
         float: left;
         font-size: 30px;
-        color: #fff;
+        color: ${props => props.theme.notificationIconColor};
         vertical-align: top;
         margin-right: 15px;
         margin-left: 5px;
@@ -67,12 +68,12 @@ export default styled(Notification) `
 
     .notification-title {
         font-size: 15px;
-        color: #fff;
+        color: ${props => props.theme.notificationPrimaryForeground};
     }
 
     .notification-body {
         font-size: 14px;
-        color: rgba(255, 255, 255, 0.6);
+        color: ${props => props.theme.notificationForeground};
     }
 
     .notification-controls {

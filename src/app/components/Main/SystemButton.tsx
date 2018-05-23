@@ -22,8 +22,8 @@
 
 import React from 'react';
 import classNames from 'classnames';
-import styled from 'styled-components';
 
+import themed from 'components/Theme/themed';
 import DropdownButton, { IDropdownButtonProps } from 'components/DropdownButton';
 
 export interface ISystemButtonProps extends IDropdownButtonProps {
@@ -48,7 +48,7 @@ const SystemButton: React.SFC<ISystemButtonProps> = props => (
     </DropdownButton>
 );
 
-const StyledSystemButton = styled(SystemButton) `
+const StyledSystemButton = themed(SystemButton) `
     background: 0;
     padding: 0;
     border: 0;
@@ -56,11 +56,11 @@ const StyledSystemButton = styled(SystemButton) `
     transition: background ease-in-out .17s;
 
     &:hover {
-        background: rgba(0,0,0,0.1);
+        background: ${props => props.theme.systemButtonActive};
     }
 
     &._warning {
-        background: #ffa500;
+        background: ${props => props.theme.systemButtonSecondary};
     }
 `;
 

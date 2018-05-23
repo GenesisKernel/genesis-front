@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import Transition from 'react-transition-group/Transition';
-import styled from 'styled-components';
+import themed from 'components/Theme/themed';
 
 const containerAnimationDuration = 210;
 const containerAnimationDef = {
@@ -76,7 +76,7 @@ const childAnimationDef = {
     }
 };
 
-const StyledModalWrapper = styled.div`
+const StyledModalWrapper = themed.div`
     background: rgba(0,0,0,0.3);
     position: fixed;
     top: 0;
@@ -88,7 +88,7 @@ const StyledModalWrapper = styled.div`
     overflow-x: hidden;
     overflow-y: auto;
     padding: 50px;
-    margin-top: ${props => props.style.marginTop}px;
+    margin-top: ${props => props.theme.headerHeight - 1}px;
 
     &::before {
         content: ' ';
@@ -101,7 +101,7 @@ const StyledModalWrapper = styled.div`
 
     > .modal-wnd {
         display: inline-block;
-        border: solid 1px #71a2e0;
+        border: solid 1px ${props => props.theme.modalOutline};
         background: #fff;
         vertical-align: middle;
         text-align: initial;
@@ -111,7 +111,7 @@ const StyledModalWrapper = styled.div`
 `;
 
 export interface IModalWrapperProps {
-    topOffset?: number;
+
 }
 
 interface IModalWrapperState {
@@ -194,7 +194,7 @@ class ModalWrapper extends React.Component<IModalWrapperProps, IModalWrapperStat
         return (
             <Transition in={this.state.active} timeout={containerAnimationDuration} onEntered={this.onEntered} onExited={this.onExited} unmountOnExit>
                 {(state: string) => (
-                    <StyledModalWrapper style={{ ...containerAnimationDef.defaultStyle, ...containerAnimationDef[state], marginTop: this.props.topOffset }}>
+                    <StyledModalWrapper style={{ ...containerAnimationDef.defaultStyle, ...containerAnimationDef[state] }}>
                         <Transition in={state === 'entered'} timeout={childAnimationDuration}>
                             {this.renderChild.bind(this)}
                         </Transition>

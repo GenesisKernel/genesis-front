@@ -20,9 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import styled from 'styled-components';
+import React from 'react';
 import classNames from 'classnames';
+
+import themed from 'components/Theme/themed';
 
 export interface IToolButtonProps {
     icon: string;
@@ -41,18 +42,14 @@ const ToolButton: React.SFC<IToolButtonProps> = props => (
     </li>
 );
 
-const StyledToolButton = styled(ToolButton) `
+const StyledToolButton = themed(ToolButton) `
     display: inline-block;
     vertical-align: top;
 
     &.disabled {
         button {
-            > em.icon {
-                color: #bcc8d6;
-            }
-
-            > span.button-label {
-                color: #93a7bf;
+            > em.icon, > span.button-label {
+                color: ${props => props.theme.toolbarDisabled};
             }
         }
     }
@@ -72,7 +69,7 @@ const StyledToolButton = styled(ToolButton) `
         transition: background .15s;
 
         > em.icon {
-            color: #5b97e4;
+            color: ${props => props.theme.toolbarIconColor};
             vertical-align: middle;
             height: 18px;
             display: inline-block;
@@ -80,7 +77,7 @@ const StyledToolButton = styled(ToolButton) `
 
         > span.button-label {
             margin-left: 8px;
-            color: #194a8a;
+            color: ${props => props.theme.toolbarForeground};
         }
 
         &:hover {

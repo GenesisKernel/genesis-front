@@ -40,7 +40,7 @@ const NotificationsMenu: React.SFC<INotificationsMenuProps> = props => (
         badge={props.count}
         warning={props.offline}
         content={(
-            <div style={{ color: '#000', overflow: 'hidden' }}>
+            <div style={{ overflow: 'hidden' }}>
                 <div className="dropdown-heading">
                     {props.offline ?
                         (
@@ -53,7 +53,7 @@ const NotificationsMenu: React.SFC<INotificationsMenuProps> = props => (
                 <div>
                     {props.offline ?
                         (
-                            <p style={{ fontSize: 14, padding: '0 15px', color: '#4b7dbd' }}>
+                            <p className="dropdown-info">
                                 <FormattedMessage id="general.error.socket.desc" defaultMessage="Failed to establish connection to the WebSocket server. Check your configuration" />
                             </p>
                         ) : (

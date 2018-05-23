@@ -20,11 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import * as classnames from 'classnames';
-import styled from 'styled-components';
-import * as propTypes from 'prop-types';
+import React from 'react';
+import classnames from 'classnames';
+import propTypes from 'prop-types';
 
+import themed from 'components/Theme/themed';
 import Protypo, { IParamsSpec } from '../Protypo';
 import PageLink from 'containers/Routing/PageLink';
 
@@ -33,12 +33,9 @@ export interface IMenuItemProps {
     'page'?: string;
     'icon'?: string;
     'params'?: IParamsSpec;
-
-    // TODO: Stub value
-    '_systemPageHook'?: string;
 }
 
-export const StyledMenuItem = styled.div`
+export const StyledMenuItem = themed.div`
     > a, > a:hover {
         text-decoration: none !important;
     }
@@ -60,7 +57,7 @@ export const StyledMenuItem = styled.div`
     }
 
     &:hover {
-        background: #ececec;
+        background: ${props => props.theme.menuBackgroundActive};
     }
 
     .link-body {
@@ -68,7 +65,7 @@ export const StyledMenuItem = styled.div`
         height: 50px;
         line-height: 50px;
         padding: 0 25px;
-        color: #0a1d33;
+        color: ${props => props.theme.menuForeground};
         font-size: 14px;
         font-weight: 200;
         text-align: left;
@@ -79,7 +76,7 @@ export const StyledMenuItem = styled.div`
 
         .icon {
             margin-right: 14px;
-            color: #3577cc;
+            color: ${props => props.theme.menuIconColor};
             font-size: 17px;
             position: relative;
             top: 3px;

@@ -22,10 +22,11 @@
 
 import * as React from 'react';
 import * as classNames from 'classnames';
-import styled from 'styled-components';
 import imgClose from 'images/close.svg';
 
-const StyledSectionButton = styled.button`
+import themed from 'components/Theme/themed';
+
+const StyledSectionButton = themed.button`
     position: relative;
     border-radius: 0;
     padding: 0 20px;
@@ -33,7 +34,7 @@ const StyledSectionButton = styled.button`
     outline: 0;
     border: 0;
     background: 0;
-    color: #fff;
+    color: ${props => props.theme.headerForeground};
     font-size: 16px;
     font-weight: 300;
     transition: background .15s;
@@ -43,8 +44,8 @@ const StyledSectionButton = styled.button`
     }
 
     &.active {
-        background: #f3f3f3;
-        color: #194a8a;
+        background: ${props => props.theme.headerBackgroundActive};
+        color: ${props => props.theme.headerForegroundActive};
     }
 
     &.closeable {

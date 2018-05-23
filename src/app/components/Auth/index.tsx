@@ -20,13 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { Panel } from 'react-bootstrap';
 import imgLogo from 'images/logo.svg';
-import styled from 'styled-components';
 import platform from 'lib/platform';
 
+import themed from 'components/Theme/themed';
 import Titlebar from 'components/Main/Titlebar';
 import Welcome from 'containers/Auth/Welcome';
 import Account from 'components/Auth/Account';
@@ -72,7 +72,7 @@ const Auth: React.SFC<IAuthProps> = props => (
     </div>
 );
 
-export default styled(Auth) `
+export default themed(Auth) `
     display: ${platform.select({ web: 'table', desktop: 'block' })};
     width: 100%;
     height: 100%;
@@ -100,7 +100,7 @@ export default styled(Auth) `
 
                 > .panel-heading {
                     position: relative;
-                    background: url(${imgLogo}) no-repeat 50% 50% #4c7dbd;
+                    background: url(${imgLogo}) no-repeat 50% 50% ${props => props.theme.headerBackground};
                     background-size: 65px;
                     height: 28px;
                     padding: 0;
