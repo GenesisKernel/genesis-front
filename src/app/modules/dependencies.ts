@@ -15,7 +15,9 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import GenesisAPI from 'lib/genesisAPI';
-import constructorModule from 'lib/constructor';
+import CodeGenerator, { setIds, convertToTreeData, findTagById, copyObject, idGenerator, updateChildrenText, html2childrenTags, Properties } from 'lib/constructor';
+import getConstructorTemplate from 'lib/constructor/templates';
+import resolveTagHandler from 'lib/constructor/tags';
 import 'whatwg-fetch';
 
 export const apiEndpoint = 'api/v2';
@@ -23,11 +25,25 @@ export const apiEndpoint = 'api/v2';
 export interface IStoreDependencies {
     api: IAPIDependency;
     defaultKey: string;
-    constructorModule: typeof constructorModule;
+    constructorModule: IConstructorDependenies;
 }
 
 export interface IAPIDependency {
     (options: { apiHost: string, sessionToken?: string }): GenesisAPI;
+}
+
+interface IConstructorDependenies {
+    setIds: typeof setIds;
+    convertToTreeData: typeof convertToTreeData;
+    findTagById: typeof findTagById;
+    copyObject: typeof copyObject;
+    getConstructorTemplate: typeof getConstructorTemplate;
+    idGenerator: typeof idGenerator;
+    updateChildrenText: typeof updateChildrenText;
+    html2childrenTags: typeof html2childrenTags;
+    resolveTagHandler: typeof resolveTagHandler;
+    CodeGenerator: typeof CodeGenerator;
+    Properties: typeof Properties;
 }
 
 const storeDependencies: IStoreDependencies = {
@@ -45,7 +61,19 @@ const storeDependencies: IStoreDependencies = {
         session: params.sessionToken
     }),
     defaultKey: 'e5a87a96a445cb55a214edaad3661018061ef2936e63a0a93bdb76eb28251c1f',
-    constructorModule
+    constructorModule: {
+        setIds,
+        convertToTreeData,
+        findTagById,
+        copyObject,
+        getConstructorTemplate,
+        idGenerator,
+        updateChildrenText,
+        html2childrenTags,
+        resolveTagHandler,
+        CodeGenerator,
+        Properties
+    }
 };
 
 export default storeDependencies;

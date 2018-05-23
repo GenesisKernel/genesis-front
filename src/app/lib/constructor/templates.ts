@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
-import constructorModule from 'lib/constructor';
+import { copyObject, idGenerator, setIds } from 'lib/constructor';
 
 const constructorTemplates: any = {
     'formWithHeader': {
@@ -521,10 +521,10 @@ const constructorTemplates: any = {
 };
 
 export default function getConstructorTemplate(name: string) {
-    let template = constructorModule.copyObject(constructorTemplates[name]);
-    template.id = constructorModule.generateId();
+    let template = copyObject(constructorTemplates[name]);
+    template.id = idGenerator.generateId();
     if (template.children) {
-        constructorModule.setIds(template.children, true);
+        setIds(template.children, true);
     }
     return template;
 }

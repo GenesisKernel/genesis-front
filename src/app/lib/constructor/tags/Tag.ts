@@ -15,7 +15,7 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { TProtypoElement } from 'genesis/protypo';
-import constructorModule from 'lib/constructor';
+import { idGenerator } from 'lib/constructor';
 import resolveTagHandler from 'lib/constructor/tags';
 import getParamName, { getTailTagName } from 'lib/constructor/tags/params';
 
@@ -176,11 +176,11 @@ class Tag {
     generateTreeJSON(text: string): any {
         return {
             tag: this.tagName.toLowerCase(),
-            id: constructorModule.generateId(),
+            id: idGenerator.generateId(),
             children: this.generateTextElement ? [{
                 tag: 'text',
                 text: text,
-                id: constructorModule.generateId()
+                id: idGenerator.generateId()
             }] : []
         };
     }

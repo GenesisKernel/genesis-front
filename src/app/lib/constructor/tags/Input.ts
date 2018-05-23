@@ -15,7 +15,7 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { TProtypoElement } from 'genesis/protypo';
-import constructorModule from 'lib/constructor';
+import { idGenerator } from 'lib/constructor';
 import Tag from './Tag';
 
 class Input extends Tag {
@@ -36,7 +36,7 @@ class Input extends Tag {
     generateTreeJSON(text: string): any {
         return {
             tag: this.tagName.toLowerCase(),
-            id: constructorModule.generateId(),
+            id: idGenerator.generateId(),
             attr: {
                 name: 'sample input',
                 class: 'form-control'
