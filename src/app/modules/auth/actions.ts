@@ -21,7 +21,7 @@ import { ICreateAccountCall, IImportAccountCall } from 'genesis/auth';
 const actionCreator = actionCreatorFactory('auth');
 export const login = actionCreator.async<ILoginCall, { account: IAccount, roles: IRole[], privateKey: string, publicKey: string, session: ISession }, string>('LOGIN');
 export const logout = actionCreator.async('LOGOUT');
-export const createEcosystem = actionCreator<{ name: string, id: string }>('CREATE_ECOSYSTEM');
+export const inviteEcosystem = actionCreator<{ ecosystem: string, redirectPage?: string }>('INVITE_ECOSYSTEM');
 export const generateSeed = actionCreator.async<void, string>('GENERATE_SEED');
 export const importSeed = actionCreator.async<Blob, string, undefined>('IMPORT_SEED');
 export const createAccount = actionCreator.async<ICreateAccountCall, IAccount, string>('CREATE_ACCOUNT');

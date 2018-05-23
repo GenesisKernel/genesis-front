@@ -15,22 +15,17 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import React from 'react';
-import Backup from 'containers/Main/Backup';
-import Editor from 'containers/Main/Editor';
-import Invite from 'containers/Main/Legacy/Invite';
+import { FormattedMessage } from 'react-intl';
+import { INotificationProto } from 'genesis/notifications';
 
-export interface ILegacyPage {
-    menu: string;
-    section: string;
-    render: (props?: { [key: string]: any }) => React.ReactNode;
-}
-
-const LEGACY_PAGES: { [page: string]: ILegacyPage } = {
-    'backup': { section: 'home', menu: null, render: () => <Backup /> },
-    'editor': { section: 'editor', menu: null, render: (props: { open?: string, create?: string, name?: string, vde?: string }) => <Editor {...props} /> },
-    '@invite': { section: 'home', menu: null, render: (props: { ecosystem: string, page?: string }) => <Invite {...props} /> }
+const EcosystemInvitedNotification: INotificationProto<{ ecosystem: string }> = {
+    icon: 'o-checkround-1',
+    title: (
+        <FormattedMessage id="tx.error.info" defaultMessage="Information" />
+    ),
+    body: params => (
+        <FormattedMessage id="notification.ecosystem_invited" defaultMessage="Joined ecosystem {ecosystem}" values={{ ecosystem: params.ecosystem }} />
+    )
 };
 
-export {
-    LEGACY_PAGES
-};
+export default EcosystemInvitedNotification;

@@ -26,6 +26,7 @@ import authErrorEpic from './epics/authErrorEpic';
 import removeAccountEpic from './epics/removeAccountEpic';
 import selectRoleEpic from './epics/selectRoleEpic';
 import logoutEmptySessionEpic from './epics/logoutEmptySessionEpic';
+import inviteEcosystemEpic from './epics/inviteEcosystemEpic';
 
 export default combineEpics(
     authorizeEpic,
@@ -38,5 +39,6 @@ export default combineEpics(
     logoutEmptySessionEpic,
     logoutEpic,
     removeAccountEpic,
-    selectRoleEpic
+    selectRoleEpic,
+    inviteEcosystemEpic
 );
