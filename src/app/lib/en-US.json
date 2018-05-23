@@ -111,6 +111,7 @@
     "auth.error.E_INVALID_PASSWORD": "Invalid password",
     "auth.error.E_DELETEDKEY": "Account was removed from the ecosystem",
     "auth.error.E_OFFLINE": "Could not connect to the service",
+    "auth.error.E_UPDATING": "Node is updating blockchain. Try again later",
     "auth.backup.invalid": "Provided key is corrupted or contains invalid data",
     "auth.generate.new": "Generate new key",
     "auth.getstarted": "Get started",
