@@ -227,6 +227,7 @@
     "navigation.home": "Домашнаяя страница",
     "navigation.refresh": "Обновить",
     "notifications": "Уведомления",
+    "notification.ecosystem_invited": "Добавлена экосистема {ecosystem}",
     "notification.tx_batch": "Пакетная обработка завершена",
     "notification.tx_imprinted": "Транзакция исполнена (блок {block})",
     "pending": "Загрузка",
