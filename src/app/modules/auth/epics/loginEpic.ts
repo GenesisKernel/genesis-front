@@ -42,50 +42,61 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
                     ecosystem: action.payload.account.ecosystem,
                     expire: 60 * 60 * 24 * 90
 
-                }).then(loginResult =>
-                    client.authorize(loginResult.token)
-                        .getRow({
+                }).then(loginResult => {
+                    const authClient = client.authorize(loginResult.token);
+                    return Promise.all([
+                        authClient.getRow({
                             id: loginResult.key_id,
                             table: 'members',
                             columns: ['member_name']
-                        })
-                        .then(memberResult => ({
+
+                        }).then(memberResult => ({
                             ...loginResult,
                             username: memberResult.value.member_name
-                        }))
-                        .catch(e => ({
+
+                        })).catch(e => ({
                             ...loginResult,
                             avatar: null,
                             username: null
-                        }))
-                )
+                        })),
+                        authClient.getParam({
+                            name: 'ecosystem_name'
+
+                        }).then(l => l.value).catch(e => '')
+                    ]);
+                })
             )
 
             // Successful authentication. Yield the result
-            .map(payload => login.done({
-                params: action.payload,
-                result: {
-                    account: {
-                        id: payload.key_id,
-                        encKey: action.payload.account.encKey,
-                        address: payload.address,
-                        ecosystem: action.payload.account.ecosystem,
-                        ecosystemName: null,
-                        username: payload.username
-                    },
-                    roles: payload.roles && payload.roles.map(role => ({
-                        id: role.role_id,
-                        name: role.role_name
-                    })),
-                    session: {
-                        sessionToken: payload.token,
-                        refreshToken: payload.refresh,
-                        apiHost: nodeHost
-                    },
-                    privateKey,
-                    publicKey
-                }
-            }))
+            .map(payload => {
+                const account = payload[0];
+                const ecosystemName = payload[1];
+
+                return login.done({
+                    params: action.payload,
+                    result: {
+                        account: {
+                            id: account.key_id,
+                            encKey: action.payload.account.encKey,
+                            address: account.address,
+                            ecosystem: action.payload.account.ecosystem,
+                            ecosystemName,
+                            username: account.username
+                        },
+                        roles: account.roles && account.roles.map(role => ({
+                            id: role.role_id,
+                            name: role.role_name
+                        })),
+                        session: {
+                            sessionToken: account.token,
+                            refreshToken: account.refresh,
+                            apiHost: nodeHost
+                        },
+                        privateKey,
+                        publicKey
+                    }
+                });
+            })
 
             // Catch actual login error, yield result
             .catch(e => Observable.of(
