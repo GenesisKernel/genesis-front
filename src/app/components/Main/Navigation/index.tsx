@@ -22,11 +22,19 @@ import StackGroup from 'components/Animation/StackGroup';
 import Protypo from 'containers/Widgets/Protypo';
 import ResizeHandle from 'containers/Main/Navigation/ResizeHandle';
 import { TMenu } from 'genesis/content';
+import ScrollArea from 'react-scrollbar';
 
 const StyledNavigation = styled.aside`
     &.navigation-collapsed {
         overflow: hidden;
         width: 0;
+    }
+    
+    .scrollarea {
+        height: 100%;
+        .scrollbar-container {
+            opacity: 0;
+        }
     }
 
     position: absolute;
@@ -80,7 +88,7 @@ const StyledBackButton = styled.button`
 const StyledMenu = styled.div`
     overflow: hidden;
     position: absolute;
-    bottom: 50px;
+    bottom: 0px;
     left: 0;
     right: 0;
     top: 80px;
@@ -88,12 +96,7 @@ const StyledMenu = styled.div`
 
 const StyledMenuContent = styled.div`
     background: #fff;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
-
+    
     .title-wrap {
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -120,22 +123,27 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
                     <StyledMenu style={{ top: this.props.topOffset }}>
                         <StackGroup
                             items={this.props.menus.map((menu, index) => (
-                                <StyledMenuContent>
-                                    <StyledBackButton onClick={() => this.props.menuPop()} disabled={1 >= this.props.menus.length} className={index === 0 ? 'disabled' : ''}>
-                                        <div className="title-wrap">
-                                            {index > 0 && (
-                                                <span className="icon">
-                                                    <em className="icon-arrow-left" />
-                                                </span>
-                                            )}
-                                            <span>{menu.name}</span>
-                                        </div>
-                                    </StyledBackButton>
-                                    <Protypo
-                                        context="menu"
-                                        content={menu.content}
-                                    />
-                                </StyledMenuContent>
+                                <ScrollArea
+                                       horizontal={false}
+                                       speed={0.2}
+                                >
+                                    <StyledMenuContent>
+                                        <StyledBackButton onClick={() => this.props.menuPop()} disabled={1 >= this.props.menus.length} className={index === 0 ? 'disabled' : ''}>
+                                            <div className="title-wrap">
+                                                {index > 0 && (
+                                                    <span className="icon">
+                                                        <em className="icon-arrow-left" />
+                                                    </span>
+                                                )}
+                                                <span>{menu.name}</span>
+                                            </div>
+                                        </StyledBackButton>
+                                        <Protypo
+                                            context="menu"
+                                            content={menu.content}
+                                        />
+                                    </StyledMenuContent>
+                                </ScrollArea>
                             ))}
                         />
                     </StyledMenu>
