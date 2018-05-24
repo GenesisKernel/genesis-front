@@ -36,6 +36,7 @@ export const updateSection = actionCreator<TSection>('UPDATE_SECTION');
 export const closeSection = actionCreator<string>('CLOSE_SECTION');
 export const switchSection = actionCreator<string>('SWITCH_SECTION');
 export const reset = actionCreator.async<void, { menu: TMenu, page: TPage }, string>('RESET');
+export const setDefaultPage = actionCreator<string>('SET_DEFAULT_PAGE');
 
 // Protypo-specific
 export const displayData = actionCreator.async<string, string, string>('DISPLAY_DATA');

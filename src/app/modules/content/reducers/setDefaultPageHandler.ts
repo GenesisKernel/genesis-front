@@ -15,23 +15,18 @@
 // along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
 
 import { State } from '../reducer';
-import { selectRole } from '../actions';
+import { setDefaultPage } from '../actions';
 import { Reducer } from 'modules';
 
-const selectRoleDoneHandler: Reducer<typeof selectRole.done, State> = (state, payload) => ({
+const setDefaultPageHandler: Reducer<typeof setDefaultPage, State> = (state, payload) => ({
     ...state,
-    isAuthenticated: true,
-    isLoggingIn: false,
-    roles: null,
-    role: 'number' === typeof payload.params ? {
-        id: payload.params,
-        name: state.roles.find(l => l.id === payload.params).name
-    } : null,
-    session: {
-        ...state.session,
-        sessionToken: payload.result.sessionToken,
-        refreshToken: payload.result.refreshToken
+    sections: {
+        ...state.sections,
+        home: {
+            ...state.sections.home,
+            defaultPage: (payload ? payload : state.sections.home.defaultPage)
+        }
     }
 });
 
-export default selectRoleDoneHandler;
+export default setDefaultPageHandler;

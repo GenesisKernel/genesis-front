@@ -16,6 +16,7 @@
 
 import { Epic } from 'modules';
 import { selectRole } from '../actions';
+import { setDefaultPage } from 'modules/content/actions';
 import { Observable } from 'rxjs/Observable';
 import keyring from 'lib/keyring';
 
@@ -29,22 +30,35 @@ const selectRoleEpic: Epic = (action$, store, { api }) => action$.ofAction(selec
 
         return Observable.from(client.getUid().then(uid => {
             const signature = keyring.sign(uid.uid, privateKey);
-            return client.authorize(uid.token)
-                .login({
-                    publicKey,
-                    signature,
-                    ecosystem: account.ecosystem,
-                    role: action.payload
-                });
 
-        })).map(payload =>
-            selectRole.done({
-                params: action.payload,
-                result: {
-                    sessionToken: payload.token,
-                    refreshToken: payload.refresh,
-                },
-            })
+            return Promise.all([
+                client.authorize(uid.token)
+                    .login({
+                        publicKey,
+                        signature,
+                        ecosystem: account.ecosystem,
+                        role: action.payload
+                    }),
+
+                client.getRow({
+                    table: 'roles',
+                    id: action.payload && action.payload.toString() || null
+                })
+                    .then(row => row.value.default_page)
+                    .catch(e => null)
+            ]);
+
+        })).flatMap(payload =>
+            Observable.concat([
+                setDefaultPage(payload[1]),
+                selectRole.done({
+                    params: action.payload,
+                    result: {
+                        sessionToken: payload[0].token,
+                        refreshToken: payload[0].refresh
+                    }
+                })
+            ])
 
         ).catch(e =>
             Observable.of(

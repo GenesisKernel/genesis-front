@@ -40,6 +40,7 @@ import setResizingHandler from './reducers/setResizingHandler';
 import switchSectionHandler from './reducers/switchSectionHandler';
 import updateSectionHandler from './reducers/updateSectionHandler';
 import ecosystemInitHandler from './reducers/ecosystemInitHandler';
+import setDefaultPageHandler from './reducers/setDefaultPageHandler';
 
 export type State = {
     readonly preloading: boolean;
@@ -121,4 +122,5 @@ export default reducerWithInitialState(initialState)
     .case(actions.reset.failed, resetFailedHandler)
     .case(actions.setResizing, setResizingHandler)
     .case(actions.switchSection, switchSectionHandler)
-    .case(actions.updateSection, updateSectionHandler);
+    .case(actions.updateSection, updateSectionHandler)
+    .case(actions.setDefaultPage, setDefaultPageHandler);
