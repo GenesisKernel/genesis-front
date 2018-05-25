@@ -29,18 +29,18 @@ const state: IRootState = {
         loadedSeed: '',
         isAuthenticated: true,
         isLoggingIn: false,
-        isCreatingAccount: false,
-        createAccountError: '',
-        isImportingAccount: false,
-        importAccountError: '',
+        isCreatingWallet: false,
+        createWalletError: '',
+        isImportingWallet: false,
+        importWalletError: '',
         id: '4158839290248807330',
         session: {
             sessionToken: '',
             refreshToken: '',
             apiHost: 'http://127.0.0.1:7079'
         },
-        defaultAccount: '',
-        account: {
+        defaultWallet: '',
+        wallet: {
             id: '4158839290248807330',
             encKey: '',
             address: '0415-8839-2902-4880-7330',
@@ -769,7 +769,7 @@ const state: IRootState = {
     io: {},
     storage: {
         locale: 'en-US',
-        accounts: [],
+        wallets: [],
         navigationSize: 230,
         fullNodes: [
             'http://127.0.0.1:7079'

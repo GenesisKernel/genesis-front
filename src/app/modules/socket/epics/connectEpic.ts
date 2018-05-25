@@ -25,9 +25,9 @@ import { Observable } from 'rxjs/Observable';
 import { Epic } from 'redux-observable';
 import { IRootState } from 'modules';
 import { connect, disconnect, subscribe, setConnected } from '../actions';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import * as Centrifuge from 'centrifuge';
-import * as SockJS from 'sockjs-client';
+import SockJS from 'sockjs-client';
 import { Observer } from 'rxjs';
 
 const connectEpic: Epic<Action, IRootState> =
@@ -54,8 +54,8 @@ const connectEpic: Epic<Action, IRootState> =
                             }
                         }));
 
-                        _.uniqBy(store.getState().storage.accounts, 'id').forEach(account =>
-                            observer.next(subscribe.started(account))
+                        _.uniqBy(store.getState().storage.wallets, 'id').forEach(wallet =>
+                            observer.next(subscribe.started(wallet))
                         );
                     });
 

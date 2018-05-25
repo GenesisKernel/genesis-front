@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { navigate } from 'modules/engine/actions';
@@ -44,7 +44,7 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    onConfirm: () => navigate('/account')
+    onConfirm: () => navigate('wallet')
 };
 
 const WelcomeContainer: React.SFC<IWelcomeContainerProps & IWelcomeContainerState & IWelcomeContainerDispatch> = props => (

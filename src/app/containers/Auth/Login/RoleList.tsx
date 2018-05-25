@@ -20,21 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { IAccount } from 'genesis/auth';
+import { IWallet } from 'genesis/auth';
 
 import RoleList from 'components/Auth/Login/RoleList';
 import { logout, selectRole } from 'modules/auth/actions';
 import getNotificationsCount from 'modules/socket/reducers/getNotificationsCount';
 
-export interface IAccountListContainerProps {
+export interface IWalletListContainerProps {
 
 }
 
 interface IRoleListContainerState {
-    account: IAccount;
+    wallet: IWallet;
     roles: {
         id: number;
         name: string;
@@ -48,11 +48,11 @@ interface IRoleListContainerDispatch {
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    account: state.auth.account,
+    wallet: state.auth.wallet,
     roles: state.auth.roles.map(r => ({
         ...r,
         notifications: getNotificationsCount(state.socket, {
-            account: state.auth.account,
+            wallet: state.auth.wallet,
             role: r.id
         })
     }))
@@ -63,8 +63,8 @@ const mapDispatchToProps = {
     onCancel: () => logout.started(null)
 };
 
-const AccountListContainer: React.SFC<IAccountListContainerProps & IRoleListContainerState & IRoleListContainerDispatch> = props => (
+const WalletListContainer: React.SFC<IWalletListContainerProps & IRoleListContainerState & IRoleListContainerDispatch> = props => (
     <RoleList {...props} />
 );
 
-export default connect<IRoleListContainerState, IRoleListContainerDispatch, IAccountListContainerProps>(mapStateToProps, mapDispatchToProps)(AccountListContainer);
+export default connect<IRoleListContainerState, IRoleListContainerDispatch, IWalletListContainerProps>(mapStateToProps, mapDispatchToProps)(WalletListContainer);

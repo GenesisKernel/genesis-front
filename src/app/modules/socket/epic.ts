@@ -26,8 +26,8 @@ import disconnectEpic from './epics/disconnectEpic';
 import subscribeEpic from './epics/subscribeEpic';
 import unsubscribeEpic from './epics/unsubscribeEpic';
 import getNotificationsCountEpic from './epics/getNotificationsCountEpic';
-import subscribeSavedAccountEpic from './epics/subscribeSavedAccountEpic';
-import unsubscribeRemovedAccountEpic from './epics/unsubscribeRemovedAccountEpic';
+import subscribeSavedWalletEpic from './epics/subscribeSavedWalletEpic';
+import unsubscribeRemovedWalletEpic from './epics/unsubscribeRemovedWalletEpic';
 
 export default combineEpics(
     connectEpic,
@@ -35,6 +35,6 @@ export default combineEpics(
     subscribeEpic,
     unsubscribeEpic,
     getNotificationsCountEpic,
-    subscribeSavedAccountEpic,
-    unsubscribeRemovedAccountEpic
+    subscribeSavedWalletEpic,
+    unsubscribeRemovedWalletEpic
 );

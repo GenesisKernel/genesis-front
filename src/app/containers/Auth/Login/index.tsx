@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { IAccount } from 'genesis/auth';
+import { IWallet } from 'genesis/auth';
 
 import Login from 'components/Auth/Login';
 
@@ -32,7 +32,7 @@ export interface ILoginContainerProps {
 }
 
 interface ILoginContainerState {
-    account: IAccount;
+    wallet: IWallet;
     isAuthenticating: boolean;
     isSelectingRole: boolean;
 }
@@ -42,9 +42,9 @@ interface ILoginContainerDispatch {
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    account: state.auth.account,
-    isAuthenticating: state.auth.account && !state.auth.isAuthenticated,
-    isSelectingRole: state.auth.roles && state.auth.roles.length && state.auth.account && !state.auth.isAuthenticated
+    wallet: state.auth.wallet,
+    isAuthenticating: state.auth.wallet && !state.auth.isAuthenticated,
+    isSelectingRole: state.auth.roles && state.auth.roles.length && state.auth.wallet && !state.auth.isAuthenticated
 });
 
 const mapDispatchToProps = {

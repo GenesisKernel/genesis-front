@@ -26,10 +26,10 @@ import { IRootState } from 'modules';
 import { reset } from '../actions';
 import { login } from 'modules/auth/actions';
 
-const resetOnAccountSelectEpic: Epic<Action, IRootState> =
+const resetOnWalletSelectEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(login.done)
         .map(action =>
             reset.started(null)
         );
 
-export default resetOnAccountSelectEpic;
+export default resetOnWalletSelectEpic;

@@ -28,7 +28,7 @@ import { unsubscribe } from '../actions';
 const unsubscribeEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(unsubscribe.started)
         .map(action => {
-            const sub = store.getState().socket.subscriptions.find(l => l.account.id === action.payload.id);
+            const sub = store.getState().socket.subscriptions.find(l => l.wallet.id === action.payload.id);
             if (sub) {
                 sub.instance.unsubscribe();
                 return unsubscribe.done({

@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { IAccount } from 'genesis/auth';
+import { IWallet } from 'genesis/auth';
 
 import PasswordPrompt from 'components/Auth/Login/PasswordPrompt';
 import { logout, login } from 'modules/auth/actions';
@@ -33,21 +33,21 @@ export interface IPasswordPromptContainerProps {
 }
 
 interface IPasswordPromptContainerState {
-    account: IAccount;
+    wallet: IWallet;
 }
 
 interface IPasswordPromptContainerDispatch {
-    onSubmit: (params: { account: IAccount, password: string }) => void;
+    onSubmit: (params: { wallet: IWallet, password: string }) => void;
     onCancel: () => void;
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    account: state.auth.account
+    wallet: state.auth.wallet
 });
 
 const mapDispatchToProps = {
     onCancel: () => logout.started(null),
-    onSubmit: (params: { account: IAccount, password: string }) => login.started(params)
+    onSubmit: (params: { wallet: IWallet, password: string }) => login.started(params)
 };
 
 const PasswordPromptContainer: React.SFC<IPasswordPromptContainerProps & IPasswordPromptContainerState & IPasswordPromptContainerDispatch> = props => (

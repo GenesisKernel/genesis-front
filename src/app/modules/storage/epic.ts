@@ -21,16 +21,16 @@
 // SOFTWARE.
 
 import { combineEpics } from 'redux-observable';
-import saveAccountOnLoginEpic from './epics/saveAccountOnLoginEpic';
-import saveAccountOnEcosystemInitEpic from './epics/saveAccountOnEcosystemInitEpic';
-import saveAccountOnSelectEpic from './epics/saveAccountOnSelectEpic';
-import saveAccountOnImportEpic from './epics/saveAccountOnImportEpic';
-import saveAccountOnCreateEpic from './epics/saveAccountOnCreateEpic';
+import saveWalletOnLoginEpic from './epics/saveWalletOnLoginEpic';
+import saveWalletOnEcosystemInitEpic from './epics/saveWalletOnEcosystemInitEpic';
+import saveWalletOnSelectEpic from './epics/saveWalletOnSelectEpic';
+import saveWalletOnImportEpic from './epics/saveWalletOnImportEpic';
+import saveWalletOnCreateEpic from './epics/saveWalletOnCreateEpic';
 
 export default combineEpics(
-    saveAccountOnCreateEpic,
-    saveAccountOnEcosystemInitEpic,
-    saveAccountOnImportEpic,
-    saveAccountOnLoginEpic,
-    saveAccountOnSelectEpic
+    saveWalletOnCreateEpic,
+    saveWalletOnEcosystemInitEpic,
+    saveWalletOnImportEpic,
+    saveWalletOnLoginEpic,
+    saveWalletOnSelectEpic
 );

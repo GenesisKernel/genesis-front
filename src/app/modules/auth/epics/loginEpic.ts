@@ -27,7 +27,7 @@ import keyring from 'lib/keyring';
 
 const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.started)
     .flatMap(action => {
-        const privateKey = keyring.decryptAES(action.payload.account.encKey, action.payload.password);
+        const privateKey = keyring.decryptAES(action.payload.wallet.encKey, action.payload.password);
 
         if (!keyring.validatePrivateKey(privateKey)) {
             return Observable.of(login.failed({
@@ -45,7 +45,7 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
                 client.authorize(uid.token).login({
                     publicKey,
                     signature: keyring.sign(uid.uid, privateKey),
-                    ecosystem: action.payload.account.ecosystem,
+                    ecosystem: action.payload.wallet.ecosystem,
                     expire: 60 * 60 * 24 * 90
 
                 }).then(loginResult => {
@@ -75,27 +75,27 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
 
             // Successful authentication. Yield the result
             .map(payload => {
-                const account = payload[0];
+                const wallet = payload[0];
                 const ecosystemName = payload[1];
 
                 return login.done({
                     params: action.payload,
                     result: {
-                        account: {
-                            id: account.key_id,
-                            encKey: action.payload.account.encKey,
-                            address: account.address,
-                            ecosystem: action.payload.account.ecosystem,
+                        wallet: {
+                            id: wallet.key_id,
+                            encKey: action.payload.wallet.encKey,
+                            address: wallet.address,
+                            ecosystem: action.payload.wallet.ecosystem,
                             ecosystemName,
-                            username: account.username
+                            username: wallet.username
                         },
-                        roles: account.roles && account.roles.map(role => ({
+                        roles: wallet.roles && wallet.roles.map(role => ({
                             id: role.role_id,
                             name: role.role_name
                         })),
                         session: {
-                            sessionToken: account.token,
-                            refreshToken: account.refresh,
+                            sessionToken: wallet.token,
+                            refreshToken: wallet.refresh,
                             apiHost: nodeHost
                         },
                         privateKey,

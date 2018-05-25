@@ -21,10 +21,10 @@
 // SOFTWARE.
 
 import { Epic } from 'modules';
-import { login, importAccount, selectRole, createAccount } from '../actions';
+import { login, importWallet, selectRole, createWallet } from '../actions';
 import { modalShow } from 'modules/modal/actions';
 
-const authErrorEpic: Epic = (action$, store) => action$.ofType(login.failed.type, importAccount.failed.type, createAccount.failed.type, selectRole.failed.type)
+const authErrorEpic: Epic = (action$, store) => action$.ofType(login.failed.type, importWallet.failed.type, createWallet.failed.type, selectRole.failed.type)
     .map(action =>
         modalShow({
             id: 'AUTH_ERROR',

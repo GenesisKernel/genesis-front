@@ -26,7 +26,7 @@ import { Reducer } from 'modules';
 
 const logoutDoneHandler: Reducer<typeof logout.done, State> = (state, payload) => ({
     ...state,
-    account: null,
+    wallet: null,
     isAuthenticated: false,
     isLoggingIn: false
 });

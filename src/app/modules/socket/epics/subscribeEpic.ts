@@ -32,7 +32,7 @@ const subscribeEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(subscribe.started)
         .flatMap(action => {
             const state = store.getState();
-            if (state.socket.subscriptions.find(l => l.account.id === action.payload.id)) {
+            if (state.socket.subscriptions.find(l => l.wallet.id === action.payload.id)) {
                 return Observable.of(subscribe.failed({
                     params: action.payload,
                     error: 'E_ALREADY_SUBSCRIBED'
@@ -52,9 +52,9 @@ const subscribeEpic: Epic<Action, IRootState> =
                         message.data.forEach(n => {
                             const subState = store.getState();
                             if (subState.auth.isAuthenticated &&
-                                subState.auth.account &&
-                                subState.auth.account.id === action.payload.id &&
-                                subState.auth.account.ecosystem === action.payload.ecosystem
+                                subState.auth.wallet &&
+                                subState.auth.wallet.id === action.payload.id &&
+                                subState.auth.wallet.ecosystem === action.payload.ecosystem
                             ) {
                                 count += n.count;
                             }

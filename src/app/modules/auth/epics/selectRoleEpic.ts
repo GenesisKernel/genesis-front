@@ -31,7 +31,7 @@ const selectRoleEpic: Epic = (action$, store, { api }) => action$.ofAction(selec
         const client = api(state.auth.session);
         const privateKey = state.auth.privateKey;
         const publicKey = keyring.generatePublicKey(privateKey);
-        const account = state.auth.account;
+        const wallet = state.auth.wallet;
 
         return Observable.from(client.getUid().then(uid => {
             const signature = keyring.sign(uid.uid, privateKey);
@@ -39,7 +39,7 @@ const selectRoleEpic: Epic = (action$, store, { api }) => action$.ofAction(selec
                 .login({
                     publicKey,
                     signature,
-                    ecosystem: account.ecosystem,
+                    ecosystem: wallet.ecosystem,
                     role: action.payload
                 });
 

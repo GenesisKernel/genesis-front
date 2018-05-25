@@ -58,7 +58,7 @@ const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall)
                         .take(1)
                         .flatMap(result => {
                             if (isType(result, txAuthorize.done)) {
-                                return execTx(keyring.decryptAES(store.getState().auth.account.encKey, result.payload.result));
+                                return execTx(keyring.decryptAES(store.getState().auth.wallet.encKey, result.payload.result));
                             }
                             else {
                                 return Observable.empty<never>();

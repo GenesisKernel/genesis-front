@@ -38,13 +38,13 @@ import AuthorizeModal from 'components/Modal/Tx/AuthorizeModal';
 import SignatureModal from 'components/Modal/Tx/SignatureModal';
 import TxErrorModal from 'components/Modal/Tx/ErrorModal';
 import AuthErrorModal from 'components/Modal/Auth/AuthErrorModal';
-import AuthRemoveAccountModal from 'components/Modal/Auth/AuthRemoveAccountModal';
+import AuthRemoveWalletModal from 'components/Modal/Auth/AuthRemoveWalletModal';
 import TxConfirmModal from './Tx/ConfirmModal';
 
 const MODAL_COMPONENTS = {
     'AUTHORIZE': AuthorizeModal,
     'AUTH_ERROR': AuthErrorModal,
-    'AUTH_REMOVE_ACCOUNT': AuthRemoveAccountModal,
+    'AUTH_REMOVE_WALLET': AuthRemoveWalletModal,
     'TX_CONFIRM': TxConfirmModal,
     'TX_ERROR': TxErrorModal,
     'TX_SIGNATURE': SignatureModal,

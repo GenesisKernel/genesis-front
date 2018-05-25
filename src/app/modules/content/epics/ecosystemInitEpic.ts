@@ -24,7 +24,7 @@ import { Action } from 'redux';
 import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
 import { ecosystemInit, fetchNotifications } from 'modules/content/actions';
-import { logout, selectAccount } from 'modules/auth/actions';
+import { logout, selectWallet } from 'modules/auth/actions';
 
 const ecosystemInitEpic: Epic = (action$, store, { api }) => action$.ofAction(ecosystemInit.started)
     .flatMap(action => {
@@ -49,11 +49,11 @@ const ecosystemInitEpic: Epic = (action$, store, { api }) => action$.ofAction(ec
             )
         ).catch(e => {
             if ('E_OFFLINE' === e.error || 'E_SERVER' === e.error || 'E_TOKENEXPIRED' === e.error) {
-                const account = store.getState().auth.account;
+                const wallet = store.getState().auth.wallet;
 
                 return Observable.of<Action>(
                     logout.started(null),
-                    selectAccount(account),
+                    selectWallet(wallet),
                     ecosystemInit.failed({
                         params: action.payload,
                         error: e.error

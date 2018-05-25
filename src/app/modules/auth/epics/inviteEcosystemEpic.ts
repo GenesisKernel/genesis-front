@@ -27,11 +27,11 @@ import uuid from 'uuid';
 import { inviteEcosystem } from '../actions';
 import { enqueueNotification } from 'modules/notifications/actions';
 import { navigatePage } from 'modules/content/actions';
-import { saveAccount } from '../../storage/actions';
+import { saveWallet } from '../../storage/actions';
 
 const inviteEcosystemEpic: Epic = (action$, store) => action$.ofAction(inviteEcosystem)
     .flatMap(action => {
-        const account = store.getState().auth.account;
+        const wallet = store.getState().auth.wallet;
         const notification = enqueueNotification({
             id: uuid.v4(),
             type: 'ECOSYSTEM_INVITED',
@@ -42,10 +42,10 @@ const inviteEcosystemEpic: Epic = (action$, store) => action$.ofAction(inviteEco
 
         const emitter = Observable.of<Action>(
             notification,
-            saveAccount({
-                id: account.id,
-                encKey: account.encKey,
-                address: account.address,
+            saveWallet({
+                id: wallet.id,
+                encKey: wallet.encKey,
+                address: wallet.address,
                 ecosystem: action.payload.ecosystem,
                 ecosystemName: null,
                 username: null

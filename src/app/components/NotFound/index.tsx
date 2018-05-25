@@ -54,13 +54,13 @@ const NotFound: React.SFC<INotFoundProps> = (props) => (
                         <li>|</li>
                         <li>
                             <Link to="">
-                                <FormattedMessage id="account.login" defaultMessage="Login" />
+                                <FormattedMessage id="wallet.login" defaultMessage="Login" />
                             </Link>
                         </li>
                         <li >|</li>
                         <li>
-                            <Link to="/account/create">
-                                <FormattedMessage id="account.create" defaultMessage="Create account" />
+                            <Link to="/wallet/create">
+                                <FormattedMessage id="wallet.create" defaultMessage="Create wallet" />
                             </Link>
                         </li>
                     </ul>

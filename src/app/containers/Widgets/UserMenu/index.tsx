@@ -24,8 +24,8 @@ import React from 'react';
 import { Dispatch, Action } from 'redux';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
-import { logout, selectAccount } from 'modules/auth/actions';
-import { IAccount } from 'genesis/auth';
+import { logout, selectWallet } from 'modules/auth/actions';
+import { IWallet } from 'genesis/auth';
 
 import UserMenu from 'components/Main//UserMenu';
 
@@ -34,29 +34,29 @@ export interface IUserMenuContainerProps {
 }
 
 interface IUserMenuContainerState {
-    account: IAccount;
-    ecosystemAccounts: IAccount[];
+    wallet: IWallet;
+    ecosystemWallets: IWallet[];
 }
 
 interface IUserMenuContainerDispatch {
     logout: typeof logout.started;
-    selectAccount: typeof selectAccount;
+    selectWallet: typeof selectWallet;
 }
 
 const UserMenuContainer: React.SFC<IUserMenuContainerProps & IUserMenuContainerState & IUserMenuContainerDispatch> = (props) => (
     <UserMenu
-        account={props.account}
-        ecosystemAccounts={props.ecosystemAccounts}
+        wallet={props.wallet}
+        ecosystemWallets={props.ecosystemWallets}
         logout={() => props.logout({})}
-        switchAccount={props.selectAccount}
+        switchWallet={props.selectWallet}
     />
 );
 
 const mapStateToProps = (state: IRootState) => ({
-    account: state.auth.account,
-    ecosystemAccounts: state.auth.account ?
-        state.storage.accounts.filter(l =>
-            l.id === state.auth.account.id
+    wallet: state.auth.wallet,
+    ecosystemWallets: state.auth.wallet ?
+        state.storage.wallets.filter(l =>
+            l.id === state.auth.wallet.id
         ).sort((a, b) => parseInt(a.ecosystem, 10) - parseInt(b.ecosystem, 10)) : [],
     ecosystem: state.auth.ecosystem
 });
@@ -65,9 +65,9 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
     logout: () => {
         dispatch(logout.started(null));
     },
-    selectAccount: (account: IAccount) => {
+    selectWallet: (wallet: IWallet) => {
         dispatch(logout.started(null));
-        dispatch(selectAccount(account));
+        dispatch(selectWallet(wallet));
     }
 });
 

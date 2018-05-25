@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
-import { IAccount } from 'genesis/auth';
+import { IWallet } from 'genesis/auth';
 
 import { CloseDropdownButton } from 'components/DropdownButton';
 import Avatar from 'containers/Avatar';
@@ -78,15 +78,15 @@ const StyledUserMenu = styled.div`
 `;
 
 export interface IUserMenuProps {
-    account: IAccount;
-    ecosystemAccounts: IAccount[];
-    switchAccount: (account: IAccount) => void;
+    wallet: IWallet;
+    ecosystemWallets: IWallet[];
+    switchWallet: (wallet: IWallet) => void;
     logout: () => void;
 }
 
 class UserMenu extends React.Component<IUserMenuProps> {
     render() {
-        return this.props.account ? (
+        return this.props.wallet ? (
             <SystemButton
                 className="p0"
                 width={225}
@@ -99,7 +99,7 @@ class UserMenu extends React.Component<IUserMenuProps> {
                                 <CloseDropdownButton disabled>
                                     <em className="icon icon-key text-muted" />
                                     <span>
-                                        <FormattedMessage id="general.account.changepassword" defaultMessage="Change password" />
+                                        <FormattedMessage id="general.wallet.changepassword" defaultMessage="Change password" />
                                     </span>
                                 </CloseDropdownButton>
                             </li>
@@ -108,7 +108,7 @@ class UserMenu extends React.Component<IUserMenuProps> {
                                     <CloseDropdownButton>
                                         <em className="icon icon-shield text-muted" />
                                         <span>
-                                            <FormattedMessage id="general.account.backup" defaultMessage="Backup account" />
+                                            <FormattedMessage id="general.wallet.backup" defaultMessage="Backup wallet" />
                                         </span>
                                     </CloseDropdownButton>
                                 </PageLink>
@@ -117,7 +117,7 @@ class UserMenu extends React.Component<IUserMenuProps> {
                                 <CloseDropdownButton onClick={this.props.logout}>
                                     <em className="icon icon-logout text-danger" />
                                     <span>
-                                        <FormattedMessage id="general.account.signout" defaultMessage="Sign out" />
+                                        <FormattedMessage id="general.wallet.signout" defaultMessage="Sign out" />
                                     </span>
                                 </CloseDropdownButton>
                             </li>
@@ -126,21 +126,21 @@ class UserMenu extends React.Component<IUserMenuProps> {
                             <FormattedMessage id="general.ecosystems" defaultMessage="Ecosystems" />
                         </div>
                         <ul className="dropdown-group">
-                            {this.props.ecosystemAccounts.map(account => (
-                                <li key={account.ecosystem}>
-                                    <CloseDropdownButton onClick={account.ecosystem !== this.props.account.ecosystem && this.props.switchAccount.bind(this, account)}>
-                                        {account.ecosystemName ?
+                            {this.props.ecosystemWallets.map(wallet => (
+                                <li key={wallet.ecosystem}>
+                                    <CloseDropdownButton onClick={wallet.ecosystem !== this.props.wallet.ecosystem && this.props.switchWallet.bind(this, wallet)}>
+                                        {wallet.ecosystemName ?
                                             (
-                                                account.ecosystemName
+                                                wallet.ecosystemName
                                             ) :
                                             (
-                                                <FormattedMessage id="general.account.ecosystemNo" defaultMessage="Ecosystem #{ecosystem}" values={{ ecosystem: account.ecosystem }} />
+                                                <FormattedMessage id="general.wallet.ecosystemNo" defaultMessage="Ecosystem #{ecosystem}" values={{ ecosystem: wallet.ecosystem }} />
                                             )
                                         }
                                     </CloseDropdownButton>
                                 </li>
                             ))}
-                            {/*_.map(this.props.account.ecosystems, ((value, key) => (
+                            {/*_.map(this.props.wallet.ecosystems, ((value, key) => (
                                 <li key={key}>
                                     <CloseDropdownButton onClick={key !== this.props.ecosystem && this.onSwitchEcosystem.bind(this, key)}>
                                         {value.name || key}
@@ -154,19 +154,19 @@ class UserMenu extends React.Component<IUserMenuProps> {
                 <StyledUserMenu>
                     <div className="user-info">
                         <div className="user-title">
-                            {this.props.account.username || this.props.account.address}
+                            {this.props.wallet.username || this.props.wallet.address}
                         </div>
                         <div className="user-subtitle">
-                            {this.props.account.ecosystemName || (
-                                <FormattedMessage id="general.account.ecosystemNo" defaultMessage="Ecosystem #{ecosystem}" values={{ ecosystem: this.props.account.ecosystem }} />
+                            {this.props.wallet.ecosystemName || (
+                                <FormattedMessage id="general.wallet.ecosystemNo" defaultMessage="Ecosystem #{ecosystem}" values={{ ecosystem: this.props.wallet.ecosystem }} />
                             )}
                         </div>
                     </div>
                     <Avatar
                         className="user-avatar"
                         size={32}
-                        keyID={this.props.account.id}
-                        ecosystem={this.props.account.ecosystem}
+                        keyID={this.props.wallet.id}
+                        ecosystem={this.props.wallet.ecosystem}
                     />
                 </StyledUserMenu>
             </SystemButton>

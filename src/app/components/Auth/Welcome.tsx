@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
@@ -39,10 +39,10 @@ const Welcome: React.SFC<IWelcomeProps> = (props) => (
                 <FormattedMessage id="auth.welcome" defaultMessage="Welcome" />
             </h4>
             <p className="pv">
-                <FormattedMessage id="auth.welcome.guide" defaultMessage="Before proceeding, you will now be guided through the account creation process. This will not take too much of your time. After completing this process you will be able to use all features of Genesis" />
+                <FormattedMessage id="auth.welcome.guide" defaultMessage="Before proceeding, you will now be guided through the wallet creation process. This will not take too much of your time. After completing this process you will be able to use all features of Genesis" />
             </p>
             <p>
-                <FormattedMessage id="auth.welcome.continue" defaultMessage="Press 'Get started' button to begin the process of creating or restoring your account" />
+                <FormattedMessage id="auth.welcome.continue" defaultMessage="Press 'Get started' button to begin the process of creating or restoring your wallet" />
             </p>
             <hr />
             <Button bsStyle="primary" className="btn-block" onClick={props.onConfirm}>

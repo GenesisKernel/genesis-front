@@ -20,16 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { IAccount } from 'genesis/auth';
+import { IWallet } from 'genesis/auth';
 
-import AccountList from 'containers/Auth/Login/AccountList';
+import WalletList from 'containers/Auth/Login/WalletList';
 import RoleList from 'containers/Auth/Login/RoleList';
 import PasswordPrompt from 'containers/Auth/Login/PasswordPrompt';
 
 export interface ILoginProps {
-    account: IAccount;
+    wallet: IWallet;
     isAuthenticating: boolean;
     isSelectingRole: boolean;
 }
@@ -37,9 +37,9 @@ export interface ILoginProps {
 const Login: React.SFC<ILoginProps> = props => (
     <div>
         <Switch>
-            {props.account && props.isSelectingRole ? <Route path="/" component={RoleList} /> : null}
-            {props.account && props.isAuthenticating ? <Route path="/" component={PasswordPrompt} /> : null}
-            <Route path="/" component={AccountList} />
+            {props.wallet && props.isSelectingRole ? <Route path="/" component={RoleList} /> : null}
+            {props.wallet && props.isAuthenticating ? <Route path="/" component={PasswordPrompt} /> : null}
+            <Route path="/" component={WalletList} />
         </Switch>
     </div>
 );

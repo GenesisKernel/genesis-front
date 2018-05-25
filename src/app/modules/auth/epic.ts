@@ -24,27 +24,27 @@ import { combineEpics } from 'redux-observable';
 import loginEpic from './epics/loginEpic';
 import logoutEpic from './epics/logoutEpic';
 import authorizeEpic from './epics/authorizeEpic';
-import createAccountEpic from './epics/createAccountEpic';
-import importAccountEpic from './epics/importAccountEpic';
+import createWalletEpic from './epics/createWalletEpic';
+import importWalletEpic from './epics/importWalletEpic';
 import importSeedEpic from './epics/importSeedEpic';
 import generateSeedEpic from './epics/generateSeedEpic';
 import authErrorEpic from './epics/authErrorEpic';
-import removeAccountEpic from './epics/removeAccountEpic';
+import removeWalletEpic from './epics/removeWalletEpic';
 import selectRoleEpic from './epics/selectRoleEpic';
 import logoutEmptySessionEpic from './epics/logoutEmptySessionEpic';
 import inviteEcosystemEpic from './epics/inviteEcosystemEpic';
 
 export default combineEpics(
     authorizeEpic,
-    createAccountEpic,
+    createWalletEpic,
     generateSeedEpic,
-    importAccountEpic,
+    importWalletEpic,
     importSeedEpic,
     loginEpic,
     authErrorEpic,
     logoutEmptySessionEpic,
     logoutEpic,
-    removeAccountEpic,
+    removeWalletEpic,
     selectRoleEpic,
     inviteEcosystemEpic
 );

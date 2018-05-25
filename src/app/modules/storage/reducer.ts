@@ -22,30 +22,30 @@
 
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import * as actions from './actions';
-import { IAccount } from 'genesis/auth';
+import { IWallet } from 'genesis/auth';
 import saveLocaleHandler from './reducers/saveLocaleHandler';
-import saveAccountHandler from './reducers/saveAccountHandler';
-import removeAccountHandler from './reducers/removeAccountHandler';
+import saveWalletHandler from './reducers/saveWalletHandler';
+import removeWalletHandler from './reducers/removeWalletHandler';
 import saveNavigationSizeHandler from './reducers/saveNavigationSizeHandler';
 import mergeFullNodesHandler from './reducers/mergeFullNodesHandler';
 
 export type State = {
     readonly locale: string;
-    readonly accounts: IAccount[];
+    readonly wallets: IWallet[];
     readonly navigationSize: number;
     readonly fullNodes: string[];
 };
 
 export const initialState: State = {
     locale: 'en-US',
-    accounts: [],
+    wallets: [],
     navigationSize: 230,
     fullNodes: []
 };
 
 export default reducerWithInitialState<State>(initialState)
     .case(actions.saveLocale, saveLocaleHandler)
-    .case(actions.saveAccount, saveAccountHandler)
-    .case(actions.removeAccount, removeAccountHandler)
+    .case(actions.saveWallet, saveWalletHandler)
+    .case(actions.removeWallet, removeWalletHandler)
     .case(actions.saveNavigationSize, saveNavigationSizeHandler)
     .case(actions.mergeFullNodes, mergeFullNodesHandler);

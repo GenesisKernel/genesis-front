@@ -20,20 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { modalShow } from 'modules/modal/actions';
 import { FormattedMessage } from 'react-intl';
+import { IWallet } from 'genesis/auth';
 
 import Backup from 'components/Main/Backup';
-import { IAccount } from 'genesis/auth';
 
 export interface IBackupContainerProps {
 }
 
 interface IBackupContainerState {
-    account: IAccount;
+    wallet: IWallet;
     ecosystems: string[];
     privateKey: string;
 }
@@ -48,9 +48,9 @@ const BackupContainer: React.SFC<IBackupContainerProps & IBackupContainerState &
 );
 
 const mapStateToProps = (state: IRootState) => ({
-    account: state.auth.account,
-    ecosystems: state.auth.account && state.storage.accounts
-        .filter(l => l.id === state.auth.account.id && '1' !== l.ecosystem)
+    wallet: state.auth.wallet,
+    ecosystems: state.auth.wallet && state.storage.wallets
+        .filter(l => l.id === state.auth.wallet.id && '1' !== l.ecosystem)
         .map(l => l.ecosystem)
         .sort((a, b) => parseInt(a, 10) - parseInt(b, 10)),
     privateKey: state.auth.privateKey

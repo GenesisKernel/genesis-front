@@ -29,7 +29,7 @@ const subscribeDoneHandler: Reducer<typeof subscribe.done, State> = (state, payl
     subscriptions: [
         ...state.subscriptions,
         {
-            account: payload.params,
+            wallet: payload.params,
             instance: payload.result
         }
     ]

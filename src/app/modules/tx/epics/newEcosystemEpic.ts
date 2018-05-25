@@ -24,7 +24,7 @@ import { IRootState } from 'modules';
 import { Epic } from 'redux-observable';
 import { Action } from 'redux';
 import { txExec } from '../actions';
-import { saveAccount } from 'modules/storage/actions';
+import { saveWallet } from 'modules/storage/actions';
 
 const newEcosystemEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(txExec.done)
@@ -32,12 +32,12 @@ const newEcosystemEpic: Epic<Action, IRootState> =
         .map(action => {
             const ecosystem = action.payload.result.result;
             const ecosystemName = (action.payload.params.tx.params && action.payload.params.tx.params.Name) || ecosystem;
-            const account = store.getState().auth.account;
+            const wallet = store.getState().auth.wallet;
 
-            return saveAccount({
-                id: account.id,
-                encKey: account.encKey,
-                address: account.address,
+            return saveWallet({
+                id: wallet.id,
+                encKey: wallet.encKey,
+                address: wallet.address,
                 username: null,
                 ecosystem,
                 ecosystemName

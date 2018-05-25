@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as CryptoJS from 'crypto-js';
-import * as KJUR from 'jsrsasign';
-import * as Random from 'random-js';
+import CryptoJS from 'crypto-js';
+import KJUR from 'jsrsasign';
+import Random from 'random-js';
 import { Int64BE, Uint64BE } from 'int64-buffer';
 
 // https://github.com/bitcoin/bips/blob/master/bip-0039/bip-0039-wordlists.md

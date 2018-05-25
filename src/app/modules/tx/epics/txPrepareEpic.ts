@@ -83,7 +83,7 @@ const txPrepareEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrep
                         .then(uid => node.authorize(uid.token).login({
                             publicKey: keyring.generatePublicKey(action.payload.privateKey),
                             signature: keyring.sign(uid.uid, action.payload.privateKey),
-                            ecosystem: state.auth.account.ecosystem,
+                            ecosystem: state.auth.wallet.ecosystem,
                             role: state.auth.role && state.auth.role.id
                         }))
                         .then(session =>

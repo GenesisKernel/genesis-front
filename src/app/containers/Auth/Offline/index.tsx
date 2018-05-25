@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { initialize } from 'modules/engine/actions';
@@ -49,8 +49,8 @@ const mapDispatchToProps = {
     checkOnline: () => initialize.started(null)
 };
 
-const AccountListContainer: React.SFC<IOfflineContainerProps & IOfflineContainerState & IOfflineContainerDispatch> = props => (
+const WalletListContainer: React.SFC<IOfflineContainerProps & IOfflineContainerState & IOfflineContainerDispatch> = props => (
     <Offline {...props} />
 );
 
-export default connect<IOfflineContainerState, IOfflineContainerDispatch, IOfflineContainerProps>(mapStateToProps, mapDispatchToProps)(AccountListContainer);
+export default connect<IOfflineContainerState, IOfflineContainerDispatch, IOfflineContainerProps>(mapStateToProps, mapDispatchToProps)(WalletListContainer);

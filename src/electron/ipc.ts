@@ -23,7 +23,7 @@
 import { ipcMain, Event } from 'electron';
 import { spawnWindow } from './windows/index';
 import config from './config';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 export let state: any = null;
 let saveState = () => null as any;
@@ -46,7 +46,7 @@ if (!process.argv || !process.argv.find(l => '--nosave' === l)) {
                 refreshToken: state.auth.refreshToken,
                 socketToken: state.auth.socketToken,
                 id: state.auth.id,
-                account: state.auth.account,
+                wallet: state.auth.wallet,
                 timestamp: state.auth.timestamp
             }
         }));

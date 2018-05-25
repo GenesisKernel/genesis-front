@@ -21,19 +21,19 @@
 // SOFTWARE.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IAccount, ILoginCall, IRole, ISession } from 'genesis/auth';
-import { ICreateAccountCall, IImportAccountCall } from 'genesis/auth';
+import { IWallet, ILoginCall, IRole, ISession } from 'genesis/auth';
+import { ICreateWalletCall, IImportWalletCall } from 'genesis/auth';
 
 const actionCreator = actionCreatorFactory('auth');
-export const login = actionCreator.async<ILoginCall, { account: IAccount, roles: IRole[], privateKey: string, publicKey: string, session: ISession }, string>('LOGIN');
+export const login = actionCreator.async<ILoginCall, { wallet: IWallet, roles: IRole[], privateKey: string, publicKey: string, session: ISession }, string>('LOGIN');
 export const logout = actionCreator.async('LOGOUT');
 export const inviteEcosystem = actionCreator<{ ecosystem: string, redirectPage?: string }>('INVITE_ECOSYSTEM');
 export const generateSeed = actionCreator.async<void, string>('GENERATE_SEED');
 export const importSeed = actionCreator.async<Blob, string, undefined>('IMPORT_SEED');
-export const createAccount = actionCreator.async<ICreateAccountCall, IAccount, string>('CREATE_ACCOUNT');
-export const importAccount = actionCreator.async<IImportAccountCall, IAccount[], string>('IMPORT_ACCOUNT');
-export const removeAccount = actionCreator<IAccount>('REMOVE_ACCOUNT');
-export const selectAccount = actionCreator<IAccount>('SELECT_ACCOUNT');
+export const createWallet = actionCreator.async<ICreateWalletCall, IWallet, string>('CREATE_WALLET');
+export const importWallet = actionCreator.async<IImportWalletCall, IWallet[], string>('IMPORT_WALLET');
+export const removeWallet = actionCreator<IWallet>('REMOVE_WALLET');
+export const selectWallet = actionCreator<IWallet>('SELECT_WALLET');
 export const selectRole = actionCreator.async<number, { sessionToken: string, refreshToken: string }>('SELECT_ROLE');
 export const authorize = actionCreator<string>('AUTHORIZE');
 export const deauthorize = actionCreator('DEAUTHORIZE');

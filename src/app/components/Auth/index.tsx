@@ -29,7 +29,7 @@ import platform from 'lib/platform';
 import themed from 'components/Theme/themed';
 import Titlebar from 'components/Main/Titlebar';
 import Welcome from 'containers/Auth/Welcome';
-import Account from 'components/Auth/Account';
+import Wallet from 'components/Auth/Wallet';
 import Login from 'containers/Auth/Login';
 import Offline from 'containers/Auth/Offline';
 
@@ -49,7 +49,7 @@ const Auth: React.SFC<IAuthProps> = props => (
                 >
                     <Switch>
                         {props.isOffline && (<Route path="/" component={Offline} />)}
-                        <Route path="/account" component={Account} />
+                        <Route path="/wallet" component={Wallet} />
                         {props.firstRun && (<Route path="/" component={Welcome} />)}
                         {!props.firstRun && (<Route path="/" component={Login} />)}
                         <Redirect to="/" />

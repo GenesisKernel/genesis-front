@@ -21,20 +21,20 @@
 // SOFTWARE.
 
 import { State } from '../reducer';
-import { IAccount } from 'genesis/auth';
+import { IWallet } from 'genesis/auth';
 
-export default function (state: State, payload: { account: IAccount, role?: number }): number {
+export default function (state: State, payload: { wallet: IWallet, role?: number }): number {
     if ('number' === typeof payload.role) {
         return state.notifications.filter(l =>
-            l.id === payload.account.id &&
-            l.ecosystem === payload.account.ecosystem &&
+            l.id === payload.wallet.id &&
+            l.ecosystem === payload.wallet.ecosystem &&
             l.role === payload.role
         ).map(l => l.count).concat([0]).reduce((a, b) => a + b);
     }
     else {
         return state.notifications.filter(l =>
-            l.id === payload.account.id &&
-            l.ecosystem === payload.account.ecosystem
+            l.id === payload.wallet.id &&
+            l.ecosystem === payload.wallet.ecosystem
         ).map(l => l.count).concat([0]).reduce((a, b) => a + b);
     }
 }

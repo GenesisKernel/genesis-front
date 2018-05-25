@@ -20,11 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
-import { IAccount } from 'genesis/auth';
+import { IWallet } from 'genesis/auth';
 
 import Heading from 'components/Auth/Heading';
 import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
@@ -33,7 +33,7 @@ import ContextButton from '../ContextButton';
 
 export interface IRoleListProps {
     className?: string;
-    account: IAccount;
+    wallet: IWallet;
     roles: {
         id: number;
         name: string;

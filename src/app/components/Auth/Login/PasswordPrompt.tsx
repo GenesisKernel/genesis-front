@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
-import { IAccount } from 'genesis/auth';
+import { IWallet } from 'genesis/auth';
 
 import Avatar from 'containers/Avatar';
 import Validation from 'components/Validation';
@@ -31,15 +31,15 @@ import Heading from 'components/Auth/Heading';
 
 export interface IPasswordPromptProps {
     className?: string;
-    account: IAccount;
-    onSubmit: (params: { account: IAccount, password: string }) => void;
+    wallet: IWallet;
+    onSubmit: (params: { wallet: IWallet, password: string }) => void;
     onCancel: () => void;
 }
 
 const PasswordPrompt: React.SFC<IPasswordPromptProps & InjectedIntlProps> = props => {
     const onSubmit = (values: { [key: string]: any }) =>
         props.onSubmit({
-            account: props.account,
+            wallet: props.wallet,
             password: values.password
         });
 
@@ -53,12 +53,12 @@ const PasswordPrompt: React.SFC<IPasswordPromptProps & InjectedIntlProps> = prop
                     <div className="avatar-holder">
                         <Avatar
                             size={100}
-                            keyID={props.account.id}
-                            ecosystem={props.account.ecosystem}
+                            keyID={props.wallet.id}
+                            ecosystem={props.wallet.ecosystem}
                         />
                     </div>
                     <h4 className="text-center mt0">
-                        {`${props.account.username || props.account.id} (${props.account.ecosystemName || props.account.ecosystem})`}
+                        {`${props.wallet.username || props.wallet.id} (${props.wallet.ecosystemName || props.wallet.ecosystem})`}
                     </h4>
                     <p>
                         <FormattedMessage id="auth.session.expired" defaultMessage="Your session has expired. Please enter your password to sign in" />

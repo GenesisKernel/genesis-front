@@ -27,7 +27,7 @@ import { Reducer } from 'modules';
 const unsubscribeDoneHandler: Reducer<typeof unsubscribe.done, State> = (state, payload) => ({
     ...state,
     subscriptions: state.subscriptions.filter(l =>
-        l.account.id !== payload.params.id
+        l.wallet.id !== payload.params.id
     )
 });
 

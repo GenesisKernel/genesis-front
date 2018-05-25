@@ -30,12 +30,12 @@ const loginDoneHandler: Reducer<typeof login.done, State> = (state, payload) => 
         ...state,
         isAuthenticated: !hasRoles,
         isLoggingIn: hasRoles,
-        account: payload.result.account,
+        wallet: payload.result.wallet,
         roles: payload.result.roles,
-        ecosystem: payload.result.account.ecosystem,
+        ecosystem: payload.result.wallet.ecosystem,
         session: payload.result.session,
         privateKey: payload.result.privateKey,
-        id: payload.result.account.id
+        id: payload.result.wallet.id
     };
 };
 

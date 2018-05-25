@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { fetchNotifications } from 'modules/content/actions';
@@ -57,9 +57,9 @@ class NotificationsContainer extends React.Component<INotificationsMenuContainer
 }
 
 const mapStateToProps = (state: IRootState) => {
-    const notifications = state.auth.account ? state.socket.notifications.filter(l =>
-        l.id === state.auth.account.id &&
-        l.ecosystem === state.auth.account.ecosystem
+    const notifications = state.auth.wallet ? state.socket.notifications.filter(l =>
+        l.id === state.auth.wallet.id &&
+        l.ecosystem === state.auth.wallet.ecosystem
     ).map(l => l.count) : [];
     const count = notifications.length ? notifications.reduce((a, b) => a + b) : 0;
 
