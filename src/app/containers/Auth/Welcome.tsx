@@ -44,7 +44,7 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    onConfirm: () => navigate('wallet')
+    onConfirm: () => navigate('/wallet')
 };
 
 const WelcomeContainer: React.SFC<IWelcomeContainerProps & IWelcomeContainerState & IWelcomeContainerDispatch> = props => (
