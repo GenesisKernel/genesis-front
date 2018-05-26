@@ -35,7 +35,6 @@ const ecosystemInitDoneEpic: Epic = (action$, store, { api }) => action$.ofActio
                 id: state.auth.role.id.toString() || null,
             })
                 .then(row => row.value.default_page)
-                .catch(e => null)
         ).flatMap(payload =>
             Observable.of(
                 setDefaultPage(payload)
