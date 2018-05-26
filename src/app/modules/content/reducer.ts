@@ -47,6 +47,7 @@ export type State = {
     readonly preloadingError: string;
     readonly stylesheet: string;
     readonly navigationResizing: boolean;
+    readonly inited: boolean;
     readonly section: string;
     readonly sections: {
         readonly [name: string]: TSection;
@@ -59,6 +60,7 @@ export const initialState: State = {
     preloadingError: null,
     stylesheet: null,
     navigationResizing: false,
+    inited: false,
     section: 'home',
     sections: {
         home: {

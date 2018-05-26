@@ -20,6 +20,7 @@ import { Reducer } from 'modules';
 
 const setDefaultPageHandler: Reducer<typeof setDefaultPage, State> = (state, payload) => ({
     ...state,
+    inited: true,
     sections: {
         ...state.sections,
         home: {
