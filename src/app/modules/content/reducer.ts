@@ -46,12 +46,14 @@ import setResizingHandler from './reducers/setResizingHandler';
 import switchSectionHandler from './reducers/switchSectionHandler';
 import updateSectionHandler from './reducers/updateSectionHandler';
 import ecosystemInitHandler from './reducers/ecosystemInitHandler';
+import setDefaultPageHandler from './reducers/setDefaultPageHandler';
 
 export type State = {
     readonly preloading: boolean;
     readonly preloadingError: string;
     readonly stylesheet: string;
     readonly navigationResizing: boolean;
+    readonly inited: boolean;
     readonly section: string;
     readonly sections: {
         readonly [name: string]: TSection;
@@ -64,6 +66,7 @@ export const initialState: State = {
     preloadingError: null,
     stylesheet: null,
     navigationResizing: false,
+    inited: false,
     section: 'home',
     sections: {
         home: {
@@ -127,4 +130,5 @@ export default reducerWithInitialState(initialState)
     .case(actions.reset.failed, resetFailedHandler)
     .case(actions.setResizing, setResizingHandler)
     .case(actions.switchSection, switchSectionHandler)
-    .case(actions.updateSection, updateSectionHandler);
+    .case(actions.updateSection, updateSectionHandler)
+    .case(actions.setDefaultPage, setDefaultPageHandler);

@@ -29,7 +29,7 @@ export interface IDefaultPageContainerProps {
 }
 
 interface IDefaultPageContainerState {
-
+    inited: boolean;
 }
 
 interface IDefaultPageContainerDispatch {
@@ -38,7 +38,13 @@ interface IDefaultPageContainerDispatch {
 
 class DefaultPageContainer extends React.Component<IDefaultPageContainerProps & IDefaultPageContainerState & IDefaultPageContainerDispatch> {
     componentDidMount() {
-        this.props.navigatePage({ params: {} });
+        this.props.navigatePage({params: {}});
+    }
+
+    componentWillReceiveProps(props: IDefaultPageContainerProps & IDefaultPageContainerState & IDefaultPageContainerDispatch) {
+        if (props.inited && props.inited !== this.props.inited) {
+            this.props.navigatePage({params: {}});
+        }
     }
 
     render() {
@@ -47,7 +53,7 @@ class DefaultPageContainer extends React.Component<IDefaultPageContainerProps & 
 }
 
 const mapStateToProps = (state: IRootState) => ({
-
+    inited: state.content.inited
 });
 
 const mapDispatchToProps = {

@@ -26,7 +26,6 @@ import { Reducer } from 'modules';
 
 const selectRoleDoneHandler: Reducer<typeof selectRole.done, State> = (state, payload) => ({
     ...state,
-    ...state,
     isAuthenticated: true,
     isLoggingIn: false,
     roles: null,
