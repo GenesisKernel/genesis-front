@@ -39,11 +39,11 @@ const ecosystemInitDoneEpic: Epic = (action$, store, { api }) => action$.ofActio
             Observable.of(
                 setDefaultPage(payload)
             )
-        ).catch(e =>
-            Observable.of(
-                setDefaultPage(null)
-            )
         );
-    });
+    }).catch(e =>
+        Observable.of(
+            setDefaultPage(null)
+        )
+    );
 
 export default ecosystemInitDoneEpic;
