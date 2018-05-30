@@ -20,22 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
-import { closeEditorTab } from '../actions';
-import { updateSection } from 'modules/section/actions';
+import * as queryString from 'query-string';
+import { Epic } from 'modules';
+import { push } from 'react-router-redux';
+import { renderSection } from 'modules/section/actions';
 
-const closeEditorTabEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(closeEditorTab)
-        .map(action => {
-            const state = store.getState();
-            const section = state.section.sections.editor;
+const renderSectionEpic: Epic = (action$, store) => action$.ofAction(renderSection)
+    .map(action => {
+        const state = store.getState();
+        const section = state.section.sections[action.payload];
+        const params = section.page ? queryString.stringify(section.page.params) : '';
+        return push(`/${section.name}/${section.page ? section.page.name : ''}${params ? '?' + params : ''}`);
+    });
 
-            return updateSection({
-                ...section,
-                visible: 0 < state.editor.tabs.length
-            });
-        });
-
-export default closeEditorTabEpic;
+export default renderSectionEpic;

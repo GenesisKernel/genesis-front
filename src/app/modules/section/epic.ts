@@ -20,22 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
-import { closeEditorTab } from '../actions';
-import { updateSection } from 'modules/section/actions';
+import { combineEpics } from 'redux-observable';
+import closeSectionEpic from './epics/closeSectionEpic';
+import renderSectionEpic from './epics/renderSectionEpic';
+import resetEpic from './epics/resetEpic';
+import resetOnLoginEpic from './epics/resetOnLoginEpic';
+import navigatePageEpic from './epics/navigatePageEpic';
+import reloadPageEpic from './epics/reloadPageEpic';
+import renderLegacyPageEpic from './epics/renderLegacyPageEpic';
+import renderPageEpic from './epics/renderPageEpic';
 
-const closeEditorTabEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(closeEditorTab)
-        .map(action => {
-            const state = store.getState();
-            const section = state.section.sections.editor;
-
-            return updateSection({
-                ...section,
-                visible: 0 < state.editor.tabs.length
-            });
-        });
-
-export default closeEditorTabEpic;
+export default combineEpics(
+    closeSectionEpic,
+    renderSectionEpic,
+    resetEpic,
+    resetOnLoginEpic,
+    navigatePageEpic,
+    reloadPageEpic,
+    renderLegacyPageEpic,
+    renderPageEpic
+);

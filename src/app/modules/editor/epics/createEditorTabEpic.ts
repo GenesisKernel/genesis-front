@@ -24,7 +24,7 @@ import { Action } from 'redux';
 import { Epic } from 'redux-observable';
 import { IRootState } from 'modules';
 import { createEditorTab } from '../actions';
-import { updateSection } from '../../content/actions';
+import { updateSection } from '../../section/actions';
 import { Observable } from 'rxjs/Observable';
 import { replace } from 'react-router-redux';
 
@@ -71,7 +71,7 @@ const createEditorTabEpic: Epic<Action, IRootState> =
             }
         })
         .flatMap(action => {
-            const editor = store.getState().content.sections.editor;
+            const editor = store.getState().section.sections.editor;
 
             return Observable.of<Action>(
                 replace('/editor'),

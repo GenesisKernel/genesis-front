@@ -27,13 +27,6 @@ import { Reducer } from 'modules';
 const ecosystemInitDoneHandler: Reducer<typeof ecosystemInit.done, State> = (state, payload) => ({
     ...state,
     stylesheet: payload.result.stylesheet,
-    sections: {
-        ...state.sections,
-        [payload.params.section]: {
-            ...state.sections[payload.params.section],
-            pending: false
-        }
-    }
 });
 
 export default ecosystemInitDoneHandler;

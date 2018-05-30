@@ -22,7 +22,7 @@
 
 import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
-import { renderLegacyPage } from 'modules/content/actions';
+import { renderLegacyPage } from 'modules/section/actions';
 
 const renderLegacyPageEpic: Epic = (action$, store, { api }) => action$.ofAction(renderLegacyPage.started)
     .flatMap(action => {

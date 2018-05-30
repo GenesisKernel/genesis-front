@@ -20,22 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
-import { closeEditorTab } from '../actions';
-import { updateSection } from 'modules/section/actions';
+import { State } from '../reducer';
+import { ecosystemInit } from 'modules/content/actions';
+import { Reducer } from 'modules';
 
-const closeEditorTabEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(closeEditorTab)
-        .map(action => {
-            const state = store.getState();
-            const section = state.section.sections.editor;
+const ecosystemInitDoneHandler: Reducer<typeof ecosystemInit.done, State> = (state, payload) => ({
+    ...state,
+    sections: {
+        ...state.sections,
+        [payload.params.section]: {
+            ...state.sections[payload.params.section],
+            pending: false
+        }
+    }
+});
 
-            return updateSection({
-                ...section,
-                visible: 0 < state.editor.tabs.length
-            });
-        });
-
-export default closeEditorTabEpic;
+export default ecosystemInitDoneHandler;

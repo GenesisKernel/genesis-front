@@ -27,7 +27,7 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { txCall } from 'modules/tx/actions';
 import { TTransactionStatus, ITransactionCollection } from 'genesis/tx';
-import { navigatePage } from 'modules/content/actions';
+import { navigatePage } from 'modules/section/actions';
 
 import TxBatchButton, { ITxButtonConfirm } from 'components/TxBatchButton';
 

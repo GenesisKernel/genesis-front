@@ -20,17 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as queryString from 'query-string';
-import { Epic } from 'modules';
-import { push } from 'react-router-redux';
-import { renderSection } from 'modules/content/actions';
+import { Action } from 'redux';
+import { Epic } from 'redux-observable';
+import { IRootState } from 'modules';
+import { reset } from 'modules/section/actions';
+import { login } from 'modules/auth/actions';
 
-const renderSectionEpic: Epic = (action$, store) => action$.ofAction(renderSection)
-    .map(action => {
-        const state = store.getState();
-        const section = state.content.sections[action.payload];
-        const params = section.page ? queryString.stringify(section.page.params) : '';
-        return push(`/${section.name}/${section.page ? section.page.name : ''}${params ? '?' + params : ''}`);
-    });
+const resetOnWalletSelectEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(login.done)
+        .map(action =>
+            reset.started(null)
+        );
 
-export default renderSectionEpic;
+export default resetOnWalletSelectEpic;

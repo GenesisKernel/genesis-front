@@ -21,40 +21,18 @@
 // SOFTWARE.
 
 import { Epic } from 'modules';
+import { closeSection, renderSection } from 'modules/section/actions';
 import { Observable } from 'rxjs/Observable';
-import { reset } from 'modules/content/actions';
 
-const resetEpic: Epic = (action$, store, { api }) => action$.ofAction(reset.started)
+const closeSectionEpic: Epic = (action$, store) => action$.ofAction(closeSection)
     .flatMap(action => {
         const state = store.getState();
-        const section = state.content.sections[state.content.section];
-        const client = api(state.auth.session);
-
-        return Observable.fromPromise(client.content({
-            type: 'page',
-            name: section.defaultPage,
-            params: {},
-            locale: state.storage.locale
-
-        })).map(payload => reset.done({
-            params: action.payload,
-            result: {
-                menu: {
-                    name: payload.menu,
-                    content: payload.menutree
-                },
-                page: {
-                    params: {},
-                    name: section.defaultPage,
-                    content: payload.tree
-                }
-            }
-        })).catch(e =>
-            Observable.of(reset.failed({
-                params: action.payload,
-                error: e.error
-            }))
-        );
+        if (action.payload === state.section.section) {
+            return Observable.of(renderSection('home'));
+        }
+        else {
+            return Observable.empty<never>();
+        }
     });
 
-export default resetEpic;
+export default closeSectionEpic;

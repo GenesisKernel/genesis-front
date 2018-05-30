@@ -26,7 +26,7 @@ import { Observable } from 'rxjs';
 import uuid from 'uuid';
 import { inviteEcosystem } from '../actions';
 import { enqueueNotification } from 'modules/notifications/actions';
-import { navigatePage } from 'modules/content/actions';
+import { navigatePage } from 'modules/section/actions';
 import { saveWallet } from '../../storage/actions';
 
 const inviteEcosystemEpic: Epic = (action$, store) => action$.ofAction(inviteEcosystem)

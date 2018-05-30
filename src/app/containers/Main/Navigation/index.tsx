@@ -23,7 +23,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { menuPop, menuPush, ecosystemInit } from 'modules/content/actions';
+import { ecosystemInit } from 'modules/content/actions';
+import { menuPop, menuPush } from 'modules/section/actions';
 import { TMenu } from 'genesis/content';
 
 import Navigation from 'components/Main/Navigation';
@@ -51,11 +52,11 @@ const NavigationContainer: React.SFC<INavigationContainerProps & INavigationCont
 );
 
 const mapStateToProps = (state: IRootState) => {
-    const section = state.content.sections[state.content.section] || state.content.sections.home;
+    const section = state.section.sections[state.section.section] || state.section.sections.home;
     return {
         preloading: state.content.preloading,
         preloadingError: state.content.preloadingError,
-        visible: state.content.sections[state.content.section].menuDisabled ? false : state.content.sections[state.content.section].menuVisible,
+        visible: state.section.sections[state.section.section].menuDisabled ? false : state.section.sections[state.section.section].menuVisible,
         width: state.storage.navigationSize,
         menus: section.menus
     };

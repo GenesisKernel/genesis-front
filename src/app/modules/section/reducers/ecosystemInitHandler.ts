@@ -20,19 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Epic } from 'modules';
-import { closeSection, renderSection } from 'modules/content/actions';
-import { Observable } from 'rxjs/Observable';
+import { State } from '../reducer';
+import { ecosystemInit } from 'modules/content/actions';
+import { Reducer } from 'modules';
+import { TSection } from 'genesis/content';
 
-const closeSectionEpic: Epic = (action$, store) => action$.ofAction(closeSection)
-    .flatMap(action => {
-        const state = store.getState();
-        if (action.payload === state.content.section) {
-            return Observable.of(renderSection('home'));
+const ecosystemInitHandler: Reducer<typeof ecosystemInit.started, State> = (state, payload) => {
+    const sections: { [key: string]: TSection } = {};
+    for (let itr in state.sections) {
+        if (state.sections.hasOwnProperty(itr)) {
+            sections[itr] = {
+                ...state.sections[itr],
+                pending: payload.section === itr ? true : false,
+                page: null,
+                menus: []
+            };
         }
-        else {
-            return Observable.empty<never>();
-        }
-    });
+    }
 
-export default closeSectionEpic;
+    return {
+        ...state,
+        section: payload.section,
+        sections
+    };
+};
+
+export default ecosystemInitHandler;

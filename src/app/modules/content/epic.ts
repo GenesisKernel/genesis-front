@@ -21,30 +21,14 @@
 // SOFTWARE.
 
 import { combineEpics } from 'redux-observable';
-import closeSectionEpic from './epics/closeSectionEpic';
 import displayDataEpic from './epics/displayDataEpic';
 import ecosystemInitEpic from './epics/ecosystemInitEpic';
 import ecosystemInitDoneEpic from './epics/ecosystemInitDoneEpic';
 import fetchNotificationsEpic from './epics/fetchNotificationsEpic';
-import navigatePageEpic from './epics/navigatePageEpic';
-import reloadPageEpic from './epics/reloadPageEpic';
-import renderLegacyPageEpic from './epics/renderLegacyPageEpic';
-import renderPageEpic from './epics/renderPageEpic';
-import renderSectionEpic from './epics/renderSectionEpic';
-import resetEpic from './epics/resetEpic';
-import resetOnLoginEpic from './epics/resetOnLoginEpic';
 
 export default combineEpics(
-    closeSectionEpic,
     displayDataEpic,
     ecosystemInitEpic,
     ecosystemInitDoneEpic,
-    fetchNotificationsEpic,
-    navigatePageEpic,
-    reloadPageEpic,
-    renderLegacyPageEpic,
-    renderPageEpic,
-    renderSectionEpic,
-    resetEpic,
-    resetOnLoginEpic
+    fetchNotificationsEpic
 );

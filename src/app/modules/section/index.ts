@@ -20,16 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
-import { reset } from '../actions';
-import { login } from 'modules/auth/actions';
+import reducer, { State } from './reducer';
+import epic from './epic';
+import * as actions from './actions';
 
-const resetOnWalletSelectEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(login.done)
-        .map(action =>
-            reset.started(null)
-        );
-
-export default resetOnWalletSelectEpic;
+export type State = State;
+export {
+    actions,
+    reducer,
+    epic
+};

@@ -25,7 +25,8 @@ import * as _ from 'lodash';
 import * as queryString from 'query-string';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { renderPage, ecosystemInit, renderLegacyPage, navigatePage, switchSection } from 'modules/content/actions';
+import { ecosystemInit } from 'modules/content/actions';
+import { renderPage, renderLegacyPage, navigatePage, switchSection } from 'modules/section/actions';
 import { TSection } from 'genesis/content';
 import { LEGACY_PAGES } from 'lib/legacyPages';
 
@@ -134,8 +135,8 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    section: state.content.section,
-    sections: state.content.sections
+    section: state.section.section,
+    sections: state.section.sections
 });
 
 const mapDispatchToProps = {
