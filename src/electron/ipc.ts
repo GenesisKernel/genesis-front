@@ -23,7 +23,7 @@
 import { ipcMain, Event } from 'electron';
 import { spawnWindow } from './windows/index';
 import config from './config';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 export let state: any = null;
 let saveState = () => null as any;
