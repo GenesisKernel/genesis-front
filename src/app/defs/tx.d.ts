@@ -80,7 +80,7 @@ declare module 'genesis/tx' {
     interface ITransactionBatchCall extends ITransactionRequest {
         contracts: {
             name: string;
-            data: {
+            params: {
                 [key: string]: any;
             }[];
         }[];

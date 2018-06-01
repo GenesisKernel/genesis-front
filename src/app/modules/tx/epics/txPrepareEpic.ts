@@ -44,16 +44,6 @@ const txPrepareEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrep
         const state = store.getState();
         const client = api(state.auth.session);
 
-        if (!keyring.validatePrivateKey(action.payload.privateKey)) {
-            Observable.of(txExec.failed({
-                params: action.payload,
-                error: {
-                    type: 'E_INVALID_PASSWORD',
-                    error: null
-                }
-            }));
-        }
-
         const txCall = {
             ...action.payload.tx,
             params: {

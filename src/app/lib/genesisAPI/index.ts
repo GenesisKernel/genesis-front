@@ -288,10 +288,13 @@ class GenesisAPI {
     public txStatus = this.setSecuredEndpoint<ITxStatusRequest, ITxStatusResponse>('get', 'txstatus/{hash}', { requestTransformer: () => null });
 
     // Transactions batch-processing
-    public txPrepareBatch = this.setSecuredEndpoint<ITxPrepareBatchRequest, ITxPrepareBatchResponse>('post', 'prepareMultiple/{name}', {
+    public txPrepareBatch = this.setSecuredEndpoint<ITxPrepareBatchRequest, ITxPrepareBatchResponse>('post', 'prepareMultiple', {
         requestTransformer: request => ({
             data: JSON.stringify({
-                params: request.data
+                contracts: request.contracts.map(l => ({
+                    contract: l.name,
+                    params: l.params
+                }))
             })
         })
     });
@@ -304,7 +307,7 @@ class GenesisAPI {
             })
         })
     });
-    public txStatusBatch = this.setSecuredEndpoint<ITxStatusBatchRequest, ITxStatusBatchResponse>('get', 'txstatusMultiple', {
+    public txStatusBatch = this.setSecuredEndpoint<ITxStatusBatchRequest, ITxStatusBatchResponse>('post', 'txstatusMultiple', {
         requestTransformer: request => ({
             data: JSON.stringify({
                 hashes: request.hashes
