@@ -20,33 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { combineEpics } from 'redux-observable';
-import loginEpic from './epics/loginEpic';
-import logoutEpic from './epics/logoutEpic';
-import authorizeEpic from './epics/authorizeEpic';
-import createWalletEpic from './epics/createWalletEpic';
-import importWalletEpic from './epics/importWalletEpic';
-import importSeedEpic from './epics/importSeedEpic';
-import generateSeedEpic from './epics/generateSeedEpic';
-import authErrorEpic from './epics/authErrorEpic';
-import removeWalletEpic from './epics/removeWalletEpic';
-import selectRoleEpic from './epics/selectRoleEpic';
-import logoutEmptySessionEpic from './epics/logoutEmptySessionEpic';
-import inviteEcosystemEpic from './epics/inviteEcosystemEpic';
-import changePasswordEpic from './epics/changePasswordEpic';
+import { Epic } from 'modules';
+import { changePassword } from '../actions';
+import { modalShow } from 'modules/modal/actions';
 
-export default combineEpics(
-    authorizeEpic,
-    createWalletEpic,
-    generateSeedEpic,
-    importWalletEpic,
-    importSeedEpic,
-    loginEpic,
-    authErrorEpic,
-    logoutEmptySessionEpic,
-    logoutEpic,
-    removeWalletEpic,
-    selectRoleEpic,
-    inviteEcosystemEpic,
-    changePasswordEpic
-);
+const changePasswordEpic: Epic = (action$, store) => action$.ofAction(changePassword)
+    .map(action => {
+            return modalShow({
+                id: 'AUTH_CHANGE_PASSWORD',
+                type: 'AUTH_CHANGE_PASSWORD',
+                params: {}
+            });
+        }
+    );
+
+export default changePasswordEpic;

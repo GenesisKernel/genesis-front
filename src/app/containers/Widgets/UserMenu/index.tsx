@@ -24,7 +24,7 @@ import React from 'react';
 import { Dispatch, Action } from 'redux';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
-import { logout, selectWallet } from 'modules/auth/actions';
+import { logout, selectWallet, changePassword } from 'modules/auth/actions';
 import { IWallet } from 'genesis/auth';
 
 import UserMenu from 'components/Main//UserMenu';
@@ -41,6 +41,7 @@ interface IUserMenuContainerState {
 interface IUserMenuContainerDispatch {
     logout: typeof logout.started;
     selectWallet: typeof selectWallet;
+    changePassword: typeof changePassword;
 }
 
 const UserMenuContainer: React.SFC<IUserMenuContainerProps & IUserMenuContainerState & IUserMenuContainerDispatch> = (props) => (
@@ -49,6 +50,7 @@ const UserMenuContainer: React.SFC<IUserMenuContainerProps & IUserMenuContainerS
         ecosystemWallets={props.ecosystemWallets}
         logout={() => props.logout({})}
         switchWallet={props.selectWallet}
+        changePassword={props.changePassword}
     />
 );
 
@@ -68,6 +70,9 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
     selectWallet: (wallet: IWallet) => {
         dispatch(logout.started(null));
         dispatch(selectWallet(wallet));
+    },
+    changePassword: () => {
+        dispatch(changePassword());
     }
 });
 
