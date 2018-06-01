@@ -65,10 +65,9 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
                             avatar: null,
                             username: null
                         })),
-                        authClient.getParam({
-                            name: 'ecosystem_name'
-
-                        }).then(l => l.value).catch(e => '')
+                        authClient.getEcosystemName({
+                            id: action.payload.wallet.ecosystem
+                        }).catch(e => '')
                     ]);
                 })
             )

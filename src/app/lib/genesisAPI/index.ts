@@ -225,6 +225,9 @@ class GenesisAPI {
             names: (request.names || []).join(',')
         })
     });
+    public getEcosystemName = this.setEndpoint<{ id: string | number }, string>('get', 'ecosystemname', {
+        responseTransformer: response => response.ecosystem_name
+    });
     public getConfig = this.setEndpoint<{ name: TConfigRequest }, string>('get', 'config/{name}', { requestTransformer: request => null });
     public getContract = this.setSecuredEndpoint<IContractRequest, IContractResponse>('get', 'contract/{name}', { requestTransformer: request => null });
     public getContracts = this.setSecuredEndpoint<ISegmentRequest, IContractsResponse>('get', 'contracts');
