@@ -22,7 +22,7 @@
 
 import { Epic } from 'modules';
 import { Observable } from 'rxjs';
-import { txCall, txAuthorize, txExecBatch, txPrepare } from '../actions';
+import { txCall, txAuthorize, txPrepare, txPrepareBatch } from '../actions';
 import { modalShow, modalClose } from 'modules/modal/actions';
 import { isType } from 'typescript-fsa';
 import keyring from 'lib/keyring';
@@ -79,8 +79,8 @@ const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall)
 
             if ('contracts' in action.payload) {
                 const call = action.payload as ITransactionBatchCall;
-                return txExecBatch.started({
-                    ...call,
+                return txPrepareBatch({
+                    tx: call,
                     privateKey
                 });
             }

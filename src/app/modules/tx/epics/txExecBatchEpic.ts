@@ -24,7 +24,7 @@ import { Epic } from 'modules';
 import { txExecBatch } from '../actions';
 import { Observable } from 'rxjs/Observable';
 import keyring from 'lib/keyring';
-import { TTxParams, ITxCallBatchResponse } from 'genesis/api';
+import { ITxCallBatchResponse } from 'genesis/api';
 import { ITransaction } from 'genesis/tx';
 
 const TX_STATUS_INTERVAL = 3000;
@@ -33,26 +33,10 @@ const txExecBatchEpic: Epic = (action$, store, { api }) => action$.ofAction(txEx
     .flatMap(action => {
         const state = store.getState();
         const client = api(state.auth.session);
-        const privateKey = state.auth.privateKey;
+        const privateKey = action.payload.privateKey;
         const publicKey = keyring.generatePublicKey(privateKey);
 
-        const contracts: { name: string, params: TTxParams }[] = [];
-        for (let itr in action.payload.contracts) {
-            if (action.payload.contracts.hasOwnProperty(itr)) {
-                const tx = action.payload.contracts[itr];
-                tx.params.forEach(item =>
-                    contracts.push({
-                        name: tx.name,
-                        params: item
-                    })
-                );
-            }
-        }
-
-        return Observable.from(client.txPrepareBatch({
-            contracts
-
-        })).flatMap(result => Observable.from(result.forsign).flatMap(forsign =>
+        return Observable.of(action.payload).flatMap(result => Observable.from(result.forsign).flatMap(forsign =>
             // Performance bottleneck. Detach cryptographic operations from current
             // context to release the event loop
             Observable.of(
@@ -66,17 +50,12 @@ const txExecBatchEpic: Epic = (action$, store, { api }) => action$.ofAction(txEx
                     pubkey: publicKey
                 })
             )
-        ).catch(error => Observable.throw({
-            type: error.error,
-            error: error.msg,
-            params: error.params
-
-        })).flatMap((call: ITxCallBatchResponse) =>
+        ).flatMap((call: ITxCallBatchResponse) =>
             Observable.defer(() => client.txStatusBatch({
                 hashes: call.hashes
 
             })).map(status => {
-                let pending = contracts.length;
+                let pending = action.payload.forsign.length;
 
                 for (let itr in status.results) {
                     if (status.results.hasOwnProperty(itr)) {

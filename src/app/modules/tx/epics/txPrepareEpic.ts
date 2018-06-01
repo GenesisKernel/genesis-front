@@ -26,18 +26,10 @@ import keyring from 'lib/keyring';
 import { txExec, txPrepare } from '../actions';
 import ModalObservable from 'modules/modal/util/ModalObservable';
 import NodeObservable from 'modules/engine/util/NodeObservable';
+import TxDissect from '../util/TxDissect';
 
 // 10 seconds max jitter between tx header validation
-const MAX_FAULT_TIME = 10;
-
-const dissectHeader = (forsign: string) => {
-    const matches = /([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}),[0-9]+,([0-9]+),(.*)/i.exec(forsign);
-    return {
-        requestID: matches[1],
-        timestamp: parseInt(matches[2], 10),
-        body: matches[3]
-    };
-};
+const MAX_FAULT_TIME = 3;
 
 const txPrepareEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrepare)
     .flatMap(action => {
@@ -54,10 +46,9 @@ const txPrepareEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrep
 
         return Observable.fromPromise(client.txPrepare(txCall)).flatMap(prepare => {
             let forSign = prepare.forsign;
-            const validatingHeader = dissectHeader(forSign);
-            const signParams = {};
-
             const validatingNodesCount = Math.min(state.storage.fullNodes.length, 3);
+            const validatingHeader = TxDissect(forSign);
+            const signParams = {};
 
             return NodeObservable({
                 nodes: state.storage.fullNodes,
@@ -85,7 +76,7 @@ const txPrepareEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrep
 
                 ).toArray().flatMap(headers => {
                     for (let i = 0; i < headers.length; i++) {
-                        const header = dissectHeader(headers[i].forsign);
+                        const header = TxDissect(headers[i].forsign);
                         if (header.body !== validatingHeader.body || MAX_FAULT_TIME < Math.abs(header.timestamp - validatingHeader.timestamp)) {
                             return Observable.throw({
                                 error: 'E_INVALIDATED'
@@ -155,7 +146,8 @@ const txPrepareEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrep
             params: action.payload,
             error: {
                 type: e.error,
-                error: e.msg
+                error: e.msg,
+                params: e.params
             }
         })));
     });

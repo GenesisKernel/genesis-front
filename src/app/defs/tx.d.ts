@@ -39,6 +39,7 @@ declare module 'genesis/tx' {
     interface ITxError {
         type: TTxError;
         error: string;
+        params?: any[];
     }
 
     type TTransactionStatus =

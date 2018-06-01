@@ -29,7 +29,7 @@ const txExecBatchHandler: Reducer<typeof txExecBatch.started, State> = (state, p
     transactions: state.transactions.set(payload.uuid, {
         type: 'collection',
         uuid: payload.uuid,
-        pending: payload.contracts.map(l => l.params.length).reduce((a, b) => a + b),
+        pending: payload.forsign.length,
         transactions: []
     })
 });

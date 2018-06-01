@@ -31,7 +31,7 @@ const txExecBatchFailedHandler: Reducer<typeof txExecBatch.failed, State> = (sta
         uuid: payload.params.uuid,
         pending: 0,
         transactions: [],
-        error: payload.error.error
+        error: payload.error
     })
 });
 
