@@ -751,9 +751,13 @@ const register = (editor: typeof monaco) => {
             const textUntilPosition = model.getValueInRange({ startLineNumber: 1, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column });
 
             // Match function parameters. There must be an opening bracket or separating comma
-            const paramsMatch = textUntilPosition.match(/ ?([A-Z][a-zA-Z]*)\(([a-zA-Z]*.*,)*[ a-zA-Z]*$/);
-            if (paramsMatch && functionDefs[paramsMatch[1]]) {
-                return functionDefs[paramsMatch[1]].params;
+            const paramsMatch = textUntilPosition.match(/([A-Z][a-zA-Z]*)\(/g);
+
+            if (paramsMatch) {
+                const token = paramsMatch[paramsMatch.length - 1].slice(0, -1);
+                if (functionDefs[token]) {
+                    return functionDefs[token].params;
+                }
             }
 
             return functionProposals();
