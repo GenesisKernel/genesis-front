@@ -99,6 +99,24 @@ const register = (editor: typeof monaco) => {
             kind: monaco.languages.CompletionItemKind.Function,
             insertText: 'And('
         },
+        ArrayToSource: {
+            label: 'ArrayToSource',
+            documentation: 'Data emitter that converts JSON array to a source',
+            kind: monaco.languages.CompletionItemKind.Function,
+            insertText: 'ArrayToSource(',
+            params: [
+                {
+                    label: 'Source',
+                    documentation: 'Source identificator to bind results',
+                    insertText: 'Source: '
+                },
+                {
+                    label: 'Data',
+                    documentation: 'Emitted data that must be a valid json-formatted string',
+                    insertText: 'Data: '
+                }
+            ]
+        },
         DBFind: {
             label: 'DBFind',
             documentation: 'Database search',
