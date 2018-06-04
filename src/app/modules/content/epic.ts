@@ -22,13 +22,9 @@
 
 import { combineEpics } from 'redux-observable';
 import displayDataEpic from './epics/displayDataEpic';
-import ecosystemInitEpic from './epics/ecosystemInitEpic';
-import ecosystemInitDoneEpic from './epics/ecosystemInitDoneEpic';
 import fetchNotificationsEpic from './epics/fetchNotificationsEpic';
 
 export default combineEpics(
     displayDataEpic,
-    ecosystemInitEpic,
-    ecosystemInitDoneEpic,
     fetchNotificationsEpic
 );

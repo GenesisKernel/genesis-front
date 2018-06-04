@@ -22,41 +22,39 @@
 
 import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
-import { renderPage } from 'modules/section/actions';
+import { reset } from '..//actions';
 
-const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(renderPage.started)
+const resetEpic: Epic = (action$, store, { api }) => action$.ofAction(reset.started)
     .flatMap(action => {
         const state = store.getState();
+        const section = state.sections.sections[state.sections.section];
         const client = api(state.auth.session);
 
         return Observable.fromPromise(client.content({
             type: 'page',
-            name: action.payload.name,
-            params: action.payload.params,
+            name: section.defaultPage,
+            params: {},
             locale: state.storage.locale
 
-        })).map(payload =>
-            renderPage.done({
-                params: action.payload,
-                result: {
-                    menu: {
-                        name: payload.menu,
-                        content: payload.menutree
-                    },
-                    page: {
-                        params: action.payload.params,
-                        name: action.payload.name,
-                        content: payload.tree
-                    }
+        })).map(payload => reset.done({
+            params: action.payload,
+            result: {
+                menu: {
+                    name: payload.menu,
+                    content: payload.menutree
+                },
+                page: {
+                    params: {},
+                    name: section.defaultPage,
+                    content: payload.tree
                 }
-            })
-
-        ).catch(e =>
-            Observable.of(renderPage.failed({
+            }
+        })).catch(e =>
+            Observable.of(reset.failed({
                 params: action.payload,
                 error: e.error
             }))
         );
     });
 
-export default renderPageEpic;
+export default resetEpic;

@@ -25,8 +25,7 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { navigate } from 'modules/engine/actions';
 import { displayData } from 'modules/content/actions';
-import { navigatePage } from 'modules/section/actions';
-import { menuPush } from 'modules/section/actions';
+import { navigatePage, menuPush } from 'modules/sections/actions';
 import { TProtypoElement } from 'genesis/protypo';
 
 import Protypo from 'components/Protypo';
@@ -64,11 +63,11 @@ const ProtypoContainer: React.SFC<IProtypoContainerState & IProtypoContainerDisp
 );
 
 const mapStateToProps = (state: IRootState) => {
-    const section = state.section.sections[state.section.section];
+    const section = state.sections.sections[state.sections.section];
 
     return {
         apiHost: state.auth.session && (state.auth.session.apiHost + '/api/v2'),
-        section: state.section.section,
+        section: state.sections.section,
         page: section.page && section.page.name
     };
 };

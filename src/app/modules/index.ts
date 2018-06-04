@@ -29,7 +29,7 @@ import { routerReducer as router, RouterState } from 'react-router-redux';
 import { loadingBarReducer } from 'react-redux-loading-bar';
 import * as auth from './auth';
 import * as content from './content';
-import * as section from './section';
+import * as sections from './sections';
 import * as modal from './modal';
 import * as engine from './engine';
 import * as editor from './editor';
@@ -51,7 +51,7 @@ export type Reducer<T, S> =
 export interface IRootState {
     auth: auth.State;
     content: content.State;
-    section: section.State;
+    sections: sections.State;
     modal: modal.State;
     engine: engine.State;
     editor: editor.State;
@@ -68,7 +68,7 @@ export interface IRootState {
 export const rootEpic = combineEpics(
     auth.epic,
     content.epic,
-    section.epic,
+    sections.epic,
     engine.epic,
     editor.epic,
     tx.epic,
@@ -82,7 +82,7 @@ export const rootEpic = combineEpics(
 export default combineReducers<IRootState>({
     auth: auth.reducer,
     content: content.reducer,
-    section: section.reducer,
+    sections: sections.reducer,
     modal: modal.reducer,
     engine: engine.reducer,
     editor: editor.reducer,

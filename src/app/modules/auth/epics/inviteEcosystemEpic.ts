@@ -26,8 +26,8 @@ import { Observable } from 'rxjs';
 import uuid from 'uuid';
 import { inviteEcosystem } from '../actions';
 import { enqueueNotification } from 'modules/notifications/actions';
-import { navigatePage } from 'modules/section/actions';
-import { saveWallet } from '../../storage/actions';
+import { navigatePage } from 'modules/sections/actions';
+import { saveWallet } from 'modules/storage/actions';
 
 const inviteEcosystemEpic: Epic = (action$, store) => action$.ofAction(inviteEcosystem)
     .flatMap(action => {

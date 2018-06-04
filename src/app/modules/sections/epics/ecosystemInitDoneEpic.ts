@@ -1,17 +1,17 @@
 // MIT License
-// 
+//
 // Copyright (c) 2016-2018 GenesisKernel
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,23 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { combineEpics } from 'redux-observable';
-import closeSectionEpic from './epics/closeSectionEpic';
-import renderSectionEpic from './epics/renderSectionEpic';
-import resetEpic from './epics/resetEpic';
-import resetOnLoginEpic from './epics/resetOnLoginEpic';
-import navigatePageEpic from './epics/navigatePageEpic';
-import reloadPageEpic from './epics/reloadPageEpic';
-import renderLegacyPageEpic from './epics/renderLegacyPageEpic';
-import renderPageEpic from './epics/renderPageEpic';
+import { Epic } from 'modules';
+import { Observable } from 'rxjs/Observable';
+import { setDefaultPage, ecosystemInit } from 'modules/sections/actions';
 
-export default combineEpics(
-    closeSectionEpic,
-    renderSectionEpic,
-    resetEpic,
-    resetOnLoginEpic,
-    navigatePageEpic,
-    reloadPageEpic,
-    renderLegacyPageEpic,
-    renderPageEpic
-);
+const ecosystemInitDoneEpic: Epic = (action$, store, { api }) => action$.ofAction(ecosystemInit.done)
+    .flatMap(action => {
+        const state = store.getState();
+        const client = api(state.auth.session);
+
+        return Observable.from(
+            client.getRow({
+                table: 'roles',
+                id: state.auth.role.id.toString() || null,
+            })
+                .then(row => row.value.default_page)
+        ).flatMap(payload =>
+            Observable.of(
+                setDefaultPage(payload)
+            )
+        ).catch(e =>
+            Observable.of(
+                setDefaultPage(null)
+            )
+        );
+    });
+
+export default ecosystemInitDoneEpic;

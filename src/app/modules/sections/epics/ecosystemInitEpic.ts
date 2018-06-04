@@ -23,10 +23,11 @@
 import { Action } from 'redux';
 import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
-import { ecosystemInit, fetchNotifications } from 'modules/content/actions';
+import { ecosystemInit as ecosystemInitContent, fetchNotifications } from 'modules/content/actions';
+import { ecosystemInit as ecosystemInitSections } from 'modules/sections/actions';
 import { logout, selectWallet } from 'modules/auth/actions';
 
-const ecosystemInitEpic: Epic = (action$, store, { api }) => action$.ofAction(ecosystemInit.started)
+const ecosystemInitEpic: Epic = (action$, store, { api }) => action$.ofAction(ecosystemInitSections.started)
     .flatMap(action => {
         const state = store.getState();
         const client = api(state.auth.session);
@@ -39,7 +40,14 @@ const ecosystemInitEpic: Epic = (action$, store, { api }) => action$.ofAction(ec
         ).flatMap(payload =>
             Observable.of<Action>(
                 fetchNotifications.started(null),
-                ecosystemInit.done({
+                ecosystemInitContent.done({
+                    params: action.payload,
+                    result: {
+                        stylesheet: payload[0],
+                        name: payload[1],
+                    }
+                }),
+                ecosystemInitSections.done({
                     params: action.payload,
                     result: {
                         stylesheet: payload[0],
@@ -54,16 +62,26 @@ const ecosystemInitEpic: Epic = (action$, store, { api }) => action$.ofAction(ec
                 return Observable.of<Action>(
                     logout.started(null),
                     selectWallet(wallet),
-                    ecosystemInit.failed({
+                    ecosystemInitContent.failed({
+                        params: action.payload,
+                        error: e.error
+                    }),
+                    ecosystemInitSections.failed({
                         params: action.payload,
                         error: e.error
                     })
                 );
             }
-            return Observable.of(ecosystemInit.failed({
-                params: action.payload,
-                error: e.error
-            }));
+            return Observable.of<Action>(
+                ecosystemInitContent.failed({
+                    params: action.payload,
+                    error: e.error
+                }),
+                ecosystemInitSections.failed({
+                    params: action.payload,
+                    error: e.error
+                })
+            );
         });
     });
 

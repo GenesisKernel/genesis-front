@@ -21,44 +21,18 @@
 // SOFTWARE.
 
 import { Epic } from 'modules';
+import { closeSection, renderSection } from '..//actions';
 import { Observable } from 'rxjs/Observable';
-import { reloadPage } from 'modules/section/actions';
 
-const reloadPageEpic: Epic = (action$, store, { api }) => action$.ofAction(reloadPage.started)
+const closeSectionEpic: Epic = (action$, store) => action$.ofAction(closeSection)
     .flatMap(action => {
         const state = store.getState();
-        const section = state.section.sections[state.section.section];
-        const client = api(state.auth.session);
-
-        return Observable.fromPromise(client.content({
-            type: 'page',
-            name: section.page.name,
-            params: section.page.params,
-            locale: state.storage.locale,
-
-        })).map(payload =>
-            reloadPage.done({
-                params: action.payload,
-                result: {
-                    params: section.page.params,
-                    menu: {
-                        name: payload.menu,
-                        content: payload.menutree
-                    },
-                    page: {
-                        params: section.page.params,
-                        name: section.page.name,
-                        content: payload.tree
-                    }
-                }
-            })
-
-        ).catch(e =>
-            Observable.of(reloadPage.failed({
-                params: action.payload,
-                error: e.error
-            }))
-        );
+        if (action.payload === state.sections.section) {
+            return Observable.of(renderSection('home'));
+        }
+        else {
+            return Observable.empty<never>();
+        }
     });
 
-export default reloadPageEpic;
+export default closeSectionEpic;

@@ -24,7 +24,7 @@ import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Route } from 'react-router-dom';
 import { IRootState } from 'modules';
-import { reloadPage, navigationToggle, renderSection, navigatePage, closeSection } from 'modules/section/actions';
+import { reloadPage, navigationToggle, renderSection, navigatePage, closeSection } from '../../modules/sections/actions';
 
 import { AnimatedSwitch } from 'components/Animation';
 import Main, { IMainProps } from 'components/Main';
@@ -46,10 +46,10 @@ const mapStateToProps = (state: IRootState) => ({
     nodeUrl: state.auth.session && state.auth.session.apiHost,
     isAuthorized: !!state.auth.privateKey,
     stylesheet: state.content.stylesheet,
-    section: state.section.section,
-    sections: state.section.sections,
+    section: state.sections.section,
+    sections: state.sections.sections,
     navigationSize: state.storage.navigationSize,
-    navigationVisible: state.section.sections[state.section.section].menuDisabled ? false : state.section.sections[state.section.section].menuVisible,
+    navigationVisible: state.sections.sections[state.sections.section].menuDisabled ? false : state.sections.sections[state.sections.section].menuVisible,
     transactionsCount: state.tx.transactions.count(),
     pendingTransactions: state.tx.transactions.takeLast(5)
 });

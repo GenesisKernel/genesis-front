@@ -22,39 +22,51 @@
 
 import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
-import { reset } from 'modules/section/actions';
+import { renderLegacyPage } from '..//actions';
 
-const resetEpic: Epic = (action$, store, { api }) => action$.ofAction(reset.started)
+const renderLegacyPageEpic: Epic = (action$, store, { api }) => action$.ofAction(renderLegacyPage.started)
     .flatMap(action => {
         const state = store.getState();
-        const section = state.section.sections[state.section.section];
         const client = api(state.auth.session);
 
-        return Observable.fromPromise(client.content({
-            type: 'page',
-            name: section.defaultPage,
-            params: {},
-            locale: state.storage.locale
+        if (action.payload.menu) {
+            return Observable.fromPromise(client.content({
+                type: 'menu',
+                name: action.payload.menu,
+                params: {},
+                locale: state.storage.locale
 
-        })).map(payload => reset.done({
-            params: action.payload,
-            result: {
-                menu: {
-                    name: payload.menu,
-                    content: payload.menutree
-                },
-                page: {
-                    params: {},
-                    name: section.defaultPage,
-                    content: payload.tree
-                }
-            }
-        })).catch(e =>
-            Observable.of(reset.failed({
+            })).map(payload =>
+                renderLegacyPage.done({
+                    params: action.payload,
+                    result: {
+                        menu: {
+                            name: action.payload.menu,
+                            content: payload.tree
+                        }
+                    }
+                })
+
+            ).catch(error =>
+                Observable.of(renderLegacyPage.done({
+                    params: action.payload,
+                    result: {
+                        menu: {
+                            name: action.payload.menu,
+                            content: []
+                        }
+                    }
+                }))
+            );
+        }
+        else {
+            return Observable.of(renderLegacyPage.done({
                 params: action.payload,
-                error: e.error
-            }))
-        );
+                result: {
+                    menu: null
+                }
+            }));
+        }
     });
 
-export default resetEpic;
+export default renderLegacyPageEpic;

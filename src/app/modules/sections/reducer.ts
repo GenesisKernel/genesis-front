@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 import * as actions from './actions';
-import * as contentActions from 'modules/content/actions';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { TSection } from 'genesis/content';
 import closeSectionHandler from './reducers/closeSectionHandler';
@@ -114,5 +113,5 @@ export default reducerWithInitialState(initialState)
     .case(actions.renderPage.done, renderPageDoneHandler)
     .case(actions.renderPage.failed, renderPageFailedHandler)
     .case(actions.renderPage.started, renderPageHandler)
-    .case(contentActions.ecosystemInit.started, ecosystemInitHandler)
-    .case(contentActions.ecosystemInit.done, ecosystemInitDoneHandler);
+    .case(actions.ecosystemInit.started, ecosystemInitHandler)
+    .case(actions.ecosystemInit.done, ecosystemInitDoneHandler);

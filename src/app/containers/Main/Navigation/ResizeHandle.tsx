@@ -24,7 +24,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { setResizing } from 'modules/content/actions';
-import { navigationToggle } from 'modules/section/actions';
+import { navigationToggle } from 'modules/sections/actions';
 import { saveNavigationSize } from 'modules/storage/actions';
 
 import ResizeHandle from 'components/Main/Navigation/ResizeHandle';

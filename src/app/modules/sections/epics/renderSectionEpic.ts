@@ -23,12 +23,12 @@
 import * as queryString from 'query-string';
 import { Epic } from 'modules';
 import { push } from 'react-router-redux';
-import { renderSection } from 'modules/section/actions';
+import { renderSection } from '..//actions';
 
 const renderSectionEpic: Epic = (action$, store) => action$.ofAction(renderSection)
     .map(action => {
         const state = store.getState();
-        const section = state.section.sections[action.payload];
+        const section = state.sections.sections[action.payload];
         const params = section.page ? queryString.stringify(section.page.params) : '';
         return push(`/${section.name}/${section.page ? section.page.name : ''}${params ? '?' + params : ''}`);
     });

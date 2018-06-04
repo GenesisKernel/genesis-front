@@ -27,7 +27,7 @@ const actionCreator = actionCreatorFactory('content');
 
 // Navigation
 export const setResizing = actionCreator<boolean>('SET_RESIZING');
-export const ecosystemInit = actionCreator.async<{ section: string }, { name: string, stylesheet: string }, string>('ECOSYSTEM_INIT');
+export const ecosystemInit = actionCreator.async<{ }, { name: string, stylesheet: string }, string>('ECOSYSTEM_INIT');
 
 // Protypo-specific
 export const displayData = actionCreator.async<string, string, string>('DISPLAY_DATA');

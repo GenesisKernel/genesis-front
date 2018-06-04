@@ -20,29 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { ecosystemInit } from 'modules/content/actions';
-import { Reducer } from 'modules';
-import { TSection } from 'genesis/content';
+import { combineEpics } from 'redux-observable';
+import closeSectionEpic from './epics/closeSectionEpic';
+import renderSectionEpic from './epics/renderSectionEpic';
+import resetEpic from './epics/resetEpic';
+import resetOnLoginEpic from './epics/resetOnLoginEpic';
+import navigatePageEpic from './epics/navigatePageEpic';
+import reloadPageEpic from './epics/reloadPageEpic';
+import renderLegacyPageEpic from './epics/renderLegacyPageEpic';
+import renderPageEpic from './epics/renderPageEpic';
+import ecosystemInitEpic from './epics/ecosystemInitEpic';
+import ecosystemInitDoneEpic from './epics/ecosystemInitDoneEpic';
 
-const ecosystemInitHandler: Reducer<typeof ecosystemInit.started, State> = (state, payload) => {
-    const sections: { [key: string]: TSection } = {};
-    for (let itr in state.sections) {
-        if (state.sections.hasOwnProperty(itr)) {
-            sections[itr] = {
-                ...state.sections[itr],
-                pending: payload.section === itr ? true : false,
-                page: null,
-                menus: []
-            };
-        }
-    }
-
-    return {
-        ...state,
-        section: payload.section,
-        sections
-    };
-};
-
-export default ecosystemInitHandler;
+export default combineEpics(
+    closeSectionEpic,
+    renderSectionEpic,
+    resetEpic,
+    resetOnLoginEpic,
+    navigatePageEpic,
+    reloadPageEpic,
+    renderLegacyPageEpic,
+    renderPageEpic,
+    ecosystemInitEpic,
+    ecosystemInitDoneEpic
+);
