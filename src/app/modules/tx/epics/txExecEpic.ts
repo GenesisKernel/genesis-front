@@ -36,16 +36,6 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
         const client = api(state.auth.session);
         const publicKey = keyring.generatePublicKey(action.payload.privateKey, true);
 
-        if (!keyring.validatePrivateKey(action.payload.privateKey)) {
-            return Observable.of(txExec.failed({
-                params: action.payload,
-                error: {
-                    type: 'E_INVALID_PASSWORD',
-                    error: null
-                }
-            }));
-        }
-
         return Observable.fromPromise(client.txCall({
             requestID: action.payload.requestID,
             pubkey: publicKey,

@@ -28,15 +28,12 @@ import { modalShow } from '../../modal/actions';
 
 export const txExecBatchFailedEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(txExecBatch.failed)
-        .filter(l => !l.payload.params.silent && !!l.payload.error)
+        .filter(l => !!l.payload.error)
         .map(action =>
             modalShow({
                 id: 'TX_ERROR',
                 type: 'TX_ERROR',
-                params: {
-                    tx: action.payload.error.tx,
-                    error: action.payload.error.error
-                }
+                params: action.payload.error
             })
         );
 

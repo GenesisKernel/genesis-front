@@ -22,73 +22,77 @@
 
 import { Epic } from 'modules';
 import { Observable } from 'rxjs';
+import { txCall, txAuthorize, txPrepare, txPrepareBatch } from '../actions';
+import { modalShow, modalClose } from 'modules/modal/actions';
 import { isType } from 'typescript-fsa';
 import keyring from 'lib/keyring';
-import { txCall, txAuthorize, txPrepare, txExecBatch } from '../actions';
-import { modalShow, modalClose } from 'modules/modal/actions';
+import { ITransactionBatchCall } from 'genesis/tx';
 
 const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall)
+    // Show confirmation window if there is any
+    .flatMap(action => Observable.if(
+        () => !!action.payload.confirm,
+        Observable.merge(
+            Observable.of(modalShow({
+                id: action.payload.uuid,
+                type: 'TX_CONFIRM',
+                params: action.payload.confirm
+            })),
+            action$.ofAction(modalClose).take(1).flatMap(modalPayload => Observable.if(
+                () => 'RESULT' === modalPayload.payload.reason,
+                Observable.of(action),
+                Observable.empty<never>()
+            ))
+        ),
+        Observable.of(action)
+
+    ))
+    // Ask for password if there are no privateKey
     .flatMap(action => {
-        const execTx = (privateKey: string) => {
-            if ('contracts' in action.payload) {
-                return Observable.of(txExecBatch.started({
-                    ...action.payload,
-                    privateKey
-                }));
-            }
-            else {
-                return Observable.of(txPrepare({
-                    tx: action.payload,
-                    privateKey
-                }));
-            }
-        };
+        if (isType(action, txCall)) {
+            const privateKey = store.getState().auth.privateKey;
+            const contractName = 'contracts' in action.payload ? null : action.payload.name;
 
-        const validateTx = Observable.defer(() => {
-            const state = store.getState();
-            if (keyring.validatePrivateKey(state.auth.privateKey)) {
-                return execTx(state.auth.privateKey);
-            }
-            else {
-                const contractName = 'contracts' in action.payload ? null : action.payload.name;
-
-                return Observable.merge(
+            return Observable.if(
+                () => keyring.validatePrivateKey(privateKey),
+                Observable.of(action),
+                Observable.merge(
                     Observable.of(txAuthorize.started({ contract: contractName })),
                     action$.filter(l => txAuthorize.done.match(l) || txAuthorize.failed.match(l))
                         .take(1)
-                        .flatMap(result => {
-                            if (isType(result, txAuthorize.done)) {
-                                return execTx(keyring.decryptAES(store.getState().auth.wallet.encKey, result.payload.result));
-                            }
-                            else {
-                                return Observable.empty<never>();
-                            }
-                        })
-                );
-            }
-        });
-
-        if (action.payload.confirm) {
-            return Observable.merge(
-                Observable.of(modalShow({
-                    id: action.payload.uuid,
-                    type: 'TX_CONFIRM',
-                    params: action.payload.confirm
-                })),
-                action$.ofAction(modalClose)
-                    .take(1)
-                    .flatMap(modalPayload => {
-                        if ('RESULT' === modalPayload.payload.reason) {
-                            return validateTx;
-                        }
-                        else {
-                            return Observable.empty<never>();
-                        }
-                    })
+                        .flatMap(result => Observable.if(
+                            () => isType(result, txAuthorize.done),
+                            Observable.of(action),
+                            Observable.empty<never>()
+                        ))
+                )
             );
         }
         else {
-            return validateTx;
+            return Observable.of(action);
+        }
+
+    })
+    .map(action => {
+        if (isType(action, txCall)) {
+            const privateKey = store.getState().auth.privateKey;
+
+            if ('contracts' in action.payload) {
+                const call = action.payload as ITransactionBatchCall;
+                return txPrepareBatch({
+                    tx: call,
+                    privateKey
+                });
+            }
+            else {
+                return txPrepare({
+                    tx: action.payload,
+                    privateKey
+                });
+            }
+        }
+        else {
+            return action;
         }
     });
 

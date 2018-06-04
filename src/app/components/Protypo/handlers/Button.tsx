@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
+import propTypes from 'prop-types';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import * as propTypes from 'prop-types';
 
 import Protypo, { IParamsSpec } from '../Protypo';
 import ValidatedForm from 'components/Validation/ValidatedForm';
@@ -101,7 +101,10 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
         return (
             <TxBatchButton
                 className={props.class}
-                contracts={props.composite}
+                contracts={props.composite.map(l => ({
+                    name: l.name,
+                    params: l.data
+                }))}
                 confirm={props.alert && {
                     icon: props.alert.icon,
                     title: props.intl.formatMessage({ id: 'alert.confirmation', defaultMessage: 'Confirmation' }),

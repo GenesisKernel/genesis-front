@@ -29,7 +29,6 @@ import { enqueueNotification } from 'modules/notifications/actions';
 
 export const txExecBatchDoneEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(txExecBatch.done)
-        .filter(l => !l.payload.params.silent)
         .map(action =>
             enqueueNotification({
                 id: uuid.v4(),

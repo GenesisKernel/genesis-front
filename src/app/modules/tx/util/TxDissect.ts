@@ -20,16 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { initialize } from '../actions';
-import { Reducer } from 'modules';
+const TxDissect = (forsign: string) => {
+    const matches = /([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}),[0-9]+,([0-9]+),(.*)/i.exec(forsign);
+    return {
+        requestID: matches[1],
+        timestamp: parseInt(matches[2], 10),
+        body: matches[3]
+    };
+};
 
-const initializeDoneHandler: Reducer<typeof initialize.done, State> = (state, payload) => ({
-    ...state,
-    isLoaded: true,
-    isOffline: false,
-    isConnecting: false,
-    nodeHost: payload.result.nodeHost
-});
-
-export default initializeDoneHandler;
+export default TxDissect;
