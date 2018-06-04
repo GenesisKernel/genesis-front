@@ -82,7 +82,7 @@ export interface IUserMenuProps {
     ecosystemWallets: IWallet[];
     switchWallet: (wallet: IWallet) => void;
     logout: () => void;
-    changePassword: () => void;
+    openChangePassword: () => void;
 }
 
 class UserMenu extends React.Component<IUserMenuProps> {
@@ -97,7 +97,7 @@ class UserMenu extends React.Component<IUserMenuProps> {
                     <div>
                         <ul className="dropdown-group">
                             <li>
-                                <CloseDropdownButton onClick={this.props.changePassword}>
+                                <CloseDropdownButton onClick={this.props.openChangePassword}>
                                     <em className="icon icon-key text-muted." />
                                     <span>
                                         <FormattedMessage id="general.wallet.changepassword" defaultMessage="Change password" />

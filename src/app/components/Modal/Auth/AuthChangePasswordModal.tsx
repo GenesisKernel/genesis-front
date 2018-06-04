@@ -22,21 +22,54 @@
 
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
-
 import Modal from '../';
 import { FormattedMessage } from 'react-intl';
 import Validation from 'components/Validation';
+import keyring from 'lib/keyring';
 
 export interface IAuthChangePasswordModalProps {
-
+    encKey: string;
 }
 
-class AuthChangePasswordModal extends Modal<IAuthChangePasswordModalProps, { }> {
+export interface IAuthChangePasswordModalState {
+    newPassword: string;
+    newPasswordRepeat: string;
+}
+
+class AuthChangePasswordModal extends Modal<IAuthChangePasswordModalProps, {}, IAuthChangePasswordModalState> {
+
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            newPassword: '',
+            newPasswordRepeat: ''
+        };
+    }
+
     onSubmit = (values: { [key: string]: any }) => {
-        // this.props.onResult({
-        //     name: values.name,
-        //     conditions: values.conditions
-        // });
+        const privateKey = keyring.decryptAES(this.props.params.encKey, values.password_old);
+
+        if (!keyring.validatePrivateKey(privateKey)) {
+            alert('Invalid current password');
+        }
+        else {
+            this.props.onResult({
+                oldPassword: values.password_old,
+                newPassword: values.password_new
+            });
+        }
+    }
+
+    onNewPasswordChange = (value: string) => {
+        this.setState({
+            newPassword: value
+        });
+    }
+
+    onNewPasswordRepeatChange = (value: string) => {
+        this.setState({
+            newPasswordRepeat: value
+        });
     }
 
     render() {
@@ -50,19 +83,42 @@ class AuthChangePasswordModal extends Modal<IAuthChangePasswordModalProps, { }> 
                         <label htmlFor="password_old">
                             <FormattedMessage id="auth.password.old" defaultMessage="Old password" />
                         </label>
-                        <Validation.components.ValidatedControl key="password_old" name="password_old" validators={[Validation.validators.required]} />
+                        <Validation.components.ValidatedControl key="password_old" name="password_old" type="password" validators={[Validation.validators.password]} />
+                        <div className="visible-md visible-lg text-left">
+                            <Validation.components.ValidationMessage for="password_old" />
+                        </div>
                     </Validation.components.ValidatedFormGroup>
                     <Validation.components.ValidatedFormGroup for="password_new">
                         <label htmlFor="password_new">
                             <FormattedMessage id="auth.password.new" defaultMessage="New password" />
                         </label>
-                        <Validation.components.ValidatedControl key="password_new" name="password_new" validators={[Validation.validators.required]} />
+                        <Validation.components.ValidatedControl
+                            key="password_new"
+                            name="password_new"
+                            type="password"
+                            value={this.state.newPassword}
+                            validators={[Validation.validators.password]}
+                            onChange={(e: any) => this.onNewPasswordChange(e.target.value)}
+                        />
+                        <div className="visible-md visible-lg text-left">
+                            <Validation.components.ValidationMessage for="password_new" />
+                        </div>
                     </Validation.components.ValidatedFormGroup>
                     <Validation.components.ValidatedFormGroup for="password_new_repeat">
                         <label htmlFor="password_new_repeat">
                             <FormattedMessage id="auth.password.new_repeat" defaultMessage="Repeat password" />
                         </label>
-                        <Validation.components.ValidatedControl key="password_new_repeat" name="password_new_repeat" validators={[Validation.validators.required]} />
+                        <Validation.components.ValidatedControl
+                            key={'password_new_repeat' + this.state.newPassword}
+                            name="password_new_repeat"
+                            type="password"
+                            value={this.state.newPasswordRepeat}
+                            validators={[Validation.validators.password, Validation.validators.compare(this.state.newPassword)]}
+                            onChange={(e: any) => this.onNewPasswordRepeatChange(e.target.value)}
+                        />
+                        <div className="visible-md visible-lg text-left">
+                            <Validation.components.ValidationMessage for="password_new_repeat" />
+                        </div>
                     </Validation.components.ValidatedFormGroup>
 
                 </Modal.Body >

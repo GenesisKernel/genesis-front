@@ -261,6 +261,7 @@
     "validation.minlength": "Value is too short",
     "validation.maxlength": "Value is too long",
     "validation.compare": "Value doesn't match",
+    "validation.password": "Invalid password length",
     "validation.regex": "This field contains invalid data",
     "validation.email": "Value must be a valid e-mail",
     "validation.url": "Value must be a valid URL"

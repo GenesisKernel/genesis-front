@@ -20,45 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-declare module 'genesis/auth' {
-    interface IWallet {
-        id: string;
-        encKey: string;
-        address: string;
-        ecosystem: string;
-        ecosystemName: string;
-        username: string;
-    }
+import { Action } from 'redux';
+import { Epic } from 'redux-observable';
+import { IRootState } from 'modules';
+import { saveEncKey } from '../actions';
+import { changePassword } from 'modules/auth/actions';
 
-    interface ISaveEncKeyCall {
-        id: string;
-        encKey: string;
-    }
+const saveEncKeyEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(changePassword.done)
+        .map(action =>
+            saveEncKey(action.payload.result)
+        );
 
-    interface IRole {
-        id: number;
-        name: string;
-    }
-
-    interface ISession {
-        apiHost: string;
-        sessionToken: string;
-        refreshToken: string;
-    }
-
-    interface ILoginCall {
-        wallet: IWallet;
-        password: string;
-    }
-
-    interface ICreateWalletCall {
-        seed: string;
-        password: string
-    }
-
-    interface IImportWalletCall {
-        backup: string;
-        password: string;
-        isDefault?: boolean
-    }
-}
+export default saveEncKeyEpic;

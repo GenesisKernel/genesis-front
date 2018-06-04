@@ -20,45 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-declare module 'genesis/auth' {
-    interface IWallet {
-        id: string;
-        encKey: string;
-        address: string;
-        ecosystem: string;
-        ecosystemName: string;
-        username: string;
-    }
+import { State } from '../reducer';
+import { saveEncKey } from '../actions';
+import { Reducer } from 'modules';
 
-    interface ISaveEncKeyCall {
-        id: string;
-        encKey: string;
-    }
+const saveEncKeyHandler: Reducer<typeof saveEncKey, State> = (state, payload) => {
+    const wallet = {
+        ...(state.wallets.find(l => l.id === payload.id)),
+        encKey: payload.encKey
+    };
+    return {
+        ...state,
+        wallets: [
+            ...state.wallets.filter(l => l.id !== payload.id),
+            wallet
+        ]
+    };
+};
 
-    interface IRole {
-        id: number;
-        name: string;
-    }
-
-    interface ISession {
-        apiHost: string;
-        sessionToken: string;
-        refreshToken: string;
-    }
-
-    interface ILoginCall {
-        wallet: IWallet;
-        password: string;
-    }
-
-    interface ICreateWalletCall {
-        seed: string;
-        password: string
-    }
-
-    interface IImportWalletCall {
-        backup: string;
-        password: string;
-        isDefault?: boolean
-    }
-}
+export default saveEncKeyHandler;

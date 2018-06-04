@@ -87,6 +87,25 @@ export const maxlength: IValidatorGenerator = (count: number | string) => {
     });
 };
 
+export const password = new Validator({
+    name: 'password',
+    validate: (value) => {
+        const type = typeof value;
+        const minLength = 6;
+        const maxLength = 30;
+
+        if (null === value) {
+            return false;
+        }
+
+        switch (type) {
+            case 'string': return value && value.length >= minLength && value.length <= maxLength;
+            case 'undefined': return false;
+            default: throw new Error(`Unrecognized value type "${typeof value}"`);
+        }
+    }
+});
+
 export const compare: IValidatorGenerator = (compareValue: any) => {
     return new Validator({
         name: 'compare',
