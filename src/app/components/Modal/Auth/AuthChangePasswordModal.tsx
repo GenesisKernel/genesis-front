@@ -50,7 +50,7 @@ class AuthChangePasswordModal extends Modal<IAuthChangePasswordModalProps, {}, I
         const privateKey = keyring.decryptAES(this.props.params.encKey, values.password_old);
 
         if (!keyring.validatePrivateKey(privateKey)) {
-            alert('Invalid current password');
+            this.props.notify('INVALID_PASSWORD', {});
         }
         else {
             this.props.onResult({

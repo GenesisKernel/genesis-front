@@ -22,6 +22,8 @@
 
 import React from 'react';
 import { IModal, TModalResultReason } from 'genesis/modal';
+import { INotification } from 'genesis/notifications';
+import uuid from 'uuid';
 
 import Wrapper from 'components/Modal/Wrapper';
 import DebugContractModal from 'components/Modal/Editor/DebugContractModal';
@@ -65,6 +67,7 @@ const MODAL_COMPONENTS = {
 export interface IModalProviderProps {
     modal: IModal;
     onResult: (params: { reason: TModalResultReason, data: any }) => void;
+    enqueueNotification: (params: INotification) => void;
 }
 
 class ModalProvider extends React.Component<IModalProviderProps> {
@@ -82,6 +85,14 @@ class ModalProvider extends React.Component<IModalProviderProps> {
         });
     }
 
+    notify(type: string, params: any) {
+        this.props.enqueueNotification({
+            id: uuid.v4(),
+            type,
+            params
+        });
+    }
+
     render() {
         const Modal = this.props.modal && !this.props.modal.result && MODAL_COMPONENTS[this.props.modal.type] || null;
         return (
@@ -92,6 +103,7 @@ class ModalProvider extends React.Component<IModalProviderProps> {
                         active
                         onResult={this.onResult.bind(this)}
                         onCancel={this.onCancel.bind(this)}
+                        notify={this.notify.bind(this)}
                         {...this.props.modal}
                     />
                 )}
