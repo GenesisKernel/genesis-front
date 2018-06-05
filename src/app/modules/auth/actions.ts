@@ -1,33 +1,39 @@
-// Copyright 2017 The genesis-front Authors
-// This file is part of the genesis-front library.
+// MIT License
 // 
-// The genesis-front library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Copyright (c) 2016-2018 GenesisKernel
 // 
-// The genesis-front library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 // 
-// You should have received a copy of the GNU Lesser General Public License
-// along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IAccount, ILoginCall, IRole, ISession } from 'genesis/auth';
-import { ICreateAccountCall, IImportAccountCall } from 'genesis/auth';
+import { IWallet, ILoginCall, IRole, ISession } from 'genesis/auth';
+import { ICreateWalletCall, IImportWalletCall } from 'genesis/auth';
 
 const actionCreator = actionCreatorFactory('auth');
-export const login = actionCreator.async<ILoginCall, { account: IAccount, roles: IRole[], privateKey: string, publicKey: string, session: ISession }, string>('LOGIN');
+export const login = actionCreator.async<ILoginCall, { wallet: IWallet, roles: IRole[], privateKey: string, publicKey: string, session: ISession }, string>('LOGIN');
 export const logout = actionCreator.async('LOGOUT');
-export const createEcosystem = actionCreator<{ name: string, id: string }>('CREATE_ECOSYSTEM');
+export const inviteEcosystem = actionCreator<{ ecosystem: string, redirectPage?: string }>('INVITE_ECOSYSTEM');
 export const generateSeed = actionCreator.async<void, string>('GENERATE_SEED');
 export const importSeed = actionCreator.async<Blob, string, undefined>('IMPORT_SEED');
-export const createAccount = actionCreator.async<ICreateAccountCall, IAccount, string>('CREATE_ACCOUNT');
-export const importAccount = actionCreator.async<IImportAccountCall, IAccount[], string>('IMPORT_ACCOUNT');
-export const removeAccount = actionCreator<IAccount>('REMOVE_ACCOUNT');
-export const selectAccount = actionCreator<IAccount>('SELECT_ACCOUNT');
+export const createWallet = actionCreator.async<ICreateWalletCall, IWallet, string>('CREATE_WALLET');
+export const importWallet = actionCreator.async<IImportWalletCall, IWallet[], string>('IMPORT_WALLET');
+export const removeWallet = actionCreator<IWallet>('REMOVE_WALLET');
+export const selectWallet = actionCreator<IWallet>('SELECT_WALLET');
 export const selectRole = actionCreator.async<number, { sessionToken: string, refreshToken: string }>('SELECT_ROLE');
 export const authorize = actionCreator<string>('AUTHORIZE');
 export const deauthorize = actionCreator('DEAUTHORIZE');

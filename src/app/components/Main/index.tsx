@@ -1,29 +1,34 @@
-// Copyright 2017 The genesis-front Authors
-// This file is part of the genesis-front library.
+// MIT License
 // 
-// The genesis-front library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Copyright (c) 2016-2018 GenesisKernel
 // 
-// The genesis-front library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 // 
-// You should have received a copy of the GNU Lesser General Public License
-// along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
-import * as React from 'react';
-import * as _ from 'lodash';
+import React from 'react';
+import _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import LoadingBar from 'react-redux-loading-bar';
 import { OrderedMap } from 'immutable';
-import styled from 'styled-components';
-import platform from 'lib/platform';
 import { TSection } from 'genesis/content';
 import { history } from 'store';
 
+import themed from 'components/Theme/themed';
 import Titlebar from './Titlebar';
 import UserMenu from 'containers/Widgets/UserMenu';
 import Navigation from 'containers/Main/Navigation';
@@ -35,15 +40,7 @@ import EditorToolbar from 'containers/Main/Toolbar/EditorToolbar';
 import { TTransactionStatus } from 'genesis/tx';
 // import TransactionsMenu from './TransactionsMenu';
 
-export const styles = {
-    headerHeight: platform.select({ desktop: 28, web: 0 }),
-    menuHeight: 40,
-    toolbarHeight: 40,
-    mainColor: '#4c7dbd',
-    toolColor: '#f3f3f3'
-};
-
-const StyledWrapper = styled.div`
+const StyledWrapper = themed.div`
     background-color: #f6f8fa;
 `;
 
@@ -65,7 +62,7 @@ export interface IMainProps {
     onCloseSection: (section: string) => void;
 }
 
-const StyledControls = styled.div`
+const StyledControls = themed.div`
     position: fixed;
     top: 0;
     left: 0;
@@ -73,21 +70,21 @@ const StyledControls = styled.div`
     z-index: 10000;
 `;
 
-const StyledTitlebar = styled.div`
-    background: ${styles.mainColor};
-    height: ${styles.headerHeight}px;
-    line-height: ${styles.headerHeight}px;
+const StyledTitlebar = themed.div`
+    background: ${props => props.theme.headerBackground};
+    height: ${props => props.theme.headerHeight}px;
+    line-height: ${props => props.theme.headerHeight}px;
     font-size: 15px;
     color: #fff;
     text-align: center;
 `;
 
-const StyledMenu = styled.ul`
-    background: ${styles.mainColor};
+const StyledMenu = themed.ul`
+    background: ${props => props.theme.headerBackground};
     list-style-type: none;
     padding: 0;
     margin: 0;
-    height: ${styles.menuHeight}px;
+    height: ${props => props.theme.menuHeight}px;
     position: relative;
 
     > li {
@@ -102,7 +99,7 @@ const StyledMenu = styled.ul`
 
         &.user-menu {
             margin-top: 0;
-            height: ${styles.menuHeight}px;
+            height: ${props => props.theme.menuHeight}px;
             line-height: normal;
             position: absolute;
             top: 0;
@@ -112,12 +109,14 @@ const StyledMenu = styled.ul`
     }
 `;
 
-const StyledContent = styled.section`
-    margin-top: ${styles.headerHeight + styles.menuHeight + styles.toolbarHeight}px !important;
+const StyledContent = themed.section`
+    && { background: ${props => props.theme.contentBackground}; }
+    color: ${props => props.theme.contentForeground};
+    margin-top: ${props => props.theme.headerHeight + props.theme.menuHeight + props.theme.toolbarHeight}px !important;
     transition: none !important;
 `;
 
-const StyledLoadingBar = styled(LoadingBar) `
+const StyledLoadingBar = themed(LoadingBar) `
     position: absolute;
     bottom: 0;
     right: 0;
@@ -203,7 +202,7 @@ class Main extends React.Component<IMainProps> {
                         }}
                     />
                 </StyledControls >
-                <Navigation topOffset={styles.headerHeight + styles.menuHeight + styles.toolbarHeight} />
+                <Navigation />
                 <StyledContent style={{ marginLeft: this.props.navigationVisible ? this.props.navigationSize : 0 }}>
                     {this.props.children}
                 </StyledContent>

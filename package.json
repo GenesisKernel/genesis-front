@@ -4,7 +4,7 @@
     "author": {
         "name": "genesis-front"
     },
-    "license": "LGPLv3",
+    "license": "MIT",
     "repository": {
         "type": "git",
         "url": "https://github.com/GenesisKernel/genesis-front"
@@ -70,7 +70,6 @@
         "whatwg-fetch": "^2.0.4"
     },
     "scripts": {
-        "extract-locales": "node util/extractLocales.js",
         "build-css": "node-sass-chokidar --include-path ./src/app/styles/scss --include-path ./node_modules src/app/styles/scss/sass.scss -o src/app/styles/built",
         "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src/app/styles/scss --include-path ./node_modules src/app/styles/scss/sass.scss -o src/app/styles/built --watch --recursive",
         "start-js": "react-scripts-ts start",

@@ -1,23 +1,29 @@
-// Copyright 2017 The genesis-front Authors
-// This file is part of the genesis-front library.
-// 
-// The genesis-front library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// The genesis-front library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
-// 
-// You should have received a copy of the GNU Lesser General Public License
-// along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
+// MIT License
+//
+// Copyright (c) 2016-2018 GenesisKernel
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
-import * as React from 'react';
-import styled from 'styled-components';
+import React from 'react';
 import platform from 'lib/platform';
 
+import themed from 'components/Theme/themed';
 import BackButton from './BackButton';
 
 export interface IHeadingProps {
@@ -41,8 +47,8 @@ const Heading: React.SFC<IHeadingProps> = props => (
     </div>
 );
 
-export default styled(Heading) `
-    background: ${platform.select({ web: '#4c7dbd', desktop: 'transparent' })};
+export default themed(Heading) `
+    background: ${props => platform.select({ web: props.theme.headerBackground, desktop: 'transparent' })};
     margin: -15px -15px ${platform.select({ desktop: '0', web: '15px' })};
     padding: 0 15px;
     height: 45px;
@@ -59,7 +65,7 @@ export default styled(Heading) `
         }
 
         .heading-title {
-            color: ${platform.select({ web: '#fff', desktop: '#000' })};
+            color: ${props => platform.select({ web: props.theme.headerForeground, desktop: '#000' })};
             font-size: 18px;
         }
     }

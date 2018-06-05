@@ -1,45 +1,51 @@
-// Copyright 2017 The genesis-front Authors
-// This file is part of the genesis-front library.
+// MIT License
 // 
-// The genesis-front library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Copyright (c) 2016-2018 GenesisKernel
 // 
-// The genesis-front library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 // 
-// You should have received a copy of the GNU Lesser General Public License
-// along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import * as actions from './actions';
-import { IAccount } from 'genesis/auth';
+import { IWallet } from 'genesis/auth';
 import saveLocaleHandler from './reducers/saveLocaleHandler';
-import saveAccountHandler from './reducers/saveAccountHandler';
-import removeAccountHandler from './reducers/removeAccountHandler';
+import saveWalletHandler from './reducers/saveWalletHandler';
+import removeWalletHandler from './reducers/removeWalletHandler';
 import saveNavigationSizeHandler from './reducers/saveNavigationSizeHandler';
 import mergeFullNodesHandler from './reducers/mergeFullNodesHandler';
 
 export type State = {
     readonly locale: string;
-    readonly accounts: IAccount[];
+    readonly wallets: IWallet[];
     readonly navigationSize: number;
     readonly fullNodes: string[];
 };
 
 export const initialState: State = {
     locale: 'en-US',
-    accounts: [],
+    wallets: [],
     navigationSize: 230,
     fullNodes: []
 };
 
 export default reducerWithInitialState<State>(initialState)
     .case(actions.saveLocale, saveLocaleHandler)
-    .case(actions.saveAccount, saveAccountHandler)
-    .case(actions.removeAccount, removeAccountHandler)
+    .case(actions.saveWallet, saveWalletHandler)
+    .case(actions.removeWallet, removeWalletHandler)
     .case(actions.saveNavigationSize, saveNavigationSizeHandler)
     .case(actions.mergeFullNodes, mergeFullNodesHandler);

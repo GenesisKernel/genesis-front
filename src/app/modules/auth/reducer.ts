@@ -1,34 +1,40 @@
-// Copyright 2017 The genesis-front Authors
-// This file is part of the genesis-front library.
+// MIT License
 // 
-// The genesis-front library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Copyright (c) 2016-2018 GenesisKernel
 // 
-// The genesis-front library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 // 
-// You should have received a copy of the GNU Lesser General Public License
-// along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 import * as actions from './actions';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import { IAccount, IRole, ISession } from 'genesis/auth';
+import { IWallet, IRole, ISession } from 'genesis/auth';
 import loginHandler from './reducers/loginHandler';
 import loginDoneHandler from './reducers/loginDoneHandler';
 import loginFailedHandler from './reducers/loginFailedHandler';
 import logoutDoneHandler from './reducers/logoutDoneHandler';
-import createAccountHandler from './reducers/createAccountHandler';
-import createAccountDoneHandler from './reducers/createAccountDoneHandler';
-import createAccountFailedHandler from './reducers/createAccountFailedHandler';
-import importAccountHandler from './reducers/importAccountHandler';
-import importAccountDoneHandler from './reducers/importAccountDoneHandler';
-import importAccountFailedHandler from './reducers/importAccountFailedHandler';
+import createWalletHandler from './reducers/createWalletHandler';
+import createWalletDoneHandler from './reducers/createWalletDoneHandler';
+import createWalletFailedHandler from './reducers/createWalletFailedHandler';
+import importWalletHandler from './reducers/importWalletHandler';
+import importWalletDoneHandler from './reducers/importWalletDoneHandler';
+import importWalletFailedHandler from './reducers/importWalletFailedHandler';
 import importSeedDoneHandler from './reducers/importSeedDoneHandler';
-import selectAccountHandler from './reducers/selectAccountHandler';
+import selectWalletHandler from './reducers/selectWalletHandler';
 import authorizeHandler from './reducers/authorizeHandler';
 import deauthorizeHandler from './reducers/deauthorizeHandler';
 import generateSeedDoneHandler from './reducers/generateSeedDoneHandler';
@@ -38,14 +44,14 @@ export type State = {
     readonly loadedSeed: string;
     readonly isAuthenticated: boolean;
     readonly isLoggingIn: boolean;
-    readonly isCreatingAccount: boolean;
-    readonly createAccountError: string;
-    readonly isImportingAccount: boolean;
-    readonly importAccountError: string;
+    readonly isCreatingWallet: boolean;
+    readonly createWalletError: string;
+    readonly isImportingWallet: boolean;
+    readonly importWalletError: string;
     readonly id: string;
     readonly session: ISession;
-    readonly defaultAccount: string;
-    readonly account: IAccount;
+    readonly defaultWallet: string;
+    readonly wallet: IWallet;
     readonly role: IRole;
     readonly roles: IRole[];
     readonly privateKey: string;
@@ -56,14 +62,14 @@ export const initialState: State = {
     loadedSeed: null,
     isAuthenticated: false,
     isLoggingIn: false,
-    isCreatingAccount: false,
-    createAccountError: null,
-    isImportingAccount: false,
-    importAccountError: null,
+    isCreatingWallet: false,
+    createWalletError: null,
+    isImportingWallet: false,
+    importWalletError: null,
     id: null,
     session: null,
-    defaultAccount: null,
-    account: null,
+    defaultWallet: null,
+    wallet: null,
     role: null,
     roles: null,
     privateKey: null,
@@ -75,14 +81,14 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.login.done, loginDoneHandler)
     .case(actions.login.failed, loginFailedHandler)
     .case(actions.logout.done, logoutDoneHandler)
-    .case(actions.createAccount.started, createAccountHandler)
-    .case(actions.createAccount.done, createAccountDoneHandler)
-    .case(actions.createAccount.failed, createAccountFailedHandler)
-    .case(actions.importAccount.started, importAccountHandler)
-    .case(actions.importAccount.done, importAccountDoneHandler)
-    .case(actions.importAccount.failed, importAccountFailedHandler)
+    .case(actions.createWallet.started, createWalletHandler)
+    .case(actions.createWallet.done, createWalletDoneHandler)
+    .case(actions.createWallet.failed, createWalletFailedHandler)
+    .case(actions.importWallet.started, importWalletHandler)
+    .case(actions.importWallet.done, importWalletDoneHandler)
+    .case(actions.importWallet.failed, importWalletFailedHandler)
     .case(actions.importSeed.done, importSeedDoneHandler)
-    .case(actions.selectAccount, selectAccountHandler)
+    .case(actions.selectWallet, selectWalletHandler)
     .case(actions.selectRole.done, selectRoleDoneHandler)
     .case(actions.authorize, authorizeHandler)
     .case(actions.deauthorize, deauthorizeHandler)
