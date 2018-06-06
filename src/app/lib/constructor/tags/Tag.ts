@@ -51,7 +51,7 @@ class Tag {
         return Array(this.offset + 1).join(' ');
     }
 
-    getParam(value: string, attr: string): string {
+    getParam(value: any, attr: string): string {
         let param = '';
         if (value) {
             if (typeof value === 'string') {
@@ -68,9 +68,11 @@ class Tag {
 
         if (element.attr) {
             Object.keys(element.attr).forEach(attr => {
-                let param = this.getParam(element.attr[attr], attr);
-                if (param) {
-                    params.push(param);
+                if (!(this.dataAttr && attr === 'data')) {
+                    let param = this.getParam(element.attr[attr], attr);
+                    if (param) {
+                        params.push(param);
+                    }
                 }
             });
         }
