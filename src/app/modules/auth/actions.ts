@@ -38,4 +38,4 @@ export const selectRole = actionCreator.async<number, { sessionToken: string, re
 export const authorize = actionCreator<string>('AUTHORIZE');
 export const deauthorize = actionCreator('DEAUTHORIZE');
 export const openChangePassword = actionCreator('OPEN_CHANGE_PASSWORD');
-export const changePassword = actionCreator.async<{ oldPassword: string, newPassword: string }, { id: string, encKey: string}, string>('CHANGE_PASSWORD');
+export const changePassword = actionCreator.async<{ oldPassword: string, newPassword: string }, string, string>('CHANGE_PASSWORD');

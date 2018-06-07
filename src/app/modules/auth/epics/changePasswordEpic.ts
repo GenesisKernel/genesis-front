@@ -54,10 +54,7 @@ const changePasswordEpic: Epic = (action$, store, { api }) => action$.ofAction(c
         return Observable.concat(
             Observable.of(changePassword.done({
                 params: action.payload,
-                result: {
-                    encKey,
-                    id: wallet.id
-                }
+                result: encKey
             })),
 
             Observable.merge(

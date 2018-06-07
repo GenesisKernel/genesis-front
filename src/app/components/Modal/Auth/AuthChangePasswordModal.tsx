@@ -33,6 +33,7 @@ export interface IAuthChangePasswordModalProps {
 
 export interface IAuthChangePasswordModalState {
     newPassword: string;
+    newPasswordKey: string;
     newPasswordRepeat: string;
 }
 
@@ -42,6 +43,7 @@ class AuthChangePasswordModal extends Modal<IAuthChangePasswordModalProps, {}, I
         super(props);
         this.state = {
             newPassword: '',
+            newPasswordKey: Math.random().toString(),
             newPasswordRepeat: ''
         };
     }
@@ -62,7 +64,8 @@ class AuthChangePasswordModal extends Modal<IAuthChangePasswordModalProps, {}, I
 
     onNewPasswordChange = (value: string) => {
         this.setState({
-            newPassword: value
+            newPassword: value,
+            newPasswordKey: Math.random().toString()
         });
     }
 
@@ -93,7 +96,6 @@ class AuthChangePasswordModal extends Modal<IAuthChangePasswordModalProps, {}, I
                             <FormattedMessage id="auth.password.new" defaultMessage="New password" />
                         </label>
                         <Validation.components.ValidatedControl
-                            key="password_new"
                             name="password_new"
                             type="password"
                             value={this.state.newPassword}
@@ -109,7 +111,7 @@ class AuthChangePasswordModal extends Modal<IAuthChangePasswordModalProps, {}, I
                             <FormattedMessage id="auth.password.new_repeat" defaultMessage="Repeat password" />
                         </label>
                         <Validation.components.ValidatedControl
-                            key={'password_new_repeat' + this.state.newPassword}
+                            key={this.state.newPasswordKey}
                             name="password_new_repeat"
                             type="password"
                             value={this.state.newPasswordRepeat}

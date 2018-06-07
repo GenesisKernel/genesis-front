@@ -28,7 +28,6 @@ import saveWalletHandler from './reducers/saveWalletHandler';
 import removeWalletHandler from './reducers/removeWalletHandler';
 import saveNavigationSizeHandler from './reducers/saveNavigationSizeHandler';
 import mergeFullNodesHandler from './reducers/mergeFullNodesHandler';
-import saveEncKeyHandler from './reducers/saveEncKeyHandler';
 
 export type State = {
     readonly locale: string;
@@ -49,5 +48,4 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.saveWallet, saveWalletHandler)
     .case(actions.removeWallet, removeWalletHandler)
     .case(actions.saveNavigationSize, saveNavigationSizeHandler)
-    .case(actions.mergeFullNodes, mergeFullNodesHandler)
-    .case(actions.saveEncKey, saveEncKeyHandler);
+    .case(actions.mergeFullNodes, mergeFullNodesHandler);

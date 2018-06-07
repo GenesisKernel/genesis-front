@@ -23,13 +23,16 @@
 import { Action } from 'redux';
 import { Epic } from 'redux-observable';
 import { IRootState } from 'modules';
-import { saveEncKey } from '../actions';
+import { saveWallet } from '../actions';
 import { changePassword } from 'modules/auth/actions';
 
 const saveEncKeyEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(changePassword.done)
         .map(action =>
-            saveEncKey(action.payload.result)
+            saveWallet({
+                ...store.getState().auth.wallet,
+                encKey: action.payload.result
+            })
         );
 
 export default saveEncKeyEpic;
