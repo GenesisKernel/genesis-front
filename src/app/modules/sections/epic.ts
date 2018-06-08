@@ -29,8 +29,8 @@ import navigatePageEpic from './epics/navigatePageEpic';
 import reloadPageEpic from './epics/reloadPageEpic';
 import renderLegacyPageEpic from './epics/renderLegacyPageEpic';
 import renderPageEpic from './epics/renderPageEpic';
-import ecosystemInitEpic from './epics/ecosystemInitEpic';
-import ecosystemInitDoneEpic from './epics/ecosystemInitDoneEpic';
+import sectionsInitEpic from './epics/sectionsInitEpic';
+import sectionsInitDoneEpic from './epics/sectionsInitDoneEpic';
 
 export default combineEpics(
     closeSectionEpic,
@@ -41,6 +41,6 @@ export default combineEpics(
     reloadPageEpic,
     renderLegacyPageEpic,
     renderPageEpic,
-    ecosystemInitEpic,
-    ecosystemInitDoneEpic
+    sectionsInitEpic,
+    sectionsInitDoneEpic
 );

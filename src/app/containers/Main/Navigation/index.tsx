@@ -24,7 +24,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { ecosystemInit } from 'modules/content/actions';
-import { menuPop, menuPush, ecosystemInit as ecosystemInitSection } from 'modules/sections/actions';
+import { menuPop, menuPush, sectionsInit } from 'modules/sections/actions';
 import { TMenu } from 'genesis/content';
 
 import Navigation from 'components/Main/Navigation';
@@ -45,7 +45,7 @@ interface INavigationContainerDispatch {
     menuPop: typeof menuPop;
     menuPush: typeof menuPush;
     ecosystemInit: typeof ecosystemInit.started;
-    ecosystemInitSection: typeof ecosystemInitSection.started;
+    sectionsInit: typeof sectionsInit.started;
 }
 
 const NavigationContainer: React.SFC<INavigationContainerProps & INavigationContainerState & INavigationContainerDispatch> = (props) => (
@@ -67,7 +67,7 @@ const mapDispatchToProps = {
     menuPop,
     menuPush,
     ecosystemInit: ecosystemInit.started,
-    ecosystemInitSection: ecosystemInitSection.started
+    sectionsInit: sectionsInit.started
 };
 
 export default connect<INavigationContainerState, INavigationContainerDispatch, INavigationContainerProps>(mapStateToProps, mapDispatchToProps)(NavigationContainer);

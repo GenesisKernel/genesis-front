@@ -30,8 +30,8 @@ import updateSectionHandler from './reducers/updateSectionHandler';
 import setDefaultPageHandler from './reducers/setDefaultPageHandler';
 import resetDoneHandler from './reducers/resetDoneHandler';
 import resetFailedHandler from './reducers/resetFailedHandler';
-import ecosystemInitHandler from './reducers/ecosystemInitHandler';
-import ecosystemInitDoneHandler from './reducers/ecosystemInitDoneHandler';
+import sectionsInitHandler from './reducers/sectionsInitHandler';
+import sectionsInitDoneHandler from './reducers/sectionsInitDoneHandler';
 import menuPopHandler from './reducers/menuPopHandler';
 import menuPushHandler from './reducers/menuPushHandler';
 import navigatePageDoneHandler from './reducers/navigatePageDoneHandler';
@@ -113,5 +113,5 @@ export default reducerWithInitialState(initialState)
     .case(actions.renderPage.done, renderPageDoneHandler)
     .case(actions.renderPage.failed, renderPageFailedHandler)
     .case(actions.renderPage.started, renderPageHandler)
-    .case(actions.ecosystemInit.started, ecosystemInitHandler)
-    .case(actions.ecosystemInit.done, ecosystemInitDoneHandler);
+    .case(actions.sectionsInit.started, sectionsInitHandler)
+    .case(actions.sectionsInit.done, sectionsInitDoneHandler);

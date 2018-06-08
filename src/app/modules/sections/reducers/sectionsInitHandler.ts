@@ -21,11 +21,11 @@
 // SOFTWARE.
 
 import { State } from '../reducer';
-import { ecosystemInit } from '..//actions';
+import { sectionsInit } from '../actions';
 import { Reducer } from 'modules';
 import { TSection } from 'genesis/content';
 
-const ecosystemInitHandler: Reducer<typeof ecosystemInit.started, State> = (state, payload) => {
+const sectionsInitHandler: Reducer<typeof sectionsInit.started, State> = (state, payload) => {
     const sections: { [key: string]: TSection } = {};
     for (let itr in state.sections) {
         if (state.sections.hasOwnProperty(itr)) {
@@ -45,4 +45,4 @@ const ecosystemInitHandler: Reducer<typeof ecosystemInit.started, State> = (stat
     };
 };
 
-export default ecosystemInitHandler;
+export default sectionsInitHandler;

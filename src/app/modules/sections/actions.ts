@@ -40,4 +40,4 @@ export const navigationToggle = actionCreator('NAVIGATION_TOGGLE');
 export const renderPage = actionCreator.async<{ section: string, name: string, params?: { [key: string]: any } }, { menu: TMenu, page: TPage }, string>('RENDER_PAGE');
 export const renderLegacyPage = actionCreator.async<{ section: string, name: string, menu: string, params?: { [key: string]: any } }, { menu: TMenu }>('RENDER_LEGACY_PAGE');
 export const reloadPage = actionCreator.async<{}, { params: { [key: string]: any }, menu: TMenu, page: TPage }, string>('RELOAD_PAGE');
-export const ecosystemInit = actionCreator.async<{ section: string }, { name: string, stylesheet: string }, string>('SECTIONS_ECOSYSTEM_INIT');
+export const sectionsInit = actionCreator.async<{ section: string }, { name: string, stylesheet: string }, string>('SECTIONS_INIT');
