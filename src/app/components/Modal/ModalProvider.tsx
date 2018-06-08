@@ -42,6 +42,7 @@ import TxErrorModal from 'components/Modal/Tx/ErrorModal';
 import AuthErrorModal from 'components/Modal/Auth/AuthErrorModal';
 import AuthRemoveWalletModal from 'components/Modal/Auth/AuthRemoveWalletModal';
 import AuthChangePasswordModal from 'components/Modal/Auth/AuthChangePasswordModal';
+import AuthPasswordChangedModal from 'components/Modal/Auth/AuthPasswordChangedModal';
 import TxConfirmModal from './Tx/ConfirmModal';
 
 const MODAL_COMPONENTS = {
@@ -49,6 +50,7 @@ const MODAL_COMPONENTS = {
     'AUTH_ERROR': AuthErrorModal,
     'AUTH_REMOVE_WALLET': AuthRemoveWalletModal,
     'AUTH_CHANGE_PASSWORD': AuthChangePasswordModal,
+    'AUTH_PASSWORD_CHANGED': AuthPasswordChangedModal,
     'TX_CONFIRM': TxConfirmModal,
     'TX_ERROR': TxErrorModal,
     'TX_SIGNATURE': SignatureModal,

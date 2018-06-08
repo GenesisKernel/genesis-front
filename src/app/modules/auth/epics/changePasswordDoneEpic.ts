@@ -32,6 +32,7 @@ const changePasswordDoneEpic: Epic = (action$, store, { api }) => action$.ofActi
     .flatMap(action => {
         const auth = store.getState().auth;
         const wallet = auth.wallet;
+        const wallets = store.getState().storage.wallets;
         const privateKey = keyring.decryptAES(wallet.encKey, action.payload.result.oldPassword);
 
         if (!keyring.validatePrivateKey(privateKey)) {
@@ -53,18 +54,18 @@ const changePasswordDoneEpic: Epic = (action$, store, { api }) => action$.ofActi
         const encKey = keyring.encryptAES(privateKey, action.payload.result.newPassword);
 
         return Observable.concat(
-            Observable.of(saveWallet({
-                ...store.getState().auth.wallet,
-                encKey: encKey
-            })),
+
+            Observable.from(wallets.filter(l => l.id === wallet.id))
+                .map(w => saveWallet({
+                    ...w,
+                    encKey
+                })),
 
             Observable.merge(
                 Observable.of(modalShow({
-                    id: 'DISPLAY_INFO',
-                    type: 'INFO',
-                    params: {
-                        value: 'Password changed. Please login with new password.'
-                    }
+                    id: 'AUTH_PASSWORD_CHANGED',
+                    type: 'AUTH_PASSWORD_CHANGED',
+                    params: {}
                 })),
                 action$.ofAction(modalClose)
                     .take(1)

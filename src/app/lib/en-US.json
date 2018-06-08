@@ -125,6 +125,7 @@
     "auth.nokey": "I don't have a key",
     "auth.nokey.desc": "If you are new to the system or just want to create a new wallet - proceed with this option to generate new private key and protect it with your password",
     "auth.password": "Password",
+    "auth.password.changed": "Password changed. Please login with new password.",
     "auth.qrcode": "QR-Code",
     "auth.qrcode.desc": "Use this code to import the wallet on your mobile device",
     "auth.remove.desc": "Do you really want to delete this wallet? THIS ACTION IS IRREVERSIBLE",
