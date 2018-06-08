@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import Protypo from './Protypo';
+import ArrayToSource from './handlers/ArrayToSource';
 import Button from './handlers/Button';
 import Code from 'components/Protypo/handlers/Code';
 import Data from './handlers/Data';
@@ -53,6 +54,7 @@ import setTitle from './functions/setTitle';
 import addToolButton from './functions/addToolButton';
 
 const handlers = {
+    'arraytosource': ArrayToSource,
     'button': Button,
     'code': Code,
     'data': Data,

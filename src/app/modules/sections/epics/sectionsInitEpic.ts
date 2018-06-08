@@ -35,7 +35,7 @@ const initSectionsEpic: Epic = (action$, store, { api }) => action$.ofAction(sec
         return Observable.from(
             Promise.all([
                 client.getParam({ name: 'stylesheet' }).then(l => l.value),
-                client.getParam({ name: 'ecosystem_name' }).then(l => l.value).catch(e => '')
+                client.getEcosystemName({ id: state.auth.wallet.ecosystem }).catch(e => '')
             ])
         ).flatMap(payload =>
             Observable.of<Action>(

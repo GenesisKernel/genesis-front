@@ -20,36 +20,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import { ITransactionCall, TTxError } from 'genesis/tx';
+import { TTxError } from 'genesis/tx';
 
 import Modal from '../';
 
 export interface ITxErrorModalProps {
-    tx: ITransactionCall;
-    error: {
-        type: TTxError,
-        error?: string
-    };
+    type: TTxError;
+    error?: string;
+    params?: string[];
 }
 
 class TxErrorModal extends Modal<ITxErrorModalProps, void> {
     render() {
+        const normalizedParams: { [key: string]: string } = {};
+        if (this.props.params.params) {
+            this.props.params.params.forEach((p, i) => {
+                normalizedParams[i] = p;
+            });
+        }
+
         return (
             <div>
                 <Modal.Header>
-                    <FormattedMessage id={`tx.error.${this.props.params.error.type}`} defaultMessage={this.props.params.error.type} />
+                    <FormattedMessage id={`tx.error.${this.props.params.type}`} defaultMessage={this.props.params.type} />
                 </Modal.Header>
                 <Modal.Body>
                     <div>
                         <FormattedMessage
-                            id={`tx.error.${this.props.params.error.type}.desc`}
-                            defaultMessage={this.props.params.error.type}
+                            id={`tx.error.${this.props.params.type}.desc`}
+                            defaultMessage={this.props.params.type}
                             values={{
-                                error: this.props.params.error.error,
-                                contract: this.props.params.tx.name
+                                error: this.props.params.error,
+                                ...normalizedParams
                             }}
                         />
                     </div>

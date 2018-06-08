@@ -28,11 +28,21 @@ import themed from 'components/Theme/themed';
 import Protypo from 'containers/Widgets/Protypo';
 import ResizeHandle from 'containers/Main/Navigation/ResizeHandle';
 import { TMenu } from 'genesis/content';
+import ScrollArea from 'react-scrollbar';
 
 const StyledNavigation = themed.aside`
     &.navigation-collapsed {
         overflow: hidden;
         width: 0;
+    }
+    
+    .scrollarea {
+        background: ${props => props.theme.menuBackground};
+        height: 100%;
+        
+        .scrollbar-container {
+            opacity: 0;
+        }
     }
 
     position: absolute;
@@ -40,7 +50,6 @@ const StyledNavigation = themed.aside`
     left: 0;
     bottom: 0;
     z-index: 150;
-    background: ${props => props.theme.menuBackground};
 `;
 
 const StyledBackButton = themed.button`
@@ -86,7 +95,7 @@ const StyledBackButton = themed.button`
 const StyledMenu = themed.div`
     overflow: hidden;
     position: absolute;
-    bottom: 50px;
+    bottom: 0px;
     left: 0;
     right: 0;
     top: ${props => props.theme.headerHeight + props.theme.menuHeight + props.theme.toolbarHeight}px;
@@ -94,11 +103,6 @@ const StyledMenu = themed.div`
 
 const StyledMenuContent = themed.div`
     background: ${props => props.theme.menuBackground};
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
 
     .title-wrap {
         text-overflow: ellipsis;
@@ -125,22 +129,27 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
                     <StyledMenu>
                         <StackGroup
                             items={this.props.menus.map((menu, index) => (
-                                <StyledMenuContent>
-                                    <StyledBackButton onClick={() => this.props.menuPop()} disabled={1 >= this.props.menus.length} className={index === 0 ? 'disabled' : ''}>
-                                        <div className="title-wrap">
-                                            {index > 0 && (
-                                                <span className="icon">
-                                                    <em className="icon-arrow-left" />
-                                                </span>
-                                            )}
-                                            <span>{menu.name}</span>
-                                        </div>
-                                    </StyledBackButton>
-                                    <Protypo
-                                        context="menu"
-                                        content={menu.content}
-                                    />
-                                </StyledMenuContent>
+                                <ScrollArea
+                                       horizontal={false}
+                                       speed={0.2}
+                                >
+                                    <StyledMenuContent>
+                                        <StyledBackButton onClick={() => this.props.menuPop()} disabled={1 >= this.props.menus.length} className={index === 0 ? 'disabled' : ''}>
+                                            <div className="title-wrap">
+                                                {index > 0 && (
+                                                    <span className="icon">
+                                                        <em className="icon-arrow-left" />
+                                                    </span>
+                                                )}
+                                                <span>{menu.name}</span>
+                                            </div>
+                                        </StyledBackButton>
+                                        <Protypo
+                                            context="menu"
+                                            content={menu.content}
+                                        />
+                                    </StyledMenuContent>
+                                </ScrollArea>
                             ))}
                         />
                     </StyledMenu>

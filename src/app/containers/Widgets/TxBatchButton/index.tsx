@@ -36,7 +36,7 @@ interface ITxBatchButtonContainerProps {
     className?: string;
     contracts: {
         name: string;
-        data: {
+        params: {
             [key: string]: any
         }[]
     }[];
@@ -59,7 +59,7 @@ interface ITxBatchButtonContainerDispatch {
 class TxBatchButtonContainer extends React.Component<ITxBatchButtonContainerProps & ITxBatchButtonContainerState & ITxBatchButtonContainerDispatch> {
     private _uuid: string;
 
-    execContracts(params: { contracts: { name: string, data: { [key: string]: any }[] }[] }) {
+    execContracts(params: { contracts: { name: string, params: { [key: string]: any }[] }[] }) {
         this._uuid = uuid.v4();
         this.props.execContracts({
             uuid: this._uuid,

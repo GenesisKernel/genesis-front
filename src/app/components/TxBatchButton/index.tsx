@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 
 export interface ITxButtonConfirm {
     icon: string;
@@ -35,14 +35,14 @@ export interface ITxButtonProps {
     className?: string;
     contracts: {
         name: string;
-        data: {
+        params: {
             [key: string]: any
         }[]
     }[];
     status: 'PENDING' | 'DONE' | 'ERROR';
     page?: string;
     pageParams?: { [key: string]: any };
-    execContracts: (params: { contracts: { name: string, data: { [key: string]: any }[] }[] }) => void;
+    execContracts: (params: { contracts: { name: string, params: { [key: string]: any }[] }[] }) => void;
     navigate: (page: string, params: { [key: string]: any }) => void;
     onExec?: (success: boolean) => void;
 }

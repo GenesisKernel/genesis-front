@@ -33,10 +33,7 @@ export const txExecFailedEpic: Epic<Action, IRootState> =
             modalShow({
                 id: 'TX_ERROR',
                 type: 'TX_ERROR',
-                params: {
-                    tx: action.payload.params.tx,
-                    error: action.payload.error
-                }
+                params: action.payload.error
             })
         );
 

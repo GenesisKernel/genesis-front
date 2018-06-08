@@ -20,16 +20,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { initialize } from '../actions';
-import { Reducer } from 'modules';
+import React from 'react';
+import propTypes from 'prop-types';
 
-const initializeDoneHandler: Reducer<typeof initialize.done, State> = (state, payload) => ({
-    ...state,
-    isLoaded: true,
-    isOffline: false,
-    isConnecting: false,
-    nodeHost: payload.result.nodeHost
-});
+import Protypo from '../';
 
-export default initializeDoneHandler;
+export interface IArrayToSourceProps {
+    source: string;
+    columns: string[];
+    types: string[];
+    data: string[][];
+}
+
+interface IArrayToSourceContext {
+    protypo: Protypo;
+}
+
+const ArrayToSource: React.SFC<IArrayToSourceProps> = (props, context: IArrayToSourceContext) => {
+    context.protypo.registerSource(props.source, {
+        columns: props.columns,
+        types: props.types,
+        data: props.data
+    });
+    return null;
+};
+
+ArrayToSource.contextTypes = {
+    protypo: propTypes.object.isRequired
+};
+
+export default ArrayToSource;

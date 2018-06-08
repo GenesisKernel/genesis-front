@@ -225,6 +225,9 @@ class GenesisAPI {
             names: (request.names || []).join(',')
         })
     });
+    public getEcosystemName = this.setEndpoint<{ id: string | number }, string>('get', 'ecosystemname', {
+        responseTransformer: response => response.ecosystem_name
+    });
     public getConfig = this.setEndpoint<{ name: TConfigRequest }, string>('get', 'config/{name}', { requestTransformer: request => null });
     public getContract = this.setSecuredEndpoint<IContractRequest, IContractResponse>('get', 'contract/{name}', { requestTransformer: request => null });
     public getContracts = this.setSecuredEndpoint<ISegmentRequest, IContractsResponse>('get', 'contracts');
@@ -288,10 +291,13 @@ class GenesisAPI {
     public txStatus = this.setSecuredEndpoint<ITxStatusRequest, ITxStatusResponse>('get', 'txstatus/{hash}', { requestTransformer: () => null });
 
     // Transactions batch-processing
-    public txPrepareBatch = this.setSecuredEndpoint<ITxPrepareBatchRequest, ITxPrepareBatchResponse>('post', 'prepareMultiple/{name}', {
+    public txPrepareBatch = this.setSecuredEndpoint<ITxPrepareBatchRequest, ITxPrepareBatchResponse>('post', 'prepareMultiple', {
         requestTransformer: request => ({
             data: JSON.stringify({
-                params: request.data
+                contracts: request.contracts.map(l => ({
+                    contract: l.name,
+                    params: l.params
+                }))
             })
         })
     });
@@ -304,7 +310,7 @@ class GenesisAPI {
             })
         })
     });
-    public txStatusBatch = this.setSecuredEndpoint<ITxStatusBatchRequest, ITxStatusBatchResponse>('get', 'txstatusMultiple', {
+    public txStatusBatch = this.setSecuredEndpoint<ITxStatusBatchRequest, ITxStatusBatchResponse>('post', 'txstatusMultiple', {
         requestTransformer: request => ({
             data: JSON.stringify({
                 hashes: request.hashes
