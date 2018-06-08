@@ -37,7 +37,9 @@ const StyledNavigation = themed.aside`
     }
     
     .scrollarea {
+        background: ${props => props.theme.menuBackground};
         height: 100%;
+        
         .scrollbar-container {
             opacity: 0;
         }
@@ -48,7 +50,6 @@ const StyledNavigation = themed.aside`
     left: 0;
     bottom: 0;
     z-index: 150;
-    background: ${props => props.theme.menuBackground};
 `;
 
 const StyledBackButton = themed.button`
