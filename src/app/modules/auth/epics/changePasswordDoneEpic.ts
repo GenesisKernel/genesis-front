@@ -24,33 +24,55 @@ import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
 import { changePassword } from '../actions';
 import { modalShow, modalClose } from 'modules/modal/actions';
+import { logout } from 'modules/auth/actions';
+import { saveWallet } from 'modules/storage/actions';
+import keyring from 'lib/keyring';
 
-const changePasswordEpic: Epic = (action$, store, { api }) => action$.ofAction(changePassword.started)
+const changePasswordDoneEpic: Epic = (action$, store, { api }) => action$.ofAction(changePassword.done)
     .flatMap(action => {
-            const encKey = store.getState().auth.wallet.encKey;
-            return Observable.merge(
+        const auth = store.getState().auth;
+        const wallet = auth.wallet;
+        const privateKey = keyring.decryptAES(wallet.encKey, action.payload.result.oldPassword);
+
+        if (!keyring.validatePrivateKey(privateKey)) {
+            return Observable.concat(
+                Observable.of(changePassword.failed({
+                    params: null,
+                    error: 'E_INVALID_PASSWORD'
+                })),
                 Observable.of(modalShow({
-                    id: 'AUTH_CHANGE_PASSWORD',
-                    type: 'AUTH_CHANGE_PASSWORD',
+                    id: 'AUTH_ERROR',
+                    type: 'AUTH_ERROR',
                     params: {
-                        encKey
+                        error: 'E_INVALID_PASSWORD'
+                    }
+                }))
+            );
+        }
+
+        const encKey = keyring.encryptAES(privateKey, action.payload.result.newPassword);
+
+        return Observable.concat(
+            Observable.of(saveWallet({
+                ...store.getState().auth.wallet,
+                encKey: encKey
+            })),
+
+            Observable.merge(
+                Observable.of(modalShow({
+                    id: 'DISPLAY_INFO',
+                    type: 'INFO',
+                    params: {
+                        value: 'Password changed. Please login with new password.'
                     }
                 })),
                 action$.ofAction(modalClose)
                     .take(1)
                     .flatMap(result => {
-                        if ('RESULT' === result.payload.reason) {
-                            return Observable.of(changePassword.done({
-                                params: action.payload,
-                                result: result.payload.data
-                            }));
-                        }
-                        else {
-                            return Observable.empty<never>();
-                        }
+                        return Observable.of(logout.started(null));
                     })
-            );
-        }
-    );
+            )
+        );
+    });
 
-export default changePasswordEpic;
+export default changePasswordDoneEpic;
