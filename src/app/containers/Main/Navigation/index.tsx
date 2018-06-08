@@ -23,7 +23,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { menuPop, menuPush, ecosystemInit } from 'modules/content/actions';
+import { ecosystemInit } from 'modules/content/actions';
+import { menuPop, menuPush, sectionsInit } from 'modules/sections/actions';
 import { TMenu } from 'genesis/content';
 
 import Navigation from 'components/Main/Navigation';
@@ -44,6 +45,7 @@ interface INavigationContainerDispatch {
     menuPop: typeof menuPop;
     menuPush: typeof menuPush;
     ecosystemInit: typeof ecosystemInit.started;
+    sectionsInit: typeof sectionsInit.started;
 }
 
 const NavigationContainer: React.SFC<INavigationContainerProps & INavigationContainerState & INavigationContainerDispatch> = (props) => (
@@ -51,11 +53,11 @@ const NavigationContainer: React.SFC<INavigationContainerProps & INavigationCont
 );
 
 const mapStateToProps = (state: IRootState) => {
-    const section = state.content.sections[state.content.section] || state.content.sections.home;
+    const section = state.sections.sections[state.sections.section] || state.sections.sections.home;
     return {
         preloading: state.content.preloading,
         preloadingError: state.content.preloadingError,
-        visible: state.content.sections[state.content.section].menuDisabled ? false : state.content.sections[state.content.section].menuVisible,
+        visible: state.sections.sections[state.sections.section].menuDisabled ? false : state.sections.sections[state.sections.section].menuVisible,
         width: state.storage.navigationSize,
         menus: section.menus
     };
@@ -64,7 +66,8 @@ const mapStateToProps = (state: IRootState) => {
 const mapDispatchToProps = {
     menuPop,
     menuPush,
-    ecosystemInit: ecosystemInit.started
+    ecosystemInit: ecosystemInit.started,
+    sectionsInit: sectionsInit.started
 };
 
 export default connect<INavigationContainerState, INavigationContainerDispatch, INavigationContainerProps>(mapStateToProps, mapDispatchToProps)(NavigationContainer);

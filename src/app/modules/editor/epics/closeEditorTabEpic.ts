@@ -24,13 +24,13 @@ import { Action } from 'redux';
 import { Epic } from 'redux-observable';
 import { IRootState } from 'modules';
 import { closeEditorTab } from '../actions';
-import { updateSection } from '../../content/actions';
+import { updateSection } from 'modules/sections/actions';
 
 const closeEditorTabEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(closeEditorTab)
         .map(action => {
             const state = store.getState();
-            const section = state.content.sections.editor;
+            const section = state.sections.sections.editor;
 
             return updateSection({
                 ...section,

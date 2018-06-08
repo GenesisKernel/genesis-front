@@ -27,7 +27,7 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { txCall } from 'modules/tx/actions';
 import { TTransactionStatus, ITransaction } from 'genesis/tx';
-import { navigatePage } from 'modules/content/actions';
+import { navigatePage } from 'modules/sections/actions';
 
 import TxButton, { ITxButtonConfirm } from 'components/TxButton';
 

@@ -56,11 +56,11 @@ const ProtypoConstructorContainer: React.SFC<IProtypoConstructorContainerState &
 );
 
 const mapStateToProps = (state: IRootState) => {
-    const section = state.content.sections[state.content.section];
+    const section = state.sections.sections[state.sections.section];
 
     return {
         apiHost: state.auth.session.apiHost + '/api/v2',
-        section: state.content.section,
+        section: state.sections.section,
         page: section.page && section.page.name
     };
 };

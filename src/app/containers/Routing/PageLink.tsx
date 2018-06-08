@@ -23,7 +23,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { navigatePage } from 'modules/content/actions';
+import { navigatePage } from '../../modules/sections/actions';
 
 import PageLink from 'components/Routing/PageLink';
 
@@ -49,7 +49,7 @@ const PageLinkContainer: React.SFC<IPageLinkContainerProps & IPageLinkContainerS
 );
 
 const mapStateToProps = (state: IRootState) => ({
-    currentSection: state.content.section
+    currentSection: state.sections.section
 });
 
 const mapDispatchToProps = {

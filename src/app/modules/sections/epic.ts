@@ -20,19 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Epic } from 'modules';
-import { closeSection, renderSection } from 'modules/content/actions';
-import { Observable } from 'rxjs/Observable';
+import { combineEpics } from 'redux-observable';
+import closeSectionEpic from './epics/closeSectionEpic';
+import renderSectionEpic from './epics/renderSectionEpic';
+import resetEpic from './epics/resetEpic';
+import resetOnLoginEpic from './epics/resetOnLoginEpic';
+import navigatePageEpic from './epics/navigatePageEpic';
+import reloadPageEpic from './epics/reloadPageEpic';
+import renderLegacyPageEpic from './epics/renderLegacyPageEpic';
+import renderPageEpic from './epics/renderPageEpic';
+import sectionsInitEpic from './epics/sectionsInitEpic';
+import sectionsInitDoneEpic from './epics/sectionsInitDoneEpic';
 
-const closeSectionEpic: Epic = (action$, store) => action$.ofAction(closeSection)
-    .flatMap(action => {
-        const state = store.getState();
-        if (action.payload === state.content.section) {
-            return Observable.of(renderSection('home'));
-        }
-        else {
-            return Observable.empty<never>();
-        }
-    });
-
-export default closeSectionEpic;
+export default combineEpics(
+    closeSectionEpic,
+    renderSectionEpic,
+    resetEpic,
+    resetOnLoginEpic,
+    navigatePageEpic,
+    reloadPageEpic,
+    renderLegacyPageEpic,
+    renderPageEpic,
+    sectionsInitEpic,
+    sectionsInitDoneEpic
+);

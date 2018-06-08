@@ -24,9 +24,10 @@ import { Action } from 'redux';
 import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
 import { ecosystemInit, fetchNotifications } from 'modules/content/actions';
+import { sectionsInit } from 'modules/sections/actions';
 import { logout, selectWallet } from 'modules/auth/actions';
 
-const ecosystemInitEpic: Epic = (action$, store, { api }) => action$.ofAction(ecosystemInit.started)
+const initSectionsEpic: Epic = (action$, store, { api }) => action$.ofAction(sectionsInit.started)
     .flatMap(action => {
         const state = store.getState();
         const client = api(state.auth.session);
@@ -45,6 +46,13 @@ const ecosystemInitEpic: Epic = (action$, store, { api }) => action$.ofAction(ec
                         stylesheet: payload[0],
                         name: payload[1],
                     }
+                }),
+                sectionsInit.done({
+                    params: action.payload,
+                    result: {
+                        stylesheet: payload[0],
+                        name: payload[1],
+                    }
                 })
             )
         ).catch(e => {
@@ -57,14 +65,24 @@ const ecosystemInitEpic: Epic = (action$, store, { api }) => action$.ofAction(ec
                     ecosystemInit.failed({
                         params: action.payload,
                         error: e.error
+                    }),
+                    sectionsInit.failed({
+                        params: action.payload,
+                        error: e.error
                     })
                 );
             }
-            return Observable.of(ecosystemInit.failed({
-                params: action.payload,
-                error: e.error
-            }));
+            return Observable.of<Action>(
+                ecosystemInit.failed({
+                    params: action.payload,
+                    error: e.error
+                }),
+                sectionsInit.failed({
+                    params: action.payload,
+                    error: e.error
+                })
+            );
         });
     });
 
-export default ecosystemInitEpic;
+export default initSectionsEpic;

@@ -22,41 +22,51 @@
 
 import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
-import { renderPage } from 'modules/content/actions';
+import { renderLegacyPage } from '..//actions';
 
-const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(renderPage.started)
+const renderLegacyPageEpic: Epic = (action$, store, { api }) => action$.ofAction(renderLegacyPage.started)
     .flatMap(action => {
         const state = store.getState();
         const client = api(state.auth.session);
 
-        return Observable.fromPromise(client.content({
-            type: 'page',
-            name: action.payload.name,
-            params: action.payload.params,
-            locale: state.storage.locale
+        if (action.payload.menu) {
+            return Observable.fromPromise(client.content({
+                type: 'menu',
+                name: action.payload.menu,
+                params: {},
+                locale: state.storage.locale
 
-        })).map(payload =>
-            renderPage.done({
+            })).map(payload =>
+                renderLegacyPage.done({
+                    params: action.payload,
+                    result: {
+                        menu: {
+                            name: action.payload.menu,
+                            content: payload.tree
+                        }
+                    }
+                })
+
+            ).catch(error =>
+                Observable.of(renderLegacyPage.done({
+                    params: action.payload,
+                    result: {
+                        menu: {
+                            name: action.payload.menu,
+                            content: []
+                        }
+                    }
+                }))
+            );
+        }
+        else {
+            return Observable.of(renderLegacyPage.done({
                 params: action.payload,
                 result: {
-                    menu: {
-                        name: payload.menu,
-                        content: payload.menutree
-                    },
-                    page: {
-                        params: action.payload.params,
-                        name: action.payload.name,
-                        content: payload.tree
-                    }
+                    menu: null
                 }
-            })
-
-        ).catch(e =>
-            Observable.of(renderPage.failed({
-                params: action.payload,
-                error: e.error
-            }))
-        );
+            }));
+        }
     });
 
-export default renderPageEpic;
+export default renderLegacyPageEpic;

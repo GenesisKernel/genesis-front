@@ -23,7 +23,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { navigatePage } from 'modules/content/actions';
+import { navigatePage } from 'modules/sections/actions';
 
 export interface IDefaultPageContainerProps {
 }
@@ -53,7 +53,7 @@ class DefaultPageContainer extends React.Component<IDefaultPageContainerProps & 
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    inited: state.content.inited
+    inited: state.sections.inited
 });
 
 const mapDispatchToProps = {

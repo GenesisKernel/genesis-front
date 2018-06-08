@@ -20,17 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { ecosystemInit } from '../actions';
-import { Reducer } from 'modules';
+import { Action } from 'redux';
+import { Epic } from 'redux-observable';
+import { IRootState } from 'modules';
+import { reset } from '..//actions';
+import { login } from 'modules/auth/actions';
 
-const ecosystemInitHandler: Reducer<typeof ecosystemInit.started, State> = (state, payload) => {
+const resetOnWalletSelectEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(login.done)
+        .map(action =>
+            reset.started(null)
+        );
 
-    return {
-        ...state,
-        preloading: true,
-        preloadingError: null
-    };
-};
-
-export default ecosystemInitHandler;
+export default resetOnWalletSelectEpic;

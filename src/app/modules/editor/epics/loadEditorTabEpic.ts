@@ -24,7 +24,7 @@ import { Action } from 'redux';
 import { Epic } from 'modules';
 import { loadEditorTab } from '../actions';
 import { Observable } from 'rxjs/Observable';
-import { updateSection } from 'modules/content/actions';
+import { updateSection } from 'modules/sections/actions';
 import { replace } from 'react-router-redux';
 
 const loadEditorTabEpic: Epic = (action$, store, { api }) => action$.ofAction(loadEditorTab.started)
@@ -130,7 +130,7 @@ const loadEditorTabEpic: Epic = (action$, store, { api }) => action$.ofAction(lo
         }
 
     }).flatMap(result => {
-        const editor = store.getState().content.sections.editor;
+        const editor = store.getState().sections.sections.editor;
         return Observable.of<Action>(
             replace('/editor'),
             result,

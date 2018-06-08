@@ -61,9 +61,12 @@ const state: IRootState = {
         preloadingError: null,
         stylesheet: 'body {\n\t\t  /* You can define your custom styles here or create custom CSS rules */\n\t\t}',
         navigationResizing: false,
+        notifications: []
+    },
+    sections: {
         section: 'editor',
         sections: {},
-        notifications: []
+        inited: true
     },
     modal: {
         id: null,

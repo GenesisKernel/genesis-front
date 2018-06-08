@@ -20,17 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { ecosystemInit } from '../actions';
-import { Reducer } from 'modules';
+import * as queryString from 'query-string';
+import { Epic } from 'modules';
+import { push } from 'react-router-redux';
+import { renderSection } from '..//actions';
 
-const ecosystemInitHandler: Reducer<typeof ecosystemInit.started, State> = (state, payload) => {
+const renderSectionEpic: Epic = (action$, store) => action$.ofAction(renderSection)
+    .map(action => {
+        const state = store.getState();
+        const section = state.sections.sections[action.payload];
+        const params = section.page ? queryString.stringify(section.page.params) : '';
+        return push(`/${section.name}/${section.page ? section.page.name : ''}${params ? '?' + params : ''}`);
+    });
 
-    return {
-        ...state,
-        preloading: true,
-        preloadingError: null
-    };
-};
-
-export default ecosystemInitHandler;
+export default renderSectionEpic;

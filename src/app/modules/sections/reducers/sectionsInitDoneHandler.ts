@@ -21,16 +21,18 @@
 // SOFTWARE.
 
 import { State } from '../reducer';
-import { ecosystemInit } from '../actions';
+import { sectionsInit } from '../actions';
 import { Reducer } from 'modules';
 
-const ecosystemInitHandler: Reducer<typeof ecosystemInit.started, State> = (state, payload) => {
+const sectionsInitDoneHandler: Reducer<typeof sectionsInit.done, State> = (state, payload) => ({
+    ...state,
+    sections: {
+        ...state.sections,
+        [payload.params.section]: {
+            ...state.sections[payload.params.section],
+            pending: false
+        }
+    }
+});
 
-    return {
-        ...state,
-        preloading: true,
-        preloadingError: null
-    };
-};
-
-export default ecosystemInitHandler;
+export default sectionsInitDoneHandler;

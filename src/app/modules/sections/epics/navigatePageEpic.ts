@@ -25,7 +25,7 @@ import { Action } from 'redux';
 import { push } from 'react-router-redux';
 import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
-import { navigatePage } from 'modules/content/actions';
+import { navigatePage } from '..//actions';
 import { modalShow, modalClose } from 'modules/modal/actions';
 import { LEGACY_PAGES } from 'lib/legacyPages';
 
@@ -33,8 +33,8 @@ const navigatePageEpic: Epic = (action$, store) => action$.ofAction(navigatePage
     .flatMap(action => {
         const navigate = () => {
             const state = store.getState();
-            const sectionName = (LEGACY_PAGES[action.payload.name] && LEGACY_PAGES[action.payload.name].section) || action.payload.section || state.content.section;
-            const section = state.content.sections[sectionName];
+            const sectionName = (LEGACY_PAGES[action.payload.name] && LEGACY_PAGES[action.payload.name].section) || action.payload.section || state.sections.section;
+            const section = state.sections.sections[sectionName];
             const params = queryString.stringify(action.payload.params);
 
             return Observable.of<Action>(
