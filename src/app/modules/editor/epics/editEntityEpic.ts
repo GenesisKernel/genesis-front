@@ -22,26 +22,35 @@
 
 import { Action } from 'redux';
 import { Epic } from 'redux-observable';
+import { Observable } from 'rxjs';
 import { IRootState } from 'modules';
 import { txExec } from 'modules/tx/actions';
 import { reloadEditorTab } from '../actions';
 
-const editContractEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(txExec.done)
-        .filter(l =>
-            l.payload.params.tx.contract &&
-            /^(@1)?EditContract$/.test(l.payload.params.tx.contract.name) &&
-            'string' === typeof l.payload.params.tx.contract.params.Value
+const connections = {
+    '@1EditBlock': 'block',
+    '@1EditContract': 'contract',
+    '@1EditMenu': 'menu'
+};
 
-        ).map(action => {
+const editEntityEpic: Epic<Action, IRootState> = (action$, store) => action$.ofAction(txExec.done)
+    .flatMap(action => {
+        const contractName = action.payload.params.tx.contract && action.payload.params.tx.contract.name;
+        const entity = connections[contractName];
+
+        if (entity) {
             const params = action.payload.params.tx.contract.params as { Id: string, Value?: string };
-            return reloadEditorTab({
-                type: 'contract',
+            return Observable.of(reloadEditorTab({
+                type: entity,
                 id: params.Id,
                 data: {
                     initialValue: params.Value
                 }
-            });
-        });
+            }));
+        }
+        else {
+            return Observable.empty();
+        }
+    });
 
-export default editContractEpic;
+export default editEntityEpic;

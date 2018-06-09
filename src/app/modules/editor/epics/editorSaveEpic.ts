@@ -21,67 +21,40 @@
 // SOFTWARE.
 
 import * as actions from '../actions';
+import uuid from 'uuid';
 import { Action } from 'redux';
 import { Observable } from 'rxjs';
 import { Epic } from 'redux-observable';
 import { IRootState } from 'modules';
 import { txCall } from 'modules/tx/actions';
 
+const connections = {
+    contract: '@1EditContract',
+    page: '@1EditPage',
+    menu: '@1EditMenu',
+    block: '@1EditBlock',
+};
+
 const editorSaveEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(actions.editorSave)
         .filter(l => !l.payload.new)
         .flatMap(action => {
-            switch (action.payload.type) {
-                case 'contract':
-                    return Observable.of(txCall({
-                        uuid: 'EDITOR_SAVE',
-                        contract: {
-                            name: '@1EditContract',
-                            params: {
-                                Id: action.payload.id,
-                                Value: action.payload.value
-                            }
-                        }
-                    }));
+            const contract = connections[action.payload.type];
 
-                case 'page':
-                    return Observable.of(txCall({
-                        uuid: 'EDITOR_SAVE',
-                        contract: {
-                            name: '@1EditPage',
-                            params: {
-                                Id: action.payload.id,
-                                Value: action.payload.value
-                            }
+            if (contract) {
+                return Observable.of(txCall({
+                    uuid: uuid.v4(),
+                    contract: {
+                        name: contract,
+                        params: {
+                            Id: action.payload.id,
+                            Value: action.payload.value
                         }
-                    }));
-
-                case 'menu':
-                    return Observable.of(txCall({
-                        uuid: 'EDITOR_SAVE',
-                        contract: {
-                            name: '@1EditMenu',
-                            params: {
-                                Id: action.payload.id,
-                                Value: action.payload.value
-                            }
-                        }
-                    }));
-
-                case 'block':
-                    return Observable.of(txCall({
-                        uuid: 'EDITOR_SAVE',
-                        contract: {
-                            name: '@1EditBlock',
-                            params: {
-                                Id: action.payload.id,
-                                Value: action.payload.value
-                            }
-                        }
-                    }));
-
-                default:
-                    return Observable.empty<never>();
+                    }
+                }));
+            }
+            else {
+                return Observable.empty();
             }
         });
 
