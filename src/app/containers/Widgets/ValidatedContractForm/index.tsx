@@ -65,13 +65,9 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
     onSubmit = () => {
         this._uuid = uuid.v4();
 
-        let contractParams: { [key: string]: any } = null;
-        if ('function' === typeof this.props.contractParams) {
-            contractParams = this.props.contractParams();
-        }
-        else {
-            contractParams = this.props.contractParams;
-        }
+        const contractParams = 'function' === typeof this.props.contractParams ?
+            this.props.contractParams() :
+            this.props.contractParams;
 
         if (null === contractParams) {
             return;

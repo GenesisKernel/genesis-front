@@ -22,7 +22,6 @@
 
 import { combineEpics } from 'redux-observable';
 import newContractEpic from './epics/newContractEpic';
-import editPageEpic from './epics/editPageEpic';
 import editorSaveEpic from './epics/editorSaveEpic';
 import newPageEpic from './epics/newPageEpic';
 import editEntityEpic from './epics/editEntityEpic';
@@ -53,7 +52,6 @@ export default combineEpics(
     createEditorTabEpic,
     editEntityEpic,
     editorSaveEpic,
-    editPageEpic,
     loadEditorTabEpic,
     newBlockEpic,
     newContractEpic,

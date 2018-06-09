@@ -52,12 +52,7 @@ const buttonInteractionEpic: Epic = (action$, store, { api }) => action$.ofActio
             if (isType(action, buttonInteraction)) {
                 if (action.payload.contracts || action.payload.contract) {
                     return Observable.merge(
-                        Observable.of(txCall({
-                            uuid: action.payload.uuid,
-                            silent: action.payload.silent,
-                            contract: action.payload.contract,
-                            contracts: action.payload.contracts
-                        })),
+                        Observable.of(txCall(action.payload)),
                         action$.filter(l => {
                             if (action.payload.contract) {
                                 return isType(l, txExec.done) || isType(l, txExec.failed);
