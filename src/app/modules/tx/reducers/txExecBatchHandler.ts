@@ -27,10 +27,15 @@ import { Reducer } from 'modules';
 const txExecBatchHandler: Reducer<typeof txExecBatch.started, State> = (state, payload) => ({
     ...state,
     transactions: state.transactions.set(payload.uuid, {
-        type: 'collection',
         uuid: payload.uuid,
-        pending: payload.forsign.length,
-        transactions: []
+        contract: payload.tx.contract && payload.tx.contract.name,
+        block: null,
+        result: null,
+        error: null,
+        batch: {
+            pending: payload.prepare.forsign.length,
+            contracts: payload.tx.contracts.map(tx => tx.name)
+        }
     })
 });
 

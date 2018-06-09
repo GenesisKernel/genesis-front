@@ -23,8 +23,10 @@
 import { combineEpics } from 'redux-observable';
 import displayDataEpic from './epics/displayDataEpic';
 import fetchNotificationsEpic from './epics/fetchNotificationsEpic';
+import buttonInteractionEpic from './epics/buttonInteractionEpic';
 
 export default combineEpics(
     displayDataEpic,
-    fetchNotificationsEpic
+    fetchNotificationsEpic,
+    buttonInteractionEpic
 );

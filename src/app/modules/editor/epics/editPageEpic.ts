@@ -28,9 +28,13 @@ import { reloadEditorTab } from '../actions';
 
 const editPageEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(txExec.done)
-        .filter(l => /^(@1)?EditPage$/.test(l.payload.params.tx.name) && 'string' === typeof l.payload.params.tx.params.Value)
-        .map(action => {
-            const params = action.payload.params.tx.params as { Id: string, Value?: string };
+        .filter(l =>
+            l.payload.params.tx.contract &&
+            /^(@1)?EditPage$/.test(l.payload.params.tx.contract.name) &&
+            'string' === typeof l.payload.params.tx.contract.params.Value
+
+        ).map(action => {
+            const params = action.payload.params.tx.contract.params as { Id: string, Value?: string };
             return reloadEditorTab({
                 type: 'page',
                 id: params.Id,

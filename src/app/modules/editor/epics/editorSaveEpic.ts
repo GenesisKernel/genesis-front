@@ -35,40 +35,48 @@ const editorSaveEpic: Epic<Action, IRootState> =
                 case 'contract':
                     return Observable.of(txCall({
                         uuid: 'EDITOR_SAVE',
-                        name: '@1EditContract',
-                        params: {
-                            Id: action.payload.id,
-                            Value: action.payload.value
+                        contract: {
+                            name: '@1EditContract',
+                            params: {
+                                Id: action.payload.id,
+                                Value: action.payload.value
+                            }
                         }
                     }));
 
                 case 'page':
                     return Observable.of(txCall({
                         uuid: 'EDITOR_SAVE',
-                        name: '@1EditPage',
-                        params: {
-                            Id: action.payload.id,
-                            Value: action.payload.value
+                        contract: {
+                            name: '@1EditPage',
+                            params: {
+                                Id: action.payload.id,
+                                Value: action.payload.value
+                            }
                         }
                     }));
 
                 case 'menu':
                     return Observable.of(txCall({
                         uuid: 'EDITOR_SAVE',
-                        name: '@1EditMenu',
-                        params: {
-                            Id: action.payload.id,
-                            Value: action.payload.value
+                        contract: {
+                            name: '@1EditMenu',
+                            params: {
+                                Id: action.payload.id,
+                                Value: action.payload.value
+                            }
                         }
                     }));
 
                 case 'block':
                     return Observable.of(txCall({
                         uuid: 'EDITOR_SAVE',
-                        name: '@1EditBlock',
-                        params: {
-                            Id: action.payload.id,
-                            Value: action.payload.value
+                        contract: {
+                            name: '@1EditBlock',
+                            params: {
+                                Id: action.payload.id,
+                                Value: action.payload.value
+                            }
                         }
                     }));
 

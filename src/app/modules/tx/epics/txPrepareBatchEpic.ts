@@ -100,18 +100,18 @@ const txPrepareBatchEpic: Epic = (action$, store, { api }) => action$.ofAction(t
             }
 
             return txExecBatch.started({
-                ...mainPrepare.prepare,
+                uuid: action.payload.tx.uuid,
                 privateKey: action.payload.privateKey,
-                uuid: action.payload.tx.uuid
+                prepare: mainPrepare.prepare,
+                tx: action.payload.tx
             });
 
         }).catch(e => Observable.of(txExecBatch.failed({
             params: {
                 uuid: action.payload.tx.uuid,
-                request_id: null,
-                forsign: [],
-                time: null,
-                privateKey: null
+                privateKey: action.payload.privateKey,
+                prepare: null,
+                tx: action.payload.tx
             },
             error: {
                 type: e.error,

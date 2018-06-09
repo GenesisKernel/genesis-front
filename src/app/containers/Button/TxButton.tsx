@@ -22,47 +22,63 @@
 
 import React from 'react';
 import uuid from 'uuid';
-import { connect } from 'react-redux';
+import { ITransaction } from 'genesis/tx';
 import { OrderedMap } from 'immutable';
 import { IRootState } from 'modules';
-import { txCall } from 'modules/tx/actions';
-import { ITransaction } from 'genesis/tx';
+import { connect } from 'react-redux';
+import { buttonInteraction } from 'modules/content/actions';
 
-import Validation from 'components/Validation';
+import Button from 'components/Button';
 
-interface IValidatedContractFormProps {
+export interface ITxButtonProps {
+    disabled?: boolean;
     silent?: boolean;
     className?: string;
-    onExec?: (block: string, error?: { type: string, error: string }) => void;
+
+    // Called first
+    confirm?: {
+        icon: string;
+        title: string;
+        text: string;
+        confirmButton: string;
+        cancelButton: string;
+    };
+
+    // Executed after confirm if approved
+    contracts?: {
+        name: string;
+        params: {
+            [key: string]: any
+        }[]
+    }[];
+
+    // Executed after batch
     contract?: string;
     contractParams?: { [key: string]: any } | (() => { [key: string]: any });
+
+    // Redirect if all previous actions succeeded
+    page?: string;
+    pageParams?: { [key: string]: any };
+
+    // Page must be rendered within a modal dialog
+    popup?: {
+        title?: string;
+        width?: number;
+    };
 }
 
-interface IValidatedContractFormStateProps {
+interface ITxButtonState {
     transactions: OrderedMap<string, ITransaction>;
 }
 
-interface IValidatedContractFormDispatchProps {
-    txCall: typeof txCall;
+interface ITxButtonDispatch {
+    buttonInteraction: typeof buttonInteraction;
 }
 
-class ValidatedContractForm extends React.Component<IValidatedContractFormProps & IValidatedContractFormStateProps & IValidatedContractFormDispatchProps> {
+class TxButton extends React.Component<ITxButtonProps & ITxButtonState & ITxButtonDispatch> {
     private _uuid: string = null;
 
-    componentWillReceiveProps(props: IValidatedContractFormProps & IValidatedContractFormStateProps & IValidatedContractFormDispatchProps) {
-        const oldTransaction = this.props.transactions.get(this._uuid);
-        const newTransaction = props.transactions.get(this._uuid);
-        const oldDone = oldTransaction && (oldTransaction.block || oldTransaction.error);
-        const newDone = newTransaction && (newTransaction.block || newTransaction.error);
-
-        if (!oldDone && newDone) {
-            if (props.onExec) {
-                props.onExec(newTransaction.block, newTransaction.error);
-            }
-        }
-    }
-
-    onSubmit = () => {
+    onClick = () => {
         this._uuid = uuid.v4();
 
         let contractParams: { [key: string]: any } = null;
@@ -77,24 +93,46 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
             return;
         }
 
-        this.props.txCall({
+        this.props.buttonInteraction({
             uuid: this._uuid,
             silent: this.props.silent,
-            contract: {
+            confirm: this.props.confirm,
+            popup: this.props.popup,
+            contract: this.props.contract ? {
                 name: this.props.contract,
                 params: contractParams
-            }
+            } : null,
+            contracts: this.props.contracts,
+            page: this.props.page ? {
+                name: this.props.page,
+                params: this.props.pageParams
+            } : null
         });
     }
 
-    render() {
-        const transaction = this.props.transactions.get(this._uuid);
-        const pending = transaction && !transaction.block && !transaction.error;
+    isPending = () => {
+        const tx = this.props.transactions.get(this._uuid);
+        if (tx) {
+            if (tx.contract) {
+                return !tx.error && !tx.block;
+            }
+            else if (tx.batch) {
+                return 0 < tx.batch.pending;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    }
 
+    render() {
         return (
-            <Validation.components.ValidatedForm className={this.props.className} onSubmitSuccess={this.onSubmit} pending={pending}>
+            <Button onClick={this.onClick} disabled={this.props.disabled || this.isPending()} className={this.props.className}>
                 {this.props.children}
-            </Validation.components.ValidatedForm>
+            </Button>
         );
     }
 }
@@ -104,7 +142,7 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    txCall
+    buttonInteraction
 };
 
-export default connect<IValidatedContractFormStateProps, IValidatedContractFormDispatchProps, IValidatedContractFormProps>(mapStateToProps, mapDispatchToProps)(ValidatedContractForm);
+export default connect<ITxButtonState, ITxButtonDispatch, ITxButtonProps>(mapStateToProps, mapDispatchToProps)(TxButton);

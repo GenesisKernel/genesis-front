@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { Button, Well, Row, Col } from 'react-bootstrap';
 import imgClose from 'images/close.svg';
 
@@ -165,7 +165,7 @@ class DebugContractModal extends Modal<IDebugContractModalProps, void, IDebugCon
 
     render() {
         return (
-            <ValidatedContractForm silent contractName={this.props.params.contract} mapContractParams={this.mapContractParams} onExec={this.onExec}>
+            <ValidatedContractForm silent contract={this.props.params.contract} contractParams={this.mapContractParams} onExec={this.onExec}>
                 <Modal.Header>
                     <FormattedMessage id="contract.exec" defaultMessage="Execute contract" />
                 </Modal.Header>

@@ -20,14 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import { ITransactionConfirm } from 'genesis/tx';
+import { IButtonConfirm } from 'genesis/protypo';
 
 import Modal from '../';
 
-export interface ITxConfirmModalProps extends ITransactionConfirm {
+export interface ITxConfirmModalProps extends IButtonConfirm {
 }
 
 class TxConfirmModal extends Modal<ITxConfirmModalProps, void> {

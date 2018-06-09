@@ -23,41 +23,23 @@
 import { Epic } from 'modules';
 import { Observable } from 'rxjs';
 import { txCall, txAuthorize, txPrepare, txPrepareBatch } from '../actions';
-import { modalShow, modalClose } from 'modules/modal/actions';
 import { isType } from 'typescript-fsa';
 import keyring from 'lib/keyring';
-import { ITransactionBatchCall } from 'genesis/tx';
 
 const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall)
-    // Show confirmation window if there is any
-    .flatMap(action => Observable.if(
-        () => !!action.payload.confirm,
-        Observable.merge(
-            Observable.of(modalShow({
-                id: action.payload.uuid,
-                type: 'TX_CONFIRM',
-                params: action.payload.confirm
-            })),
-            action$.ofAction(modalClose).take(1).flatMap(modalPayload => Observable.if(
-                () => 'RESULT' === modalPayload.payload.reason,
-                Observable.of(action),
-                Observable.empty<never>()
-            ))
-        ),
-        Observable.of(action)
-
-    ))
-    // Ask for password if there are no privateKey
+    // Ask for password if there is no privateKey
     .flatMap(action => {
         if (isType(action, txCall)) {
             const privateKey = store.getState().auth.privateKey;
-            const contractName = 'contracts' in action.payload ? null : action.payload.name;
 
             return Observable.if(
                 () => keyring.validatePrivateKey(privateKey),
                 Observable.of(action),
                 Observable.merge(
-                    Observable.of(txAuthorize.started({ contract: contractName })),
+                    Observable.of(txAuthorize.started({
+                        contract: action.payload.contract ? action.payload.contract.name : null,
+                        batch: !!(action.payload.contracts && action.payload.contracts.length)
+                    })),
                     action$.filter(l => txAuthorize.done.match(l) || txAuthorize.failed.match(l))
                         .take(1)
                         .flatMap(result => Observable.if(
@@ -73,26 +55,28 @@ const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall)
         }
 
     })
-    .map(action => {
+    .flatMap(action => {
         if (isType(action, txCall)) {
             const privateKey = store.getState().auth.privateKey;
 
-            if ('contracts' in action.payload) {
-                const call = action.payload as ITransactionBatchCall;
-                return txPrepareBatch({
-                    tx: call,
-                    privateKey
-                });
-            }
-            else {
-                return txPrepare({
+            if (action.payload.contracts && action.payload.contracts.length) {
+                return Observable.of(txPrepareBatch({
                     tx: action.payload,
                     privateKey
-                });
+                }));
+            }
+            else if (action.payload.contract) {
+                return Observable.of(txPrepare({
+                    tx: action.payload,
+                    privateKey
+                }));
+            }
+            else {
+                return Observable.empty<never>();
             }
         }
         else {
-            return action;
+            return Observable.of(action);
         }
     });
 

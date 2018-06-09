@@ -28,10 +28,10 @@ import { saveWallet } from 'modules/storage/actions';
 
 const newEcosystemEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(txExec.done)
-        .filter(l => /^(@1)?NewEcosystem$/.test(l.payload.params.tx.name))
+        .filter(l => l.payload.params.tx.contract && /^(@1)?NewEcosystem$/.test(l.payload.params.tx.contract.name))
         .map(action => {
             const ecosystem = action.payload.result.result;
-            const ecosystemName = (action.payload.params.tx.params && action.payload.params.tx.params.Name) || ecosystem;
+            const ecosystemName = (action.payload.params.tx.contract.params && action.payload.params.tx.contract.params.Name) || ecosystem;
             const wallet = store.getState().auth.wallet;
 
             return saveWallet({
