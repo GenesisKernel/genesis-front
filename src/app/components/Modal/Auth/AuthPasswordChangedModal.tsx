@@ -20,45 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-declare module 'genesis/auth' {
-    interface IWallet {
-        id: string;
-        encKey: string;
-        address: string;
-        ecosystem: string;
-        ecosystemName: string;
-        username: string;
-    }
+import * as React from 'react';
+import { Button } from 'react-bootstrap';
+import { FormattedMessage } from 'react-intl';
 
-    interface ISaveEncKeyCall {
-        id: string;
-        encKey: string;
-    }
+import Modal from '../';
 
-    interface IRole {
-        id: number;
-        name: string;
-    }
-
-    interface ISession {
-        apiHost: string;
-        sessionToken: string;
-        refreshToken: string;
-    }
-
-    interface ILoginCall {
-        wallet: IWallet;
-        password: string;
-    }
-
-    interface ICreateWalletCall {
-        seed: string;
-        password: string
-    }
-
-    interface IImportWalletCall {
-        backup: string;
-        password: string;
-        isDefault?: boolean
+class AuthPasswordChangedModal extends Modal<{}, void> {
+    render() {
+        return (
+            <div>
+                <Modal.Header>
+                    <FormattedMessage id="alert.info" defaultMessage="Information" />
+                </Modal.Header>
+                <Modal.Body>
+                    <div><FormattedMessage id="auth.password.changed" defaultMessage="Password changed. Please login with new password." /></div>
+                </Modal.Body>
+                <Modal.Footer className="text-right">
+                    <Button type="button" bsStyle="primary" onClick={this.props.onCancel.bind(this)}>
+                        <FormattedMessage id="close" defaultMessage="Close" />
+                    </Button>
+                </Modal.Footer>
+            </div>
+        );
     }
 }
+export default AuthPasswordChangedModal;

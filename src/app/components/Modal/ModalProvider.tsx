@@ -22,6 +22,8 @@
 
 import React from 'react';
 import { IModal, TModalResultReason } from 'genesis/modal';
+import { INotification } from 'genesis/notifications';
+import uuid from 'uuid';
 
 import Wrapper from 'components/Modal/Wrapper';
 import DebugContractModal from 'components/Modal/Editor/DebugContractModal';
@@ -39,6 +41,8 @@ import SignatureModal from 'components/Modal/Tx/SignatureModal';
 import TxErrorModal from 'components/Modal/Tx/ErrorModal';
 import AuthErrorModal from 'components/Modal/Auth/AuthErrorModal';
 import AuthRemoveWalletModal from 'components/Modal/Auth/AuthRemoveWalletModal';
+import AuthChangePasswordModal from 'components/Modal/Auth/AuthChangePasswordModal';
+import AuthPasswordChangedModal from 'components/Modal/Auth/AuthPasswordChangedModal';
 import TxConfirmModal from './Tx/ConfirmModal';
 import PageModal from './PageModal';
 
@@ -46,6 +50,8 @@ const MODAL_COMPONENTS = {
     'AUTHORIZE': AuthorizeModal,
     'AUTH_ERROR': AuthErrorModal,
     'AUTH_REMOVE_WALLET': AuthRemoveWalletModal,
+    'AUTH_CHANGE_PASSWORD': AuthChangePasswordModal,
+    'AUTH_PASSWORD_CHANGED': AuthPasswordChangedModal,
     'TX_CONFIRM': TxConfirmModal,
     'TX_ERROR': TxErrorModal,
     'TX_SIGNATURE': SignatureModal,
@@ -65,6 +71,7 @@ const MODAL_COMPONENTS = {
 export interface IModalProviderProps {
     modal: IModal;
     onResult: (params: { reason: TModalResultReason, data: any }) => void;
+    enqueueNotification: (params: INotification) => void;
 }
 
 class ModalProvider extends React.Component<IModalProviderProps> {
@@ -82,6 +89,14 @@ class ModalProvider extends React.Component<IModalProviderProps> {
         });
     }
 
+    notify(type: string, params: any) {
+        this.props.enqueueNotification({
+            id: uuid.v4(),
+            type,
+            params
+        });
+    }
+
     render() {
         const Modal = this.props.modal && !this.props.modal.result && MODAL_COMPONENTS[this.props.modal.type] || null;
         return (
@@ -92,6 +107,7 @@ class ModalProvider extends React.Component<IModalProviderProps> {
                         active
                         onResult={this.onResult.bind(this)}
                         onCancel={this.onCancel.bind(this)}
+                        notify={this.notify.bind(this)}
                         {...this.props.modal}
                     />
                 )}
