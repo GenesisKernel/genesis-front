@@ -32,9 +32,8 @@ const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall)
         if (isType(action, txCall)) {
             const privateKey = store.getState().auth.privateKey;
 
-            return Observable.if(
-                () => keyring.validatePrivateKey(privateKey),
-                Observable.of(action),
+            return keyring.validatePrivateKey(privateKey) ?
+                Observable.of(action) :
                 Observable.merge(
                     Observable.of(txAuthorize.started({
                         contract: action.payload.contract ? action.payload.contract.name : null,
@@ -47,8 +46,7 @@ const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall)
                             Observable.of(action),
                             Observable.empty<never>()
                         ))
-                )
-            );
+                );
         }
         else {
             return Observable.of(action);
