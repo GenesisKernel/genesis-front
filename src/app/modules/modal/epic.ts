@@ -20,13 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import reducer, { State } from './reducer';
-import epic from './epic';
-import * as actions from './actions';
+import { combineEpics } from 'redux-observable';
+import modalPageEpic from './epics/modalPageEpic';
+import closeModalOnInteractionEpic from './epics/closeModalOnInteractionEpic';
 
-export type State = State;
-export {
-    actions,
-    reducer,
-    epic
-};
+export default combineEpics(
+    modalPageEpic,
+    closeModalOnInteractionEpic
+);

@@ -20,13 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import reducer, { State } from './reducer';
-import epic from './epic';
-import * as actions from './actions';
+import { Epic } from 'modules';
+import { modalPage, modalShow } from '../actions';
+import { Observable } from 'rxjs/Observable';
 
-export type State = State;
-export {
-    actions,
-    reducer,
-    epic
-};
+const modalPageEpic: Epic = (action$, store, { api }) => action$.ofAction(modalPage)
+    .flatMap(action => {
+        const state = store.getState();
+        const client = api(state.auth.session);
+
+        return Observable.fromPromise(client.content({
+            type: 'page',
+            name: action.payload.name,
+            params: action.payload.params,
+            locale: state.storage.locale
+
+        })).map(payload =>
+            modalShow({
+                id: 'PAGE_MODAL',
+                type: 'PAGE_MODAL',
+                params: {
+                    title: action.payload.title || action.payload.name,
+                    width: action.payload.width,
+                    tree: payload.tree
+                }
+
+            })
+
+        ).catch(e =>
+            Observable.empty<never>()
+        );
+    });
+
+export default modalPageEpic;

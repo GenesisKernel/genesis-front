@@ -40,6 +40,7 @@ import TxErrorModal from 'components/Modal/Tx/ErrorModal';
 import AuthErrorModal from 'components/Modal/Auth/AuthErrorModal';
 import AuthRemoveWalletModal from 'components/Modal/Auth/AuthRemoveWalletModal';
 import TxConfirmModal from './Tx/ConfirmModal';
+import PageModal from './PageModal';
 
 const MODAL_COMPONENTS = {
     'AUTHORIZE': AuthorizeModal,
@@ -53,6 +54,7 @@ const MODAL_COMPONENTS = {
     'DEBUG_CONTRACT': DebugContractModal,
     'IMAGE_EDITOR': ImageEditorModal,
     'MAP_EDITOR': MapEditorModal,
+    'PAGE_MODAL': PageModal,
     'PROMPT': PromptModal,
     'CONFIRM': ConfirmModal,
     'INFO': InfoModal,

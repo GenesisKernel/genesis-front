@@ -43,6 +43,10 @@ interface ITxBatchButtonContainerProps {
     confirm?: ITxButtonConfirm;
     page?: string;
     pageParams?: { [key: string]: any };
+    popup?: {
+        title?: string;
+        width?: number;
+    };
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
     onExec?: (success: boolean) => void;
 }
@@ -110,6 +114,7 @@ class TxBatchButtonContainer extends React.Component<ITxBatchButtonContainerProp
             name: page,
             params: pageParams,
             confirm: this.props.confirm,
+            popup: this.props.popup,
             force: true
         });
     }

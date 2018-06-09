@@ -44,6 +44,10 @@ export interface IButtonProps {
             [key: string]: any;
         }[]
     }[];
+    'popup'?: {
+        header?: string;
+        width?: string;
+    };
     'page'?: string;
     'pageparams'?: IParamsSpec;
     'params'?: IParamsSpec;
@@ -97,6 +101,15 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
         }
     };
 
+    let popup: { title?: string, width?: number } = null;
+    if (props.popup) {
+        const width = parseInt(props.popup.width, 10);
+        popup = {
+            title: props.popup.header,
+            width: width === width ? width : null
+        };
+    }
+
     if (props.composite) {
         return (
             <TxBatchButton
@@ -112,6 +125,7 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
                     confirmButton: props.alert.confirmbutton,
                     cancelButton: props.alert.cancelbutton
                 }}
+                popup={popup}
                 page={props.page}
                 pageParams={getPageParams}
             >
@@ -132,6 +146,7 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
                     confirmButton: props.alert.confirmbutton,
                     cancelButton: props.alert.cancelbutton
                 }}
+                popup={popup}
                 page={props.page}
                 pageParams={getPageParams}
             >

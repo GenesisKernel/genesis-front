@@ -69,6 +69,7 @@ export const rootEpic = combineEpics(
     auth.epic,
     content.epic,
     sections.epic,
+    modal.epic,
     engine.epic,
     editor.epic,
     tx.epic,

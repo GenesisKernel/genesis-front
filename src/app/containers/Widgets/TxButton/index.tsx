@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import * as uuid from 'uuid';
+import React from 'react';
+import uuid from 'uuid';
 import { OrderedMap } from 'immutable';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
@@ -38,6 +38,10 @@ interface ITxButtonContainerProps {
     confirm?: ITxButtonConfirm;
     page?: string;
     pageParams?: { [key: string]: any };
+    popup?: {
+        title?: string;
+        width?: number;
+    };
     disabled?: boolean;
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
     onExec?: (block: string, error?: { type: string, error: string }) => void;
@@ -122,6 +126,7 @@ class TxButtonContainer extends React.Component<ITxButtonContainerProps & ITxBut
         this._uuid = uuid.v4();
         this.props.navigatePage({
             confirm,
+            popup: this.props.popup,
             name: page,
             params: pageParams,
             force: true

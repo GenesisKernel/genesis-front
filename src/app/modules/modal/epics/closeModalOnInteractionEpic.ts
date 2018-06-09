@@ -20,13 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import reducer, { State } from './reducer';
-import epic from './epic';
-import * as actions from './actions';
+import { Epic } from 'modules';
+import { isType } from 'typescript-fsa';
+import { Observable } from 'rxjs/Observable';
+import { modalClose } from '../actions';
+import { navigatePage } from 'modules/sections/actions';
 
-export type State = State;
-export {
-    actions,
-    reducer,
-    epic
-};
+const closeModalOnInteractionEpic: Epic = (action$, store, { api }) => action$.filter(action => isType(action, navigatePage.started))
+    .flatMap(action => {
+        const state = store.getState();
+
+        return Observable.if(
+            () => state.modal.type && !state.modal.result,
+            Observable.of(modalClose({
+                reason: 'CANCEL',
+                data: null
+            })),
+            Observable.empty<never>()
+        );
+    });
+
+export default closeModalOnInteractionEpic;
