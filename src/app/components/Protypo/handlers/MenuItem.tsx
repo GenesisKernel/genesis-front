@@ -1,24 +1,30 @@
-// Copyright 2017 The genesis-front Authors
-// This file is part of the genesis-front library.
+// MIT License
 // 
-// The genesis-front library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Copyright (c) 2016-2018 GenesisKernel
 // 
-// The genesis-front library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 // 
-// You should have received a copy of the GNU Lesser General Public License
-// along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
-import * as React from 'react';
-import * as classnames from 'classnames';
-import styled from 'styled-components';
-import * as propTypes from 'prop-types';
+import React from 'react';
+import classnames from 'classnames';
+import propTypes from 'prop-types';
 
+import themed from 'components/Theme/themed';
 import Protypo, { IParamsSpec } from '../Protypo';
 import PageLink from 'containers/Routing/PageLink';
 
@@ -27,12 +33,9 @@ export interface IMenuItemProps {
     'page'?: string;
     'icon'?: string;
     'params'?: IParamsSpec;
-
-    // TODO: Stub value
-    '_systemPageHook'?: string;
 }
 
-export const StyledMenuItem = styled.div`
+export const StyledMenuItem = themed.div`
     > a, > a:hover {
         text-decoration: none !important;
     }
@@ -54,7 +57,7 @@ export const StyledMenuItem = styled.div`
     }
 
     &:hover {
-        background: #ececec;
+        background: ${props => props.theme.menuBackgroundActive};
     }
 
     .link-body {
@@ -62,7 +65,7 @@ export const StyledMenuItem = styled.div`
         height: 50px;
         line-height: 50px;
         padding: 0 25px;
-        color: #0a1d33;
+        color: ${props => props.theme.menuForeground};
         font-size: 14px;
         font-weight: 200;
         text-align: left;
@@ -73,7 +76,7 @@ export const StyledMenuItem = styled.div`
 
         .icon {
             margin-right: 14px;
-            color: #3577cc;
+            color: ${props => props.theme.menuIconColor};
             font-size: 17px;
             position: relative;
             top: 3px;

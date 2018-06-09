@@ -1,33 +1,35 @@
-// Copyright 2017 The genesis-front Authors
-// This file is part of the genesis-front library.
+// MIT License
 // 
-// The genesis-front library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Copyright (c) 2016-2018 GenesisKernel
 // 
-// The genesis-front library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 // 
-// You should have received a copy of the GNU Lesser General Public License
-// along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 import * as _ from 'lodash';
 import * as React from 'react';
 import * as propTypes from 'prop-types';
-import * as classnames from 'classnames';
 import { TProtypoElement } from 'genesis/protypo';
 
 import StyledComponent from './StyledComponent';
-import TagWrapper from '../components/TagWrapper';
-import DnDComponent from './DnDComponent';
 import LongText from 'components/Protypo/components/LongText';
 import BlobData from 'components/Protypo/components/BlobData';
-import { IConstructorElementProps } from 'genesis/editor';
 
-export interface ITableProps extends IConstructorElementProps {
+export interface ITableProps {
     id: string;
     className?: string;
     source?: string;
@@ -54,75 +56,6 @@ class Table extends React.Component<ITableProps> {
 
     render() {
         const context = this.context as ITableContext;
-        if (this.props.editable) {
-            const onClick = (e: any) => {
-                e.stopPropagation();
-                this.props.selectTag(this.props.tag);
-            };
-
-            const removeTag = () => {
-                this.props.removeTag({ tag: this.props.tag });
-            };
-
-            const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
-
-            const classes = classnames({
-                'table': true,
-                [this.props.className]: true,
-                'b-selected': this.props.selected
-            });
-
-            return connectDragPreview(connectDropTarget(
-                <span>
-                    <TagWrapper
-                        display="block"
-                        selected={this.props.selected}
-                        canDrop={isOver}
-                        canDropPosition={this.props.canDropPosition}
-                        onClick={onClick}
-                        removeTag={removeTag}
-                        connectDragSource={connectDragSource}
-                        canMove={true}
-                    >
-                        <table
-                            className={classes}
-                        >
-                            <thead>
-                                <tr>
-                                    <th>Column 1</th>
-                                    <th>Column 2</th>
-                                    <th>Column 3</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        Row 1
-                            </td>
-                                    <td>
-                                        Value
-                            </td>
-                                    <td>
-                                        Value
-                            </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Row 2
-                            </td>
-                                    <td>
-                                        Value
-                            </td>
-                                    <td>
-                                        Value
-                            </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </TagWrapper>
-                </span>
-            ));
-        }
 
         this._cachedSourceData = context.resolveSource(this.props.source);
 
@@ -219,4 +152,3 @@ class Table extends React.Component<ITableProps> {
 }
 
 export default StyledComponent(Table);
-export const TableDnD = DnDComponent(StyledComponent(Table));

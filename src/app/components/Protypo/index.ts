@@ -1,61 +1,65 @@
-// Copyright 2017 The genesis-front Authors
-// This file is part of the genesis-front library.
+// MIT License
 // 
-// The genesis-front library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Copyright (c) 2016-2018 GenesisKernel
 // 
-// The genesis-front library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 // 
-// You should have received a copy of the GNU Lesser General Public License
-// along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 import Protypo from './Protypo';
-import Button, { ButtonDnD } from './handlers/Button';
+import ArrayToSource from './handlers/ArrayToSource';
+import Button from './handlers/Button';
 import Code from 'components/Protypo/handlers/Code';
 import Data from './handlers/Data';
 import DBFind from './handlers/DBFind';
-import LogicDnD from './handlers/Logic';
-import IfDnD from './handlers/If';
-import ElseIfDnD from './handlers/ElseIf';
-import ElseDnD from './handlers/Else';
-import Div, { DivDnD } from './handlers/Div';
-import Em, { EmDnD } from './handlers/Em';
+import Div from './handlers/Div';
+import Em from './handlers/Em';
 import ForList from './handlers/ForList';
-import Form, { FormDnD } from './handlers/Form';
-import Image, { ImageDnD } from './handlers/Image';
-import ImageInput, { ImageInputDnD } from './handlers/ImageInput';
-import Input, { InputDnD } from './handlers/Input';
+import Form from './handlers/Form';
+import Image from './handlers/Image';
+import ImageInput from './handlers/ImageInput';
+import Input from './handlers/Input';
 import InputErr from './handlers/InputErr';
 import InputMap from './handlers/InputMap';
 import JsonToSource from './handlers/JsonToSource';
-import Label, { LabelDnD } from './handlers/Label';
+import Label from './handlers/Label';
 import LinkPage from './handlers/LinkPage';
 import Map from './handlers/Map';
 import MenuItem from './handlers/MenuItem';
 import MenuGroup from './handlers/MenuGroup';
-import P, { PDnD } from './handlers/P';
+import P from './handlers/P';
 import QRCode from './handlers/QRCode';
-import RadioGroup, { RadioGroupDnD } from './handlers/RadioGroup';
+import RadioGroup from './handlers/RadioGroup';
 import Range from './handlers/Range';
 import Select from './handlers/Select';
-import Span, { SpanDnD } from './handlers/Span';
-import Strong, { StrongDnD } from './handlers/Strong';
-import Table, { TableDnD } from './handlers/Table';
+import Span from './handlers/Span';
+import Strong from './handlers/Strong';
+import Table from './handlers/Table';
 
 import setTitle from './functions/setTitle';
 import addToolButton from './functions/addToolButton';
 
 const handlers = {
+    'arraytosource': ArrayToSource,
     'button': Button,
     'code': Code,
     'data': Data,
-    'div': Div,
     'dbfind': DBFind,
+    'div': Div,
     'em': Em,
     'forlist': ForList,
     'form': Form,
@@ -80,34 +84,12 @@ const handlers = {
     'table': Table
 };
 
-const handlersDnD = {
-    'button': ButtonDnD,
-    'if': IfDnD,
-    'elseif': ElseIfDnD,
-    'else': ElseDnD,
-    'div': DivDnD,
-    'em': EmDnD,
-    'form': FormDnD,
-    'image': ImageDnD,
-    'imageinput': ImageInputDnD,
-    'input': InputDnD,
-    'label': LabelDnD,
-    'p': PDnD,
-    'radiogroup': RadioGroupDnD,
-    'span': SpanDnD,
-    'strong': StrongDnD,
-    'table': TableDnD
-};
-
 const functions = {
     'settitle': setTitle,
     'addtoolbutton': addToolButton
 };
 
-export const resolveHandler = (name: string, DnD?: boolean) => {
-    if (DnD) {
-        return handlersDnD[name] || LogicDnD;
-    }
+export const resolveHandler = (name: string) => {
     return handlers[name];
 };
 

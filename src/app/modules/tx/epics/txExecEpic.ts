@@ -1,43 +1,40 @@
-// Copyright 2017 The genesis-front Authors
-// This file is part of the genesis-front library.
+// MIT License
 // 
-// The genesis-front library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Copyright (c) 2016-2018 GenesisKernel
 // 
-// The genesis-front library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 // 
-// You should have received a copy of the GNU Lesser General Public License
-// along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
+import uuid from 'uuid';
 import { Action } from 'redux';
 import { Epic } from 'modules';
 import { Observable } from 'rxjs';
 import { txExec } from '../actions';
 import keyring from 'lib/keyring';
-import { toastr } from 'react-redux-toastr';
 import { authorize } from 'modules/auth/actions';
 import { TTxError } from 'genesis/tx';
+import { enqueueNotification } from '../../notifications/actions';
 
 export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(txExec.started)
     .flatMap(action => {
         const state = store.getState();
         const client = api(state.auth.session);
-        const publicKey = keyring.generatePublicKey(action.payload.privateKey);
-
-        if (!keyring.validatePrivateKey(action.payload.privateKey)) {
-            return Observable.of(txExec.failed({
-                params: action.payload,
-                error: {
-                    type: 'E_INVALID_PASSWORD',
-                    error: null
-                }
-            }));
-        }
+        const publicKey = keyring.generatePublicKey(action.payload.privateKey, true);
 
         return Observable.fromPromise(client.txCall({
             requestID: action.payload.requestID,
@@ -61,14 +58,7 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
 
         ).flatMap(txResult => {
             if (txResult.blockid) {
-                if (!action.payload.tx.silent) {
-                    toastr.success(
-                        action.payload.tx.name,
-                        `Imprinted in the blockchain (block #${txResult.blockid})`,
-                    );
-                }
-
-                return Observable.of<Action>(
+                const actions = Observable.of<Action>(
                     txExec.done({
                         params: action.payload,
                         result: {
@@ -78,6 +68,20 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                     }),
                     authorize(action.payload.privateKey)
                 );
+
+                if (action.payload.tx.silent) {
+                    return actions;
+                }
+                else {
+                    return actions.concat(Observable.of(enqueueNotification({
+                        id: uuid.v4(),
+                        type: 'TX_SUCCESS',
+                        params: {
+                            block: txResult.blockid,
+                            tx: action.payload.tx
+                        }
+                    })));
+                }
             }
             else {
                 return Observable.of(txExec.failed({

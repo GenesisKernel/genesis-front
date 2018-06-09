@@ -4,7 +4,7 @@
     "author": {
         "name": "genesis-front"
     },
-    "license": "LGPLv3",
+    "license": "MIT",
     "repository": {
         "type": "git",
         "url": "https://github.com/GenesisKernel/genesis-front"
@@ -46,10 +46,10 @@
         "react-onclickoutside": "^6.6.0",
         "react-redux": "^5.0.6",
         "react-redux-loading-bar": "^2.9.3",
-        "react-redux-toastr": "^7.1.5",
         "react-router-dom": "^4.1.2",
         "react-router-redux": "^5.0.0-alpha.8",
         "react-router-transition": "^1.1.0",
+        "react-scrollbar": "^0.5.4",
         "react-sortable-tree": "^2.1.0",
         "react-test-renderer": "^15.6.2",
         "react-transition-group": "^2.2.1",
@@ -70,7 +70,6 @@
         "whatwg-fetch": "^2.0.4"
     },
     "scripts": {
-        "extract-locales": "node util/extractLocales.js",
         "build-css": "node-sass-chokidar --include-path ./src/app/styles/scss --include-path ./node_modules src/app/styles/scss/sass.scss -o src/app/styles/built",
         "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src/app/styles/scss --include-path ./node_modules src/app/styles/scss/sass.scss -o src/app/styles/built --watch --recursive",
         "start-js": "react-scripts-ts start",
@@ -110,9 +109,9 @@
         "@types/react-monaco-editor": "^0.8.2",
         "@types/react-onclickoutside": "^6.0.1",
         "@types/react-redux": "^5.0.4",
-        "@types/react-redux-toastr": "^7.0.2",
         "@types/react-router-dom": "^4.0.7",
         "@types/react-router-redux": "^5.0.10",
+        "@types/react-scrollbar": "^0.4.9",
         "@types/react-sortable-tree": "^0.1.4",
         "@types/react-test-renderer": "^15.5.4",
         "@types/react-transition-group": "^2.0.6",
@@ -132,7 +131,7 @@
         "react": "^16.2.0",
         "react-dom": "^16.2.0",
         "react-scripts-ts": "^2.15.1",
-        "react-scripts-ts-electron": "^0.2.1",
+        "react-scripts-ts-electron": "git+https://git@github.com/GenesisKernel/cra-typescript-electron.git",
         "ts-jest": "^22.4.4",
         "tslint-react": "^3.2.0",
         "typescript": "^2.8.3",

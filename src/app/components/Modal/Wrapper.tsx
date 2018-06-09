@@ -1,22 +1,28 @@
-// Copyright 2017 The genesis-front Authors
-// This file is part of the genesis-front library.
+// MIT License
 // 
-// The genesis-front library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Copyright (c) 2016-2018 GenesisKernel
 // 
-// The genesis-front library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 // 
-// You should have received a copy of the GNU Lesser General Public License
-// along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import Transition from 'react-transition-group/Transition';
-import styled from 'styled-components';
+import themed from 'components/Theme/themed';
 
 const containerAnimationDuration = 210;
 const containerAnimationDef = {
@@ -70,7 +76,7 @@ const childAnimationDef = {
     }
 };
 
-const StyledModalWrapper = styled.div`
+const StyledModalWrapper = themed.div`
     background: rgba(0,0,0,0.3);
     position: fixed;
     top: 0;
@@ -82,7 +88,8 @@ const StyledModalWrapper = styled.div`
     overflow-x: hidden;
     overflow-y: auto;
     padding: 50px;
-    margin-top: ${props => props.style.marginTop}px;
+    margin-top: ${props => props.theme.headerHeight - 1}px;
+    padding-top: ${props => 50 + props.theme.toolbarHeight}px;
 
     &::before {
         content: ' ';
@@ -95,7 +102,7 @@ const StyledModalWrapper = styled.div`
 
     > .modal-wnd {
         display: inline-block;
-        border: solid 1px #71a2e0;
+        border: solid 1px ${props => props.theme.modalOutline};
         background: #fff;
         vertical-align: middle;
         text-align: initial;
@@ -105,7 +112,7 @@ const StyledModalWrapper = styled.div`
 `;
 
 export interface IModalWrapperProps {
-    topOffset?: number;
+
 }
 
 interface IModalWrapperState {
@@ -188,7 +195,7 @@ class ModalWrapper extends React.Component<IModalWrapperProps, IModalWrapperStat
         return (
             <Transition in={this.state.active} timeout={containerAnimationDuration} onEntered={this.onEntered} onExited={this.onExited} unmountOnExit>
                 {(state: string) => (
-                    <StyledModalWrapper style={{ ...containerAnimationDef.defaultStyle, ...containerAnimationDef[state], marginTop: this.props.topOffset }}>
+                    <StyledModalWrapper style={{ ...containerAnimationDef.defaultStyle, ...containerAnimationDef[state] }}>
                         <Transition in={state === 'entered'} timeout={childAnimationDuration}>
                             {this.renderChild.bind(this)}
                         </Transition>

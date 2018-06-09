@@ -1,23 +1,29 @@
-// Copyright 2017 The genesis-front Authors
-// This file is part of the genesis-front library.
+// MIT License
 // 
-// The genesis-front library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Copyright (c) 2016-2018 GenesisKernel
 // 
-// The genesis-front library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 // 
-// You should have received a copy of the GNU Lesser General Public License
-// along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 import queryString from 'query-string';
 import urlJoin from 'url-join';
 import urlTemplate from 'url-template';
-import { IUIDResponse, ILoginRequest, ILoginResponse, IRefreshResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, IContentJsonRequest, IContentJsonResponse, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IRefreshRequest, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse, ITxCallRequest, ITxCallResponse, ITxPrepareRequest, ITxPrepareResponse, ITxStatusRequest, ITxStatusResponse, ITableRequest, TConfigRequest, ISystemParamsRequest, ISystemParamsResponse } from 'genesis/api';
+import { IUIDResponse, ILoginRequest, ILoginResponse, IRefreshResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, IContentJsonRequest, IContentJsonResponse, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IRefreshRequest, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse, ITxCallRequest, ITxCallResponse, ITxPrepareRequest, ITxPrepareResponse, ITxStatusRequest, ITxStatusResponse, ITableRequest, TConfigRequest, ISystemParamsRequest, ISystemParamsResponse, ITxPrepareBatchRequest, ITxStatusBatchRequest, ITxPrepareBatchResponse, ITxCallBatchRequest, ITxCallBatchResponse, ITxStatusBatchResponse } from 'genesis/api';
 
 export type TRequestMethod =
     'get' |
@@ -131,7 +137,7 @@ class GenesisAPI {
                 body,
                 headers: requestOptions.headers
             });
-            json = requestOptions.responseTransformer ? requestOptions.responseTransformer(response.body) : response.body;
+            json = response.body;
         }
         catch (e) {
             // TODO: Not possible to catch with any other way
@@ -150,7 +156,7 @@ class GenesisAPI {
             throw json;
         }
         else {
-            return json as R;
+            return requestOptions.responseTransformer ? requestOptions.responseTransformer(json) : json;
         }
     }
 
@@ -219,6 +225,9 @@ class GenesisAPI {
             names: (request.names || []).join(',')
         })
     });
+    public getEcosystemName = this.setEndpoint<{ id: string | number }, string>('get', 'ecosystemname', {
+        responseTransformer: response => response.ecosystem_name
+    });
     public getConfig = this.setEndpoint<{ name: TConfigRequest }, string>('get', 'config/{name}', { requestTransformer: request => null });
     public getContract = this.setSecuredEndpoint<IContractRequest, IContractResponse>('get', 'contract/{name}', { requestTransformer: request => null });
     public getContracts = this.setSecuredEndpoint<ISegmentRequest, IContractsResponse>('get', 'contracts');
@@ -280,6 +289,34 @@ class GenesisAPI {
         requestTransformer: request => request.params
     });
     public txStatus = this.setSecuredEndpoint<ITxStatusRequest, ITxStatusResponse>('get', 'txstatus/{hash}', { requestTransformer: () => null });
+
+    // Transactions batch-processing
+    public txPrepareBatch = this.setSecuredEndpoint<ITxPrepareBatchRequest, ITxPrepareBatchResponse>('post', 'prepareMultiple', {
+        requestTransformer: request => ({
+            data: JSON.stringify({
+                contracts: request.contracts.map(l => ({
+                    contract: l.name,
+                    params: l.params
+                }))
+            })
+        })
+    });
+    public txCallBatch = this.setSecuredEndpoint<ITxCallBatchRequest, ITxCallBatchResponse>('post', 'contractMultiple/{requestID}', {
+        requestTransformer: request => ({
+            data: JSON.stringify({
+                signatures: request.signatures,
+                pubkey: request.pubkey,
+                time: request.time
+            })
+        })
+    });
+    public txStatusBatch = this.setSecuredEndpoint<ITxStatusBatchRequest, ITxStatusBatchResponse>('post', 'txstatusMultiple', {
+        requestTransformer: request => ({
+            data: JSON.stringify({
+                hashes: request.hashes
+            })
+        })
+    });
 
     // Blob data getters
     public resolveTextData = (link: string) => this._options.transport({

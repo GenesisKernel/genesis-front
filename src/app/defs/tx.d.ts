@@ -1,18 +1,24 @@
-// Copyright 2017 The genesis-front Authors
-// This file is part of the genesis-front library.
+// MIT License
 // 
-// The genesis-front library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Copyright (c) 2016-2018 GenesisKernel
 // 
-// The genesis-front library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 // 
-// You should have received a copy of the GNU Lesser General Public License
-// along with the genesis-front library. If not, see <http://www.gnu.org/licenses/>.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 declare module 'genesis/tx' {
     type TTxError =
@@ -33,6 +39,7 @@ declare module 'genesis/tx' {
     interface ITxError {
         type: TTxError;
         error: string;
+        params?: any[];
     }
 
     type TTransactionStatus =
@@ -44,27 +51,40 @@ declare module 'genesis/tx' {
         contract: string;
         block: string;
         result?: string;
-        error?: {
-            type: string;
-            error: string;
-        }
+        error?: ITxError;
     }
 
     interface ITransactionCollection {
         type: 'collection';
         uuid: string;
+        pending: number;
+        error?: ITxError;
         transactions: ITransaction[];
     }
 
-    interface ITransactionCall {
+    type TTransactionRequest =
+        ITransactionCall | ITransactionBatchCall;
+
+    interface ITransactionRequest {
         uuid: string;
-        name: string;
-        parent?: string;
         silent?: boolean;
+        confirm?: ITransactionConfirm;
+    }
+
+    interface ITransactionCall extends ITransactionRequest {
+        name: string;
         params: {
             [key: string]: any;
         };
-        confirm?: ITransactionConfirm;
+    }
+
+    interface ITransactionBatchCall extends ITransactionRequest {
+        contracts: {
+            name: string;
+            params: {
+                [key: string]: any;
+            }[];
+        }[];
     }
 
     interface ITransactionConfirm {
@@ -73,18 +93,6 @@ declare module 'genesis/tx' {
         text?: string;
         confirmButton?: string;
         cancelButton?: string;
-    }
-
-    interface ITransactionBatchCall {
-        uuid: string;
-        contracts: {
-            name: string;
-            data: {
-                [key: string]: any;
-            }[];
-        }[];
-        silent?: boolean;
-        confirm?: ITransactionConfirm;
     }
 
     interface IExecutionCall {
