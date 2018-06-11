@@ -20,17 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import commander from 'commander';
+
 export type TPlatformType =
     'desktop' | 'web' | 'win32' | 'linux' | 'darwin';
 
 const isElectron = navigator.userAgent.toLowerCase().indexOf(' electron/') > -1;
 const platform: TPlatformType = isElectron ? 'desktop' : 'web';
 let os: NodeJS.Platform = null;
+let argv = [];
 
 if (isElectron) {
+    const electron = require('electron');
     const process: NodeJS.Process = require('process');
     os = process.platform;
+
+    // Normalize electron launch arguments
+    argv = electron.remote.process.argv.slice();
+    const executable = argv.shift();
+    if (!argv[0] || argv[0] && argv[0] !== '.') {
+        argv.unshift('');
+    }
+    argv.unshift(executable);
 }
+
+const command = commander
+    .option('-n, --full-node <url>', null, (value, stack) => {
+        stack.push(value);
+        return stack;
+    }, [])
+    .parse(argv);
 
 export default {
     // Platform.select will return only 1 value depending on which platform
@@ -58,17 +77,6 @@ export default {
     },
 
     args: () => {
-        if (isElectron) {
-            const electron = require('electron');
-            const args: { [key: string]: string } = {};
-            (electron.remote.process.argv || []).forEach((arg: string) => {
-                const tokens = arg.split('=', 2);
-                args[tokens[0]] = tokens[1];
-            });
-            return args;
-        }
-        else {
-            return {};
-        }
+        return command;
     }
 };

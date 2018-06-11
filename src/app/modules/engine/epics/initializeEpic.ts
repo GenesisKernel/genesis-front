@@ -35,18 +35,15 @@ const fullNodesFallback = ['http://127.0.0.1:7079'];
 
 const initializeEpic: Epic = (action$, store, { api, defaultKey }) => action$.ofAction(initialize.started)
     .flatMap(action => {
-        const fullNodesArg = platform.args()['--full_nodes'];
+        const fullNodesArg = platform.args().fullNode;
         const requestUrl = platform.select({
             web: urlJoin(process.env.PUBLIC_URL || location.origin, 'settings.json'),
             desktop: './settings.json'
         });
 
         return Observable.if(
-            () => !!fullNodesArg,
-            Observable.of(fullNodesArg)
-                .map(l =>
-                    l.split('|')
-                ),
+            () => fullNodesArg && 0 < fullNodesArg.length,
+            Observable.of(fullNodesArg),
             Observable.ajax.getJSON<{ fullNodes?: string[] }>(requestUrl)
                 .map(l =>
                     l.fullNodes
