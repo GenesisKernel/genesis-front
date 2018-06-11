@@ -35,80 +35,99 @@ const fullNodesFallback = ['http://127.0.0.1:7079'];
 
 const initializeEpic: Epic = (action$, store, { api, defaultKey }) => action$.ofAction(initialize.started)
     .flatMap(action => {
+        const fullNodesArg = platform.args()['--full_nodes'];
         const requestUrl = platform.select({
             web: urlJoin(process.env.PUBLIC_URL || location.origin, 'settings.json'),
             desktop: './settings.json'
         });
 
-        return Observable.ajax.getJSON<{ fullNodes?: string[] }>(requestUrl)
-            .map(l => l.fullNodes)
-            .defaultIfEmpty(fullNodesFallback)
-            .catch(e => Observable.of(fullNodesFallback))
-            .flatMap(fullNodes =>
-                NodeObservable({
-                    nodes: [...(store.getState().storage.fullNodes || []), ...fullNodes],
-                    count: 1,
-                    timeout: 5000,
-                    concurrency: 10,
-                    api
-                }).flatMap(node => {
-                    const state = store.getState();
-                    const client = api({ apiHost: node });
+        return Observable.if(
+            () => !!fullNodesArg,
+            Observable.of(fullNodesArg)
+                .map(l =>
+                    l.split('|')
+                ),
+            Observable.ajax.getJSON<{ fullNodes?: string[] }>(requestUrl)
+                .map(l =>
+                    l.fullNodes
 
-                    return Observable.concat(
-                        Observable.of(initialize.done({
-                            params: action.payload,
-                            result: {
-                                fullNodes,
-                                nodeHost: node
-                            }
-                        })),
-                        Observable.of(setLocale.started(state.storage.locale)),
-                        Observable.from(client.getUid())
-                            .flatMap(uid => {
-                                return client.authorize(uid.token).login({
-                                    publicKey: keyring.generatePublicKey(defaultKey),
-                                    signature: keyring.sign(uid.uid, defaultKey)
+                ).catch(e =>
+                    Observable.of(fullNodesFallback)
 
-                                }).then(loginResult => {
-                                    const securedClient = client.authorize(loginResult.token);
+                ).defaultIfEmpty(
+                    fullNodesFallback
 
-                                    return Promise.all([
-                                        client.getConfig({ name: 'centrifugo' }).catch(e => null),
-                                        securedClient.getSystemParams({ names: ['full_nodes'] })
-                                            .then(l =>
-                                                JSON.parse(l.list.find(p => p.name === 'full_nodes').value)
-                                                    .map((n: any) => n.api_address)
-                                            ).catch(e =>
-                                                []
-                                            )
-                                    ]).then(result => ({
-                                        centrifugo: result[0],
-                                        login: loginResult,
-                                        fullNodes: result[1]
-                                    }));
-                                });
-                            }).flatMap(result => Observable.of<Action>(
-                                connect.started({
-                                    wsHost: result.centrifugo,
-                                    session: result.login.token,
-                                    socketToken: result.login.notify_key,
-                                    timestamp: result.login.timestamp,
-                                    userID: result.login.key_id
-                                }),
-                                mergeFullNodes([...result.fullNodes, ...fullNodes])
+                ).map(fullNodes => [
+                    ...(store.getState().storage.fullNodes || []),
+                    ...fullNodes
+                ])
 
-                            )).catch(e => Observable.of(connect.failed({
-                                params: null,
-                                error: 'E_SOCKET_OFFLINE'
-                            })))
-                    );
+        ).flatMap(fullNodes =>
+            NodeObservable({
+                nodes: fullNodes,
+                count: 1,
+                timeout: 5000,
+                concurrency: 10,
+                api
 
-                }).defaultIfEmpty(initialize.failed({
-                    params: action.payload,
-                    error: 'E_OFFLINE'
-                }))
-            );
+            }).flatMap(node => {
+                const state = store.getState();
+                const client = api({ apiHost: node });
+
+                return Observable.concat(
+                    Observable.of(initialize.done({
+                        params: action.payload,
+                        result: {
+                            fullNodes,
+                            nodeHost: node
+                        }
+                    })),
+                    Observable.of(setLocale.started(state.storage.locale)),
+                    Observable.from(client.getUid())
+                        .flatMap(uid => {
+                            return client.authorize(uid.token).login({
+                                publicKey: keyring.generatePublicKey(defaultKey),
+                                signature: keyring.sign(uid.uid, defaultKey)
+
+                            }).then(loginResult => {
+                                const securedClient = client.authorize(loginResult.token);
+
+                                return Promise.all([
+                                    client.getConfig({ name: 'centrifugo' }).catch(e => null),
+                                    securedClient.getSystemParams({ names: ['full_nodes'] })
+                                        .then(l =>
+                                            JSON.parse(l.list.find(p => p.name === 'full_nodes').value)
+                                                .map((n: any) => n.api_address)
+                                        ).catch(e =>
+                                            []
+                                        )
+                                ]).then(result => ({
+                                    centrifugo: result[0],
+                                    login: loginResult,
+                                    fullNodes: result[1]
+                                }));
+                            });
+                        }).flatMap(result => Observable.of<Action>(
+                            connect.started({
+                                wsHost: result.centrifugo,
+                                session: result.login.token,
+                                socketToken: result.login.notify_key,
+                                timestamp: result.login.timestamp,
+                                userID: result.login.key_id
+                            }),
+                            mergeFullNodes([...result.fullNodes, ...fullNodes])
+
+                        )).catch(e => Observable.of(connect.failed({
+                            params: null,
+                            error: 'E_SOCKET_OFFLINE'
+                        })))
+                );
+
+            }).defaultIfEmpty(initialize.failed({
+                params: action.payload,
+                error: 'E_OFFLINE'
+            }))
+        );
     });
 
 export default initializeEpic;
