@@ -21,10 +21,12 @@
 // SOFTWARE.
 
 import { combineEpics } from 'redux-observable';
+import ecosystemInitEpic from './epics/ecosystemInitEpic';
 import displayDataEpic from './epics/displayDataEpic';
 import fetchNotificationsEpic from './epics/fetchNotificationsEpic';
 
 export default combineEpics(
+    ecosystemInitEpic,
     displayDataEpic,
     fetchNotificationsEpic
 );
