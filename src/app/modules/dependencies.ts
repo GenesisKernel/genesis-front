@@ -31,6 +31,7 @@ export const apiEndpoint = 'api/v2';
 export interface IStoreDependencies {
     api: IAPIDependency;
     defaultKey: string;
+    defaultPassword: string;
     constructorModule: IConstructorDependenies;
 }
 
@@ -67,6 +68,7 @@ const storeDependencies: IStoreDependencies = {
         session: params.sessionToken
     }),
     defaultKey: 'e5a87a96a445cb55a214edaad3661018061ef2936e63a0a93bdb76eb28251c1f',
+    defaultPassword: 'genesis',
     constructorModule: {
         setIds,
         convertToTreeData,
