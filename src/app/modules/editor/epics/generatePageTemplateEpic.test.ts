@@ -36,11 +36,11 @@ describe('generatePageTemplateEpic', () => {
         const expectedOutput: any = [
             {
                 type: 'editor/UPDATE_EDITOR_TAB',
-                payload: 'Image(Src: /img/dummy.png, Alt: Image)\nP(Class: text-primary, Body:\n Paragraph text here\n)\nForm() {\n Label(Body:\n  Firstname:\n )\n Input(Class: form-control, Name: sample input)\n}\nForm() {\n Label(Body:\n  Lastname:\n )\n Input(Class: form-control, Name: sample input)\n Button(Body:\n  Submit\n )\n}\nTable(Source: keysStr, Columns: "KEY_ID=id,MONEY=amount")'
+                payload: 'Image(Alt: Image, Src: /img/dummy.png)\nP(Class: text-primary, Body: Paragraph text here)\nForm() {\n Label(Body: Firstname:)\n Input(Class: form-control, Name: sample input)\n}\nForm() {\n Label(Body: Lastname:)\n Input(Class: form-control, Name: sample input)\n Button(Body: Submit)\n}\nTable(Source: keysStr, Columns: "KEY_ID=id,MONEY=amount")'
             },
             {
                 type: 'editor/SET_PAGE_TEMPLATE',
-                payload: 'Image(Src: /img/dummy.png, Alt: Image)\nP(Class: text-primary, Body:\n Paragraph text here\n)\nForm() {\n Label(Body:\n  Firstname:\n )\n Input(Class: form-control, Name: sample input)\n}\nForm() {\n Label(Body:\n  Lastname:\n )\n Input(Class: form-control, Name: sample input)\n Button(Body:\n  Submit\n )\n}\nTable(Source: keysStr, Columns: "KEY_ID=id,MONEY=amount")'
+                payload: 'Image(Alt: Image, Src: /img/dummy.png)\nP(Class: text-primary, Body: Paragraph text here)\nForm() {\n Label(Body: Firstname:)\n Input(Class: form-control, Name: sample input)\n}\nForm() {\n Label(Body: Lastname:)\n Input(Class: form-control, Name: sample input)\n Button(Body: Submit)\n}\nTable(Source: keysStr, Columns: "KEY_ID=id,MONEY=amount")'
             }
         ];
 

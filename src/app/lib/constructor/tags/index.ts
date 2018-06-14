@@ -36,6 +36,7 @@ import Table from './Table';
 import If from './If';
 import ElseIf from './ElseIf';
 import Else from './Else';
+import Data from './Data';
 import Logic from './Logic';
 
 const tagHandlers = {
@@ -55,7 +56,8 @@ const tagHandlers = {
         'table': Table,
         'if': If,
         'elseif': ElseIf,
-        'else': Else
+        'else': Else,
+        'data': Data
     },
     default: Logic
 };

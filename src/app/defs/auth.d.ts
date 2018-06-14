@@ -30,6 +30,11 @@ declare module 'genesis/auth' {
         username: string;
     }
 
+    interface ISaveEncKeyCall {
+        id: string;
+        encKey: string;
+    }
+
     interface IRole {
         id: number;
         name: string;

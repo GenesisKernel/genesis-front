@@ -28,7 +28,7 @@ import * as _ from 'lodash';
 export let state: any = null;
 let saveState = () => null as any;
 
-if (!process.argv || !process.argv.find(l => '--nosave' === l)) {
+if (!process.argv || !process.argv.find(l => '--dry' === l)) {
     try {
         state = JSON.parse(config.get('persistentData'));
     }

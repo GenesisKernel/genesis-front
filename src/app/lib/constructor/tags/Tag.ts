@@ -24,6 +24,7 @@ import { TProtypoElement } from 'genesis/protypo';
 import { idGenerator } from 'lib/constructor';
 import resolveTagHandler from 'lib/constructor/tags';
 import getParamName, { getTailTagName } from 'lib/constructor/tags/params';
+import { isSimpleBody, quoteValueIfNeeded, getParamsStr } from 'lib/constructor/helpers';
 
 class Tag {
     protected element: TProtypoElement;
@@ -43,6 +44,9 @@ class Tag {
 
     protected editProps = ['class', 'align', 'transform', 'wrap', 'color'];
 
+    protected bodyInline = true;
+    protected dataAttr = false;
+
     constructor(element: TProtypoElement) {
         this.element = element;
     }
@@ -52,56 +56,97 @@ class Tag {
     renderOffset(): string {
         return Array(this.offset + 1).join(' ');
     }
-    renderCode(): string {
-        let result: string = this.tagName + '(';
-        let params = [];
-        for (let attr in this.attr) {
-            if (this.attr.hasOwnProperty(attr)) {
-                let value = this.element && this.element.attr && this.element.attr[attr] || '';
-                if (value) {
-                    if (typeof value === 'string') {
-                        const quote = value.indexOf(',') >= 0;
-                        params.push(this.attr[attr] + ': ' + (quote ? '"' : '') + value + (quote ? '"' : ''));
-                    }
-                    if (typeof value === 'object') {
-                        params.push(this.getParamsStr(this.attr[attr], value));
-                    }
-                }
+
+    getParam(value: any, attr: string): string {
+        let param = '';
+        if (value) {
+            if (typeof value === 'string') {
+                param = getParamName(attr) + ': ' + quoteValueIfNeeded(value);
+            }
+            if (typeof value === 'object') {
+                param = getParamsStr(getParamName(attr), value);
             }
         }
+        return param;
+    }
+    getBasicParamsArr(element: TProtypoElement) {
+        let params: string[] = [];
 
-        let body = this.renderChildren(this.element.children, this.offset);
-        if (this.element.children && this.element.children.length === 1) {
-            params.push('Body:\n' + body);
+        if (element.attr) {
+            Object.keys(element.attr).forEach(attr => {
+                if (!(this.dataAttr && attr === 'data')) {
+                    let param = this.getParam(element.attr[attr], attr);
+                    if (param) {
+                        params.push(param);
+                    }
+                }
+            });
+        }
+        return params;
+    }
+    renderParams(element: TProtypoElement, body: string): string {
+        let params: string[] = this.getBasicParamsArr(element);
+
+        if (body && this.bodyInline && isSimpleBody(body)) {
+            params.push('Body: ' + body);
         }
 
-        result += params.join(', ');
-        result += ((this.element.children && this.element.children.length === 1) ? ('\n' + this.renderOffset()) : '') + ')';
-
+        return params.join(', ');
+    }
+    renderData(): string {
+        let result = '';
+        if (this.dataAttr && this.element && this.element.attr && this.element.attr.data) {
+             result += '{\n'
+                + this.renderOffset() + '   '
+                + this.element.attr.data
+                + '\n'
+                + this.renderOffset()
+                + '}';
+        }
+        return result;
+    }
+    renderTailTag(element: TProtypoElement): string {
+        const tagName = getTailTagName(element.tag);
+        if (tagName) {
+            const children = this.renderChildren(element.children, this.offset);
+            return '.' + tagName
+                + '('
+                + this.renderParams(element, children)
+                + ')'
+                + (children ?
+                    ('{\n' + children + '\n' + this.renderOffset() + '}')
+                    :
+                    '');
+        }
+        return '';
+    }
+    renderTail(): string {
+        let result = '';
         if (this.element.tail && this.element.tail.length) {
-            result += this.element.tail.map((element) => {
-                const tagName = getTailTagName(element.tag);
-                if (tagName) {
-                    let attrs: string[] = [];
-                    for (let attr in element.attr) {
-                        if (element.attr.hasOwnProperty(attr)) {
-                            const val = element.attr[attr];
-                            const quote = val.indexOf(',') >= 0;
-                            attrs.push(getParamName(attr) + ': ' + (quote ? '"' : '') + val + (quote ? '"' : ''));
-                        }
-                    }
-                    const children = this.renderChildren(element.children, this.offset);
-                    return '.' + tagName + '(' + attrs.join(', ') + ')' + (children ? ('{\n' + children + '\n' + this.renderOffset() + '}') : '');
-                }
-                return '';
+            result = this.element.tail.map((element) => {
+                return this.renderTailTag(element);
             }).join('');
         }
-
-        if (this.element.children && this.element.children.length > 1) {
-            result += ' {\n' + body + '\n' + this.renderOffset() + '}';
+        return result;
+    }
+    renderBody(body: string): string {
+        let result = '';
+        if (body && (!this.bodyInline || !isSimpleBody(body))) {
+            result = ' {\n' + body + '\n' + this.renderOffset() + '}';
         }
+        return result;
+    }
+    renderCode(): string {
+        const body = this.renderChildren(this.element.children, this.offset);
 
-        return this.renderOffset() + result;
+        let result: string = this.renderOffset();
+        result += this.tagName + '(';
+        result += this.renderParams(this.element, body) + ')';
+        result += this.renderData();
+        result += this.renderTail();
+        result += this.renderBody(body);
+
+        return result;
     }
 
     renderChildren(children: TProtypoElement[], offset: number): string {
@@ -111,7 +156,7 @@ class Tag {
         let result = children.map((element, index) => {
             switch (element.tag) {
                 case 'text':
-                    return this.renderOffset() + ' ' + element.text;
+                    return quoteValueIfNeeded(element.text);
                 default:
                     const Handler = resolveTagHandler(element.tag);
                     if (Handler) {
@@ -189,16 +234,6 @@ class Tag {
                 id: idGenerator.generateId()
             }] : []
         };
-    }
-
-    getParamsStr(name: string, obj: Object) {
-        let paramsArr = [];
-        for (let param in obj) {
-            if (obj.hasOwnProperty(param)) {
-                paramsArr.push(param + '=' + (obj[param] && obj[param].text || ''));
-            }
-        }
-        return name + ': ' + '"' + paramsArr.join(',') + '"';
     }
 
     getValidationParams(obj: Object) {

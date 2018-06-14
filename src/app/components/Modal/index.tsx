@@ -28,6 +28,7 @@ export interface IModalProps<P, R> {
     params: P;
     onResult: (data: R) => void;
     onCancel: () => void;
+    notify: (type: string, params: any) => void;
     children: React.ReactNode[];
 }
 

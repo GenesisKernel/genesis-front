@@ -37,3 +37,4 @@ export const selectWallet = actionCreator<IWallet>('SELECT_WALLET');
 export const selectRole = actionCreator.async<number, { sessionToken: string, refreshToken: string }>('SELECT_ROLE');
 export const authorize = actionCreator<string>('AUTHORIZE');
 export const deauthorize = actionCreator('DEAUTHORIZE');
+export const changePassword = actionCreator.async<void, { oldPassword: string, newPassword: string }, string>('CHANGE_PASSWORD');

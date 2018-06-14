@@ -33,6 +33,8 @@ import removeWalletEpic from './epics/removeWalletEpic';
 import selectRoleEpic from './epics/selectRoleEpic';
 import logoutEmptySessionEpic from './epics/logoutEmptySessionEpic';
 import inviteEcosystemEpic from './epics/inviteEcosystemEpic';
+import changePasswordEpic from './epics/changePasswordEpic';
+import changePasswordDoneEpic from './epics/changePasswordDoneEpic';
 
 export default combineEpics(
     authorizeEpic,
@@ -46,5 +48,7 @@ export default combineEpics(
     logoutEpic,
     removeWalletEpic,
     selectRoleEpic,
-    inviteEcosystemEpic
+    inviteEcosystemEpic,
+    changePasswordEpic,
+    changePasswordDoneEpic
 );

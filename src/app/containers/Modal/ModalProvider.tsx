@@ -25,6 +25,7 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { IModal } from 'genesis/modal';
 import { modalClose } from 'modules/modal/actions';
+import { enqueueNotification } from 'modules/notifications/actions';
 import ModalProvider from 'components/Modal/ModalProvider';
 
 interface IModalProviderContainerProps {
@@ -37,6 +38,7 @@ interface IModalProviderContainerState {
 
 interface IModalProviderContainerDispatch {
     modalClose: typeof modalClose;
+    enqueueNotification: typeof enqueueNotification;
 }
 
 class ModalProviderContainer extends React.Component<IModalProviderContainerProps & IModalProviderContainerState & IModalProviderContainerDispatch> {
@@ -45,6 +47,7 @@ class ModalProviderContainer extends React.Component<IModalProviderContainerProp
             <ModalProvider
                 modal={this.props.modal}
                 onResult={this.props.modalClose}
+                enqueueNotification={this.props.enqueueNotification}
             >
                 {this.props.children}
             </ModalProvider>
@@ -57,7 +60,8 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    modalClose: modalClose
+    modalClose: modalClose,
+    enqueueNotification: enqueueNotification
 };
 
 export default connect<IModalProviderContainerState, IModalProviderContainerDispatch, IModalProviderContainerProps>(mapStateToProps, mapDispatchToProps)(ModalProviderContainer);
