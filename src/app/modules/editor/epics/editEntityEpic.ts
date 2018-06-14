@@ -20,21 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { TTransactionStatus } from 'genesis/tx';
+import { Action } from 'redux';
+import { Epic } from 'redux-observable';
+import { Observable } from 'rxjs';
+import { IRootState } from 'modules';
+import { txExec } from 'modules/tx/actions';
+import { reloadEditorTab } from '../actions';
 
-export default function (state: State, uuid: string): TTransactionStatus {
-    const parent = state.transactions.get(uuid);
+const connections = {
+    '@1EditBlock': 'block',
+    '@1EditContract': 'contract',
+    '@1EditMenu': 'menu'
+};
 
-    switch (parent.type) {
-        case 'single':
-            return parent;
+const editEntityEpic: Epic<Action, IRootState> = (action$, store) => action$.ofAction(txExec.done)
+    .flatMap(action => {
+        const contractName = action.payload.params.tx.contract && action.payload.params.tx.contract.name;
+        const entity = connections[contractName];
 
-        case 'collection':
-            const txIndex = parent.transactions.findIndex(l => uuid === l.uuid);
-            return parent.transactions[txIndex];
+        if (entity) {
+            const params = action.payload.params.tx.contract.params as { Id: string, Value?: string };
+            return Observable.of(reloadEditorTab({
+                type: entity,
+                id: params.Id,
+                data: {
+                    initialValue: params.Value
+                }
+            }));
+        }
+        else {
+            return Observable.empty();
+        }
+    });
 
-        default:
-            return null;
-    }
-}
+export default editEntityEpic;

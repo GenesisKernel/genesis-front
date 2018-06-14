@@ -37,9 +37,9 @@ const txPrepareEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrep
         const client = api(state.auth.session);
 
         const txCall = {
-            ...action.payload.tx,
+            name: action.payload.tx.contract.name,
             params: {
-                ...action.payload.tx.params,
+                ...action.payload.tx.contract.params,
                 Lang: state.storage.locale
             }
         };
@@ -112,13 +112,7 @@ const txPrepareEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrep
                                 });
 
                                 return Observable.of(txExec.started({
-                                    tx: {
-                                        ...txCall,
-                                        params: {
-                                            ...txCall.params,
-                                            ...signParams
-                                        }
-                                    },
+                                    tx: action.payload.tx,
                                     requestID: prepare.request_id,
                                     time: prepare.time,
                                     privateKey: action.payload.privateKey,
@@ -132,7 +126,7 @@ const txPrepareEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrep
                     }
                     else {
                         return Observable.of(txExec.started({
-                            tx: txCall,
+                            tx: action.payload.tx,
                             requestID: prepare.request_id,
                             time: prepare.time,
                             privateKey: action.payload.privateKey,

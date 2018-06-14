@@ -21,13 +21,14 @@
 // SOFTWARE.
 
 declare module 'genesis/tx' {
+    import { ITxPrepareBatchResponse } from 'genesis/api';
+
     type TTxError =
         'error' |
         'info' |
         'warning' |
         'panic' |
         'E_CONTRACT' |
-        'E_INVALID_PASSWORD' |
         'E_INVALIDATED' |
         'E_SERVER';
 
@@ -42,57 +43,33 @@ declare module 'genesis/tx' {
         params?: any[];
     }
 
-    type TTransactionStatus =
-        ITransaction | ITransactionCollection;
-
     interface ITransaction {
-        type: 'single';
         uuid: string;
         contract: string;
-        block: string;
+        block?: string;
         result?: string;
         error?: ITxError;
+        batch?: {
+            pending: number;
+            contracts: string[];
+        }
     }
 
-    interface ITransactionCollection {
-        type: 'collection';
-        uuid: string;
-        pending: number;
-        error?: ITxError;
-        transactions: ITransaction[];
-    }
-
-    type TTransactionRequest =
-        ITransactionCall | ITransactionBatchCall;
-
-    interface ITransactionRequest {
+    interface ITransactionCall {
         uuid: string;
         silent?: boolean;
-        confirm?: ITransactionConfirm;
-    }
-
-    interface ITransactionCall extends ITransactionRequest {
-        name: string;
-        params: {
-            [key: string]: any;
+        contract?: {
+            name: string;
+            params: {
+                [key: string]: any
+            };
         };
-    }
-
-    interface ITransactionBatchCall extends ITransactionRequest {
-        contracts: {
+        contracts?: {
             name: string;
             params: {
                 [key: string]: any;
             }[];
         }[];
-    }
-
-    interface ITransactionConfirm {
-        type?: string;
-        title?: string;
-        text?: string;
-        confirmButton?: string;
-        cancelButton?: string;
     }
 
     interface IExecutionCall {
@@ -101,5 +78,12 @@ declare module 'genesis/tx' {
         privateKey?: string;
         signature?: string;
         time?: string;
+    }
+
+    interface IBatchExecutionCall {
+        uuid: string;
+        privateKey: string;
+        tx: ITransactionCall;
+        prepare: ITxPrepareBatchResponse;
     }
 }

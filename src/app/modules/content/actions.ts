@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { TProtypoElement } from 'genesis/protypo';
+import { TProtypoElement, IButtonInteraction } from 'genesis/protypo';
 
 const actionCreator = actionCreatorFactory('content');
 
@@ -29,7 +29,8 @@ const actionCreator = actionCreatorFactory('content');
 export const setResizing = actionCreator<boolean>('SET_RESIZING');
 export const ecosystemInit = actionCreator.async<{ section: string }, { name: string, stylesheet: string }, string>('ECOSYSTEM_INIT');
 
-// Protypo-specific
+// Interaction
+export const buttonInteraction = actionCreator<IButtonInteraction>('BUTTON_INTERACTION');
 export const displayData = actionCreator.async<string, string, string>('DISPLAY_DATA');
 
 // Notifications

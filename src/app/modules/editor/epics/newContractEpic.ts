@@ -36,11 +36,13 @@ const newContractEpic: Epic = (action$, store, { api }) => action$.ofAction(edit
         return TxObservable(action$, {
             tx: {
                 uuid: id,
-                name: '@1NewContract',
-                params: {
-                    Value: action.payload.value,
-                    Conditions: 'true',
-                    ApplicationId: action.payload.appId ? action.payload.appId : 0
+                contract: {
+                    name: '@1NewContract',
+                    params: {
+                        Value: action.payload.value,
+                        Conditions: 'true',
+                        ApplicationId: action.payload.appId ? action.payload.appId : 0
+                    }
                 }
             },
             success: result => Observable.fromPromise(client.getRow({

@@ -20,24 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
-import { txExec } from 'modules/tx/actions';
-import { reloadEditorTab } from '../actions';
+import React from 'react';
 
-const editPageEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(txExec.done)
-        .filter(l => /^(@1)?EditPage$/.test(l.payload.params.tx.name) && 'string' === typeof l.payload.params.tx.params.Value)
-        .map(action => {
-            const params = action.payload.params.tx.params as { Id: string, Value?: string };
-            return reloadEditorTab({
-                type: 'page',
-                id: params.Id,
-                data: {
-                    initialValue: params.Value
-                }
-            });
-        });
+export interface IButtonProps {
+    disabled?: boolean;
+    pending?: boolean;
+    className?: string;
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
+}
 
-export default editPageEpic;
+const Button: React.SFC<IButtonProps> = props => (
+    <button
+        type="button"
+        onClick={props.onClick}
+        disabled={props.disabled}
+        className={props.className}
+    >
+        {props.children}
+    </button>
+);
+
+export default Button;
