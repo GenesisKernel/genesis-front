@@ -86,26 +86,31 @@ const buttonInteractionEpic: Epic = (action$, store, { api }) => action$.ofActio
                 return Observable.of(action);
             }
 
-        }).map(action => {
+        }).flatMap(action => {
             if (isType(action, buttonInteraction)) {
-                if (action.payload.popup) {
-                    return modalPage({
-                        name: action.payload.page.name,
-                        params: action.payload.page.params,
-                        title: action.payload.popup.title,
-                        width: action.payload.popup.width
-                    });
+                if (action.payload.page) {
+                    if (action.payload.popup) {
+                        return Observable.of(modalPage({
+                            name: action.payload.page.name,
+                            params: action.payload.page.params,
+                            title: action.payload.popup.title,
+                            width: action.payload.popup.width
+                        }));
+                    }
+                    else {
+                        return Observable.of(navigatePage.started({
+                            name: action.payload.page.name,
+                            params: action.payload.page.params,
+                            force: true
+                        }));
+                    }
                 }
                 else {
-                    return navigatePage.started({
-                        name: action.payload.page.name,
-                        params: action.payload.page.params,
-                        force: true
-                    });
+                    return Observable.empty<never>();
                 }
             }
             else {
-                return action;
+                return Observable.of(action);
             }
         });
     });
