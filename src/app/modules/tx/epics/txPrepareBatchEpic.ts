@@ -34,6 +34,7 @@ const MAX_FAULT_TIME = 10;
 const txPrepareBatchEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrepareBatch)
     .flatMap(action => {
         const state = store.getState();
+        const client = api(state.auth.session);
         const validatingNodesCount = Math.min(state.storage.fullNodes.length, 3);
 
         const contracts: { name: string, params: TTxParams }[] = [];
@@ -49,61 +50,64 @@ const txPrepareBatchEpic: Epic = (action$, store, { api }) => action$.ofAction(t
             }
         }
 
-        return NodeObservable({
-            nodes: state.storage.fullNodes,
-            count: validatingNodesCount,
-            concurrency: 3,
-            timeout: MAX_FAULT_TIME * 1000,
-            api
+        return Observable.fromPromise(client.txPrepareBatch({ contracts })).flatMap(mainPrepare => {
+            const mainDissected = mainPrepare.forsign.map(forsign => TxDissect(forsign));
 
-        }).flatMap(apiHost => {
-            const node = api({ apiHost });
-            return Observable.from(node.getUid())
-                .flatMap(uid => node
-                    .authorize(uid.token)
-                    .login({
-                        publicKey: keyring.generatePublicKey(action.payload.privateKey),
-                        signature: keyring.sign(uid.uid, action.payload.privateKey),
-                        ecosystem: state.auth.wallet.ecosystem,
-                        role: state.auth.role && state.auth.role.id
+            return NodeObservable({
+                nodes: state.storage.fullNodes,
+                count: validatingNodesCount,
+                concurrency: 3,
+                timeout: MAX_FAULT_TIME * 1000,
+                api
 
-                    }).then(session =>
-                        api({
-                            apiHost,
-                            sessionToken: session.token
-                        }).txPrepareBatch({
-                            contracts
-                        })
-                    )
-                );
+            }).flatMap(apiHost => {
+                const node = api({ apiHost });
+                return Observable.from(node.getUid())
+                    .flatMap(uid => node
+                        .authorize(uid.token)
+                        .login({
+                            publicKey: keyring.generatePublicKey(action.payload.privateKey),
+                            signature: keyring.sign(uid.uid, action.payload.privateKey),
+                            ecosystem: state.auth.wallet.ecosystem,
+                            role: state.auth.role && state.auth.role.id
 
-        }).flatMap(prepare => Observable.from(prepare.forsign)
-            .map(forsign => TxDissect(forsign))
-            .toArray().map(dissected => ({
-                prepare,
-                dissected
-            }))
+                        }).then(session =>
+                            api({
+                                apiHost,
+                                sessionToken: session.token
+                            }).txPrepareBatch({
+                                contracts
+                            })
+                        )
+                    );
 
-        ).toArray().map((result, index) => {
-            const mainPrepare = result[result.length - 1];
+            }).flatMap(prepare => Observable.from(prepare.forsign)
+                .map(forsign => TxDissect(forsign))
+                .toArray().map(dissected => ({
+                    prepare,
+                    dissected
+                }))
 
-            for (let p = 0; p < result.length; p++) {
-                const prepare = result[p];
-                for (let h = 0; h < prepare.dissected.length; h++) {
-                    const header = prepare.dissected[h];
-                    if (header.body !== mainPrepare.dissected[h].body || MAX_FAULT_TIME < Math.abs(header.timestamp - mainPrepare.dissected[h].timestamp)) {
-                        throw {
-                            error: 'E_INVALIDATED'
-                        };
+            ).toArray().map((result, index) => {
+                for (let p = 0; p < result.length; p++) {
+                    const prepare = result[p];
+                    for (let h = 0; h < prepare.dissected.length; h++) {
+                        const header = prepare.dissected[h];
+                        if (header.body !== mainDissected[h].body || MAX_FAULT_TIME < Math.abs(header.timestamp - mainDissected[h].timestamp)) {
+                            throw {
+                                error: 'E_INVALIDATED'
+                            };
+                        }
                     }
                 }
-            }
 
-            return txExecBatch.started({
-                uuid: action.payload.tx.uuid,
-                privateKey: action.payload.privateKey,
-                prepare: mainPrepare.prepare,
-                tx: action.payload.tx
+                return txExecBatch.started({
+                    uuid: action.payload.tx.uuid,
+                    privateKey: action.payload.privateKey,
+                    prepare: mainPrepare,
+                    tx: action.payload.tx
+                });
+
             });
 
         }).catch(e => Observable.of(txExecBatch.failed({
