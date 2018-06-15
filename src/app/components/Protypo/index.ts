@@ -49,6 +49,7 @@ import Select from './handlers/Select';
 import Span from './handlers/Span';
 import Strong from './handlers/Strong';
 import Table from './handlers/Table';
+import Chart from './handlers/Chart';
 
 import setTitle from './functions/setTitle';
 import addToolButton from './functions/addToolButton';
@@ -81,7 +82,8 @@ const handlers = {
     'select': Select,
     'span': Span,
     'strong': Strong,
-    'table': Table
+    'table': Table,
+    'chart': Chart
 };
 
 const functions = {

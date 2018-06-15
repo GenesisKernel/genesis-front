@@ -46,11 +46,13 @@ class Editor extends React.Component<IEditorProps> {
 
             case 'preview':
                 return (
-                    <Page
-                        name="preview"
-                        content={tab.preview}
-                        params={{}}
-                    />
+                    <div style={{ overflowY: 'auto' }}>
+                        <Page
+                            name="preview"
+                            content={tab.preview}
+                            params={{}}
+                        />
+                    </div>
                 );
 
             default:
