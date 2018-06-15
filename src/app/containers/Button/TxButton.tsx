@@ -58,7 +58,7 @@ export interface ITxButtonProps {
 
     // Redirect if all previous actions succeeded
     page?: string;
-    pageParams?: { [key: string]: any };
+    pageParams?: { [key: string]: any } | (() => { [key: string]: any });
 
     // Page must be rendered within a modal dialog
     popup?: {
@@ -88,6 +88,13 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonState & ITxButt
         if (null === contractParams) {
             return;
         }
+        const pageParams = 'function' === typeof this.props.pageParams ?
+            this.props.pageParams() :
+            this.props.pageParams;
+
+        if (null === pageParams) {
+            return;
+        }
 
         this.props.buttonInteraction({
             uuid: this._uuid,
@@ -101,7 +108,7 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonState & ITxButt
             contracts: this.props.contracts,
             page: this.props.page ? {
                 name: this.props.page,
-                params: this.props.pageParams
+                params: pageParams
             } : null
         });
     }
