@@ -20,73 +20,75 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
+import uuid from 'uuid';
 import { connect } from 'react-redux';
-import { injectIntl, InjectedIntlProps } from 'react-intl';
 import { OrderedMap } from 'immutable';
 import { IRootState } from 'modules';
 import { txCall } from 'modules/tx/actions';
-import { TTransactionStatus, ITransaction } from 'genesis/tx';
-import * as uuid from 'uuid';
+import { ITransaction } from 'genesis/tx';
 
 import Validation from 'components/Validation';
 
 interface IValidatedContractFormProps {
     silent?: boolean;
     className?: string;
-    contractName: string;
-    mapContractParams: (values: { [key: string]: any }) => { [key: string]: any };
     onExec?: (block: string, error?: { type: string, error: string }) => void;
+    contract?: string;
+    contractParams?: { [key: string]: any } | (() => { [key: string]: any });
 }
 
 interface IValidatedContractFormStateProps {
-    transactions: OrderedMap<string, TTransactionStatus>;
+    transactions: OrderedMap<string, ITransaction>;
 }
 
 interface IValidatedContractFormDispatchProps {
-    callContract: typeof txCall;
+    txCall: typeof txCall;
 }
 
-class ValidatedContractForm extends React.Component<IValidatedContractFormProps & IValidatedContractFormStateProps & IValidatedContractFormDispatchProps & InjectedIntlProps> {
-    private _uuid: string;
-    private _pending: boolean;
-
-    componentDidMount() {
-        this._uuid = uuid.v4();
-    }
+class ValidatedContractForm extends React.Component<IValidatedContractFormProps & IValidatedContractFormStateProps & IValidatedContractFormDispatchProps> {
+    private _uuid: string = null;
 
     componentWillReceiveProps(props: IValidatedContractFormProps & IValidatedContractFormStateProps & IValidatedContractFormDispatchProps) {
-        const transaction = props.transactions.get(this._uuid) as ITransaction;
-        if (this._pending && transaction && (transaction.block || transaction.error)) {
-            this._pending = false;
+        const oldTransaction = this.props.transactions.get(this._uuid);
+        const newTransaction = props.transactions.get(this._uuid);
+        const oldDone = oldTransaction && (oldTransaction.block || oldTransaction.error);
+        const newDone = newTransaction && (newTransaction.block || newTransaction.error);
 
-            if (transaction.error) {
-                this._uuid = uuid.v4();
-            }
-
-            if (this.props.onExec) {
-                this.props.onExec(transaction.block, transaction.error);
+        if (!oldDone && newDone) {
+            if (props.onExec) {
+                props.onExec(newTransaction.block, newTransaction.error);
             }
         }
     }
 
-    onSubmit(values: { [key: string]: any }) {
-        const params = this.props.mapContractParams(values);
-        this._pending = true;
-        this.props.callContract({
+    onSubmit = () => {
+        this._uuid = uuid.v4();
+
+        const contractParams = 'function' === typeof this.props.contractParams ?
+            this.props.contractParams() :
+            this.props.contractParams;
+
+        if (null === contractParams) {
+            return;
+        }
+
+        this.props.txCall({
             uuid: this._uuid,
-            name: this.props.contractName,
             silent: this.props.silent,
-            params
+            contract: {
+                name: this.props.contract,
+                params: contractParams
+            }
         });
     }
 
     render() {
-        const transaction = this.props.transactions.get(this._uuid) as ITransaction;
+        const transaction = this.props.transactions.get(this._uuid);
         const pending = transaction && !transaction.block && !transaction.error;
 
         return (
-            <Validation.components.ValidatedForm className={this.props.className} onSubmitSuccess={this.onSubmit.bind(this)} pending={pending}>
+            <Validation.components.ValidatedForm className={this.props.className} onSubmitSuccess={this.onSubmit} pending={pending}>
                 {this.props.children}
             </Validation.components.ValidatedForm>
         );
@@ -98,8 +100,7 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    callContract: txCall
+    txCall
 };
 
-const LocalizedValidatedContractForm = injectIntl(ValidatedContractForm);
-export default connect<IValidatedContractFormStateProps, IValidatedContractFormDispatchProps, IValidatedContractFormProps>(mapStateToProps, mapDispatchToProps)(LocalizedValidatedContractForm);
+export default connect<IValidatedContractFormStateProps, IValidatedContractFormDispatchProps, IValidatedContractFormProps>(mapStateToProps, mapDispatchToProps)(ValidatedContractForm);

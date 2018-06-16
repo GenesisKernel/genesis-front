@@ -26,8 +26,7 @@ import { injectIntl, InjectedIntlProps } from 'react-intl';
 
 import Protypo, { IParamsSpec } from '../Protypo';
 import ValidatedForm from 'components/Validation/ValidatedForm';
-import TxButton from 'containers/Widgets/TxButton';
-import TxBatchButton from 'containers/Widgets/TxBatchButton';
+import TxButton from 'containers/Button/TxButton';
 
 export interface IButtonProps {
     'class'?: string;
@@ -110,50 +109,29 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
         };
     }
 
-    if (props.composite) {
-        return (
-            <TxBatchButton
-                className={props.class}
-                contracts={props.composite.map(l => ({
-                    name: l.name,
-                    params: l.data
-                }))}
-                confirm={props.alert && {
-                    icon: props.alert.icon,
-                    title: props.intl.formatMessage({ id: 'alert.confirmation', defaultMessage: 'Confirmation' }),
-                    text: props.alert.text,
-                    confirmButton: props.alert.confirmbutton,
-                    cancelButton: props.alert.cancelbutton
-                }}
-                popup={popup}
-                page={props.page}
-                pageParams={getPageParams}
-            >
-                {props.children}
-            </TxBatchButton>
-        );
-    }
-    else {
-        return (
-            <TxButton
-                className={props.class}
-                contractName={props.contract}
-                contractParams={getParams}
-                confirm={props.alert && {
-                    icon: props.alert.icon,
-                    title: props.intl.formatMessage({ id: 'alert.confirmation', defaultMessage: 'Confirmation' }),
-                    text: props.alert.text,
-                    confirmButton: props.alert.confirmbutton,
-                    cancelButton: props.alert.cancelbutton
-                }}
-                popup={popup}
-                page={props.page}
-                pageParams={getPageParams}
-            >
-                {props.children}
-            </TxButton>
-        );
-    }
+    return (
+        <TxButton
+            className={props.class}
+            confirm={props.alert && {
+                icon: props.alert.icon,
+                title: props.intl.formatMessage({ id: 'alert.confirmation', defaultMessage: 'Confirmation' }),
+                text: props.alert.text,
+                confirmButton: props.alert.confirmbutton,
+                cancelButton: props.alert.cancelbutton
+            }}
+            contracts={props.composite && props.composite.map(tx => ({
+                name: tx.name,
+                params: tx.data
+            }))}
+            contract={props.contract}
+            contractParams={getParams}
+            page={props.page}
+            pageParams={getPageParams}
+            popup={popup}
+        >
+            {props.children}
+        </TxButton>
+    );
 };
 
 Button.contextTypes = {

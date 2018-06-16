@@ -49,6 +49,8 @@ const command = commander
         stack.push(value);
         return stack;
     }, [])
+    .option('-k, --private-key <key>')
+    .option('-d, --dry')
     .parse(argv);
 
 export default {

@@ -36,7 +36,7 @@ const txExecBatchEpic: Epic = (action$, store, { api }) => action$.ofAction(txEx
         const privateKey = action.payload.privateKey;
         const publicKey = keyring.generatePublicKey(privateKey);
 
-        return Observable.of(action.payload).flatMap(result => Observable.from(result.forsign).flatMap(forsign =>
+        return Observable.of(action.payload).flatMap(result => Observable.from(result.prepare.forsign).flatMap(forsign =>
             // Performance bottleneck. Detach cryptographic operations from current
             // context to release the event loop
             Observable.of(
@@ -44,8 +44,8 @@ const txExecBatchEpic: Epic = (action$, store, { api }) => action$.ofAction(txEx
 
             ).delay(50), 5).toArray().flatMap(signatures =>
                 client.txCallBatch({
-                    requestID: result.request_id,
-                    time: result.time,
+                    requestID: result.prepare.request_id,
+                    time: result.prepare.time,
                     signatures,
                     pubkey: publicKey
                 })
@@ -55,7 +55,7 @@ const txExecBatchEpic: Epic = (action$, store, { api }) => action$.ofAction(txEx
                 hashes: call.hashes
 
             })).map(status => {
-                let pending = action.payload.forsign.length;
+                let pending = action.payload.prepare.forsign.length;
 
                 for (let itr in status.results) {
                     if (status.results.hasOwnProperty(itr)) {
@@ -106,7 +106,6 @@ const txExecBatchEpic: Epic = (action$, store, { api }) => action$.ofAction(txEx
                 if (result.results.hasOwnProperty(itr)) {
                     const tx = result.results[itr];
                     results.push({
-                        type: 'single',
                         uuid: action.payload.uuid,
                         contract: null,
                         block: tx.blockid,

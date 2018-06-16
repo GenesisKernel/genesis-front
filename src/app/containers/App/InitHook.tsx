@@ -20,10 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { initialize } from 'modules/engine/actions';
+import platform from 'lib/platform';
 
 export interface IInitHookProps {
 
@@ -34,12 +35,14 @@ interface IInitHookState {
 }
 
 interface IInitHookDispatch {
-    initialize: () => void;
+    initialize: typeof initialize.started;
 }
 
 class InitHook extends React.Component<IInitHookProps & IInitHookState & IInitHookDispatch> {
     componentDidMount() {
-        this.props.initialize();
+        this.props.initialize({
+            defaultKey: platform.args().privateKey
+        });
     }
 
     render() {
@@ -52,7 +55,7 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    initialize: () => initialize.started(null)
+    initialize: initialize.started
 };
 
 export default connect<IInitHookState, IInitHookDispatch, IInitHookProps>(mapStateToProps, mapDispatchToProps)(InitHook);

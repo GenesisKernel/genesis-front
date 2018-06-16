@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
 import { Epic } from 'modules';
 import { Observable } from 'rxjs';
 import { connect } from 'modules/socket/actions';
@@ -29,11 +28,11 @@ import urlJoin from 'url-join';
 import platform from 'lib/platform';
 import NodeObservable from '../util/NodeObservable';
 import keyring from 'lib/keyring';
-import { mergeFullNodes } from 'modules/storage/actions';
+import { mergeFullNodes, saveWallet } from 'modules/storage/actions';
 
 const fullNodesFallback = ['http://127.0.0.1:7079'];
 
-const initializeEpic: Epic = (action$, store, { api, defaultKey }) => action$.ofAction(initialize.started)
+const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword }) => action$.ofAction(initialize.started)
     .flatMap(action => {
         const fullNodesArg = platform.args().fullNode;
         const requestUrl = platform.select({
@@ -82,9 +81,11 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey }) => action$.of
                     Observable.of(setLocale.started(state.storage.locale)),
                     Observable.from(client.getUid())
                         .flatMap(uid => {
+                            const guestKey = action.payload.defaultKey || defaultKey;
+
                             return client.authorize(uid.token).login({
-                                publicKey: keyring.generatePublicKey(defaultKey),
-                                signature: keyring.sign(uid.uid, defaultKey)
+                                publicKey: keyring.generatePublicKey(guestKey),
+                                signature: keyring.sign(uid.uid, guestKey)
 
                             }).then(loginResult => {
                                 const securedClient = client.authorize(loginResult.token);
@@ -104,15 +105,27 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey }) => action$.of
                                     fullNodes: result[1]
                                 }));
                             });
-                        }).flatMap(result => Observable.of<Action>(
-                            connect.started({
+                        }).flatMap(result => Observable.concat(
+                            Observable.if(
+                                () => !!action.payload.defaultKey,
+                                Observable.of(saveWallet({
+                                    id: result.login.key_id,
+                                    encKey: keyring.encryptAES(action.payload.defaultKey, defaultPassword),
+                                    address: result.login.address,
+                                    ecosystem: result.login.ecosystem_id,
+                                    ecosystemName: null,
+                                    username: null
+                                })),
+                                Observable.empty<never>()
+                            ),
+                            Observable.of(connect.started({
                                 wsHost: result.centrifugo,
                                 session: result.login.token,
                                 socketToken: result.login.notify_key,
                                 timestamp: result.login.timestamp,
                                 userID: result.login.key_id
-                            }),
-                            mergeFullNodes([...result.fullNodes, ...fullNodes])
+                            })),
+                            Observable.of(mergeFullNodes([...result.fullNodes, ...fullNodes]))
 
                         )).catch(e => Observable.of(connect.failed({
                             params: null,

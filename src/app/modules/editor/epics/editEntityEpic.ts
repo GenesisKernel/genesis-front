@@ -1,17 +1,17 @@
 // MIT License
-//
+// 
 // Copyright (c) 2016-2018 GenesisKernel
-//
+// 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,30 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Epic } from 'modules';
-import { Observable } from 'rxjs/Observable';
-import { setDefaultPage, sectionsInit } from 'modules/sections/actions';
+import { Action } from 'redux';
+import { Epic } from 'redux-observable';
+import { Observable } from 'rxjs';
+import { IRootState } from 'modules';
+import { txExec } from 'modules/tx/actions';
+import { reloadEditorTab } from '../actions';
 
-const sectionsInitDoneEpic: Epic = (action$, store, { api }) => action$.ofAction(sectionsInit.done)
+const connections = {
+    '@1EditBlock': 'block',
+    '@1EditContract': 'contract',
+    '@1EditMenu': 'menu'
+};
+
+const editEntityEpic: Epic<Action, IRootState> = (action$, store) => action$.ofAction(txExec.done)
     .flatMap(action => {
-        const state = store.getState();
-        const client = api(state.auth.session);
+        const contractName = action.payload.params.tx.contract && action.payload.params.tx.contract.name;
+        const entity = connections[contractName];
 
-        return Observable.from(
-            client.getRow({
-                table: 'roles',
-                id: state.auth.role.id.toString() || null,
-            })
-                .then(row => row.value.default_page)
-        ).flatMap(payload =>
-            Observable.of(
-                setDefaultPage(payload)
-            )
-        );
-    }).catch(e =>
-        Observable.of(
-            setDefaultPage(null)
-        )
-    );
+        if (entity) {
+            const params = action.payload.params.tx.contract.params as { Id: string, Value?: string };
+            return Observable.of(reloadEditorTab({
+                type: entity,
+                id: params.Id,
+                data: {
+                    initialValue: params.Value
+                }
+            }));
+        }
+        else {
+            return Observable.empty();
+        }
+    });
 
-export default sectionsInitDoneEpic;
+export default editEntityEpic;

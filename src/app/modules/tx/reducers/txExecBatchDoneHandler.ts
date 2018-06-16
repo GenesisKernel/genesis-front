@@ -24,14 +24,18 @@ import { State } from '../reducer';
 import { txExecBatch } from '../actions';
 import { Reducer } from 'modules';
 
-const txExecBatchDoneHandler: Reducer<typeof txExecBatch.done, State> = (state, payload) => ({
-    ...state,
-    transactions: state.transactions.set(payload.params.uuid, {
-        type: 'collection',
-        uuid: payload.params.uuid,
-        pending: 0,
-        transactions: payload.result
-    })
-});
+const txExecBatchDoneHandler: Reducer<typeof txExecBatch.done, State> = (state, payload) => {
+    const tx = state.transactions.get(payload.params.uuid);
+    return {
+        ...state,
+        transactions: state.transactions.set(payload.params.uuid, {
+            ...tx,
+            batch: {
+                ...tx.batch,
+                pending: 0
+            }
+        })
+    };
+};
 
 export default txExecBatchDoneHandler;

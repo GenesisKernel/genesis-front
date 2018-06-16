@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Route } from 'react-router-dom';
 import { IRootState } from 'modules';
@@ -50,8 +50,7 @@ const mapStateToProps = (state: IRootState) => ({
     sections: state.sections.sections,
     navigationSize: state.storage.navigationSize,
     navigationVisible: state.sections.sections[state.sections.section].menuDisabled ? false : state.sections.sections[state.sections.section].menuVisible,
-    transactionsCount: state.tx.transactions.count(),
-    pendingTransactions: state.tx.transactions.takeLast(5)
+    transactionsCount: state.tx.transactions.count()
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({

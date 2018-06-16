@@ -39,4 +39,44 @@ declare module 'genesis/protypo' {
     };
 
     type TChartType = 'bar' | 'line' | 'pie';
+
+    interface IButtonConfirm {
+        type?: string;
+        title?: string;
+        text?: string;
+        confirmButton?: string;
+        cancelButton?: string;
+    }
+
+    interface IButtonPopup {
+        title?: string;
+        width?: number;
+    }
+
+    interface IButtonPage {
+        name: string;
+        params: {
+            [key: string]: any;
+        };
+    }
+
+    interface IButtonInteraction {
+        uuid: string;
+        silent?: boolean;
+        confirm?: IButtonConfirm;
+        contract?: {
+            name: string;
+            params: {
+                [key: string]: any
+            };
+        };
+        contracts?: {
+            name: string;
+            params: {
+                [key: string]: any;
+            }[];
+        }[];
+        page?: IButtonPage;
+        popup?: IButtonPopup;
+    }
 }
