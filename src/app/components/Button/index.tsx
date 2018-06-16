@@ -20,21 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { TTransactionStatus } from 'genesis/tx';
+import React from 'react';
 
-export default function (state: State, uuid: string): TTransactionStatus {
-    const parent = state.transactions.get(uuid);
-
-    switch (parent.type) {
-        case 'single':
-            return parent;
-
-        case 'collection':
-            const txIndex = parent.transactions.findIndex(l => uuid === l.uuid);
-            return parent.transactions[txIndex];
-
-        default:
-            return null;
-    }
+export interface IButtonProps {
+    disabled?: boolean;
+    pending?: boolean;
+    className?: string;
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
+
+const Button: React.SFC<IButtonProps> = props => (
+    <button
+        type="button"
+        onClick={props.onClick}
+        disabled={props.disabled}
+        className={props.className}
+    >
+        {props.children}
+    </button>
+);
+
+export default Button;

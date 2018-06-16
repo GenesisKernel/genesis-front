@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import * as actions from './actions';
 import { OrderedMap } from 'immutable';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import * as actions from './actions';
-import { TTransactionStatus } from 'genesis/tx';
+import { ITransaction } from 'genesis/tx';
 import txExecHandler from './reducers/txExecHandler';
 import txExecDoneHandler from './reducers/txExecDoneHandler';
 import txExecFailedHandler from './reducers/txExecFailedHandler';
@@ -33,7 +33,7 @@ import txBatchStatusHandler from './reducers/txBatchStatusHandler';
 import txExecBatchFailedHandler from './reducers/txExecBatchFailedHandler';
 
 export type State = {
-    readonly transactions: OrderedMap<string, TTransactionStatus>;
+    readonly transactions: OrderedMap<string, ITransaction>;
 };
 
 export const initialState: State = {

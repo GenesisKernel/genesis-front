@@ -23,18 +23,22 @@
 import uuid from 'uuid';
 import { IRootState } from 'modules';
 import { Epic } from 'redux-observable';
+import { Observable } from 'rxjs';
 import { Action } from 'redux';
-import { txExecBatch } from '../actions';
+import { txExecBatch, txPrepare } from '../actions';
 import { enqueueNotification } from 'modules/notifications/actions';
 
-export const txExecBatchDoneEpic: Epic<Action, IRootState> =
+const txExecBatchDoneEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(txExecBatch.done)
-        .map(action =>
-            enqueueNotification({
+        .flatMap(action => Observable.if(
+            () => !!action.payload.params.tx.contract,
+            Observable.of(txPrepare(action.payload.params)),
+            Observable.of(enqueueNotification({
                 id: uuid.v4(),
                 type: 'TX_BATCH',
                 params: {}
-            })
-        );
+            }))
+
+        ));
 
 export default txExecBatchDoneEpic;

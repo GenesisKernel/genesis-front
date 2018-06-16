@@ -24,7 +24,6 @@ import React from 'react';
 import _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import LoadingBar from 'react-redux-loading-bar';
-import { OrderedMap } from 'immutable';
 import { TSection } from 'genesis/content';
 import { history } from 'store';
 
@@ -37,7 +36,6 @@ import Toolbar from './Toolbar';
 import SectionButton from 'components/Main/SectionButton';
 import ToolButton from 'components/Main/Toolbar/ToolButton';
 import EditorToolbar from 'containers/Main/Toolbar/EditorToolbar';
-import { TTransactionStatus } from 'genesis/tx';
 // import TransactionsMenu from './TransactionsMenu';
 
 const StyledWrapper = themed.div`
@@ -53,7 +51,6 @@ export interface IMainProps {
     stylesheet: string;
     navigationSize: number;
     navigationVisible: boolean;
-    pendingTransactions: OrderedMap<string, TTransactionStatus>;
     transactionsCount: number;
     onRefresh: () => void;
     onNavigateHome: () => void;
@@ -116,7 +113,7 @@ const StyledContent = themed.section`
     transition: none !important;
 `;
 
-const StyledLoadingBar = themed(LoadingBar) `
+const StyledLoadingBar = themed(LoadingBar)`
     position: absolute;
     bottom: 0;
     right: 0;

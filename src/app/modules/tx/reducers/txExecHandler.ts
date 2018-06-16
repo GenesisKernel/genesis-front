@@ -23,15 +23,20 @@
 import { State } from '../reducer';
 import { txExec } from '../actions';
 import { Reducer } from 'modules';
-import setTxData from './setTxData';
 
-const txExecHandler: Reducer<typeof txExec.started, State> = (state, payload) =>
-    setTxData(state, {
-        tx: payload.tx,
-        data: {
+const txExecHandler: Reducer<typeof txExec.started, State> = (state, payload) => {
+    const tx = state.transactions.get(payload.tx.uuid);
+    return {
+        ...state,
+        transactions: state.transactions.set(payload.tx.uuid, {
+            ...tx,
+            uuid: payload.tx.uuid,
+            contract: payload.tx.contract.name,
             block: null,
-            error: null
-        }
-    });
+            error: null,
+            result: null
+        })
+    };
+};
 
 export default txExecHandler;

@@ -25,13 +25,13 @@ import { sectionsInit } from '../actions';
 import { Reducer } from 'modules';
 import { TSection } from 'genesis/content';
 
-const sectionsInitHandler: Reducer<typeof sectionsInit.started, State> = (state, payload) => {
+const sectionsInitHandler: Reducer<typeof sectionsInit, State> = (state, payload) => {
     const sections: { [key: string]: TSection } = {};
     for (let itr in state.sections) {
         if (state.sections.hasOwnProperty(itr)) {
             sections[itr] = {
                 ...state.sections[itr],
-                pending: payload.section === itr ? true : false,
+                pending: false,
                 page: null,
                 menus: []
             };
@@ -40,7 +40,7 @@ const sectionsInitHandler: Reducer<typeof sectionsInit.started, State> = (state,
 
     return {
         ...state,
-        section: payload.section,
+        section: payload,
         sections
     };
 };

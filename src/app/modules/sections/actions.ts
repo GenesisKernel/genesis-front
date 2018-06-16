@@ -22,7 +22,6 @@
 
 import actionCreatorFactory from 'typescript-fsa';
 import { TMenu, TPage, TSection } from 'genesis/content';
-import { ITransactionConfirm } from 'genesis/tx';
 
 const actionCreator = actionCreatorFactory('section');
 
@@ -35,9 +34,9 @@ export const setDefaultPage = actionCreator<string>('SET_DEFAULT_PAGE');
 export const reset = actionCreator.async<void, { menu: TMenu, page: TPage }, string>('RESET');
 export const menuPop = actionCreator('MENU_POP');
 export const menuPush = actionCreator<TMenu>('MENU_PUSH');
-export const navigatePage = actionCreator.async<{ name?: string, section?: string, force?: boolean, popup?: { title?: string, width?: number }, params: { [key: string]: any }, confirm?: ITransactionConfirm }, { section: string }, undefined>('NAVIGATE_PAGE');
+export const navigatePage = actionCreator.async<{ name?: string, section?: string, force?: boolean, params: { [key: string]: any } }, { section: string }, undefined>('NAVIGATE_PAGE');
 export const navigationToggle = actionCreator('NAVIGATION_TOGGLE');
 export const renderPage = actionCreator.async<{ section: string, name: string, params?: { [key: string]: any } }, { menu: TMenu, page: TPage }, string>('RENDER_PAGE');
 export const renderLegacyPage = actionCreator.async<{ section: string, name: string, menu: string, params?: { [key: string]: any } }, { menu: TMenu }>('RENDER_LEGACY_PAGE');
 export const reloadPage = actionCreator.async<{}, { params: { [key: string]: any }, menu: TMenu, page: TPage }, string>('RELOAD_PAGE');
-export const sectionsInit = actionCreator.async<{ section: string }, { name: string, stylesheet: string }, string>('SECTIONS_INIT');
+export const sectionsInit = actionCreator<string>('SECTIONS_INIT');

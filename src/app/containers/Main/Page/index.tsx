@@ -26,7 +26,7 @@ import * as queryString from 'query-string';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { ecosystemInit } from 'modules/content/actions';
-import { renderPage, renderLegacyPage, navigatePage, switchSection, sectionsInit } from 'modules/sections/actions';
+import { renderPage, renderLegacyPage, navigatePage, switchSection } from 'modules/sections/actions';
 import { TSection } from 'genesis/content';
 import { LEGACY_PAGES } from 'lib/legacyPages';
 
@@ -52,14 +52,11 @@ interface IPageContainerDispatch {
     renderLegacyPage: typeof renderLegacyPage.started;
     switchSection: typeof switchSection;
     ecosystemInit: typeof ecosystemInit.started;
-    sectionsInit: typeof sectionsInit.started;
 }
 
 class PageContainer extends React.Component<IPageContainerProps & IPageContainerState & IPageContainerDispatch> {
     componentDidMount() {
         this.props.ecosystemInit({
-        });
-        this.props.sectionsInit({
             section: this.props.match.params.section
         });
     }
@@ -147,7 +144,6 @@ const mapDispatchToProps = {
     renderPage: renderPage.started,
     renderLegacyPage: renderLegacyPage.started,
     ecosystemInit: ecosystemInit.started,
-    sectionsInit: sectionsInit.started,
     switchSection
 };
 

@@ -23,14 +23,19 @@
 import { State } from '../reducer';
 import { txBatchStatus } from '../actions';
 import { Reducer } from 'modules';
-import { ITransactionCollection } from 'genesis/tx';
 
-const txBatchStatusHandler: Reducer<typeof txBatchStatus, State> = (state, payload) => ({
-    ...state,
-    transactions: state.transactions.set(payload.id, {
-        ...state.transactions.get(payload.id),
-        pending: payload.pending
-    } as ITransactionCollection)
-});
+const txBatchStatusHandler: Reducer<typeof txBatchStatus, State> = (state, payload) => {
+    const tx = state.transactions.get(payload.id);
+    return {
+        ...state,
+        transactions: state.transactions.set(payload.id, {
+            ...tx,
+            batch: {
+                ...tx.batch,
+                pending: payload.pending
+            }
+        })
+    };
+};
 
 export default txBatchStatusHandler;

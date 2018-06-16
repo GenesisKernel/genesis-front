@@ -49,13 +49,15 @@ const newPageEpic: Epic = (action$, store, { api }) => action$.ofAction(editorSa
             success: result => TxObservable(action$, {
                 tx: {
                     uuid: id,
-                    name: '@1NewPage',
-                    params: {
-                        Name: result.name,
-                        Value: action.payload.value,
-                        Menu: result.menu,
-                        Conditions: result.conditions,
-                        ApplicationId: action.payload.appId || 0
+                    contract: {
+                        name: '@1NewPage',
+                        params: {
+                            Name: result.name,
+                            Value: action.payload.value,
+                            Menu: result.menu,
+                            Conditions: result.conditions,
+                            ApplicationId: action.payload.appId || 0
+                        }
                     }
                 },
                 success: tx => Observable.from(client.getPage({ name: result.name }))

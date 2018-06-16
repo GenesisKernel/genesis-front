@@ -21,13 +21,10 @@
 // SOFTWARE.
 
 import { combineEpics } from 'redux-observable';
-import editContractEpic from './epics/editContractEpic';
 import newContractEpic from './epics/newContractEpic';
-import editPageEpic from './epics/editPageEpic';
 import editorSaveEpic from './epics/editorSaveEpic';
 import newPageEpic from './epics/newPageEpic';
-import editMenuEpic from './epics/editMenuEpic';
-import editBlockEpic from './epics/editBlockEpic';
+import editEntityEpic from './epics/editEntityEpic';
 import newMenuEpic from './epics/newMenuEpic';
 import newBlockEpic from './epics/newBlockEpic';
 import closeEditorTabEpic from './epics/closeEditorTabEpic';
@@ -53,11 +50,8 @@ export default combineEpics(
     changeEditorToolEpic,
     closeEditorTabEpic,
     createEditorTabEpic,
-    editBlockEpic,
-    editContractEpic,
-    editMenuEpic,
+    editEntityEpic,
     editorSaveEpic,
-    editPageEpic,
     loadEditorTabEpic,
     newBlockEpic,
     newContractEpic,
