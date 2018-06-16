@@ -46,7 +46,7 @@ class Editor extends React.Component<IEditorProps> {
 
             case 'preview':
                 return (
-                    <div className="scroll">
+                    <div className="flex-col flex-stretch scroll">
                         <Page
                             name="preview"
                             content={tab.preview}

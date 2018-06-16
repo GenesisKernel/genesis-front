@@ -41,7 +41,11 @@ interface IChartContext {
     resolveSource: (name: string) => ISource;
 }
 
-// declare interface IChart extends React.SFC<{data: any, options: any}>{};
+const chartTypes: { [K in TChartType]: new () => ChartComponent<any> } = {
+    bar: Bar,
+    line: Line,
+    pie: Pie
+};
 
 class Chart extends React.Component<IChartProps> {
     private _cachedSourceData: ISource;
@@ -106,12 +110,6 @@ class Chart extends React.Component<IChartProps> {
                     }
                 }]
             }
-        };
-
-        const chartTypes: { [K in TChartType]: new () => ChartComponent<any> } = {
-            bar: Bar,
-            line: Line,
-            pie: Pie
         };
 
         const ChartType = chartTypes[this.props.type];
