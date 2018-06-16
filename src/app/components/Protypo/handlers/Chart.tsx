@@ -23,7 +23,8 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import * as propTypes from 'prop-types';
-import { Bar, Line, Pie } from 'react-chartjs-2';
+import { ISource, TChartType } from 'genesis/protypo';
+import ChartComponent, { Bar, Line, Pie } from 'react-chartjs-2';
 
 import StyledComponent from './StyledComponent';
 
@@ -33,15 +34,17 @@ export interface IChartProps {
     fieldlabel?: string;
     fieldvalue?: string;
     source?: string;
-    type?: string;
+    type?: TChartType;
 }
 
 interface IChartContext {
-    resolveSource: (name: string) => { columns: string[], types: string[], data: string[][] };
+    resolveSource: (name: string) => ISource;
 }
 
+// declare interface IChart extends React.SFC<{data: any, options: any}>{};
+
 class Chart extends React.Component<IChartProps> {
-    private _cachedSourceData: { columns: string[], types: string[], data: string[][] };
+    private _cachedSourceData: ISource;
 
     static contextTypes = {
         resolveSource: propTypes.func.isRequired
@@ -53,7 +56,7 @@ class Chart extends React.Component<IChartProps> {
     }
 
     render() {
-        const context = this.context as IChartContext;
+        const context: IChartContext = this.context;
 
         this._cachedSourceData = context.resolveSource(this.props.source);
 
@@ -105,38 +108,25 @@ class Chart extends React.Component<IChartProps> {
             }
         };
 
-        switch (this.props.type) {
-            case 'line':
-                return (
-                    <div>
-                        <Line
-                            data={chartData}
-                            options={options}
-                        />
-                    </div>
-                );
+        const chartTypes: { [K in TChartType]: new () => ChartComponent<any> } = {
+            bar: Bar,
+            line: Line,
+            pie: Pie
+        };
 
-            case 'pie':
-                return (
-                    <div>
-                        <Pie
-                            data={chartData}
-                            options={options}
-                        />
-                    </div>
-                );
+        const ChartType = chartTypes[this.props.type];
 
-            case 'bar':
-            default:
-                return (
-                    <div>
-                        <Bar
-                            data={chartData}
-                            options={options}
-                        />
-                    </div>
-                );
+        if (ChartType) {
+            return (
+                <div>
+                    <ChartType
+                        data={chartData}
+                        options={options}
+                    />
+                </div>
+            );
         }
+        return null;
     }
 }
 

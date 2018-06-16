@@ -31,4 +31,12 @@ declare module 'genesis/protypo' {
         readonly childrenText?: string | null;
         readonly tail?: TProtypoElement[] | null;
     };
+
+    type ISource = {
+        readonly columns: string[];
+        readonly types: string[];
+        readonly data: string[][];
+    };
+
+    type TChartType = 'bar' | 'line' | 'pie';
 }

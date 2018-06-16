@@ -46,7 +46,7 @@ class Editor extends React.Component<IEditorProps> {
 
             case 'preview':
                 return (
-                    <div style={{ overflowY: 'auto' }}>
+                    <div className="scroll">
                         <Page
                             name="preview"
                             content={tab.preview}
