@@ -29,6 +29,7 @@ import { reloadEditorTab } from '../actions';
 
 const connections = {
     '@1EditBlock': 'block',
+    '@1EditPage': 'page',
     '@1EditContract': 'contract',
     '@1EditMenu': 'menu'
 };
