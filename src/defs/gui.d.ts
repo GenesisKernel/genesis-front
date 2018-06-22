@@ -23,4 +23,13 @@
 declare module 'genesis/gui' {
     type TWindowType =
         'general' | 'main';
+
+    interface IInferredArguments {
+        readonly privateKey?: string;
+        readonly fullNode?: string[];
+        readonly dry?: boolean;
+        readonly offsetX?: number;
+        readonly offsetY?: number;
+        readonly socketUrl?: string;
+    }
 }
