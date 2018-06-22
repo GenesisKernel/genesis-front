@@ -34,7 +34,7 @@ const fullNodesFallback = ['http://127.0.0.1:7079'];
 
 const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword }) => action$.ofAction(initialize.started)
     .flatMap(action => {
-        const fullNodesArg = platform.args().fullNode;
+        const fullNodesArg = platform.args.fullNode;
         const requestUrl = platform.select({
             web: urlJoin(process.env.PUBLIC_URL || location.origin, 'settings.json'),
             desktop: './settings.json'
@@ -119,7 +119,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                                 Observable.empty<never>()
                             ),
                             Observable.of(connect.started({
-                                wsHost: result.centrifugo,
+                                wsHost: platform.args.socketUrl || result.centrifugo,
                                 session: result.login.token,
                                 socketToken: result.login.notify_key,
                                 timestamp: result.login.timestamp,

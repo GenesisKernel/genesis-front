@@ -41,7 +41,7 @@ interface IInitHookDispatch {
 class InitHook extends React.Component<IInitHookProps & IInitHookState & IInitHookDispatch> {
     componentDidMount() {
         this.props.initialize({
-            defaultKey: platform.args().privateKey
+            defaultKey: platform.args.privateKey
         });
     }
 

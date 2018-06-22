@@ -20,9 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import ElectronStore from 'electron-store';
-const Store: typeof ElectronStore = require('electron-store');
+import * as commander from 'commander';
+import { IInferredArguments } from 'genesis/gui';
 
-export default new Store({
-    cwd: process.platform === 'win32' ? process.cwd() : null
-});
+// Normalize electron launch arguments
+const argv = process.argv.slice();
+const executable = argv.shift();
+if (!argv[0] || argv[0] && argv[0] !== '.') {
+    argv.unshift('');
+}
+argv.unshift(executable);
+
+const command = commander
+    .option('-n, --full-node <url>', null, (value, stack) => {
+        stack.push(value);
+        return stack;
+    }, [])
+    .option('-k, --private-key <key>')
+    .option('-d, --dry')
+    .option('-x, --offset-x <value>', null, parseInt)
+    .option('-y, --offset-y <value>', null, parseInt)
+    .option('-s, --socket-url <url>', null)
+    .parse(argv);
+
+const args: IInferredArguments = {
+    privateKey: command.privateKey,
+    fullNode: command.fullNode,
+    dry: command.dry,
+    offsetX: command.offsetX,
+    offsetY: command.offsetY,
+    socketUrl: command.socketUrl
+};
+
+export default args;

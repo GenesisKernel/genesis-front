@@ -23,12 +23,13 @@
 import { ipcMain, Event } from 'electron';
 import { spawnWindow } from './windows/index';
 import config from './config';
+import args from './args';
 import * as _ from 'lodash';
 
 export let state: any = null;
 let saveState = () => null as any;
 
-if (!process.argv || !process.argv.find(l => '--dry' === l)) {
+if (!args.dry) {
     try {
         state = JSON.parse(config.get('persistentData'));
     }
@@ -65,4 +66,8 @@ ipcMain.on('getState', (e: Event) => {
 ipcMain.on('switchWindow', (e: Event, wnd: string) => {
     e.returnValue = null;
     spawnWindow(wnd);
+});
+
+ipcMain.on('getArgs', (e: Event) => {
+    e.returnValue = args;
 });
