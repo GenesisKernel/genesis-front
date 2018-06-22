@@ -92,13 +92,14 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
 
                                 return Promise.all([
                                     client.getConfig({ name: 'centrifugo' }).catch(e => null),
-                                    securedClient.getSystemParams({ names: ['full_nodes'] })
-                                        .then(l =>
-                                            JSON.parse(l.list.find(p => p.name === 'full_nodes').value)
-                                                .map((n: any) => n.api_address)
-                                        ).catch(e =>
-                                            []
-                                        )
+                                    platform.args.fullNode && platform.args.fullNode.length ? Promise.resolve(platform.args.fullNode) :
+                                        securedClient.getSystemParams({ names: ['full_nodes'] })
+                                            .then(l =>
+                                                JSON.parse(l.list.find(p => p.name === 'full_nodes').value)
+                                                    .map((n: any) => n.api_address)
+                                            ).catch(e =>
+                                                []
+                                            )
                                 ]).then(result => ({
                                     centrifugo: result[0],
                                     login: loginResult,
