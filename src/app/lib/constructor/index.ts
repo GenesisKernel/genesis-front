@@ -26,8 +26,7 @@ import { IFindTagResult } from 'genesis/editor';
 import * as _ from 'lodash';
 import { html2json } from 'html2json';
 import resolveTagHandler from 'lib/constructor/tags';
-
-declare const window: Window & { clipboardData: any };
+import IdGenerator from 'lib/constructor/idGenerator';
 
 let findTagByIdResult: IFindTagResult = {
         el: null,
@@ -92,19 +91,6 @@ export function copyObject(item: any) {
     return result || item;
 }
 
-export class IdGenerator {
-    private counter: number = 0;
-    setCounter(counter: number) {
-        this.counter = counter;
-    }
-    generateId() {
-        return 'tag_' + this.counter++;
-    }
-    generateRandId() {
-        return 'tag_' + (10000000 + Math.floor(Math.random() * 89999999));
-    }
-}
-
 export const idGenerator = new IdGenerator();
 
 export function setIds(children: any[], force: boolean = false) {
@@ -121,31 +107,6 @@ export function setIds(children: any[], force: boolean = false) {
         if (tag.tail) {
             setIds(tag.tail, force);
         }
-    }
-}
-
-let onPasteStripFormattingIEPaste: boolean = false;
-
-export function OnPasteStripFormatting(elem: any, e: any) {
-    let text: string;
-    if (e.originalEvent && e.originalEvent.clipboardData && e.originalEvent.clipboardData.getData) {
-        e.preventDefault();
-        text = e.originalEvent.clipboardData.getData('text/plain');
-        window.document.execCommand('insertText', false, text);
-    }
-    else if (e.clipboardData && e.clipboardData.getData) {
-        e.preventDefault();
-        text = e.clipboardData.getData('text/plain');
-        window.document.execCommand('insertText', false, text);
-    }
-    else if (window.clipboardData && window.clipboardData.getData) {
-        // Stop stack overflow
-        if (!onPasteStripFormattingIEPaste) {
-            onPasteStripFormattingIEPaste = true;
-            e.preventDefault();
-            window.document.execCommand('ms-pasteTextOnly', false);
-        }
-        onPasteStripFormattingIEPaste = false;
     }
 }
 
@@ -242,91 +203,6 @@ export default class CodeGenerator {
         }).join('\n');
     }
 }
-
-export class Properties {
-    private propertiesClasses = {
-        'align': {
-            'left': 'text-left',
-            'center': 'text-center',
-            'right': 'text-right'
-        },
-        'transform': {
-            'lowercase': 'text-lowercase',
-            'uppercase': 'text-uppercase'
-        },
-        'wrap': {
-            'nowrap': 'text-nowrap'
-        },
-        'color': {
-            'muted': 'text-muted',
-            'primary': 'text-primary',
-            'success': 'text-success',
-            'info': 'text-info',
-            'warning': 'text-warning',
-            'danger': 'text-danger'
-        },
-        'btn': {
-            'default': 'btn btn-default',
-            'primary': 'btn btn-primary',
-            'success': 'btn btn-success',
-            'info': 'btn btn-info',
-            'warning': 'btn btn-warning',
-            'danger': 'btn btn-danger',
-            'link': 'btn btn-link',
-            'basic': 'btn'
-        }
-    };
-
-    public getInitial(property: string, tag: any) {
-        if (tag && tag.attr && tag.attr.class) {
-            const classes = ' ' + tag.attr.class + ' ';
-            if (this.propertiesClasses[property]) {
-                for (let value in this.propertiesClasses[property]) {
-                    if (this.propertiesClasses[property].hasOwnProperty(value)) {
-                        if (classes.indexOf(' ' + this.propertiesClasses[property][value] + ' ') >= 0) {
-                            return value;
-                        }
-                    }
-                }
-            }
-        }
-        return '';
-    }
-
-    public updateClassList(classes: string, property: string, value: string) {
-        classes = classes ? classes.concat() : '';
-
-        switch (property) {
-            case 'align':
-            case 'transform':
-            case 'wrap':
-            case 'color':
-            case 'btn':
-                for (let prop in this.propertiesClasses[property]) {
-                    if (this.propertiesClasses[property].hasOwnProperty(prop)) {
-                        classes = classes.replace(this.propertiesClasses[property][prop], '');
-                    }
-                }
-                if (this.propertiesClasses[property][value]) {
-                    classes += ' ' + this.propertiesClasses[property][value];
-                }
-                break;
-            default:
-                break;
-        }
-
-        return classes.replace(/\s+/g, ' ').trim();
-    }
-}
-
-export const getInitialTagValue = (prop: string, tag: any): string => {
-    let properties = new Properties();
-    return properties.getInitial(prop, tag);
-};
-
-// export const resolveTagHandler = (name: string) => {
-//     return tagHandlers[name] || Logic;
-// };
 
 export function getDropPosition(monitor: any, component: any, tag: any) {
 
@@ -524,14 +400,4 @@ function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
             break;
     }
     return null;
-}
-
-let hoverTimer: any = null;
-
-export function startHoverTimer() {
-    if (hoverTimer) {
-        return false;
-    }
-    hoverTimer = setTimeout(() => { hoverTimer = null; }, 200);
-    return true;
 }

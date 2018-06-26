@@ -23,7 +23,17 @@
 import * as React from 'react';
 import { findDOMNode } from 'react-dom';
 import { DropTarget, DragSource } from 'react-dnd';
-import { startHoverTimer, getDropPosition } from 'lib/constructor';
+import { getDropPosition } from 'lib/constructor';
+
+let hoverTimer: any = null;
+
+function startHoverTimer() {
+    if (hoverTimer) {
+        return false;
+    }
+    hoverTimer = setTimeout(() => { hoverTimer = null; }, 200);
+    return true;
+}
 
 const Source = {
     beginDrag(props: any, monitor: any, component: any) {

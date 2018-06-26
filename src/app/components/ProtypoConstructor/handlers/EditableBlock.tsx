@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import * as React from 'react';
-import { OnPasteStripFormatting } from 'lib/constructor';
+import { OnPasteStripFormatting } from 'lib/constructor/helpers';
 import { IConstructorElementProps } from 'genesis/editor';
 import { TProtypoElement } from 'genesis/protypo';
 

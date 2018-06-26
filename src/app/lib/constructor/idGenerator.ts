@@ -20,23 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { TProtypoElement } from 'genesis/protypo';
-import Tag from './Tag';
-
-class Data extends Tag {
-    constructor(element: TProtypoElement) {
-        super(element);
-        this.tagName = 'Data';
-        this.logic = true;
-        this.canHaveChildren = true;
-        this.attr = {
-            'source': 'Source',
-            'columns': 'Columns'
-        };
-        this.editProps = ['source', 'columns', 'data'];
-        this.bodyInline = false;
-        this.dataAttr = true;
+class IdGenerator {
+    private counter: number = 0;
+    setCounter(counter: number) {
+        this.counter = counter;
+    }
+    generateId() {
+        return 'tag_' + this.counter++;
+    }
+    generateRandId() {
+        return 'tag_' + (10000000 + Math.floor(Math.random() * 89999999));
     }
 }
 
-export default Data;
+export default IdGenerator;

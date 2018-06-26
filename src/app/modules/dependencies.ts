@@ -21,7 +21,8 @@
 // SOFTWARE.
 
 import GenesisAPI from 'lib/genesisAPI';
-import CodeGenerator, { setIds, convertToTreeData, findTagById, copyObject, idGenerator, updateChildrenText, html2childrenTags, Properties } from 'lib/constructor';
+import CodeGenerator, { setIds, convertToTreeData, findTagById, copyObject, idGenerator, updateChildrenText, html2childrenTags } from 'lib/constructor';
+import Properties from 'lib/constructor/properties';
 import getConstructorTemplate from 'lib/constructor/templates';
 import resolveTagHandler from 'lib/constructor/tags';
 import 'whatwg-fetch';
