@@ -32,6 +32,14 @@ declare module 'genesis/protypo' {
         readonly tail?: TProtypoElement[] | null;
     };
 
+    type ISource = {
+        readonly columns: string[];
+        readonly types: string[];
+        readonly data: string[][];
+    };
+
+    type TChartType = 'bar' | 'line' | 'pie';
+
     interface IButtonConfirm {
         type?: string;
         title?: string;
