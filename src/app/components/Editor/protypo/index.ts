@@ -236,6 +236,78 @@ const register = (editor: typeof monaco) => {
                 staticParamTypes.Class
             ]
         },
+        GetBlockHistory: {
+            label: 'GetBlockHistory',
+            documentation: 'Retrieve block change history',
+            kind: monaco.languages.CompletionItemKind.Function,
+            insertText: 'GetBlockHistory(',
+            params: [
+                {
+                    label: 'Source',
+                    documentation: 'Source identificator to bind results',
+                    insertText: 'Source: '
+                },
+                {
+                    label: 'Id',
+                    documentation: 'Database entry id',
+                    insertText: 'Id: '
+                }
+            ]
+        },
+        GetContractHistory: {
+            label: 'GetContractHistory',
+            documentation: 'Retrieve contract change history',
+            kind: monaco.languages.CompletionItemKind.Function,
+            insertText: 'GetContractHistory(',
+            params: [
+                {
+                    label: 'Source',
+                    documentation: 'Source identificator to bind results',
+                    insertText: 'Source: '
+                },
+                {
+                    label: 'Id',
+                    documentation: 'Database entry id',
+                    insertText: 'Id: '
+                }
+            ]
+        },
+        GetMenuHistory: {
+            label: 'GetMenuHistory',
+            documentation: 'Retrieve menu change history',
+            kind: monaco.languages.CompletionItemKind.Function,
+            insertText: 'GetMenuHistory(',
+            params: [
+                {
+                    label: 'Source',
+                    documentation: 'Source identificator to bind results',
+                    insertText: 'Source: '
+                },
+                {
+                    label: 'Id',
+                    documentation: 'Database entry id',
+                    insertText: 'Id: '
+                }
+            ]
+        },
+        GetPageHistory: {
+            label: 'GetPageHistory',
+            documentation: 'Retrieve page change history',
+            kind: monaco.languages.CompletionItemKind.Function,
+            insertText: 'GetPageHistory(',
+            params: [
+                {
+                    label: 'Source',
+                    documentation: 'Source identificator to bind results',
+                    insertText: 'Source: '
+                },
+                {
+                    label: 'Id',
+                    documentation: 'Database entry id',
+                    insertText: 'Id: '
+                }
+            ]
+        },
         GetVar: {
             label: 'GetVar',
             documentation: 'Get variable value',
