@@ -20,38 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import commander from 'commander';
+import { IInferredArguments } from 'genesis/gui';
 
 export type TPlatformType =
     'desktop' | 'web' | 'win32' | 'linux' | 'darwin';
 
 const isElectron = navigator.userAgent.toLowerCase().indexOf(' electron/') > -1;
 const platform: TPlatformType = isElectron ? 'desktop' : 'web';
+
 let os: NodeJS.Platform = null;
-let argv = [];
+let args: IInferredArguments = {};
 
 if (isElectron) {
     const electron = require('electron');
     const process: NodeJS.Process = require('process');
     os = process.platform;
-
-    // Normalize electron launch arguments
-    argv = electron.remote.process.argv.slice();
-    const executable = argv.shift();
-    if (!argv[0] || argv[0] && argv[0] !== '.') {
-        argv.unshift('');
-    }
-    argv.unshift(executable);
+    args = electron.ipcRenderer.sendSync('getArgs') || {};
 }
-
-const command = commander
-    .option('-n, --full-node <url>', null, (value, stack) => {
-        stack.push(value);
-        return stack;
-    }, [])
-    .option('-k, --private-key <key>')
-    .option('-d, --dry')
-    .parse(argv);
 
 export default {
     // Platform.select will return only 1 value depending on which platform
@@ -78,7 +63,5 @@ export default {
         }
     },
 
-    args: () => {
-        return command;
-    }
+    args
 };

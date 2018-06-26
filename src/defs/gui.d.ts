@@ -20,9 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import ElectronStore from 'electron-store';
-const Store: typeof ElectronStore = require('electron-store');
+declare module 'genesis/gui' {
+    type TWindowType =
+        'general' | 'main';
 
-export default new Store({
-    cwd: process.platform === 'win32' ? process.cwd() : null
-});
+    interface IInferredArguments {
+        readonly privateKey?: string;
+        readonly fullNode?: string[];
+        readonly dry?: boolean;
+        readonly offsetX?: number;
+        readonly offsetY?: number;
+        readonly socketUrl?: string;
+    }
+}

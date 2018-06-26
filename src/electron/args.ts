@@ -20,7 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-declare module 'genesis/gui' {
-    type TWindowType =
-        'general' | 'main';
+import * as commander from 'commander';
+import { IInferredArguments } from 'genesis/gui';
+
+// Normalize electron launch arguments
+const argv = process.argv.slice();
+const executable = argv.shift();
+if (!argv[0] || argv[0] && argv[0] !== '.') {
+    argv.unshift('');
 }
+argv.unshift(executable);
+
+const command = commander
+    .option('-n, --full-node <url>', null, (value, stack) => {
+        stack.push(value);
+        return stack;
+    }, [])
+    .option('-k, --private-key <key>')
+    .option('-d, --dry')
+    .option('-x, --offset-x <value>', null, parseInt)
+    .option('-y, --offset-y <value>', null, parseInt)
+    .option('-s, --socket-url <url>', null)
+    .parse(argv);
+
+const args: IInferredArguments = {
+    privateKey: command.privateKey,
+    fullNode: command.fullNode,
+    dry: command.dry,
+    offsetX: command.offsetX,
+    offsetY: command.offsetY,
+    socketUrl: command.socketUrl
+};
+
+export default args;

@@ -34,7 +34,7 @@ const fullNodesFallback = ['http://127.0.0.1:7079'];
 
 const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword }) => action$.ofAction(initialize.started)
     .flatMap(action => {
-        const fullNodesArg = platform.args().fullNode;
+        const fullNodesArg = platform.args.fullNode;
         const requestUrl = platform.select({
             web: urlJoin(process.env.PUBLIC_URL || location.origin, 'settings.json'),
             desktop: './settings.json'
@@ -92,13 +92,14 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
 
                                 return Promise.all([
                                     client.getConfig({ name: 'centrifugo' }).catch(e => null),
-                                    securedClient.getSystemParams({ names: ['full_nodes'] })
-                                        .then(l =>
-                                            JSON.parse(l.list.find(p => p.name === 'full_nodes').value)
-                                                .map((n: any) => n.api_address)
-                                        ).catch(e =>
-                                            []
-                                        )
+                                    platform.args.fullNode && platform.args.fullNode.length ? Promise.resolve(platform.args.fullNode) :
+                                        securedClient.getSystemParams({ names: ['full_nodes'] })
+                                            .then(l =>
+                                                JSON.parse(l.list.find(p => p.name === 'full_nodes').value)
+                                                    .map((n: any) => n.api_address)
+                                            ).catch(e =>
+                                                []
+                                            )
                                 ]).then(result => ({
                                     centrifugo: result[0],
                                     login: loginResult,
@@ -119,7 +120,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                                 Observable.empty<never>()
                             ),
                             Observable.of(connect.started({
-                                wsHost: result.centrifugo,
+                                wsHost: platform.args.socketUrl || result.centrifugo,
                                 session: result.login.token,
                                 socketToken: result.login.notify_key,
                                 timestamp: result.login.timestamp,
