@@ -42,13 +42,9 @@ if (!args.dry) {
             storage: state.storage,
             auth: {
                 isAuthenticated: state.auth.isAuthenticated,
-                isEcosystemOwner: state.auth.isEcosystemOwner,
-                sessionToken: state.auth.sessionToken,
-                refreshToken: state.auth.refreshToken,
-                socketToken: state.auth.socketToken,
+                session: state.auth.session,
                 id: state.auth.id,
-                wallet: state.auth.wallet,
-                timestamp: state.auth.timestamp
+                wallet: state.auth.wallet
             }
         }));
     }, 1000, { leading: true });
