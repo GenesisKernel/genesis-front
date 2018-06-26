@@ -25,12 +25,18 @@ import { Observable } from 'rxjs';
 import { ActionsObservable } from 'redux-observable';
 import { txCall, txExec } from '../actions';
 import { ITransactionCall, ITxResult, ITxError } from 'genesis/tx';
-import { isType, Action } from 'typescript-fsa';
+import { isType } from 'typescript-fsa';
+
+type TTxDoneAction =
+    ReturnType<typeof txExec.done> |
+    ReturnType<typeof txExec.failed>;
 
 const TxObservable = (action$: ActionsObservable<ReduxAction>, params: { tx: ITransactionCall, success?: (tx: ITxResult) => Observable<ReduxAction>, failure?: (error: ITxError) => Observable<ReduxAction> }) =>
     Observable.merge(
         action$.filter(l => isType(l, txExec.done) || isType(l, txExec.failed))
-            .filter((l: Action<ITransactionCall>) => params.tx.uuid === l.payload.contract.params.tx.uuid)
+            .filter((l: TTxDoneAction) => {
+                return params.tx.uuid === l.payload.params.tx.uuid;
+            })
             .take(1)
             .flatMap(result => {
                 if (isType(result, txExec.done)) {
