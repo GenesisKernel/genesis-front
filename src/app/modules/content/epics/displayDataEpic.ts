@@ -25,34 +25,35 @@ import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
 import { displayData } from 'modules/content/actions';
 import { modalShow } from 'modules/modal/actions';
+import urlJoin from 'url-join';
 
 const displayDataEpic: Epic = (action$, store, { api }) => action$.ofAction(displayData.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.auth.session);
 
-        return Observable.fromPromise(client.resolveTextData(action.payload))
-            .flatMap(payload =>
-                Observable.of<Action>(
-                    modalShow({
-                        id: 'DISPLAY_INFO',
-                        type: 'INFO',
-                        params: {
-                            value: payload
-                        }
-                    }),
-                    displayData.done({
-                        params: action.payload,
-                        result: payload
-                    })
-                )
-            )
-            .catch(e =>
-                Observable.of(displayData.failed({
-                    params: action.payload,
-                    error: e.error
-                }))
-            );
+        return Observable.ajax({
+            url: urlJoin(state.auth.session.apiHost, 'api/v2', action.payload),
+            responseType: 'text'
+
+        }).flatMap(payload => Observable.of<Action>(
+            modalShow({
+                id: 'DISPLAY_INFO',
+                type: 'INFO',
+                params: {
+                    value: payload.response
+                }
+            }),
+            displayData.done({
+                params: action.payload,
+                result: payload.response
+            })
+
+        )).catch(e =>
+            Observable.of(displayData.failed({
+                params: action.payload,
+                error: e
+            }))
+        );
     });
 
 export default displayDataEpic;

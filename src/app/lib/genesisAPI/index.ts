@@ -317,13 +317,6 @@ class GenesisAPI {
             })
         })
     });
-
-    // Blob data getters
-    public resolveTextData = (link: string) => this._options.transport({
-        method: 'get',
-        url: urlJoin(this._options.apiHost, this._options.apiEndpoint, link)
-
-    }).then(res => res.body as string)
 }
 
 export default GenesisAPI;
