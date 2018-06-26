@@ -21,30 +21,21 @@
 // SOFTWARE.
 
 import React from 'react';
-import propTypes from 'prop-types';
 import { ISource } from 'genesis/protypo';
 
-import Protypo from '../';
+import SimpleSource from './SimpleSource';
 
 export interface IRangeProps extends Pick<ISource, 'data' | 'columns'> {
     source?: string;
 }
 
-interface IRangeContext {
-    protypo: Protypo;
-}
-
-const Range: React.SFC<IRangeProps> = (props, context: IRangeContext) => {
-    context.protypo.registerSource(props.source, {
-        columns: props.columns,
-        types: [],
-        data: props.data
-    });
-    return null;
-};
-
-Range.contextTypes = {
-    protypo: propTypes.object.isRequired
-};
+const Range: React.SFC<IRangeProps> = props => (
+    <SimpleSource
+        source={props.source}
+        columns={props.columns}
+        types={[]}
+        data={props.data}
+    />
+);
 
 export default Range;

@@ -21,11 +21,8 @@
 // SOFTWARE.
 
 import Protypo from './Protypo';
-import ArrayToSource from './handlers/ArrayToSource';
 import Button from './handlers/Button';
 import Code from 'components/Protypo/handlers/Code';
-import Data from './handlers/Data';
-import DBFind from './handlers/DBFind';
 import Div from './handlers/Div';
 import Em from './handlers/Em';
 import ForList from './handlers/ForList';
@@ -35,7 +32,6 @@ import ImageInput from './handlers/ImageInput';
 import Input from './handlers/Input';
 import InputErr from './handlers/InputErr';
 import InputMap from './handlers/InputMap';
-import JsonToSource from './handlers/JsonToSource';
 import Label from './handlers/Label';
 import LinkPage from './handlers/LinkPage';
 import Map from './handlers/Map';
@@ -50,26 +46,31 @@ import Span from './handlers/Span';
 import Strong from './handlers/Strong';
 import Table from './handlers/Table';
 import Chart from './handlers/Chart';
+import SimpleSource from './handlers/SimpleSource';
 
 import setTitle from './functions/setTitle';
 import addToolButton from './functions/addToolButton';
 
 const handlers = {
-    'arraytosource': ArrayToSource,
+    'arraytosource': SimpleSource,
     'button': Button,
     'code': Code,
-    'data': Data,
-    'dbfind': DBFind,
+    'data': SimpleSource,
+    'dbfind': SimpleSource,
     'div': Div,
     'em': Em,
     'forlist': ForList,
     'form': Form,
+    'getpagehistory': SimpleSource,
+    'getcontracthistory': SimpleSource,
+    'getmenuhistory': SimpleSource,
+    'getblockhistory': SimpleSource,
     'image': Image,
     'imageinput': ImageInput,
     'input': Input,
     'inputerr': InputErr,
     'inputMap': InputMap,
-    'jsontosource': JsonToSource,
+    'jsontosource': SimpleSource,
     'label': Label,
     'linkpage': LinkPage,
     'map': Map,

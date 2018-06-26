@@ -26,15 +26,15 @@ import { ISource } from 'genesis/protypo';
 
 import Protypo from '../';
 
-export interface IArrayToSourceProps extends ISource {
+export interface IGetContractHistoryProps extends ISource {
     source: string;
 }
 
-interface IArrayToSourceContext {
+interface IGetContractHistoryContext {
     protypo: Protypo;
 }
 
-const ArrayToSource: React.SFC<IArrayToSourceProps> = (props, context: IArrayToSourceContext) => {
+const GetContractHistory: React.SFC<IGetContractHistoryProps> = (props, context: IGetContractHistoryContext) => {
     context.protypo.registerSource(props.source, {
         columns: props.columns,
         types: props.types,
@@ -43,8 +43,8 @@ const ArrayToSource: React.SFC<IArrayToSourceProps> = (props, context: IArrayToS
     return null;
 };
 
-ArrayToSource.contextTypes = {
+GetContractHistory.contextTypes = {
     protypo: propTypes.object.isRequired
 };
 
-export default ArrayToSource;
+export default GetContractHistory;
