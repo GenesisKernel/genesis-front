@@ -22,14 +22,12 @@
 
 import React from 'react';
 import propTypes from 'prop-types';
+import { ISource } from 'genesis/protypo';
 
 import Protypo from '../';
 
-export interface IArrayToSourceProps {
+export interface IArrayToSourceProps extends ISource {
     source: string;
-    columns: string[];
-    types: string[];
-    data: string[][];
 }
 
 interface IArrayToSourceContext {

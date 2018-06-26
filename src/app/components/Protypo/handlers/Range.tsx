@@ -20,15 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import * as propTypes from 'prop-types';
+import React from 'react';
+import propTypes from 'prop-types';
+import { ISource } from 'genesis/protypo';
 
 import Protypo from '../';
 
-export interface IRangeProps {
+export interface IRangeProps extends Pick<ISource, 'data' | 'columns'> {
     source?: string;
-    columns?: string[];
-    data?: string[][];
 }
 
 interface IRangeContext {

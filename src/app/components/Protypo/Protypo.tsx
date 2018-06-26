@@ -20,11 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { resolveHandler, resolveFunction } from 'components/Protypo';
-import * as propTypes from 'prop-types';
+import propTypes from 'prop-types';
 import contextDefinitions from './contexts';
-import { TProtypoElement } from 'genesis/protypo';
+import { TProtypoElement, ISource } from 'genesis/protypo';
 import { IValidationResult } from 'components/Validation/ValidatedForm';
 import Heading from 'components/Heading';
 import ToolButton, { IToolButtonProps } from 'components/Protypo/components/ToolButton';
@@ -61,7 +61,7 @@ class Protypo extends React.Component<IProtypoProps> {
     private _renderElementsBind: Function;
     private _title: string;
     private _toolButtons: IToolButtonProps[];
-    private _sources: { [key: string]: { columns: string[], types: string[], data: string[][] } };
+    private _sources: { [key: string]: ISource };
     private _errors: { name: string, description: string }[];
 
     constructor(props: IProtypoProps) {
@@ -100,7 +100,7 @@ class Protypo extends React.Component<IProtypoProps> {
         this.props.displayData(link);
     }
 
-    registerSource(name: string, payload: { columns: string[], types: string[], data: string[][] }) {
+    registerSource(name: string, payload: ISource) {
         this._sources[name] = payload;
     }
 

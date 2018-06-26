@@ -20,16 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import * as propTypes from 'prop-types';
+import React from 'react';
+import propTypes from 'prop-types';
+import { ISource } from 'genesis/protypo';
 
 import Protypo from '../';
 
-export interface IJsonToSourceProps {
+export interface IJsonToSourceProps extends ISource {
     source: string;
-    columns: string[];
-    types: string[];
-    data: string[][];
 }
 
 interface IJsonContext {

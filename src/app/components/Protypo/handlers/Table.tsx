@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as _ from 'lodash';
-import * as React from 'react';
-import * as propTypes from 'prop-types';
-import { TProtypoElement } from 'genesis/protypo';
+import _ from 'lodash';
+import React from 'react';
+import propTypes from 'prop-types';
+import { TProtypoElement, ISource } from 'genesis/protypo';
 
 import StyledComponent from './StyledComponent';
 import LongText from 'components/Protypo/components/LongText';
@@ -37,12 +37,12 @@ export interface ITableProps {
 }
 
 interface ITableContext {
-    resolveSource: (name: string) => { columns: string[], types: string[], data: string[][] };
+    resolveSource: (name: string) => ISource;
     renderElements: (elements: TProtypoElement[], keyPrefix?: string) => React.ReactNode[];
 }
 
 class Table extends React.Component<ITableProps> {
-    private _cachedSourceData: { columns: string[], types: string[], data: string[][] };
+    private _cachedSourceData: ISource;
 
     static contextTypes = {
         resolveSource: propTypes.func.isRequired,

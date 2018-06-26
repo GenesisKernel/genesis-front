@@ -32,11 +32,11 @@ declare module 'genesis/protypo' {
         readonly tail?: TProtypoElement[] | null;
     };
 
-    type ISource = {
+    interface ISource {
         readonly columns: string[];
         readonly types: string[];
         readonly data: string[][];
-    };
+    }
 
     type TChartType = 'bar' | 'line' | 'pie';
 
