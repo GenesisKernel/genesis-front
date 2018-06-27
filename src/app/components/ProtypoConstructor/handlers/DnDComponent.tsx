@@ -23,7 +23,55 @@
 import * as React from 'react';
 import { findDOMNode } from 'react-dom';
 import { DropTarget, DragSource } from 'react-dnd';
-import { getDropPosition } from 'lib/constructor';
+import resolveTagHandler from 'lib/constructor/tags';
+
+function getDropPosition(monitor: any, component: any, tag: any) {
+    // Determine rectangle on screen
+    if (!findDOMNode(component)) {
+        return 'after';
+    }
+    const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
+
+    const maxGap: number = 15;
+    let gapX: number = hoverBoundingRect.width / 4;
+    let gapY: number = hoverBoundingRect.height / 4;
+    if (gapX > maxGap) {
+        gapX = maxGap;
+    }
+    if (gapY > maxGap) {
+        gapY = maxGap;
+    }
+
+    // Determine mouse position
+    const clientOffset = monitor.getClientOffset();
+
+    // Get pixels to the top
+    const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+    const hoverClientX = clientOffset.x - hoverBoundingRect.left;
+
+    let tagObj: any = null;
+    const Handler = resolveTagHandler(tag.tag);
+    if (Handler) {
+        tagObj = new Handler(tag);
+    }
+
+    if (!tagObj.canChangePosition && tagObj.canHaveChildren) {
+        return 'inside';
+    }
+
+    if (hoverClientY < gapY || hoverClientX < gapX) {
+        return 'before';
+    }
+
+    if (hoverClientY > hoverBoundingRect.height - gapY || hoverClientX > hoverBoundingRect.width - gapX) {
+        return 'after';
+    }
+
+    if (tagObj && tagObj.getCanHaveChildren()) {
+        return 'inside';
+    }
+    return 'after';
+}
 
 let hoverTimer: any = null;
 
@@ -71,18 +119,20 @@ const Target = {
             return;
         }
 
+        const position = getDropPosition(monitor, component, props.tag);
+
         if (droppedItem.new) {
             props.addTag({
                 tag: droppedItem,
                 destinationTagID: props.tag.id,
-                position: getDropPosition(monitor, component, props.tag)
+                position: position
             });
         }
         else {
             const tagInfo = {
                 tag: droppedItem.tag,
                 destinationTagID: props.tag.id,
-                position: getDropPosition(monitor, component, props.tag)
+                position: position
             };
             switch (droppedItem.dropEffect) {
                 case 'move':

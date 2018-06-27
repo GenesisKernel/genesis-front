@@ -20,55 +20,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { findDOMNode } from 'react-dom';
 import { TProtypoElement } from 'genesis/protypo';
 import { IFindTagResult } from 'genesis/editor';
 import * as _ from 'lodash';
 import { html2json } from 'html2json';
 import resolveTagHandler from 'lib/constructor/tags';
 import IdGenerator from 'lib/constructor/idGenerator';
+import { htmlJsonChild2childrenTags } from 'lib/constructor/helpers';
+import TreeSearch from 'lib/constructor/treeSearch';
 
-let findTagByIdResult: IFindTagResult = {
-        el: null,
-        parent: null,
-        parentPosition: 0,
-        tail: false
-    };
-
-const findNextTagById = (el: any, id: string, parent: any, tail: boolean): any => {
-    if (el.id === id) {
-        findTagByIdResult.el = el;
-        return;
-    }
-    if (el instanceof Array) {
-        for (var i = 0; i < el.length; i++) {
-            if (findTagByIdResult.el) {
-                break;
-            }
-            findTagByIdResult.parent = parent;
-            findTagByIdResult.parentPosition = i;
-            findTagByIdResult.tail = tail;
-            findNextTagById(el[i], id, parent, false);
-        }
-    }
-    if (findTagByIdResult.el) {
-        return;
-    }
-    if (el.children) {
-        findNextTagById(el.children, id, el, false);
-    }
-    if (el.tail) {
-        findNextTagById(el.tail, id, el, true);
-    }
-};
-
-export const findTagById = (el: any, id: string): any => {
-    findTagByIdResult.el = null;
-    findNextTagById(el, id, null, false);
-    return findTagByIdResult;
+export const findTagById = (el: TProtypoElement[], id: string): IFindTagResult => {
+    const treeSearch = new TreeSearch();
+    return treeSearch.findTagById(el, id);
 };
 
 // todo: copyArray, copyObject
+
+function copyObjectInstance(item: any) {
+    let result = null;
+    if (item instanceof Object && !(item instanceof Function)) {
+        result = {};
+        for (const key of Object.keys(item)) {
+        // for (let key in item) {
+            result[key] = copyObject(item[key]);
+        }
+    }
+    return result;
+}
 
 export function copyObject(item: any) {
     let result: any = null;
@@ -79,34 +57,30 @@ export function copyObject(item: any) {
         result = item.map(copyObject);
     }
     else {
-        if (item instanceof Object && !(item instanceof Function)) {
-            result = {};
-            for (let key in item) {
-                if (key) {
-                    result[key] = copyObject(item[key]);
-                }
-            }
-        }
+        result = copyObjectInstance(item);
     }
     return result || item;
 }
 
 export const idGenerator = new IdGenerator();
 
+function setId(tag: any, force: boolean) {
+    if (force) {
+        tag.id = idGenerator.generateId();
+    }
+    else {
+        tag.id = tag.id || idGenerator.generateId();
+    }
+}
+
 export function setIds(children: any[], force: boolean = false) {
     for (let tag of children) {
         if (!tag) {
             continue;
         }
-        if (!tag.id || force) {
-            tag.id = idGenerator.generateId();
-        }
-        if (tag.children) {
-            setIds(tag.children, force);
-        }
-        if (tag.tail) {
-            setIds(tag.tail, force);
-        }
+        setId(tag, force);
+        setIds(tag.children || [], force);
+        setIds(tag.tail || [], force);
     }
 }
 
@@ -204,53 +178,12 @@ export default class CodeGenerator {
     }
 }
 
-export function getDropPosition(monitor: any, component: any, tag: any) {
-
-    // Determine rectangle on screen
-    if (!findDOMNode(component)) {
-        return 'after';
+function getChildrenElements(children: TProtypoElement[]) {
+    let result: TProtypoElement[] = [];
+    for (let child of children) {
+        result.push(updateElementChildrenText(child));
     }
-    const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
-
-    const maxGap: number = 15;
-    let gapX: number = hoverBoundingRect.width / 4;
-    let gapY: number = hoverBoundingRect.height / 4;
-    if (gapX > maxGap) {
-        gapX = maxGap;
-    }
-    if (gapY > maxGap) {
-        gapY = maxGap;
-    }
-
-    // Determine mouse position
-    const clientOffset = monitor.getClientOffset();
-
-    // Get pixels to the top
-    const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-    const hoverClientX = clientOffset.x - hoverBoundingRect.left;
-
-    let tagObj: any = null;
-    const Handler = resolveTagHandler(tag.tag);
-    if (Handler) {
-        tagObj = new Handler(tag);
-    }
-
-    if (!tagObj.canChangePosition && tagObj.canHaveChildren) {
-        return 'inside';
-    }
-
-    if (hoverClientY < gapY || hoverClientX < gapX) {
-        return 'before';
-    }
-
-    if (hoverClientY > hoverBoundingRect.height - gapY || hoverClientX > hoverBoundingRect.width - gapX) {
-        return 'after';
-    }
-
-    if (tagObj && tagObj.getCanHaveChildren()) {
-        return 'inside';
-    }
-    return 'after';
+    return result;
 }
 
 function updateElementChildrenText(el: TProtypoElement) {
@@ -262,14 +195,10 @@ function updateElementChildrenText(el: TProtypoElement) {
             let tag = new Handler(el);
             childrenText = tag.renderHTMLChildren();
         }
-        let children: TProtypoElement[] = [];
-        for (let child of el.children) {
-            children.push(updateElementChildrenText(child));
-        }
         return {
             ...el,
             childrenText,
-            children
+            children: getChildrenElements(el.children)
         };
     }
     else {
@@ -293,111 +222,4 @@ export function updateChildrenText(tree: TProtypoElement[]): TProtypoElement[] {
 export function html2childrenTags(html: string): TProtypoElement[] {
     const htmlJson = html2json(html);
     return htmlJsonChild2childrenTags(htmlJson.child);
-}
-
-function htmlJsonChild2childrenTags(nodes: IHtmlJsonNode[]): TProtypoElement[] {
-    let children = [];
-    let i = 0;
-    if (nodes) {
-        for (const node of nodes) {
-            const el = htmlJson2ProtypoElement(node, i);
-            if (el) {
-                children.push(el);
-            }
-            i++;
-        }
-    }
-    return children;
-}
-
-interface IHtmlJsonNode {
-    node: string;
-    tag?: string;
-    text?: string;
-    attr?: { [key: string]: any };
-    child?: IHtmlJsonNode[];
-}
-
-function clearHtml(text: string): string {
-    return text.replace(/&nbsp;/g, '');
-}
-
-function htmlJson2ProtypoElement(node: IHtmlJsonNode, index: number) {
-    switch (node.node) {
-        case 'text':
-            if (index === 0) {
-                return {
-                    tag: 'text',
-                    text: clearHtml(node.text),
-                    id: idGenerator.generateId()
-                };
-            }
-            else {
-                return {
-                    tag: 'span',
-                    id: idGenerator.generateId(),
-                    children: [{
-                        tag: 'text',
-                        text: clearHtml(node.text),
-                        id: idGenerator.generateId()
-                    }]
-                };
-            }
-        case 'element':
-            const className = node.attr && node.attr.class && node.attr.class.join(' ') || '';
-            switch (node.tag) {
-                case 'p':
-                    return {
-                        tag: 'p',
-                        id: idGenerator.generateId(),
-                        attr: {
-                            className: className
-                        },
-                        children: htmlJsonChild2childrenTags(node.child)
-                    };
-                case 'i':
-                    return {
-                        tag: 'em',
-                        id: idGenerator.generateId(),
-                        attr: {
-                            className: className
-                        },
-                        children: htmlJsonChild2childrenTags(node.child)
-                    };
-                case 'b':
-                case 'strong':
-                    return {
-                        tag: 'strong',
-                        id: idGenerator.generateId(),
-                        attr: {
-                            className: className
-                        },
-                        children: htmlJsonChild2childrenTags(node.child)
-                    };
-                case 'span':
-                    return {
-                        tag: 'span',
-                        id: idGenerator.generateId(),
-                        attr: {
-                            className: className
-                        },
-                        children: htmlJsonChild2childrenTags(node.child)
-                    };
-                case 'div':
-                    return {
-                        tag: 'div',
-                        id: idGenerator.generateId(),
-                        attr: {
-                            className: className
-                        },
-                        children: htmlJsonChild2childrenTags(node.child)
-                    };
-                default:
-                    break;
-            }
-            break;
-        default:
-            break;
-    }
-    return null;
 }

@@ -54,44 +54,50 @@ class Properties {
         }
     };
 
-    public getInitial(property: string, tag: any) {
-        if (tag && tag.attr && tag.attr.class) {
-            const classes = ' ' + tag.attr.class + ' ';
-            if (this.propertiesClasses[property]) {
-                for (let value in this.propertiesClasses[property]) {
-                    if (this.propertiesClasses[property].hasOwnProperty(value)) {
-                        if (classes.indexOf(' ' + this.propertiesClasses[property][value] + ' ') >= 0) {
-                            return value;
-                        }
-                    }
-                }
+    private getPropertyValue(propertyClasses: any, classes: string) {
+        for (const value of Object.keys(propertyClasses)) {
+            if (classes.indexOf(' ' + propertyClasses[value] + ' ') >= 0) {
+                return value;
             }
         }
         return '';
     }
 
-    public updateClassList(classes: string, property: string, value: string) {
-        classes = classes ? classes.concat() : '';
+    public getInitial(property: string, tag: any) {
+        let classes = tag && tag.attr && tag.attr.class || '';
+        classes = ' ' + classes + ' ';
+        const propertyClasses = this.propertiesClasses[property] || {};
 
+        return this.getPropertyValue(propertyClasses, classes);
+    }
+
+    private removePropertyValues(classes: string, property: string) {
+        for (const prop of Object.keys(this.propertiesClasses[property])) {
+            classes = classes.replace(this.propertiesClasses[property][prop], '');
+        }
+        return classes;
+    }
+
+    private addPropertyValues(classes: string, property: string, value: string) {
+        if (this.propertiesClasses[property][value]) {
+            classes += ' ' + this.propertiesClasses[property][value];
+        }
+        return classes;
+    }
+
+    public updateClassList(classes: string, property: string, value: string) {
         switch (property) {
             case 'align':
             case 'transform':
             case 'wrap':
             case 'color':
             case 'btn':
-                for (let prop in this.propertiesClasses[property]) {
-                    if (this.propertiesClasses[property].hasOwnProperty(prop)) {
-                        classes = classes.replace(this.propertiesClasses[property][prop], '');
-                    }
-                }
-                if (this.propertiesClasses[property][value]) {
-                    classes += ' ' + this.propertiesClasses[property][value];
-                }
+                classes = this.removePropertyValues(classes, property);
+                classes = this.addPropertyValues(classes, property, value);
                 break;
             default:
                 break;
         }
-
         return classes.replace(/\s+/g, ' ').trim();
     }
 }
