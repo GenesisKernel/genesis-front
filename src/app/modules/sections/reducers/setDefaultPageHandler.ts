@@ -24,6 +24,8 @@ import { State } from '../reducer';
 import { setDefaultPage } from '../actions';
 import { Reducer } from 'modules';
 
+const DEFAULT_PAGE = 'default_page';
+
 const setDefaultPageHandler: Reducer<typeof setDefaultPage, State> = (state, payload) => ({
     ...state,
     inited: true,
@@ -31,7 +33,7 @@ const setDefaultPageHandler: Reducer<typeof setDefaultPage, State> = (state, pay
         ...state.sections,
         home: {
             ...state.sections.home,
-            defaultPage: (payload ? payload : state.sections.home.defaultPage)
+            defaultPage: payload || DEFAULT_PAGE
         }
     }
 });

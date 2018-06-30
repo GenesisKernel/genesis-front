@@ -20,10 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import { Action } from 'redux';
 import { Epic } from 'modules';
 import { login } from '../actions';
 import { Observable } from 'rxjs/Observable';
 import keyring from 'lib/keyring';
+import { push } from 'react-router-redux';
 
 const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.started)
     .flatMap(action => {
@@ -73,34 +75,37 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
             )
 
             // Successful authentication. Yield the result
-            .map(payload => {
+            .flatMap(payload => {
                 const wallet = payload[0];
                 const ecosystemName = payload[1];
 
-                return login.done({
-                    params: action.payload,
-                    result: {
-                        wallet: {
-                            id: wallet.key_id,
-                            encKey: action.payload.wallet.encKey,
-                            address: wallet.address,
-                            ecosystem: action.payload.wallet.ecosystem,
-                            ecosystemName,
-                            username: wallet.username
-                        },
-                        roles: wallet.roles && wallet.roles.map(role => ({
-                            id: role.role_id,
-                            name: role.role_name
-                        })),
-                        session: {
-                            sessionToken: wallet.token,
-                            refreshToken: wallet.refresh,
-                            apiHost: nodeHost
-                        },
-                        privateKey,
-                        publicKey
-                    }
-                });
+                return Observable.of<Action>(
+                    push('/'),
+                    login.done({
+                        params: action.payload,
+                        result: {
+                            wallet: {
+                                id: wallet.key_id,
+                                encKey: action.payload.wallet.encKey,
+                                address: wallet.address,
+                                ecosystem: action.payload.wallet.ecosystem,
+                                ecosystemName,
+                                username: wallet.username
+                            },
+                            roles: wallet.roles && wallet.roles.map(role => ({
+                                id: role.role_id,
+                                name: role.role_name
+                            })),
+                            session: {
+                                sessionToken: wallet.token,
+                                refreshToken: wallet.refresh,
+                                apiHost: nodeHost
+                            },
+                            privateKey,
+                            publicKey
+                        }
+                    })
+                );
             })
 
             // Catch actual login error, yield result

@@ -20,9 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import { Action } from 'redux';
 import { Epic } from 'modules';
 import { selectRole } from '../actions';
 import { Observable } from 'rxjs/Observable';
+import { setDefaultPage } from 'modules/sections/actions';
 import keyring from 'lib/keyring';
 
 const selectRoleEpic: Epic = (action$, store, { api }) => action$.ofAction(selectRole.started)
@@ -33,27 +35,41 @@ const selectRoleEpic: Epic = (action$, store, { api }) => action$.ofAction(selec
         const publicKey = keyring.generatePublicKey(privateKey);
         const wallet = state.auth.wallet;
 
-        return Observable.from(client.getUid().then(uid => {
+        return Observable.from(client.getUid()).flatMap(uid => {
             const signature = keyring.sign(uid.uid, privateKey);
+            const authClient = client.authorize(uid.token);
 
-            return client.authorize(uid.token)
-                .login({
-                    publicKey,
-                    signature,
-                    ecosystem: wallet.ecosystem,
-                    role: action.payload
-                });
+            return Observable.from(authClient.login({
+                publicKey,
+                signature,
+                ecosystem: wallet.ecosystem,
+                role: action.payload
 
-        })).map(payload =>
-            selectRole.done({
-                params: action.payload,
-                result: {
-                    sessionToken: payload.token,
-                    refreshToken: payload.refresh
-                }
-            })
+            })).flatMap(loginResult => {
+                const securedClient = authClient.authorize(loginResult.token);
 
-        ).catch(e =>
+                return (action.payload ? Observable.from(
+                    securedClient.getRow({
+                        table: 'roles',
+                        id: action.payload.toString()
+
+                    }).then(roleResult => roleResult.value.default_page).catch(e => null)
+
+                ) : Observable.of(null)).flatMap(roleResult =>
+                    Observable.of<Action>(
+                        setDefaultPage(roleResult),
+                        selectRole.done({
+                            params: action.payload,
+                            result: {
+                                sessionToken: loginResult.token,
+                                refreshToken: loginResult.refresh
+                            }
+                        })
+                    )
+                );
+            });
+
+        }).catch(e =>
             Observable.of(
                 selectRole.failed({
                     params: null,
