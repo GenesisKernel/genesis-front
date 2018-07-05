@@ -188,7 +188,7 @@ class Protypo extends React.Component<IProtypoProps> {
     }
 
     renderHeading() {
-        return (this.props.context === 'page') ? (
+        return (this.props.context === 'page' && this._title) ? (
             <Heading key="func_heading">
                 <span>{this._title}</span>
                 <div className="pull-right">
