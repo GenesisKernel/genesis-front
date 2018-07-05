@@ -35,11 +35,27 @@ const txPrepareEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrep
     .flatMap(action => {
         const state = store.getState();
         const client = api(state.auth.session);
+        const txParams = {};
+
+        for (let itr in action.payload.tx.contract.params) {
+            if (action.payload.tx.contract.params.hasOwnProperty(itr)) {
+                const param = action.payload.tx.contract.params[itr];
+                if (Array.isArray(param)) {
+                    txParams[`${itr}[]`] = param.length;
+                    param.forEach((childParam, index) => {
+                        txParams[`${itr}[${index}]`] = childParam;
+                    });
+                }
+                else {
+                    txParams[itr] = param;
+                }
+            }
+        }
 
         const txCall = {
             name: action.payload.tx.contract.name,
             params: {
-                ...action.payload.tx.contract.params,
+                ...txParams,
                 Lang: state.storage.locale
             }
         };
