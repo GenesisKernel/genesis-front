@@ -23,7 +23,7 @@
 import queryString from 'query-string';
 import urlJoin from 'url-join';
 import urlTemplate from 'url-template';
-import { IUIDResponse, ILoginRequest, ILoginResponse, IRefreshResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, IContentJsonRequest, IContentJsonResponse, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IRefreshRequest, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse, ITxCallRequest, ITxCallResponse, ITxPrepareRequest, ITxPrepareResponse, ITxStatusRequest, ITxStatusResponse, ITableRequest, TConfigRequest, ISystemParamsRequest, ISystemParamsResponse, ITxPrepareBatchRequest, ITxStatusBatchRequest, ITxPrepareBatchResponse, ITxCallBatchRequest, ITxCallBatchResponse, ITxStatusBatchResponse } from 'genesis/api';
+import { IUIDResponse, ILoginRequest, ILoginResponse, IRefreshResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, IContentJsonRequest, IContentJsonResponse, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IRefreshRequest, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse, ITxCallRequest, ITxCallResponse, ITxPrepareRequest, ITxPrepareResponse, ITxStatusRequest, ITxStatusResponse, ITableRequest, TConfigRequest, ISystemParamsRequest, ISystemParamsResponse, ITxPrepareBatchRequest, ITxStatusBatchRequest, ITxPrepareBatchResponse, ITxCallBatchRequest, ITxCallBatchResponse, ITxStatusBatchResponse, IContentHashRequest, IContentHashResponse } from 'genesis/api';
 
 export type TRequestMethod =
     'get' |
@@ -43,7 +43,7 @@ export interface IRequestOptions<P, R> {
         [key: string]: string;
     };
     requestTransformer?: (request: P) => { [key: string]: any };
-    responseTransformer?: (response: any) => R;
+    responseTransformer?: (response: any, text: string) => R;
 }
 
 export interface IEndpointFactory {
@@ -60,7 +60,7 @@ export interface IParameterLessEndpoint<R> {
 }
 
 export interface IRequestTransport {
-    (request: IRequest): Promise<{ body: any }>;
+    (request: IRequest): Promise<{ json: object, body: string }>;
 }
 
 export interface IRequestParams {
@@ -119,13 +119,7 @@ class GenesisAPI {
         };
 
         let json: any = null;
-
-        const formData = new FormData();
-        for (let itr in params) {
-            if (params.hasOwnProperty(itr) && params[itr]) {
-                formData.append(itr, params[itr]);
-            }
-        }
+        let text: string = null;
 
         const query = 'get' === method ? queryString.stringify(params) : '';
         const body = 'get' === method ? null : this.serializeFormData(params);
@@ -137,7 +131,9 @@ class GenesisAPI {
                 body,
                 headers: requestOptions.headers
             });
-            json = response.body;
+
+            json = response.json;
+            text = response.body;
         }
         catch (e) {
             // TODO: Not possible to catch with any other way
@@ -156,7 +152,7 @@ class GenesisAPI {
             throw json;
         }
         else {
-            return requestOptions.responseTransformer ? requestOptions.responseTransformer(json) : json;
+            return requestOptions.responseTransformer ? requestOptions.responseTransformer(json, text) : json;
         }
     }
 
@@ -259,6 +255,10 @@ class GenesisAPI {
         requestTransformer: request => ({
             ...request.params,
             lang: request.locale
+        }),
+        responseTransformer: (response, plainText) => ({
+            ...response,
+            plainText
         })
     });
     public contentTest = this.setSecuredEndpoint<IContentTestRequest, IContentResponse>('post', 'content', {
@@ -275,6 +275,10 @@ class GenesisAPI {
             lang: request.locale,
             source: request.source,
         })
+    });
+
+    public contentHash = this.setEndpoint<IContentHashRequest, IContentHashResponse>('post', 'content/hash/{name}', {
+        requestTransformer: () => null
     });
 
     // Transactions

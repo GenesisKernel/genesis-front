@@ -22,7 +22,13 @@
 
 import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
-import { renderPage } from '..//actions';
+import { renderPage } from '../actions';
+import NodeObservable from 'modules/engine/util/NodeObservable';
+import keyring from 'lib/keyring';
+
+const invalidationError = {
+    error: 'E_INVALIDATED'
+};
 
 const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(renderPage.started)
     .flatMap(action => {
@@ -35,23 +41,51 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
             params: action.payload.params,
             locale: state.storage.locale
 
-        })).map(payload =>
-            renderPage.done({
-                params: action.payload,
-                result: {
-                    menu: {
-                        name: payload.menu,
-                        content: payload.menutree
-                    },
-                    page: {
-                        params: action.payload.params,
-                        name: action.payload.name,
-                        content: payload.tree
+        })).flatMap(payload => {
+            const validatingNodesCount = Math.min(state.storage.fullNodes.length, 3);
+
+            return NodeObservable({
+                nodes: state.storage.fullNodes,
+                count: validatingNodesCount,
+                concurrency: 3,
+                api
+
+            }).flatMap(apiHost => Observable.from(
+                api({ apiHost }).contentHash({
+                    name: action.payload.name
+
+                })
+            ).catch(e => Observable.throw(invalidationError))
+            ).toArray().map(result => {
+                const contentHash = keyring.hashData(payload.plainText);
+
+                if (validatingNodesCount !== result.length) {
+                    throw invalidationError;
+                }
+
+                for (let i = 0; i < result.length; i++) {
+                    if (contentHash !== result[i].hash) {
+                        throw invalidationError;
                     }
                 }
-            })
 
-        ).catch(e =>
+                return renderPage.done({
+                    params: action.payload,
+                    result: {
+                        menu: {
+                            name: payload.menu,
+                            content: payload.menutree
+                        },
+                        page: {
+                            params: action.payload.params,
+                            name: action.payload.name,
+                            content: payload.tree
+                        }
+                    }
+                });
+            });
+
+        }).catch(e =>
             Observable.of(renderPage.failed({
                 params: action.payload,
                 error: e.error

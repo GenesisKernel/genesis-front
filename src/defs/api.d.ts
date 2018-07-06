@@ -189,6 +189,8 @@ declare module 'genesis/api' {
         menu: string;
         tree: TProtypoElement[];
         menutree?: TProtypoElement[];
+        plainText: string;
+        nodesCount: number;
     }
 
     interface IContentTestRequest {
@@ -207,6 +209,14 @@ declare module 'genesis/api' {
 
     interface IContentJsonResponse {
         tree: TProtypoElement[];
+    }
+
+    interface IContentHashRequest {
+        name: string;
+    }
+
+    interface IContentHashResponse {
+        hash: string;
     }
 
     interface ISegmentRequest {

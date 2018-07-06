@@ -60,7 +60,20 @@ const storeDependencies: IStoreDependencies = {
             headers: request.headers,
             body: request.body
 
-        }).then(response => response.json()).then(body => ({ body })).catch(e => {
+        }).then(response =>
+            Promise.all([
+                response.clone().json(),
+                response.clone().text()
+
+            ]).then(result => ({
+                json: result[0],
+                body: result[1]
+
+            }))
+
+        ).catch(e => {
+            // tslint:disable-next-line:no-console
+            console.error(e);
             throw e && e.response && e.response.data ? e.response.data.error : null;
         }),
         apiHost: params.apiHost,
