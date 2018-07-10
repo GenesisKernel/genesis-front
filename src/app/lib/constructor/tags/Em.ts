@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { TProtypoElement } from 'genesis/protypo';
 import Tag from './Tag';
+import { TProtypoElement } from 'genesis/protypo';
 
 class Em extends Tag {
     constructor(element: TProtypoElement) {

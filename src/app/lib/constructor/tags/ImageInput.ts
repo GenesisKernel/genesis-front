@@ -20,29 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { TProtypoElement } from 'genesis/protypo';
-import { idGenerator } from 'lib/constructor';
 import Tag from './Tag';
 
 class ImageInput extends Tag {
-    constructor(element: TProtypoElement) {
-        super(element);
-        this.tagName = 'ImageInput';
-        this.canHaveChildren = false;
-        this.attr = {
-            'class': 'Class',
-            'format': 'Format',
-            'name': 'Name',
-            'ratio': 'Ratio',
-            'width': 'Width'
-        };
-        this.editProps = ['class', 'ratio', 'width'];
-    }
+
+    protected tagName: string = 'ImageInput';
+    public canHaveChildren: boolean = false;
+    protected attr: any = {
+        'class': 'Class',
+        'format': 'Format',
+        'name': 'Name',
+        'ratio': 'Ratio',
+        'width': 'Width'
+    };
+    protected editProps = ['class', 'name', 'format', 'ratio', 'width'];
+    protected generateTextElement: boolean = false;
 
     generateTreeJSON(text: string): any {
         return {
-            tag: this.tagName.toLowerCase(),
-            id: idGenerator.generateId(),
+            ...this.generateBaseTreeJSON(text),
             attr: {
                 format: 'jpg',
                 name: 'sample image',

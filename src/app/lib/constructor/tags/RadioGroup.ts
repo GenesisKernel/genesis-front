@@ -20,30 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { TProtypoElement } from 'genesis/protypo';
-import { idGenerator } from 'lib/constructor';
 import Tag from './Tag';
 
 class RadioGroup extends Tag {
-    constructor(element: TProtypoElement) {
-        super(element);
-        this.tagName = 'RadioGroup';
-        this.canHaveChildren = false;
-        this.attr = {
-            'name': 'Name',
-            'source': 'Source',
-            'namecolumn': 'NameColumn',
-            'valuecolumn': 'ValueColumn',
-            'value': 'Value',
-            'class': 'Class'
-        };
-        this.editProps = ['class', 'name', 'source', 'namecolumn', 'valuecolumn', 'value'];
-    }
+
+    protected tagName: string = 'RadioGroup';
+    public canHaveChildren: boolean = false;
+    protected attr: any = {
+        'name': 'Name',
+        'source': 'Source',
+        'namecolumn': 'NameColumn',
+        'valuecolumn': 'ValueColumn',
+        'value': 'Value',
+        'class': 'Class'
+    };
+    protected editProps = ['class', 'name', 'source', 'namecolumn', 'valuecolumn', 'value'];
+    protected generateTextElement: boolean = false;
 
     generateTreeJSON(text: string): any {
         return {
-            tag: this.tagName.toLowerCase(),
-            id: idGenerator.generateId(),
+            ...this.generateBaseTreeJSON(text),
             attr: {
                 name: 'name'
             }

@@ -36,7 +36,7 @@ class Tag {
     public canChangePosition: boolean = true;
     protected offset: number = 0;
     protected generateTextElement = true;
-    protected logic = false;
+    public logic = false;
 
     protected attr: any = {
         'class': 'Class'
@@ -47,7 +47,7 @@ class Tag {
     protected bodyInline = true;
     protected dataAttr = false;
 
-    constructor(element: TProtypoElement) {
+    constructor(element: TProtypoElement | null) {
         this.element = element;
     }
     setOffset(offset: number): void {
@@ -132,7 +132,7 @@ class Tag {
     renderBody(body: string): string {
         let result = '';
         if (body && (!this.bodyInline || !isSimpleBody(body))) {
-            result = ' {\n' + body + '\n' + this.renderOffset() + '}';
+            result = '{\n' + body + '\n' + this.renderOffset() + '}';
         }
         return result;
     }
@@ -143,17 +143,17 @@ class Tag {
         result += this.tagName + '(';
         result += this.renderParams(this.element, body) + ')';
         result += this.renderData();
-        result += this.renderTail();
         result += this.renderBody(body);
+        result += this.renderTail();
 
         return result;
     }
 
-    renderChildren(children: TProtypoElement[], offset: number): string {
+    renderChildren(children: TProtypoElement[], offset: number = 0, delimeter: string = '\n'): string {
         if (!children) {
             return '';
         }
-        let result = children.map((element, index) => {
+        return children.map((element, index) => {
             switch (element.tag) {
                 case 'text':
                     return quoteValueIfNeeded(element.text);
@@ -166,20 +166,15 @@ class Tag {
                     }
                     return '';
             }
-        }).join('\n');
-
-        if (result.length > 0) {
-            return result;
-        }
-
-        return '';
+        }).join(delimeter);
+    }
+    getClassName(): string {
+        return this.element.attr && (this.element.attr.class || this.element.attr.className) || '';
     }
     renderHTML(): string {
         if (this.HTMLTag) {
             let result: string = '<' + this.HTMLTag;
-            if (this.element.attr && (this.element.attr.class || this.element.attr.className)) {
-                result += ' class="' + (this.element.attr.class ? this.element.attr.class : '') + ' ' + (this.element.attr.className ? this.element.attr.className : '') + '"';
-            }
+            result += ' class="' + this.getClassName() + '"';
             result += '>';
             const children = this.renderHTMLChildren();
             if (children === null) {
@@ -194,20 +189,13 @@ class Tag {
         }
     }
     renderHTMLChildren(): string {
-        if (!this.element.children) {
-            return '';
-        }
-        let resultArr = this.element.children.map((element, index) => {
+        let resultArr = (this.element.children || []).map((element, index) => {
             switch (element.tag) {
                 case 'text':
                     return element.text;
                 default:
                     const Handler = resolveTagHandler(element.tag);
-                    if (Handler) {
-                        let tag = new Handler(element);
-                        return tag.renderHTML();
-                    }
-                    return '';
+                    return Handler && (new Handler(element)).renderHTML() || '';
             }
         });
 
@@ -216,15 +204,10 @@ class Tag {
             return null;
         }
 
-        const result = resultArr.join('');
-
-        if (result.length > 0) {
-            return result;
-        }
-
-        return '';
+        return resultArr.join('');
     }
-    generateTreeJSON(text: string): any {
+
+    generateBaseTreeJSON(text: string): any {
         return {
             tag: this.tagName.toLowerCase(),
             id: idGenerator.generateId(),
@@ -234,6 +217,10 @@ class Tag {
                 id: idGenerator.generateId()
             }] : []
         };
+    }
+
+    generateTreeJSON(text: string): any {
+        return this.generateBaseTreeJSON(text);
     }
 
     getValidationParams(obj: Object) {
@@ -263,16 +250,8 @@ class Tag {
         return paramsArr.join(',');
     }
 
-    getCanHaveChildren() {
-        return this.canHaveChildren;
-    }
-
     hasEditProp(prop: string): boolean {
         return this.editProps.indexOf(prop) !== -1;
-    }
-
-    isLogic(): boolean {
-        return this.logic;
     }
 }
 

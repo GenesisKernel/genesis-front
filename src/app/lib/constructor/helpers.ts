@@ -112,8 +112,9 @@ function generateProtypoElement(node: IHtmlJsonNode) {
     const className = node.attr && node.attr.class && node.attr.class.join(' ') || '';
     switch (node.tag) {
         case 'p':
-        case 'i':
             return getProtypoElement(node.tag, className, node.child);
+        case 'i':
+            return getProtypoElement('em', className, node.child);
         case 'b':
         case 'strong':
             return getProtypoElement('strong', className, node.child);

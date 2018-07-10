@@ -20,23 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { TProtypoElement } from 'genesis/protypo';
 import Tag from './Tag';
 
 class Data extends Tag {
-    constructor(element: TProtypoElement) {
-        super(element);
-        this.tagName = 'Data';
-        this.logic = true;
-        this.canHaveChildren = true;
-        this.attr = {
-            'source': 'Source',
-            'columns': 'Columns'
-        };
-        this.editProps = ['source', 'columns', 'data'];
-        this.bodyInline = false;
-        this.dataAttr = true;
-    }
+    protected tagName: string = 'Data';
+    public logic: boolean = true;
+    protected attr: any = {
+        'source': 'Source',
+        'columns': 'Columns'
+    };
+    protected editProps = ['source', 'columns', 'data'];
+    protected bodyInline = false;
+    protected dataAttr = true;
 }
 
 export default Data;

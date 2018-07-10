@@ -20,29 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { TProtypoElement } from 'genesis/protypo';
-import { idGenerator } from 'lib/constructor';
 import Tag from './Tag';
 
 class Input extends Tag {
-    constructor(element: TProtypoElement) {
-        super(element);
-        this.tagName = 'Input';
-        this.canHaveChildren = false;
-        this.attr = {
-            'class': 'Class',
-            'name': 'Name',
-            'placeholder': 'Placeholder',
-            'type': 'Type',
-            'value': 'Value'
-        };
-        this.editProps = ['class', 'align', 'transform', 'wrap'];
-    }
+    protected tagName: string = 'Input';
+    public canHaveChildren: boolean = false;
+    protected attr: any = {
+        'class': 'Class',
+        'name': 'Name',
+        'placeholder': 'Placeholder',
+        'type': 'Type',
+        'value': 'Value'
+    };
+    protected editProps = ['class', 'align', 'transform', 'wrap'];
+    protected generateTextElement: boolean = false;
 
     generateTreeJSON(text: string): any {
         return {
-            tag: this.tagName.toLowerCase(),
-            id: idGenerator.generateId(),
+            ...this.generateBaseTreeJSON(text),
             attr: {
                 name: 'sample input',
                 class: 'form-control'

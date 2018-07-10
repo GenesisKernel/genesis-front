@@ -20,47 +20,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { TProtypoElement } from 'genesis/protypo';
-import { idGenerator } from 'lib/constructor';
 import Tag from './Tag';
 
 class ElseIf extends Tag {
-    constructor(element: TProtypoElement) {
-        super(element);
-        this.tagName = 'ElseIf';
-        this.canHaveChildren = true;
-        this.canMove = false;
-        this.canCopy = false;
-        this.canChangePosition = false;
-        this.logic = true;
-        this.attr = {
-            'condition': 'Condition'
-        };
-        this.editProps = ['condition'];
-    }
+    protected tagName: string = 'ElseIf';
+    public logic: boolean = true;
+    protected bodyInline = false;
+    public canMove: boolean = false;
+    public canCopy: boolean = false;
+    public canChangePosition: boolean = false;
+    protected attr: any = {
+        'condition': 'Condition'
+    };
+    protected editProps: string[] = ['condition'];
+    protected generateTextElement: boolean = false;
 
     renderCode(): string {
         let result: string = '.' + this.tagName + '(';
 
-        if (this.element && this.element.attr && this.element.attr.condition) {
-            result += this.element.attr.condition;
-        }
-
-        result += ')';
-
         let body = this.renderChildren(this.element.children, this.offset);
-        result += '{\n';
-        if (this.element.children && this.element.children.length) {
-            result += body + '\n' + this.renderOffset();
-        }
-        result += '}';
+        result += this.renderParams(this.element, body) + ')';
+        result += this.renderBody(body);
         return result;
     }
 
     generateTreeJSON(text: string): any {
         return {
-            tag: this.tagName.toLowerCase(),
-            id: idGenerator.generateId(),
+            ...this.generateBaseTreeJSON(text),
             attr: {
                 condition: '#value#'
             }

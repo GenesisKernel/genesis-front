@@ -21,13 +21,14 @@
 // SOFTWARE.
 
 import { TProtypoElement } from 'genesis/protypo';
-import { IFindTagResult } from 'genesis/editor';
+import { IFindTagResult, TConstructorTreeElement } from 'genesis/editor';
 import * as _ from 'lodash';
 import { html2json } from 'html2json';
-import resolveTagHandler from 'lib/constructor/tags';
-import IdGenerator from 'lib/constructor/idGenerator';
-import { htmlJsonChild2childrenTags } from 'lib/constructor/helpers';
-import TreeSearch from 'lib/constructor/treeSearch';
+import resolveTagHandler from './tags';
+import IdGenerator from './idGenerator';
+import { htmlJsonChild2childrenTags } from './helpers';
+import TreeSearch from './treeSearch';
+import Tag from './tags/Tag';
 
 export const findTagById = (el: TProtypoElement[], id: string): IFindTagResult => {
     const treeSearch = new TreeSearch();
@@ -84,72 +85,83 @@ export function setIds(children: any[], force: boolean = false) {
     }
 }
 
-export function convertToTreeData(data: TProtypoElement[], selectedTag?: TProtypoElement): any {
-    let result = [];
-    if (data instanceof Array) {
-        for (const item of data) {
-            let children = null;
-            let subtitle = item.text;
-            if (item.children) {
-                if (item.children.length && item.children[0] && item.children[0].tag === 'text') {
-                    subtitle = _.truncate(item.children[0].text, {
-                        'length': 24,
-                        'separator': /,? +/
-                    });
-                    if (item.children.length > 1) {
-                        children = convertToTreeData([...item.children.slice(1)], selectedTag);
-                    }
-                }
-                else {
-                    children = convertToTreeData(item.children, selectedTag);
-                }
-            }
+function isFirstChildText(item: TProtypoElement): boolean {
+    return item.children && item.children.length && item.children[0] && item.children[0].tag === 'text';
+}
 
-            if (item.tail) {
-                if (!children) {
-                    children = [];
-                }
+function getTailTreeItem(tail: TProtypoElement[], selectedTag?: TProtypoElement): TConstructorTreeElement {
+    return {
+        title: '...',
+        children: convertToTreeData(tail, selectedTag),
+        expanded: true,
+        id: '',
+        selected: false,
+        logic: true,
+        canMove: false,
+        canDrop: false,
+        tag: null
+    };
+}
 
-                const tail = convertToTreeData(item.tail, selectedTag);
-
-                let tailTreeItem = {
-                    title: '...',
-                    children: tail,
-                    expanded: true,
-                    id: '',
-                    selected: false,
-                    logic: true,
-                    tag: '',
-                    canMove: false,
-                    canDrop: false
-                };
-
-                children.push(tailTreeItem);
-            }
-
-            let selected = false;
-            if (selectedTag && selectedTag.id === item.id) {
-                selected = true;
-            }
-
-            const Handler = resolveTagHandler(item.tag);
-            if (Handler) {
-                const tagObj = new Handler(item);
-                let treeItem = {
-                    title: item.tag + (subtitle ? (': ' + subtitle) : ''),
-                    children: children,
-                    expanded: true,
-                    id: item.id,
-                    selected: selected,
-                    logic: tagObj.isLogic(),
-                    canMove: tagObj.canMove,
-                    canDrop: tagObj.canHaveChildren,
-                    tag: item
-                };
-                result.push(treeItem);
-            }
+function getChildrenTreeItems(item: TProtypoElement, selectedTag?: TProtypoElement): TConstructorTreeElement[] {
+    let itemChildren = item.children;
+    if (isFirstChildText(item)) {
+        if (item.children.length > 1) {
+            itemChildren = [...item.children.slice(1)];
         }
     }
+    return convertToTreeData(itemChildren, selectedTag);
+}
+
+function getTreeItemTitle(item: TProtypoElement): string {
+    let subtitle = item.text;
+    if (isFirstChildText(item)) {
+        subtitle = _.truncate(item.children[0].text, {
+            'length': 24,
+            'separator': /,? +/
+        });
+    }
+    return item.tag + (subtitle ? (': ' + subtitle) : '');
+}
+
+function getTreeItem(item: TProtypoElement, selectedTag?: TProtypoElement): TConstructorTreeElement {
+
+    let children = getChildrenTreeItems(item, selectedTag);
+    if (item.tail) {
+        children.push(getTailTreeItem(item.tail, selectedTag));
+    }
+
+    let selected = selectedTag && selectedTag.id === item.id;
+
+    const Handler = resolveTagHandler(item.tag);
+    if (Handler) {
+        const tagObj = new Handler(item);
+        let treeItem = {
+            title: getTreeItemTitle(item),
+            children: children,
+            expanded: true,
+            id: item.id,
+            selected: selected,
+            logic: tagObj.logic,
+            canMove: tagObj.canMove,
+            canDrop: tagObj.canHaveChildren,
+            tag: item
+        };
+        return treeItem;
+    }
+    return null;
+}
+
+export function convertToTreeData(data: TProtypoElement[], selectedTag?: TProtypoElement): TConstructorTreeElement[] {
+    let result = [];
+
+    for (const item of data || []) {
+        let treeItem: TConstructorTreeElement = getTreeItem(item, selectedTag);
+        if (treeItem) {
+            result.push(treeItem);
+        }
+    }
+
     return result;
 }
 
@@ -162,19 +174,8 @@ export default class CodeGenerator {
         if (!this.elements) {
             return '';
         }
-        return this.elements.map((element, index) => {
-            switch (element.tag) {
-                case 'text':
-                    return element.text;
-                default:
-                    const Handler = resolveTagHandler(element.tag);
-                    if (Handler) {
-                        let tag = new Handler(element);
-                        return tag.renderCode();
-                    }
-                    return '';
-            }
-        }).join('\n');
+        let tag = new Tag(null);
+        return tag.renderChildren(this.elements, -1);
     }
 }
 

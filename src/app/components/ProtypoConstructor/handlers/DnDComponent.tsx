@@ -67,7 +67,7 @@ function getDropPosition(monitor: any, component: any, tag: any) {
         return 'after';
     }
 
-    if (tagObj && tagObj.getCanHaveChildren()) {
+    if (tagObj && tagObj.canHaveChildren) {
         return 'inside';
     }
     return 'after';
