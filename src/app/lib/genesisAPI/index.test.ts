@@ -75,7 +75,7 @@ const apiPassthroughTransportMock: IRequestTransport = request => {
     return new Promise<any>((resolve, reject) => {
         setTimeout(() => {
             resolve({
-                body: request
+                json: request
             });
         }, 0);
     });
@@ -85,7 +85,7 @@ const paramsTransportMock: IRequestTransport = request => {
     return new Promise<any>((resolve, reject) => {
         setTimeout(() => {
             resolve({
-                body: {
+                json: {
                     __requestUrl: request.url,
                     body: request.body
                 }

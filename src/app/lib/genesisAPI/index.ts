@@ -80,11 +80,7 @@ export interface IAPIOptions {
 }
 
 class GenesisAPI {
-    private _defaultOptions: IRequestOptions<any, any> = {
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        }
-    };
+    private _defaultOptions: IRequestOptions<any, any> = {};
     private _options: IAPIOptions;
 
     constructor(options: IAPIOptions) {
@@ -278,7 +274,13 @@ class GenesisAPI {
     });
 
     public contentHash = this.setEndpoint<IContentHashRequest, IContentHashResponse>('post', 'content/hash/{name}', {
-        requestTransformer: () => null
+        requestTransformer: request => ({
+            ...request.params,
+            lang: request.locale,
+            ecosystem: request.ecosystem,
+            keyID: request.walletID,
+            roleID: request.role
+        })
     });
 
     // Transactions

@@ -52,11 +52,15 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
 
             }).flatMap(apiHost => Observable.from(
                 api({ apiHost }).contentHash({
-                    name: action.payload.name
+                    name: action.payload.name,
+                    ecosystem: state.auth.wallet.ecosystem,
+                    walletID: state.auth.wallet.id,
+                    role: state.auth.role ? state.auth.role.id : null,
+                    locale: state.storage.locale,
+                    params: action.payload.params
 
                 })
-            ).catch(e => Observable.throw(invalidationError))
-            ).toArray().map(result => {
+            )).catch(e => Observable.throw(invalidationError)).toArray().map(result => {
                 const contentHash = keyring.hashData(payload.plainText);
 
                 if (validatingNodesCount !== result.length) {

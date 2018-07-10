@@ -213,6 +213,13 @@ declare module 'genesis/api' {
 
     interface IContentHashRequest {
         name: string;
+        ecosystem: string;
+        walletID: string;
+        role: number;
+        locale: string;
+        params: {
+            [key: string]: any;
+        };
     }
 
     interface IContentHashResponse {
