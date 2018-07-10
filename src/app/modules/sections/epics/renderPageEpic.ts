@@ -42,7 +42,7 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
             locale: state.storage.locale
 
         })).flatMap(payload => {
-            const validatingNodesCount = Math.min(state.storage.fullNodes.length, 3);
+            const validatingNodesCount = Math.min(state.storage.fullNodes.length, payload.nodesCount);
 
             return NodeObservable({
                 nodes: state.storage.fullNodes,
