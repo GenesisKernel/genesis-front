@@ -53,13 +53,13 @@ class CreateInterfaceModal extends Modal<ICreatePageModalProps, { name: string, 
                 <Modal.Body>
                     <Validation.components.ValidatedFormGroup for="name">
                         <label htmlFor="name">
-                            <FormattedMessage id="admin.interface.page.name" defaultMessage="Name" />
+                            <FormattedMessage id="editor.page.name" defaultMessage="Name" />
                         </label>
                         <Validation.components.ValidatedControl key="name" name="name" validators={[Validation.validators.required]} />
                     </Validation.components.ValidatedFormGroup>
                     <Validation.components.ValidatedFormGroup for="conditions" className="mb0">
                         <label htmlFor="conditions">
-                            <FormattedMessage id="admin.conditions.change" defaultMessage="Change conditions" />
+                            <FormattedMessage id="editor.conditions.change" defaultMessage="Change conditions" />
                         </label>
                         <Validation.components.ValidatedTextarea name="conditions" validators={[Validation.validators.required]} />
                     </Validation.components.ValidatedFormGroup>
