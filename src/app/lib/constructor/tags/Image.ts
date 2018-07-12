@@ -30,18 +30,14 @@ class Image extends Tag {
         'src': 'Src',
         'alt': 'Alt'
     };
+
+    protected newElementAttr: any = {
+        alt: 'Image',
+        src: '/img/dummy.png'
+    };
+
     protected editProps = ['class', 'src', 'alt'];
     protected generateTextElement: boolean = false;
-
-    generateTreeJSON(text: string): any {
-        return {
-            ...this.generateBaseTreeJSON(text),
-            attr: {
-                alt: 'Image',
-                src: '/img/dummy.png'
-            }
-        };
-    }
 }
 
 export default Image;

@@ -33,20 +33,14 @@ class ImageInput extends Tag {
         'ratio': 'Ratio',
         'width': 'Width'
     };
+    protected newElementAttr: any = {
+        format: 'jpg',
+        name: 'sample image',
+        ratio: '2/1',
+        width: '100'
+    };
     protected editProps = ['class', 'name', 'format', 'ratio', 'width'];
     protected generateTextElement: boolean = false;
-
-    generateTreeJSON(text: string): any {
-        return {
-            ...this.generateBaseTreeJSON(text),
-            attr: {
-                format: 'jpg',
-                name: 'sample image',
-                ratio: '2/1',
-                width: '100'
-            }
-        };
-    }
 }
 
 export default ImageInput;

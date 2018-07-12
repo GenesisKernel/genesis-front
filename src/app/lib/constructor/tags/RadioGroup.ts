@@ -34,17 +34,11 @@ class RadioGroup extends Tag {
         'value': 'Value',
         'class': 'Class'
     };
+    protected newElementAttr: any = {
+        name: 'name'
+    };
     protected editProps = ['class', 'name', 'source', 'namecolumn', 'valuecolumn', 'value'];
     protected generateTextElement: boolean = false;
-
-    generateTreeJSON(text: string): any {
-        return {
-            ...this.generateBaseTreeJSON(text),
-            attr: {
-                name: 'name'
-            }
-        };
-    }
 }
 
 export default RadioGroup;

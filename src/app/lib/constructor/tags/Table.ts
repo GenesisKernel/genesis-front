@@ -29,18 +29,12 @@ class Table extends Tag {
         'source': 'Source',
         'columns': 'Columns'
     };
+    protected newElementAttr: any = {
+        source: 'keysStr',
+        columns: 'KEY_ID=id,MONEY=amount'
+    };
     protected editProps = ['class', 'source', 'columns'];
     protected generateTextElement: boolean = false;
-
-    generateTreeJSON(text: string): any {
-        return {
-            ...this.generateBaseTreeJSON(text),
-            attr: {
-                source: 'keysStr',
-                columns: 'KEY_ID=id,MONEY=amount'
-            }
-        };
-    }
 }
 
 export default Table;

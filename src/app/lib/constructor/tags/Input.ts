@@ -32,18 +32,12 @@ class Input extends Tag {
         'type': 'Type',
         'value': 'Value'
     };
+    protected newElementAttr: any = {
+        name: 'sample input',
+        class: 'form-control'
+    };
     protected editProps = ['class', 'align', 'transform', 'wrap'];
     protected generateTextElement: boolean = false;
-
-    generateTreeJSON(text: string): any {
-        return {
-            ...this.generateBaseTreeJSON(text),
-            attr: {
-                name: 'sample input',
-                class: 'form-control'
-            }
-        };
-    }
 }
 
 export default Input;

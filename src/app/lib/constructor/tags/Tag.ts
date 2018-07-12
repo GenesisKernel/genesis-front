@@ -42,6 +42,8 @@ class Tag {
         'class': 'Class'
     };
 
+    protected newElementAttr: any = {};
+
     protected editProps = ['class', 'align', 'transform', 'wrap', 'color'];
 
     protected bodyInline = true;
@@ -211,6 +213,7 @@ class Tag {
         return {
             tag: this.tagName.toLowerCase(),
             id: idGenerator.generateId(),
+            attr: this.newElementAttr,
             children: this.generateTextElement ? [{
                 tag: 'text',
                 text: text,

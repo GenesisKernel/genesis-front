@@ -32,6 +32,9 @@ class ElseIf extends Tag {
     protected attr: any = {
         'condition': 'Condition'
     };
+    protected newElementAttr: any = {
+        condition: '#value#'
+    };
     protected editProps: string[] = ['condition'];
     protected generateTextElement: boolean = false;
 
@@ -42,15 +45,6 @@ class ElseIf extends Tag {
         result += this.renderParams(this.element, body) + ')';
         result += this.renderBody(body);
         return result;
-    }
-
-    generateTreeJSON(text: string): any {
-        return {
-            ...this.generateBaseTreeJSON(text),
-            attr: {
-                condition: '#value#'
-            }
-        };
     }
 }
 

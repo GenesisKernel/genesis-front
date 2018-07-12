@@ -30,6 +30,9 @@ class If extends Tag {
     protected attr: any = {
         'condition': 'Condition'
     };
+    protected newElementAttr: any = {
+        condition: '#value#'
+    };
     protected editProps: string[] = ['condition'];
     protected generateTextElement: boolean = false;
 
@@ -50,9 +53,6 @@ class If extends Tag {
     generateTreeJSON(text: string): any {
         return {
             ...this.generateBaseTreeJSON(text),
-            attr: {
-                condition: '#value#'
-            },
             children: [],
             tail: [
                 {
