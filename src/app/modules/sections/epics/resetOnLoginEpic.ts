@@ -29,7 +29,7 @@ import { login } from 'modules/auth/actions';
 const resetOnWalletSelectEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(login.done)
         .map(action =>
-            reset.started(null)
+            reset()
         );
 
 export default resetOnWalletSelectEpic;

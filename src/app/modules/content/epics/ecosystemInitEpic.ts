@@ -47,7 +47,7 @@ const ecosystemInitEpic: Epic = (action$, store, { api }) => action$.ofAction(ec
                         name: payload[1],
                     }
                 }),
-                sectionsInit(action.payload.section)
+                sectionsInit.started(action.payload.section)
             )
         ).catch(e => {
             if ('E_OFFLINE' === e.error || 'E_SERVER' === e.error || 'E_TOKENEXPIRED' === e.error) {

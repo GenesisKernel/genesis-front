@@ -68,7 +68,7 @@ const mapStateToProps = (state: IRootState) => {
     return {
         apiHost: state.auth.session && (state.auth.session.apiHost + '/api/v2'),
         section: state.sections.section,
-        page: section.page && section.page.name
+        page: section && section.page && section.page.name
     };
 };
 

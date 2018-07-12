@@ -22,7 +22,7 @@
 
 import queryString from 'query-string';
 import { Action } from 'redux';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
 import { navigatePage } from '..//actions';
