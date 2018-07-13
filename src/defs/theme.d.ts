@@ -36,6 +36,8 @@ declare module 'genesis/theme' {
         toolbarIconHighlight: string;
         toolbarHeight: number;
 
+        progressBarForeground: string;
+
         menuHeight: number;
         menuBackground: string;
         menuForeground: string;

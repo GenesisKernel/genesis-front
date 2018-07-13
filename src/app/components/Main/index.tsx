@@ -23,7 +23,6 @@
 import React from 'react';
 import _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
-import LoadingBar from 'react-redux-loading-bar';
 import { TSection } from 'genesis/content';
 import { history } from 'store';
 
@@ -37,6 +36,7 @@ import SectionButton from 'components/Main/SectionButton';
 import ToolButton from 'components/Main/Toolbar/ToolButton';
 import EditorToolbar from 'containers/Main/Toolbar/EditorToolbar';
 import ToolIndicator from 'components/Main/Toolbar/ToolIndicator';
+import LoadingBar from './LoadingBar';
 // import TransactionsMenu from './TransactionsMenu';
 
 const StyledWrapper = themed.div`
@@ -114,13 +114,6 @@ const StyledContent = themed.section`
     transition: none !important;
 `;
 
-const StyledLoadingBar = themed(LoadingBar)`
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
-`;
-
 class Main extends React.Component<IMainProps> {
     onBack() {
         history.goBack();
@@ -196,14 +189,7 @@ class Main extends React.Component<IMainProps> {
                             )
                         }
                     </Toolbar>
-                    <StyledLoadingBar
-                        showFastActions
-                        style={{
-                            backgroundColor: '#b2c5dc',
-                            width: 'auto',
-                            height: 2
-                        }}
-                    />
+                    <LoadingBar />
                 </StyledControls >
                 <Navigation />
                 <StyledContent style={{ marginLeft: this.props.navigationVisible ? this.props.navigationSize : 0 }}>

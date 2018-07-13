@@ -38,6 +38,8 @@ const baseTheme: IThemeDefinition = {
     toolbarDisabled: '#93a7bf',
     toolbarHeight: 40,
 
+    progressBarForeground: '#b2c5dc',
+
     menuHeight: 40,
     menuBackground: '#fff',
     menuForeground: '#0a1d33',
