@@ -34,6 +34,7 @@ const baseTheme: IThemeDefinition = {
     toolbarForeground: '#194a8a',
     toolbarOutline: '#e5e5e5',
     toolbarIconColor: '#5b97e4',
+    toolbarIconHighlight: '#a9ccf9',
     toolbarDisabled: '#93a7bf',
     toolbarHeight: 40,
 

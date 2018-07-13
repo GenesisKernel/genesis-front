@@ -147,6 +147,8 @@
     "notification.tx_batch": "Batch processing completed",
     "notification.tx_imprinted": "Imprinted in the blockchain (block {block})",
     "pending": "Pending",
+    "priviledged": "Priviledged mode",
+    "priviledged.desc": "You will not be prompted to enter your password when performing actions that require authorization",
     "process.confirm": "Confirm",
     "process.continue": "Continue",
     "undo": "Undo",

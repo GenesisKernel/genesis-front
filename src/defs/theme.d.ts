@@ -33,6 +33,7 @@ declare module 'genesis/theme' {
         toolbarOutline: string;
         toolbarDisabled: string;
         toolbarIconColor: string;
+        toolbarIconHighlight: string;
         toolbarHeight: number;
 
         menuHeight: number;

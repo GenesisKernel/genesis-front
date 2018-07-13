@@ -36,6 +36,7 @@ import Toolbar from './Toolbar';
 import SectionButton from 'components/Main/SectionButton';
 import ToolButton from 'components/Main/Toolbar/ToolButton';
 import EditorToolbar from 'containers/Main/Toolbar/EditorToolbar';
+import ToolIndicator from 'components/Main/Toolbar/ToolIndicator';
 // import TransactionsMenu from './TransactionsMenu';
 
 const StyledWrapper = themed.div`
@@ -167,7 +168,12 @@ class Main extends React.Component<IMainProps> {
                     </StyledMenu>
                     <Toolbar>
                         {this.props.isAuthorized && (
-                            <ToolButton right icon="icon-key" />
+                            <ToolIndicator
+                                right
+                                icon="icon-key"
+                                title={<FormattedMessage id="priviledged" defaultMessage="Priviledged mode" />}
+                                titleDesc={<FormattedMessage id="priviledged.desc" defaultMessage="You will not be prompted to enter your password when executing transactions" />}
+                            />
                         )}
                         {'editor' === this.props.section ?
                             (
