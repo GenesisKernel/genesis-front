@@ -164,8 +164,8 @@ class Main extends React.Component<IMainProps> {
                             <ToolIndicator
                                 right
                                 icon="icon-key"
-                                title={<FormattedMessage id="priviledged" defaultMessage="Priviledged mode" />}
-                                titleDesc={<FormattedMessage id="priviledged.desc" defaultMessage="You will not be prompted to enter your password when executing transactions" />}
+                                title={<FormattedMessage id="privileged" defaultMessage="Privileged mode" />}
+                                titleDesc={<FormattedMessage id="privileged.desc" defaultMessage="You will not be prompted to enter your password when executing transactions" />}
                             />
                         )}
                         {'editor' === this.props.section ?
