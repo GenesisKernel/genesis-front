@@ -27,7 +27,11 @@ import DnDComponent from './DnDComponent';
 import EditableBlock from './EditableBlock';
 
 class Logic extends EditableBlock {
+    protected logic = true;
     render() {
+        if (this.logic && !this.props.logic) {
+            return null;
+        }
         const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
 
         return connectDragPreview(connectDropTarget(

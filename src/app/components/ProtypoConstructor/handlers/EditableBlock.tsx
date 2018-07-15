@@ -45,7 +45,7 @@ interface IEditableBlockState {
 }
 
 export default class EditableBlock extends React.Component<IEditableBlockProps, IEditableBlockState> {
-
+    protected logic = false;
     shouldComponentUpdate(nextProps: IEditableBlockProps, nextState: IEditableBlockState) {
         if (!nextProps.selected) {
             return true;

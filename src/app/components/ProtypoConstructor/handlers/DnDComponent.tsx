@@ -24,53 +24,88 @@ import * as React from 'react';
 import { findDOMNode } from 'react-dom';
 import { DropTarget, DragSource } from 'react-dnd';
 import resolveTagHandler from 'lib/constructor/tags';
+import { TProtypoElement } from 'genesis/protypo';
 
-function getDropPosition(monitor: any, component: any, tag: any) {
-    // Determine rectangle on screen
-    if (!findDOMNode(component)) {
-        return 'after';
-    }
-    const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
+interface IRect {
+    top: number;
+    left: number;
+    right: number;
+    bottom: number;
+    width: number;
+    height: number;
+}
 
+interface IPoint {
+    x: number;
+    y: number;
+}
+
+function getGap(rect: IRect): IPoint {
     const maxGap: number = 15;
-    let gapX: number = hoverBoundingRect.width / 4;
-    let gapY: number = hoverBoundingRect.height / 4;
+    let gapX: number = rect.width / 4;
+    let gapY: number = rect.height / 4;
     if (gapX > maxGap) {
         gapX = maxGap;
     }
     if (gapY > maxGap) {
         gapY = maxGap;
     }
+    return {
+        x: gapX,
+        y: gapY
+    };
+}
 
-    // Determine mouse position
-    const clientOffset = monitor.getClientOffset();
-
-    // Get pixels to the top
-    const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-    const hoverClientX = clientOffset.x - hoverBoundingRect.left;
-
+function getTagObj(tag: TProtypoElement): any {
     let tagObj: any = null;
     const Handler = resolveTagHandler(tag.tag);
     if (Handler) {
         tagObj = new Handler(tag);
     }
+    return tagObj;
+}
+
+function getRectPosition(tagObj: any, hoverClient: IPoint, gap: IPoint, hoverBoundingRect: IRect): string {
+    let result = 'after';
+
+    if (hoverClient.y < gap.y || hoverClient.x < gap.x) {
+        return 'before';
+    }
+    if (hoverClient.y > hoverBoundingRect.height - gap.y || hoverClient.x > hoverBoundingRect.width - gap.x) {
+        return 'after';
+    }
+    if (tagObj.canHaveChildren) {
+        result = 'inside';
+    }
+    return result;
+}
+
+function getDropPosition(monitor: any, component: any, tag: any) {
+    // Determine rectangle on screen
+    const dom = findDOMNode(component);
+    if (!dom) {
+        return 'after';
+    }
+    const hoverBoundingRect = dom.getBoundingClientRect();
+
+    const gap = getGap(hoverBoundingRect);
+
+    // Determine mouse position
+    const clientOffset = monitor.getClientOffset();
+
+    // Get pixels to the top
+    const hoverClient: IPoint = {
+        x: clientOffset.x - hoverBoundingRect.left,
+        y: clientOffset.y - hoverBoundingRect.top
+    };
+
+    let tagObj = getTagObj(tag);
 
     if (!tagObj.canChangePosition && tagObj.canHaveChildren) {
         return 'inside';
     }
 
-    if (hoverClientY < gapY || hoverClientX < gapX) {
-        return 'before';
-    }
-
-    if (hoverClientY > hoverBoundingRect.height - gapY || hoverClientX > hoverBoundingRect.width - gapX) {
-        return 'after';
-    }
-
-    if (tagObj && tagObj.canHaveChildren) {
-        return 'inside';
-    }
-    return 'after';
+    return getRectPosition(tagObj, hoverClient, gap, hoverBoundingRect);
 }
 
 let hoverTimer: any = null;
@@ -89,11 +124,9 @@ const Source = {
         const el = findDOMNode(component);
         if (el) {
             const re = /data\-dropeffect="([a-z]+)"/i;
-            if (re) {
-                const res = el.innerHTML.match(re);
-                if (res) {
-                    dropEffect = res[1];
-                }
+            const res = el && el.innerHTML.match(re);
+            if (res) {
+                dropEffect = res[1];
             }
         }
         return {
@@ -109,41 +142,36 @@ const isSameTag = (droppedItem: any, id: string): boolean => {
 
 const Target = {
     drop(props: any, monitor: any, component: any) {
-        if (monitor.didDrop()) {
-            return;
-        }
-
         const droppedItem = monitor.getItem();
 
-        if (isSameTag(droppedItem, props.tag.id)) {
+        if (monitor.didDrop() || isSameTag(droppedItem, props.tag.id)) {
             return;
         }
 
         const position = getDropPosition(monitor, component, props.tag);
 
+        let tagInfo = {
+            tag: droppedItem,
+            destinationTagID: props.tag.id,
+            position: position
+        };
+
         if (droppedItem.new) {
-            props.addTag({
-                tag: droppedItem,
-                destinationTagID: props.tag.id,
-                position: position
-            });
+            props.addTag(tagInfo);
+            return;
         }
-        else {
-            const tagInfo = {
-                tag: droppedItem.tag,
-                destinationTagID: props.tag.id,
-                position: position
-            };
-            switch (droppedItem.dropEffect) {
-                case 'move':
-                    props.moveTag(tagInfo);
-                    break;
-                case 'copy':
-                    props.copyTag(tagInfo);
-                    break;
-                default:
-                    break;
-            }
+
+        tagInfo.tag = droppedItem.tag;
+
+        switch (droppedItem.dropEffect) {
+            case 'move':
+                props.moveTag(tagInfo);
+                break;
+            case 'copy':
+                props.copyTag(tagInfo);
+                break;
+            default:
+                break;
         }
     },
     hover(props: any, monitor: any, component: any) {

@@ -29,6 +29,7 @@ import EditableBlock, { IEditableBlockProps } from './EditableBlock';
 import Switch from 'components/Main/Editor/Designer/Switch';
 
 class If extends EditableBlock {
+    protected logic = true;
     constructor(props: IEditableBlockProps) {
         super(props);
         this.state = {
@@ -43,6 +44,9 @@ class If extends EditableBlock {
     }
 
     render() {
+        if (this.logic && !this.props.logic) {
+            return null;
+        }
         const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
 
         const classes = classnames({
