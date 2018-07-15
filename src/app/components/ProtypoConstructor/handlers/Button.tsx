@@ -24,19 +24,13 @@ import * as React from 'react';
 import StyledComponent from 'components/Protypo/handlers/StyledComponent';
 import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
-import * as classnames from 'classnames';
 import ContentEditable from 'react-contenteditable';
 import EditableBlock from './EditableBlock';
 
 class Button extends EditableBlock {
     render() {
         const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
-
-        const classes = classnames({
-            [this.props.class]: true,
-            [this.props.className]: true,
-            'b-selected': this.props.selected
-        });
+        const classes = this.getClasses();
 
         return connectDragPreview(connectDropTarget(
             <span style={{display: 'inline-block'}}>

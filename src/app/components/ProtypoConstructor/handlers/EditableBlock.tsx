@@ -21,6 +21,8 @@
 // SOFTWARE.
 
 import * as React from 'react';
+import * as classnames from 'classnames';
+import ContentEditable from 'react-contenteditable';
 import { OnPasteStripFormatting } from 'lib/constructor/helpers';
 import { IConstructorElementProps } from 'genesis/editor';
 import { TProtypoElement } from 'genesis/protypo';
@@ -46,21 +48,48 @@ interface IEditableBlockState {
 
 export default class EditableBlock extends React.Component<IEditableBlockProps, IEditableBlockState> {
     protected logic = false;
+    notEmpty(childrenText: string) {
+        return childrenText !== undefined && childrenText !== null && childrenText.length >= 0;
+    }
+    hasTag(text: string) {
+        return text.indexOf('<') === -1;
+    }
+    classChanged(nextProps: IEditableBlockProps): boolean {
+        return this.props.class !== nextProps.class;
+    }
+    tailChanged(nextProps: IEditableBlockProps): boolean {
+        return this.props.tail !== nextProps.tail;
+    }
+    conditionChanged(nextState: IEditableBlockState): boolean {
+        return this.state && nextState && this.state.condition !== nextState.condition;
+    }
+    elementSelectedAndNotEmptyChildrenText(nextProps: IEditableBlockProps): boolean {
+        return this.props.selected && this.notEmpty(this.props.childrenText)
+            && nextProps.selected && this.notEmpty(nextProps.childrenText);
+    }
+    getClasses() {
+        return classnames({
+            [this.props.class]: true,
+            [this.props.className]: true,
+            'b-selected': this.props.selected
+        });
+    }
     shouldComponentUpdate(nextProps: IEditableBlockProps, nextState: IEditableBlockState) {
         if (!nextProps.selected) {
             return true;
         }
-        if (this.props.selected) {
-            if (this.props.selected && this.props.childrenText !== undefined && this.props.childrenText !== null && this.props.childrenText.length >= 0
-                && nextProps.selected && nextProps.childrenText !== undefined && nextProps.childrenText !== null && nextProps.childrenText.length >= 0) {
-                if (nextProps.childrenText.indexOf('<') === -1) {
-                    return true;
-                }
-                return (this.props.class !== nextProps.class
-                || this.props.tail !== nextProps.tail
-                || (this.state && nextState && this.state.condition !== nextState.condition));
+
+        if (this.elementSelectedAndNotEmptyChildrenText(nextProps)) {
+            if (this.hasTag(nextProps.childrenText)) {
+                return true;
             }
+            return (
+                this.classChanged(nextProps)
+                || this.tailChanged(nextProps)
+                || this.conditionChanged(nextState)
+            );
         }
+
         return true;
     }
 
@@ -83,5 +112,15 @@ export default class EditableBlock extends React.Component<IEditableBlockProps, 
 
     hasChildrenText() {
         return this.props.selected && this.props.childrenText !== undefined && this.props.childrenText !== null && this.props.childrenText.length >= 0;
+    }
+    contentEditable(tagName: string, classes: string) {
+        return (
+            <ContentEditable
+                tagName={tagName}
+                className={classes}
+                html={this.props.childrenText}
+                onChange={this.handleChange.bind(this)}
+            />
+        );
     }
 }
