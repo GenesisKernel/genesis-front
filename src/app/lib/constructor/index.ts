@@ -90,9 +90,10 @@ function isFirstChildText(item: TProtypoElement): boolean {
 }
 
 function getTailTreeItem(tail: TProtypoElement[], selectedTag?: TProtypoElement): TConstructorTreeElement {
+    const children = convertToTreeData(tail, selectedTag);
     return {
         title: '...',
-        children: convertToTreeData(tail, selectedTag),
+        children: children.length && children || null,
         expanded: true,
         id: '',
         selected: false,
@@ -105,10 +106,8 @@ function getTailTreeItem(tail: TProtypoElement[], selectedTag?: TProtypoElement)
 
 function getChildrenTreeItems(item: TProtypoElement, selectedTag?: TProtypoElement): TConstructorTreeElement[] {
     let itemChildren = item.children;
-    if (isFirstChildText(item)) {
-        if (item.children.length > 1) {
-            itemChildren = [...item.children.slice(1)];
-        }
+    if (isFirstChildText(item) && item.children.length > 0) {
+        itemChildren = [...item.children.slice(1)];
     }
     return convertToTreeData(itemChildren, selectedTag);
 }
@@ -131,25 +130,22 @@ function getTreeItem(item: TProtypoElement, selectedTag?: TProtypoElement): TCon
         children.push(getTailTreeItem(item.tail, selectedTag));
     }
 
-    let selected = selectedTag && selectedTag.id === item.id;
+    let selected = selectedTag && selectedTag.id === item.id || false;
 
     const Handler = resolveTagHandler(item.tag);
-    if (Handler) {
-        const tagObj = new Handler(item);
-        let treeItem = {
-            title: getTreeItemTitle(item),
-            children: children,
-            expanded: true,
-            id: item.id,
-            selected: selected,
-            logic: tagObj.logic,
-            canMove: tagObj.canMove,
-            canDrop: tagObj.canHaveChildren,
-            tag: item
-        };
-        return treeItem;
-    }
-    return null;
+
+    const tagObj = new Handler(item);
+    return {
+        title: getTreeItemTitle(item),
+        children: children.length && children || null,
+        expanded: true,
+        id: item.id,
+        selected: selected,
+        logic: tagObj.logic,
+        canMove: tagObj.canMove,
+        canDrop: tagObj.canHaveChildren,
+        tag: item
+    };
 }
 
 export function convertToTreeData(data: TProtypoElement[], selectedTag?: TProtypoElement): TConstructorTreeElement[] {

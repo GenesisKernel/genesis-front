@@ -161,22 +161,23 @@ class Tag {
                     return quoteValueIfNeeded(element.text);
                 default:
                     const Handler = resolveTagHandler(element.tag);
-                    if (Handler) {
-                        let tag = new Handler(element);
-                        tag.setOffset(offset + 1);
-                        return tag.renderCode();
-                    }
-                    return '';
+                    let tag = new Handler(element);
+                    tag.setOffset(offset + 1);
+                    return tag.renderCode();
             }
         }).join(delimeter);
     }
-    getClassName(): string {
-        return this.element.attr && (this.element.attr.class || this.element.attr.className) || '';
+    getClass(): string {
+        const classValue = this.element.attr && (this.element.attr.class || this.element.attr.className) || '';
+        if (classValue) {
+            return ' class="' + classValue + '"';
+        }
+        return '';
     }
     renderHTML(): string {
         if (this.HTMLTag) {
             let result: string = '<' + this.HTMLTag;
-            result += ' class="' + this.getClassName() + '"';
+            result += this.getClass();
             result += '>';
             const children = this.renderHTMLChildren();
             if (children === null) {
@@ -197,7 +198,8 @@ class Tag {
                     return element.text;
                 default:
                     const Handler = resolveTagHandler(element.tag);
-                    return Handler && (new Handler(element)).renderHTML() || '';
+                    let tag = new Handler(element);
+                    return tag.renderHTML();
             }
         });
 
