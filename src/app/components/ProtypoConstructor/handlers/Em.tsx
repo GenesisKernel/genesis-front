@@ -20,43 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
 import StyledComponent from 'components/Protypo/handlers/StyledComponent';
-import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
-import ContentEditable from 'react-contenteditable';
 import EditableBlock from './EditableBlock';
 
 class Em extends EditableBlock {
-    render() {
-        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
-        const classes = this.getClasses();
-
-        return connectDragPreview(connectDropTarget(
-            <span style={{display: 'inline-block'}}>
-                <TagWrapper
-                    display="inline"
-                    selected={this.props.selected}
-                    canDrop={isOver}
-                    canDropPosition={this.props.canDropPosition}
-                    onClick={this.onClick.bind(this)}
-                    removeTag={this.removeTag.bind(this)}
-                    connectDragSource={connectDragSource}
-                    canMove={true}
-                >
-                {this.hasChildrenText() ? (
-                    this.contentEditable('em', classes)
-                ) : (
-                    <em
-                        className={classes}
-                    >
-                        {this.props.children}
-                    </em>
-                )}
-                </TagWrapper>
-            </span>
-        ));
-    }
+    protected editableTag = 'em';
+    protected editableDisplay = 'inline';
+    protected renderTag = 'em';
 }
 
 export default DnDComponent(StyledComponent(Em));

@@ -22,45 +22,32 @@
 
 import * as React from 'react';
 import * as classnames from 'classnames';
-import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import EditableBlock from './EditableBlock';
 
 class ImageInput extends EditableBlock {
-    render() {
-        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
-
-        const classes = classnames({
+    protected editableDisplay = 'inline';
+    protected editable = false;
+    renderChildren(classes: string) {
+        return (
+            <div
+                className={classes}
+            >
+                <input type="text" className="form-control" readOnly={true}/>
+                <div className="group-span-filestyle input-group-btn">
+                    <button className="btn btn-default" type="button">
+                        <span className="icon-span-filestyle glyphicon glyphicon-folder-open" />
+                        <span className="buttonText" />
+                    </button>
+                </div>
+            </div>
+        );
+    }
+    getClasses() {
+        return classnames({
             'b-selected': this.props.selected,
             'input-group': true
         });
-
-        return connectDragPreview(connectDropTarget(
-            <span>
-                <TagWrapper
-                    display="block"
-                    selected={this.props.selected}
-                    canDrop={isOver}
-                    canDropPosition={this.props.canDropPosition}
-                    onClick={this.onClick.bind(this)}
-                    removeTag={this.removeTag.bind(this)}
-                    connectDragSource={connectDragSource}
-                    canMove={true}
-                >
-                    <div
-                        className={classes}
-                    >
-                        <input type="text" className="form-control" readOnly={true}/>
-                        <div className="group-span-filestyle input-group-btn">
-                            <button className="btn btn-default" type="button">
-                                <span className="icon-span-filestyle glyphicon glyphicon-folder-open" />
-                                <span className="buttonText" />
-                            </button>
-                        </div>
-                    </div>
-                </TagWrapper>
-            </span>
-        ));
     }
 }
 

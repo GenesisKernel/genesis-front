@@ -22,40 +22,20 @@
 
 import * as React from 'react';
 import StyledComponent from 'components/Protypo/handlers/StyledComponent';
-import * as classnames from 'classnames';
-import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import EditableBlock from './EditableBlock';
 
 class Image extends EditableBlock {
-    render() {
-        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
-
-        const classes = classnames({
-            [this.props.class]: true,
-            'b-selected': this.props.selected
-        });
-
-        return connectDragPreview(connectDropTarget(
-            <span style={{ display: 'inline-block' }}>
-                <TagWrapper
-                    display="inline"
-                    selected={this.props.selected}
-                    canDrop={isOver}
-                    canDropPosition={this.props.canDropPosition}
-                    onClick={this.onClick.bind(this)}
-                    removeTag={this.removeTag.bind(this)}
-                    connectDragSource={connectDragSource}
-                    canMove={true}
-                >
-                    <img
-                        className={classes}
-                        src={this.props.src}
-                        alt={this.props.alt}
-                    />
-                </TagWrapper>
-            </span>
-        ));
+    protected editableDisplay = 'inline';
+    protected editable = false;
+    renderChildren(classes: string) {
+        return (
+            <img
+                className={classes}
+                src={this.props.src}
+                alt={this.props.alt}
+            />
+        );
     }
 }
 

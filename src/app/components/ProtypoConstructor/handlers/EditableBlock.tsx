@@ -23,6 +23,7 @@
 import * as React from 'react';
 import * as classnames from 'classnames';
 import ContentEditable from 'react-contenteditable';
+import TagWrapper from '../components/TagWrapper';
 import { OnPasteStripFormatting } from 'lib/constructor/helpers';
 import { IConstructorElementProps } from 'genesis/editor';
 import { TProtypoElement } from 'genesis/protypo';
@@ -48,6 +49,11 @@ interface IEditableBlockState {
 
 export default class EditableBlock extends React.Component<IEditableBlockProps, IEditableBlockState> {
     protected logic = false;
+    protected editableTag = 'div';
+    protected editableDisplay = 'block';
+    protected renderTag = 'div';
+    protected editable = true;
+    protected canMove = true;
     notEmpty(childrenText: string) {
         return childrenText !== undefined && childrenText !== null && childrenText.length >= 0;
     }
@@ -122,5 +128,51 @@ export default class EditableBlock extends React.Component<IEditableBlockProps, 
                 onChange={this.handleChange.bind(this)}
             />
         );
+    }
+    renderChildrenWrapper() {
+        const classes = this.getClasses();
+        return (
+            (this.hasChildrenText() && this.editable) ? (
+                this.contentEditable(this.editableTag, classes)
+            ) : (
+                this.renderChildren(classes)
+            )
+        );
+    }
+    renderChildren(classes: string) {
+        const Tag = `${this.renderTag}`;
+        return (
+            <Tag
+                className={classes}
+            >
+                {this.props.children}
+            </Tag>
+        );
+    }
+    render() {
+        if (this.logic && !this.props.logic) {
+            return null;
+        }
+        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
+        const style = {
+            display: (this.editableDisplay === 'inline') ? 'inline-block' : ''
+        };
+
+        return connectDragPreview(connectDropTarget(
+            <span style={style}>
+                <TagWrapper
+                    display={this.editableDisplay}
+                    selected={this.props.selected}
+                    canDrop={isOver}
+                    canDropPosition={this.props.canDropPosition}
+                    onClick={this.onClick.bind(this)}
+                    removeTag={this.removeTag.bind(this)}
+                    connectDragSource={connectDragSource}
+                    canMove={this.canMove}
+                >
+                    {this.renderChildrenWrapper()}
+                </TagWrapper>
+            </span>
+        ));
     }
 }

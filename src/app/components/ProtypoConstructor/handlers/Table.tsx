@@ -23,70 +23,55 @@
 import * as React from 'react';
 import * as classnames from 'classnames';
 import StyledComponent from 'components/Protypo/handlers/StyledComponent';
-import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import EditableBlock from './EditableBlock';
 
 class Table extends EditableBlock {
-    render() {
-        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
-
-        const classes = classnames({
+    protected editableDisplay = 'block';
+    protected editable = false;
+    getClasses() {
+        return classnames({
             'table': true,
             [this.props.className]: true,
             'b-selected': this.props.selected
         });
+    }
 
-        return connectDragPreview(connectDropTarget(
-            <span>
-                <TagWrapper
-                    display="block"
-                    selected={this.props.selected}
-                    canDrop={isOver}
-                    canDropPosition={this.props.canDropPosition}
-                    onClick={this.onClick.bind(this)}
-                    removeTag={this.removeTag.bind(this)}
-                    connectDragSource={connectDragSource}
-                    canMove={true}
-                >
-                    <table
-                        className={classes}
-                    >
-                        <thead>
-                            <tr>
-                                <th>Column 1</th>
-                                <th>Column 2</th>
-                                <th>Column 3</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    Row 1
-                        </td>
-                                <td>
-                                    Value
-                        </td>
-                                <td>
-                                    Value
-                        </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Row 2
-                        </td>
-                                <td>
-                                    Value
-                        </td>
-                                <td>
-                                    Value
-                        </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </TagWrapper>
-            </span>
-        ));
+    renderChildren(classes: string) {
+        return (
+            <table
+                className={classes}
+            >
+                <thead>
+                <tr>
+                    <th>Column 1</th>
+                    <th>Column 2</th>
+                    <th>Column 3</th>
+                </tr>
+                </thead>
+                <tbody>
+                {this.renderRow(1)}
+                {this.renderRow(2)}
+                {this.renderRow(3)}
+                </tbody>
+            </table>
+        );
+    }
+
+    renderRow(row: number) {
+        return (
+            <tr>
+                <td>
+                    Row {row}
+                </td>
+                <td>
+                    Value 1
+                </td>
+                <td>
+                    Value 2
+                </td>
+            </tr>
+        );
     }
 }
 

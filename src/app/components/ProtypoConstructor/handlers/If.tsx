@@ -21,15 +21,15 @@
 // SOFTWARE.
 
 import * as React from 'react';
-import * as classnames from 'classnames';
 import StyledComponent from 'components/Protypo/handlers/StyledComponent';
-import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import EditableBlock, { IEditableBlockProps } from './EditableBlock';
 import Switch from 'components/Main/Editor/Designer/Switch';
 
-class If extends EditableBlock {
+export class If extends EditableBlock {
     protected logic = true;
+    protected editableDisplay = 'block';
+    protected editable = false;
     constructor(props: IEditableBlockProps) {
         super(props);
         this.state = {
@@ -43,46 +43,30 @@ class If extends EditableBlock {
         });
     }
 
-    render() {
-        if (this.logic && !this.props.logic) {
-            return null;
-        }
-        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
-
-        const classes = classnames({
-            'b-selected': this.props.selected
-        });
-
-        return connectDragPreview(connectDropTarget(
-            <span>
-                <TagWrapper
-                    display="block"
-                    selected={this.props.selected}
-                    canDrop={isOver}
-                    canDropPosition={this.props.canDropPosition}
-                    onClick={this.onClick.bind(this)}
-                    removeTag={this.removeTag.bind(this)}
-                    connectDragSource={connectDragSource}
-                    canMove={true}
-                >
-                <div
-                    className={classes}
-                >
-                    <span style={{'backgroundColor': '#FFCC66'}}>If
-                        <Switch
-                            initialValue={this.state.condition}
-                            onValue={true}
-                            offValue={false}
-                            onChange={this.toggleCondition.bind(this)}
-                        /> &#123;
-                    </span>
-                    {this.state.condition && (<div>{this.props.children} </div>) || (<span>...</span>)}
-                    <span style={{'backgroundColor': '#FFCC66'}}>&#125;</span>
-                    {!this.state.condition && this.props.tail}
-                </div>
-                </TagWrapper>
+    renderSwitch(tag: string) {
+        return (
+            <span style={{'backgroundColor': '#FFCC66'}}>{tag}
+                <Switch
+                    initialValue={this.state.condition}
+                    onValue={true}
+                    offValue={false}
+                    onChange={this.toggleCondition.bind(this)}
+                /> &#123;
             </span>
-        ));
+        );
+    }
+
+    renderChildren(classes: string) {
+        return (
+            <div
+                className={classes}
+            >
+                {this.renderSwitch('If')}
+                {this.state.condition && (<div>{this.props.children} </div>) || (<span>...</span>)}
+                <span style={{'backgroundColor': '#FFCC66'}}>&#125;</span>
+                {!this.state.condition && this.props.tail}
+            </div>
+        );
     }
 }
 

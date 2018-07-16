@@ -21,44 +21,27 @@
 // SOFTWARE.
 
 import * as React from 'react';
-import * as classnames from 'classnames';
 import StyledComponent from 'components/Protypo/handlers/StyledComponent';
-import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import EditableBlock from './EditableBlock';
 
 class Else extends EditableBlock {
-    render() {
-        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
-
-        const classes = classnames({
-            'b-selected': this.props.selected
-        });
-
-        return connectDragPreview(connectDropTarget(
-            <span>
-                <TagWrapper
-                    display="block"
-                    selected={this.props.selected}
-                    canDrop={isOver}
-                    canDropPosition={this.props.canDropPosition}
-                    onClick={this.onClick.bind(this)}
-                    removeTag={this.removeTag.bind(this)}
-                    connectDragSource={connectDragSource}
-                    canMove={false}
-                >
-                <div
-                    className={classes}
-                >
-                    <span style={{'backgroundColor': '#FFCC66'}}>Else &#123;</span>
-                    <div>
-                        {this.props.children}
-                    </div>
-                    <span style={{'backgroundColor': '#FFCC66'}}>&#125;</span>
+    protected logic = true;
+    protected canMove = false;
+    protected editableDisplay = 'block';
+    protected editable = false;
+    renderChildren(classes: string) {
+        return (
+            <div
+                className={classes}
+            >
+                <span style={{'backgroundColor': '#FFCC66'}}>Else &#123;</span>
+                <div>
+                    {this.props.children}
                 </div>
-                </TagWrapper>
-            </span>
-        ));
+                <span style={{'backgroundColor': '#FFCC66'}}>&#125;</span>
+            </div>
+        );
     }
 }
 

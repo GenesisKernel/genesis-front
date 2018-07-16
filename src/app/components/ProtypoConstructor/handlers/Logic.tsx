@@ -22,36 +22,19 @@
 
 import * as React from 'react';
 import StyledComponent from 'components/Protypo/handlers/StyledComponent';
-import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import EditableBlock from './EditableBlock';
 
 class Logic extends EditableBlock {
+    protected editableDisplay = 'inline';
+    protected editable = false;
     protected logic = true;
-    render() {
-        if (this.logic && !this.props.logic) {
-            return null;
-        }
-        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
-
-        return connectDragPreview(connectDropTarget(
-            <span style={{display: 'inline-block'}}>
-                <TagWrapper
-                    display="inline"
-                    selected={this.props.selected}
-                    canDrop={isOver}
-                    canDropPosition={this.props.canDropPosition}
-                    onClick={this.onClick.bind(this)}
-                    removeTag={this.removeTag.bind(this)}
-                    connectDragSource={connectDragSource}
-                    canMove={true}
-                >
-                    <span style={{'backgroundColor': '#FFCC66'}}>
-                        {this.props.tag.tag}
-                    </span>
-                </TagWrapper>
+    renderChildren(classes: string) {
+        return (
+            <span style={{'backgroundColor': '#FFCC66'}}>
+                {this.props.tag.tag}
             </span>
-        ));
+        );
     }
 }
 

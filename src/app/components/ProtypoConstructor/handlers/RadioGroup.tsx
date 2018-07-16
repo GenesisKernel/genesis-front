@@ -22,60 +22,32 @@
 
 import * as React from 'react';
 import StyledComponent from 'components/Protypo/handlers/StyledComponent';
-import * as classnames from 'classnames';
-import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import EditableBlock from './EditableBlock';
 
 class RadioGroup extends EditableBlock {
-    render() {
-        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
-
-        const classes = classnames({
-            [this.props.className]: true,
-            'b-selected': this.props.selected
-        });
-
-        return connectDragPreview(connectDropTarget(
-            <span>
-                <TagWrapper
-                    display="block"
-                    selected={this.props.selected}
-                    canDrop={isOver}
-                    canDropPosition={this.props.canDropPosition}
-                    onClick={this.onClick.bind(this)}
-                    removeTag={this.removeTag.bind(this)}
-                    connectDragSource={connectDragSource}
-                    canMove={true}
-                >
-                    <div className={classes}>
-                        <label>
-                            <input
-                                type="radio"
-                                name="radio"
-                            />
-                            Option 1
-                        </label>
-                        <br/>
-                        <label>
-                            <input
-                                type="radio"
-                                name="radio"
-                            />
-                            Option 2
-                        </label>
-                        <br/>
-                        <label>
-                            <input
-                                type="radio"
-                                name="radio"
-                            />
-                            Option 3
-                        </label>
-                    </div>
-                </TagWrapper>
-            </span>
-        ));
+    protected editableDisplay = 'block';
+    protected editable = false;
+    renderChildren(classes: string) {
+        return (
+            <div className={classes}>
+                <label>
+                    <input
+                        type="radio"
+                        name="radio"
+                    />
+                    Option 1
+                </label>
+                <br/>
+                <label>
+                    <input
+                        type="radio"
+                        name="radio"
+                    />
+                    Option 2
+                </label>
+            </div>
+        );
     }
 }
 

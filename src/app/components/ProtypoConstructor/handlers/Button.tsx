@@ -22,48 +22,27 @@
 
 import * as React from 'react';
 import StyledComponent from 'components/Protypo/handlers/StyledComponent';
-import TagWrapper from '../components/TagWrapper';
 import DnDComponent from './DnDComponent';
 import ContentEditable from 'react-contenteditable';
 import EditableBlock from './EditableBlock';
 
 class Button extends EditableBlock {
-    render() {
-        const { connectDropTarget, connectDragSource, connectDragPreview, isOver } = this.props;
-        const classes = this.getClasses();
+    protected editableTag = 'span';
+    protected editableDisplay = 'inline';
+    protected renderTag = 'button';
 
-        return connectDragPreview(connectDropTarget(
-            <span style={{display: 'inline-block'}}>
-                <TagWrapper
-                    display="inline"
-                    selected={this.props.selected}
-                    canDrop={isOver}
-                    canDropPosition={this.props.canDropPosition}
-                    onClick={this.onClick.bind(this)}
-                    removeTag={this.removeTag.bind(this)}
-                    connectDragSource={connectDragSource}
-                    canMove={true}
-                >
-                    {this.hasChildrenText() ? (
-                        <button
-                            className={classes}
-                        >
-                            <ContentEditable
-                                tagName="span"
-                                html={this.props.childrenText}
-                                onChange={this.handleChange.bind(this)}
-                            />
-                        </button>
-                    ) : (
-                        <button
-                            className={classes}
-                        >
-                            {this.props.children}
-                        </button>
-                    )}
-                </TagWrapper>
-            </span>
-        ));
+    contentEditable(tagName: string, classes: string) {
+        return (
+            <button
+                className={classes}
+            >
+                <ContentEditable
+                    tagName={tagName}
+                    html={this.props.childrenText}
+                    onChange={this.handleChange.bind(this)}
+                />
+            </button>
+        );
     }
 }
 
