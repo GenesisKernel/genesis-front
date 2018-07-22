@@ -41,6 +41,7 @@ const command = commander
     .option('-x, --offset-x <value>', null, parseInt)
     .option('-y, --offset-y <value>', null, parseInt)
     .option('-s, --socket-url <url>', null)
+    .option('-u, --disable-full-nodes-sync', null)
     .parse(argv);
 
 const args: IInferredArguments = {
@@ -49,7 +50,8 @@ const args: IInferredArguments = {
     dry: command.dry,
     offsetX: command.offsetX,
     offsetY: command.offsetY,
-    socketUrl: command.socketUrl
+    socketUrl: command.socketUrl,
+    disableFullNodesSync: command.disableFullNodesSync
 };
 
 export default args;
