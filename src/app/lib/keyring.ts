@@ -336,6 +336,10 @@ const keyring = {
         const truncated = addr.replace(/-/g, '');
         const num = new Uint64BE(truncated, 10);
         return new Int64BE(num.toString(10), 10).toString(10);
+    },
+
+    hashData(data: string) {
+        return CryptoJS.SHA256(data).toString();
     }
 };
 

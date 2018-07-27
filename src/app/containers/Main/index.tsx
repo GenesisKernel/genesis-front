@@ -61,7 +61,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
         dispatch(navigatePage.started({ params: {} }));
     },
     onRefresh: (section: string) => {
-        dispatch(reloadPage.started(section));
+        dispatch(reloadPage());
     },
     onSwitchSection: (section: string) => {
         dispatch(renderSection(section));
