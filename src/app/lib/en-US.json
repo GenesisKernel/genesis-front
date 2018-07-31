@@ -1,5 +1,5 @@
 {
-    "LANG_NAME": "English(USA)",
+    "LANG_NAME": "English(US)",
     "wallet.create": "Create wallet",
     "wallet.createimport": "Create or import wallet",
     "wallet.import": "Import wallet",
@@ -74,6 +74,7 @@
     "editor.revert.confirm": "Do you really want to discard all changes?",
     "editor.save": "Save",
     "editor.tool.developer": "Developer",
+    "editor.tool.designer": "Designer",
     "editor.tool.preview": "Preview",
     "editor.untitled": "Untitled-{id}",
     "exec": "Exec",
@@ -138,6 +139,7 @@
     "modal.imageeditor.confirm": "Confirm",
     "modal.imageeditor.desc": "Prepare your image for uploading by selecting which part of the image you want to use",
     "modal.imageeditor.title": "Image editor",
+    "modal.locale.title": "Switch language",
     "navigation.back": "Back",
     "navigation.forward": "Forward",
     "navigation.home": "Home",

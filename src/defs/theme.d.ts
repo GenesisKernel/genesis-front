@@ -22,6 +22,8 @@
 
 declare module 'genesis/theme' {
     interface IThemeDefinition {
+        windowBorder: string;
+        
         headerBackground: string;
         headerForeground: string;
         headerBackgroundActive: string;

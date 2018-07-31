@@ -25,6 +25,7 @@ import _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import { TSection } from 'genesis/content';
 import { history } from 'store';
+import platform from 'lib/platform';
 
 import themed from 'components/Theme/themed';
 import Titlebar from './Titlebar';
@@ -62,9 +63,9 @@ export interface IMainProps {
 
 const StyledControls = themed.div`
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: ${platform.select({ win32: '1px' }) || 0};
+    left: ${platform.select({ win32: '1px' }) || 0};
+    right: ${platform.select({ win32: '1px' }) || 0};
     z-index: 10000;
 `;
 

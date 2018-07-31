@@ -24,6 +24,8 @@ import { IThemeDefinition } from 'genesis/theme';
 import platform from 'lib/platform';
 
 const baseTheme: IThemeDefinition = {
+    windowBorder: '#4c7dbd',
+
     headerBackground: '#4c7dbd',
     headerForeground: '#fff',
     headerBackgroundActive: '#f3f3f3',

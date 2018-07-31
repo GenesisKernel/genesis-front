@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
 import { modalShow } from 'modules/modal/actions';
@@ -32,7 +32,7 @@ export interface ISystemMenuContainerProps {
 }
 
 interface ISystemMenuContainerState {
-
+    locale: string;
 }
 
 interface ISystemMenuContainerDispatch {
@@ -48,13 +48,23 @@ const SystemMenuContainer: React.SFC<ISystemMenuContainerProps & ISystemMenuCont
         });
     };
 
+    const onChangeLocale = () => {
+        props.modalShow({
+            id: 'CHANGE_LOCALE',
+            type: 'CHANGE_LOCALE',
+            params: {
+                value: props.locale
+            }
+        });
+    };
+
     return (
-        <SystemMenu align={props.align} onAbout={onAbout} />
+        <SystemMenu align={props.align} onAbout={onAbout} onChangeLocale={onChangeLocale} />
     );
 };
 
 const mapStateToProps = (state: IRootState) => ({
-
+    locale: state.storage.locale
 });
 
 const mapDispatchToProps = {
