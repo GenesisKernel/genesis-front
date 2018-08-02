@@ -55,8 +55,8 @@ const txPrepareEpic: Epic = (action$, store, { api }) => action$.ofAction(txPrep
         const txCall = {
             name: action.payload.tx.contract.name,
             params: {
-                ...txParams,
-                Lang: state.storage.locale
+                Lang: state.storage.locale,
+                ...txParams
             }
         };
 
