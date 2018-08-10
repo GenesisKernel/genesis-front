@@ -53,7 +53,7 @@ const Generator: React.SFC<IWalletGeneratorProps> = props => (
             <Validation.components.ValidatedFormGroup for="seed">
                 <Col md={3} className="clearfix">
                     <div className="pull-left">
-                        <FormattedMessage id="auth.seed" defaultMessage="Wallet seed" />
+                        <FormattedMessage id="auth.seed" defaultMessage="Backup payload" />
                     </div>
                     <div className="pull-right visible-sm visible-xs">
                         <Validation.components.ValidationMessage for="seed" />

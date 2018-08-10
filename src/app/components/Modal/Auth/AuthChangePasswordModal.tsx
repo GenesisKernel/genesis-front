@@ -84,7 +84,7 @@ class AuthChangePasswordModal extends Modal<IAuthChangePasswordModalProps, {}, I
                 <Modal.Body>
                     <Validation.components.ValidatedFormGroup for="password_old">
                         <label htmlFor="password_old">
-                            <FormattedMessage id="auth.password.old" defaultMessage="Old password" />
+                            <FormattedMessage id="general.password.old" defaultMessage="Old password" />
                         </label>
                         <Validation.components.ValidatedControl key="password_old" name="password_old" type="password" validators={[Validation.validators.password]} />
                         <div className="visible-md visible-lg text-left">
@@ -93,7 +93,7 @@ class AuthChangePasswordModal extends Modal<IAuthChangePasswordModalProps, {}, I
                     </Validation.components.ValidatedFormGroup>
                     <Validation.components.ValidatedFormGroup for="password_new">
                         <label htmlFor="password_new">
-                            <FormattedMessage id="auth.password.new" defaultMessage="New password" />
+                            <FormattedMessage id="general.password.new" defaultMessage="New password" />
                         </label>
                         <Validation.components.ValidatedControl
                             name="password_new"
@@ -108,7 +108,7 @@ class AuthChangePasswordModal extends Modal<IAuthChangePasswordModalProps, {}, I
                     </Validation.components.ValidatedFormGroup>
                     <Validation.components.ValidatedFormGroup for="password_new_repeat">
                         <label htmlFor="password_new_repeat">
-                            <FormattedMessage id="auth.password.new_repeat" defaultMessage="Repeat password" />
+                            <FormattedMessage id="general.password.repeat" defaultMessage="Repeat password" />
                         </label>
                         <Validation.components.ValidatedControl
                             key={this.state.newPasswordKey}
