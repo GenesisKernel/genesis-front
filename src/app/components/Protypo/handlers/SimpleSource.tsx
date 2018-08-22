@@ -26,15 +26,15 @@ import { ISource } from 'genesis/protypo';
 
 import Protypo from '../';
 
-export interface IGetContractHistoryProps extends ISource {
+export interface ISimpleSourceProps extends ISource {
     source: string;
 }
 
-interface IGetContractHistoryContext {
+interface ISimpleSourceContext {
     protypo: Protypo;
 }
 
-const GetContractHistory: React.SFC<IGetContractHistoryProps> = (props, context: IGetContractHistoryContext) => {
+const SimpleSource: React.SFC<ISimpleSourceProps> = (props, context: ISimpleSourceContext) => {
     context.protypo.registerSource(props.source, {
         columns: props.columns,
         types: props.types,
@@ -43,8 +43,8 @@ const GetContractHistory: React.SFC<IGetContractHistoryProps> = (props, context:
     return null;
 };
 
-GetContractHistory.contextTypes = {
+SimpleSource.contextTypes = {
     protypo: propTypes.object.isRequired
 };
 
-export default GetContractHistory;
+export default SimpleSource;
