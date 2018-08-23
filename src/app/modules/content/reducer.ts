@@ -28,6 +28,7 @@ import ecosystemInitFailedHandler from './reducers/ecosystemInitFailedHandler';
 import fetchNotificationsDoneHandler from './reducers/fetchNotificationsDoneHandler';
 import setResizingHandler from './reducers/setResizingHandler';
 import ecosystemInitHandler from './reducers/ecosystemInitHandler';
+import reloadStylesheetHandler from './reducers/reloadStylesheetHandler';
 
 export type State = {
     readonly preloading: boolean;
@@ -50,4 +51,5 @@ export default reducerWithInitialState(initialState)
     .case(actions.ecosystemInit.failed, ecosystemInitFailedHandler)
     .case(actions.ecosystemInit.started, ecosystemInitHandler)
     .case(actions.fetchNotifications.done, fetchNotificationsDoneHandler)
-    .case(actions.setResizing, setResizingHandler);
+    .case(actions.setResizing, setResizingHandler)
+    .case(actions.reloadStylesheet, reloadStylesheetHandler);

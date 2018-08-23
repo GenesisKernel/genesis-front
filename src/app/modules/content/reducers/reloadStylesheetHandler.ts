@@ -20,29 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { combineEpics } from 'redux-observable';
-import txCallEpic from './epics/txCallEpic';
-import txAuthorizeEpic from './epics/txAuthorizeEpic';
-import txPrepareEpic from './epics/txPrepareEpic';
-import txExecEpic from './epics/txExecEpic';
-import newEcosystemEpic from './epics/newEcosystemEpic';
-import txExecFailedEpic from './epics/txExecFailedEpic';
-import txExecBatchEpic from './epics/txExecBatchEpic';
-import txExecBatchDoneEpic from './epics/txExecBatchDoneEpic';
-import txExecBatchFailedEpic from './epics/txExecBatchFailedEpic';
-import txPrepareBatchEpic from './epics/txPrepareBatchEpic';
-import reloadStylesheetEpic from './epics/reloadStylesheetEpic';
+import { State } from '../reducer';
+import { reloadStylesheet } from '../actions';
+import { Reducer } from 'modules';
 
-export default combineEpics(
-    txExecBatchDoneEpic,
-    txExecBatchEpic,
-    txExecBatchFailedEpic,
-    txCallEpic,
-    txAuthorizeEpic,
-    txPrepareEpic,
-    txExecEpic,
-    txExecFailedEpic,
-    newEcosystemEpic,
-    txPrepareBatchEpic,
-    reloadStylesheetEpic
-);
+const reloadStylesheetHandler: Reducer<typeof reloadStylesheet, State> = (state, payload) => ({
+    ...state,
+    stylesheet: payload,
+});
+
+export default reloadStylesheetHandler;
