@@ -20,16 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { TProtypoElement } from 'genesis/protypo';
 import Tag from './Tag';
 
 class Div extends Tag {
-    constructor(element: TProtypoElement) {
-        super(element);
-        this.tagName = 'Div';
-        this.HTMLTag = 'div';
-        this.generateTextElement = false;
-    }
+    protected tagName: string = 'Div';
+    protected HTMLTag: string = 'div';
+    protected generateTextElement = false;
 }
 
 export default Div;

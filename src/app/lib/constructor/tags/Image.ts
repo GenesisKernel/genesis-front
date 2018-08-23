@@ -20,33 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { TProtypoElement } from 'genesis/protypo';
-import { idGenerator } from 'lib/constructor';
 import Tag from './Tag';
 
 class Image extends Tag {
-    constructor(element: TProtypoElement) {
-        super(element);
-        this.tagName = 'Image';
-        this.canHaveChildren = false;
-        this.attr = {
-            'source': 'Source',
-            'src': 'Src',
-            'alt': 'Alt'
-        };
-        this.editProps = ['class', 'src', 'alt'];
-    }
+    protected tagName: string = 'Image';
+    public canHaveChildren: boolean = false;
+    protected attr: any = {
+        'source': 'Source',
+        'src': 'Src',
+        'alt': 'Alt'
+    };
 
-    generateTreeJSON(text: string): any {
-        return {
-            tag: this.tagName.toLowerCase(),
-            id: idGenerator.generateId(),
-            attr: {
-                alt: 'Image',
-                src: '/img/dummy.png'
-            }
-        };
-    }
+    protected newElementAttr: any = {
+        alt: 'Image',
+        src: '/img/dummy.png'
+    };
+
+    protected editProps = ['class', 'src', 'alt'];
+    protected generateTextElement: boolean = false;
 }
 
 export default Image;

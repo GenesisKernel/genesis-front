@@ -20,23 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { TProtypoElement } from 'genesis/protypo';
-import { idGenerator } from 'lib/constructor';
 import Tag from './Tag';
 
 class Else extends Tag {
-    constructor(element: TProtypoElement) {
-        super(element);
-        this.tagName = 'Else';
-        this.canHaveChildren = true;
-        this.canMove = false;
-        this.canCopy = false;
-        this.canChangePosition = false;
-        this.logic = true;
-        this.attr = {
-        };
-        this.editProps = [];
-    }
+
+    protected tagName: string = 'Else';
+    public logic: boolean = true;
+    public canMove: boolean = false;
+    public canCopy: boolean = false;
+    public canChangePosition: boolean = false;
+    protected bodyInline = false;
+    protected attr: any = {
+    };
+    protected editProps: string[] = [];
+    protected generateTextElement: boolean = false;
 
     renderCode(): string {
 
@@ -45,21 +42,10 @@ class Else extends Tag {
         }
 
         let result: string = '.' + this.tagName;
-        result += '{\n';
         let body = this.renderChildren(this.element.children, this.offset);
 
-        if (this.element.children && this.element.children.length) {
-            result += body + '\n' + this.renderOffset();
-        }
-        result += '}';
+        result += this.renderBody(body);
         return result;
-    }
-
-    generateTreeJSON(text: string): any {
-        return {
-            tag: this.tagName.toLowerCase(),
-            id: idGenerator.generateId()
-        };
     }
 }
 

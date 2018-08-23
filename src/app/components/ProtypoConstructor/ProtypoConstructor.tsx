@@ -70,6 +70,34 @@ class ProtypoConstructor extends React.Component<IProtypoConstructorProps> {
         return `${this.props.apiHost}${name}`;
     }
 
+    renderHandler(Handler: typeof resolveHandler, element: TProtypoElement, key: string): React.ReactNode {
+        const selected = this.props.selectedTag && this.props.selectedTag.id === element.id;
+        return (
+            <Handler
+                {...element.attr}
+                {...element.sysAttr}
+                key={key}
+                id={key}
+                tag={element}
+                childrenTree={element.children}
+                childrenText={element.childrenText}
+                editable={this.props.editable}
+                changePage={this.props.changePage}
+                setTagCanDropPosition={this.props.setTagCanDropPosition}
+                addTag={this.props.addTag}
+                moveTag={this.props.moveTag}
+                copyTag={this.props.copyTag}
+                removeTag={this.props.removeTag}
+                selectTag={this.props.selectTag}
+                selected={selected}
+                logic={this.props.logic}
+                tail={this.renderElements(element.tail)}
+            >
+                {this.renderElements(element.children)}
+            </Handler>
+        );
+    }
+
     renderElement(element: TProtypoElement, optionalKey?: string): React.ReactNode {
         switch (element.tag) {
             case 'text':
@@ -78,35 +106,8 @@ class ProtypoConstructor extends React.Component<IProtypoConstructorProps> {
             default:
                 const Handler = resolveHandler(element.tag);
                 if (Handler) {
-                    const selected = this.props.selectedTag && this.props.selectedTag.id === element.id;
-
                     const key = optionalKey || (this._lastID++).toString();
-
-                    return (
-                        <Handler
-                            {...element.attr}
-                            {...element.sysAttr}
-                            key={key}
-                            id={key}
-                            tag={element}
-                            childrenTree={element.children}
-                            childrenText={element.childrenText}
-                            editable={this.props.editable}
-                            changePage={this.props.changePage}
-                            setTagCanDropPosition={this.props.setTagCanDropPosition}
-                            addTag={this.props.addTag}
-                            moveTag={this.props.moveTag}
-                            copyTag={this.props.copyTag}
-                            removeTag={this.props.removeTag}
-                            selectTag={this.props.selectTag}
-                            selected={selected}
-                            logic={this.props.logic}
-                            tail={this.renderElements(element.tail)}
-                        >
-                            {this.renderElements(element.children)}
-                        </Handler>
-                    );
-
+                    return this.renderHandler(Handler, element, key);
                 }
                 else {
                     this._errors.push({
@@ -128,12 +129,9 @@ class ProtypoConstructor extends React.Component<IProtypoConstructorProps> {
         ));
     }
 
-    render() {
-        this._lastID = 0;
-        this._errors = [];
-
+    getChildren(): React.ReactNode[] {
         const body = this.renderElements(this.props.content);
-        const children = [
+        return [
             this._errors.length ? (
                 <div key="errors">
                     {this._errors.map((error, errorIndex) => (
@@ -147,6 +145,13 @@ class ProtypoConstructor extends React.Component<IProtypoConstructorProps> {
             ) : null,
             ...body
         ];
+    }
+
+    render() {
+        this._lastID = 0;
+        this._errors = [];
+
+        const children = this.getChildren();
 
         if (this.props.wrapper) {
             return React.cloneElement(this.props.wrapper, this.props.wrapper.props, children);
