@@ -41,12 +41,9 @@ export interface IToolButtonProps {
         title?: string;
         width?: number;
     };
-
-    section?: string;
 }
 
 interface IToolButtonState {
-    currentSection: string;
 }
 
 interface IToolButtonDispatch {
@@ -85,7 +82,6 @@ class ToolButtonContainer extends React.Component<IToolButtonProps & IToolButton
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    currentSection: state.sections.section
 });
 
 const mapDispatchToProps = {
