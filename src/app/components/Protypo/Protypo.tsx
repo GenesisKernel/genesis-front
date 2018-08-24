@@ -27,7 +27,7 @@ import contextDefinitions from './contexts';
 import { TProtypoElement, ISource } from 'genesis/protypo';
 import { IValidationResult } from 'components/Validation/ValidatedForm';
 import Heading from 'components/Heading';
-import ToolButton, { IToolButtonProps } from 'components/Protypo/components/ToolButton';
+import ToolButton, { IToolButtonProps } from 'containers/ToolButton/ToolButton';
 import { IConstructorElementProps } from 'genesis/editor';
 
 export interface IProtypoProps extends IConstructorElementProps {

@@ -115,6 +115,7 @@ const LogicTagNames = {
 };
 
 const TailTagNames = {
+    'alert': 'Alert',
     'columns': 'Columns',
     'count': 'Count',
     'custom': 'Custom',
@@ -122,6 +123,7 @@ const TailTagNames = {
     'limit': 'Limit',
     'offset': 'Offset',
     'order': 'Order',
+    'popup': 'Popup',
     'style': 'Style',
     'vars': 'Vars',
     'validate': 'Validate',
