@@ -40,7 +40,7 @@ export interface IWalletGeneratorProps {
     onGenerate?: () => void;
     onSave?: () => void;
     onLoad?: () => void;
-    action: string;
+    action: 'create' | 'import';
 }
 
 const Generator: React.SFC<IWalletGeneratorProps> = props => (
