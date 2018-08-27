@@ -40,6 +40,7 @@ export interface IWalletGeneratorProps {
     onGenerate?: () => void;
     onSave?: () => void;
     onLoad?: () => void;
+    action: string;
 }
 
 const Generator: React.SFC<IWalletGeneratorProps> = props => (
@@ -53,7 +54,11 @@ const Generator: React.SFC<IWalletGeneratorProps> = props => (
             <Validation.components.ValidatedFormGroup for="seed">
                 <Col md={3} className="clearfix">
                     <div className="pull-left">
-                        <FormattedMessage id="auth.backup" defaultMessage="Backup payload" />
+                        {props.action === 'import' ?
+                            (<FormattedMessage id="auth.backup" defaultMessage="Backup payload"/>)
+                            :
+                            (<FormattedMessage id="auth.seed" defaultMessage="Auth seed"/>)
+                        }
                     </div>
                     <div className="pull-right visible-sm visible-xs">
                         <Validation.components.ValidationMessage for="seed" />

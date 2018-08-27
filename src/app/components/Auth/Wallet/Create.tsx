@@ -157,6 +157,7 @@ class Create extends React.Component<ICreateProps & InjectedIntlProps, ICreateSt
                                     onSeedChange={this.onSeedChange}
                                     onPasswordChange={this.onPasswordChange}
                                     password={this.state.password}
+                                    action="create"
                                     descriptionValue={
                                         <FormattedMessage
                                             id="auth.remember.disclaimer"
@@ -174,6 +175,7 @@ class Create extends React.Component<ICreateProps & InjectedIntlProps, ICreateSt
                                     password={this.state.passwordConfirm}
                                     compareSeed={this.state.seed}
                                     comparePassword={this.state.password}
+                                    action="create"
                                     descriptionValue={
                                         <FormattedMessage
                                             id="auth.remember.disclaimer.confirm"
