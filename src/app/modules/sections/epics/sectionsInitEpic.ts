@@ -58,7 +58,7 @@ const sectionsInitEpic: Epic = (action$, store, { api }) => action$.ofAction(sec
         ])).flatMap(payload => {
             const remoteSections = (payload[0].list as object as IRemoteSectionProto[]).filter(l =>
                 RemoteSectionStatus.Removed !== l.status &&
-                (!l.roles_access || JSON.parse(l.roles_access).indexOf(roleID) !== -1)
+                (!l.roles_access || JSON.parse(l.roles_access).length === 0 || JSON.parse(l.roles_access).indexOf(roleID) !== -1)
             );
 
             const mainSection = remoteSections.find(l => RemoteSectionStatus.Main === l.status) || remoteSections[0];
