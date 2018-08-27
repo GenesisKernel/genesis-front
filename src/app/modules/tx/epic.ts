@@ -31,6 +31,7 @@ import txExecBatchEpic from './epics/txExecBatchEpic';
 import txExecBatchDoneEpic from './epics/txExecBatchDoneEpic';
 import txExecBatchFailedEpic from './epics/txExecBatchFailedEpic';
 import txPrepareBatchEpic from './epics/txPrepareBatchEpic';
+import reloadStylesheetEpic from './epics/reloadStylesheetEpic';
 
 export default combineEpics(
     txExecBatchDoneEpic,
@@ -42,5 +43,6 @@ export default combineEpics(
     txExecEpic,
     txExecFailedEpic,
     newEcosystemEpic,
-    txPrepareBatchEpic
+    txPrepareBatchEpic,
+    reloadStylesheetEpic
 );

@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import { Route } from 'react-router-dom';
 import { IRootState } from 'modules';
 import { reloadPage, navigationToggle, renderSection, navigatePage, closeSection } from '../../modules/sections/actions';
@@ -30,12 +30,14 @@ import { AnimatedSwitch } from 'components/Animation';
 import Main, { IMainProps } from 'components/Main';
 import DefaultPage from 'containers/Main/DefaultPage';
 import Page from 'containers/Main/Page';
+import NotFound from 'components/NotFound';
 
 const MainContainer: React.SFC<IMainProps> = props => (
     <Main {...props}>
         <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
             <Route exact path="/:section/:pageName?" component={Page} />
             <Route exact path="*" component={DefaultPage} />
+            <Route path="*" render={() => <NotFound main />} />
         </AnimatedSwitch>
     </Main>
 );
@@ -55,13 +57,22 @@ const mapStateToProps = (state: IRootState) => ({
     transactionsCount: state.tx.transactions.count()
 });
 
-const mapDispatchToProps = {
-    onNavigationToggle: () => navigationToggle(),
-    onNavigateHome: () =>
-        navigatePage.started({ params: {} }),
-    onRefresh: () => reloadPage.started({}),
-    onSwitchSection: (section: string) => renderSection(section),
-    onCloseSection: (section: string) => closeSection(section)
-};
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+    onNavigationToggle: () => {
+        dispatch(navigationToggle());
+    },
+    onNavigateHome: () => {
+        dispatch(navigatePage.started({ params: {} }));
+    },
+    onRefresh: (section: string) => {
+        dispatch(reloadPage.started({}));
+    },
+    onSwitchSection: (section: string) => {
+        dispatch(renderSection(section));
+    },
+    onCloseSection: (section: string) => {
+        dispatch(closeSection(section));
+    }
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainContainer);

@@ -45,6 +45,7 @@ import AuthChangePasswordModal from 'components/Modal/Auth/AuthChangePasswordMod
 import AuthPasswordChangedModal from 'components/Modal/Auth/AuthPasswordChangedModal';
 import TxConfirmModal from './Tx/ConfirmModal';
 import PageModal from './PageModal';
+import ChangeLocaleModal from './ChangeLocale';
 
 const MODAL_COMPONENTS = {
     'AUTHORIZE': AuthorizeModal,
@@ -65,13 +66,15 @@ const MODAL_COMPONENTS = {
     'CONFIRM': ConfirmModal,
     'INFO': InfoModal,
     'ERROR': ErrorModal,
-    'ABOUT': AboutModal
+    'ABOUT': AboutModal,
+    'CHANGE_LOCALE': ChangeLocaleModal
 };
 
 export interface IModalProviderProps {
     modal: IModal;
     onResult: (params: { reason: TModalResultReason, data: any }) => void;
     enqueueNotification: (params: INotification) => void;
+    changeLocale: (locale: string) => void;
 }
 
 class ModalProvider extends React.Component<IModalProviderProps> {
@@ -108,6 +111,7 @@ class ModalProvider extends React.Component<IModalProviderProps> {
                         onResult={this.onResult.bind(this)}
                         onCancel={this.onCancel.bind(this)}
                         notify={this.notify.bind(this)}
+                        changeLocale={this.props.changeLocale}
                         {...this.props.modal}
                     />
                 )}

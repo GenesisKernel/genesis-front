@@ -24,6 +24,8 @@ import { IThemeDefinition } from 'genesis/theme';
 import platform from 'lib/platform';
 
 const baseTheme: IThemeDefinition = {
+    windowBorder: '#4c7dbd',
+
     headerBackground: '#4c7dbd',
     headerForeground: '#fff',
     headerBackgroundActive: '#f3f3f3',
@@ -34,8 +36,11 @@ const baseTheme: IThemeDefinition = {
     toolbarForeground: '#194a8a',
     toolbarOutline: '#e5e5e5',
     toolbarIconColor: '#5b97e4',
+    toolbarIconHighlight: '#a9ccf9',
     toolbarDisabled: '#93a7bf',
     toolbarHeight: 40,
+
+    progressBarForeground: '#b2c5dc',
 
     menuHeight: 40,
     menuBackground: '#fff',

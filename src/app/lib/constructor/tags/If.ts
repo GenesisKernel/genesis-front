@@ -20,60 +20,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { TProtypoElement } from 'genesis/protypo';
 import { idGenerator } from 'lib/constructor';
-import resolveTagHandler from 'lib/constructor/tags';
 import Tag from './Tag';
 
 class If extends Tag {
-    constructor(element: TProtypoElement) {
-        super(element);
-        this.tagName = 'If';
-        this.canHaveChildren = true;
-        this.logic = true;
-        this.attr = {
-            'condition': 'Condition'
-        };
-        this.editProps = ['condition'];
-    }
+    protected tagName: string = 'If';
+    public logic: boolean = true;
+    protected bodyInline = false;
+    protected attr: any = {
+        'condition': 'Condition'
+    };
+    protected newElementAttr: any = {
+        condition: '#value#'
+    };
+    protected editProps: string[] = ['condition'];
+    protected generateTextElement: boolean = false;
 
     renderCode(): string {
-        let result: string = this.tagName + '(';
-
-        if (this.element && this.element.attr && this.element.attr.condition) {
-            result += this.element.attr.condition;
-        }
-        result += ')';
+        let result: string = this.renderOffset();
+        result += this.tagName + '(';
 
         let body = this.renderChildren(this.element.children, this.offset);
-        result += '{\n';
-        if (this.element.children && this.element.children.length) {
-            result += body + '\n' + this.renderOffset();
-        }
-        result += '}';
+        result += this.renderParams(this.element, body) + ')';
+        result += this.renderBody(body);
 
-        if (this.element.tail && this.element.tail.length) {
-            result += this.element.tail.map((element, index) => {
-                const TailHandler = resolveTagHandler(element.tag);
-                if (TailHandler) {
-                    let tag = new TailHandler(element);
-                    tag.setOffset(this.offset);
-                    return tag.renderCode();
-                }
-                return '';
-            }).join('');
-        }
+        let tail = this.renderChildren(this.element.tail, this.offset, '');
 
-        return this.renderOffset() + result;
+        result += tail;
+        return result;
     }
 
     generateTreeJSON(text: string): any {
         return {
-            tag: this.tagName.toLowerCase(),
-            id: idGenerator.generateId(),
-            attr: {
-                condition: '#value#'
-            },
+            ...this.generateBaseTreeJSON(text),
             children: [],
             tail: [
                 {

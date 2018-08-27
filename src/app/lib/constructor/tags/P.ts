@@ -20,15 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { TProtypoElement } from 'genesis/protypo';
 import Tag from './Tag';
 
 class P extends Tag {
-    constructor(element: TProtypoElement) {
-        super(element);
-        this.tagName = 'P';
-        this.HTMLTag = 'p';
-    }
+    protected tagName: string = 'P';
+    protected HTMLTag: string = 'p';
 }
 
 export default P;

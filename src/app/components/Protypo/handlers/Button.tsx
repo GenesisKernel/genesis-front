@@ -23,6 +23,7 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
+import StyledComponent from './StyledComponent';
 
 import Protypo, { IParamsSpec } from '../Protypo';
 import ValidatedForm from 'components/Validation/ValidatedForm';
@@ -30,6 +31,7 @@ import TxButton from 'containers/Button/TxButton';
 
 export interface IButtonProps {
     'class'?: string;
+    'className'?: string;
     'alert'?: {
         icon: string;
         text: string;
@@ -111,7 +113,7 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
 
     return (
         <TxButton
-            className={props.class}
+            className={[props.class, props.className].join(' ')}
             confirm={props.alert && {
                 icon: props.alert.icon,
                 title: props.intl.formatMessage({ id: 'alert.confirmation', defaultMessage: 'Confirmation' }),
@@ -139,4 +141,4 @@ Button.contextTypes = {
     protypo: propTypes.object.isRequired
 };
 
-export default injectIntl(Button);
+export default injectIntl(StyledComponent(Button));

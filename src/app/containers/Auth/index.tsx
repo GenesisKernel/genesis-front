@@ -23,33 +23,48 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
+// import { setLocale } from 'modules/engine/actions';
 
 import Auth from 'components/Auth';
+import { modalShow } from 'modules/modal/actions';
 
 export interface IAuthContainerProps {
 
 }
 
 interface IAuthContainerState {
+    locale: string;
     firstRun: boolean;
     isOffline: boolean;
 }
 
 interface IAuthContainerDispatch {
-
+    changeLocale: (locale: string) => void;
 }
 
 const mapStateToProps = (state: IRootState) => ({
+    locale: state.storage.locale,
     firstRun: !state.storage.wallets || 0 === state.storage.wallets.length,
     isOffline: state.engine.isOffline
 });
 
 const mapDispatchToProps = {
-
+    changeLocale: (locale: string) => modalShow({
+        id: 'CHANGE_LOCALE',
+        type: 'CHANGE_LOCALE',
+        params: {
+            value: locale
+        }
+    })
 };
 
-const AuthContainer: React.SFC<IAuthContainerProps & IAuthContainerState & IAuthContainerDispatch> = props => (
-    <Auth {...props} />
-);
+const AuthContainer: React.SFC<IAuthContainerProps & IAuthContainerState & IAuthContainerDispatch> = props => {
+    const changeLocale = () =>
+        props.changeLocale(props.locale);
+
+    return (
+        <Auth {...props} changeLocale={changeLocale} />
+    );
+};
 
 export default connect<IAuthContainerState, IAuthContainerDispatch, IAuthContainerProps>(mapStateToProps, mapDispatchToProps)(AuthContainer);

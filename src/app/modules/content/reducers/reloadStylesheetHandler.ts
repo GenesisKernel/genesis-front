@@ -21,18 +21,12 @@
 // SOFTWARE.
 
 import { State } from '../reducer';
-import { reloadPage } from '../actions';
+import { reloadStylesheet } from '../actions';
 import { Reducer } from 'modules';
 
-const reloadPageHandler: Reducer<typeof reloadPage.started, State> = (state, payload) => ({
+const reloadStylesheetHandler: Reducer<typeof reloadStylesheet, State> = (state, payload) => ({
     ...state,
-    sections: {
-        ...state.sections,
-        [state.section]: {
-            ...state.sections[state.section],
-            pending: true
-        }
-    }
+    stylesheet: payload,
 });
 
-export default reloadPageHandler;
+export default reloadStylesheetHandler;

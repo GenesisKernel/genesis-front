@@ -24,6 +24,7 @@ import { Epic } from 'modules';
 import { Observable } from 'rxjs';
 import { connect } from 'modules/socket/actions';
 import { initialize, setLocale } from '../actions';
+import { IWebSettings } from 'genesis';
 import urlJoin from 'url-join';
 import platform from 'lib/platform';
 import NodeObservable from '../util/NodeObservable';
@@ -34,32 +35,38 @@ const fullNodesFallback = ['http://127.0.0.1:7079'];
 
 const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword }) => action$.ofAction(initialize.started)
     .flatMap(action => {
-        const fullNodesArg = platform.args.fullNode;
         const requestUrl = platform.select({
             web: urlJoin(process.env.PUBLIC_URL || location.origin, 'settings.json'),
             desktop: './settings.json'
         });
 
-        return Observable.if(
-            () => fullNodesArg && 0 < fullNodesArg.length,
-            Observable.of(fullNodesArg),
-            Observable.ajax.getJSON<{ fullNodes?: string[] }>(requestUrl)
-                .map(l =>
-                    l.fullNodes
+        return Observable.ajax.getJSON<IWebSettings>(
+            requestUrl
 
-                ).catch(e =>
-                    Observable.of(fullNodesFallback)
+        ).catch(e =>
+            Observable.of({} as IWebSettings)
 
-                ).defaultIfEmpty(
-                    fullNodesFallback
+        ).map(result => {
+            if (!result) {
+                result = {};
+            }
 
-                ).map(fullNodes => [
-                    ...(store.getState().storage.fullNodes || []),
-                    ...fullNodes
-                ])
+            const config: IWebSettings = {
+                fullNodes: (platform.args.fullNode && platform.args.fullNode.length) ? platform.args.fullNode :
+                    (result.fullNodes && Array.isArray(result.fullNodes) && result.fullNodes.length) ? result.fullNodes :
+                        fullNodesFallback,
+                socketUrl: platform.args.socketUrl || ((result.socketUrl && 'string' === typeof result.socketUrl) ? result.socketUrl : null),
+                disableFullNodesSync: 'boolean' === typeof platform.args.disableFullNodesSync ? platform.args.disableFullNodesSync :
+                    ('boolean' === typeof result.disableFullNodesSync) ? result.disableFullNodesSync : null
+            };
+            return config;
 
-        ).flatMap(fullNodes =>
-            NodeObservable({
+        }).flatMap(config => {
+            const fullNodes = config.disableFullNodesSync ? config.fullNodes : [
+                ...(store.getState().storage.fullNodes || []),
+                ...config.fullNodes
+            ];
+            return NodeObservable({
                 nodes: fullNodes,
                 count: 1,
                 timeout: 5000,
@@ -74,7 +81,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                     Observable.of(initialize.done({
                         params: action.payload,
                         result: {
-                            fullNodes,
+                            fullNodes: fullNodes,
                             nodeHost: node
                         }
                     })),
@@ -91,8 +98,8 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                                 const securedClient = client.authorize(loginResult.token);
 
                                 return Promise.all([
-                                    client.getConfig({ name: 'centrifugo' }).catch(e => null),
-                                    platform.args.fullNode && platform.args.fullNode.length ? Promise.resolve(platform.args.fullNode) :
+                                    config.socketUrl ? Promise.resolve(config.socketUrl) : client.getConfig({ name: 'centrifugo' }).catch(e => null),
+                                    config.disableFullNodesSync ? Promise.resolve(fullNodes) :
                                         securedClient.getSystemParams({ names: ['full_nodes'] })
                                             .then(l =>
                                                 JSON.parse(l.list.find(p => p.name === 'full_nodes').value)
@@ -120,13 +127,13 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                                 Observable.empty<never>()
                             ),
                             Observable.of(connect.started({
-                                wsHost: platform.args.socketUrl || result.centrifugo,
+                                wsHost: result.centrifugo,
                                 session: result.login.token,
                                 socketToken: result.login.notify_key,
                                 timestamp: result.login.timestamp,
                                 userID: result.login.key_id
                             })),
-                            Observable.of(mergeFullNodes([...result.fullNodes, ...fullNodes]))
+                            Observable.of(mergeFullNodes([...result.fullNodes, ...config.fullNodes]))
 
                         )).catch(e => Observable.of(connect.failed({
                             params: null,
@@ -137,8 +144,8 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
             }).defaultIfEmpty(initialize.failed({
                 params: action.payload,
                 error: 'E_OFFLINE'
-            }))
-        );
+            }));
+        });
     });
 
 export default initializeEpic;

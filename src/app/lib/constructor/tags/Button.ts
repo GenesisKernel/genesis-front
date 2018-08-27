@@ -20,22 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { TProtypoElement } from 'genesis/protypo';
 import Tag from './Tag';
 
 class Button extends Tag {
-    constructor(element: TProtypoElement) {
-        super(element);
-        this.tagName = 'Button';
-        this.canHaveChildren = true;
-        this.attr = {
-            'class': 'Class',
-            'page': 'Page',
-            'pageparams': 'PageParams',
-            'contract': 'Contract'
-        };
-        this.editProps = ['class', 'btn', 'align', 'transform', 'wrap'];
-    }
+    protected tagName: string = 'Button';
+    protected attr: any = {
+        'class': 'Class',
+        'page': 'Page',
+        'pageparams': 'PageParams',
+        'contract': 'Contract'
+    };
+    protected editProps = ['class', 'btn', 'align', 'transform', 'wrap'];
 }
 
 export default Button;

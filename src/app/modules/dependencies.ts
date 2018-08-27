@@ -21,7 +21,8 @@
 // SOFTWARE.
 
 import GenesisAPI from 'lib/genesisAPI';
-import CodeGenerator, { setIds, convertToTreeData, findTagById, copyObject, idGenerator, updateChildrenText, html2childrenTags, Properties } from 'lib/constructor';
+import CodeGenerator, { setIds, convertToTreeData, findTagById, copyObject, idGenerator, updateChildrenText, html2childrenTags } from 'lib/constructor';
+import Properties from 'lib/constructor/properties';
 import getConstructorTemplate from 'lib/constructor/templates';
 import resolveTagHandler from 'lib/constructor/tags';
 import 'whatwg-fetch';
@@ -60,7 +61,20 @@ const storeDependencies: IStoreDependencies = {
             headers: request.headers,
             body: request.body
 
-        }).then(response => response.json()).then(body => ({ body })).catch(e => {
+        }).then(response =>
+            Promise.all([
+                response.clone().json(),
+                response.clone().text()
+
+            ]).then(result => ({
+                json: result[0],
+                body: result[1]
+
+            }))
+
+        ).catch(e => {
+            // tslint:disable-next-line:no-console
+            console.error(e);
             throw e && e.response && e.response.data ? e.response.data.error : null;
         }),
         apiHost: params.apiHost,

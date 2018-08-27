@@ -306,7 +306,7 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                                 ),
                                 buttons: [
                                     <button
-                                        key={node.tag.id}
+                                        key={node.tag && node.tag.id}
                                         className="tree-button-remove"
                                         onClick={
                                             () => {

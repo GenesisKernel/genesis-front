@@ -20,35 +20,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import * as classnames from 'classnames';
-import DnDComponent from './DnDComponent';
-import EditableBlock from './EditableBlock';
+import React from 'react';
+import LoadingBarNative from 'react-redux-loading-bar';
+import { withTheme } from 'styled-components';
+import { IThemeDefinition } from 'genesis/theme';
+import themed from 'components/Theme/themed';
 
-class ImageInput extends EditableBlock {
-    protected editableDisplay = 'inline';
-    protected editable = false;
-    renderChildren(classes: string) {
-        return (
-            <div
-                className={classes}
-            >
-                <input type="text" className="form-control" readOnly={true}/>
-                <div className="group-span-filestyle input-group-btn">
-                    <button className="btn btn-default" type="button">
-                        <span className="icon-span-filestyle glyphicon glyphicon-folder-open" />
-                        <span className="buttonText" />
-                    </button>
-                </div>
-            </div>
-        );
-    }
-    getClasses() {
-        return classnames({
-            'b-selected': this.props.selected,
-            'input-group': true
-        });
-    }
+export interface ILoadingBarProps {
+    theme: IThemeDefinition;
 }
 
-export default DnDComponent(ImageInput);
+const StyledLoadingBar = themed(LoadingBarNative)`
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+`;
+
+const LoadingBar: React.SFC<ILoadingBarProps> = props => (
+    <StyledLoadingBar
+        showFastActions
+        style={{
+            backgroundColor: props.theme.progressBarForeground,
+            width: 'auto',
+            height: 2
+        }}
+    />
+);
+
+export default withTheme(LoadingBar);

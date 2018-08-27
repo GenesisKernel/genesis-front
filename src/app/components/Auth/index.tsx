@@ -22,6 +22,7 @@
 
 import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 import { Panel } from 'react-bootstrap';
 import imgLogo from 'images/logo.svg';
 import platform from 'lib/platform';
@@ -35,8 +36,10 @@ import Offline from 'containers/Auth/Offline';
 
 export interface IAuthProps {
     className?: string;
+    locale: string;
     firstRun: boolean;
     isOffline: boolean;
+    changeLocale: () => void;
 }
 
 const Auth: React.SFC<IAuthProps> = props => (
@@ -62,7 +65,9 @@ const Auth: React.SFC<IAuthProps> = props => (
                                 <div>Genesis &copy; 2017 - 2018 - <a href="http://genesis.space">http://genesis.space</a></div>
                             </div>
                             <div className="pull-right">
-                                <a href="#">English(US)</a>
+                                <a href="#" onClick={props.changeLocale}>
+                                    <FormattedMessage id="LANG_NAME" defaultMessage={props.locale} />
+                                </a>
                             </div>
                         </div>
                     )
@@ -72,7 +77,7 @@ const Auth: React.SFC<IAuthProps> = props => (
     </div>
 );
 
-export default themed(Auth) `
+export default themed(Auth)`
     display: ${platform.select({ web: 'table', desktop: 'block' })};
     width: 100%;
     height: 100%;

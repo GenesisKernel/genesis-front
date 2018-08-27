@@ -49,13 +49,13 @@ class CreatePageModal extends Modal<ICreatePageModalProps, { name: string, menu:
                 <Modal.Body>
                     <Validation.components.ValidatedFormGroup for="name">
                         <label htmlFor="name">
-                            <FormattedMessage id="admin.interface.page.name" defaultMessage="Name" />
+                            <FormattedMessage id="editor.page.name" defaultMessage="Name" />
                         </label>
                         <Validation.components.ValidatedControl key="name" name="name" validators={[Validation.validators.required]} />
                     </Validation.components.ValidatedFormGroup>
                     <Validation.components.ValidatedFormGroup for="menu">
                         <label htmlFor="menu">
-                            <FormattedMessage id="admin.interface.menu" defaultMessage="Menu" />
+                            <FormattedMessage id="editor.menu" defaultMessage="Menu" />
                         </label>
                         <Validation.components.ValidatedSelect name="menu" defaultValue={this.props.params.menus[0]} validators={[Validation.validators.required]}>
                             {this.props.params.menus.map(menu => (
@@ -65,7 +65,7 @@ class CreatePageModal extends Modal<ICreatePageModalProps, { name: string, menu:
                     </Validation.components.ValidatedFormGroup>
                     <Validation.components.ValidatedFormGroup for="conditions" className="mb0">
                         <label htmlFor="conditions">
-                            <FormattedMessage id="admin.conditions.change" defaultMessage="Change conditions" />
+                            <FormattedMessage id="editor.conditions.change" defaultMessage="Change conditions" />
                         </label>
                         <Validation.components.ValidatedTextarea name="conditions" validators={[Validation.validators.required]} />
                     </Validation.components.ValidatedFormGroup>

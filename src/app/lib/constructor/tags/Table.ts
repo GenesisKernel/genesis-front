@@ -20,32 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { TProtypoElement } from 'genesis/protypo';
-import { idGenerator } from 'lib/constructor';
 import Tag from './Tag';
 
 class Table extends Tag {
-    constructor(element: TProtypoElement) {
-        super(element);
-        this.tagName = 'Table';
-        this.canHaveChildren = false;
-        this.attr = {
-            'source': 'Source',
-            'columns': 'Columns'
-        };
-        this.editProps = ['class', 'source', 'columns'];
-    }
-
-    generateTreeJSON(text: string): any {
-        return {
-            tag: this.tagName.toLowerCase(),
-            id: idGenerator.generateId(),
-            attr: {
-                source: 'keysStr',
-                columns: 'KEY_ID=id,MONEY=amount'
-            }
-        };
-    }
+    protected tagName: string = 'Table';
+    public canHaveChildren: boolean = false;
+    protected attr: any = {
+        'source': 'Source',
+        'columns': 'Columns'
+    };
+    protected newElementAttr: any = {
+        source: 'keysStr',
+        columns: 'KEY_ID=id,MONEY=amount'
+    };
+    protected editProps = ['class', 'source', 'columns'];
+    protected generateTextElement: boolean = false;
 }
 
 export default Table;

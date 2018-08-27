@@ -485,7 +485,7 @@ test('Constructor module', () => {
         }
     ];
 
-    const pageTemplate = 'P(Class: text-danger text-center) {\n Strong(Body: Bold text)\n Span(Body:  and )\n Em(Body: italic)\n}\nDiv(Class: classname) {\n Input(Name: sample input, Class: form-control)\n Button(Body: Button)\n}';
+    const pageTemplate = 'P(Class: text-danger text-center){\n Strong(Body: Bold text)\n Span(Body:  and )\n Em(Body: italic)\n}\nDiv(Class: classname){\n Input(Name: sample input, Class: form-control)\n Button(Body: Button)\n}';
     const codeGenerator = new CodeGenerator(jsonData);
 
     expect(foundTag).toEqual(findTagById(jsonData, 'tag_27384336'));

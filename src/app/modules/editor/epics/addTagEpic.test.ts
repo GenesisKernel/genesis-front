@@ -142,6 +142,7 @@ describe('addTagEpic', () => {
             {
                 tag: 'div',
                 id: 'tag_14',
+                attr: {},
                 children: [],
                 childrenText: ''
             }
@@ -401,7 +402,7 @@ describe('addTagEpic', () => {
             },
             {
                 title: 'div',
-                children: [],
+                children: null,
                 expanded: true,
                 id: 'tag_14',
                 selected: false,
@@ -409,6 +410,7 @@ describe('addTagEpic', () => {
                 canMove: true,
                 canDrop: true,
                 tag: {
+                    attr: {},
                     tag: 'div',
                     id: 'tag_14',
                     children: [],

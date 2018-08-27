@@ -20,35 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import * as classnames from 'classnames';
-import DnDComponent from './DnDComponent';
-import EditableBlock from './EditableBlock';
+import { IRootState } from 'modules';
+import { Epic } from 'redux-observable';
+import { Action } from 'redux';
+import { txExec } from '../actions';
+import { reloadStylesheet } from 'modules/content/actions';
 
-class ImageInput extends EditableBlock {
-    protected editableDisplay = 'inline';
-    protected editable = false;
-    renderChildren(classes: string) {
-        return (
-            <div
-                className={classes}
-            >
-                <input type="text" className="form-control" readOnly={true}/>
-                <div className="group-span-filestyle input-group-btn">
-                    <button className="btn btn-default" type="button">
-                        <span className="icon-span-filestyle glyphicon glyphicon-folder-open" />
-                        <span className="buttonText" />
-                    </button>
-                </div>
-            </div>
-        );
-    }
-    getClasses() {
-        return classnames({
-            'b-selected': this.props.selected,
-            'input-group': true
+const reloadStylesheetEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(txExec.done)
+        .filter(l => l.payload.params.tx.contract && l.payload.params.tx.contract.name === 'EditParameter' && l.payload.params.tx.contract.params.name === 'stylesheet')
+        .map(action => {
+            return reloadStylesheet(action.payload.params.tx.contract.params.value);
         });
-    }
-}
 
-export default DnDComponent(ImageInput);
+export default reloadStylesheetEpic;

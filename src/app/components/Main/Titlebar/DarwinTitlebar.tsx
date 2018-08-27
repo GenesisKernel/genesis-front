@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import * as classNames from 'classnames';
+import React from 'react';
+import classNames from 'classnames';
 import styled from 'styled-components';
 import { remote } from 'electron';
 import imgControls from './wndControls.svg';

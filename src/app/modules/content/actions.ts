@@ -35,3 +35,5 @@ export const displayData = actionCreator.async<string, string, string>('DISPLAY_
 
 // Notifications
 export const fetchNotifications = actionCreator.async<void, TProtypoElement[], void>('FETCH_NOTIFICATIONS');
+
+export const reloadStylesheet = actionCreator<string>('RELOAD_STYLESHEET');

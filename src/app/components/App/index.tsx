@@ -20,10 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { Route } from 'react-router-dom';
 import platform from 'lib/platform';
-import * as classnames from 'classnames';
+import classnames from 'classnames';
+import themed from 'components/Theme/themed';
 
 import { AnimatedSwitch } from 'components/Animation';
 import Main from 'containers/Main';
@@ -40,6 +41,12 @@ interface IAppProps {
     switchWindow: (wnd: string) => void;
 }
 
+const ThemedApp = themed.div`
+    &.platform-windows {
+        border: solid 1px ${props => props.theme.windowBorder};
+    }
+`;
+
 class App extends React.Component<IAppProps> {
     componentWillReceiveProps(props: IAppProps) {
         if (this.props.isAuthenticated !== props.isAuthenticated) {
@@ -55,10 +62,11 @@ class App extends React.Component<IAppProps> {
             'aside-toggled': !this.props.isCollapsed,
             'platform-desktop': platform.select({ desktop: true }),
             'platform-web': platform.select({ web: true }),
+            'platform-windows': platform.select({ win32: true })
         });
 
         return (
-            <div className={classes}>
+            <ThemedApp className={classes}>
                 <InitHook />
                 <ModalProvider />
                 <NotificationsProvider />
@@ -71,7 +79,7 @@ class App extends React.Component<IAppProps> {
                     )}
                     <Route path="/" component={Main} />
                 </AnimatedSwitch>
-            </div>
+            </ThemedApp>
         );
     }
 }

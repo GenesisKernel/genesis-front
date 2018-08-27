@@ -30,7 +30,7 @@ import BtnRadioButtons from './BtnRadioButtons';
 import FormatButtons from './FormatButtons';
 import Switch from './Switch';
 import PropertiesInput from './PropertiesInput';
-import { getInitialTagValue } from 'lib/constructor';
+import { getInitialTagValue } from 'lib/constructor/properties';
 import resolveTagHandler from 'lib/constructor/tags';
 import { params } from 'lib/constructor/tags/params';
 

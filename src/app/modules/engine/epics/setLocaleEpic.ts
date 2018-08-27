@@ -26,8 +26,10 @@ import { Epic } from 'redux-observable';
 import { IRootState } from 'modules';
 import { setLocale } from '../actions';
 import { addLocaleData } from 'react-intl';
-import defaultLocaleMessages from 'lib/en-US.json';
 import { saveLocale } from 'modules/storage/actions';
+import defaultLocaleMessages from 'lib/en-US.json';
+import platform from 'lib/platform';
+import urlJoin from 'url-join';
 
 const defaultLocale = 'en-US';
 
@@ -45,7 +47,12 @@ const setLocaleEpic: Epic<Action, IRootState> =
                 );
             }
             else {
-                return Observable.ajax(`/locales/${action.payload}.json`)
+                const requestUrl = platform.select({
+                    web: urlJoin(process.env.PUBLIC_URL || location.origin, `locales/${action.payload}.json`),
+                    desktop: `./locales/${action.payload}.json`
+                });
+
+                return Observable.ajax(requestUrl)
                     .flatMap(result => {
                         if ('json' === result.responseType) {
                             addLocaleData({
