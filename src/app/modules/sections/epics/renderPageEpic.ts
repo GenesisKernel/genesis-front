@@ -26,6 +26,10 @@ import { renderPage } from '../actions';
 import NodeObservable from 'modules/engine/util/NodeObservable';
 import keyring from 'lib/keyring';
 
+const invalidationError = {
+    error: 'E_INVALIDATED'
+};
+
 const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(renderPage.started)
     .flatMap(action => {
         const state = store.getState();
@@ -80,7 +84,7 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
                     }
                 }
 
-                return Observable.of(renderPage.done({
+                return renderPage.done({
                     params: action.payload,
                     result: {
                         defaultMenu: payload[1] && payload[1].menu !== payload[0].menu && {
@@ -97,7 +101,7 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
                             content: payload[0].tree
                         }
                     }
-                }));
+                });
             });
 
         }).catch(e =>
