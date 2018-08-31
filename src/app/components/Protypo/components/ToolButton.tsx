@@ -24,27 +24,29 @@ import * as React from 'react';
 import * as propTypes from 'prop-types';
 
 import Protypo, { IParamsSpec } from '../Protypo';
-import PageLink from 'containers/Routing/PageLink';
 
 export interface IToolButtonProps {
     title?: string;
     icon?: string;
     page?: string;
     pageparams?: IParamsSpec;
+    onClick: (e: any) => void;
 }
 
 interface IToolButtonContext {
     protypo: Protypo;
 }
 
-const ToolButton: React.SFC<IToolButtonProps> = (props, context: IToolButtonContext) => (
-    <PageLink className="ml btn-tool" page={props.page} params={context.protypo.resolveParams(props.pageparams)}>
-        <em className={`icon ${props.icon}`} />
-        <span>
-            <span>{props.title}</span>
-        </span>
-    </PageLink>
-);
+const ToolButton: React.SFC<IToolButtonProps> = (props, context: IToolButtonContext) => {
+    return (
+        <a href="#" className="ml btn-tool" onClick={props.onClick}>
+            <em className={`icon ${props.icon}`} />
+            <span>
+                <span>{props.title}</span>
+            </span>
+        </a>
+    );
+};
 
 ToolButton.contextTypes = {
     protypo: propTypes.object.isRequired
