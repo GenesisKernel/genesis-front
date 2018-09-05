@@ -28,7 +28,7 @@ import { reloadStylesheet } from 'modules/content/actions';
 
 const reloadStylesheetEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(txExec.done)
-        .filter(l => l.payload.params.tx.contract && l.payload.params.tx.contract.name === 'EditParameter' && l.payload.params.tx.contract.params.name === 'stylesheet')
+        .filter(l => l.payload.params.tx.contract && l.payload.params.tx.contract.name.indexOf('EditParameter') !== -1 && l.payload.params.tx.contract.params.name === 'stylesheet')
         .map(action => {
             return reloadStylesheet(action.payload.params.tx.contract.params.value);
         });
