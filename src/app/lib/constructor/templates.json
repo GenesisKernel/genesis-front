@@ -469,9 +469,6 @@
           {
             "tag": "button",
             "attr": {
-              "alert": {
-                "text": "Select the payment method"
-              },
               "class": "btn btn-default mr-lg",
               "contract": "ContractName"
             },
@@ -479,6 +476,17 @@
               {
                 "tag": "text",
                 "text": "Cancel"
+              }
+            ],
+            "tail": [
+              {
+                "tag": "alert",
+                "attr": {
+                  "cancelbutton": "Cancel",
+                  "confirmbutton": "Confirm",
+                  "icon": "Icon",
+                  "text": "Select the payment method"
+                }
               }
             ]
           },
