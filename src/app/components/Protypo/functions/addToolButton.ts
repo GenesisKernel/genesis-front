@@ -31,7 +31,10 @@ export interface IAddToolButtonProps {
 }
 
 const addToolButton = (context: Protypo, props: IAddToolButtonProps) => {
-    context.addToolButton(props);
+    context.addToolButton({
+        ...props,
+        pageparams: context.resolveParams(props.pageparams)
+    });
 };
 
 export default addToolButton;

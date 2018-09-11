@@ -20,16 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import * as propTypes from 'prop-types';
+import React from 'react';
+import propTypes from 'prop-types';
 
-import Protypo, { IParamsSpec } from '../Protypo';
+import Protypo from '../Protypo';
 
 export interface IToolButtonProps {
     title?: string;
     icon?: string;
     page?: string;
-    pageparams?: IParamsSpec;
+    pageparams?: {
+        [name: string]: string;
+    };
     onClick: (e: any) => void;
 }
 

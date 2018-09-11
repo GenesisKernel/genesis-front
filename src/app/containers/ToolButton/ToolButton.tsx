@@ -25,7 +25,6 @@ import uuid from 'uuid';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
 import { buttonInteraction } from 'modules/content/actions';
-import { IParamsSpec } from 'components/Protypo/Protypo';
 
 import ToolButton from 'components/Protypo/components/ToolButton';
 
@@ -34,7 +33,9 @@ export interface IToolButtonProps {
     icon?: string;
     // Redirect if all previous actions succeeded
     page?: string;
-    pageparams?: IParamsSpec;
+    pageparams?: {
+        [name: string]: string;
+    };
 
     // Page must be rendered within a modal dialog
     popup?: {
