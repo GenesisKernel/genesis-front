@@ -40,11 +40,15 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
             name: action.payload.tx.contract.name
 
         })).flatMap(contract => {
-            const contractTx = new Contract(contract.id, defaultSchema, contract.fields.map(l => ({
-                name: l.name,
-                type: l.txtype,
-                value: action.payload.tx.contract.params[l.name]
-            })));
+            const contractTx = new Contract(
+                contract.id,
+                defaultSchema,
+                contract.fields.map(l => ({
+                    name: l.name,
+                    type: l.txtype,
+                    value: action.payload.tx.contract.params[l.name]
+                }))
+            );
             contractTx.sign(action.payload.privateKey);
 
             return Observable.from(Promise.all([

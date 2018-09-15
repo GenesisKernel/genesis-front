@@ -30,7 +30,7 @@ class BooleanField implements IField<string> {
     }
 
     get() {
-        return String(this._value);
+        return this._value ? String(this._value) : '';
     }
 
     forSign() {

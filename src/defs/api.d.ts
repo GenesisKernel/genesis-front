@@ -97,7 +97,7 @@ declare module 'genesis/api' {
             name: string;
             htmltype: string;
             txtype: string;
-            tags: string;
+            tags: string[];
         }[];
     }
 

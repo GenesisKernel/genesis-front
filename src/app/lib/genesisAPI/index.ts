@@ -221,7 +221,16 @@ class GenesisAPI {
         responseTransformer: response => response.ecosystem_name
     });
     public getConfig = this.setEndpoint<{ name: TConfigRequest }, string>('get', 'config/{name}', { requestTransformer: request => null });
-    public getContract = this.setSecuredEndpoint<IContractRequest, IContractResponse>('get', 'contract/{name}', { requestTransformer: request => null });
+    public getContract = this.setSecuredEndpoint<IContractRequest, IContractResponse>('get', 'contract/{name}', {
+        requestTransformer: request => null,
+        responseTransformer: response => ({
+            ...response,
+            fields: response.fields.map((l: any) => ({
+                ...l,
+                tags: l.tags ? l.tags.split(' ') : []
+            }))
+        })
+    });
     public getContracts = this.setSecuredEndpoint<ISegmentRequest, IContractsResponse>('get', 'contracts');
     public getParam = this.setSecuredEndpoint<IParamRequest, IParamResponse>('get', 'ecosystemparam/{name}', { requestTransformer: request => null });
     public getParams = this.setSecuredEndpoint<IParamsRequest, IParamsResponse>('get', 'ecosystemparams', {

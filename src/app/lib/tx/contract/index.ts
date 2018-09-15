@@ -85,14 +85,12 @@ export default class Contract {
         if (fields.length) {
             signParts.push(fields);
         }
-
         return signParts.join(',');
     }
 
     sign(privateKey: string) {
         const publicKey = privateToPublic(privateKey);
         const forSign = this.getStringForSign();
-
         this._publicKey = convert.toArrayBuffer(publicKey);
         this._keyID = new Int64BE(address(publicKey));
         this._binSignatures = encodeLengthPlusData(convert.toArrayBuffer(sign(forSign, privateKey)));
@@ -100,7 +98,6 @@ export default class Contract {
 
     serialize() {
         const params = this._fields.map(l => l.proto.get());
-
         const codec = msgpack.createCodec({
             binarraybuffer: true,
             preset: true

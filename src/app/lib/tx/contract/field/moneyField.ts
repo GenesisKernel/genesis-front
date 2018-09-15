@@ -30,11 +30,11 @@ class MoneyField implements IField<string> {
     }
 
     get() {
-        return this._value;
+        return this._value || '';
     }
 
     forSign() {
-        return this._value ? this._value : '';
+        return this._value || '';
     }
 }
 
