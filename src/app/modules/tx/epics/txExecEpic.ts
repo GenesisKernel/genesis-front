@@ -28,6 +28,7 @@ import { txExec } from '../actions';
 import { authorize } from 'modules/auth/actions';
 import { TTxError } from 'genesis/tx';
 import { enqueueNotification } from '../../notifications/actions';
+import { Int64BE } from 'int64-buffer';
 import Contract from 'lib/tx/contract';
 import defaultSchema from 'lib/tx/schema/defaultSchema';
 
@@ -39,21 +40,24 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
         return Observable.from(client.getContract({
             name: action.payload.tx.contract.name
 
-        })).flatMap(contract => {
-            const contractTx = new Contract(
-                contract.id,
-                defaultSchema,
-                contract.fields.map(l => ({
+        })).flatMap(proto => {
+            const contract = new Contract({
+                id: proto.id,
+                schema: defaultSchema,
+                keyID: new Int64BE(state.auth.id, 10),
+                ecosystemID: state.auth.ecosystem ? parseInt(state.auth.ecosystem, 10) : 1,
+                roleID: state.auth.role ? state.auth.role.id : 0,
+                fields: proto.fields.map(l => ({
                     name: l.name,
                     type: l.txtype,
                     value: action.payload.tx.contract.params[l.name]
                 }))
-            );
-            contractTx.sign(action.payload.privateKey);
+            });
+            contract.sign(action.payload.privateKey);
 
             return Observable.from(Promise.all([
                 client.txSend({
-                    data: new Blob([contractTx.serialize()], { type: 'application/octet-stream' })
+                    data: new Blob([contract.serialize()], { type: 'application/octet-stream' })
 
                 }),
                 // TODO: REMOVE ME

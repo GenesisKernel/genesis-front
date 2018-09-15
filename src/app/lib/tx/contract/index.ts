@@ -28,6 +28,15 @@ import { encodeLengthPlusData, concatBuffer } from '../convert';
 import { ISchema } from 'lib/tx/schema';
 import { IField } from 'lib/tx/contract/field';
 
+export interface IContractContext {
+    id: number;
+    schema: ISchema;
+    keyID: Int64BE;
+    ecosystemID: number;
+    roleID: number;
+    fields: IContractParam[];
+}
+
 export interface IContractParam {
     name: string;
     type: string;
@@ -38,12 +47,8 @@ export default class Contract {
     // DEPRECATED
     private readonly _requestID: string = '';
 
-    private _id: number = 279;
-    private _schema: ISchema;
+    private _context: IContractContext;
     private _time: number;
-    private _keyID: Int64BE = new Int64BE('-4266021234179922125', 10);
-    private _ecosystemID: number = 1;
-    private _roleID: number = 0;
     private _tokenEcosystem: number = 0;
     private _maxSum: string;
     private _payOver: string;
@@ -55,12 +60,13 @@ export default class Contract {
         proto: IField<object>
     }[];
 
-    constructor(id: number, schema: ISchema, fields: IContractParam[]) {
-        this._id = id;
-        this._schema = schema;
+    constructor(context: IContractContext) {
+        // tslint:disable-next-line:no-console
+        console.log(context);
+        this._context = context;
         this._time = Math.floor((new Date()).getTime() / 1000);
-        this._fields = fields.map(l => {
-            const Field = schema.fields[l.type];
+        this._fields = this._context.fields.map(l => {
+            const Field = this._context.schema.fields[l.type];
             const field = new Field();
             field.set(l.value);
 
@@ -77,8 +83,8 @@ export default class Contract {
         ).join(',');
 
         const signParts = [
-            this._requestID, this._id, this._time,
-            this._keyID, this._ecosystemID,
+            this._requestID, this._context.id, this._time,
+            this._context.keyID, this._context.ecosystemID,
             this._tokenEcosystem, this._maxSum, this._payOver, this._signedBy
         ];
 
@@ -92,7 +98,7 @@ export default class Contract {
         const publicKey = privateToPublic(privateKey);
         const forSign = this.getStringForSign();
         this._publicKey = convert.toArrayBuffer(publicKey);
-        this._keyID = new Int64BE(address(publicKey));
+        this._context.keyID = new Int64BE(address(publicKey));
         this._binSignatures = encodeLengthPlusData(convert.toArrayBuffer(sign(forSign, privateKey)));
     }
 
@@ -106,12 +112,12 @@ export default class Contract {
         const txBuffer = msgpack.encode(
             {
                 Header: {
-                    Type: this._id,
+                    Type: this._context.id,
                     Time: this._time,
-                    EcosystemID: this._ecosystemID,
-                    KeyID: this._keyID,
-                    RoleID: this._roleID,
-                    NetworkID: this._schema.network,
+                    EcosystemID: this._context.ecosystemID,
+                    KeyID: this._context.keyID,
+                    RoleID: this._context.roleID,
+                    NetworkID: this._context.schema.network,
                     PublicKey: this._publicKey,
                     BinSignatures: this._binSignatures
                 },
@@ -122,7 +128,7 @@ export default class Contract {
             }
         );
 
-        return concatBuffer(this._schema.header, txBuffer);
+        return concatBuffer(this._context.schema.header, txBuffer);
     }
 
     setParam(key: string, value: any) {
