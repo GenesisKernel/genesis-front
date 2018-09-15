@@ -61,8 +61,6 @@ export default class Contract {
     }[];
 
     constructor(context: IContractContext) {
-        // tslint:disable-next-line:no-console
-        console.log(context);
         this._context = context;
         this._time = Math.floor((new Date()).getTime() / 1000);
         this._fields = this._context.fields.map(l => {
