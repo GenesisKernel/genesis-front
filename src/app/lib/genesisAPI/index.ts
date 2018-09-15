@@ -294,6 +294,7 @@ class GenesisAPI {
     public txPrepare = this.setSecuredEndpoint<ITxPrepareRequest, ITxPrepareResponse>('post', 'prepare/{name}', {
         requestTransformer: request => request.params
     });
+    public txSend = this.setSecuredEndpoint<{ data: any }, any>('post', 'sendTx');
     public txStatus = this.setSecuredEndpoint<ITxStatusRequest, ITxStatusResponse>('get', 'txstatus/{hash}', { requestTransformer: () => null });
 
     // Transactions batch-processing

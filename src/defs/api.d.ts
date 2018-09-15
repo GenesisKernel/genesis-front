@@ -89,13 +89,14 @@ declare module 'genesis/api' {
     }
 
     interface IContractResponse {
+        id: number;
         name: string;
         active: boolean;
         tableid: number;
         fields: {
             name: string;
             htmltype: string;
-            type: string;
+            txtype: string;
             tags: string;
         }[];
     }

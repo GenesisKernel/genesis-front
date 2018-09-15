@@ -22,7 +22,7 @@
 
 import { Epic } from 'modules';
 import { Observable } from 'rxjs';
-import { txCall, txAuthorize, txPrepare, txPrepareBatch } from '../actions';
+import { txCall, txAuthorize, txPrepareBatch, txExec } from '../actions';
 import { isType } from 'typescript-fsa';
 import keyring from 'lib/keyring';
 
@@ -63,7 +63,7 @@ const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall)
                 }));
             }
             else if (action.payload.contract) {
-                return Observable.of(txPrepare({
+                return Observable.of(txExec.started({
                     tx: action.payload,
                     privateKey
                 }));

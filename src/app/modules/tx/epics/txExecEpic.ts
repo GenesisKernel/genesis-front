@@ -25,25 +25,41 @@ import { Action } from 'redux';
 import { Epic } from 'modules';
 import { Observable } from 'rxjs';
 import { txExec } from '../actions';
-import keyring from 'lib/keyring';
 import { authorize } from 'modules/auth/actions';
 import { TTxError } from 'genesis/tx';
 import { enqueueNotification } from '../../notifications/actions';
+import Contract from 'lib/tx/contract';
+import defaultSchema from 'lib/tx/schema/defaultSchema';
 
 export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(txExec.started)
     .flatMap(action => {
         const state = store.getState();
         const client = api(state.auth.session);
-        const publicKey = keyring.generatePublicKey(action.payload.privateKey, true);
 
-        return Observable.fromPromise(client.txCall({
-            requestID: action.payload.requestID,
-            pubkey: publicKey,
-            signature: action.payload.signature,
-            time: action.payload.time
+        return Observable.from(client.getContract({
+            name: action.payload.tx.contract.name
 
-        })).flatMap(result => Observable.defer(() => client.txStatus({
-            hash: result.hash
+        })).flatMap(contract => {
+            const contractTx = new Contract(contract.id, defaultSchema, contract.fields.map(l => ({
+                name: l.name,
+                type: l.txtype,
+                value: action.payload.tx.contract.params[l.name]
+            })));
+            contractTx.sign(action.payload.privateKey);
+
+            return Observable.from(Promise.all([
+                client.txSend({
+                    data: new Blob([contractTx.serialize()], { type: 'application/octet-stream' })
+
+                }),
+                // TODO: REMOVE ME
+                client.txPrepare({
+                    name: action.payload.tx.contract.name,
+                    params: action.payload.tx.contract.params
+                })
+            ]));
+        }).flatMap(result => Observable.defer(() => client.txStatus({
+            hash: result[0].hash
 
         }).then(status => {
             if (!status.blockid && !status.errmsg) {
