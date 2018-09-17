@@ -79,6 +79,7 @@
     "editor.tool.designer": "Designer",
     "editor.tool.preview": "Preview",
     "editor.untitled": "Untitled-{id}",
+    "editor.designer.emptyform": "Empty form. Drop elements here.",
     "exec": "Exec",
     "general.about": "About",
     "general.wallet.backup": "Backup wallet",

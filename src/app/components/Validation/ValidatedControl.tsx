@@ -81,7 +81,9 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
     }
 
     onBlur(e: React.FocusEvent<FormControl>) {
-        (this.context.form as ValidatedForm).updateState(this.props.name);
+        if (this.context.form) {
+            (this.context.form as ValidatedForm).updateState(this.props.name);
+        }
 
         if (this.props.onBlur) {
             this.props.onBlur(e);
