@@ -54,6 +54,14 @@ export default class EditableBlock extends React.Component<IEditableBlockProps, 
     protected renderTag = 'div';
     protected editable = true;
     protected canMove = true;
+
+    private _text = '';
+
+    constructor(props: IEditableBlockProps) {
+        super(props);
+        this._text = props.childrenText;
+    }
+
     notEmpty(childrenText: string) {
         return childrenText !== undefined && childrenText !== null && childrenText.length >= 0;
     }
@@ -109,7 +117,11 @@ export default class EditableBlock extends React.Component<IEditableBlockProps, 
     }
 
     handleChange(e: any) {
-        this.props.changePage({text: e.target.value, tagID: this.props.tag.id});
+        this._text = e.target.value;
+    }
+
+    handleBlur() {
+        this.props.changePage({text: this._text, tagID: this.props.tag.id});
     }
 
     removeTag() {
@@ -126,6 +138,7 @@ export default class EditableBlock extends React.Component<IEditableBlockProps, 
                 className={classes}
                 html={this.props.childrenText}
                 onChange={this.handleChange.bind(this)}
+                onBlur={this.handleBlur.bind(this)}
             />
         );
     }

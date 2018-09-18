@@ -137,3 +137,7 @@ export function htmlJsonChild2childrenTags(nodes: IHtmlJsonNode[]): TProtypoElem
 
     return children;
 }
+
+export function stripNewlineTags(html: string): string {
+    return html.replace(/(<br>|<div>|<\/div>)/g, ' ');
+}
