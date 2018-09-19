@@ -118,6 +118,8 @@ function generateProtypoElement(node: IHtmlJsonNode) {
         case 'b':
         case 'strong':
             return getProtypoElement('strong', className, node.child);
+        case 'span':
+            return getProtypoElement('span', className, node.child);
         default:
             return null;
     }
