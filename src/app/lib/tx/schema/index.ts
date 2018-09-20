@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { IField } from 'lib/tx/contract/field';
+import IField from 'lib/tx/contract/field';
 
 export interface ISchema {
     header: Uint8Array;

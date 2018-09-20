@@ -27,10 +27,10 @@ import { Observable } from 'rxjs';
 import { txExec } from '../actions';
 import { authorize } from 'modules/auth/actions';
 import { TTxError } from 'genesis/tx';
-import { enqueueNotification } from '../../notifications/actions';
-import { Int64BE } from 'int64-buffer';
-import Contract from 'lib/tx/contract';
+import { enqueueNotification } from 'modules/notifications/actions';
+import Contract, { IContractParam } from 'lib/tx/contract';
 import defaultSchema from 'lib/tx/schema/defaultSchema';
+import fileObservable from 'modules/io/util/fileObservable';
 
 export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(txExec.started)
     .flatMap(action => {
@@ -40,34 +40,51 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
         return Observable.from(client.getContract({
             name: action.payload.tx.contract.name
 
-        })).flatMap(proto => {
-            const contract = new Contract({
-                id: proto.id,
-                schema: defaultSchema,
-                keyID: new Int64BE(state.auth.id, 10),
-                ecosystemID: state.auth.ecosystem ? parseInt(state.auth.ecosystem, 10) : 1,
-                roleID: state.auth.role ? state.auth.role.id : 0,
-                fields: proto.fields.map(l => ({
-                    name: l.name,
-                    type: l.txtype,
-                    value: action.payload.tx.contract.params[l.name]
-                }))
-            });
-            contract.sign(action.payload.privateKey);
+        })).flatMap(proto => Observable.from(proto.fields)
+            .filter(l => l.txtype === '[]uint8' && action.payload.tx.contract.params[l.name])
+            .flatMap(field =>
+                fileObservable(action.payload.tx.contract.params[field.name])
+                    .map(buffer => {
+                        const blob = action.payload.tx.contract.params[field.name] as File;
+                        return {
+                            field: field.name,
+                            name: blob.name,
+                            type: blob.type,
+                            value: buffer,
+                        };
+                    })
+            ).toArray()
+            .flatMap(files => {
+                const fields: { [name: string]: IContractParam } = {};
+                proto.fields.forEach(field => {
+                    const file = files.find(f => f.field === field.name);
+                    fields[field.name] = {
+                        type: field.txtype,
+                        value: file ? {
+                            name: file.name,
+                            type: file.type,
+                            value: file.value
+                        } : action.payload.tx.contract.params[field.name]
+                    };
+                });
 
-            return Observable.from(Promise.all([
-                client.txSend({
-                    data: new Blob([contract.serialize()], { type: 'application/octet-stream' })
+                const contract = new Contract({
+                    id: proto.id,
+                    schema: defaultSchema,
+                    ecosystemID: state.auth.ecosystem ? parseInt(state.auth.ecosystem, 10) : 1,
+                    roleID: state.auth.role ? state.auth.role.id : 0,
+                    fields
+                });
+                const signature = contract.sign(action.payload.privateKey);
 
-                }),
-                // TODO: REMOVE ME
-                client.txPrepare({
-                    name: action.payload.tx.contract.name,
-                    params: action.payload.tx.contract.params
-                })
-            ]));
-        }).flatMap(result => Observable.defer(() => client.txStatus({
-            hash: result[0].hash
+                return Observable.from(client.txSend({
+                    data: new Blob([signature], { type: 'application/octet-stream' })
+
+                }));
+            })
+
+        ).flatMap(result => Observable.defer(() => client.txStatus({
+            hash: result.hash
 
         }).then(status => {
             if (!status.blockid && !status.errmsg) {

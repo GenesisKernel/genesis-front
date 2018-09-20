@@ -20,28 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { IField } from './';
-import { Int64BE } from 'int64-buffer';
+import IField from './';
 
-class IntegerField implements IField<Int64BE> {
-    private _value: Int64BE = new Int64BE();
+class Boolean implements IField<string | boolean, boolean> {
+    private _value: boolean = false;
 
-    set(value: Int64BE | string) {
-        if ('string' === typeof value) {
-            this._value = new Int64BE(value);
+    set(value: string | boolean) {
+        if (!value) {
+            this._value = false;
         }
-        else {
+        else if ('boolean' === typeof value) {
             this._value = value;
         }
+        else {
+            this._value = /^\s*(true|1(.(0)+)?)\s*$/i.test(value || '');
+        }
     }
 
-    get(): Int64BE {
+    get() {
         return this._value;
-    }
-
-    forSign(): string {
-        return this._value ? String(this._value) : '';
     }
 }
 
-export default IntegerField;
+export default Boolean;

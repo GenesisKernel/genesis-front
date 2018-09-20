@@ -20,23 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { IField } from './';
+import IField from './';
+import { Int64BE } from 'int64-buffer';
 
-class FloatField implements IField<string> {
-    private _value: number;
+class Integer implements IField<Int64BE | string | number, Int64BE> {
+    private _value: Int64BE = new Int64BE();
 
-    set(value: string) {
-        const val = parseFloat(value);
-        this._value = val === val ? val : null;
+    set(value: Int64BE | string | number) {
+        if (!value) {
+            this._value = new Int64BE();
+        }
+        else if ('string' === typeof value) {
+            this._value = new Int64BE(value);
+        }
+        else if ('number' === typeof value) {
+            this._value = new Int64BE(value);
+        }
+        else {
+            this._value = value;
+        }
     }
 
-    get() {
-        return this._value ? String(this._value) : '';
-    }
-
-    forSign() {
-        return this._value ? String(this._value).replace(',', '.') : '';
+    get(): Int64BE {
+        return this._value;
     }
 }
 
-export default FloatField;
+export default Integer;

@@ -25,6 +25,7 @@ import jsrsasign from 'jsrsasign';
 import CryptoJS, { SHA256, SHA512, LibWordArray } from 'crypto-js';
 import crc64 from './crc64';
 import Long from 'long';
+import { toArrayBuffer } from 'lib/tx/convert';
 
 const curveName = 'secp256r1';
 const signAlg = 'SHA256withECDSA';
@@ -73,7 +74,7 @@ export const privateToPublic = (privateKey: string) => {
 export const sign = (data: string, privateKey: string): string => {
     const signature = new jsrsasign.crypto.Signature({ alg: signAlg });
     signature.init({ d: privateKey, curve: curveName });
-    signature.updateString(data);
+    signature.updateHex(data);
     return signature.sign();
 };
 
@@ -92,6 +93,8 @@ export const address = (publicKey: string) => {
     return crcLong.sub(remainder(crc, 10)).add(addrChecksum).toString();
 };
 
-export const sha256 = (buffer: Uint8Array | ArrayBuffer): string => {
-    return SHA256(CryptoJS.lib.WordArray.create(buffer)).toString();
+export const doubleHash = (buffer: Uint8Array | ArrayBuffer): ArrayBuffer => {
+    const a = SHA256(CryptoJS.lib.WordArray.create(buffer));
+    const b = SHA256(a as any);
+    return toArrayBuffer(b.toString());
 };

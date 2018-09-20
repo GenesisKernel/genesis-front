@@ -20,30 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { IField } from './';
+import IField from './';
 
-class StringCollectionField implements IField<string[]> {
-    private _value: string[] = [];
+class Float implements IField<string | number, number> {
+    private _value: number;
 
-    set(value: string[] | object) {
-        if (!value) {
-            this._value = [];
+    set(value: string | number) {
+        if ('number' === typeof value) {
+            this._value = value === value ? value : 0;
         }
-        else if (!Array.isArray(value)) {
-            value = [value.toString()];
+        else if ('string' === typeof value) {
+            const val = parseFloat(value);
+            this._value = val === val ? val : 0;
         }
         else {
-            this._value = value.map(v => v.toString());
+            this._value = 0;
         }
     }
 
-    get(): string[] {
+    get() {
         return this._value;
-    }
-
-    forSign(): string {
-        return this._value ? [this._value.length, ...this._value].join(',') : '';
     }
 }
 
-export default StringCollectionField;
+export default Float;

@@ -20,8 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-export interface IField<T> {
-    set(value: T): void;
-    get(): T;
-    forSign(): string;
+export default interface IField<I = object, O = I> {
+    set(value: I): void;
+    get(): O;
 }

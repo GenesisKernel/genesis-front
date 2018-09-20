@@ -20,23 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { IField } from './';
-import { sha256 } from 'lib/crypto';
+import { Observable } from 'rxjs';
 
-class BinaryField implements IField<ArrayBuffer> {
-    private _value: ArrayBuffer = new ArrayBuffer(0);
+const fileObservable = (blob: Blob): Observable<ArrayBuffer> => new Observable(obs => {
+    const reader = new FileReader();
 
-    set(value: ArrayBuffer) {
-        this._value = value;
-    }
+    reader.onerror = err => obs.error(err);
+    reader.onabort = err => obs.error(err);
+    reader.onload = () => obs.next(reader.result as ArrayBuffer);
+    reader.onloadend = () => obs.complete();
 
-    get() {
-        return this._value;
-    }
+    return reader.readAsArrayBuffer(blob);
+});
 
-    forSign(): string {
-        return this._value ? sha256(this._value) : '';
-    }
-}
-
-export default BinaryField;
+export default fileObservable;

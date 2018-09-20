@@ -20,22 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { IField } from './';
+import IField from './';
 
-class StringField implements IField<string> {
+class Money implements IField<string, string> {
     private _value: string = '';
 
     set(value: string) {
-        this._value = value ? value.toString() : null;
+        this._value = value ? value.toString().replace(',', '.') : '';
     }
 
     get() {
-        return this._value || '';
-    }
-
-    forSign() {
-        return this._value || '';
+        return this._value;
     }
 }
 
-export default StringField;
+export default Money;

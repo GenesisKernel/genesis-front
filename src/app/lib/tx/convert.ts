@@ -20,6 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// tslint:disable:no-bitwise
+import { Uint64BE } from 'int64-buffer';
+
 export const toHex = (buffer: ArrayBuffer): string => {
     return Array.prototype.map.call(new Uint8Array(buffer), (x: number) =>
         ('00' + x.toString(16)).slice(-2)
@@ -34,23 +37,27 @@ export const toArrayBuffer = (hex: string): ArrayBuffer => {
     return uint8.buffer;
 };
 
-export const encodeLengthPlusData = (buffer: Uint8Array | ArrayBuffer): ArrayBuffer => {
-    if (buffer instanceof ArrayBuffer) {
-        buffer = new Uint8Array(buffer);
+export const encodeLength = (length: number): Uint8Array => {
+    if (length >= 0 && length < 128) {
+        const value = new Uint8Array(1);
+        value[0] = length;
+        return value;
     }
 
-    if (buffer.length > 255) {
-        throw new Error('Data that is longer than 255 is not supported');
+    const buffer = ((new Uint64BE(length)) as any).buffer;
+    let i = 1;
+    while (buffer[i] === 0 && i < buffer.length) {
+        i++;
+    }
+    let offset = buffer.length - i;
+
+    const uint8 = new Uint8Array(1 + offset);
+    uint8[0] = 128 | offset;
+    for (let n = 1; i <= buffer.length; n++ , i++) {
+        uint8[n] = buffer[i];
     }
 
-    const uint8 = new Uint8Array(buffer.length + 1);
-    uint8[0] = buffer.length;
-
-    for (let i = 0; i < buffer.length; i++) {
-        uint8[i + 1] = buffer[i];
-    }
-
-    return uint8.buffer;
+    return uint8;
 };
 
 export const concatBuffer = (a: Uint8Array | ArrayBuffer, b: Uint8Array | ArrayBuffer): ArrayBuffer => {
@@ -72,4 +79,12 @@ export const concatBuffer = (a: Uint8Array | ArrayBuffer, b: Uint8Array | ArrayB
     }
 
     return uint8.buffer;
+};
+
+export const encodeLengthPlusData = (buffer: Uint8Array | ArrayBuffer): ArrayBuffer => {
+    if (buffer instanceof ArrayBuffer) {
+        buffer = new Uint8Array(buffer);
+    }
+
+    return concatBuffer(encodeLength(buffer.length), buffer);
 };

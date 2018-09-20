@@ -20,27 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { ISchema } from './';
-import Boolean from '../contract/field/boolean';
-import Integer from '../contract/field/integer';
-import Float from '../contract/field/float';
-import Money from '../contract/field/money';
-import String from '../contract/field/string';
-import File from '../contract/field/file';
-import StringCollection from '../contract/field/stringCollection';
+import IField from './';
 
-const defaultSchema: ISchema = {
-    header: new Uint8Array([0x80]),
-    network: 1,
-    fields: {
-        'bool': Boolean,
-        'int64': Integer,
-        'float64': Float,
-        'decimal.Decimal': Money,
-        'string': String,
-        '*types.File': File,
-        '[]interface {}': StringCollection,
+export interface IFileStruct {
+    name: string;
+    type: string;
+    value: ArrayBuffer;
+}
+
+export interface IFileData {
+    Name: string;
+    MimeType: string;
+    Body: ArrayBuffer;
+}
+
+class File implements IField<IFileStruct, IFileData> {
+    private _value: IFileStruct;
+
+    set(value: IFileStruct) {
+        this._value = value;
     }
-};
 
-export default defaultSchema;
+    get() {
+        return this._value ? {
+            Name: this._value.name,
+            MimeType: this._value.type,
+            Body: this._value.value
+        } : null;
+    }
+}
+
+export default File;

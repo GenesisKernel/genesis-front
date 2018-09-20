@@ -20,22 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { IField } from './';
+import IField from './';
 
-class BooleanField implements IField<string> {
-    private _value: boolean = false;
+class String implements IField<string> {
+    private _value: string = '';
 
     set(value: string) {
-        this._value = /^\s*(true|1(.(0)+)?)\s*$/i.test(value || '');
+        this._value = value ? value.toString() : '';
     }
 
     get() {
-        return this._value ? String(this._value) : '';
-    }
-
-    forSign() {
-        return this._value ? String(this._value) : '';
+        return this._value;
     }
 }
 
-export default BooleanField;
+export default String;
