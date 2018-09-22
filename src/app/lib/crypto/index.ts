@@ -25,7 +25,9 @@ import jsrsasign from 'jsrsasign';
 import CryptoJS, { SHA256, SHA512, LibWordArray } from 'crypto-js';
 import crc64 from './crc64';
 import Long from 'long';
-import { toArrayBuffer } from 'lib/tx/convert';
+
+export type THashInput =
+    Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer;
 
 const curveName = 'secp256r1';
 const signAlg = 'SHA256withECDSA';
@@ -93,8 +95,12 @@ export const address = (publicKey: string) => {
     return crcLong.sub(remainder(crc, 10)).add(addrChecksum).toString();
 };
 
-export const doubleHash = (buffer: Uint8Array | ArrayBuffer): ArrayBuffer => {
-    const a = SHA256(CryptoJS.lib.WordArray.create(buffer));
-    const b = SHA256(a as any);
-    return toArrayBuffer(b.toString());
+export const Sha256 = async (data: THashInput) => {
+    if (!window.crypto || !window.crypto.subtle || !window.crypto.subtle.digest) {
+        throw {
+            type: 'E_CRYPTO_UNAVAILABLE'
+        };
+    }
+
+    return await crypto.subtle.digest({ name: 'SHA-256' }, data);
 };

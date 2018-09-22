@@ -41,7 +41,7 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
             name: action.payload.tx.contract.name
 
         })).flatMap(proto => Observable.from(proto.fields)
-            .filter(l => l.txtype === '[]uint8' && action.payload.tx.contract.params[l.name])
+            .filter(l => l.txtype === 'types.File' && action.payload.tx.contract.params[l.name])
             .flatMap(field =>
                 fileObservable(action.payload.tx.contract.params[field.name])
                     .map(buffer => {
@@ -75,12 +75,12 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                     roleID: state.auth.role ? state.auth.role.id : 0,
                     fields
                 });
-                const signature = contract.sign(action.payload.privateKey);
 
-                return Observable.from(client.txSend({
-                    data: new Blob([signature], { type: 'application/octet-stream' })
-
-                }));
+                return Observable.from(contract.sign(action.payload.privateKey)).flatMap(signature =>
+                    client.txSend({
+                        data: new Blob([signature], { type: 'application/octet-stream' })
+                    })
+                );
             })
 
         ).flatMap(result => Observable.defer(() => client.txStatus({

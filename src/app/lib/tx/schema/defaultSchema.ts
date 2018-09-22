@@ -38,7 +38,7 @@ const defaultSchema: ISchema = {
         'float64': Float,
         'decimal.Decimal': Money,
         'string': String,
-        '*types.File': File,
+        'types.File': File,
         '[]interface {}': StringCollection,
     }
 };

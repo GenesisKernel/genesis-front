@@ -23,7 +23,7 @@
 import msgpack from 'msgpack-lite';
 import * as convert from 'lib/tx/convert';
 import { Int64BE } from 'int64-buffer';
-import { privateToPublic, address, sign, doubleHash } from 'lib/crypto';
+import { privateToPublic, address, sign, Sha256 } from 'lib/crypto';
 import { encodeLengthPlusData, concatBuffer } from '../convert';
 import { ISchema } from 'lib/tx/schema';
 import IField from 'lib/tx/contract/field';
@@ -64,14 +64,16 @@ export default class Contract {
         });
     }
 
-    sign(privateKey: string) {
+    async sign(privateKey: string) {
         const publicKey = privateToPublic(privateKey);
         this._publicKey = convert.toArrayBuffer(publicKey);
         this._keyID = new Int64BE(address(publicKey));
 
         const data = this.serialize();
-        const hash = convert.toHex(doubleHash(data));
-        const signature = convert.toArrayBuffer(sign(hash, privateKey));
+        const txHash = await Sha256(data);
+        const resultHash = await Sha256(txHash);
+        const hexHash = await convert.toHex(resultHash);
+        const signature = convert.toArrayBuffer(sign(hexHash, privateKey));
 
         return concatBuffer(
             this._context.schema.header,
