@@ -27,10 +27,6 @@ import { ITransaction } from 'genesis/tx';
 import txExecHandler from './reducers/txExecHandler';
 import txExecDoneHandler from './reducers/txExecDoneHandler';
 import txExecFailedHandler from './reducers/txExecFailedHandler';
-import txExecBatchHandler from './reducers/txExecBatchHandler';
-import txExecBatchDoneHandler from './reducers/txExecBatchDoneHandler';
-import txBatchStatusHandler from './reducers/txBatchStatusHandler';
-import txExecBatchFailedHandler from './reducers/txExecBatchFailedHandler';
 
 export type State = {
     readonly transactions: OrderedMap<string, ITransaction>;
@@ -43,8 +39,4 @@ export const initialState: State = {
 export default reducerWithInitialState(initialState)
     .case(actions.txExec.started, txExecHandler)
     .case(actions.txExec.done, txExecDoneHandler)
-    .case(actions.txExec.failed, txExecFailedHandler)
-    .case(actions.txExecBatch.started, txExecBatchHandler)
-    .case(actions.txExecBatch.done, txExecBatchDoneHandler)
-    .case(actions.txExecBatch.failed, txExecBatchFailedHandler)
-    .case(actions.txBatchStatus, txBatchStatusHandler);
+    .case(actions.txExec.failed, txExecFailedHandler);

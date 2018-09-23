@@ -22,7 +22,7 @@
 
 import { Epic } from 'modules';
 import { Observable } from 'rxjs';
-import { txCall, txAuthorize, txPrepareBatch, txExec } from '../actions';
+import { txCall, txAuthorize, txExec } from '../actions';
 import { isType } from 'typescript-fsa';
 import keyring from 'lib/keyring';
 
@@ -31,15 +31,13 @@ const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall)
     .flatMap(action => {
         const privateKey = store.getState().auth.privateKey;
         const contractName = action.payload.contract ? action.payload.contract.name : null;
-        const batch = action.payload.contracts && 0 < action.payload.contracts.length;
 
         return Observable.if(
             () => keyring.validatePrivateKey(privateKey),
             Observable.of(action),
             Observable.merge(
                 Observable.of(txAuthorize.started({
-                    contract: contractName,
-                    batch
+                    contract: contractName
                 })),
                 action$.filter(l => txAuthorize.done.match(l) || txAuthorize.failed.match(l))
                     .take(1)
@@ -55,22 +53,10 @@ const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall)
     .flatMap(action => {
         if (isType(action, txCall)) {
             const privateKey = store.getState().auth.privateKey;
-
-            if (action.payload.contracts && action.payload.contracts.length) {
-                return Observable.of(txPrepareBatch({
-                    tx: action.payload,
-                    privateKey
-                }));
-            }
-            else if (action.payload.contract) {
-                return Observable.of(txExec.started({
-                    tx: action.payload,
-                    privateKey
-                }));
-            }
-            else {
-                return Observable.empty<never>();
-            }
+            return Observable.of(txExec.started({
+                tx: action.payload,
+                privateKey
+            }));
         }
         else {
             return Observable.of(action);

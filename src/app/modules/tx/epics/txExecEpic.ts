@@ -125,13 +125,7 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                 }
             }
             else {
-                return Observable.of(txExec.failed({
-                    params: action.payload,
-                    error: {
-                        type: txResult.errmsg.type as TTxError,
-                        error: txResult.errmsg.error
-                    }
-                }));
+                throw txResult;
             }
 
         })).catch(error => Observable.of(txExec.failed({

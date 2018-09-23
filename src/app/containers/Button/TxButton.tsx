@@ -115,20 +115,7 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonState & ITxButt
 
     isPending = () => {
         const tx = this.props.transactions.get(this._uuid);
-        if (tx) {
-            if (tx.contract) {
-                return !tx.error && !tx.block;
-            }
-            else if (tx.batch) {
-                return 0 < tx.batch.pending;
-            }
-            else {
-                return false;
-            }
-        }
-        else {
-            return false;
-        }
+        return tx && !tx.error && !tx.block;
     }
 
     render() {

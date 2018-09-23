@@ -29,7 +29,6 @@ declare module 'genesis/tx' {
         'warning' |
         'panic' |
         'E_CONTRACT' |
-        'E_INVALIDATED' |
         'E_SERVER';
 
     interface ITxResult {
@@ -49,27 +48,17 @@ declare module 'genesis/tx' {
         block?: string;
         result?: string;
         error?: ITxError;
-        batch?: {
-            pending: number;
-            contracts: string[];
-        }
     }
 
     interface ITransactionCall {
         uuid: string;
         silent?: boolean;
-        contract?: {
-            name: string;
-            params: {
-                [key: string]: any
-            };
-        };
-        contracts?: {
+        contract: {
             name: string;
             params: {
                 [key: string]: any;
-            }[];
-        }[];
+            };
+        };
     }
 
     interface IExecutionCall {
@@ -78,12 +67,5 @@ declare module 'genesis/tx' {
         privateKey?: string;
         signature?: string;
         time?: string;
-    }
-
-    interface IBatchExecutionCall {
-        uuid: string;
-        privateKey: string;
-        tx: ITransactionCall;
-        prepare: ITxPrepareBatchResponse;
     }
 }

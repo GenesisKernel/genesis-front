@@ -25,7 +25,7 @@ import { Observable } from 'rxjs/Observable';
 import { buttonInteraction } from 'modules/content/actions';
 import { isType } from 'typescript-fsa';
 import { ITransactionCall } from 'genesis/tx';
-import { txCall, txExecBatch, txExec } from 'modules/tx/actions';
+import { txCall, txExec } from 'modules/tx/actions';
 import { modalShow, modalClose, modalPage } from 'modules/modal/actions';
 import { navigatePage } from 'modules/sections/actions';
 
@@ -49,38 +49,29 @@ const buttonInteractionEpic: Epic = (action$, store, { api }) => action$.ofActio
             Observable.of(rootAction)
 
         ).flatMap(action => {
-            if (isType(action, buttonInteraction)) {
-                if (action.payload.contracts || action.payload.contract) {
-                    return Observable.merge(
-                        Observable.of(txCall(action.payload)),
-                        action$.filter(l => {
-                            if (action.payload.contract) {
-                                return isType(l, txExec.done) || isType(l, txExec.failed);
-                            }
-                            else if (action.payload.contracts) {
-                                return isType(l, txExecBatch.done) || isType(l, txExecBatch.failed);
-                            }
-                            else {
-                                return false;
-                            }
+            if (isType(action, buttonInteraction) && action.payload.contract) {
+                return Observable.merge(
+                    Observable.of(txCall({
+                        uuid: action.payload.uuid,
+                        silent: action.payload.silent,
+                        contract: action.payload.contract
+                    })),
+                    action$.filter(l =>
+                        isType(l, txExec.done) || isType(l, txExec.failed)
 
-                        }).filter(l => {
-                            const tx = l as any as { payload: { params: { tx: ITransactionCall } } };
-                            return action.payload.uuid === tx.payload.params.tx.uuid;
+                    ).filter(l => {
+                        const tx = l as any as { payload: { params: { tx: ITransactionCall } } };
+                        return action.payload.uuid === tx.payload.params.tx.uuid;
 
-                        }).take(1).flatMap(result => {
-                            if (isType(result, txExecBatch.done) || isType(result, txExec.done)) {
-                                return Observable.of(action);
-                            }
-                            else {
-                                return Observable.empty<never>();
-                            }
-                        })
-                    );
-                }
-                else {
-                    return Observable.of(action);
-                }
+                    }).take(1).flatMap(result => {
+                        if (isType(result, txExec.done)) {
+                            return Observable.of(action);
+                        }
+                        else {
+                            return Observable.empty<never>();
+                        }
+                    })
+                );
             }
             else {
                 return Observable.of(action);
