@@ -70,13 +70,9 @@ export const concatBuffer = (a: Uint8Array | ArrayBuffer, b: Uint8Array | ArrayB
     }
 
     const uint8 = new Uint8Array(a.length + b.length);
-    for (let i = 0; i < a.length; i++) {
-        uint8[i] = a[i];
 
-    }
-    for (let i = 0, j = a.length; i < b.length; i++ , j++) {
-        uint8[j] = b[i];
-    }
+    uint8.set(a, 0);
+    uint8.set(b, a.length);
 
     return uint8.buffer;
 };
