@@ -42,11 +42,13 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
             locale: state.storage.locale
 
         })).flatMap(payload => {
-            const validatingNodesCount = Math.min(state.storage.fullNodes.length, payload.nodesCount);
+            if (payload.nodesCount > state.storage.fullNodes.length) {
+                return Observable.throw(invalidationError);
+            }
 
             return NodeObservable({
                 nodes: state.storage.fullNodes,
-                count: validatingNodesCount,
+                count: payload.nodesCount,
                 concurrency: 3,
                 api
 
@@ -63,7 +65,7 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
             )).catch(e => Observable.throw(invalidationError)).toArray().map(result => {
                 const contentHash = keyring.hashData(payload.plainText);
 
-                if (validatingNodesCount !== result.length) {
+                if (payload.nodesCount !== result.length) {
                     throw invalidationError;
                 }
 
