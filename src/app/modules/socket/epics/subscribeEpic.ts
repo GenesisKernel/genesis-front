@@ -52,9 +52,8 @@ const subscribeEpic: Epic<Action, IRootState> =
                         message.data.forEach(n => {
                             const subState = store.getState();
                             if (subState.auth.isAuthenticated &&
-                                subState.auth.role &&
                                 (
-                                    subState.auth.role.id === n.role_id ||
+                                    subState.auth.role && subState.auth.role.id === n.role_id ||
                                     0 === n.role_id // single notifications
                                 ) &&
                                 subState.auth.wallet &&
