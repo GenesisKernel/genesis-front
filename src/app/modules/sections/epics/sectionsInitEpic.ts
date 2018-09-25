@@ -47,18 +47,17 @@ const sectionsInitEpic: Epic = (action$, store, { api }) => action$.ofAction(sec
         const roleID = state.auth.role && state.auth.role.id;
 
         return Observable.from(Promise.all([
-            client.getData({
-                name: 'sections'
+            client.sections({
+                locale: state.storage.locale
             }),
             client.getRow({
-                table: 'roles',
-                id: (roleID && roleID.toString()) || null,
+                 table: 'roles',
+                 id: (roleID && roleID.toString()) || null,
             }).then(row => row.value.default_page).catch(e => null)
 
         ])).flatMap(payload => {
             const remoteSections = (payload[0].list as object as IRemoteSectionProto[]).filter(l =>
-                RemoteSectionStatus.Removed !== l.status &&
-                (!l.roles_access || JSON.parse(l.roles_access).length === 0 || JSON.parse(l.roles_access).indexOf(roleID) !== -1)
+                RemoteSectionStatus.Removed !== l.status
             );
 
             const mainSection = remoteSections.find(l => RemoteSectionStatus.Main === l.status) || remoteSections[0];
