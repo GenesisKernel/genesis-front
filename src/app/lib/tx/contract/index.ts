@@ -32,7 +32,6 @@ export interface IContractContext {
     id: number;
     schema: ISchema;
     ecosystemID: number;
-    roleID: number;
     fields: {
         [name: string]: IContractParam;
     };
@@ -75,13 +74,16 @@ export default class Contract {
         const hexHash = await convert.toHex(resultHash);
         const signature = convert.toArrayBuffer(sign(hexHash, privateKey));
 
-        return concatBuffer(
-            this._context.schema.header,
-            concatBuffer(
-                encodeLengthPlusData(data),
-                encodeLengthPlusData(signature)
+        return {
+            hash: hexHash,
+            data: concatBuffer(
+                this._context.schema.header,
+                concatBuffer(
+                    encodeLengthPlusData(data),
+                    encodeLengthPlusData(signature)
+                )
             )
-        );
+        };
     }
 
     serialize() {
@@ -98,11 +100,10 @@ export default class Contract {
         const txBuffer = msgpack.encode(
             {
                 Header: {
-                    Type: this._context.id,
+                    ID: this._context.id,
                     Time: this._time,
                     EcosystemID: this._context.ecosystemID,
                     KeyID: this._keyID,
-                    RoleID: this._context.roleID,
                     NetworkID: this._context.schema.network,
                     PublicKey: this._publicKey
                 },

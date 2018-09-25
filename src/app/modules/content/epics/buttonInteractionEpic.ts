@@ -49,12 +49,12 @@ const buttonInteractionEpic: Epic = (action$, store, { api }) => action$.ofActio
             Observable.of(rootAction)
 
         ).flatMap(action => {
-            if (isType(action, buttonInteraction) && action.payload.contract) {
+            if (isType(action, buttonInteraction) && action.payload.contracts) {
                 return Observable.merge(
                     Observable.of(txCall({
                         uuid: action.payload.uuid,
                         silent: action.payload.silent,
-                        contract: action.payload.contract
+                        contracts: action.payload.contracts
                     })),
                     action$.filter(l =>
                         isType(l, txExec.done) || isType(l, txExec.failed)

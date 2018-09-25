@@ -34,12 +34,12 @@ const defaultSchema: ISchema = {
     network: 1,
     fields: {
         'bool': Boolean,
-        'int64': Integer,
-        'float64': Float,
-        'decimal.Decimal': Money,
+        'int': Integer,
+        'float': Float,
+        'money': Money,
         'string': String,
-        'types.File': File,
-        '[]interface {}': StringCollection,
+        'file': File,
+        'array': StringCollection,
     }
 };
 

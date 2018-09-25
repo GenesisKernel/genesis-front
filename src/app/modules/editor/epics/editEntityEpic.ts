@@ -35,23 +35,17 @@ const connections = {
 };
 
 const editEntityEpic: Epic<Action, IRootState> = (action$, store) => action$.ofAction(txExec.done)
-    .flatMap(action => {
-        const contractName = action.payload.params.tx.contract && action.payload.params.tx.contract.name;
-        const entity = connections[contractName];
-
-        if (entity) {
-            const params = action.payload.params.tx.contract.params as { Id: string, Value?: string };
-            return Observable.of(reloadEditorTab({
-                type: entity,
+    .flatMap(action => Observable.from(action.payload.params.tx.contracts)
+        .filter(l => connections[l.name])
+        .flatMap(contract => Observable.from(contract.params).map(params =>
+            reloadEditorTab({
+                type: connections[contract.name],
                 id: params.Id,
                 data: {
                     initialValue: params.Value
                 }
-            }));
-        }
-        else {
-            return Observable.empty();
-        }
-    });
+            })
+        ))
+    );
 
 export default editEntityEpic;

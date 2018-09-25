@@ -76,10 +76,10 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
         this.props.txCall({
             uuid: this._uuid,
             silent: this.props.silent,
-            contract: {
+            contracts: [{
                 name: this.props.contract,
-                params: contractParams
-            }
+                params: [contractParams]
+            }]
         });
     }
 

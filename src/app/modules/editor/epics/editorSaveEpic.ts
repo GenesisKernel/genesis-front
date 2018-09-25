@@ -44,13 +44,13 @@ const editorSaveEpic: Epic<Action, IRootState> =
             if (contract) {
                 return Observable.of(txCall({
                     uuid: uuid.v4(),
-                    contract: {
+                    contracts: [{
                         name: contract,
-                        params: {
+                        params: [{
                             Id: action.payload.id,
                             Value: action.payload.value
-                        }
-                    }
+                        }]
+                    }]
                 }));
             }
             else {

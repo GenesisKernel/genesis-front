@@ -36,16 +36,16 @@ const newContractEpic: Epic = (action$, store, { api }) => action$.ofAction(edit
         return TxObservable(action$, {
             tx: {
                 uuid: id,
-                contract: {
+                contracts: [{
                     name: '@1NewContract',
-                    params: {
+                    params: [{
                         Value: action.payload.value,
                         Conditions: 'true',
                         ApplicationId: action.payload.appId ? action.payload.appId : 0
-                    }
-                }
+                    }]
+                }]
             },
-            success: result => Observable.fromPromise(client.getRow({
+            success: results => Observable.from(results).flatMap(result => Observable.fromPromise(client.getRow({
                 table: 'contracts',
                 id: result.result
 
@@ -54,11 +54,11 @@ const newContractEpic: Epic = (action$, store, { api }) => action$.ofAction(edit
                 id: action.payload.id,
                 data: {
                     new: false,
-                    id: result.result,
+                    id: String(result.result),
                     name: response.value.name,
                     initialValue: action.payload.value
                 }
-            }))
+            })))
         });
     });
 

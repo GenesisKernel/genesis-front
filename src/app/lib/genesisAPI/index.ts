@@ -23,7 +23,7 @@
 import queryString from 'query-string';
 import urlJoin from 'url-join';
 import urlTemplate from 'url-template';
-import { IUIDResponse, ILoginRequest, ILoginResponse, IRefreshResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, IContentJsonRequest, IContentJsonResponse, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IRefreshRequest, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse, ITxCallRequest, ITxCallResponse, ITxPrepareRequest, ITxPrepareResponse, ITxStatusRequest, ITxStatusResponse, ITableRequest, TConfigRequest, ISystemParamsRequest, ISystemParamsResponse, ITxPrepareBatchRequest, ITxStatusBatchRequest, ITxPrepareBatchResponse, ITxCallBatchRequest, ITxCallBatchResponse, ITxStatusBatchResponse, IContentHashRequest, IContentHashResponse } from 'genesis/api';
+import { IUIDResponse, ILoginRequest, ILoginResponse, IRefreshResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, IContentJsonRequest, IContentJsonResponse, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IRefreshRequest, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse, ITableRequest, TConfigRequest, ISystemParamsRequest, ISystemParamsResponse, IContentHashRequest, IContentHashResponse, TTxCallRequest, TTxCallResponse, TTxStatusRequest, TTxStatusResponse, ITxStatus } from 'genesis/api';
 
 export type TRequestMethod =
     'get' |
@@ -221,16 +221,7 @@ class GenesisAPI {
         responseTransformer: response => response.ecosystem_name
     });
     public getConfig = this.setEndpoint<{ name: TConfigRequest }, string>('get', 'config/{name}', { requestTransformer: request => null });
-    public getContract = this.setSecuredEndpoint<IContractRequest, IContractResponse>('get', 'contract/{name}', {
-        requestTransformer: request => null,
-        responseTransformer: response => ({
-            ...response,
-            fields: response.fields.map((l: any) => ({
-                ...l,
-                tags: l.tags ? l.tags.split(' ') : []
-            }))
-        })
-    });
+    public getContract = this.setSecuredEndpoint<IContractRequest, IContractResponse>('get', 'contract/{name}', { requestTransformer: request => null });
     public getContracts = this.setSecuredEndpoint<ISegmentRequest, IContractsResponse>('get', 'contracts');
     public getParam = this.setSecuredEndpoint<IParamRequest, IParamResponse>('get', 'ecosystemparam/{name}', { requestTransformer: request => null });
     public getParams = this.setSecuredEndpoint<IParamsRequest, IParamsResponse>('get', 'ecosystemparams', {
@@ -293,46 +284,20 @@ class GenesisAPI {
     });
 
     // Transactions
-    public txCall = this.setSecuredEndpoint<ITxCallRequest, ITxCallResponse>('post', 'contract/{requestID}', {
-        requestTransformer: request => ({
-            time: request.time,
-            signature: request.signature,
-            pubkey: request.pubkey
-        })
-    });
-    public txPrepare = this.setSecuredEndpoint<ITxPrepareRequest, ITxPrepareResponse>('post', 'prepare/{name}', {
-        requestTransformer: request => request.params
-    });
-    public txSend = this.setSecuredEndpoint<{ data: any }, any>('post', 'sendTx');
-    public txStatus = this.setSecuredEndpoint<ITxStatusRequest, ITxStatusResponse>('get', 'txstatus/{hash}', { requestTransformer: () => null });
+    private _txSend = this.setSecuredEndpoint<{ [key: string]: Blob }, { hashes: { [key: string]: string } }>('post', 'sendTx');
+    public txSend = <T>(params: TTxCallRequest<T>) => this._txSend(params) as Promise<TTxCallResponse<T>>;
 
-    // Transactions batch-processing
-    public txPrepareBatch = this.setSecuredEndpoint<ITxPrepareBatchRequest, ITxPrepareBatchResponse>('post', 'prepareMultiple', {
-        requestTransformer: request => ({
-            data: JSON.stringify({
-                contracts: request.contracts.map(l => ({
-                    contract: l.name,
-                    params: l.params
-                }))
-            })
-        })
-    });
-    public txCallBatch = this.setSecuredEndpoint<ITxCallBatchRequest, ITxCallBatchResponse>('post', 'contractMultiple/{requestID}', {
-        requestTransformer: request => ({
-            data: JSON.stringify({
-                signatures: request.signatures,
-                pubkey: request.pubkey,
-                time: request.time
-            })
-        })
-    });
-    public txStatusBatch = this.setSecuredEndpoint<ITxStatusBatchRequest, ITxStatusBatchResponse>('post', 'txstatusMultiple', {
+    private _txStatus = this.setSecuredEndpoint<{ hashes: string[] }, { [hash: string]: ITxStatus; }>('post', 'txstatusMultiple', {
         requestTransformer: request => ({
             data: JSON.stringify({
                 hashes: request.hashes
             })
-        })
+        }),
+        responseTransformer: response => response.results
     });
+    public txStatus = <T>(params: TTxStatusRequest<T>) => this._txStatus({
+        hashes: Object.keys(params).map(l => params[l])
+    }) as Promise<TTxStatusResponse<T>>
 }
 
 export default GenesisAPI;

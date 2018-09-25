@@ -21,8 +21,6 @@
 // SOFTWARE.
 
 declare module 'genesis/tx' {
-    import { ITxPrepareBatchResponse } from 'genesis/api';
-
     type TTxError =
         'error' |
         'info' |
@@ -53,12 +51,12 @@ declare module 'genesis/tx' {
     interface ITransactionCall {
         uuid: string;
         silent?: boolean;
-        contract: {
+        contracts: {
             name: string;
             params: {
                 [key: string]: any;
-            };
-        };
+            }[];
+        }[];
     }
 
     interface IExecutionCall {

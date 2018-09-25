@@ -30,14 +30,13 @@ const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall)
     // Ask for password if there is no privateKey
     .flatMap(action => {
         const privateKey = store.getState().auth.privateKey;
-        const contractName = action.payload.contract ? action.payload.contract.name : null;
 
         return Observable.if(
             () => keyring.validatePrivateKey(privateKey),
             Observable.of(action),
             Observable.merge(
                 Observable.of(txAuthorize.started({
-                    contract: contractName
+                    contract: ''
                 })),
                 action$.filter(l => txAuthorize.done.match(l) || txAuthorize.failed.match(l))
                     .take(1)

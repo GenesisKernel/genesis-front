@@ -96,16 +96,20 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonState & ITxButt
             return;
         }
 
+        const contracts = this.props.contracts || [];
+        if (this.props.contract) {
+            contracts.push({
+                name: this.props.contract,
+                params: [contractParams]
+            });
+        }
+
         this.props.buttonInteraction({
             uuid: this._uuid,
             silent: this.props.silent,
             confirm: this.props.confirm,
             popup: this.props.popup,
-            contract: this.props.contract ? {
-                name: this.props.contract,
-                params: contractParams
-            } : null,
-            contracts: this.props.contracts,
+            contracts: contracts,
             page: this.props.page ? {
                 name: this.props.page,
                 params: pageParams

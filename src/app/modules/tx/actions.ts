@@ -21,9 +21,9 @@
 // SOFTWARE.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IExecutionCall, ITransactionCall, ITxResult, ITxError } from 'genesis/tx';
+import { IExecutionCall, ITransactionCall, ITxError, ITransaction } from 'genesis/tx';
 
 const actionCreator = actionCreatorFactory('tx');
 export const txCall = actionCreator<ITransactionCall>('TX_CALL');
 export const txAuthorize = actionCreator.async<{ contract: string, batch?: boolean }, string, void>('TX_AUTHORIZE');
-export const txExec = actionCreator.async<IExecutionCall, ITxResult, ITxError>('TX_EXEC');
+export const txExec = actionCreator.async<IExecutionCall, ITransaction[], ITxError>('TX_EXEC');

@@ -25,13 +25,13 @@ import { Epic } from 'redux-observable';
 import { Action } from 'redux';
 import { txExec } from '../actions';
 import { saveWallet } from 'modules/storage/actions';
+import { Observable } from 'rxjs';
 
 const newEcosystemEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(txExec.done)
-        .filter(l => l.payload.params.tx.contract && /^(@1)?NewEcosystem$/.test(l.payload.params.tx.contract.name))
-        .map(action => {
-            const ecosystem = action.payload.result.result;
-            const ecosystemName = (action.payload.params.tx.contract.params && action.payload.params.tx.contract.params.Name) || ecosystem;
+        .filter(l => !!l.payload.params.tx.contracts.find(c => /^(@1)?NewEcosystem$/.test(c.name)))
+        .flatMap(action => Observable.from(action.payload.result).map(result => {
+            const ecosystem = result.result;
             const wallet = store.getState().auth.wallet;
 
             return saveWallet({
@@ -40,8 +40,8 @@ const newEcosystemEpic: Epic<Action, IRootState> =
                 address: wallet.address,
                 username: null,
                 ecosystem,
-                ecosystemName
+                ecosystemName: ecosystem
             });
-        });
+        }));
 
 export default newEcosystemEpic;
