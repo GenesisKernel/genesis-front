@@ -39,8 +39,8 @@ export interface IToolButtonProps {
 
     // Page must be rendered within a modal dialog
     popup?: {
-        title?: string;
-        width?: number;
+        header?: string;
+        width?: string;
     };
 }
 
@@ -64,9 +64,18 @@ class ToolButtonContainer extends React.Component<IToolButtonProps & IToolButton
             return;
         }
 
+        let popup: { title?: string, width?: number } = null;
+        if (this.props.popup) {
+            const width = parseInt(this.props.popup.width, 10);
+            popup = {
+                title: this.props.popup.header,
+                width: width === width ? width : null
+            };
+         }
+
         this.props.buttonInteraction({
             uuid: this._uuid,
-            popup: this.props.popup,
+            popup,
             contract: null,
             page: this.props.page ? {
                 name: this.props.page,
