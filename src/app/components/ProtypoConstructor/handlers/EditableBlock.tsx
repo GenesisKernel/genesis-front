@@ -41,6 +41,9 @@ export interface IEditableBlockProps extends IConstructorElementProps {
     'disabled'?: string;
     'placeholder'?: string;
     'type'?: string;
+    'icon'?: string;
+    'title'?: string;
+    'text'?: string;
 }
 
 interface IEditableBlockState {

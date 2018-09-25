@@ -36,6 +36,7 @@ import Input from './handlers/Input';
 import Label from './handlers/Label';
 import P from './handlers/P';
 import RadioGroup from './handlers/RadioGroup';
+import Hint from './handlers/Hint';
 
 import Table from './handlers/Table';
 import Logic from './handlers/Logic';
@@ -56,7 +57,8 @@ const handlers = {
     'label': Label,
     'p': P,
     'radiogroup': RadioGroup,
-    'table': Table
+    'table': Table,
+    'hint': Hint
 };
 
 export const resolveHandler = (name: string) => {
