@@ -43,12 +43,12 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                 name: contract.name
 
             })).flatMap(proto =>
-                Observable.from(contract.params).flatMap(fields =>
+                Observable.from(contract.params).flatMap(params =>
                     Observable.from(proto.fields)
-                        .filter(l => l.type === 'file' && contract.params[l.name])
-                        .flatMap(field => fileObservable(fields[field.name])
+                        .filter(l => l.type === 'file' && params[l.name])
+                        .flatMap(field => fileObservable(params[field.name])
                             .map(buffer => {
-                                const blob = fields[field.name] as File;
+                                const blob = params[field.name] as File;
                                 return {
                                     field: field.name,
                                     name: blob.name,
@@ -58,10 +58,10 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                             })
                         ).toArray()
                         .flatMap(files => {
-                            const params: { [name: string]: IContractParam } = {};
+                            const txParams: { [name: string]: IContractParam } = {};
                             proto.fields.forEach(field => {
                                 const file = files.find(f => f.field === field.name);
-                                params[field.name] = {
+                                txParams[field.name] = {
                                     type: field.type,
                                     value: file ? {
                                         name: file.name,
@@ -71,14 +71,11 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                                 };
                             });
 
-                            // tslint:disable-next-line:no-console
-                            console.log('Passing params::', params, fields);
-
                             return Observable.from(new Contract({
                                 id: proto.id,
                                 schema: defaultSchema,
                                 ecosystemID: state.auth.ecosystem ? parseInt(state.auth.ecosystem, 10) : 1,
-                                fields: params
+                                fields: txParams
                             }).sign(action.payload.privateKey));
                         })
 
