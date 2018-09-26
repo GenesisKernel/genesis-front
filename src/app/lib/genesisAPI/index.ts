@@ -287,7 +287,7 @@ class GenesisAPI {
     private _txSend = this.setSecuredEndpoint<{ [key: string]: Blob }, { hashes: { [key: string]: string } }>('post', 'sendTx');
     public txSend = <T>(params: TTxCallRequest<T>) => this._txSend(params) as Promise<TTxCallResponse<T>>;
 
-    private _txStatus = this.setSecuredEndpoint<{ hashes: string[] }, { [hash: string]: ITxStatus; }>('post', 'txstatusMultiple', {
+    private _txStatus = this.setSecuredEndpoint<{ hashes: string[] }, { [hash: string]: ITxStatus; }>('post', 'txstatus', {
         requestTransformer: request => ({
             data: JSON.stringify({
                 hashes: request.hashes
