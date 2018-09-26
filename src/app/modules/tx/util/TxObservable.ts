@@ -35,7 +35,7 @@ const TxObservable = (action$: ActionsObservable<ReduxAction>, params: { tx: ITr
     Observable.merge(
         action$.filter(l => isType(l, txExec.done) || isType(l, txExec.failed))
             .filter((l: TTxDoneAction) => {
-                return params.tx.uuid === l.payload.params.tx.uuid;
+                return params.tx.uuid === l.payload.params.uuid;
             })
             .take(1)
             .flatMap(result => {

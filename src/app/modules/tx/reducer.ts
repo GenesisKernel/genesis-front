@@ -23,13 +23,13 @@
 import * as actions from './actions';
 import { OrderedMap } from 'immutable';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import { ITransaction } from 'genesis/tx';
-import txExecHandler from './reducers/txExecHandler';
+import { ITransactionCollection } from 'genesis/tx';
 import txExecDoneHandler from './reducers/txExecDoneHandler';
+import txExecHandler from './reducers/txExecHandler';
 import txExecFailedHandler from './reducers/txExecFailedHandler';
 
 export type State = {
-    readonly transactions: OrderedMap<string, ITransaction>;
+    readonly transactions: OrderedMap<string, ITransactionCollection>;
 };
 
 export const initialState: State = {

@@ -27,21 +27,20 @@ import { txExec } from '../actions';
 import { saveWallet } from 'modules/storage/actions';
 import { Observable } from 'rxjs';
 
-const newEcosystemEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(txExec.done)
-        .filter(l => !!l.payload.params.tx.contracts.find(c => /^(@1)?NewEcosystem$/.test(c.name)))
-        .flatMap(action => Observable.from(action.payload.result).map(result => {
-            const ecosystem = result.result;
-            const wallet = store.getState().auth.wallet;
+const newEcosystemEpic: Epic<Action, IRootState> = (action$, store) => action$.ofAction(txExec.done)
+    .filter(l => !!l.payload.params.contracts.find(c => /^(@1)?NewEcosystem$/.test(c.name)))
+    .flatMap(action => Observable.from(action.payload.result).map(result => {
+        const ecosystem = result.status.result;
+        const wallet = store.getState().auth.wallet;
 
-            return saveWallet({
-                id: wallet.id,
-                encKey: wallet.encKey,
-                address: wallet.address,
-                username: null,
-                ecosystem,
-                ecosystemName: ecosystem
-            });
-        }));
+        return saveWallet({
+            id: wallet.id,
+            encKey: wallet.encKey,
+            address: wallet.address,
+            username: null,
+            ecosystem,
+            ecosystemName: String(result.params.Name.value) || ecosystem
+        });
+    }));
 
 export default newEcosystemEpic;

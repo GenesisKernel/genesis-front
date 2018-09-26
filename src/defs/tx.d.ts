@@ -40,12 +40,29 @@ declare module 'genesis/tx' {
         params?: any[];
     }
 
-    interface ITransaction {
-        uuid: string;
-        contract: string;
-        block?: string;
-        result?: string;
+    interface ITxStatus extends ITxResult, ITxError { }
+
+    interface ITransactionParam {
+        type: string;
+        value: object;
+    }
+
+    type TTransactionStatus =
+        'pending' | 'done' | 'error';
+
+    interface ITransactionCollection {
+        status: TTransactionStatus;
         error?: ITxError;
+        stack: ITransaction[];
+    }
+
+    interface ITransaction {
+        name: string,
+        hash: string,
+        status: ITxStatus;
+        params: {
+            [name: string]: ITransactionParam;
+        };
     }
 
     interface ITransactionCall {
@@ -57,13 +74,5 @@ declare module 'genesis/tx' {
                 [key: string]: any;
             }[];
         }[];
-    }
-
-    interface IExecutionCall {
-        tx: ITransactionCall;
-        requestID?: string;
-        privateKey?: string;
-        signature?: string;
-        time?: string;
     }
 }

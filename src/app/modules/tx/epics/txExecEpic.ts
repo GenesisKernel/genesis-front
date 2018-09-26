@@ -24,7 +24,6 @@ import { Action } from 'redux';
 import { Epic } from 'modules';
 import { Observable } from 'rxjs';
 import { txExec } from '../actions';
-import { ITransaction } from 'genesis/tx';
 import uuid from 'uuid';
 import Contract, { IContractParam } from 'lib/tx/contract';
 import defaultSchema from 'lib/tx/schema/defaultSchema';
@@ -37,57 +36,82 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
     .flatMap(action => {
         const state = store.getState();
         const client = api(state.auth.session);
+        const privateKey = state.auth.privateKey;
 
-        return Observable.from(action.payload.tx.contracts).flatMap(contract =>
+        return Observable.from(action.payload.contracts).flatMap(contract =>
             Observable.from(client.getContract({
                 name: contract.name
 
-            })).flatMap(proto =>
-                Observable.from(contract.params).flatMap(params =>
-                    Observable.from(proto.fields)
-                        .filter(l => l.type === 'file' && params[l.name])
-                        .flatMap(field => fileObservable(params[field.name])
-                            .map(buffer => {
-                                const blob = params[field.name] as File;
-                                return {
-                                    field: field.name,
-                                    name: blob.name,
-                                    type: blob.type,
-                                    value: buffer,
-                                };
-                            })
-                        ).toArray()
-                        .flatMap(files => {
-                            const txParams: { [name: string]: IContractParam } = {};
-                            proto.fields.forEach(field => {
-                                const file = files.find(f => f.field === field.name);
-                                txParams[field.name] = {
-                                    type: field.type,
-                                    value: file ? {
-                                        name: file.name,
-                                        type: file.type,
-                                        value: file.value
-                                    } : params[field.name]
-                                };
-                            });
-
-                            return Observable.from(new Contract({
-                                id: proto.id,
-                                schema: defaultSchema,
-                                ecosystemID: state.auth.ecosystem ? parseInt(state.auth.ecosystem, 10) : 1,
-                                fields: txParams
-                            }).sign(action.payload.privateKey));
+            })).flatMap(proto => Observable.from(contract.params).flatMap(params =>
+                Observable.from(proto.fields)
+                    .filter(l => l.type === 'file' && params[l.name])
+                    .flatMap(field => fileObservable(params[field.name])
+                        .map(buffer => {
+                            const blob = params[field.name] as File;
+                            return {
+                                field: field.name,
+                                name: blob.name,
+                                type: blob.type,
+                                value: buffer,
+                            };
                         })
+                    ).toArray()
+                    .flatMap(files => {
+                        const txParams: { [name: string]: IContractParam } = {};
+                        const logParams: { [name: string]: IContractParam } = {};
 
-                    // Contract params serialization concurrency
-                ), 1).toArray()
+                        proto.fields.forEach(field => {
+                            const file = files.find(f => f.field === field.name);
+                            txParams[field.name] = {
+                                type: field.type,
+                                value: file ? {
+                                    name: file.name,
+                                    type: file.type,
+                                    value: file.value
+                                } : params[field.name]
+                            };
+                            logParams[field.name] = {
+                                type: field.type,
+                                value: file ? null : params[field.name]
+                            };
+                        });
+
+                        return Observable.from(new Contract({
+                            id: proto.id,
+                            schema: defaultSchema,
+                            ecosystemID: state.auth.ecosystem ? parseInt(state.auth.ecosystem, 10) : 1,
+                            fields: txParams
+
+                        }).sign(privateKey)).map(signature => ({
+                            ...signature,
+                            name: proto.name,
+                            params: logParams
+                        }));
+                    })
+
+                // Contract params serialization concurrency
+            ), 1).toArray()
 
             // Contracts serialization concurrency
             , 1).flatMap(contracts => {
                 const request = {};
+                const jobs: {
+                    name: string,
+                    hash: string,
+                    params: {
+                        [name: string]: IContractParam;
+                    }
+                }[] = [];
+
                 contracts.forEach(contract => {
                     request[contract.hash] = new Blob([contract.data]);
+                    jobs.push({
+                        name: contract.name,
+                        hash: contract.hash,
+                        params: contract.params,
+                    });
                 });
+
                 return Observable.from(client.txSend(request)).flatMap(sendResponse => Observable.defer(() =>
                     client.txStatus(contracts.map(l => l.hash))
 
@@ -107,7 +131,10 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                     });
 
                     if (0 === pending) {
-                        return status;
+                        return jobs.map(job => ({
+                            ...job,
+                            status: status[job.hash]
+                        }));
                     }
                     else {
                         throw {
@@ -134,41 +161,21 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
 
                 })));
 
-            }, 1).toArray().flatMap(result => {
-                const results: ITransaction[] = [];
-                result.forEach(contract => {
-                    Object.keys(contract).forEach(hash => {
-                        const status = contract[hash];
-                        results.push({
-                            uuid: action.payload.tx.uuid,
-                            contract: null,
-                            block: status.blockid,
-                            result: status.result,
-                            error: null
-                        });
-                    });
-                });
-
-                return Observable.of<Action>(
-                    txExec.done({
-                        params: action.payload,
-                        result: results
-                    }),
-                    enqueueNotification({
-                        id: uuid.v4(),
-                        type: 'TX_BATCH',
-                        params: {}
-                    })
-                );
-
-            }).catch(error => {
-                // tslint:disable-next-line:no-console
-                console.log('TxError::', error);
-                return Observable.of(txExec.failed({
+            }, 1).toArray().flatMap(results => Observable.of<Action>(
+                txExec.done({
                     params: action.payload,
-                    error
-                }));
-            });
+                    result: Array.prototype.concat.apply([], results)
+                }),
+                enqueueNotification({
+                    id: uuid.v4(),
+                    type: 'TX_BATCH',
+                    params: {}
+                })
+
+            )).catch(error => Observable.of(txExec.failed({
+                params: action.payload,
+                error
+            })));
     });
 
 export default txExecEpic;

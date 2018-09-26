@@ -22,7 +22,7 @@
 
 import React from 'react';
 import uuid from 'uuid';
-import { ITransaction } from 'genesis/tx';
+import { ITransactionCollection } from 'genesis/tx';
 import { OrderedMap } from 'immutable';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
@@ -68,7 +68,7 @@ export interface ITxButtonProps {
 }
 
 interface ITxButtonState {
-    transactions: OrderedMap<string, ITransaction>;
+    transactions: OrderedMap<string, ITransactionCollection>;
 }
 
 interface ITxButtonDispatch {
@@ -119,7 +119,7 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonState & ITxButt
 
     isPending = () => {
         const tx = this.props.transactions.get(this._uuid);
-        return tx && !tx.error && !tx.block;
+        return tx && 'pending' === tx.status;
     }
 
     render() {

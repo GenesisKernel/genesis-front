@@ -47,14 +47,14 @@ const newContractEpic: Epic = (action$, store, { api }) => action$.ofAction(edit
             },
             success: results => Observable.from(results).flatMap(result => Observable.fromPromise(client.getRow({
                 table: 'contracts',
-                id: result.result
+                id: result.status.result
 
             })).map(response => reloadEditorTab({
                 type: action.payload.type,
                 id: action.payload.id,
                 data: {
                     new: false,
-                    id: String(result.result),
+                    id: String(result.status.result),
                     name: response.value.name,
                     initialValue: action.payload.value
                 }

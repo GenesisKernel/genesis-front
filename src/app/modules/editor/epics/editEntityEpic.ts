@@ -35,7 +35,7 @@ const connections = {
 };
 
 const editEntityEpic: Epic<Action, IRootState> = (action$, store) => action$.ofAction(txExec.done)
-    .flatMap(action => Observable.from(action.payload.params.tx.contracts)
+    .flatMap(action => Observable.from(action.payload.params.contracts)
         .filter(l => connections[l.name])
         .flatMap(contract => Observable.from(contract.params).map(params =>
             reloadEditorTab({

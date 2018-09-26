@@ -29,8 +29,8 @@ import { Observable } from 'rxjs';
 
 const reloadStylesheetEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(txExec.done)
-        .filter(l => !!l.payload.params.tx.contracts.find(c => /^(@1)?EditParameter$/.test(c.name) && !!c.params.find(p => 'stylesheet' === p.name)))
-        .flatMap(s => Observable.from(s.payload.params.tx.contracts))
+        .filter(l => !!l.payload.params.contracts.find(c => /^(@1)?EditParameter$/.test(c.name) && !!c.params.find(p => 'stylesheet' === p.name)))
+        .flatMap(s => Observable.from(s.payload.params.contracts))
         .flatMap(contract => Observable.from(contract.params))
         .map(params =>
             reloadStylesheet(params.value)
