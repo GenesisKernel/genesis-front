@@ -20,8 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import StyledComponent from './StyledComponent';
+import React from 'react';
+import styledComponent from './StyledComponent';
+import interactiveComponent from './InteractiveComponent';
 
 export interface IDivProps {
     'className'?: string;
@@ -29,10 +30,6 @@ export interface IDivProps {
 }
 
 class Div extends React.Component<IDivProps> {
-    constructor(props: IDivProps) {
-        super(props);
-    }
-
     render() {
         return (
             <div
@@ -44,4 +41,4 @@ class Div extends React.Component<IDivProps> {
     }
 }
 
-export default StyledComponent(Div);
+export default interactiveComponent(styledComponent(Div) as any);

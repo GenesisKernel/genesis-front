@@ -62,10 +62,15 @@ interface IValidationElement {
     validators: Validator[];
 }
 
+interface IFormListener {
+    (e: IValidationResult): void;
+}
+
 export default class ValidatedForm extends React.Component<IValidatedFormProps, IValidatedFormState> {
     private _elements: {
         [name: string]: IValidationElement[];
     } = {};
+    private _listeners: IFormListener[] = [];
 
     constructor(props: IValidatedFormProps) {
         super(props);
@@ -127,12 +132,17 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
         }
     }
 
+    onUpdate(listener: IFormListener) {
+        this._listeners.push(listener);
+    }
+
     isPending() {
         return this.props.pending;
     }
 
     updateState(name: string, value?: any) {
-        const result = this.validate(name, value);
+        const result = this.emitUpdate(name, value);
+        this._listeners.forEach(l => l(result));
         this.setState({
             payload: {
                 ...this.state.payload,
@@ -142,6 +152,12 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
                 }
             }
         });
+    }
+
+    emitUpdate(name: string, value?: any) {
+        const result = this.validate(name, value);
+        this._listeners.forEach(l => l(result));
+        return result;
     }
 
     getState(name: string) {

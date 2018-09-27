@@ -70,7 +70,7 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
         return this.state.value;
     }
 
-    onChange(e: React.ChangeEvent<FormControl>) {
+    onChange = (e: React.ChangeEvent<FormControl>) => {
         this.setState({
             value: (e.target as any).value
         });
@@ -78,9 +78,11 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
         if (this.props.onChange) {
             this.props.onChange(e);
         }
+
+        (this.context.form as ValidatedForm).emitUpdate(this.props.name, (e.target as any).value);
     }
 
-    onBlur(e: React.FocusEvent<FormControl>) {
+    onBlur = (e: React.FocusEvent<FormControl>) => {
         (this.context.form as ValidatedForm).updateState(this.props.name);
 
         if (this.props.onBlur) {
@@ -95,8 +97,8 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
                 className={this.props.className}
                 readOnly={this.props.readOnly}
                 disabled={this.props.disabled}
-                onChange={this.onChange.bind(this)}
-                onBlur={this.onBlur.bind(this)}
+                onChange={this.onChange}
+                onBlur={this.onBlur}
                 bsClass={this.props.bsClass}
                 bsSize={this.props.bsSize}
                 componentClass={this.props.componentClass}
