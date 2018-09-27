@@ -134,6 +134,13 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
 
     onUpdate(listener: IFormListener) {
         this._listeners.push(listener);
+
+        Object.keys(this._elements).forEach(input =>
+            this._elements[input].forEach(l => {
+                const result = this.validate(input, l.node.getValue());
+                listener(result);
+            })
+        );
     }
 
     isPending() {
