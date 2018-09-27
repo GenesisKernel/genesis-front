@@ -172,6 +172,7 @@ export default class EditableBlock extends React.Component<IEditableBlockProps, 
         };
 
         return connectDragPreview(connectDropTarget(
+            // Only native element nodes can now be passed to React DnD connectors.You can either wrap TagWrapper into a <div>, or turn it into a drag source or a drop target itself.
             <span style={style}>
                 <TagWrapper
                     display={this.editableDisplay}
