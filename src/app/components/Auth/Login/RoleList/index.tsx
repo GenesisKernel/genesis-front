@@ -52,7 +52,7 @@ const RoleList: React.SFC<IRoleListProps & InjectedIntlProps> = props => (
             <div className="role-list form-horizontal desktop-flex-col desktop-flex-stretch">
                 <FormattedMessage
                     id="auth.role.disclaimer"
-                    defaultMessage="Select role that you want to use to login. Data representation will change according to the selected role. You can switch between the roles at any time"
+                    defaultMessage="Select role that you want to use to login. Data representation will change according to the selected role. You can switch between roles at any time"
                 />
                 <hr />
                 <div className="text-center desktop-flex-stretch">

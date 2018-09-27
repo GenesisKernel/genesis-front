@@ -43,7 +43,7 @@
     "auth.remove.desc": "Do you really want to delete this wallet? THIS ACTION IS IRREVERSIBLE",
     "auth.remember.disclaimer": "Please make sure that you keep your passphrase (wallet seed) safe and remember the password. You will be asked to retype them for confirmation",
     "auth.remember.disclaimer.confirm": "Please repeat your registration values. This step is required to ensure that your passphrase and password are stored correctly",
-    "auth.role.disclaimer": "Select role that you want to use to login. Data representation will change according to the selected role. You can switch between the roles at any time",
+    "auth.role.disclaimer": "Select role that you want to use to login. Data representation will change according to the selected role. You can switch between roles at any time",
     "auth.role.empty": "Login without role",
     "auth.role.select": "Role selection",
     "auth.backup": "Backup payload",
