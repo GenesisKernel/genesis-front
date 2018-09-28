@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import * as React from 'react';
+import ScrollArea from 'react-scrollbar';
 import { TEditorTab } from 'genesis/editor';
 import imgSim from './sim.svg';
 import imgTpl from './tpl.svg';
@@ -36,6 +37,21 @@ export const TYPE_ICONS: { [type: string]: string } = {
     default: null
 };
 
+const StyledTabsMenu = themed.div `
+    position: absolute;
+    z-index: 20;
+    top: 0px;
+    right: 0px;
+    
+    > div {
+        position: relative;
+        
+        & > button {
+            padding: 7px 20px 8px 20px;
+        }        
+    }    
+`;
+
 export interface IEditorTabsProps {
     className?: string;
     tabIndex: number;
@@ -45,26 +61,50 @@ export interface IEditorTabsProps {
 }
 
 const EditorTabs: React.SFC<IEditorTabsProps> = (props) => (
-    <ul className={props.className}>
-        {props.tabs.map((tab, index) => (
-            <EditorTab
-                {...tab}
-                key={index}
-                active={props.tabIndex === index}
-                icon={TYPE_ICONS[tab.type] || TYPE_ICONS.default}
-                onClick={props.onChange.bind(null, index)}
-                onClose={props.onClose.bind(null, index)}
-            />
-        ))}
-    </ul>
+    <div style={{position: 'relative'}}>
+        <ScrollArea
+            className={props.className}
+            horizontal={true}
+            vertical={false}
+            swapWheelAxes={true}
+            speed={0.3}
+            smoothScrolling={true}
+            contentStyle={{width: props.tabs.length * 172}}
+            horizontalContainerStyle={{display: 'none'}}
+        >
+            <ul>
+                {props.tabs.map((tab, index) => (
+                    <EditorTab
+                        {...tab}
+                        key={index}
+                        active={props.tabIndex === index}
+                        icon={TYPE_ICONS[tab.type] || TYPE_ICONS.default}
+                        onClick={props.onChange.bind(null, index)}
+                        onClose={props.onClose.bind(null, index)}
+                    />
+                ))}
+            </ul>
+        </ScrollArea>
+        <StyledTabsMenu>
+            <div>
+                <button type="button" className="btn">
+                    <em className="fa fa-ellipsis-v"/>
+                </button>
+            </div>
+        </StyledTabsMenu>
+    </div>
 );
 
 const StyledEditorTabs = themed(EditorTabs) `
     background: ${props => props.theme.editorBackground};
-    height: 36px;
-    list-style-type: none;
-    padding: 1px 0 0;
-    margin: 0;
+    ul {
+        height: 36px;
+        list-style-type: none;
+        padding: 1px 0 0;
+        margin: 0;
+        overflow: auto;
+        white-space: nowrap;
+    }
 `;
 
 export default StyledEditorTabs;
