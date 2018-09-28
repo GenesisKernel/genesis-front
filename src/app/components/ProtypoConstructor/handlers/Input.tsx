@@ -26,7 +26,7 @@ import DnDComponent from './DnDComponent';
 import EditableBlock from './EditableBlock';
 
 class Input extends EditableBlock {
-    protected editableDisplay = 'inline';
+    protected editableDisplay = 'block';
     protected editable = false;
     renderChildren(classes: string) {
         return (

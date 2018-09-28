@@ -79,6 +79,8 @@
     "editor.tool.designer": "Дизайн",
     "editor.tool.preview": "Просмотр",
     "editor.untitled": "Безымянный-{id}",
+    "editor.designer.emptyform": "Пустая форма. Добавьте сюда элементы.",
+    "editor.designer.emptyblock": "Пустой блок. Добавьте сюда элементы.",
     "exec": "Вызов",
     "general.about": "О программе",
     "general.wallet.backup": "Резервное копирование",

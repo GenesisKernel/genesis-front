@@ -118,6 +118,8 @@ function generateProtypoElement(node: IHtmlJsonNode) {
         case 'b':
         case 'strong':
             return getProtypoElement('strong', className, node.child);
+        case 'span':
+            return getProtypoElement('span', className, node.child);
         default:
             return null;
     }
@@ -136,4 +138,9 @@ export function htmlJsonChild2childrenTags(nodes: IHtmlJsonNode[]): TProtypoElem
     }
 
     return children;
+}
+
+export function stripNewlineTags(html: string): string {
+    let result = html.replace(/<br>|<div>/g, ' ');
+    return result.replace(/<\/div>/g, '');
 }

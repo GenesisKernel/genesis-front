@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import StyledComponent from 'components/Protypo/handlers/StyledComponent';
 import DnDComponent from './DnDComponent';
 import EditableBlock from './EditableBlock';
@@ -40,7 +41,7 @@ class Form extends EditableBlock {
                 className={classes}
                 onSubmit={this.onSubmit.bind(this)}
             >
-                {this.props.children}
+                {this.props.children || (<FormattedMessage id="editor.designer.emptyform" defaultMessage="Empty form. Drop elements here.<"/>)}
             </form>
         );
     }
