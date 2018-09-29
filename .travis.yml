@@ -11,6 +11,7 @@ matrix:
         homebrew:
           packages:
             - wine
+            - snapcraft
 
 cache:
   directories:
@@ -24,7 +25,8 @@ script:
   - |
     if [ "$TRAVIS_BRANCH" == "master" ]; then
       yarn build-desktop
-      yarn release -mwl
+      yarn release -ml
+      yarn release -w
     fi
   - yarn build
 
