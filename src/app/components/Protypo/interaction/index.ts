@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-export type TAction = {
+export type TEvent = {
     'input_change': {
         name: string;
         value: string;
@@ -44,23 +44,19 @@ class InteractionManager {
     } = {};
     private _listeners: {
         [id: string]: {
-            reaction: TReaction;
-            conditions: ICondition[];
-        }[];
+            [R in TReaction]?: ICondition[];
+        }
     } = {};
 
-    registerCondition(id: string, reaction: TReaction, conditions: ICondition[]) {
+    registerReaction(id: string, reaction: TReaction, conditions: ICondition[]) {
         if (!this._listeners[id]) {
-            this._listeners[id] = [];
+            this._listeners[id] = {};
         }
 
-        this._listeners[id].push({
-            reaction,
-            conditions
-        });
+        this._listeners[id][reaction] = conditions;
     }
 
-    on<T extends keyof TAction>(action: T, event: TAction[T]) {
+    on<T extends keyof TEvent>(action: T, event: TEvent[T]) {
         switch (action) {
             case 'input_change':
                 this._inputValues[event.name] = event.value;
@@ -71,19 +67,40 @@ class InteractionManager {
         }
     }
 
+    getConditionFor(id: string, reaction: TReaction, condition: ICondition) {
+        for (let input in condition) {
+            if (condition.hasOwnProperty(input)) {
+                if (this._inputValues[input] !== condition[input]) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    getConditionsFor(id: string, reaction: TReaction) {
+        const conditions = this._listeners[id][reaction];
+
+        for (let i = 0; i < conditions.length; i++) {
+            const condition = conditions[i];
+            if (this.getConditionFor(id, reaction, condition)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     getConditionMap<A>(): { [id: string]: TConditionMap } {
         const result: { [id: string]: TConditionMap } = {};
 
         Object.keys(this._listeners).forEach(id => {
             const listener = this._listeners[id];
-            listener.forEach(value => {
-                result[id] = {};
-                for (let i = 0; i < value.conditions.length; i++) {
-                    const condition = value.conditions[i];
-                    Object.keys(condition).forEach(input => {
-                        result[id][value.reaction] = this._inputValues[input] === condition[input];
-                    });
-                }
+            result[id] = {};
+
+            Object.keys(listener).forEach((reaction: TReaction) => {
+                result[id][reaction] = this.getConditionsFor(id, reaction);
             });
         });
 

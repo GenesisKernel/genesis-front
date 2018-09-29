@@ -22,23 +22,18 @@
 
 import React from 'react';
 import styledComponent from './StyledComponent';
-import interactiveComponent from './InteractiveComponent';
+import interactiveComponent from '../interaction/InteractiveComponent';
 
 export interface IDivProps {
+    'id': string;
     'className'?: string;
     'class'?: string;
 }
 
-class Div extends React.Component<IDivProps> {
-    render() {
-        return (
-            <div
-                className={[this.props.class, this.props.className].join(' ')}
-            >
-                {this.props.children}
-            </div>
-        );
-    }
-}
+const Div: React.SFC<IDivProps> = props => (
+    <div className={[props.class, props.className].join(' ')}>
+        {props.children}
+    </div>
+);
 
-export default interactiveComponent(styledComponent(Div) as any);
+export default interactiveComponent(styledComponent(Div));
