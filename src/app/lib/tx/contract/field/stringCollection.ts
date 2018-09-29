@@ -30,7 +30,7 @@ class StringCollection implements IField<string[]> {
             this._value = [];
         }
         else if (!Array.isArray(value)) {
-            value = [value.toString()];
+            this._value = [value.toString()];
         }
         else {
             this._value = value.map(v => v.toString());
