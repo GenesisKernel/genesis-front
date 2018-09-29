@@ -19,15 +19,14 @@ cache:
     - $HOME/.cache/electron-builder
 
 script:
+  - yarn install
   - CI=true yarn test --passWithNoTests --ci
   - |
     if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-      yarn install
       yarn build-desktop
       yarn release -wl
       yarn build
     else
-      yarn install
       yarn build-desktop
       yarn release -m
     fi
