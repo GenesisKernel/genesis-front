@@ -7,16 +7,28 @@ matrix:
       env:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
-
+        - 
     - os: linux
-      services: docker
-      language: generic
+      dist: trusty
+      sudo: true
+      language: node_js
+      node_js: "10"
 
 cache:
   directories:
     - node_modules
     - $HOME/.cache/electron
     - $HOME/.cache/electron-builder
+
+before_install: 
+  - |
+    if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+      sudo dpkg --add-architecture i386
+      sudo apt-get -qq update
+      sudo apt-get install wine1.6
+    fi
+
+install: true
 
 script:
   - yarn install
@@ -48,7 +60,7 @@ deploy:
   github-token: $GITHUB_TOKEN
   on:
     branch: master
-    condition: $TRAVIS_OS_NAME = LINUX
+    condition: $TRAVIS_OS_NAME = linux
 
 branches:
   except:
