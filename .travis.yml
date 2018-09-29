@@ -16,9 +16,9 @@ cache:
 
 script:
   - yarn install
+  - CI=true yarn test --passWithNoTests --ci
   - yarn build-desktop
   - yarn release -mwl
-  - CI=true yarn test --passWithNoTests --ci
   - yarn build
 
 before_cache:
