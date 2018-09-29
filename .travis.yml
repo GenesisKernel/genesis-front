@@ -21,8 +21,11 @@ cache:
 script:
   - yarn install
   - CI=true yarn test --passWithNoTests --ci
-  - yarn build-desktop
-  - yarn release -w
+  - |
+    if [ "$TRAVIS_BRANCH" == "master" ]; then
+      yarn build-desktop
+      yarn release -mwl
+    fi
   - yarn build
 
 before_cache:
