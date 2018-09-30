@@ -99,14 +99,14 @@ const EditorTabs: React.SFC<IEditorTabsProps> = (props) => (
                     <div>
                         <ul className="dropdown-group">
                             <li>
-                                <CloseDropdownButton onClick={props.onCloseSaved}>
+                                <CloseDropdownButton onClick={props.tabs.length && props.onCloseSaved} disabled={!props.tabs.length}>
                                     <span>
                                         <FormattedMessage id="editor.close.saved" defaultMessage="Close saved tabs" />
                                     </span>
                                 </CloseDropdownButton>
                             </li>
                             <li>
-                                <CloseDropdownButton onClick={props.onCloseAll}>
+                                <CloseDropdownButton onClick={props.tabs.length && props.onCloseAll} disabled={!props.tabs.length}>
                                     <span>
                                         <FormattedMessage id="editor.close.all" defaultMessage="Close all tabs" />
                                     </span>
