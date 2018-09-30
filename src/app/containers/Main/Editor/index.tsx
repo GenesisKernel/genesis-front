@@ -25,7 +25,7 @@ import { injectIntl, InjectedIntlProps } from 'react-intl';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { modalShow } from 'modules/modal/actions';
-import { changeEditorTab, closeEditorTab, updateEditorTab, loadEditorTab, createEditorTab } from 'modules/editor/actions';
+import { changeEditorTab, closeEditorTab, closeAllEditorTab, closeSavedEditorTab, updateEditorTab, loadEditorTab, createEditorTab } from 'modules/editor/actions';
 import { TEditorTab } from 'genesis/editor';
 import { IModalResult } from 'genesis/modal';
 
@@ -50,6 +50,8 @@ interface IEditorContainerDispatch {
     onTabLoad: typeof loadEditorTab.started;
     onTabChange: typeof changeEditorTab;
     onTabClose: typeof closeEditorTab;
+    onTabCloseAll: typeof closeAllEditorTab;
+    onTabCloseSaved: typeof closeSavedEditorTab;
     onTabUpdate: typeof updateEditorTab;
 }
 
@@ -126,6 +128,8 @@ class EditorContainer extends React.Component<IEditorContainerProps & InjectedIn
                 onTabChange={this.props.onTabChange}
                 onTabUpdate={this.props.onTabUpdate}
                 onTabClose={this.onTabClose}
+                onTabCloseAll={this.props.onTabCloseAll}
+                onTabCloseSaved={this.props.onTabCloseSaved}
             />
         );
     }
@@ -143,6 +147,8 @@ const mapDispatchToProps = {
     onTabLoad: loadEditorTab.started,
     onTabChange: changeEditorTab,
     onTabClose: closeEditorTab,
+    onTabCloseAll: closeAllEditorTab,
+    onTabCloseSaved: closeSavedEditorTab,
     onTabUpdate: updateEditorTab,
 };
 

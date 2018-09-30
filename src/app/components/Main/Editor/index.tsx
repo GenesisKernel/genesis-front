@@ -34,6 +34,8 @@ export interface IEditorProps {
     onTabChange: (index: number) => void;
     onTabUpdate: (value: string) => void;
     onTabClose: (index: number) => void;
+    onTabCloseAll: () => void;
+    onTabCloseSaved: () => void;
 }
 
 class Editor extends React.Component<IEditorProps> {
@@ -75,6 +77,8 @@ class Editor extends React.Component<IEditorProps> {
                     tabs={this.props.tabs}
                     onChange={this.props.onTabChange}
                     onClose={this.props.onTabClose}
+                    onCloseAll={this.props.onTabCloseAll}
+                    onCloseSaved={this.props.onTabCloseSaved}
                 />
                 {currentTab && this.renderTool(currentTab)}
             </div>
