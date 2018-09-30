@@ -29,6 +29,10 @@ import imgTpl from './tpl.svg';
 import themed from 'components/Theme/themed';
 import EditorTab from './EditorTab';
 
+import { FormattedMessage } from 'react-intl';
+import SystemButton from 'components/Main/SystemButton';
+import { CloseDropdownButton } from 'components/DropdownButton';
+
 export const TYPE_ICONS: { [type: string]: string } = {
     contract: imgSim,
     page: imgTpl,
@@ -42,13 +46,10 @@ const StyledTabsMenu = themed.div `
     z-index: 20;
     top: 0px;
     right: 0px;
+    background: #c3c7ce;
     
-    > div {
-        position: relative;
-        
-        & > button {
-            padding: 7px 20px 8px 20px;
-        }        
+    & button.dropdown-toggle {
+        height: 36px;
     }    
 `;
 
@@ -58,6 +59,8 @@ export interface IEditorTabsProps {
     tabs: TEditorTab[];
     onChange: (index: number) => void;
     onClose: (index: number) => void;
+    onCloseAll: () => void;
+    onCloseSaved: () => void;
 }
 
 const EditorTabs: React.SFC<IEditorTabsProps> = (props) => (
@@ -86,11 +89,35 @@ const EditorTabs: React.SFC<IEditorTabsProps> = (props) => (
             </ul>
         </ScrollArea>
         <StyledTabsMenu>
-            <div>
-                <button type="button" className="btn">
-                    <em className="fa fa-ellipsis-v"/>
-                </button>
-            </div>
+
+            <SystemButton
+                className="p0"
+                width={225}
+                align="right"
+                rightMost
+                content={
+                    <div>
+                        <ul className="dropdown-group">
+                            <li>
+                                <CloseDropdownButton onClick={props.onCloseSaved}>
+                                    <span>
+                                        <FormattedMessage id="editor.close.saved" defaultMessage="Close saved tabs" />
+                                    </span>
+                                </CloseDropdownButton>
+                            </li>
+                            <li>
+                                <CloseDropdownButton onClick={props.onCloseAll}>
+                                    <span>
+                                        <FormattedMessage id="editor.close.all" defaultMessage="Close all tabs" />
+                                    </span>
+                                </CloseDropdownButton>
+                            </li>
+                        </ul>
+                    </div>
+                }
+            >
+                <em className="fa fa-ellipsis-v"/>
+            </SystemButton>
         </StyledTabsMenu>
     </div>
 );
