@@ -71,12 +71,11 @@ class ToolButtonContainer extends React.Component<IToolButtonProps & IToolButton
                 title: this.props.popup.header,
                 width: width === width ? width : null
             };
-         }
+        }
 
         this.props.buttonInteraction({
             uuid: this._uuid,
             popup,
-            contract: null,
             page: this.props.page ? {
                 name: this.props.page,
                 params: pageParams
