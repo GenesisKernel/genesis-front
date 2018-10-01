@@ -45,15 +45,15 @@ const newBlockEpic: Epic = (action$, store, { api }) => action$.ofAction(editorS
             success: result => TxObservable(action$, {
                 tx: {
                     uuid: id,
-                    contract: {
+                    contracts: [{
                         name: '@1NewBlock',
-                        params: {
+                        params: [{
                             Name: result.name,
                             Value: action.payload.value,
                             Conditions: result.conditions,
                             ApplicationId: action.payload.appId || 0
-                        }
-                    }
+                        }]
+                    }]
                 },
                 success: tx => Observable.fromPromise(client.getBlock({
                     name: result.name

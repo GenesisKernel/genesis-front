@@ -28,7 +28,7 @@ import { modalShow } from '../../modal/actions';
 
 export const txExecFailedEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(txExec.failed)
-        .filter(l => !l.payload.params.tx.silent)
+        .filter(l => !l.payload.params.silent)
         .map(action =>
             modalShow({
                 id: 'TX_ERROR',

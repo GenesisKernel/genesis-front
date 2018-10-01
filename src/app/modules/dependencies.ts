@@ -73,8 +73,6 @@ const storeDependencies: IStoreDependencies = {
             }))
 
         ).catch(e => {
-            // tslint:disable-next-line:no-console
-            console.error(e);
             throw e && e.response && e.response.data ? e.response.data.error : null;
         }),
         apiHost: params.apiHost,

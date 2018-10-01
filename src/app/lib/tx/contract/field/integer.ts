@@ -20,20 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { IRootState } from 'modules';
-import { Epic } from 'redux-observable';
-import { Action } from 'redux';
-import { txExec } from '../actions';
-import { reloadStylesheet } from 'modules/content/actions';
-import { Observable } from 'rxjs';
+import IField from './';
+import { Int64BE } from 'int64-buffer';
 
-const reloadStylesheetEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(txExec.done)
-        .filter(l => !!l.payload.params.contracts.find(c => /^(@1)?EditParameter$/.test(c.name) && !!c.params.find(p => 'stylesheet' === p.name)))
-        .flatMap(s => Observable.from(s.payload.params.contracts))
-        .flatMap(contract => Observable.from(contract.params))
-        .map(params =>
-            reloadStylesheet(params.value)
-        );
+class Integer implements IField<Int64BE | string | number, Int64BE> {
+    private _value: Int64BE = new Int64BE();
 
-export default reloadStylesheetEpic;
+    set(value: Int64BE | string | number) {
+        if (!value) {
+            this._value = new Int64BE();
+        }
+        else if ('string' === typeof value) {
+            this._value = new Int64BE(value);
+        }
+        else if ('number' === typeof value) {
+            this._value = new Int64BE(value);
+        }
+        else {
+            this._value = value;
+        }
+    }
+
+    get(): Int64BE {
+        return this._value;
+    }
+}
+
+export default Integer;

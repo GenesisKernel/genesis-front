@@ -20,22 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { txBatchStatus } from '../actions';
-import { Reducer } from 'modules';
+import IField from './';
 
-const txBatchStatusHandler: Reducer<typeof txBatchStatus, State> = (state, payload) => {
-    const tx = state.transactions.get(payload.id);
-    return {
-        ...state,
-        transactions: state.transactions.set(payload.id, {
-            ...tx,
-            batch: {
-                ...tx.batch,
-                pending: payload.pending
-            }
-        })
-    };
-};
+class String implements IField<string> {
+    private _value: string = '';
 
-export default txBatchStatusHandler;
+    set(value: string) {
+        this._value = value ? value.toString() : '';
+    }
+
+    get() {
+        return this._value;
+    }
+}
+
+export default String;

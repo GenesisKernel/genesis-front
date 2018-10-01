@@ -20,23 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { txExecBatch } from '../actions';
-import { Reducer } from 'modules';
+import IField from './';
 
-const txExecBatchFailedHandler: Reducer<typeof txExecBatch.failed, State> = (state, payload) => {
-    const tx = state.transactions.get(payload.params.uuid);
-    return {
-        ...state,
-        transactions: state.transactions.set(payload.params.uuid, {
-            ...tx,
-            error: payload.error,
-            batch: {
-                ...tx.batch,
-                pending: 0
-            }
-        })
-    };
-};
+class Boolean implements IField<string | boolean, boolean> {
+    private _value: boolean = false;
 
-export default txExecBatchFailedHandler;
+    set(value: string | boolean) {
+        if (!value) {
+            this._value = false;
+        }
+        else if ('boolean' === typeof value) {
+            this._value = value;
+        }
+        else {
+            this._value = /^\s*(true|1(.(0)+)?)\s*$/i.test(value || '');
+        }
+    }
+
+    get() {
+        return this._value;
+    }
+}
+
+export default Boolean;

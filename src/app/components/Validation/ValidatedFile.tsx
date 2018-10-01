@@ -20,11 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { FormControl } from 'react-bootstrap';
 import { Validator } from './Validators';
-import * as propTypes from 'prop-types';
-import { readBinaryFile } from 'lib/fs';
+import propTypes from 'prop-types';
 
 import ValidatedForm, { IValidatedControl } from './ValidatedForm';
 
@@ -81,11 +80,9 @@ export default class ValidatedFile extends React.Component<IValidatedFileProps, 
     onChange(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.files.length) {
             const file = e.target.files[0];
-            readBinaryFile(file).then(r => {
-                this.setState({
-                    value: file,
-                    filename: file.name
-                });
+            this.setState({
+                value: file,
+                filename: file.name
             });
         }
         e.target.value = '';
