@@ -23,7 +23,8 @@
 import actionCreatorFactory from 'typescript-fsa';
 import { TProtypoElement } from 'genesis/protypo';
 
-import { IEditorTabCreateCall, ILoadEditorTabCall, ICreateEditorTabCall, IReloadEditorTabCall, TEditorTab, IChangePageCall, IChangePageResult, ISaveConstructorHistoryResult,
+import {
+    IEditorTabCreateCall, ILoadEditorTabCall, ICreateEditorTabCall, IReloadEditorTabCall, TEditorTab, IChangePageCall, IChangePageResult, ISaveConstructorHistoryResult,
     IConstructorUndoRedoResult, ISetTagCanDropPositionCall, ISetTagCanDropPositionResult, IAddTagCall, IOperateTagCall, IOperateTagResult, IMoveTreeTag, ISelectTagResult,
     IGetPageTreeResult
 } from 'genesis/editor';
@@ -53,3 +54,4 @@ export const saveConstructorHistory = actionCreator.async<void, ISaveConstructor
 export const constructorUndo = actionCreator.async<void, IConstructorUndoRedoResult>('CONSTRUCTOR_UNDO');
 export const constructorRedo = actionCreator.async<void, IConstructorUndoRedoResult>('CONSTRUCTOR_REDO');
 export const generatePageTemplate = actionCreator<string>('GENERATE_PAGE_TEMPLATE');
+export const debugContract = actionCreator<string>('DEBUG_CONTRACT');

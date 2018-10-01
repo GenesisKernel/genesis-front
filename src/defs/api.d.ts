@@ -88,6 +88,9 @@ declare module 'genesis/api' {
         name: string;
     }
 
+    type TContractFieldType =
+        'bool' | 'int' | 'float' | 'money' | 'string' | 'file' | 'array';
+
     interface IContractResponse {
         id: number;
         name: string;
@@ -95,7 +98,7 @@ declare module 'genesis/api' {
         tableid: number;
         fields: {
             name: string;
-            type: string;
+            type: TContractFieldType;
             optional: boolean;
         }[];
     }
