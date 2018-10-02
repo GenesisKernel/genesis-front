@@ -64,7 +64,7 @@ declare module 'genesis/protypo' {
         uuid: string;
         silent?: boolean;
         confirm?: IButtonConfirm;
-        contracts?: {
+        contracts: {
             name: string;
             params: {
                 [key: string]: any
