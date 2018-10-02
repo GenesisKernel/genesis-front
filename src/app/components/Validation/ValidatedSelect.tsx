@@ -84,6 +84,8 @@ export default class ValidatedSelect extends React.Component<IValidatedSelectPro
         if (this.props.onChange) {
             this.props.onChange(e);
         }
+
+        (this.context.form as ValidatedForm).emitUpdate(this.props.name, (e.target as any).value);
     }
 
     onBlur(e: React.FocusEvent<HTMLSelectElement>) {

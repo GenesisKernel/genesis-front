@@ -77,6 +77,8 @@ export default class ValidatedTextarea extends React.Component<IValidatedTextare
         if (this.props.onChange) {
             this.props.onChange(e);
         }
+
+        (this.context.form as ValidatedForm).emitUpdate(this.props.name, e.target.value);
     }
 
     onBlur(e: React.FocusEvent<HTMLTextAreaElement>) {

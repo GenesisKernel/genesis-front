@@ -84,6 +84,8 @@ export default class ValidatedCheckbox extends React.Component<IValidatedCheckbo
         if (this.props.onChange) {
             this.props.onChange(e);
         }
+
+        (this.context.form as ValidatedForm).emitUpdate(this.props.name, String(e.target.checked));
     }
 
     onBlur(e: React.FocusEvent<HTMLInputElement>) {
