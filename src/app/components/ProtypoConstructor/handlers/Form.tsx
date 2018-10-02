@@ -28,7 +28,7 @@ import EditableBlock from './EditableBlock';
 
 class Form extends EditableBlock {
     protected editableDisplay = 'block';
-    protected editable = false;
+    protected editable = true;
 
     onSubmit(e: any) {
         e.stopPropagation();
