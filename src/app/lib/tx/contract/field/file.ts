@@ -20,26 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
-import StyledComponent from 'components/Protypo/handlers/StyledComponent';
-import DnDComponent from './DnDComponent';
-import EditableBlock from './EditableBlock';
+import IField from './';
 
-class Div extends EditableBlock {
-    protected editableTag = 'div';
-    protected editableDisplay = 'block';
-    protected renderTag = 'div';
+export interface IFileStruct {
+    name: string;
+    type: string;
+    value: ArrayBuffer;
+}
 
-    renderChildren(classes: string) {
-        return (
-            <div
-                className={classes}
-            >
-                {this.props.children || (<FormattedMessage id="editor.designer.emptyblock" defaultMessage="Empty block. Drop elements here.<"/>)}
-            </div>
-        );
+export interface IFileData {
+    Name: string;
+    MimeType: string;
+    Body: ArrayBuffer;
+}
+
+class File implements IField<IFileStruct, IFileData> {
+    private _value: IFileStruct;
+
+    set(value: IFileStruct) {
+        this._value = value;
+    }
+
+    get() {
+        return this._value ? {
+            Name: this._value.name,
+            MimeType: this._value.type,
+            Body: this._value.value
+        } : null;
     }
 }
 
-export default DnDComponent(StyledComponent(Div));
+export default File;

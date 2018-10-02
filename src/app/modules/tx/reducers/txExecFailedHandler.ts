@@ -24,16 +24,13 @@ import { State } from '../reducer';
 import { txExec } from '../actions';
 import { Reducer } from 'modules';
 
-const txExecFailedHandler: Reducer<typeof txExec.failed, State> = (state, payload) => {
-    const tx = state.transactions.get(payload.params.tx.uuid);
-    return {
-        ...state,
-        transactions: state.transactions.set(payload.params.tx.uuid, {
-            ...tx,
-            block: null,
-            error: payload.error
-        })
-    };
-};
+const txExecFailedHandler: Reducer<typeof txExec.failed, State> = (state, payload) => ({
+    ...state,
+    transactions: state.transactions.set(payload.params.uuid, {
+        status: 'error',
+        error: payload.error,
+        stack: []
+    })
+});
 
 export default txExecFailedHandler;

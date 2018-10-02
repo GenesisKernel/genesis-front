@@ -228,6 +228,7 @@ export default class Properties extends React.Component<IPropertiesProps, IPrope
                             <Row className="g-padding-bottom">
                                 <Col xs={12}>
                                     <FormatButtons
+                                        tag={this.props.tag.tag}
                                         onClick={this.onToggleFormat.bind(this)}
                                     />
                                 </Col>

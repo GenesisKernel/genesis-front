@@ -20,26 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
-import StyledComponent from 'components/Protypo/handlers/StyledComponent';
-import DnDComponent from './DnDComponent';
-import EditableBlock from './EditableBlock';
+import IField from './';
 
-class Div extends EditableBlock {
-    protected editableTag = 'div';
-    protected editableDisplay = 'block';
-    protected renderTag = 'div';
+class StringCollection implements IField<string[]> {
+    private _value: string[] = [];
 
-    renderChildren(classes: string) {
-        return (
-            <div
-                className={classes}
-            >
-                {this.props.children || (<FormattedMessage id="editor.designer.emptyblock" defaultMessage="Empty block. Drop elements here.<"/>)}
-            </div>
-        );
+    set(value: string[] | object) {
+        if (!value) {
+            this._value = [];
+        }
+        else if (!Array.isArray(value)) {
+            this._value = [value.toString()];
+        }
+        else {
+            this._value = value.map(v => v.toString());
+        }
+    }
+
+    get(): string[] {
+        return this._value;
     }
 }
 
-export default DnDComponent(StyledComponent(Div));
+export default StringCollection;

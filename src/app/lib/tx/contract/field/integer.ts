@@ -20,26 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
-import StyledComponent from 'components/Protypo/handlers/StyledComponent';
-import DnDComponent from './DnDComponent';
-import EditableBlock from './EditableBlock';
+import IField from './';
+import { Int64BE } from 'int64-buffer';
 
-class Div extends EditableBlock {
-    protected editableTag = 'div';
-    protected editableDisplay = 'block';
-    protected renderTag = 'div';
+class Integer implements IField<Int64BE | string | number, Int64BE> {
+    private _value: Int64BE = new Int64BE();
 
-    renderChildren(classes: string) {
-        return (
-            <div
-                className={classes}
-            >
-                {this.props.children || (<FormattedMessage id="editor.designer.emptyblock" defaultMessage="Empty block. Drop elements here.<"/>)}
-            </div>
-        );
+    set(value: Int64BE | string | number) {
+        if (!value) {
+            this._value = new Int64BE();
+        }
+        else if ('string' === typeof value) {
+            this._value = new Int64BE(value);
+        }
+        else if ('number' === typeof value) {
+            this._value = new Int64BE(value);
+        }
+        else {
+            this._value = value;
+        }
+    }
+
+    get(): Int64BE {
+        return this._value;
     }
 }
 
-export default DnDComponent(StyledComponent(Div));
+export default Integer;

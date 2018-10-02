@@ -23,7 +23,6 @@
 import * as actions from '../actions';
 import uuid from 'uuid';
 import { Action } from 'redux';
-import { Observable } from 'rxjs';
 import { Epic } from 'redux-observable';
 import { IRootState } from 'modules';
 import { txCall } from 'modules/tx/actions';
@@ -35,27 +34,19 @@ const connections = {
     block: '@1EditBlock',
 };
 
-const editorSaveEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(actions.editorSave)
-        .filter(l => !l.payload.new)
-        .flatMap(action => {
-            const contract = connections[action.payload.type];
-
-            if (contract) {
-                return Observable.of(txCall({
-                    uuid: uuid.v4(),
-                    contract: {
-                        name: contract,
-                        params: {
-                            Id: action.payload.id,
-                            Value: action.payload.value
-                        }
-                    }
-                }));
-            }
-            else {
-                return Observable.empty();
-            }
-        });
+const editorSaveEpic: Epic<Action, IRootState> = (action$, store) => action$.ofAction(actions.editorSave)
+    .filter(l => !l.payload.new && connections[l.payload.type])
+    .map(action =>
+        txCall({
+            uuid: uuid.v4(),
+            contracts: [{
+                name: connections[action.payload.type],
+                params: [{
+                    Id: action.payload.id,
+                    Value: action.payload.value
+                }]
+            }]
+        })
+    );
 
 export default editorSaveEpic;

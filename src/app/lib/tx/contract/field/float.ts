@@ -20,26 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
-import StyledComponent from 'components/Protypo/handlers/StyledComponent';
-import DnDComponent from './DnDComponent';
-import EditableBlock from './EditableBlock';
+import IField from './';
 
-class Div extends EditableBlock {
-    protected editableTag = 'div';
-    protected editableDisplay = 'block';
-    protected renderTag = 'div';
+class Float implements IField<string | number, number> {
+    private _value: number;
 
-    renderChildren(classes: string) {
-        return (
-            <div
-                className={classes}
-            >
-                {this.props.children || (<FormattedMessage id="editor.designer.emptyblock" defaultMessage="Empty block. Drop elements here.<"/>)}
-            </div>
-        );
+    set(value: string | number) {
+        if ('number' === typeof value) {
+            this._value = value === value ? value : 0;
+        }
+        else if ('string' === typeof value) {
+            const val = parseFloat(value);
+            this._value = val === val ? val : 0;
+        }
+        else {
+            this._value = 0;
+        }
+    }
+
+    get() {
+        return this._value;
     }
 }
 
-export default DnDComponent(StyledComponent(Div));
+export default Float;

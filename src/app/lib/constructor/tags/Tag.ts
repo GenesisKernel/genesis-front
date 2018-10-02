@@ -220,7 +220,7 @@ class Tag {
                 tag: 'text',
                 text: text,
                 id: idGenerator.generateId()
-            }] : []
+            }] : null
         };
     }
 
