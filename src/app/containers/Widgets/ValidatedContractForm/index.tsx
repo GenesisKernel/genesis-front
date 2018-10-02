@@ -35,7 +35,7 @@ interface IValidatedContractFormProps {
     className?: string;
     onExec?: (result: ITransactionCollection) => void;
     contract?: string;
-    contractParams?: { [key: string]: any } | (() => { [key: string]: any });
+    contractParams?: { [key: string]: any } | ((payload: { [key: string]: string }) => { [key: string]: any });
 }
 
 interface IValidatedContractFormStateProps {
@@ -62,11 +62,11 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
         }
     }
 
-    onSubmit = () => {
+    onSubmit = (payload: { [key: string]: string }) => {
         this._uuid = uuid.v4();
 
         const contractParams = 'function' === typeof this.props.contractParams ?
-            this.props.contractParams() :
+            this.props.contractParams(payload) :
             this.props.contractParams;
 
         if (null === contractParams) {

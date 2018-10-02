@@ -24,7 +24,7 @@ import * as React from 'react';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
 import { modalShow } from 'modules/modal/actions';
-import { editorSave, revertEditorTab, changeEditorTool } from 'modules/editor/actions';
+import { editorSave, revertEditorTab, changeEditorTool, debugContract } from 'modules/editor/actions';
 import { IModalResult } from 'genesis/modal';
 import { TEditorTab } from 'genesis/editor';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
@@ -48,6 +48,7 @@ interface IEditorToolbarDispatch {
     changeEditorTool: typeof changeEditorTool.started;
     revertEditorTab: typeof revertEditorTab;
     editorSave: typeof editorSave;
+    onExec: typeof debugContract;
 }
 
 class EditorToolbarContainer extends React.Component<IEditorToolbarProps & InjectedIntlProps & IEditorToolbarState & IEditorToolbarDispatch> {
@@ -67,20 +68,14 @@ class EditorToolbarContainer extends React.Component<IEditorToolbarProps & Injec
         });
     }
 
-    onExec = () => {
-        this.props.modalShow({
-            id: 'EDITOR_EXEC',
-            type: 'DEBUG_CONTRACT',
-            params: {
-                contract: this.props.currentTab.name
-            }
-        });
-    }
-
     onSave = () => {
         if (this.props.currentTab) {
             this.props.editorSave(this.props.currentTab);
         }
+    }
+
+    onExec = () => {
+        this.props.onExec(this.props.currentTab.name);
     }
 
     componentWillReceiveProps(props: IEditorToolbarProps & IEditorToolbarState & IEditorToolbarDispatch) {
@@ -123,6 +118,7 @@ const mapStateToProps = (state: IRootState) => {
 
 const mapDispatchToProps = {
     modalShow: modalShow,
+    onExec: debugContract,
     revertEditorTab: revertEditorTab,
     changeEditorTool: changeEditorTool.started,
     editorSave
