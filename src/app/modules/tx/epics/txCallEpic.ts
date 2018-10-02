@@ -22,59 +22,25 @@
 
 import { Epic } from 'modules';
 import { Observable } from 'rxjs';
-import { txCall, txAuthorize, txPrepare, txPrepareBatch } from '../actions';
+import { txCall, txAuthorize, txExec } from '../actions';
 import { isType } from 'typescript-fsa';
 import keyring from 'lib/keyring';
 
 const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall)
     // Ask for password if there is no privateKey
-    .flatMap(action => {
-        const privateKey = store.getState().auth.privateKey;
-        const contractName = action.payload.contract ? action.payload.contract.name : null;
-        const batch = action.payload.contracts && 0 < action.payload.contracts.length;
-
-        return Observable.if(
-            () => keyring.validatePrivateKey(privateKey),
-            Observable.of(action),
-            Observable.merge(
-                Observable.of(txAuthorize.started({
-                    contract: contractName,
-                    batch
-                })),
-                action$.filter(l => txAuthorize.done.match(l) || txAuthorize.failed.match(l))
-                    .take(1)
-                    .flatMap(result => Observable.if(
-                        () => isType(result, txAuthorize.done),
-                        Observable.of(action),
-                        Observable.empty<never>()
-                    ))
-            )
-        );
-
-    })
-    .flatMap(action => {
-        if (isType(action, txCall)) {
-            const privateKey = store.getState().auth.privateKey;
-
-            if (action.payload.contracts && action.payload.contracts.length) {
-                return Observable.of(txPrepareBatch({
-                    tx: action.payload,
-                    privateKey
-                }));
-            }
-            else if (action.payload.contract) {
-                return Observable.of(txPrepare({
-                    tx: action.payload,
-                    privateKey
-                }));
-            }
-            else {
-                return Observable.empty<never>();
-            }
-        }
-        else {
-            return Observable.of(action);
-        }
-    });
+    .flatMap(action => Observable.if(
+        () => keyring.validatePrivateKey(store.getState().auth.privateKey),
+        Observable.of(txExec.started(action.payload)),
+        Observable.merge(
+            Observable.of(txAuthorize.started({})),
+            action$.filter(l => txAuthorize.done.match(l) || txAuthorize.failed.match(l))
+                .take(1)
+                .flatMap(result => Observable.if(
+                    () => isType(result, txAuthorize.done),
+                    Observable.of(txExec.started(action.payload)),
+                    Observable.empty<never>()
+                ))
+        )
+    ));
 
 export default txCallEpic;

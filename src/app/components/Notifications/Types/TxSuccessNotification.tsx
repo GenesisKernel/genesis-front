@@ -27,7 +27,7 @@ import { ITransactionCall } from 'genesis/tx';
 
 const TxSuccessNotification: INotificationProto<{ block: string, tx: ITransactionCall }> = {
     icon: 'o-checkround-1',
-    title: params => params.tx.contract.name,
+    title: params => '', // params.tx.contract.name,
     body: params => (
         <FormattedMessage id="notification.tx_imprinted" defaultMessage="Imprinted in the blockchain (block {block})" values={{ block: params.block }} />
     )

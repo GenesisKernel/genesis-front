@@ -24,17 +24,13 @@ import { State } from '../reducer';
 import { txExec } from '../actions';
 import { Reducer } from 'modules';
 
-const txExecDoneHandler: Reducer<typeof txExec.done, State> = (state, payload) => {
-    const tx = state.transactions.get(payload.params.tx.uuid);
-    return {
-        ...state,
-        transactions: state.transactions.set(payload.params.tx.uuid, {
-            ...tx,
-            block: payload.result.block,
-            result: payload.result.result,
-            error: null
-        })
-    };
-};
+const txExecDoneHandler: Reducer<typeof txExec.done, State> = (state, payload) => ({
+    ...state,
+    transactions: state.transactions.set(payload.params.uuid, {
+        status: 'done',
+        error: null,
+        stack: payload.result
+    })
+});
 
 export default txExecDoneHandler;

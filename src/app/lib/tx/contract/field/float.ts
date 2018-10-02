@@ -20,20 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { IRootState } from 'modules';
-import { Epic } from 'redux-observable';
-import { Action } from 'redux';
-import { txExec } from '../actions';
-import { reloadStylesheet } from 'modules/content/actions';
-import { Observable } from 'rxjs';
+import IField from './';
 
-const reloadStylesheetEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(txExec.done)
-        .filter(l => !!l.payload.params.contracts.find(c => /^(@1)?EditParameter$/.test(c.name) && !!c.params.find(p => 'stylesheet' === p.name)))
-        .flatMap(s => Observable.from(s.payload.params.contracts))
-        .flatMap(contract => Observable.from(contract.params))
-        .map(params =>
-            reloadStylesheet(params.value)
-        );
+class Float implements IField<string | number, number> {
+    private _value: number;
 
-export default reloadStylesheetEpic;
+    set(value: string | number) {
+        if ('number' === typeof value) {
+            this._value = value === value ? value : 0;
+        }
+        else if ('string' === typeof value) {
+            const val = parseFloat(value);
+            this._value = val === val ? val : 0;
+        }
+        else {
+            this._value = 0;
+        }
+    }
+
+    get() {
+        return this._value;
+    }
+}
+
+export default Float;

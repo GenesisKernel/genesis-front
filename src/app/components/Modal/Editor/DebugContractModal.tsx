@@ -22,10 +22,11 @@
 
 import React from 'react';
 import { Button, Well, Row, Col } from 'react-bootstrap';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import { ITransactionCollection, ITxStatus, ITxError } from 'genesis/tx';
 import imgClose from 'images/close.svg';
 
 import Modal from '../';
-import { FormattedMessage, injectIntl } from 'react-intl';
 import Validation from 'components/Validation';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Table, { ICellRenderer } from 'components/Table';
@@ -37,13 +38,7 @@ export interface IDebugContractModalProps {
 interface IDebugContractModalState {
     pending: boolean;
     params: { key: string, value: string }[];
-    result: {
-        block?: string;
-        error?: {
-            type: string;
-            error: string;
-        }
-    };
+    result: ITxError | ITxStatus;
 }
 
 class DebugContractModal extends Modal<IDebugContractModalProps, void, IDebugContractModalState> {
@@ -132,13 +127,10 @@ class DebugContractModal extends Modal<IDebugContractModalProps, void, IDebugCon
         });
     }
 
-    onExec = (block: string, error?: { type: string, error: string }) => {
+    onExec = (tx: ITransactionCollection) => {
         this.setState({
             pending: false,
-            result: {
-                block,
-                error
-            }
+            result: tx.error || tx.stack[0].status
         });
     }
 

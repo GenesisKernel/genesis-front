@@ -20,20 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { IRootState } from 'modules';
-import { Epic } from 'redux-observable';
-import { Action } from 'redux';
-import { txExec } from '../actions';
-import { reloadStylesheet } from 'modules/content/actions';
-import { Observable } from 'rxjs';
+import IField from './';
 
-const reloadStylesheetEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(txExec.done)
-        .filter(l => !!l.payload.params.contracts.find(c => /^(@1)?EditParameter$/.test(c.name) && !!c.params.find(p => 'stylesheet' === p.name)))
-        .flatMap(s => Observable.from(s.payload.params.contracts))
-        .flatMap(contract => Observable.from(contract.params))
-        .map(params =>
-            reloadStylesheet(params.value)
-        );
+export interface IFileStruct {
+    name: string;
+    type: string;
+    value: ArrayBuffer;
+}
 
-export default reloadStylesheetEpic;
+export interface IFileData {
+    Name: string;
+    MimeType: string;
+    Body: ArrayBuffer;
+}
+
+class File implements IField<IFileStruct, IFileData> {
+    private _value: IFileStruct;
+
+    set(value: IFileStruct) {
+        this._value = value;
+    }
+
+    get() {
+        return this._value ? {
+            Name: this._value.name,
+            MimeType: this._value.type,
+            Body: this._value.value
+        } : null;
+    }
+}
+
+export default File;
