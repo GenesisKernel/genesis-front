@@ -34,7 +34,7 @@ class AuthPasswordChangedModal extends Modal<{}, void> {
                     <FormattedMessage id="alert.info" defaultMessage="Information" />
                 </Modal.Header>
                 <Modal.Body>
-                    <div><FormattedMessage id="auth.password.changed" defaultMessage="Password changed. Please login with new password." /></div>
+                    <div><FormattedMessage id="auth.password.changed" defaultMessage="Password changed. Please login with new password" /></div>
                 </Modal.Body>
                 <Modal.Footer className="text-right">
                     <Button type="button" bsStyle="primary" onClick={this.props.onCancel.bind(this)}>

@@ -42,7 +42,7 @@ const ActionSelector: React.SFC<IActionSelectorProps> = (props) => (
                 <Action
                     icon="icon-wallet"
                     title={<FormattedMessage id="auth.havekey" defaultMessage="I have a key" />}
-                    description={<FormattedMessage id="auth.havekey.desc" defaultMessage="If you are already familiar with Genesis and have a backup of your private key - choose this option to guide you through the process of restoring of your wallet data" />}
+                    description={<FormattedMessage id="auth.havekey.desc" defaultMessage="If you are already familiar with Genesis and have a backup of your private key, choose this option to guide you through the process of restoring your wallet data" />}
                     action={<FormattedMessage id="auth.import.existing" defaultMessage="Import existing key" />}
                     onClick={props.onImport}
                 />
@@ -50,7 +50,7 @@ const ActionSelector: React.SFC<IActionSelectorProps> = (props) => (
                 <Action
                     icon="icon-lock"
                     title={<FormattedMessage id="auth.nokey" defaultMessage="I don't have a key" />}
-                    description={<FormattedMessage id="auth.nokey.desc" defaultMessage="If you are new to the system or just want to create a new wallet - proceed with this option to generate new private key and protect it with your password" />}
+                    description={<FormattedMessage id="auth.nokey.desc" defaultMessage="If you are new to the system or just want to create a new wallet, choose this option to generate a new private key and protect it with your password" />}
                     action={<FormattedMessage id="auth.generate.new" defaultMessage="Generate new key" />}
                     onClick={props.onCreate}
                 />

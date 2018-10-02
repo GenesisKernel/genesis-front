@@ -21,15 +21,12 @@
 // SOFTWARE.
 
 declare module 'genesis/tx' {
-    import { ITxPrepareBatchResponse } from 'genesis/api';
-
     type TTxError =
         'error' |
         'info' |
         'warning' |
         'panic' |
         'E_CONTRACT' |
-        'E_INVALIDATED' |
         'E_SERVER';
 
     interface ITxResult {
@@ -43,47 +40,39 @@ declare module 'genesis/tx' {
         params?: any[];
     }
 
-    interface ITransaction {
-        uuid: string;
-        contract: string;
-        block?: string;
-        result?: string;
+    interface ITxStatus extends ITxResult, ITxError { }
+
+    interface ITransactionParam {
+        type: string;
+        value: object;
+    }
+
+    type TTransactionStatus =
+        'pending' | 'done' | 'error';
+
+    interface ITransactionCollection {
+        status: TTransactionStatus;
         error?: ITxError;
-        batch?: {
-            pending: number;
-            contracts: string[];
-        }
+        stack: ITransaction[];
+    }
+
+    interface ITransaction {
+        name: string,
+        hash: string,
+        status: ITxStatus;
+        params: {
+            [name: string]: ITransactionParam;
+        };
     }
 
     interface ITransactionCall {
         uuid: string;
         silent?: boolean;
-        contract?: {
-            name: string;
-            params: {
-                [key: string]: any
-            };
-        };
-        contracts?: {
+        contracts: {
             name: string;
             params: {
                 [key: string]: any;
             }[];
         }[];
-    }
-
-    interface IExecutionCall {
-        tx: ITransactionCall;
-        requestID?: string;
-        privateKey?: string;
-        signature?: string;
-        time?: string;
-    }
-
-    interface IBatchExecutionCall {
-        uuid: string;
-        privateKey: string;
-        tx: ITransactionCall;
-        prepare: ITxPrepareBatchResponse;
     }
 }

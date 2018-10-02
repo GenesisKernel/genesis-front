@@ -23,26 +23,16 @@
 import { combineEpics } from 'redux-observable';
 import txCallEpic from './epics/txCallEpic';
 import txAuthorizeEpic from './epics/txAuthorizeEpic';
-import txPrepareEpic from './epics/txPrepareEpic';
 import txExecEpic from './epics/txExecEpic';
 import newEcosystemEpic from './epics/newEcosystemEpic';
 import txExecFailedEpic from './epics/txExecFailedEpic';
-import txExecBatchEpic from './epics/txExecBatchEpic';
-import txExecBatchDoneEpic from './epics/txExecBatchDoneEpic';
-import txExecBatchFailedEpic from './epics/txExecBatchFailedEpic';
-import txPrepareBatchEpic from './epics/txPrepareBatchEpic';
 import reloadStylesheetEpic from './epics/reloadStylesheetEpic';
 
 export default combineEpics(
-    txExecBatchDoneEpic,
-    txExecBatchEpic,
-    txExecBatchFailedEpic,
     txCallEpic,
     txAuthorizeEpic,
-    txPrepareEpic,
     txExecEpic,
     txExecFailedEpic,
     newEcosystemEpic,
-    txPrepareBatchEpic,
     reloadStylesheetEpic
 );

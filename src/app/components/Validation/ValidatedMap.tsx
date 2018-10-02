@@ -112,6 +112,7 @@ export default class ValidatedMap extends React.Component<IValidatedMapProps, IV
         return (
             <div className="input-group">
                 <input type="text" className="form-control" value={this.state.address} onChange={this.onChange.bind(this)} disabled={!this.props.value} />
+
                 <div className="group-span-filestyle input-group-btn">
                     <button className="btn btn-default" style={{ border: 'solid 1px #dde6e9' }} type="button" onClick={this.openEditor.bind(this)}>
                         <span className="text-muted icon-span-filestyle glyphicon fa fa-map-marker" />

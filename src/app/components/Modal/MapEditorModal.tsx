@@ -21,10 +21,13 @@
 // SOFTWARE.
 
 import * as React from 'react';
+import * as uuid from 'uuid';
 import { List } from 'immutable';
 import { FormattedMessage } from 'react-intl';
 import { Button } from 'react-bootstrap';
 import { IMapEditorEvent } from 'genesis/geo';
+import themed from 'components/Theme/themed';
+import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 
 import Modal, { IModalProps } from './';
 import Validation from 'components/Validation';
@@ -41,7 +44,37 @@ interface IMapEditorModalState {
     points: List<{ lat: number, lng: number }>;
     area: number;
     pending: boolean;
+    address: string;
+    center?: { lat: number, lng: number };
 }
+
+const PlacesAutocompleteList = themed.div`
+    position: relative;
+    .places-autocomplete-container {
+        position: absolute;
+        top: 35px;
+        left: 0px;
+        right: 0;
+        background: #fff;
+        z-index: 10;      
+        border-right: 1px solid #66afe9;
+        border-left: 1px solid #66afe9;
+        border-bottom: 1px solid #66afe9;
+    }
+    
+    .places-autocomplete-container__item {
+        padding: 10px;
+    }
+    
+    .places-autocomplete-container__item_active {
+        background: #fafafa;
+        cursor: pointer;
+    }
+    
+    .places-autocomplete-container__item__description {
+        color: red !important;
+    }
+`;
 
 class MapEditorModal extends Modal<IMapEditorModalProps, IMapEditorEvent, IMapEditorModalState> {
     private _isMounted = false;
@@ -51,7 +84,9 @@ class MapEditorModal extends Modal<IMapEditorModalProps, IMapEditorEvent, IMapEd
         this.state = {
             points: List(),
             area: 0,
-            pending: false
+            pending: false,
+            address: '',
+            center: props.params.center
         };
     }
 
@@ -137,6 +172,26 @@ class MapEditorModal extends Modal<IMapEditorModalProps, IMapEditorEvent, IMapEd
         });
     }
 
+    handleChange(address: string) {
+        this.setState({
+            address
+        });
+    }
+
+    handleSelect(address: string) {
+        this.setState({
+            address
+        });
+
+        geocodeByAddress(address)
+            .then((results: any) => getLatLng(results[0]))
+            .then((center: { lat: number, lng: number }) => {
+                this.setState({
+                    center
+                });
+            });
+    }
+
     render() {
         return (
             <Validation.components.ValidatedForm onSubmitSuccess={this.onSuccess.bind(this)}>
@@ -145,15 +200,56 @@ class MapEditorModal extends Modal<IMapEditorModalProps, IMapEditorEvent, IMapEd
                 </Modal.Header>
                 <Modal.Body>
                     <div style={{ minWidth: 500, width: '60%' }}>
-                        <MapView
-                            height={400}
-                            center={this.props.params.center}
-                            zoom={this.props.params.zoom}
-                            mapType={this.props.params.mapType}
-                            onClick={this.onClick.bind(this)}
-                            polygon={this.state.points.toArray()}
-                            onAreaChange={this.onAreaChange.bind(this)}
-                        />
+
+                        <PlacesAutocomplete
+                            value={this.state.address}
+                            onChange={this.handleChange.bind(this)}
+                            onSelect={this.handleSelect.bind(this)}
+                            googleCallbackName="googleMapsLoaded"
+                        >
+                            {(params: any) => (
+                                <PlacesAutocompleteList>
+                                    <input
+                                        {...params.getInputProps({
+                                            placeholder: '',
+                                            className: 'form-control',
+                                        })}
+                                    />
+                                    {(params.suggestions.length > 0) && (
+                                        <div className="places-autocomplete-container">
+                                            {params.loading && <div className="places-autocomplete-container__item">...</div>}
+                                            {!params.loading && params.suggestions.map((suggestion: any) => {
+                                                const className = suggestion.active
+                                                    ? 'places-autocomplete-container__item places-autocomplete-container__item_active'
+                                                    : 'places-autocomplete-container__item';
+
+                                                return (
+                                                    <div
+                                                        key={uuid.v4()}
+                                                        {...params.getSuggestionItemProps(suggestion, {
+                                                            className
+                                                        })}
+                                                    >
+                                                        {suggestion.description}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                </PlacesAutocompleteList>
+                            )}
+                        </PlacesAutocomplete>
+                        <div className="mt">
+                            <MapView
+                                height={400}
+                                center={this.state.center}
+                                zoom={this.props.params.zoom}
+                                mapType={this.props.params.mapType}
+                                onClick={this.onClick.bind(this)}
+                                polygon={this.state.points.toArray()}
+                                onAreaChange={this.onAreaChange.bind(this)}
+                            />
+                        </div>
                     </div>
                     <div className="mt">
                         <div className="pull-right">

@@ -23,10 +23,10 @@
 export default [
     {
         name: 'en-US',
-        title: 'English(US)'
+        title: 'English (US)'
     },
     {
         name: 'ru-RU',
-        title: 'Русский'
+        title: 'Русский (RU)'
     }
 ];

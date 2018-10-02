@@ -52,12 +52,16 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
             }) : Promise.resolve(null)
 
         ])).flatMap(payload => {
+            const page = payload[0];
+            const defaultPage = payload[1];
 
-            const validatingNodesCount = Math.min(state.storage.fullNodes.length, payload[0].nodesCount);
+            if (page.nodesCount > state.storage.fullNodes.length) {
+                return Observable.throw(invalidationError);
+            }
 
             return NodeObservable({
                 nodes: state.storage.fullNodes,
-                count: validatingNodesCount,
+                count: page.nodesCount,
                 concurrency: 3,
                 api
 
@@ -72,9 +76,9 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
 
                 })
             )).catch(e => Observable.throw(invalidationError)).toArray().map(result => {
-                const contentHash = keyring.hashData(payload[0].plainText);
+                const contentHash = keyring.hashData(page.plainText);
 
-                if (validatingNodesCount !== result.length) {
+                if (page.nodesCount !== result.length) {
                     throw invalidationError;
                 }
 
@@ -87,18 +91,18 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
                 return renderPage.done({
                     params: action.payload,
                     result: {
-                        defaultMenu: payload[1] && payload[1].menu !== payload[0].menu && {
-                            name: payload[1].menu,
-                            content: payload[1].menutree
+                        defaultMenu: defaultPage && defaultPage.menu !== page.menu && {
+                            name: defaultPage.menu,
+                            content: defaultPage.menutree
                         },
                         menu: {
-                            name: payload[0].menu,
-                            content: payload[0].menutree
+                            name: page.menu,
+                            content: page.menutree
                         },
                         page: {
                             params: action.payload.params,
                             name: action.payload.name,
-                            content: payload[0].tree
+                            content: page.tree
                         }
                     }
                 });

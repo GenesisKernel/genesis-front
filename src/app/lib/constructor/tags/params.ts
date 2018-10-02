@@ -110,11 +110,13 @@ const LogicTagNames = {
     'inputerr': 'InputErr',
     'select': 'Select',
     'inputmap': 'InputMap',
+    'inputMap': 'InputMap',
     'map': 'Map',
     'include': 'Include'
 };
 
 const TailTagNames = {
+    'alert': 'Alert',
     'columns': 'Columns',
     'count': 'Count',
     'custom': 'Custom',
@@ -122,6 +124,7 @@ const TailTagNames = {
     'limit': 'Limit',
     'offset': 'Offset',
     'order': 'Order',
+    'popup': 'Popup',
     'style': 'Style',
     'vars': 'Vars',
     'validate': 'Validate',

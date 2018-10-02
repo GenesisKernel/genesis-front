@@ -24,8 +24,8 @@ import * as uuid from 'uuid';
 import { Observable } from 'rxjs';
 import { Epic } from 'modules';
 import { editorSave, reloadEditorTab } from '../actions';
-import ModalObservable from '../../modal/util/ModalObservable';
-import TxObservable from '../../tx/util/TxObservable';
+import ModalObservable from 'modules/modal/util/ModalObservable';
+import TxObservable from 'modules/tx/util/TxObservable';
 
 const newPageEpic: Epic = (action$, store, { api }) => action$.ofAction(editorSave)
     .filter(l => l.payload.new && 'page' === l.payload.type)
@@ -49,16 +49,16 @@ const newPageEpic: Epic = (action$, store, { api }) => action$.ofAction(editorSa
             success: result => TxObservable(action$, {
                 tx: {
                     uuid: id,
-                    contract: {
+                    contracts: [{
                         name: '@1NewPage',
-                        params: {
+                        params: [{
                             Name: result.name,
                             Value: action.payload.value,
                             Menu: result.menu,
                             Conditions: result.conditions,
                             ApplicationId: action.payload.appId || 0
-                        }
-                    }
+                        }]
+                    }]
                 },
                 success: tx => Observable.from(client.getPage({ name: result.name }))
                     .map(response => reloadEditorTab({

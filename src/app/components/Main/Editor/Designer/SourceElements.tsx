@@ -188,6 +188,10 @@ class SourceElements extends React.Component<ISourceElementsProps, ISourceElemen
                     {
                         text: 'Emphasize',
                         element: 'em'
+                    },
+                    {
+                        text: 'Hint',
+                        element: 'hint'
                     }
                 ]
             },
@@ -226,7 +230,7 @@ class SourceElements extends React.Component<ISourceElementsProps, ISourceElemen
                 icon: imgGroup35,
                 items: [
                     {
-                        text: 'Picture',
+                        text: 'Image',
                         element: 'image'
                     }
                 ]

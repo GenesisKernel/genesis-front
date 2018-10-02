@@ -22,7 +22,7 @@
 
 import React from 'react';
 import uuid from 'uuid';
-import { ITransaction } from 'genesis/tx';
+import { ITransactionCollection } from 'genesis/tx';
 import { OrderedMap } from 'immutable';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
@@ -68,7 +68,7 @@ export interface ITxButtonProps {
 }
 
 interface ITxButtonState {
-    transactions: OrderedMap<string, ITransaction>;
+    transactions: OrderedMap<string, ITransactionCollection>;
 }
 
 interface ITxButtonDispatch {
@@ -96,16 +96,20 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonState & ITxButt
             return;
         }
 
+        const contracts = this.props.contracts || [];
+        if (this.props.contract) {
+            contracts.push({
+                name: this.props.contract,
+                params: [contractParams]
+            });
+        }
+
         this.props.buttonInteraction({
             uuid: this._uuid,
             silent: this.props.silent,
             confirm: this.props.confirm,
             popup: this.props.popup,
-            contract: this.props.contract ? {
-                name: this.props.contract,
-                params: contractParams
-            } : null,
-            contracts: this.props.contracts,
+            contracts: contracts,
             page: this.props.page ? {
                 name: this.props.page,
                 params: pageParams
@@ -115,20 +119,7 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonState & ITxButt
 
     isPending = () => {
         const tx = this.props.transactions.get(this._uuid);
-        if (tx) {
-            if (tx.contract) {
-                return !tx.error && !tx.block;
-            }
-            else if (tx.batch) {
-                return 0 < tx.batch.pending;
-            }
-            else {
-                return false;
-            }
-        }
-        else {
-            return false;
-        }
+        return tx && 'pending' === tx.status;
     }
 
     render() {

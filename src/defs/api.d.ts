@@ -89,14 +89,14 @@ declare module 'genesis/api' {
     }
 
     interface IContractResponse {
+        id: number;
         name: string;
         active: boolean;
         tableid: number;
         fields: {
             name: string;
-            htmltype: string;
             type: string;
-            tags: string;
+            optional: boolean;
         }[];
     }
 
@@ -302,42 +302,17 @@ declare module 'genesis/api' {
         [key: string]: any;
     };
 
-    interface ITxCallRequest {
-        requestID: string;
-        time: string;
-        signature: string;
-        pubkey: string;
+    type TTxCallRequest<T> = {
+        [K in keyof T]: Blob;
     }
 
-    interface ITxCallResponse {
-        hash: string;
+    type TTxCallResponse<T> = {
+        hashes: {
+            [K in keyof T]: string;
+        };
     }
 
-    interface ITxPrepareRequest {
-        name: string;
-        params: TTxParams;
-    }
-
-    interface ITxPrepareResponse {
-        request_id: string;
-        forsign: string;
-        time: string;
-        signs?: {
-            forsign: string;
-            field: string;
-            title: string;
-            params: {
-                name: string;
-                text: string;
-            }[];
-        }[];
-    }
-
-    interface ITxStatusRequest {
-        hash: string;
-    }
-
-    interface ITxStatusResponse {
+    interface ITxStatus {
         blockid: string;
         result: string;
         errmsg?: {
@@ -346,43 +321,10 @@ declare module 'genesis/api' {
         };
     }
 
-    interface ITxCallBatchRequest {
-        requestID: string;
-        time: string;
-        signatures: string[];
-        pubkey: string;
-    }
+    type TTxStatusRequest<T> =
+        Array<keyof T>;
 
-    interface ITxCallBatchResponse {
-        hashes: string[];
-    }
-
-    interface ITxPrepareBatchRequest {
-        contracts: ITxPrepareRequest[];
-    }
-
-    interface ITxPrepareBatchResponse {
-        request_id: string;
-        forsign: string[];
-        time: string;
-        signs?: {
-            forsign: string;
-            field: string;
-            title: string;
-            params: {
-                name: string;
-                text: string;
-            }[];
-        }[];
-    }
-
-    interface ITxStatusBatchRequest {
-        hashes: string[];
-    }
-
-    interface ITxStatusBatchResponse {
-        results: {
-            [hash: string]: ITxStatusResponse;
-        };
+    type TTxStatusResponse<T> = {
+        [K in keyof T]: ITxStatus;
     }
 }
