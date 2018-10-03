@@ -76,7 +76,7 @@ export default class ValidatedSelect extends React.Component<IValidatedSelectPro
         return this.state.value;
     }
 
-    onChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         this.setState({
             value: e.target.value
         });
@@ -88,7 +88,7 @@ export default class ValidatedSelect extends React.Component<IValidatedSelectPro
         (this.context.form as ValidatedForm).emitUpdate(this.props.name, (e.target as any).value);
     }
 
-    onBlur(e: React.FocusEvent<HTMLSelectElement>) {
+    onBlur = (e: React.FocusEvent<HTMLSelectElement>) => {
         (this.context.form as ValidatedForm).updateState(this.props.name);
 
         if (this.props.onBlur) {
@@ -104,8 +104,8 @@ export default class ValidatedSelect extends React.Component<IValidatedSelectPro
                 disabled={this.props.disabled}
                 name={this.props.name}
                 value={this.state.value}
-                onChange={this.onChange.bind(this)}
-                onBlur={this.onBlur.bind(this)}
+                onChange={this.onChange}
+                onBlur={this.onBlur}
             >
                 {this.props.children}
             </select>

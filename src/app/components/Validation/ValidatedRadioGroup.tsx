@@ -80,7 +80,7 @@ export default class ValidatedRadioGroup extends React.Component<IValidatedRadio
         return this.state.checked;
     }
 
-    onChange(e: React.ChangeEvent<HTMLInputElement>) {
+    onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             checked: e.target.value
         });
@@ -90,7 +90,7 @@ export default class ValidatedRadioGroup extends React.Component<IValidatedRadio
         }
     }
 
-    onBlur(e: React.FocusEvent<HTMLInputElement>) {
+    onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
         (this.context.form as ValidatedForm).updateState(this.props.name);
 
         if (this.props.onBlur) {
@@ -108,8 +108,8 @@ export default class ValidatedRadioGroup extends React.Component<IValidatedRadio
                                 type="radio"
                                 name={this.props.name}
                                 value={value.value}
-                                onChange={this.onChange.bind(this)}
-                                onBlur={this.onBlur.bind(this)}
+                                onChange={this.onChange}
+                                onBlur={this.onBlur}
                                 checked={this.state.checked === value.value}
                                 disabled={value.disabled}
                             />

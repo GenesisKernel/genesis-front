@@ -76,7 +76,7 @@ export default class ValidatedCheckbox extends React.Component<IValidatedCheckbo
         return this.state.checked;
     }
 
-    onChange(e: React.ChangeEvent<HTMLInputElement>) {
+    onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             checked: e.target.checked
         });
@@ -88,7 +88,7 @@ export default class ValidatedCheckbox extends React.Component<IValidatedCheckbo
         (this.context.form as ValidatedForm).emitUpdate(this.props.name, String(e.target.checked));
     }
 
-    onBlur(e: React.FocusEvent<HTMLInputElement>) {
+    onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
         (this.context.form as ValidatedForm).updateState(this.props.name);
 
         if (this.props.onBlur) {
@@ -103,8 +103,8 @@ export default class ValidatedCheckbox extends React.Component<IValidatedCheckbo
                     <input
                         type="checkbox"
                         name={this.props.name}
-                        onChange={this.onChange.bind(this)}
-                        onBlur={this.onBlur.bind(this)}
+                        onChange={this.onChange}
+                        onBlur={this.onBlur}
                         checked={this.state.checked}
                         disabled={this.props.disabled}
                     />
