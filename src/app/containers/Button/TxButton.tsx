@@ -29,6 +29,7 @@ import { connect } from 'react-redux';
 import { buttonInteraction } from 'modules/content/actions';
 
 import Button from 'components/Button';
+import { IErrorRedirect } from 'genesis/protypo';
 
 export interface ITxButtonProps {
     disabled?: boolean;
@@ -64,6 +65,10 @@ export interface ITxButtonProps {
     popup?: {
         title?: string;
         width?: number;
+    };
+
+    errorRedirects?: {
+        [key: string]: IErrorRedirect
     };
 }
 
@@ -113,7 +118,8 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonState & ITxButt
             page: this.props.page ? {
                 name: this.props.page,
                 params: pageParams
-            } : null
+            } : null,
+            errorRedirects: this.props.errorRedirects
         });
     }
 

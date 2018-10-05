@@ -28,6 +28,7 @@ import StyledComponent from './StyledComponent';
 import Protypo, { IParamsSpec } from '../Protypo';
 import ValidatedForm from 'components/Validation/ValidatedForm';
 import TxButton from 'containers/Button/TxButton';
+import { IErrorRedirect } from 'genesis/protypo';
 
 export interface IButtonProps {
     'class'?: string;
@@ -53,6 +54,10 @@ export interface IButtonProps {
     'pageparams'?: IParamsSpec;
     'params'?: IParamsSpec;
     'formID'?: number;
+
+    errredirect?: {
+        [key: string]: IErrorRedirect
+    };
 }
 
 interface IButtonContext {
@@ -130,6 +135,7 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
             page={props.page}
             pageParams={getPageParams}
             popup={popup}
+            errorRedirects={props.errredirect}
         >
             {props.children}
         </TxButton>
