@@ -45,14 +45,10 @@ const TxMenu: React.SFC<ITxMenuProps> = (props, context: ITxMenuContext) => (
         content={(
             <div style={{ overflow: 'hidden' }}>
                 <div className="dropdown-heading">
-                    <div>
-                        <FormattedMessage id="tx.spending.limit.long" defaultMessage="Transaction spending limit" />
-                    </div>
+                    <FormattedMessage id="tx.spending.limit.long" defaultMessage="Transaction spending limit" />
                 </div>
                 <div className="dropdown-info">
-                    <div>
-                        <FormattedMessage id="tx.spending.limit.desc" defaultMessage="Transactions executed on your behalf will not be able to spend more tokens than you specify here" />
-                    </div>
+                    <FormattedMessage id="tx.spending.limit.desc" defaultMessage="Transactions executed on your behalf will not be able to spend more tokens than you specify here" />
                 </div>
                 <div style={{ padding: 8 }}>
                     <Validation.components.ValidatedForm onSubmitSuccess={payload => props.onEdit(Number(payload.maxSum))}>
