@@ -53,7 +53,7 @@ const containerAnimationDef = {
         padding: '0 50px 50px',
         margin: '0 -50px',
         overflow: 'hidden',
-        zIndex: 500
+        zIndex: 590
     }
 };
 

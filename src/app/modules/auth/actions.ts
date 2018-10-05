@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IWallet, ILoginCall, IRole, ISession } from 'genesis/auth';
+import { IWallet, ILoginCall, IRole, ISession, IWalletSettings } from 'genesis/auth';
 import { ICreateWalletCall, IImportWalletCall } from 'genesis/auth';
 
 const actionCreator = actionCreatorFactory('auth');
@@ -38,3 +38,4 @@ export const selectRole = actionCreator.async<number, { sessionToken: string, re
 export const authorize = actionCreator<string>('AUTHORIZE');
 export const deauthorize = actionCreator('DEAUTHORIZE');
 export const changePassword = actionCreator.async<void, { oldPassword: string, newPassword: string }, string>('CHANGE_PASSWORD');
+export const updateSettings = actionCreator<Partial<IWalletSettings>>('UPDATE_SETTINGS');

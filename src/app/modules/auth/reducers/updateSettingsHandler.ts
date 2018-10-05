@@ -20,26 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
+import { State } from '../reducer';
+import { updateSettings } from '../actions';
+import { Reducer } from 'modules';
 
-export interface IButtonProps {
-    disabled?: boolean;
-    pending?: boolean;
-    className?: string;
-    style?: React.CSSProperties;
-    onClick?: React.MouseEventHandler<HTMLButtonElement>;
-}
+const updateSettingsHandler: Reducer<typeof updateSettings, State> = (state, payload) => ({
+    ...state,
+    wallet: {
+        ...state.wallet,
+        settings: {
+            ...state.wallet.settings,
+            ...payload
+        }
+    }
+});
 
-const Button: React.SFC<IButtonProps> = props => (
-    <button
-        type="button"
-        onClick={props.onClick}
-        disabled={props.disabled}
-        className={props.className}
-        style={props.style}
-    >
-        {props.children}
-    </button>
-);
-
-export default Button;
+export default updateSettingsHandler;

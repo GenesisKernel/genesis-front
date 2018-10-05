@@ -48,7 +48,8 @@ const inviteEcosystemEpic: Epic = (action$, store) => action$.ofAction(inviteEco
                 address: wallet.address,
                 ecosystem: action.payload.ecosystem,
                 ecosystemName: null,
-                username: null
+                username: null,
+                settings: {}
             }),
         );
 

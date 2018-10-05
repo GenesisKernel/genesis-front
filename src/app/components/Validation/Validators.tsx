@@ -60,6 +60,20 @@ export const required = new Validator({
     }
 });
 
+export const min: IValidatorGenerator = (minValue: number | string) => {
+    return new Validator({
+        name: 'min',
+        validate: (value) => {
+            if ('string' !== typeof value) {
+                throw new Error(`Unrecognized value type "${typeof value}"`);
+            }
+
+            // Do not affect empty strings. 'required' must do this job
+            return value.length === 0 || parseInt(minValue.toString(), 10) <= parseInt(value.toString(), 10);
+        }
+    });
+};
+
 export const minlength: IValidatorGenerator = (count: number | string) => {
     return new Validator({
         name: 'minlength',

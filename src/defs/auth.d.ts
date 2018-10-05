@@ -28,6 +28,11 @@ declare module 'genesis/auth' {
         ecosystem: string;
         ecosystemName: string;
         username: string;
+        settings: IWalletSettings;
+    }
+
+    interface IWalletSettings {
+        maxSum?: number;
     }
 
     interface ISaveEncKeyCall {
