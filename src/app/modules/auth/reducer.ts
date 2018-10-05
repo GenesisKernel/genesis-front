@@ -39,6 +39,7 @@ import authorizeHandler from './reducers/authorizeHandler';
 import deauthorizeHandler from './reducers/deauthorizeHandler';
 import generateSeedDoneHandler from './reducers/generateSeedDoneHandler';
 import selectRoleDoneHandler from './reducers/selectRoleDoneHandler';
+import updateSettingsHandler from './reducers/updateSettingsHandler';
 
 export type State = {
     readonly loadedSeed: string;
@@ -92,4 +93,5 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.selectRole.done, selectRoleDoneHandler)
     .case(actions.authorize, authorizeHandler)
     .case(actions.deauthorize, deauthorizeHandler)
-    .case(actions.generateSeed.done, generateSeedDoneHandler);
+    .case(actions.generateSeed.done, generateSeedDoneHandler)
+    .case(actions.updateSettings, updateSettingsHandler);

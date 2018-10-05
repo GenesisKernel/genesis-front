@@ -32,6 +32,7 @@ export interface IDropdownToolButtonProps {
     disabled?: boolean;
     right?: boolean;
     leftMost?: boolean;
+    width?: number;
     content: React.ReactNode;
 }
 
@@ -39,7 +40,7 @@ const DropdownToolButton: React.SFC<IDropdownToolButtonProps> = props => (
     <li className={classNames({ disabled: props.disabled }, props.className)} style={{ float: props.right ? 'right' : null }}>
         <DropdownButton
             align={props.right ? 'right' : 'left'}
-            width={200}
+            width={props.width || 200}
             disabled={props.disabled}
             leftMost={props.leftMost}
             content={props.content}
@@ -52,7 +53,7 @@ const DropdownToolButton: React.SFC<IDropdownToolButtonProps> = props => (
     </li>
 );
 
-const StyledDropdownToolButton = styled(DropdownToolButton) `
+const StyledDropdownToolButton = styled(DropdownToolButton)`
     display: inline-block;
     vertical-align: top;
 

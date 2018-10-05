@@ -21,25 +21,35 @@
 // SOFTWARE.
 
 import React from 'react';
+import { IRootState } from 'modules';
+import { connect } from 'react-redux';
+import { updateSettings } from 'modules/auth/actions';
+import TxMenu from 'components/Main/TxMenu';
 
-export interface IButtonProps {
-    disabled?: boolean;
-    pending?: boolean;
-    className?: string;
-    style?: React.CSSProperties;
-    onClick?: React.MouseEventHandler<HTMLButtonElement>;
+export interface ITxMenuContainerProps {
+
 }
 
-const Button: React.SFC<IButtonProps> = props => (
-    <button
-        type="button"
-        onClick={props.onClick}
-        disabled={props.disabled}
-        className={props.className}
-        style={props.style}
-    >
-        {props.children}
-    </button>
+interface ITxMenuContainerState {
+    maxSum: number;
+}
+
+interface ITxMenuContainerDispatch {
+    onEdit: (maxSum: number) => void;
+}
+
+const TxMenuContainer: React.SFC<ITxMenuContainerProps & ITxMenuContainerState & ITxMenuContainerDispatch> = props => (
+    <TxMenu {...props} />
 );
 
-export default Button;
+const mapStateToProps = (state: IRootState) => ({
+    maxSum: state.auth.wallet && state.auth.wallet.settings && state.auth.wallet.settings.maxSum
+});
+
+const mapDispatchToProps = {
+    onEdit: (maxSum: number) => updateSettings({
+        maxSum
+    })
+};
+
+export default connect<ITxMenuContainerState, ITxMenuContainerDispatch, ITxMenuContainerProps>(mapStateToProps, mapDispatchToProps)(TxMenuContainer);

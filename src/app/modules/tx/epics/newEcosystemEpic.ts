@@ -39,7 +39,8 @@ const newEcosystemEpic: Epic<Action, IRootState> = (action$, store) => action$.o
             address: wallet.address,
             username: null,
             ecosystem,
-            ecosystemName: String(result.params.Name.value) || ecosystem
+            ecosystemName: String(result.params.Name.value) || ecosystem,
+            settings: {}
         });
     }));
 

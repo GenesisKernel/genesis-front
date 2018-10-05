@@ -38,6 +38,7 @@ import ToolButton from 'components/Main/Toolbar/ToolButton';
 import EditorToolbar from 'containers/Main/Toolbar/EditorToolbar';
 import ToolIndicator from 'components/Main/Toolbar/ToolIndicator';
 import LoadingBar from './LoadingBar';
+import TxMenu from 'containers/Main/Toolbar/TxMenu';
 // import TransactionsMenu from './TransactionsMenu';
 
 const StyledWrapper = themed.div`
@@ -169,6 +170,7 @@ class Main extends React.Component<IMainProps> {
                                 titleDesc={<FormattedMessage id="privileged.desc" defaultMessage="You will not be prompted to enter your password when executing transactions" />}
                             />
                         )}
+                        <TxMenu />
                         {'editor' === this.props.section ?
                             (
                                 <EditorToolbar />

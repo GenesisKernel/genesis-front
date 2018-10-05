@@ -63,7 +63,8 @@ const importWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(imp
                     ecosystem: wallet.ecosystem_id,
                     ecosystemName: null,
                     username: wallet.key_id,
-                    avatar: null
+                    avatar: null,
+                    settings: {}
                 }));
 
                 if (wallets.length) {

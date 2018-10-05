@@ -20,26 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
+import { Action } from 'redux';
+import { Epic } from 'redux-observable';
+import { IRootState } from 'modules';
+import { saveWallet } from '../actions';
+import { updateSettings } from 'modules/auth/actions';
 
-export interface IButtonProps {
-    disabled?: boolean;
-    pending?: boolean;
-    className?: string;
-    style?: React.CSSProperties;
-    onClick?: React.MouseEventHandler<HTMLButtonElement>;
-}
+const saveWalletOnSettingsEpic: Epic<Action, IRootState> =
+    (action$, store) => action$.ofAction(updateSettings)
+        .map(action =>
+            saveWallet(store.getState().auth.wallet)
+        );
 
-const Button: React.SFC<IButtonProps> = props => (
-    <button
-        type="button"
-        onClick={props.onClick}
-        disabled={props.disabled}
-        className={props.className}
-        style={props.style}
-    >
-        {props.children}
-    </button>
-);
-
-export default Button;
+export default saveWalletOnSettingsEpic;
