@@ -21,12 +21,14 @@
 // SOFTWARE.
 
 import IField from './';
+import { toMoney } from 'lib/tx/convert';
 
 class Money implements IField<string, string> {
     private _value: string = '';
 
     set(value: string) {
-        this._value = value ? value.toString().replace(',', '.') : '';
+        const intermediary = value ? value.toString().replace(',', '.') : '0';
+        this._value = toMoney(intermediary);
     }
 
     get() {
