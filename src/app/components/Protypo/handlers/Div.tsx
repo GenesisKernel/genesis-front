@@ -20,28 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import StyledComponent from './StyledComponent';
+import React from 'react';
+import styledComponent from './StyledComponent';
+import interactiveComponent from '../interaction/InteractiveComponent';
 
 export interface IDivProps {
+    'id': string;
     'className'?: string;
     'class'?: string;
 }
 
-class Div extends React.Component<IDivProps> {
-    constructor(props: IDivProps) {
-        super(props);
-    }
+const Div: React.SFC<IDivProps> = props => (
+    <div className={[props.class, props.className].join(' ')}>
+        {props.children}
+    </div>
+);
 
-    render() {
-        return (
-            <div
-                className={[this.props.class, this.props.className].join(' ')}
-            >
-                {this.props.children}
-            </div>
-        );
-    }
-}
-
-export default StyledComponent(Div);
+export default interactiveComponent(styledComponent(Div));

@@ -40,7 +40,7 @@ const moveTreeTagEpic: Epic<Action, IRootState> =
             let position = 'inside';
 
             if (tagTreeNewPosition.parent === null) {
-                if (tagTreeNewPosition.parentPosition === 0) {
+                if (tagTreeNewPosition.parentPosition === 0 || tagTreeNewPosition.parentPosition === null) {
                     position = 'before';
                     destinationTagID = jsonData[0].id;
                 }
@@ -60,7 +60,7 @@ const moveTreeTagEpic: Epic<Action, IRootState> =
                     destinationTagID = tagTreeNewPosition.parent.id;
                 }
                 else {
-                    if (tagTreeNewPosition.parentPosition === 0) {
+                    if (tagTreeNewPosition.parentPosition === 0 || tagTreeNewPosition.parentPosition === null) {
                         destinationTagID = tagTreeNewPosition.parent.children[1].id;
                         position = 'before';
                     }

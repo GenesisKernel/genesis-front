@@ -36,7 +36,7 @@ class Input extends Tag {
         name: 'sample input',
         class: 'form-control'
     };
-    protected editProps = ['class', 'align', 'transform', 'wrap'];
+    protected editProps = ['class', 'align', 'transform', 'wrap', 'placeholder', 'value'];
     protected generateTextElement: boolean = false;
 }
 

@@ -159,7 +159,7 @@ class ProtypoConstructor extends React.Component<IProtypoConstructorProps> {
         else {
             if (this.props.editable) {
                 return (
-                    <div>
+                    <div className="fullscreen">
                         {children}
                     </div>
                 );

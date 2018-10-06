@@ -135,16 +135,16 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
                                     speed={0.2}
                                 >
                                     <StyledMenuContent>
-                                        <StyledBackButton onClick={() => this.props.menuPop()} disabled={1 >= this.props.menus.length} className={index === 0 ? 'disabled' : ''}>
-                                            <div className="title-wrap">
-                                                {index > 0 && (
+                                        {index > 0 && (
+                                            <StyledBackButton onClick={() => this.props.menuPop()} disabled={1 >= this.props.menus.length}>
+                                                <div className="title-wrap">
                                                     <span className="icon">
                                                         <em className="icon-arrow-left" />
                                                     </span>
-                                                )}
-                                                <span>{menu.name}</span>
-                                            </div>
-                                        </StyledBackButton>
+                                                    <span>{menu.name}</span>
+                                                </div>
+                                            </StyledBackButton>
+                                        )}
                                         <Protypo
                                             context="menu"
                                             content={menu.content}

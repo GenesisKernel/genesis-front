@@ -265,7 +265,7 @@
                   {
                     "tag": "div",
                     "attr": {
-                      "class": "col-md-1 mt-sm text-right"
+                      "class": "col-md-2 mt-sm text-right"
                     },
                     "children": [
                       {
@@ -290,58 +290,49 @@
                   {
                     "tag": "div",
                     "attr": {
-                      "class": "col-md-11 mc-sm"
+                      "class": "col-md-8"
                     },
                     "children": [
                       {
-                        "tag": "div",
+                        "tag": "input",
                         "attr": {
-                          "class": "input-group"
+                          "class": "form-control",
+                          "name": "Search",
+                          "placeholder": "Search...",
+                          "type": "text",
+                          "value": ""
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "div",
+                    "attr": {
+                      "class": "col-md-2"
+                    },
+                    "children": [
+                      {
+                        "tag": "button",
+                        "attr": {
+                          "class": "btn btn-default",
+                          "page": "roles_list",
+                          "pageparams": {
+                            "isSearch": {
+                              "text": "1",
+                              "type": "text"
+                            },
+                            "v_Search": {
+                              "text": "",
+                              "type": "text"
+                            }
+                          }
                         },
                         "children": [
                           {
-                            "tag": "input",
+                            "tag": "em",
                             "attr": {
-                              "class": "form-control",
-                              "name": "Search",
-                              "type": "text",
-                              "value": "#v_Search#"
+                              "class": "fa fa-search"
                             }
-                          },
-                          {
-                            "tag": "div",
-                            "attr": {
-                              "class": "input-group-btn"
-                            },
-                            "children": [
-                              {
-                                "tag": "button",
-                                "attr": {
-                                  "class": "btn btn-default",
-                                  "page": "roles_list",
-                                  "pageparams": {
-                                    "isSearch": {
-                                      "text": "1",
-                                      "type": "text"
-                                    },
-                                    "v_Search": {
-                                      "params": [
-                                        "Search"
-                                      ],
-                                      "type": "Val"
-                                    }
-                                  }
-                                },
-                                "children": [
-                                  {
-                                    "tag": "em",
-                                    "attr": {
-                                      "class": "fa fa-search"
-                                    }
-                                  }
-                                ]
-                              }
-                            ]
                           }
                         ]
                       }
@@ -469,9 +460,6 @@
           {
             "tag": "button",
             "attr": {
-              "alert": {
-                "text": "Select the payment method"
-              },
               "class": "btn btn-default mr-lg",
               "contract": "ContractName"
             },
@@ -479,6 +467,17 @@
               {
                 "tag": "text",
                 "text": "Cancel"
+              }
+            ],
+            "tail": [
+              {
+                "tag": "alert",
+                "attr": {
+                  "cancelbutton": "Cancel",
+                  "confirmbutton": "Confirm",
+                  "icon": "Icon",
+                  "text": "Select the payment method"
+                }
               }
             ]
           },

@@ -28,8 +28,9 @@ const Wrapper = styled.span`
     display: block;
     padding: 0px;
     border: 2px solid transparent;
+    margin: -2px;
     position: relative;
-    min-height: 10px;
+    min-height: 0px;
     
     &.b-display-inline {
         display: inline-block;

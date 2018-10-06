@@ -45,15 +45,15 @@ const newMenuEpic: Epic = (action$, store, { api }) => action$.ofAction(editorSa
             success: result => TxObservable(action$, {
                 tx: {
                     uuid: id,
-                    contract: {
+                    contracts: [{
                         name: '@1NewMenu',
-                        params: {
+                        params: [{
                             Name: result.name,
                             Value: action.payload.value,
                             Conditions: result.conditions,
                             ApplicationId: action.payload.appId ? action.payload.appId : 0
-                        }
-                    }
+                        }]
+                    }]
                 },
                 success: tx => Observable.fromPromise(client.getMenu({
                     name: result.name

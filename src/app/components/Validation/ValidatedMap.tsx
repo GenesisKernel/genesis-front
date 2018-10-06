@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 import * as React from 'react';
-import { FormControl } from 'react-bootstrap';
 import { Validator } from './Validators';
 import * as propTypes from 'prop-types';
 import { IMapEditorEvent } from 'genesis/geo';
@@ -88,18 +87,14 @@ export default class ValidatedMap extends React.Component<IValidatedMapProps, IV
         return JSON.stringify(this._value);
     }
 
-    onBlur(e: React.FocusEvent<FormControl>) {
-        (this.context.form as ValidatedForm).updateState(this.props.name);
-    }
-
-    onChange(e: React.ChangeEvent<HTMLInputElement>) {
+    onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         this._value.address = e.target.value;
         this.setState({
             address: e.target.value
         });
     }
 
-    openEditor() {
+    openEditor = () => {
         this.props.openEditor({
             mapType: this.props.mapType,
             coords: this.props.value && this.props.value.coords,
@@ -111,9 +106,10 @@ export default class ValidatedMap extends React.Component<IValidatedMapProps, IV
     render() {
         return (
             <div className="input-group">
-                <input type="text" className="form-control" value={this.state.address} onChange={this.onChange.bind(this)} disabled={!this.props.value} />
+                <input type="text" className="form-control" value={this.state.address} onChange={this.onChange} disabled={!this.props.value} />
+
                 <div className="group-span-filestyle input-group-btn">
-                    <button className="btn btn-default" style={{ border: 'solid 1px #dde6e9' }} type="button" onClick={this.openEditor.bind(this)}>
+                    <button className="btn btn-default" style={{ border: 'solid 1px #dde6e9' }} type="button" onClick={this.openEditor}>
                         <span className="text-muted icon-span-filestyle glyphicon fa fa-map-marker" />
                         <span className="buttonText" />
                     </button>

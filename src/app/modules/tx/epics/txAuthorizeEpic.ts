@@ -46,9 +46,7 @@ const txAuthorizeEpic: Epic<Action, IRootState> =
                     Observable.of(modalShow({
                         id: 'TX_AUTHORIZE',
                         type: 'AUTHORIZE',
-                        params: {
-                            contract: action.payload.contract
-                        }
+                        params: {}
                     })),
                     action$.ofAction(modalClose)
                         .take(1)

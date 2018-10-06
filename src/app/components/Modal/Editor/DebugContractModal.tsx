@@ -22,28 +22,27 @@
 
 import React from 'react';
 import { Button, Well, Row, Col } from 'react-bootstrap';
-import imgClose from 'images/close.svg';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import { ITransactionCollection, ITxStatus, ITxError } from 'genesis/tx';
+import { TContractFieldType } from 'genesis/api';
 
 import Modal from '../';
-import { FormattedMessage, injectIntl } from 'react-intl';
 import Validation from 'components/Validation';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Table, { ICellRenderer } from 'components/Table';
 
 export interface IDebugContractModalProps {
     contract: string;
+    fields: {
+        name: string;
+        type: TContractFieldType;
+        optional?: boolean;
+    }[];
 }
 
 interface IDebugContractModalState {
     pending: boolean;
-    params: { key: string, value: string }[];
-    result: {
-        block?: string;
-        error?: {
-            type: string;
-            error: string;
-        }
-    };
+    result: ITxError | ITxStatus;
 }
 
 class DebugContractModal extends Modal<IDebugContractModalProps, void, IDebugContractModalState> {
@@ -51,116 +50,70 @@ class DebugContractModal extends Modal<IDebugContractModalProps, void, IDebugCon
         super(props);
         this.state = {
             pending: false,
-            params: [],
             result: null
         };
     }
 
-    mapContractParams = () => {
+    mapContractParams = (payload: { [key: string]: any }) => {
         this.setState({
             pending: true
         });
 
-        const params = {};
-        this.state.params.forEach(l => {
-            params[l.key] = l.value;
-        });
-
-        return params;
+        return payload;
     }
 
     renderParameter: ICellRenderer = (value, rowData) => {
-        const index = rowData.rowData[2] as number;
+        const field = rowData.rowData[0] as {
+            name: string;
+            type: TContractFieldType;
+            optional?: boolean;
+        };
 
         switch (rowData.colIndex) {
             case 0: return (
-                <Validation.components.ValidatedFormGroup for={index + '_key'} className="m0">
-                    <Validation.components.ValidatedControl
-                        type="text"
-                        name={index + '_key'}
-                        value={value}
-                        validators={[Validation.validators.required]}
-                        onChange={(e: any) => this.onKeyUpdate(index, e.target.value)}
-                    />
-                </Validation.components.ValidatedFormGroup>
+                <span className="pl">{field.name}</span>
             );
 
-            case 1: return (
-                <Validation.components.ValidatedFormGroup for={index + '_value'} className="m0">
-                    <Validation.components.ValidatedControl
-                        type="text"
-                        name={index + '_value'}
-                        value={value}
-                        onChange={(e: any) => this.onValueUpdate(index, e.target.value)}
-                    />
-                </Validation.components.ValidatedFormGroup>
-            );
-
-            case 2: return (
-                <button className="btn-link" onClick={this.onRemoveParam.bind(this, index)}>
-                    <img src={imgClose} />
-                </button>
-            );
+            case 1:
+                return (
+                    <Validation.components.ValidatedFormGroup for={field.name} className="pr">
+                        {this.renderField(field.name, field.type, field.optional)}
+                    </Validation.components.ValidatedFormGroup>
+                );
 
             default: return null;
         }
     }
 
-    onKeyUpdate = (index: number, key: string) => {
-        this.setState({
-            params: [
-                ...this.state.params.slice(0, index),
-                {
-                    key,
-                    value: this.state.params[index].value,
-                },
-                ...this.state.params.slice(index + 1)
-            ]
-        });
-    }
-
-    onValueUpdate = (index: number, value: string) => {
-        this.setState({
-            params: [
-                ...this.state.params.slice(0, index),
-                {
-                    key: this.state.params[index].key,
-                    value
-                },
-                ...this.state.params.slice(index + 1)
-            ]
-        });
-    }
-
-    onExec = (block: string, error?: { type: string, error: string }) => {
+    onExec = (tx: ITransactionCollection) => {
         this.setState({
             pending: false,
-            result: {
-                block,
-                error
-            }
+            result: tx.error || tx.stack[0].status
         });
     }
 
-    onAddParam = () => {
-        this.setState({
-            params: [
-                ...this.state.params.slice(),
-                {
-                    key: '',
-                    value: ''
-                }
-            ]
-        });
-    }
+    renderField = (name: string, type: TContractFieldType, optional?: boolean) => {
+        switch (type) {
+            case 'bool': return (
+                <Validation.components.ValidatedCheckbox name={name} title={name} />
+            );
 
-    onRemoveParam = (index: number) => {
-        this.setState({
-            params: [
-                ...this.state.params.slice(0, index),
-                ...this.state.params.slice(index + 1)
-            ]
-        });
+            case 'int':
+            case 'money':
+            case 'float': return (
+                <Validation.components.ValidatedControl name={name} type="number" validators={optional ? [] : [Validation.validators.required]} />
+            );
+
+            case 'string': return (
+                <Validation.components.ValidatedControl name={name} type="text" validators={optional ? [] : [Validation.validators.required]} />
+            );
+
+            case 'file': return (
+                <Validation.components.ValidatedFile name={name} />
+            );
+
+            default: return null;
+        }
     }
 
     render() {
@@ -179,15 +132,11 @@ class DebugContractModal extends Modal<IDebugContractModalProps, void, IDebugCon
                                 columns={[
                                     { title: 'Key', width: 140 },
                                     { title: 'Value' },
-                                    { width: 1 }
                                 ]}
-                                data={this.state.params.map((param, index) => [param.key, param.value, index])}
+                                data={this.props.params.fields.map((param, index) => [param])}
                             />
-                            <Button bsStyle="primary" block onClick={this.onAddParam}>
-                                <FormattedMessage id="editor.param.add" defaultMessage="Add parameter" />
-                            </Button>
                         </Col>
-                        <Col md={6} style={{ width: 300 }}>
+                        <Col md={6} style={{ width: 400 }}>
                             <Well style={{ whiteSpace: 'pre-wrap' }}>
                                 {this.state.pending && (
                                     <div>

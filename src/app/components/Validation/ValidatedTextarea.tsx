@@ -69,7 +69,7 @@ export default class ValidatedTextarea extends React.Component<IValidatedTextare
         return this.state.value;
     }
 
-    onChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         this.setState({
             value: (e.target as any).value
         });
@@ -77,9 +77,11 @@ export default class ValidatedTextarea extends React.Component<IValidatedTextare
         if (this.props.onChange) {
             this.props.onChange(e);
         }
+
+        (this.context.form as ValidatedForm).emitUpdate(this.props.name, e.target.value);
     }
 
-    onBlur(e: React.FocusEvent<HTMLTextAreaElement>) {
+    onBlur = (e: React.FocusEvent<HTMLTextAreaElement>) => {
         (this.context.form as ValidatedForm).updateState(this.props.name);
 
         if (this.props.onBlur) {
@@ -94,8 +96,8 @@ export default class ValidatedTextarea extends React.Component<IValidatedTextare
                 className={`form-control ${this.props.className || ''}`}
                 placeholder={this.props.placeholder}
                 value={this.state.value}
-                onChange={this.onChange.bind(this)}
-                onBlur={this.onBlur.bind(this)}
+                onChange={this.onChange}
+                onBlur={this.onBlur}
             />
         );
     }

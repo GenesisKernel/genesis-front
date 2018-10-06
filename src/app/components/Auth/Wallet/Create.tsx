@@ -161,7 +161,7 @@ class Create extends React.Component<ICreateProps & InjectedIntlProps, ICreateSt
                                     descriptionValue={
                                         <FormattedMessage
                                             id="auth.remember.disclaimer"
-                                            defaultMessage="Please make sure that you keep your passphrase (wallet seed) safe and remember the password. You will be asked to re-type them for confirmation"
+                                            defaultMessage="Please make sure that you keep your passphrase (wallet seed) safe and remember the password. You will be asked to retype them for confirmation"
                                         />
                                     }
                                 />

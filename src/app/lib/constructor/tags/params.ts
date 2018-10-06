@@ -110,6 +110,7 @@ const LogicTagNames = {
     'inputerr': 'InputErr',
     'select': 'Select',
     'inputmap': 'InputMap',
+    'inputMap': 'InputMap',
     'map': 'Map',
     'include': 'Include'
 };

@@ -143,8 +143,7 @@ describe('addTagEpic', () => {
                 tag: 'div',
                 id: 'tag_14',
                 attr: {},
-                children: [],
-                childrenText: ''
+                children: null
             }
         ];
 
@@ -413,8 +412,7 @@ describe('addTagEpic', () => {
                     attr: {},
                     tag: 'div',
                     id: 'tag_14',
-                    children: [],
-                    childrenText: ''
+                    children: null
                 }
             }
         ];

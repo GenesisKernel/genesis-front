@@ -20,23 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { txExecBatch } from '../actions';
-import { Reducer } from 'modules';
+import { Observable } from 'rxjs';
 
-const txExecBatchHandler: Reducer<typeof txExecBatch.started, State> = (state, payload) => ({
-    ...state,
-    transactions: state.transactions.set(payload.uuid, {
-        uuid: payload.uuid,
-        contract: payload.tx.contract && payload.tx.contract.name,
-        block: null,
-        result: null,
-        error: null,
-        batch: {
-            pending: payload.prepare.forsign.length,
-            contracts: payload.tx.contracts.map(tx => tx.name)
-        }
-    })
+const fileObservable = (blob: Blob): Observable<ArrayBuffer> => new Observable(obs => {
+    const reader = new FileReader();
+
+    reader.onerror = err => obs.error(err);
+    reader.onabort = err => obs.error(err);
+    reader.onload = () => obs.next(reader.result as ArrayBuffer);
+    reader.onloadend = () => obs.complete();
+
+    return reader.readAsArrayBuffer(blob);
 });
 
-export default txExecBatchHandler;
+export default fileObservable;

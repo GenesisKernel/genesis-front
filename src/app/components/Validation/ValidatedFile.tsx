@@ -20,11 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { FormControl } from 'react-bootstrap';
 import { Validator } from './Validators';
-import * as propTypes from 'prop-types';
-import { readBinaryFile } from 'lib/fs';
+import propTypes from 'prop-types';
 
 import ValidatedForm, { IValidatedControl } from './ValidatedForm';
 
@@ -78,24 +77,23 @@ export default class ValidatedFile extends React.Component<IValidatedFileProps, 
         return this.state.value;
     }
 
-    onChange(e: React.ChangeEvent<HTMLInputElement>) {
-        if (e.target.files.length) {
-            const file = e.target.files[0];
-            readBinaryFile(file).then(r => {
-                this.setState({
-                    value: file,
-                    filename: file.name
-                });
+    onChange = (e: React.ChangeEvent<FormControl>) => {
+        const target = (e.target as object as HTMLInputElement);
+        if (target.files.length) {
+            const file = target.files[0];
+            this.setState({
+                value: file,
+                filename: file.name
             });
         }
-        e.target.value = '';
+        target.value = '';
     }
 
     onBrowse() {
         this._inputRef.click();
     }
 
-    onBlur(e: React.FocusEvent<FormControl>) {
+    onBlur = (e: React.FocusEvent<FormControl>) => {
         (this.context.form as ValidatedForm).updateState(this.props.name);
     }
 
@@ -104,8 +102,8 @@ export default class ValidatedFile extends React.Component<IValidatedFileProps, 
             <div className="input-group">
                 <FormControl
                     className="hidden"
-                    onChange={this.onChange.bind(this)}
-                    onBlur={this.onBlur.bind(this)}
+                    onChange={this.onChange}
+                    onBlur={this.onBlur}
                     inputRef={ref => this._inputRef = ref}
                     type="file"
                     noValidate

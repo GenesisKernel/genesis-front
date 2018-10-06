@@ -20,22 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { txExecBatch } from '../actions';
-import { Reducer } from 'modules';
+import { ISchema } from './';
+import Boolean from '../contract/field/boolean';
+import Integer from '../contract/field/integer';
+import Float from '../contract/field/float';
+import Money from '../contract/field/money';
+import String from '../contract/field/string';
+import File from '../contract/field/file';
+import StringCollection from '../contract/field/stringCollection';
 
-const txExecBatchDoneHandler: Reducer<typeof txExecBatch.done, State> = (state, payload) => {
-    const tx = state.transactions.get(payload.params.uuid);
-    return {
-        ...state,
-        transactions: state.transactions.set(payload.params.uuid, {
-            ...tx,
-            batch: {
-                ...tx.batch,
-                pending: 0
-            }
-        })
-    };
+const defaultSchema: ISchema = {
+    header: new Uint8Array([0x80]),
+    network: 1,
+    fields: {
+        'bool': Boolean,
+        'int': Integer,
+        'float': Float,
+        'money': Money,
+        'string': String,
+        'file': File,
+        'array': StringCollection,
+    }
 };
 
-export default txExecBatchDoneHandler;
+export default defaultSchema;

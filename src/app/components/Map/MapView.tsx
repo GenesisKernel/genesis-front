@@ -39,6 +39,7 @@ export interface IMapViewProps extends IMapProps {
 
 class Map extends React.Component<IMapProps> {
     private _map: GoogleMap = null;
+    private _defaultCenter = { lat: 36.07574221562708, lng: 5.0921630859375 };
 
     componentDidMount() {
         this.processEvents(this.props);
@@ -78,7 +79,8 @@ class Map extends React.Component<IMapProps> {
                 ref={l => this._map = l}
                 defaultMapTypeId={this.props.mapType}
                 defaultZoom={this.props.zoom || 1}
-                defaultCenter={this.props.center || { lat: 36.07574221562708, lng: 5.0921630859375 }}
+                defaultCenter={this.props.center || this._defaultCenter}
+                center={this.props.center || this._defaultCenter}
                 mapTypeId={this.props.mapType}
                 options={{
                     disableDefaultUI: true,
@@ -98,7 +100,7 @@ const BoundMap = withScriptjs(withGoogleMap(Map));
 
 const MapView: React.SFC<IMapViewProps> = props => (
     <BoundMap
-        googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyATHGb9H5fXlOMp4azLLFmX2KIr6o0jH9M&libraries=geometry,drawing,places"
+        googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyATHGb9H5fXlOMp4azLLFmX2KIr6o0jH9M&libraries=geometry,drawing,places&callback=googleMapsLoaded"
         loadingElement={<div style={{ height: props.height }} />}
         containerElement={<div style={{ height: props.height }} />}
         mapElement={<div style={{ height: props.height }} />}

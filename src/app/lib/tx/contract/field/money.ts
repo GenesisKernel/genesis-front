@@ -20,25 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import uuid from 'uuid';
-import { IRootState } from 'modules';
-import { Epic } from 'redux-observable';
-import { Observable } from 'rxjs';
-import { Action } from 'redux';
-import { txExecBatch, txPrepare } from '../actions';
-import { enqueueNotification } from 'modules/notifications/actions';
+import IField from './';
+import { toMoney } from 'lib/tx/convert';
 
-const txExecBatchDoneEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(txExecBatch.done)
-        .flatMap(action => Observable.if(
-            () => !!action.payload.params.tx.contract,
-            Observable.of(txPrepare(action.payload.params)),
-            Observable.of(enqueueNotification({
-                id: uuid.v4(),
-                type: 'TX_BATCH',
-                params: {}
-            }))
+class Money implements IField<string, string> {
+    private _value: string = '';
 
-        ));
+    set(value: string) {
+        const intermediary = value ? value.toString().replace(',', '.') : '0';
+        this._value = toMoney(intermediary);
+    }
 
-export default txExecBatchDoneEpic;
+    get() {
+        return this._value;
+    }
+}
+
+export default Money;

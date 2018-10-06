@@ -25,12 +25,15 @@ import { Epic } from 'redux-observable';
 import { Action } from 'redux';
 import { txExec } from '../actions';
 import { reloadStylesheet } from 'modules/content/actions';
+import { Observable } from 'rxjs';
 
 const reloadStylesheetEpic: Epic<Action, IRootState> =
     (action$, store) => action$.ofAction(txExec.done)
-        .filter(l => l.payload.params.tx.contract && l.payload.params.tx.contract.name.indexOf('EditParameter') !== -1 && l.payload.params.tx.contract.params.name === 'stylesheet')
-        .map(action => {
-            return reloadStylesheet(action.payload.params.tx.contract.params.value);
-        });
+        .filter(l => !!l.payload.params.contracts.find(c => /^(@1)?EditParameter$/.test(c.name) && !!c.params.find(p => 'stylesheet' === p.name)))
+        .flatMap(s => Observable.from(s.payload.params.contracts))
+        .flatMap(contract => Observable.from(contract.params))
+        .map(params =>
+            reloadStylesheet(params.value)
+        );
 
 export default reloadStylesheetEpic;
