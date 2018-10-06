@@ -31,11 +31,11 @@ export interface ITxMenuContainerProps {
 }
 
 interface ITxMenuContainerState {
-    maxSum: number;
+    maxSum: string;
 }
 
 interface ITxMenuContainerDispatch {
-    onEdit: (maxSum: number) => void;
+    onEdit: (maxSum: string) => void;
 }
 
 const TxMenuContainer: React.SFC<ITxMenuContainerProps & ITxMenuContainerState & ITxMenuContainerDispatch> = props => (
@@ -47,7 +47,7 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    onEdit: (maxSum: number) => updateSettings({
+    onEdit: (maxSum: string) => updateSettings({
         maxSum
     })
 };

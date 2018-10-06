@@ -32,7 +32,7 @@ declare module 'genesis/auth' {
     }
 
     interface IWalletSettings {
-        maxSum?: number;
+        maxSum?: string;
     }
 
     interface ISaveEncKeyCall {

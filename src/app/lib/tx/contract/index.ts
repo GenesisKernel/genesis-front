@@ -32,7 +32,7 @@ export interface IContractContext {
     id: number;
     schema: ISchema;
     ecosystemID: number;
-    maxSum?: number;
+    maxSum?: string;
     fields: {
         [name: string]: IContractParam;
     };
@@ -126,7 +126,7 @@ export default class Contract {
         };
 
         if (this._context.maxSum) {
-            data.MaxSum = String(this._context.maxSum);
+            data.MaxSum = convert.toMoney(this._context.maxSum);
         }
 
         return msgpack.encode(data, { codec });

@@ -29,8 +29,8 @@ import Validation from '../Validation';
 import Button from 'components/Button';
 
 export interface ITxMenuProps {
-    maxSum: number;
-    onEdit: (value: number) => any;
+    maxSum: string;
+    onEdit: (value: string) => any;
 }
 
 interface ITxMenuContext {
@@ -51,14 +51,15 @@ const TxMenu: React.SFC<ITxMenuProps> = (props, context: ITxMenuContext) => (
                     <FormattedMessage id="tx.spending.limit.desc" defaultMessage="Transactions executed on your behalf will not be able to spend more tokens than you specify here" />
                 </div>
                 <div style={{ padding: 8 }}>
-                    <Validation.components.ValidatedForm onSubmitSuccess={payload => props.onEdit(Number(payload.maxSum))}>
+                    <Validation.components.ValidatedForm onSubmitSuccess={payload => props.onEdit(payload.maxSum)}>
                         <Validation.components.ValidatedFormGroup for="maxSum">
                             <Validation.components.ValidatedControl
                                 className="form-control"
                                 name="maxSum"
                                 type="number"
-                                defaultValue={String(props.maxSum)}
-                                validators={[Validation.validators.min(1)]}
+                                defaultValue={props.maxSum}
+                                step="any"
+                                validators={[Validation.validators.required, Validation.validators.min(0)]}
                             />
                         </Validation.components.ValidatedFormGroup>
                         <Row>
