@@ -67,9 +67,7 @@ export interface ITxButtonProps {
         width?: number;
     };
 
-    errorRedirects?: {
-        [key: string]: IErrorRedirect
-    };
+    errorRedirects?: { [key: string]: IErrorRedirect } | (() => { [key: string]: IErrorRedirect });
 }
 
 interface ITxButtonState {
@@ -109,6 +107,10 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonState & ITxButt
             });
         }
 
+        const errorRedirects = 'function' === typeof this.props.errorRedirects ?
+            this.props.errorRedirects() :
+            this.props.errorRedirects;
+
         this.props.buttonInteraction({
             uuid: this._uuid,
             silent: this.props.silent,
@@ -119,7 +121,7 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonState & ITxButt
                 name: this.props.page,
                 params: pageParams
             } : null,
-            errorRedirects: this.props.errorRedirects
+            errorRedirects: errorRedirects
         });
     }
 

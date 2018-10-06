@@ -107,6 +107,35 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
         }
     };
 
+    const getErrorRedirectParams = () => {
+        const result: { [key: string]: IErrorRedirect } = {};
+
+        if (!props.errredirect) {
+            return {};
+        }
+
+        for (let itr in props.errredirect) {
+            if (props.errredirect.hasOwnProperty(itr)) {
+                let pageparams = null;
+                if (context.form) {
+                    const payload = context.form.validateAll();
+                    if (payload.valid) {
+                        pageparams = context.protypo.resolveParams(props.errredirect[itr].pageparams, payload.payload);
+
+                    }
+                }
+                else {
+                    pageparams = context.protypo.resolveParams(props.errredirect[itr].pageparams);
+                }
+                result[itr] = {
+                    pagename: props.errredirect[itr].pagename,
+                    pageparams
+                };
+            }
+        }
+        return result;
+    };
+
     let popup: { title?: string, width?: number } = null;
     if (props.popup) {
         const width = parseInt(props.popup.width, 10);
@@ -135,7 +164,7 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
             page={props.page}
             pageParams={getPageParams}
             popup={popup}
-            errorRedirects={props.errredirect}
+            errorRedirects={getErrorRedirectParams}
         >
             {props.children}
         </TxButton>
