@@ -25,7 +25,7 @@ script:
   - |
     if [ "${TRAVIS_PULL_REQUEST}" = "false" ] && [ "${TRAVIS_BRANCH}" = "master" ]; then
       yarn build-desktop
-      echo \{\"fullNodes\":[\"https://testapla0.apla.io:7079\",\"https://testapla1.apla.io:7079\",\"https://testapla2.apla.io:7079\"]\} > ./build/settings.json
+      echo \{\"fullNodes\":[\"https://testapla0.apla.io:7079\",\"https://testapla1.apla.io:7079\",\"https://testapla2.apla.io:7079\"]\} > ./build/app/settings.json
       yarn release -ml
       yarn release -w
     fi

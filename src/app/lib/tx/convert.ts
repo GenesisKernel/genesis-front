@@ -23,6 +23,8 @@
 // tslint:disable:no-bitwise
 import { Uint64BE } from 'int64-buffer';
 
+export const MONEY_POWER = 18;
+
 export const toHex = (buffer: ArrayBuffer): string => {
     return Array.prototype.map.call(new Uint8Array(buffer), (x: number) =>
         ('00' + x.toString(16)).slice(-2)
@@ -83,4 +85,22 @@ export const encodeLengthPlusData = (buffer: Uint8Array | ArrayBuffer): ArrayBuf
     }
 
     return concatBuffer(encodeLength(buffer.length), buffer);
+};
+
+export const toMoney = (value: number | string) => {
+    const match = /([\d]+)((\.|,)([\d]+))?/.exec(String(value));
+    if (!match) {
+        return null;
+    }
+    const integer = match[1];
+    const fraction = match[4] || '';
+    let result = integer;
+    for (let i = 0; i < MONEY_POWER; i++) {
+        const val = fraction.length <= i ? '0' : fraction[i];
+        result += val;
+    }
+    if (fraction.length > MONEY_POWER) {
+        result = result + `.${fraction.slice(MONEY_POWER, MONEY_POWER * 2)}`;
+    }
+    return result;
 };
