@@ -163,6 +163,8 @@
     "tx.param.value": "Значение",
     "tx.error.error": "Ошибка",
     "tx.error.error.desc": "{error}",
+    "tx.error.exception": "Программное исключение",
+    "tx.error.exception.desc": "{error}",
     "tx.error.info": "Информация",
     "tx.error.info.desc": "{error}",
     "tx.error.panic": "Ошибка выполнения",
