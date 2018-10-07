@@ -163,6 +163,8 @@
     "tx.param.value": "Value",
     "tx.error.error": "Error",
     "tx.error.error.desc": "{error}",
+    "tx.error.exception": "Runtime exception",
+    "tx.error.exception.desc": "{error}",
     "tx.error.info": "Information",
     "tx.error.info.desc": "{error}",
     "tx.error.panic": "Runtime error",
