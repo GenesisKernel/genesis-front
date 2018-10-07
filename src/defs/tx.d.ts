@@ -34,7 +34,16 @@ declare module 'genesis/tx' {
         result: string;
     }
 
+    interface IErrorRedirect {
+        pagename: string;
+        pageparams?: {
+            [key: string]: any;
+        };
+    }
+
     interface ITxError {
+        errorRedirects?: IErrorRedirect;
+        id?: string;
         type: TTxError;
         error: string;
         params?: any[];
@@ -74,5 +83,8 @@ declare module 'genesis/tx' {
                 [key: string]: any;
             }[];
         }[];
+        errorRedirects?: {
+            [key: string]: IErrorRedirect
+        }
     }
 }
