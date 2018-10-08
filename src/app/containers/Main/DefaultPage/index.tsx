@@ -29,7 +29,7 @@ export interface IDefaultPageContainerProps {
 }
 
 interface IDefaultPageContainerState {
-    initialized: boolean;
+
 }
 
 interface IDefaultPageContainerDispatch {
@@ -38,9 +38,7 @@ interface IDefaultPageContainerDispatch {
 
 class DefaultPageContainer extends React.Component<IDefaultPageContainerProps & IDefaultPageContainerState & IDefaultPageContainerDispatch> {
     componentDidMount() {
-        if (!this.props.initialized) {
-            this.props.ecosystemInit({});
-        }
+        this.props.ecosystemInit({});
     }
 
     render() {
@@ -49,7 +47,7 @@ class DefaultPageContainer extends React.Component<IDefaultPageContainerProps & 
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    initialized: state.sections.inited
+
 });
 
 const mapDispatchToProps = {

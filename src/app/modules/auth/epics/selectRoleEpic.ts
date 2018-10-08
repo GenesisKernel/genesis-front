@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
 import { Epic } from 'modules';
 import { selectRole } from '../actions';
 import { Observable } from 'rxjs/Observable';
@@ -44,28 +43,15 @@ const selectRoleEpic: Epic = (action$, store, { api }) => action$.ofAction(selec
                 ecosystem: wallet.ecosystem,
                 role: action.payload
 
-            })).flatMap(loginResult => {
-                const securedClient = authClient.authorize(loginResult.token);
-
-                return (action.payload ? Observable.from(
-                    securedClient.getRow({
-                        table: 'roles',
-                        id: action.payload.toString()
-
-                    }).then(roleResult => roleResult.value.default_page).catch(e => null)
-
-                ) : Observable.of(null)).flatMap(roleResult =>
-                    Observable.of<Action>(
-                        selectRole.done({
-                            params: action.payload,
-                            result: {
-                                sessionToken: loginResult.token,
-                                refreshToken: loginResult.refresh
-                            }
-                        })
-                    )
-                );
-            });
+            })).map(loginResult =>
+                selectRole.done({
+                    params: action.payload,
+                    result: {
+                        sessionToken: loginResult.token,
+                        refreshToken: loginResult.refresh
+                    }
+                })
+            );
 
         }).catch(e =>
             Observable.of(

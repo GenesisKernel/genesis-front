@@ -119,7 +119,6 @@ export interface INavigationProps {
     width: number;
     menus: TMenu[];
     menuPop: () => void;
-    ecosystemInit: (nullArg: null) => void;
 }
 
 class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
