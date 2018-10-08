@@ -103,6 +103,7 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
                 onBlur={this.onBlur}
                 bsClass={this.props.bsClass}
                 bsSize={this.props.bsSize}
+                step={this.props.step}
                 componentClass={this.props.componentClass}
                 id={this.props.id}
                 name={this.props.name}

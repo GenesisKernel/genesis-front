@@ -26,11 +26,13 @@ import saveWalletOnEcosystemInitEpic from './epics/saveWalletOnEcosystemInitEpic
 import saveWalletOnSelectEpic from './epics/saveWalletOnSelectEpic';
 import saveWalletOnImportEpic from './epics/saveWalletOnImportEpic';
 import saveWalletOnCreateEpic from './epics/saveWalletOnCreateEpic';
+import saveWalletOnSettingsEpic from './epics/saveWalletOnSettingsEpic';
 
 export default combineEpics(
     saveWalletOnCreateEpic,
     saveWalletOnEcosystemInitEpic,
     saveWalletOnImportEpic,
     saveWalletOnLoginEpic,
-    saveWalletOnSelectEpic
+    saveWalletOnSelectEpic,
+    saveWalletOnSettingsEpic
 );

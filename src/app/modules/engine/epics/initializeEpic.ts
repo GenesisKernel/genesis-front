@@ -122,7 +122,8 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                                     address: result.login.address,
                                     ecosystem: result.login.ecosystem_id,
                                     ecosystemName: null,
-                                    username: null
+                                    username: null,
+                                    settings: {}
                                 })),
                                 Observable.empty<never>()
                             ),

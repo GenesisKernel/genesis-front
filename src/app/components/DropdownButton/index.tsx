@@ -34,6 +34,7 @@ const StyledDropdown = themed.div`
 
     &.dropdown-active button.dropdown-toggle {
         background: rgba(0,0,0,0.15);
+        z-index: 610;
     }
 
     button.dropdown-toggle {
@@ -43,7 +44,7 @@ const StyledDropdown = themed.div`
         padding: 0 10px;
         text-align: center;
         position: relative;
-        z-index: 1000;
+        z-index: 500;
 
         .dropdown-badge {
             position: absolute;

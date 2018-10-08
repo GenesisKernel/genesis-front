@@ -53,7 +53,8 @@ const createWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(cre
                         address: payload.address,
                         ecosystem: '1',
                         ecosystemName: null,
-                        username: payload.key_id
+                        username: payload.key_id,
+                        settings: {}
                     }
                 }),
                 navigate('/')
