@@ -169,6 +169,8 @@
     "tx.error.info.desc": "{error}",
     "tx.error.panic": "Ошибка выполнения",
     "tx.error.panic.desc": "{error}",
+    "tx.error.txError": "Ошибка выполнения",
+    "tx.error.txError.desc": "{error}",
     "tx.error.warning": "Предупреждение",
     "tx.error.warning.desc": "{error}",
     "tx.error.E_CONTRACT": "Ошибка вызова",
