@@ -35,8 +35,8 @@ import NotFound from 'components/NotFound';
 const MainContainer: React.SFC<IMainProps> = props => (
     <Main {...props}>
         <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
-            <Route exact path="/" component={DefaultPage} />
             <Route exact path="/:section/:pageName?" component={Page} />
+            <Route exact path="*" component={DefaultPage} />
             <Route path="*" render={() => <NotFound main />} />
         </AnimatedSwitch>
     </Main>
@@ -49,7 +49,11 @@ const mapStateToProps = (state: IRootState) => ({
     section: state.sections.section,
     sections: state.sections.sections,
     navigationSize: state.storage.navigationSize,
-    navigationVisible: state.sections.sections[state.sections.section].menuDisabled ? false : state.sections.sections[state.sections.section].menuVisible,
+    navigationVisible: state.sections.sections[state.sections.section] &&
+        (state.sections.sections[state.sections.section].menuDisabled ?
+            false :
+            state.sections.sections[state.sections.section].menuVisible
+        ),
     transactionsCount: state.tx.transactions.count()
 });
 
@@ -61,7 +65,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
         dispatch(navigatePage.started({ params: {} }));
     },
     onRefresh: (section: string) => {
-        dispatch(reloadPage());
+        dispatch(reloadPage.started({}));
     },
     onSwitchSection: (section: string) => {
         dispatch(renderSection(section));

@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as queryString from 'query-string';
+import queryString from 'query-string';
 import { Epic } from 'modules';
-import { push } from 'react-router-redux';
-import { renderSection } from '..//actions';
+import { push } from 'connected-react-router';
+import { renderSection } from '../actions';
 
 const renderSectionEpic: Epic = (action$, store) => action$.ofAction(renderSection)
     .map(action => {

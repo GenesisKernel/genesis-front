@@ -25,7 +25,7 @@ import { Epic } from 'modules';
 import { login } from '../actions';
 import { Observable } from 'rxjs/Observable';
 import keyring from 'lib/keyring';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 
 const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.started)
     .flatMap(action => {

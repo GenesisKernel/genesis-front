@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 
 const actionCreator = actionCreatorFactory('engine');
 export const navigate = (url: string) => push(url);

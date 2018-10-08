@@ -34,21 +34,34 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
     .flatMap(action => {
         const state = store.getState();
         const client = api(state.auth.session);
+        const section = state.sections.sections[action.payload.section || state.sections.section];
 
-        return Observable.fromPromise(client.content({
-            type: 'page',
-            name: action.payload.name,
-            params: action.payload.params,
-            locale: state.storage.locale
+        return Observable.from(Promise.all([
+            client.content({
+                type: 'page',
+                name: action.payload.name,
+                params: action.payload.params,
+                locale: state.storage.locale
 
-        })).flatMap(payload => {
-            if (payload.nodesCount > state.storage.fullNodes.length) {
+            }),
+            (!section.menus.length && section.defaultPage !== action.payload.name) ? client.content({
+                type: 'page',
+                name: section.defaultPage,
+                params: {},
+                locale: state.storage.locale
+            }) : Promise.resolve(null)
+
+        ])).flatMap(payload => {
+            const page = payload[0];
+            const defaultPage = payload[1];
+
+            if (page.nodesCount > state.storage.fullNodes.length) {
                 return Observable.throw(invalidationError);
             }
 
             return NodeObservable({
                 nodes: state.storage.fullNodes,
-                count: payload.nodesCount,
+                count: page.nodesCount,
                 concurrency: 3,
                 api
 
@@ -63,9 +76,9 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
 
                 })
             )).catch(e => Observable.throw(invalidationError)).toArray().map(result => {
-                const contentHash = keyring.hashData(payload.plainText);
+                const contentHash = keyring.hashData(page.plainText);
 
-                if (payload.nodesCount !== result.length) {
+                if (page.nodesCount !== result.length) {
                     throw invalidationError;
                 }
 
@@ -78,14 +91,18 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
                 return renderPage.done({
                     params: action.payload,
                     result: {
+                        defaultMenu: defaultPage && defaultPage.menu !== page.menu && {
+                            name: defaultPage.menu,
+                            content: defaultPage.menutree
+                        },
                         menu: {
-                            name: payload.menu,
-                            content: payload.menutree
+                            name: page.menu,
+                            content: page.menutree
                         },
                         page: {
                             params: action.payload.params,
                             name: action.payload.name,
-                            content: payload.tree
+                            content: page.tree
                         }
                     }
                 });
