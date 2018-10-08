@@ -64,6 +64,8 @@
     "contract.exec": "Вызвать контракт",
     "editor.block.create": "Создать блок",
     "editor.close.confirm": "Вы действительно хотите закрыть '{name}' без сохранения изменений?",
+    "editor.close.all": "Закрыть все вкладки",
+    "editor.close.saved": "Закрыть сохранённые",
     "editor.conditions.change": "Права на изменение",
     "editor.create": "Создать",
     "editor.execute": "Вызвать",
