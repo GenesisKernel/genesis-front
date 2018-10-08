@@ -60,6 +60,13 @@ declare module 'genesis/protypo' {
         };
     }
 
+    interface IErrorRedirect {
+        pagename: string;
+        pageparams?: {
+            [key: string]: any;
+        };
+    }
+
     interface IButtonInteraction {
         uuid: string;
         silent?: boolean;
@@ -72,5 +79,8 @@ declare module 'genesis/protypo' {
         }[];
         page?: IButtonPage;
         popup?: IButtonPopup;
+        errorRedirects?: {
+            [key: string]: IErrorRedirect
+        }
     }
 }

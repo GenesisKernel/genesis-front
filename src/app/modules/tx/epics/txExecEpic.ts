@@ -150,6 +150,7 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
 
                         case 'E_ERROR':
                             return Observable.throw({
+                                id: error.data.id,
                                 type: error.data.type,
                                 error: error.data.error,
                                 params: error.data.params
@@ -174,7 +175,11 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
 
             )).catch(error => Observable.of(txExec.failed({
                 params: action.payload,
-                error
+                error: 'id' in error ? error : {
+                    type: (error.errmsg ? error.errmsg.type : error.error),
+                    error: error.errmsg ? error.errmsg.error : error.msg,
+                    params: error.params || []
+                }
             })));
     });
 
