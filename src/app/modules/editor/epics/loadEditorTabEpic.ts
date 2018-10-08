@@ -25,7 +25,7 @@ import { Epic } from 'modules';
 import { loadEditorTab } from '../actions';
 import { Observable } from 'rxjs/Observable';
 import { updateSection } from 'modules/sections/actions';
-import { replace } from 'react-router-redux';
+import { replace } from 'connected-react-router';
 
 const loadEditorTabEpic: Epic = (action$, store, { api }) => action$.ofAction(loadEditorTab.started)
     .flatMap(action => {

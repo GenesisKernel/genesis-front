@@ -32,9 +32,9 @@ export interface ILegacyPage {
 }
 
 const LEGACY_PAGES: { [page: string]: ILegacyPage } = {
-    'backup': { section: 'home', menu: null, render: () => <Backup /> },
+    'backup': { section: null, menu: null, render: () => <Backup /> },
     'editor': { section: 'editor', menu: null, render: (props: { open?: string, create?: string, name?: string, vde?: string }) => <Editor {...props} /> },
-    '@invite': { section: 'home', menu: null, render: (props: { ecosystem: string, page?: string }) => <Invite {...props} /> }
+    '@invite': { section: null, menu: null, render: (props: { ecosystem: string, page?: string }) => <Invite {...props} /> }
 };
 
 export {

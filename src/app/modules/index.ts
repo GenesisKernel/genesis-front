@@ -25,7 +25,7 @@ import { Epic as NativeEpic } from 'redux-observable';
 import { IStoreDependencies } from './dependencies';
 import { combineReducers } from 'redux';
 import { combineEpics } from 'redux-observable';
-import { routerReducer as router, RouterState } from 'react-router-redux';
+import { RouterState } from 'connected-react-router';
 import { loadingBarReducer } from 'react-redux-loading-bar';
 import * as auth from './auth';
 import * as content from './content';
@@ -92,6 +92,5 @@ export default combineReducers<IRootState>({
     notifications: notifications.reducer,
     storage: storage.reducer,
     socket: socket.reducer,
-    loadingBar: loadingBarReducer,
-    router
+    loadingBar: loadingBarReducer
 });
