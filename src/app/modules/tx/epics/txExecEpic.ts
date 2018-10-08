@@ -174,8 +174,12 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                 })
 
             )).catch(error => Observable.of(txExec.failed({
-                    params: action.payload,
-                    error
+                params: action.payload,
+                error: 'id' in error ? error : {
+                    type: (error.errmsg ? error.errmsg.type : error.error),
+                    error: error.errmsg ? error.errmsg.error : error.msg,
+                    params: error.params || []
+                }
             })));
     });
 
