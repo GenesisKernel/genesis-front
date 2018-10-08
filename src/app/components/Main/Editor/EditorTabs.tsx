@@ -65,7 +65,7 @@ export interface IEditorTabsProps {
 const EditorTabs: React.SFC<IEditorTabsProps> = (props) => (
     <div>
         <div className={props.className}>
-            <ScrollView className="editor-scroll-area" disableVertical hideHorizontal>
+            <ScrollView className="editor-scroll-area" disableVertical hideHorizontal horizontalWheel>
                 <ul>
                     {props.tabs.map((tab, index) => (
                         <EditorTab

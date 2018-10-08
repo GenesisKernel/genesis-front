@@ -110,6 +110,10 @@ const StyledMenuContent = themed.div`
     bottom: 0;
     background: ${props => props.theme.menuBackground};
 
+    > div {
+        background: ${props => props.theme.menuBackground};
+    }
+
     .title-wrap {
         text-overflow: ellipsis;
         white-space: nowrap;

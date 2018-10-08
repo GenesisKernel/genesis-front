@@ -33,6 +33,7 @@ export interface IScrollViewProps {
     disableVertical?: boolean;
     hideHorizontal?: boolean;
     hideVertical?: boolean;
+    horizontalWheel?: boolean;
 }
 
 const StyledScrollBar = styled(ScrollBar)`
@@ -47,19 +48,46 @@ const StyledScrollBar = styled(ScrollBar)`
     }
 `;
 
-const ScrollView: React.SFC<IScrollViewProps> = props => (
-    <StyledScrollBar
-        className={classNames(props.className, {
-            'disable-vertical': props.disableVertical,
-            'disable-horizontal': props.disableHorizontal
-        })}
-        renderTrackHorizontal={props.disableHorizontal || props.hideHorizontal ? Nop : undefined}
-        renderThumbHorizontal={props.disableHorizontal || props.hideHorizontal ? Nop : undefined}
-        renderTrackVertical={props.disableVertical || props.hideVertical ? Nop : undefined}
-        renderThumbVertical={props.disableVertical || props.hideVertical ? Nop : undefined}
-    >
-        {props.children}
-    </StyledScrollBar>
-);
+class ScrollView extends React.Component<IScrollViewProps> {
+    private _scrollBar: ScrollBar;
+
+    onMouseWheel: React.EventHandler<React.WheelEvent<ScrollBar>> = e => {
+        if (!e.deltaX) {
+            e.preventDefault();
+            const currentScrollDelta = this._scrollBar.getScrollLeft();
+            this._scrollBar.scrollLeft(currentScrollDelta + (e.deltaY * 8));
+        }
+    }
+
+    calcValue = (...args: boolean[]) => {
+        if (args.find(l => l === true)) {
+            return Nop;
+        }
+        else {
+            return undefined;
+        }
+    }
+
+    render() {
+        const classes = classNames(this.props.className, {
+            'disable-vertical': this.props.disableVertical,
+            'disable-horizontal': this.props.disableHorizontal
+        });
+
+        return (
+            <StyledScrollBar
+                innerRef={l => this._scrollBar = l}
+                className={classes}
+                onWheel={this.props.horizontalWheel && this.onMouseWheel}
+                renderTrackHorizontal={this.calcValue(this.props.disableHorizontal, this.props.hideHorizontal)}
+                renderThumbHorizontal={this.calcValue(this.props.disableHorizontal, this.props.hideHorizontal)}
+                renderTrackVertical={this.calcValue(this.props.disableVertical, this.props.hideVertical)}
+                renderThumbVertical={this.calcValue(this.props.disableVertical, this.props.hideVertical)}
+            >
+                {this.props.children}
+            </StyledScrollBar>
+        );
+    }
+}
 
 export default ScrollView;
