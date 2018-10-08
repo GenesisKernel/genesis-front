@@ -20,16 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import StackGroup from 'components/Animation/StackGroup';
+import { TMenu } from 'genesis/content';
+import platform from 'lib/platform';
 
+import StackGroup from 'components/Animation/StackGroup';
 import themed from 'components/Theme/themed';
 import Protypo from 'containers/Widgets/Protypo';
 import ResizeHandle from 'containers/Main/Navigation/ResizeHandle';
-import { TMenu } from 'genesis/content';
-import ScrollArea from 'react-scrollbar';
-import platform from 'lib/platform';
+import ScrollView from 'components/ScrollView';
 
 const StyledNavigation = themed.aside`
     &.navigation-collapsed {
@@ -103,6 +103,11 @@ const StyledMenu = themed.div`
 `;
 
 const StyledMenuContent = themed.div`
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
     background: ${props => props.theme.menuBackground};
 
     .title-wrap {
@@ -130,10 +135,7 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
                     <StyledMenu>
                         <StackGroup
                             items={this.props.menus.map((menu, index) => (
-                                <ScrollArea
-                                    horizontal={false}
-                                    speed={0.2}
-                                >
+                                <ScrollView disableHorizontal>
                                     <StyledMenuContent>
                                         {index > 0 && (
                                             <StyledBackButton onClick={() => this.props.menuPop()} disabled={1 >= this.props.menus.length}>
@@ -150,7 +152,7 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
                                             content={menu.content}
                                         />
                                     </StyledMenuContent>
-                                </ScrollArea>
+                                </ScrollView>
                             ))}
                         />
                     </StyledMenu>

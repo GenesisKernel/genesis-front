@@ -65,6 +65,8 @@
     "disabled": "Disabled",
     "editor.block.create": "Create block",
     "editor.close.confirm": "Do you really want to close '{name}' without saving changes?",
+    "editor.close.all": "Close all tabs",
+    "editor.close.saved": "Close saved tabs",
     "editor.conditions.change": "Change conditions",
     "editor.create": "Create",
     "editor.execute": "Execute",
