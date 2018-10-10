@@ -79,7 +79,7 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                         return Observable.from(new Contract({
                             id: proto.id,
                             schema: defaultSchema,
-                            ecosystemID: state.auth.ecosystem ? parseInt(state.auth.ecosystem, 10) : 1,
+                            ecosystemID: parseInt(state.auth.wallet && state.auth.wallet.ecosystem || '1', 10),
                             fields: txParams
 
                         }).sign(privateKey)).map(signature => ({
