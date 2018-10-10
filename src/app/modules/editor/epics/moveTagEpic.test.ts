@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,8 @@ import { ActionsObservable } from 'redux-observable';
 import { moveTag } from '../actions';
 import moveTagEpic from './moveTagEpic';
 import dependencies from 'modules/dependencies';
-import { TProtypoElement } from 'genesis/protypo';
-import { TConstructorTreeElement } from 'genesis/editor';
+import { TProtypoElement } from 'apla/protypo';
+import { TConstructorTreeElement } from 'apla/editor';
 import mockStore from 'test/mockStore';
 
 describe('moveTagEpic', () => {

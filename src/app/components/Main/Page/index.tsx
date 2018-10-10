@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 
 import * as React from 'react';
 import Protypo from 'containers/Widgets/Protypo';
-import { TPage } from 'genesis/content';
+import { TPage } from 'apla/content';
 
 import DocumentTitle from 'components/DocumentTitle';
 import Error from './Error';

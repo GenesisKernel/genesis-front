@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,8 @@
 
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import * as actions from './actions';
-import { INotificationsMessage } from 'genesis/socket';
-import { IWallet } from 'genesis/auth';
+import { INotificationsMessage } from 'apla/socket';
+import { IWallet } from 'apla/auth';
 import connectDoneHandler from './reducers/connectDoneHandler';
 import disconnectDoneHandler from './reducers/disconnectDoneHandler';
 import subscribeDoneHandler from './reducers/subscribeDoneHandler';

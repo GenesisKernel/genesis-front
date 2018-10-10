@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 import * as React from 'react';
 import { StyledMenuItem } from './MenuItem';
 import * as propTypes from 'prop-types';
-import { TProtypoElement } from 'genesis/protypo';
+import { TProtypoElement } from 'apla/protypo';
 
 export interface IMenuGroupProps {
     title?: string;

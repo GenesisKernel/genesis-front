@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 
 import React from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { TMenu } from 'genesis/content';
+import { TMenu } from 'apla/content';
 import platform from 'lib/platform';
 
 import StackGroup from 'components/Animation/StackGroup';

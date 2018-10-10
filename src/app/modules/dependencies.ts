@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import GenesisAPI from 'lib/genesisAPI';
+import AplaAPI from 'lib/aplaAPI';
 import CodeGenerator, { setIds, convertToTreeData, findTagById, copyObject, idGenerator, updateChildrenText, html2childrenTags } from 'lib/constructor';
 import Properties from 'lib/constructor/properties';
 import getConstructorTemplate from 'lib/constructor/templates';
@@ -37,7 +37,7 @@ export interface IStoreDependencies {
 }
 
 export interface IAPIDependency {
-    (options: { apiHost: string, sessionToken?: string }): GenesisAPI;
+    (options: { apiHost: string, sessionToken?: string }): AplaAPI;
 }
 
 interface IConstructorDependenies {
@@ -55,7 +55,7 @@ interface IConstructorDependenies {
 }
 
 const storeDependencies: IStoreDependencies = {
-    api: (params: { apiHost: string, sessionToken?: string } = { apiHost: null }) => new GenesisAPI({
+    api: (params: { apiHost: string, sessionToken?: string } = { apiHost: null }) => new AplaAPI({
         transport: request => fetch(request.url, {
             method: request.method,
             headers: request.headers,
@@ -80,7 +80,7 @@ const storeDependencies: IStoreDependencies = {
         session: params.sessionToken
     }),
     defaultKey: 'e5a87a96a445cb55a214edaad3661018061ef2936e63a0a93bdb76eb28251c1f',
-    defaultPassword: 'genesis',
+    defaultPassword: 'default',
     constructorModule: {
         setIds,
         convertToTreeData,

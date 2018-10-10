@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { IWallet } from 'genesis/auth';
+import { IWallet } from 'apla/auth';
 
 import WalletList from 'containers/Auth/Login/WalletList';
 import RoleList from 'containers/Auth/Login/RoleList';

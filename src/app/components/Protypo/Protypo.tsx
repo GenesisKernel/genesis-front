@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,11 +24,11 @@ import React from 'react';
 import { resolveHandler, resolveFunction } from 'components/Protypo';
 import propTypes from 'prop-types';
 import contextDefinitions from './contexts';
-import { TProtypoElement, ISource } from 'genesis/protypo';
+import { TProtypoElement, ISource } from 'apla/protypo';
 import { IValidationResult } from 'components/Validation/ValidatedForm';
 import Heading from 'components/Heading';
 import ToolButton, { IToolButtonProps } from 'containers/ToolButton/ToolButton';
-import { IConstructorElementProps } from 'genesis/editor';
+import { IConstructorElementProps } from 'apla/editor';
 
 export interface IProtypoProps extends IConstructorElementProps {
     apiHost: string;

@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 import queryString from 'query-string';
 import urlJoin from 'url-join';
 import urlTemplate from 'url-template';
-import { IUIDResponse, ILoginRequest, ILoginResponse, IRefreshResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, IContentJsonRequest, IContentJsonResponse, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, ISectionsRequest, ISectionsResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IRefreshRequest, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse, ITableRequest, TConfigRequest, ISystemParamsRequest, ISystemParamsResponse, IContentHashRequest, IContentHashResponse, TTxCallRequest, TTxCallResponse, TTxStatusRequest, TTxStatusResponse, ITxStatus } from 'genesis/api';
+import { IUIDResponse, ILoginRequest, ILoginResponse, IRefreshResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, IContentJsonRequest, IContentJsonResponse, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, ISectionsRequest, ISectionsResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IRefreshRequest, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse, ITableRequest, TConfigRequest, ISystemParamsRequest, ISystemParamsResponse, IContentHashRequest, IContentHashResponse, TTxCallRequest, TTxCallResponse, TTxStatusRequest, TTxStatusResponse, ITxStatus } from 'apla/api';
 
 export type TRequestMethod =
     'get' |
@@ -79,7 +79,7 @@ export interface IAPIOptions {
     requestOptions?: IRequestOptions<any, any>;
 }
 
-class GenesisAPI {
+class AplaAPI {
     private _defaultOptions: IRequestOptions<any, any> = {};
     private _options: IAPIOptions;
 
@@ -171,14 +171,14 @@ class GenesisAPI {
     }
 
     public to(apiHost: string) {
-        return new GenesisAPI({
+        return new AplaAPI({
             ...this._options,
             apiHost
         });
     }
 
     public authorize(session: string) {
-        return new GenesisAPI({
+        return new AplaAPI({
             ...this._options,
             session
         });
@@ -306,4 +306,4 @@ class GenesisAPI {
     }) as Promise<TTxStatusResponse<T>>
 }
 
-export default GenesisAPI;
+export default AplaAPI;

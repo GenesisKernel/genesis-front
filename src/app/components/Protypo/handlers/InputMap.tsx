@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import * as React from 'react';
-import { TMapType, TMapEditorType } from 'genesis/geo';
+import { TMapType, TMapEditorType } from 'apla/geo';
 import { IMapValue, parseData } from 'components/Protypo/handlers/Map';
 
 import Validation from 'components/Validation';

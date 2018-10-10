@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import React from 'react';
-import { INotification, INotificationProto } from 'genesis/notifications';
+import { INotification, INotificationProto } from 'apla/notifications';
 
 import StreamGroup from '../Animation/StreamGroup';
 import Notification from './Notification';

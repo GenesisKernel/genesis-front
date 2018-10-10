@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
-import { IWallet } from 'genesis/auth';
+import { IWallet } from 'apla/auth';
 
 import Avatar from 'containers/Avatar';
 import Validation from 'components/Validation';

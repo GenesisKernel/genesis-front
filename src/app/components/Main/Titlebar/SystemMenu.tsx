@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -83,7 +83,7 @@ const SystemMenu: React.SFC<ISystemMenuProps> = props => {
                 rightMost={'right' === props.align}
                 content={
                     <div>
-                        <div className="dropdown-heading">Genesis</div>
+                        <div className="dropdown-heading">Apla</div>
                         <ul className="dropdown-group">
                             <li>
                                 <CloseDropdownButton onClick={props.onAbout}>

@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { createWallet, importSeed, generateSeed } from 'modules/auth/actions';
-import { ICreateWalletCall } from 'genesis/auth';
+import { ICreateWalletCall } from 'apla/auth';
 import { sendAttachment } from 'modules/io/actions';
 
 import Create from 'components/Auth/Wallet/Create';

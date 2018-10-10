@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -62,7 +62,7 @@ const Auth: React.SFC<IAuthProps> = props => (
                     web: (
                         <div className="clearfix p-lg text-center text-white">
                             <div className="pull-left">
-                                <div>Genesis &copy; 2017 - 2018 - <a href="http://genesis.space">http://genesis.space</a></div>
+                                <div>Apla &copy; 2017 - 2018 - <a href="https://apla.io">https://apla.io</a></div>
                             </div>
                             <div className="pull-right">
                                 <a href="#" onClick={props.changeLocale}>

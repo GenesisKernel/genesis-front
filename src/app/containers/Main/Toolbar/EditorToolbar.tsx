@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,8 @@ import { IRootState } from 'modules';
 import { connect } from 'react-redux';
 import { modalShow } from 'modules/modal/actions';
 import { editorSave, revertEditorTab, changeEditorTool, debugContract } from 'modules/editor/actions';
-import { IModalResult } from 'genesis/modal';
-import { TEditorTab } from 'genesis/editor';
+import { IModalResult } from 'apla/modal';
+import { TEditorTab } from 'apla/editor';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 
 import EditorToolbar from 'components/Main/Toolbar/EditorToolbar';

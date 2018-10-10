@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@ import { window } from './windows';
 
 const template: MenuItemConstructorOptions[] = [
     {
-        label: 'Genesis',
+        label: 'Apla',
         submenu: [
             { label: 'Quit', accelerator: 'Command+Q', click: app.quit }
         ]

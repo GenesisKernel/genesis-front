@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,8 +21,8 @@
 // SOFTWARE.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IWallet, ILoginCall, IRole, ISession } from 'genesis/auth';
-import { ICreateWalletCall, IImportWalletCall } from 'genesis/auth';
+import { IWallet, ILoginCall, IRole, ISession } from 'apla/auth';
+import { ICreateWalletCall, IImportWalletCall } from 'apla/auth';
 
 const actionCreator = actionCreatorFactory('auth');
 export const login = actionCreator.async<ILoginCall, { wallet: IWallet, roles: IRole[], privateKey: string, publicKey: string, session: ISession }, string>('LOGIN');

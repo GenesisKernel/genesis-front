@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@ import { Button, Panel } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import keyring from 'lib/keyring';
 import { sendAttachment } from 'lib/fs';
-import { IWallet } from 'genesis/auth';
+import { IWallet } from 'apla/auth';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import QRCode from 'qrcode.react';
 

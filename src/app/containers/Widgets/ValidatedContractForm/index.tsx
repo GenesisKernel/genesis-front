@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@ import { connect } from 'react-redux';
 import { OrderedMap } from 'immutable';
 import { IRootState } from 'modules';
 import { txCall } from 'modules/tx/actions';
-import { ITransactionCollection } from 'genesis/tx';
+import { ITransactionCollection } from 'apla/tx';
 
 import Validation from 'components/Validation';
 

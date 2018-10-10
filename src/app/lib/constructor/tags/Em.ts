@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import Tag from './Tag';
-import { TProtypoElement } from 'genesis/protypo';
+import { TProtypoElement } from 'apla/protypo';
 
 class Em extends Tag {
     constructor(element: TProtypoElement) {

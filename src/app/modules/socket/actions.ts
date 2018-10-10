@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,8 +21,8 @@
 // SOFTWARE.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IWallet } from 'genesis/auth';
-import { INotificationsMessage, IConnectCall } from 'genesis/socket';
+import { IWallet } from 'apla/auth';
+import { INotificationsMessage, IConnectCall } from 'apla/socket';
 
 const actionCreator = actionCreatorFactory('socket');
 export const connect = actionCreator.async<IConnectCall, { session: string, instance: ICentrifuge }, string>('CONNECT');

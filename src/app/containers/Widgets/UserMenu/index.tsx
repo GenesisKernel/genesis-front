@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@ import { Dispatch, Action } from 'redux';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
 import { logout, selectWallet, changePassword } from 'modules/auth/actions';
-import { IWallet } from 'genesis/auth';
+import { IWallet } from 'apla/auth';
 
 import UserMenu from 'components/Main//UserMenu';
 

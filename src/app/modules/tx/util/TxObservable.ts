@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ import { Action as ReduxAction } from 'redux';
 import { Observable } from 'rxjs';
 import { ActionsObservable } from 'redux-observable';
 import { txCall, txExec } from '../actions';
-import { ITransactionCall, ITxError, ITransaction } from 'genesis/tx';
+import { ITransactionCall, ITxError, ITransaction } from 'apla/tx';
 import { isType } from 'typescript-fsa';
 
 type TTxDoneAction =

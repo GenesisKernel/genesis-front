@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
 // SOFTWARE.
 import 'rxjs';
 import 'lib/external/fsa';
-import GenesisAPI, { IRequestTransport,  } from 'lib/genesisAPI';
+import AplaAPI, { IRequestTransport,  } from 'lib/aplaAPI';
 
 describe('getPageTreeEpic', () => {
     it('gets page tree json', () => {
@@ -42,7 +42,7 @@ describe('getPageTreeEpic', () => {
             });
         };
 
-        const paramTestingAPIMock = () => new GenesisAPI({
+        const paramTestingAPIMock = () => new AplaAPI({
             apiHost: paramTestingAPIHost,
             apiEndpoint: paramTestingAPIEndpoint,
             transport: paramsTransportMock

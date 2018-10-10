@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 import { State } from '../reducer';
 import { sectionsInit } from '../actions';
 import { Reducer } from 'modules';
-import { TSection } from 'genesis/content';
+import { TSection } from 'apla/content';
 
 const sectionsInitDoneHandler: Reducer<typeof sectionsInit.done, State> = (state, payload) => {
     const sections: { [key: string]: TSection } = {};

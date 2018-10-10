@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ import StyledComponent from './StyledComponent';
 import Protypo, { IParamsSpec } from '../Protypo';
 import ValidatedForm from 'components/Validation/ValidatedForm';
 import TxButton from 'containers/Button/TxButton';
-import { IErrorRedirect } from 'genesis/protypo';
+import { IErrorRedirect } from 'apla/protypo';
 
 export interface IButtonProps {
     'class'?: string;

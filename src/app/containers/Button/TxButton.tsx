@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,14 +22,14 @@
 
 import React from 'react';
 import uuid from 'uuid';
-import { ITransactionCollection } from 'genesis/tx';
+import { ITransactionCollection } from 'apla/tx';
 import { OrderedMap } from 'immutable';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
 import { buttonInteraction } from 'modules/content/actions';
 
 import Button from 'components/Button';
-import { IErrorRedirect } from 'genesis/protypo';
+import { IErrorRedirect } from 'apla/protypo';
 
 export interface ITxButtonProps {
     disabled?: boolean;

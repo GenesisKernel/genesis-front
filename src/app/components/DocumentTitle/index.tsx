@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ export interface IDocumentTitleProps {
 const DocumentTitle: React.SFC<IDocumentTitleProps & InjectedIntlProps> = props => {
     const staticTitle = props.intl.formatMessage({
         id: 'general.title',
-        defaultMessage: 'Genesis'
+        defaultMessage: 'Apla'
     });
 
     return (

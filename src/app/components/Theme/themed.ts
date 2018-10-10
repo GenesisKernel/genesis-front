@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import styled, { ThemedStyledInterface } from 'styled-components';
-import { IThemeDefinition } from 'genesis/theme';
+import { IThemeDefinition } from 'apla/theme';
 
 const themed: ThemedStyledInterface<IThemeDefinition> = styled;
 

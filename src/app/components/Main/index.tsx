@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 import React from 'react';
 import _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
-import { TSection } from 'genesis/content';
+import { TSection } from 'apla/content';
 import { history } from 'store';
 import platform from 'lib/platform';
 
@@ -125,7 +125,7 @@ class Main extends React.Component<IMainProps> {
     }
 
     render() {
-        const appTitle = `Genesis (${this.props.nodeUrl})`;
+        const appTitle = `Apla (${this.props.nodeUrl})`;
 
         return (
             <StyledWrapper className="wrapper component-main">

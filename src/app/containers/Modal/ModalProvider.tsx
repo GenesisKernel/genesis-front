@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { IModal } from 'genesis/modal';
+import { IModal } from 'apla/modal';
 import { modalClose } from 'modules/modal/actions';
 import { enqueueNotification } from 'modules/notifications/actions';
 import { setLocale } from 'modules/engine/actions';

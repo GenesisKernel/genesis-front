@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,8 @@ import * as classnames from 'classnames';
 import ContentEditable from 'react-contenteditable';
 import TagWrapper from '../components/TagWrapper';
 import { OnPasteStripFormatting } from 'lib/constructor/helpers';
-import { IConstructorElementProps } from 'genesis/editor';
-import { TProtypoElement } from 'genesis/protypo';
+import { IConstructorElementProps } from 'apla/editor';
+import { TProtypoElement } from 'apla/protypo';
 
 export interface IEditableBlockProps extends IConstructorElementProps {
     'className'?: string;
@@ -124,7 +124,7 @@ export default class EditableBlock extends React.Component<IEditableBlockProps, 
     }
 
     handleBlur() {
-        this.props.changePage({text: this._text, tagID: this.props.tag.id});
+        this.props.changePage({ text: this._text, tagID: this.props.tag.id });
     }
 
     removeTag() {
@@ -151,8 +151,8 @@ export default class EditableBlock extends React.Component<IEditableBlockProps, 
             (this.hasChildrenText() && this.editable) ? (
                 this.contentEditable(this.editableTag, classes)
             ) : (
-                this.renderChildren(classes)
-            )
+                    this.renderChildren(classes)
+                )
         );
     }
     renderChildren(classes: string) {

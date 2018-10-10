@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 import { State } from '../reducer';
 import { renderPage } from '../actions';
 import { Reducer } from 'modules';
-import { TMenu } from 'genesis/content';
+import { TMenu } from 'apla/content';
 
 const renderPageDoneHandler: Reducer<typeof renderPage.done, State> = (state, payload) => {
     const section = payload.params.section;

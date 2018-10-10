@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import * as actions from './actions';
-import { TEditorTab } from 'genesis/editor';
+import { TEditorTab } from 'apla/editor';
 import { reducerWithInitialState } from 'typescript-fsa-reducers/dist';
 import changeEditorToolDoneHandler from './reducers/changeEditorToolDoneHandler';
 import changeEditorTabHandler from './reducers/changeEditorTabHandler';

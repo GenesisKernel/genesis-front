@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@ const LocalizedDocumentTitle: React.SFC<ILocalizedDocumentTitleProps & InjectedI
     <DocumentTitle
         title={props.intl.formatMessage({
             id: 'general.title.format',
-            defaultMessage: '{title} | Genesis'
+            defaultMessage: '{title} | Apla'
         }, {
                 title: props.intl.formatMessage({
                     id: props.title,

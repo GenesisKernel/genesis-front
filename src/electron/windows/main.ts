@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@ export default () => {
         minWidth: 800,
         minHeight: 600,
         frame: false,
-        backgroundColor: '#17437b',
+        backgroundColor: '#3d2c77',
         resizable: true,
         show: false,
         maximized: config.get('maximized') || false,

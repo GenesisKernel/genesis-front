@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,13 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { IThemeDefinition } from 'genesis/theme';
+import { IThemeDefinition } from 'apla/theme';
 import platform from 'lib/platform';
 
 const baseTheme: IThemeDefinition = {
     windowBorder: '#4c7dbd',
 
-    headerBackground: '#4c7dbd',
+    headerBackground: '#586180',
     headerForeground: '#fff',
     headerBackgroundActive: '#f3f3f3',
     headerForegroundActive: '#194a8a',
@@ -56,11 +56,11 @@ const baseTheme: IThemeDefinition = {
 
     editorBackground: '#c3c7ce',
 
-    modalHeaderBackground: '#4b7dbd',
+    modalHeaderBackground: '#6d7696',
     modalHeaderForeground: '#fff',
-    modalOutline: '#71a2e0',
+    modalOutline: '#979eb7',
 
-    notificationBackground: 'rgba(26, 91, 158, 0.9)',
+    notificationBackground: 'rgba(62, 72, 111, 0.9)',
     notificationForeground: 'rgba(255, 255, 255, 0.6)',
     notificationIconColor: '#fff',
     notificationPrimaryForeground: '#fff',
@@ -74,7 +74,7 @@ const baseTheme: IThemeDefinition = {
     dropdownMenuBackground: '#fff',
     dropdownMenuForeground: '#666',
     dropdownMenuDisabled: '#ccc',
-    dropdownMenuOutline: '#add1ff',
+    dropdownMenuOutline: '#c5cbe2',
     dropdownMenuActive: 'rgba(0,0,0,0.1)',
     dropdownMenuSeparator: '#ddd',
     dropdownMenuPrimary: '#4b7dbd',

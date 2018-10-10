@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,8 @@
 import React from 'react';
 import { Button, Well, Row, Col } from 'react-bootstrap';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { ITransactionCollection, ITxStatus, ITxError } from 'genesis/tx';
-import { TContractFieldType } from 'genesis/api';
+import { ITransactionCollection, ITxStatus, ITxError } from 'apla/tx';
+import { TContractFieldType } from 'apla/api';
 
 import Modal from '../';
 import Validation from 'components/Validation';

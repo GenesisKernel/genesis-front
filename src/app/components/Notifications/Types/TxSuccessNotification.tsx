@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,8 @@
 
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { INotificationProto } from 'genesis/notifications';
-import { ITransactionCall } from 'genesis/tx';
+import { INotificationProto } from 'apla/notifications';
+import { ITransactionCall } from 'apla/tx';
 
 const TxSuccessNotification: INotificationProto<{ block: string, tx: ITransactionCall }> = {
     icon: 'o-checkround-1',

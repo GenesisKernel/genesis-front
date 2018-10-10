@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 import _ from 'lodash';
 import React from 'react';
 import propTypes from 'prop-types';
-import { TProtypoElement, ISource } from 'genesis/protypo';
+import { TProtypoElement, ISource } from 'apla/protypo';
 
 import StyledComponent from './StyledComponent';
 import LongText from 'components/Protypo/components/LongText';

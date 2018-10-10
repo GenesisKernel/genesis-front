@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,13 +21,13 @@
 // SOFTWARE.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { TProtypoElement } from 'genesis/protypo';
+import { TProtypoElement } from 'apla/protypo';
 
 import {
     IEditorTabCreateCall, ILoadEditorTabCall, ICreateEditorTabCall, IReloadEditorTabCall, TEditorTab, IChangePageCall, IChangePageResult, ISaveConstructorHistoryResult,
     IConstructorUndoRedoResult, ISetTagCanDropPositionCall, ISetTagCanDropPositionResult, IAddTagCall, IOperateTagCall, IOperateTagResult, IMoveTreeTag, ISelectTagResult,
     IGetPageTreeResult
-} from 'genesis/editor';
+} from 'apla/editor';
 
 const actionCreator = actionCreatorFactory('editor');
 

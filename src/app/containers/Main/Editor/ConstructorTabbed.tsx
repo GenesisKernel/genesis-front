@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,9 +25,9 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { getPageTree, selectTag, changePage, saveConstructorHistory, constructorUndo, constructorRedo, setTagCanDropPosition, addTag, copyTag, moveTag, removeTag, moveTreeTag } from 'modules/editor/actions';
 import Constructor from 'components/Main/Editor/Designer';
-import { TProtypoElement } from 'genesis/protypo';
+import { TProtypoElement } from 'apla/protypo';
 import { generatePageTemplate } from 'modules/editor/actions';
-import { IChangePageCall, TConstructorData, IAddTagCall, IOperateTagCall, IMoveTreeTag, ISetTagCanDropPositionCall } from 'genesis/editor';
+import { IChangePageCall, TConstructorData, IAddTagCall, IOperateTagCall, IMoveTreeTag, ISetTagCanDropPositionCall } from 'apla/editor';
 
 export interface IConstructorTabbedContainerProps {
     pageID: string;

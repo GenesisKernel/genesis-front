@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { fetchNotifications } from 'modules/content/actions';
-import { TProtypoElement } from 'genesis/protypo';
+import { TProtypoElement } from 'apla/protypo';
 
 import NotificationsMenu from 'components/Main/NotificationsMenu';
 

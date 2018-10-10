@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -42,7 +42,7 @@ const ActionSelector: React.SFC<IActionSelectorProps> = (props) => (
                 <Action
                     icon="icon-wallet"
                     title={<FormattedMessage id="auth.havekey" defaultMessage="I have a key" />}
-                    description={<FormattedMessage id="auth.havekey.desc" defaultMessage="If you are already familiar with Genesis and have a backup of your private key, choose this option to guide you through the process of restoring your wallet data" />}
+                    description={<FormattedMessage id="auth.havekey.desc" defaultMessage="If you are already familiar with Apla and have a backup of your private key, choose this option to guide you through the process of restoring your wallet data" />}
                     action={<FormattedMessage id="auth.import.existing" defaultMessage="Import existing key" />}
                     onClick={props.onImport}
                 />

@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -276,7 +276,7 @@ const keyring = {
         return result;
     },
 
-    verify: (privateKey: string, publicKey: string, data: string = 'GENESIS') => {
+    verify: (privateKey: string, publicKey: string, data: string = 'APLA') => {
         const encryptedData = keyring.sign(data, privateKey);
         const signature = new KJUR.crypto.Signature({
             alg: signAlg,

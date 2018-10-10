@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import GenesisAPI, { IRequestTransport, TRequestMethod } from './';
-import { IContentRequest } from 'genesis/api';
+import AplaAPI, { IRequestTransport, TRequestMethod } from './';
+import { IContentRequest } from 'apla/api';
 
 class FormDataMock implements FormData {
     private _values: { [key: string]: any } = {};
@@ -106,7 +106,7 @@ const mockFormData = (values: { [key: string]: any }) => {
 
 const paramTestingAPIHost = 'http://test_Url.com';
 const paramTestingAPIEndpoint = 'api/v2';
-const paramTestingAPIMock = () => new GenesisAPI({
+const paramTestingAPIMock = () => new AplaAPI({
     apiHost: paramTestingAPIHost,
     apiEndpoint: paramTestingAPIEndpoint,
     transport: paramsTransportMock
@@ -117,7 +117,7 @@ test('Url slug parsing', () => {
     const TEST_ENDPOINT = 'api/v2';
     const TEST_ROUTE = 'test_route';
 
-    class MockAPI extends GenesisAPI {
+    class MockAPI extends AplaAPI {
         public slugEndpoint = this.setEndpoint<{ slug: string }, IMockTransportResponse>('get', `${TEST_ROUTE}/{slug}`);
         public complexSlugEndpoint = this.setEndpoint<{ a: string, b: string }, IMockTransportResponse>('get', `${TEST_ROUTE}/{a}/${TEST_ROUTE}/{b}/test`);
         public postSlugEndpoint = this.setEndpoint<{ slug: string, some: 1, more: true, params: 'hello' }, IMockTransportResponse>('post', `${TEST_ROUTE}/{slug}`);
@@ -149,7 +149,7 @@ test('Request transformer', () => {
         third: 3
     };
 
-    class MockAPI extends GenesisAPI {
+    class MockAPI extends AplaAPI {
         public transformEndpoint = this.setEndpoint<typeof testData, IMockTransportResponse>('get', 'test', {
             requestTransformer: request => ({
                 first: request.third,
@@ -176,7 +176,7 @@ test('Response transformer', () => {
         third: 3
     };
 
-    class MockAPI extends GenesisAPI {
+    class MockAPI extends AplaAPI {
         public transformEndpoint = this.setEndpoint<typeof testData, Partial<typeof testData>>('post', 'test', {
             responseTransformer: response => ({
                 first: response.body.get('third'),

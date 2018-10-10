@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IWallet, ISaveEncKeyCall } from 'genesis/auth';
+import { IWallet, ISaveEncKeyCall } from 'apla/auth';
 
 const actionCreator = actionCreatorFactory('storage');
 export const saveLocale = actionCreator<string>('SAVE_LOCALE');

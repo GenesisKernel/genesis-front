@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ import { Epic } from 'modules';
 import { Observable } from 'rxjs';
 import { connect } from 'modules/socket/actions';
 import { initialize, setLocale } from '../actions';
-import { IWebSettings } from 'genesis';
+import { IWebSettings } from 'apla';
 import urlJoin from 'url-join';
 import platform from 'lib/platform';
 import NodeObservable from '../util/NodeObservable';

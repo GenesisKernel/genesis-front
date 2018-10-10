@@ -1,13 +1,12 @@
-[![Throughput Graph](https://graphs.waffle.io/GenesisKernel/genesis-front/throughput.svg)](https://waffle.io/GenesisKernel/genesis-front/metrics/throughput)
+[![Throughput Graph](https://graphs.waffle.io/AplaProject/apla-front/throughput.svg)](https://waffle.io/AplaProject/apla-front/metrics/throughput)
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-[![Build Status](https://travis-ci.org/GenesisKernel/genesis-front.svg?branch=master)](https://travis-ci.org/GenesisKernel/genesis-front)
-[![](https://tokei.rs/b1/github/GenesisKernel/genesis-front)](https://github.com/GenesisKernel/genesis-front)
-![](https://reposs.herokuapp.com/?path=GenesisKernel/genesis-front&style=flat)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/GenesisKernel?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![](https://tokei.rs/b1/github/AplaProject/apla-front)](https://github.com/AplaProject/apla-front)
+![](https://reposs.herokuapp.com/?path=AplaProject/apla-front&style=flat)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/AplaProject?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 
-## Genesis-front
+## Apla-front
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). You will find most of the information of how to use it there.
 
 ----------
@@ -89,4 +88,4 @@ Will release desktop applications for macOS, windows and linux
 
 ### Questions?
 
-Feel free to contact us if you experience any kind of problems while using Genesis: hello@genesis.space
+Feel free to contact us if you experience any kind of problems while using Apla: hello@apla.io

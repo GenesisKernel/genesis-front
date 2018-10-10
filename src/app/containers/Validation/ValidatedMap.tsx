@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,8 @@ import * as uuid from 'uuid';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { modalShow } from 'modules/modal/actions';
-import { IMapEditorEvent, TMapEditorType, TMapType } from 'genesis/geo';
-import { IModal } from 'genesis/modal';
+import { IMapEditorEvent, TMapEditorType, TMapType } from 'apla/geo';
+import { IModal } from 'apla/modal';
 
 import { Validator } from 'components/Validation/Validators';
 import ValidatedMap from 'components/Validation/ValidatedMap';

@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 GenesisKernel
+// Copyright (c) 2016-2018 AplaProject
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@ import calcScreenOffset from '../util/calcScreenOffset';
 export default () => {
     return new BrowserWindow({
         frame: false,
-        backgroundColor: '#17437b',
+        backgroundColor: '#3d2c77',
         resizable: false,
         show: false,
         ...calcScreenOffset({ width: 640, height: 470 })
