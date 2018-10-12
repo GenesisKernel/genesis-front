@@ -20,6 +20,7 @@
     "auth.create.success": "Wallet has been successfully created",
     "auth.error.E_INVALID_KEY": "Provided key is corrupted or contains invalid data",
     "auth.error.E_INVALID_PASSWORD": "Invalid password",
+    "auth.error.E_KEYNOTFOUND": "Wallet is not registered",
     "auth.error.E_DELETEDKEY": "Wallet was removed from the ecosystem",
     "auth.error.E_OFFLINE": "Could not connect to the service",
     "auth.error.E_UPDATING": "Node is updating blockchain. Try again later",
