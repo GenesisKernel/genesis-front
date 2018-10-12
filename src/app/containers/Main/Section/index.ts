@@ -20,31 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { combineEpics } from 'redux-observable';
-import newContractEpic from './epics/newContractEpic';
-import editorSaveEpic from './epics/editorSaveEpic';
-import newPageEpic from './epics/newPageEpic';
-import editEntityEpic from './epics/editEntityEpic';
-import newMenuEpic from './epics/newMenuEpic';
-import newBlockEpic from './epics/newBlockEpic';
-import closeEditorTabEpic from './epics/closeEditorTabEpic';
-import createEditorTabEpic from './epics/createEditorTabEpic';
-import changeEditorToolEpic from './epics/changeEditorToolEpic';
-import loadEditorTabEpic from './epics/loadEditorTabEpic';
-import changePageEpic from './epics/changePageEpic';
-import debugContractEpic from './epics/debugContractEpic';
+import { connect } from 'react-redux';
+import { IRootState } from 'modules';
+import { RouteComponentProps } from 'react-router-dom';
+import Section from 'components/Main/Section';
 
-export default combineEpics(
-    changeEditorToolEpic,
-    closeEditorTabEpic,
-    createEditorTabEpic,
-    editEntityEpic,
-    editorSaveEpic,
-    loadEditorTabEpic,
-    newBlockEpic,
-    newContractEpic,
-    newMenuEpic,
-    newPageEpic,
-    changePageEpic,
-    debugContractEpic
-);
+export interface ISectionRouteParams {
+    section: string;
+    page: string;
+}
+
+export interface ISectionRouteProps extends RouteComponentProps<ISectionRouteParams> {
+}
+
+const mapStateToProps = (state: IRootState, props: ISectionRouteProps) => ({
+    pages: state.sections.sections[props.match.params.section].pages
+});
+
+const mapDispatchToProps = {
+
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Section);

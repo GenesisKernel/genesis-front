@@ -77,11 +77,7 @@ const createEditorTabEpic: Epic<Action, IRootState> =
                 replace('/editor'),
                 updateSection({
                     ...editor,
-                    visible: true,
-                    page: {
-                        ...editor.page,
-                        params: {}
-                    }
+                    visible: true
                 }),
                 action
             );

@@ -21,19 +21,53 @@
 // SOFTWARE.
 
 import { State } from '../reducer';
-import { renderPage } from '../actions';
-import { Reducer } from 'modules';
-import upsertSectionPage from '../util/upsertSectionPage';
+import { IPage } from 'genesis/content';
+import findPage from './findPage';
 
-const renderPageHandler: Reducer<typeof renderPage.started, State> = (state, payload) =>
-    upsertSectionPage(state, payload.section, {
-        key: payload.key,
-        name: payload.name,
-        status: 'PENDING',
-        legacy: false,
-        content: null,
-        params: payload.params,
-        error: null
-    });
+const defaultValues: IPage = {
+    key: null,
+    name: null,
+    status: 'PENDING',
+    legacy: false,
+    content: [],
+    params: {},
+    error: null,
+};
 
-export default renderPageHandler;
+const upsertSectionPage = (state: State, sectionName: string, page: Partial<IPage>) => {
+    const pageIndex = findPage(state, page.key);
+    let pages: IPage[];
+
+    if (pageIndex) {
+        const section = state.sections[pageIndex.section];
+        pages = [
+            ...section.pages.slice(0, pageIndex.index),
+            {
+                ...section.pages[pageIndex.index],
+                ...page
+            }
+        ];
+    }
+    else {
+        pages = [
+            ...state.sections[sectionName].pages,
+            {
+                ...defaultValues,
+                ...page
+            }
+        ];
+    }
+
+    return {
+        ...state,
+        sections: {
+            ...state.sections,
+            [sectionName]: {
+                ...state.sections[sectionName],
+                pages
+            }
+        }
+    };
+};
+
+export default upsertSectionPage;

@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import GenesisAPI from 'lib/genesisAPI';
+import * as routerService from 'services/router';
 import CodeGenerator, { setIds, convertToTreeData, findTagById, copyObject, idGenerator, updateChildrenText, html2childrenTags } from 'lib/constructor';
 import Properties from 'lib/constructor/properties';
 import getConstructorTemplate from 'lib/constructor/templates';
@@ -34,6 +35,7 @@ export interface IStoreDependencies {
     defaultKey: string;
     defaultPassword: string;
     constructorModule: IConstructorDependenies;
+    routerService: typeof routerService;
 }
 
 export interface IAPIDependency {
@@ -93,7 +95,9 @@ const storeDependencies: IStoreDependencies = {
         resolveTagHandler,
         CodeGenerator,
         Properties
-    }
+    },
+
+    routerService
 };
 
 export default storeDependencies;

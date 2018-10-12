@@ -134,7 +134,7 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
                 <nav>
                     <StyledMenu>
                         <StackGroup
-                            items={this.props.menus.map((menu, index) => (
+                            items={(this.props.menus || []).map((menu, index) => (
                                 <ScrollView disableHorizontal>
                                     <StyledMenuContent>
                                         {index > 0 && (

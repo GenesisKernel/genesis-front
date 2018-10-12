@@ -20,31 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { combineEpics } from 'redux-observable';
-import newContractEpic from './epics/newContractEpic';
-import editorSaveEpic from './epics/editorSaveEpic';
-import newPageEpic from './epics/newPageEpic';
-import editEntityEpic from './epics/editEntityEpic';
-import newMenuEpic from './epics/newMenuEpic';
-import newBlockEpic from './epics/newBlockEpic';
-import closeEditorTabEpic from './epics/closeEditorTabEpic';
-import createEditorTabEpic from './epics/createEditorTabEpic';
-import changeEditorToolEpic from './epics/changeEditorToolEpic';
-import loadEditorTabEpic from './epics/loadEditorTabEpic';
-import changePageEpic from './epics/changePageEpic';
-import debugContractEpic from './epics/debugContractEpic';
+import { Epic } from 'modules';
+import { Observable } from 'rxjs/Observable';
+import { locationChange } from '../actions';
+import { renderPage } from 'modules/sections/actions';
 
-export default combineEpics(
-    changeEditorToolEpic,
-    closeEditorTabEpic,
-    createEditorTabEpic,
-    editEntityEpic,
-    editorSaveEpic,
-    loadEditorTabEpic,
-    newBlockEpic,
-    newContractEpic,
-    newMenuEpic,
-    newPageEpic,
-    changePageEpic,
-    debugContractEpic
-);
+const sectionLoadEpic: Epic = (action$, store, { routerService }) => action$.ofAction(locationChange)
+    .flatMap(action => {
+        const match = routerService.matchRoute('(/)(:section)(/)(:page)(/)', action.payload.location.pathname);
+        if (match) {
+            const state = store.getState();
+            const section = state.sections.sections[match.parts.section || state.sections.mainSection];
+            const page = match.parts.page || section.defaultPage;
+
+            return Observable.of(renderPage.started({
+                key: action.payload.location.key,
+                section: section.name,
+                name: page,
+                params: match.query
+            }));
+        }
+        else {
+            return Observable.empty<never>();
+        }
+    });
+
+export default sectionLoadEpic;

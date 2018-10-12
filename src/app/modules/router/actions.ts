@@ -20,31 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { combineEpics } from 'redux-observable';
-import newContractEpic from './epics/newContractEpic';
-import editorSaveEpic from './epics/editorSaveEpic';
-import newPageEpic from './epics/newPageEpic';
-import editEntityEpic from './epics/editEntityEpic';
-import newMenuEpic from './epics/newMenuEpic';
-import newBlockEpic from './epics/newBlockEpic';
-import closeEditorTabEpic from './epics/closeEditorTabEpic';
-import createEditorTabEpic from './epics/createEditorTabEpic';
-import changeEditorToolEpic from './epics/changeEditorToolEpic';
-import loadEditorTabEpic from './epics/loadEditorTabEpic';
-import changePageEpic from './epics/changePageEpic';
-import debugContractEpic from './epics/debugContractEpic';
+import actionCreatorFactory from 'typescript-fsa';
+import { RouterState } from 'connected-react-router';
 
-export default combineEpics(
-    changeEditorToolEpic,
-    closeEditorTabEpic,
-    createEditorTabEpic,
-    editEntityEpic,
-    editorSaveEpic,
-    loadEditorTabEpic,
-    newBlockEpic,
-    newContractEpic,
-    newMenuEpic,
-    newPageEpic,
-    changePageEpic,
-    debugContractEpic
-);
+const actionCreator = actionCreatorFactory('@@router');
+
+export const locationChange = actionCreator<RouterState>('LOCATION_CHANGE');

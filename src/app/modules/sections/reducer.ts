@@ -31,7 +31,6 @@ import resetHandler from './reducers/resetHandler';
 import sectionsInitDoneHandler from './reducers/sectionsInitDoneHandler';
 import menuPopHandler from './reducers/menuPopHandler';
 import menuPushHandler from './reducers/menuPushHandler';
-import navigatePageDoneHandler from './reducers/navigatePageDoneHandler';
 import navigationToggleHandler from './reducers/navigationToggleHandler';
 import renderLegacyPageDoneHandler from './reducers/renderLegacyPageDoneHandler';
 import renderLegacyPageHandler from './reducers/renderLegacyPageHandler';
@@ -45,29 +44,27 @@ export type State = {
     readonly sections: {
         readonly [name: string]: TSection;
     };
-    readonly systemSections: TSection[];
-    readonly inited: boolean;
 };
 
 export const initialState: State = {
-    mainSection: null,
+    mainSection: 'home',
     section: null,
-    sections: {},
-    systemSections: [{
-        key: 'editor',
-        name: 'editor',
-        title: 'Editor',
-        visible: false,
-        closeable: true,
-        defaultPage: 'editor',
-        pending: false,
-        force: false,
-        menus: [],
-        menuDisabled: true,
-        menuVisible: true,
-        page: null
-    }],
-    inited: false
+    sections: {
+        home: {
+            key: 'home',
+            visible: true,
+            closeable: false,
+            menuDisabled: false,
+            menuVisible: true,
+            pending: false,
+            name: 'home',
+            title: 'Home',
+            force: false,
+            defaultPage: 'default_page',
+            menus: [],
+            pages: []
+        }
+    }
 };
 
 export default reducerWithInitialState(initialState)
@@ -78,7 +75,6 @@ export default reducerWithInitialState(initialState)
     .case(actions.reset, resetHandler)
     .case(actions.menuPop, menuPopHandler)
     .case(actions.menuPush, menuPushHandler)
-    .case(actions.navigatePage.done, navigatePageDoneHandler)
     .case(actions.navigationToggle, navigationToggleHandler)
     .case(actions.renderLegacyPage.done, renderLegacyPageDoneHandler)
     .case(actions.renderLegacyPage.started, renderLegacyPageHandler)

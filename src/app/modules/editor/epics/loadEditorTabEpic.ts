@@ -137,10 +137,7 @@ const loadEditorTabEpic: Epic = (action$, store, { api }) => action$.ofAction(lo
             updateSection({
                 ...editor,
                 visible: true,
-                page: {
-                    ...editor.page,
-                    params: {}
-                }
+                pages: []
             })
         );
 

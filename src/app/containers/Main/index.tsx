@@ -28,15 +28,13 @@ import { reloadPage, navigationToggle, renderSection, navigatePage, closeSection
 
 import { AnimatedSwitch } from 'components/Animation';
 import Main, { IMainProps } from 'components/Main';
-import DefaultPage from 'containers/Main/DefaultPage';
-import Page from 'containers/Main/Page';
 import NotFound from 'components/NotFound';
+import Section from './Section';
 
 const MainContainer: React.SFC<IMainProps> = props => (
     <Main {...props}>
         <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
-            <Route exact path="/:section/:pageName?" component={Page} />
-            <Route exact path="*" component={DefaultPage} />
+            <Route exact path="/:section/:page?" component={Section} />
             <Route path="*" render={() => <NotFound main />} />
         </AnimatedSwitch>
     </Main>

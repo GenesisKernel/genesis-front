@@ -20,31 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { combineEpics } from 'redux-observable';
-import newContractEpic from './epics/newContractEpic';
-import editorSaveEpic from './epics/editorSaveEpic';
-import newPageEpic from './epics/newPageEpic';
-import editEntityEpic from './epics/editEntityEpic';
-import newMenuEpic from './epics/newMenuEpic';
-import newBlockEpic from './epics/newBlockEpic';
-import closeEditorTabEpic from './epics/closeEditorTabEpic';
-import createEditorTabEpic from './epics/createEditorTabEpic';
-import changeEditorToolEpic from './epics/changeEditorToolEpic';
-import loadEditorTabEpic from './epics/loadEditorTabEpic';
-import changePageEpic from './epics/changePageEpic';
-import debugContractEpic from './epics/debugContractEpic';
+import { State } from '../reducer';
 
-export default combineEpics(
-    changeEditorToolEpic,
-    closeEditorTabEpic,
-    createEditorTabEpic,
-    editEntityEpic,
-    editorSaveEpic,
-    loadEditorTabEpic,
-    newBlockEpic,
-    newContractEpic,
-    newMenuEpic,
-    newPageEpic,
-    changePageEpic,
-    debugContractEpic
-);
+const findPage = (state: State, key: string) => {
+    for (let sectionName in state.sections) {
+        if (state.sections.hasOwnProperty(sectionName)) {
+            const section = state.sections[sectionName];
+            const pageIndex = section.pages.findIndex(p => p.key === key);
+
+            if (-1 !== pageIndex) {
+                return {
+                    index: pageIndex,
+                    section: section.name
+                };
+            }
+        }
+    }
+
+    return null;
+};
+
+export default findPage;

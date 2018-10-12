@@ -20,32 +20,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import Protypo from 'containers/Widgets/Protypo';
-import { TPage } from 'genesis/content';
+import { IPage } from 'genesis/content';
 
-import DocumentTitle from 'components/DocumentTitle';
 import Error from './Error';
 import Timeout from './Timeout';
 import NotFound from './NotFound';
 
-export interface IPageProps extends TPage {
-
+export interface IPageProps {
+    value: IPage;
 }
 
 const Page: React.SFC<IPageProps> = (props) => {
-    if (props.error) {
-        switch (props.error) {
+    if (props.value.error) {
+        switch (props.value.error) {
             case 'E_HEAVYPAGE': return (<Timeout />);
             case 'E_NOTFOUND': return (<NotFound />);
-            default: return (<Error error={props.error} />);
+            default: return (<Error error={props.value.error} />);
         }
     }
     else {
         return (
-            <DocumentTitle title={props.name}>
-                <Protypo context="page" {...props} />
-            </DocumentTitle>
+            <div className="fullscreen" style={{ backgroundColor: '#fff' }}>
+                <div>Key:: {props.value.key}</div>
+                <div>Status:: {props.value.status}</div>
+                <Protypo context="page" {...props.value} />
+            </div>
         );
     }
 };

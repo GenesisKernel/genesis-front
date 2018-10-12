@@ -20,31 +20,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { combineEpics } from 'redux-observable';
-import newContractEpic from './epics/newContractEpic';
-import editorSaveEpic from './epics/editorSaveEpic';
-import newPageEpic from './epics/newPageEpic';
-import editEntityEpic from './epics/editEntityEpic';
-import newMenuEpic from './epics/newMenuEpic';
-import newBlockEpic from './epics/newBlockEpic';
-import closeEditorTabEpic from './epics/closeEditorTabEpic';
-import createEditorTabEpic from './epics/createEditorTabEpic';
-import changeEditorToolEpic from './epics/changeEditorToolEpic';
-import loadEditorTabEpic from './epics/loadEditorTabEpic';
-import changePageEpic from './epics/changePageEpic';
-import debugContractEpic from './epics/debugContractEpic';
+import React from 'react';
+import { IPage } from 'genesis/content';
+import { Link } from 'react-router-dom';
 
-export default combineEpics(
-    changeEditorToolEpic,
-    closeEditorTabEpic,
-    createEditorTabEpic,
-    editEntityEpic,
-    editorSaveEpic,
-    loadEditorTabEpic,
-    newBlockEpic,
-    newContractEpic,
-    newMenuEpic,
-    newPageEpic,
-    changePageEpic,
-    debugContractEpic
+import Page from 'components/Main/Page';
+import Stack from 'components/Animation/Stack';
+
+export interface ISectionProps {
+    pages: IPage[];
+}
+
+const Section: React.SFC<ISectionProps> = (props) => (
+    <div className="fullscreen">
+        <div style={{ position: 'absolute', bottom: 50, left: 50, zIndex: 10000 }}>
+            <Link to="/home/default_page">Navigate</Link>
+        </div>
+        <div>
+            <Stack
+                items={(props.pages || []).map(page => (
+                    <div key={page.key} style={{ background: '#fff', padding: 15, height: '100%' }}>
+                        <Page value={page} />
+                    </div>
+                ))}
+            />
+        </div>
+    </div>
 );
+
+export default Section;

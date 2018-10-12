@@ -26,10 +26,10 @@ import { reloadPage } from '../actions';
 
 const reloadPageEpic: Epic = (action$, store, { api }) => action$.ofAction(reloadPage.started)
     .flatMap(action => {
-        const state = store.getState();
+        return Observable.empty<never>();
+        /*const state = store.getState();
         const section = state.sections.sections[state.sections.section];
         const client = api(state.auth.session);
-
         return Observable.fromPromise(client.content({
             type: 'page',
             name: section.page.name,
@@ -58,7 +58,7 @@ const reloadPageEpic: Epic = (action$, store, { api }) => action$.ofAction(reloa
                 params: action.payload,
                 error: e.error
             }))
-        );
+        );*/
     });
 
 export default reloadPageEpic;

@@ -23,16 +23,31 @@
 import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
 import { renderPage } from '../actions';
-import NodeObservable from 'modules/engine/util/NodeObservable';
+/*import NodeObservable from 'modules/engine/util/NodeObservable';
 import keyring from 'lib/keyring';
 
 const invalidationError = {
     error: 'E_INVALIDATED'
-};
+};*/
 
 const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(renderPage.started)
     .flatMap(action => {
         const state = store.getState();
+        const client = api(state.auth.session);
+
+        return Observable.from(client.content({
+            type: 'page',
+            name: action.payload.name,
+            params: action.payload.params,
+            locale: state.storage.locale
+
+        })).map(content => renderPage.done({
+            params: action.payload,
+            result: content.tree
+
+        })).delay(1000);
+
+        /*const state = store.getState();
         const client = api(state.auth.session);
         const section = state.sections.sections[action.payload.section || state.sections.section];
 
@@ -113,7 +128,7 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
                 params: action.payload,
                 error: e.error
             }))
-        );
+        );*/
     });
 
 export default renderPageEpic;

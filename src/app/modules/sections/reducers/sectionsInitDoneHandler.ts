@@ -31,9 +31,9 @@ const sectionsInitDoneHandler: Reducer<typeof sectionsInit.done, State> = (state
         sections[section.name] = section;
     });
 
-    state.systemSections.forEach(section => {
+    /*state.systemSections.forEach(section => {
         sections[section.name] = section;
-    });
+    });*/
 
     return {
         ...state,

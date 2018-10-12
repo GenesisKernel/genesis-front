@@ -28,13 +28,20 @@ declare module 'genesis/content' {
         readonly content: TProtypoElement[];
     };
 
-    type TPage = {
+    type TPageStatus =
+        'PENDING' | 'LOADED' | 'ERROR';
+
+    interface IPage {
+        readonly key: string;
         readonly name: string;
+        readonly status: TPageStatus;
         readonly legacy?: boolean;
         readonly content: TProtypoElement[];
-        readonly params: { [key: string]: any };
+        readonly params: {
+            [key: string]: string;
+        };
         readonly error?: string;
-    };
+    }
 
     type TSection = {
         readonly key: string;
@@ -48,6 +55,6 @@ declare module 'genesis/content' {
         readonly force: boolean;
         readonly defaultPage: string;
         readonly menus: TMenu[];
-        readonly page: TPage;
+        readonly pages: IPage[];
     }
 }

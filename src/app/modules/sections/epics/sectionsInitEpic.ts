@@ -51,8 +51,8 @@ const sectionsInitEpic: Epic = (action$, store, { api }) => action$.ofAction(sec
                 locale: state.storage.locale
             }),
             client.getRow({
-                 table: 'roles',
-                 id: (roleID && roleID.toString()) || null,
+                table: 'roles',
+                id: (roleID && roleID.toString()) || null,
             }).then(row => row.value.default_page).catch(e => null)
 
         ])).flatMap(payload => {
@@ -88,7 +88,7 @@ const sectionsInitEpic: Epic = (action$, store, { api }) => action$.ofAction(sec
                                 force: false,
                                 menus: [],
                                 menuVisible: true,
-                                page: null
+                                pages: []
                             }))
                         ]
                     },

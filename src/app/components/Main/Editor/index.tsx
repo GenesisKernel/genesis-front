@@ -25,8 +25,6 @@ import { TEditorTab } from 'genesis/editor';
 
 import CodeEditor from 'components/Editor';
 import EditorTabs from './EditorTabs';
-import Page from 'components/Main/Page';
-import ConstructorTabbed from 'containers/Main/Editor/ConstructorTabbed';
 
 export interface IEditorProps {
     tabIndex: number;
@@ -41,19 +39,14 @@ export interface IEditorProps {
 class Editor extends React.Component<IEditorProps> {
     renderTool(tab: TEditorTab) {
         switch (tab.tool) {
-            case 'constructor':
-                return (
-                    <ConstructorTabbed pageID={tab.id} pageName={tab.name} />
-                );
-
             case 'preview':
                 return (
                     <div className="flex-col flex-stretch scroll">
-                        <Page
+                        {/* <Page
                             name="preview"
                             content={tab.preview}
                             params={{}}
-                        />
+                        /> */}
                     </div>
                 );
 
