@@ -55,10 +55,6 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
             const page = payload[0];
             const defaultPage = payload[1];
 
-            if (page.nodesCount > state.storage.fullNodes.length) {
-                return Observable.throw(invalidationError);
-            }
-
             return NodeObservable({
                 nodes: state.storage.fullNodes,
                 count: page.nodesCount,
@@ -78,7 +74,7 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
             )).catch(e => Observable.throw(invalidationError)).toArray().map(result => {
                 const contentHash = keyring.hashData(page.plainText);
 
-                if (page.nodesCount !== result.length) {
+                if (0 < state.storage.fullNodes.length && page.nodesCount !== result.length) {
                     throw invalidationError;
                 }
 
