@@ -20,6 +20,7 @@
     "auth.create.success": "Аккаунт успешно создан",
     "auth.error.E_INVALID_KEY": "Указанный ключ содержит некорректные данные или повреждён",
     "auth.error.E_INVALID_PASSWORD": "Неверный пароль",
+    "auth.error.E_KEYNOTFOUND": "Кошелёк не зарегистрирован",
     "auth.error.E_DELETEDKEY": "Данный аккаунт был удалён из экосистемы",
     "auth.error.E_OFFLINE": "Не удалось подключиться к серверу",
     "auth.error.E_UPDATING": "Сервер находится в стадии синхронизации. Повторите попытку позднее",
