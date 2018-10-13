@@ -26,9 +26,8 @@ import { buttonInteraction } from 'modules/content/actions';
 import { isType } from 'typescript-fsa';
 import { txCall, txExec } from 'modules/tx/actions';
 import { modalShow, modalClose, modalPage } from 'modules/modal/actions';
-import { navigatePage } from 'modules/sections/actions';
 
-const buttonInteractionEpic: Epic = (action$, store, { api }) => action$.ofAction(buttonInteraction)
+const buttonInteractionEpic: Epic = (action$, store, { api, routerService }) => action$.ofAction(buttonInteraction)
     // Show confirmation window if there is any
     .flatMap(rootAction => {
         return Observable.if(
@@ -88,11 +87,8 @@ const buttonInteractionEpic: Epic = (action$, store, { api }) => action$.ofActio
                         }));
                     }
                     else {
-                        return Observable.of(navigatePage.started({
-                            name: action.payload.page.name,
-                            params: action.payload.page.params,
-                            force: true
-                        }));
+                        routerService.navigate(`/${action.payload.page.section}/${action.payload.page.name}`, action.payload.page.params);
+                        return Observable.empty<never>();
                     }
                 }
                 else {

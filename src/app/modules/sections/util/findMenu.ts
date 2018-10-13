@@ -21,26 +21,23 @@
 // SOFTWARE.
 
 import { State } from '../reducer';
-import { menuPop } from '../actions';
-import { Reducer } from 'modules';
 
-const menuPopHandler: Reducer<typeof menuPop, State> = (state, payload) => {
-    /*if (1 >= state.sections[state.section].menus.length) {
-        return state;
-    }
-    else {
-        return {
-            ...state,
-            sections: {
-                ...state.sections,
-                [state.section]: {
-                    ...state.sections[state.section],
-                    menus: state.sections[state.section].menus.slice(0, -1)
-                }
+const findMenu = (state: State, name: string) => {
+    for (let sectionName in state.sections) {
+        if (state.sections.hasOwnProperty(sectionName)) {
+            const section = state.sections[sectionName];
+            const menuIndex = section.menus.findIndex(m => m.name === name);
+
+            if (-1 !== menuIndex) {
+                return {
+                    index: menuIndex,
+                    section: section.name
+                };
             }
-        };
-    }*/
-    return state;
+        }
+    }
+
+    return null;
 };
 
-export default menuPopHandler;
+export default findMenu;

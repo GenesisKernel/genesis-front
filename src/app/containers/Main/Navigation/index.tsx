@@ -20,17 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { ecosystemInit } from 'modules/content/actions';
 import { menuPop, menuPush } from 'modules/sections/actions';
-import { TMenu } from 'genesis/content';
+import { IMenu } from 'genesis/content';
 
 import Navigation from 'components/Main/Navigation';
 
 interface INavigationContainerProps {
-
+    section: string;
 }
 
 interface INavigationContainerState {
@@ -38,7 +38,7 @@ interface INavigationContainerState {
     preloadingError: string;
     visible: boolean;
     width: number;
-    menus: TMenu[];
+    menus: IMenu[];
 }
 
 interface INavigationContainerDispatch {
@@ -51,15 +51,15 @@ const NavigationContainer: React.SFC<INavigationContainerProps & INavigationCont
     <Navigation {...props} />
 );
 
-const mapStateToProps = (state: IRootState) => {
-    const section = state.sections.sections[state.sections.section] || state.sections.sections.home;
+const mapStateToProps = (state: IRootState, props: INavigationContainerProps) => {
+    const section = state.sections.sections[props.section] || state.sections.sections.home;
     return {
         preloading: state.content.preloading,
         preloadingError: state.content.preloadingError,
-        visible: state.sections.sections[state.sections.section] && (
-            state.sections.sections[state.sections.section].menuDisabled ?
+        visible: state.sections.sections[props.section] && (
+            state.sections.sections[props.section].menuDisabled ?
                 false :
-                state.sections.sections[state.sections.section].menuVisible
+                state.sections.sections[props.section].menuVisible
         ),
         width: state.storage.navigationSize,
         menus: section ? section.menus : []

@@ -21,37 +21,47 @@
 // SOFTWARE.
 
 import React from 'react';
-import Protypo from 'containers/Widgets/Protypo';
 import { IPage } from 'genesis/content';
 
-import Error from './Error';
-import Timeout from './Timeout';
-import NotFound from './NotFound';
+import Page from 'components/Main/Page';
+import Stack from 'components/Animation/Stack';
+import Breadcrumbs from 'components/Main/Sections/Breadcrumbs';
+import themed from 'components/Theme/themed';
 
-export interface IPageProps {
-    section: string;
-    value: IPage;
+export interface ISectionProps {
+    name: string;
+    pages: IPage[];
 }
+const StyledContent = themed.section`
+    && { background: ${props => props.theme.contentBackground}; }
+    color: ${props => props.theme.contentForeground};
+    transition: none !important;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 
-const Page: React.SFC<IPageProps> = (props) => {
-    if (props.value.error) {
-        switch (props.value.error) {
-            case 'E_HEAVYPAGE': return (<Timeout />);
-            case 'E_NOTFOUND': return (<NotFound />);
-            default: return (<Error error={props.value.error} />);
-        }
+    .content-page {
+        background: #fff;
+        height: 100%;
+        flex-direction: column;
     }
-    else {
-        return (
-            <div className="fullscreen" style={{ backgroundColor: '#fff' }}>
-                <Protypo
-                    context="page"
-                    section={props.section}
-                    {...props.value}
+`;
+
+const Section: React.SFC<ISectionProps> = (props) => (
+    <div className="fullscreen">
+        <StyledContent>
+            <Breadcrumbs pages={props.pages} />
+            <div className="flex-stretch" style={{ position: 'relative' }}>
+                <Stack
+                    items={(props.pages || []).map(page => (
+                        <div key={page.location.key} className="content-page">
+                            <Page value={page} section={props.name} />
+                        </div>
+                    ))}
                 />
             </div>
-        );
-    }
-};
+        </StyledContent>
+    </div>
+);
 
-export default Page;
+export default Section;

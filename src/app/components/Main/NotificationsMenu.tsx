@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import Protypo from 'containers/Widgets/Protypo';
 import { FormattedMessage } from 'react-intl';
 import { TProtypoElement } from 'genesis/protypo';
@@ -30,6 +30,7 @@ import SystemButton from './SystemButton';
 export interface INotificationsMenuProps {
     offline: boolean;
     count: number;
+    mainSection: string;
     notificationsBody: TProtypoElement[];
 }
 
@@ -57,7 +58,11 @@ const NotificationsMenu: React.SFC<INotificationsMenuProps> = props => (
                                 <FormattedMessage id="general.error.socket.desc" defaultMessage="Failed to establish connection to the WebSocket server. Check your configuration" />
                             </p>
                         ) : (
-                            <Protypo context="menu" content={props.notificationsBody} />
+                            <Protypo
+                                context="menu"
+                                content={props.notificationsBody}
+                                section={props.mainSection}
+                            />
                         )
                     }
                 </div>

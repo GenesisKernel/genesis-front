@@ -21,26 +21,40 @@
 // SOFTWARE.
 
 import { State } from '../reducer';
-import { menuPop } from '../actions';
-import { Reducer } from 'modules';
+import { IMenu } from 'genesis/content';
+import findMenu from './findMenu';
 
-const menuPopHandler: Reducer<typeof menuPop, State> = (state, payload) => {
-    /*if (1 >= state.sections[state.section].menus.length) {
-        return state;
+const upsertSectionMenu = (state: State, sectionName: string, menu: IMenu) => {
+    const menuIndex = findMenu(state, menu.name);
+    let menus: IMenu[];
+
+    if (menuIndex) {
+        const section = state.sections[menuIndex.section];
+        menus = [
+            ...section.menus.slice(0, menuIndex.index),
+            {
+                ...section.menus[menuIndex.index],
+                ...menu
+            }
+        ];
     }
     else {
-        return {
-            ...state,
-            sections: {
-                ...state.sections,
-                [state.section]: {
-                    ...state.sections[state.section],
-                    menus: state.sections[state.section].menus.slice(0, -1)
-                }
+        menus = [
+            ...state.sections[sectionName].menus,
+            menu
+        ];
+    }
+
+    return {
+        ...state,
+        sections: {
+            ...state.sections,
+            [sectionName]: {
+                ...state.sections[sectionName],
+                menus
             }
-        };
-    }*/
-    return state;
+        }
+    };
 };
 
-export default menuPopHandler;
+export default upsertSectionMenu;

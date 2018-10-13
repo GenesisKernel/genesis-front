@@ -27,6 +27,7 @@ import upsertSectionPage from '../util/upsertSectionPage';
 
 const renderPageFailedHandler: Reducer<typeof renderPage.failed, State> = (state, payload) =>
     upsertSectionPage(state, payload.params.section, {
+        name: payload.params.name,
         status: 'ERROR',
         error: payload.error
     });

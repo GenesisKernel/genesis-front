@@ -27,13 +27,11 @@ import upsertSectionPage from '../util/upsertSectionPage';
 
 const renderPageHandler: Reducer<typeof renderPage.started, State> = (state, payload) =>
     upsertSectionPage(state, payload.section, {
-        key: payload.key,
         name: payload.name,
         status: 'PENDING',
         legacy: false,
-        content: null,
         params: payload.params,
-        error: null
+        location: payload.location
     });
 
 export default renderPageHandler;

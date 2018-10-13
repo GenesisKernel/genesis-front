@@ -162,6 +162,7 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
             contract={props.contract}
             contractParams={getParams}
             page={props.page}
+            section={context.protypo.props.section}
             pageParams={getPageParams}
             popup={popup}
             errorRedirects={getErrorRedirectParams}

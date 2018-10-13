@@ -21,31 +21,53 @@
 // SOFTWARE.
 
 import React from 'react';
-import { IPage } from 'genesis/content';
-import { Link } from 'react-router-dom';
 
-import Page from 'components/Main/Page';
-import Stack from 'components/Animation/Stack';
+import themed from 'components/Theme/themed';
+import SectionButton from './SectionButton';
 
-export interface ISectionProps {
-    pages: IPage[];
+export interface ISectionsProps {
+    section: string;
+    values: {
+        name: string;
+        title: string;
+        page: string;
+        params?: {
+            [name: string]: string;
+        }
+    }[];
 }
 
-const Section: React.SFC<ISectionProps> = (props) => (
-    <div className="fullscreen">
-        <div style={{ position: 'absolute', bottom: 50, left: 50, zIndex: 10000 }}>
-            <Link to="/home/default_page">Navigate</Link>
-        </div>
-        <div>
-            <Stack
-                items={(props.pages || []).map(page => (
-                    <div key={page.key} style={{ background: '#fff', padding: 15, height: '100%' }}>
-                        <Page value={page} />
-                    </div>
-                ))}
-            />
-        </div>
-    </div>
+const StyledSelector = themed.ul`
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0;
+
+    > li {
+        display: inline-block;
+        font-size: 16px;
+        color: #fff;
+        user-select: none;
+        margin: 0 12px 0 0;
+    }
+`;
+
+const Selector: React.SFC<ISectionsProps> = (props) => (
+    <StyledSelector>
+        {props.values.map(section => (
+            <li key={section.name}>
+                <SectionButton
+                    active={props.section === section.name}
+                    section={section.name}
+                    page={section.page}
+                    params={section.params}
+                >
+                    {section.title}
+                </SectionButton>
+            </li>
+
+        ))}
+    </StyledSelector>
 );
 
-export default Section;
+export default Selector;

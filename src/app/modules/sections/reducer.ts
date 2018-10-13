@@ -23,7 +23,6 @@
 import * as actions from './actions';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { TSection } from 'genesis/content';
-import closeSectionHandler from './reducers/closeSectionHandler';
 import renderSectionHandler from './reducers/renderSectionHandler';
 import switchSectionHandler from './reducers/switchSectionHandler';
 import updateSectionHandler from './reducers/updateSectionHandler';
@@ -37,10 +36,10 @@ import renderLegacyPageHandler from './reducers/renderLegacyPageHandler';
 import renderPageDoneHandler from './reducers/renderPageDoneHandler';
 import renderPageFailedHandler from './reducers/renderPageFailedHandler';
 import renderPageHandler from './reducers/renderPageHandler';
+import popPageHandler from './reducers/popPageHandler';
 
 export type State = {
     readonly mainSection: string;
-    readonly section: string;
     readonly sections: {
         readonly [name: string]: TSection;
     };
@@ -48,12 +47,10 @@ export type State = {
 
 export const initialState: State = {
     mainSection: 'home',
-    section: null,
     sections: {
         home: {
             key: 'home',
             visible: true,
-            closeable: false,
             menuDisabled: false,
             menuVisible: true,
             pending: false,
@@ -63,12 +60,24 @@ export const initialState: State = {
             defaultPage: 'default_page',
             menus: [],
             pages: []
+        },
+        developer: {
+            key: 'developer',
+            visible: true,
+            menuDisabled: false,
+            menuVisible: true,
+            pending: false,
+            name: 'developer',
+            title: 'Developer',
+            force: false,
+            defaultPage: 'admin_index',
+            menus: [],
+            pages: []
         }
     }
 };
 
 export default reducerWithInitialState(initialState)
-    .case(actions.closeSection, closeSectionHandler)
     .case(actions.renderSection, renderSectionHandler)
     .case(actions.switchSection, switchSectionHandler)
     .case(actions.updateSection, updateSectionHandler)
@@ -81,4 +90,5 @@ export default reducerWithInitialState(initialState)
     .case(actions.renderPage.done, renderPageDoneHandler)
     .case(actions.renderPage.failed, renderPageFailedHandler)
     .case(actions.renderPage.started, renderPageHandler)
+    .case(actions.popPage, popPageHandler)
     .case(actions.sectionsInit.done, sectionsInitDoneHandler);

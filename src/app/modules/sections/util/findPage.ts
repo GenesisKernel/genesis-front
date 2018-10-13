@@ -22,11 +22,11 @@
 
 import { State } from '../reducer';
 
-const findPage = (state: State, key: string) => {
+const findPage = (state: State, name: string) => {
     for (let sectionName in state.sections) {
         if (state.sections.hasOwnProperty(sectionName)) {
             const section = state.sections[sectionName];
-            const pageIndex = section.pages.findIndex(p => p.key === key);
+            const pageIndex = section.pages.findIndex(p => p.name === name);
 
             if (-1 !== pageIndex) {
                 return {

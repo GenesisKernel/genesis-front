@@ -26,10 +26,11 @@ import platform from 'lib/platform';
 const baseTheme: IThemeDefinition = {
     windowBorder: '#4c7dbd',
 
-    headerBackground: '#4c7dbd',
-    headerForeground: '#fff',
+    headerBackground: '#f3f3f3',
+    headerForeground: '#666',
     headerBackgroundActive: '#f3f3f3',
-    headerForegroundActive: '#194a8a',
+    headerForegroundActive: '#000',
+    headerForegroundHighlight: '#999',
     headerHeight: platform.select({ desktop: 28, web: 0 }),
 
     toolbarBackground: '#f3f3f3',
@@ -42,17 +43,17 @@ const baseTheme: IThemeDefinition = {
 
     progressBarForeground: '#b2c5dc',
 
-    menuHeight: 40,
-    menuBackground: '#fff',
+    menuHeight: 50,
     menuForeground: '#0a1d33',
     menuBackgroundActive: '#ececec',
-    menuOutline: '#e5e4e5',
+    menuOutline: '#dbdbdb',
+    menuOutlineActive: '#a7c4e9',
     menuIconColor: '#3577cc',
     menuPrimaryForeground: '#2886ff',
     menuPrimaryActive: '#7bb0f5',
 
     contentForeground: '#515253',
-    contentBackground: '#f6f7fa',
+    contentBackground: '#fff',
 
     editorBackground: '#c3c7ce',
 

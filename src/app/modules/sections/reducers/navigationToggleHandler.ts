@@ -26,13 +26,13 @@ import { Reducer } from 'modules';
 
 const navigationToggleHandler: Reducer<typeof navigationToggle, State> = (state, payload) => ({
     ...state,
-    sections: {
+    /*sections: {
         ...state.sections,
         [state.section]: {
             ...state.sections[state.section],
             menuVisible: !state.sections[state.section].menuVisible
         }
-    }
+    }*/
 });
 
 export default navigationToggleHandler;

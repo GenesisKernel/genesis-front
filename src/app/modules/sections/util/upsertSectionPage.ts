@@ -25,17 +25,23 @@ import { IPage } from 'genesis/content';
 import findPage from './findPage';
 
 const defaultValues: IPage = {
-    key: null,
     name: null,
     status: 'PENDING',
     legacy: false,
     content: [],
     params: {},
     error: null,
+    location: {
+        key: null,
+        pathname: null,
+        search: '',
+        state: {},
+        hash: ''
+    }
 };
 
 const upsertSectionPage = (state: State, sectionName: string, page: Partial<IPage>) => {
-    const pageIndex = findPage(state, page.key);
+    const pageIndex = findPage(state, page.name);
     let pages: IPage[];
 
     if (pageIndex) {

@@ -37,7 +37,6 @@ export interface IPageContainerProps {
 }
 
 interface IPageContainerState {
-    section: string;
     sections: {
         [name: string]: TSection;
     };
@@ -67,7 +66,6 @@ class PageContainer extends React.Component<IPageContainerProps & IPageContainer
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    section: state.sections.section,
     sections: state.sections.sections
 });
 

@@ -20,27 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { menuPop } from '../actions';
-import { Reducer } from 'modules';
+import React from 'react';
 
-const menuPopHandler: Reducer<typeof menuPop, State> = (state, payload) => {
-    /*if (1 >= state.sections[state.section].menus.length) {
-        return state;
-    }
-    else {
-        return {
-            ...state,
-            sections: {
-                ...state.sections,
-                [state.section]: {
-                    ...state.sections[state.section],
-                    menus: state.sections[state.section].menus.slice(0, -1)
-                }
-            }
-        };
-    }*/
-    return state;
-};
+import themed from 'components/Theme/themed';
 
-export default menuPopHandler;
+const StyledSidebar = themed.div`
+    background: url(/img/backDark.png);
+    background-attachment: fixed;
+    width: ${props => props.theme.menuHeight}px;
+    height: 100%;
+`;
+
+export interface ISidebarProps {
+
+}
+
+const Sidebar: React.SFC<ISidebarProps> = props => (
+    <StyledSidebar>
+        {props.children}
+    </StyledSidebar>
+);
+
+export default Sidebar;

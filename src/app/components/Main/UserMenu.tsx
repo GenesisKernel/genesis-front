@@ -27,7 +27,7 @@ import { IWallet } from 'genesis/auth';
 
 import { CloseDropdownButton } from 'components/DropdownButton';
 import Avatar from 'containers/Avatar';
-import PageLink from 'containers/Routing/PageLink';
+import PageLink from 'components/Routing/PageLink';
 import SystemButton from './SystemButton';
 
 const StyledUserMenu = styled.div`
@@ -105,7 +105,7 @@ class UserMenu extends React.Component<IUserMenuProps> {
                                 </CloseDropdownButton>
                             </li>
                             <li>
-                                <PageLink page="backup">
+                                <PageLink section="NOT_WORKING" page="backup">
                                     <CloseDropdownButton>
                                         <em className="icon icon-shield text-muted" />
                                         <span>

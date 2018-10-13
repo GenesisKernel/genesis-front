@@ -22,8 +22,7 @@
 
 import React from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { TMenu } from 'genesis/content';
-import platform from 'lib/platform';
+import { IMenu } from 'genesis/content';
 
 import StackGroup from 'components/Animation/StackGroup';
 import themed from 'components/Theme/themed';
@@ -32,13 +31,15 @@ import ResizeHandle from 'containers/Main/Navigation/ResizeHandle';
 import ScrollView from 'components/ScrollView';
 
 const StyledNavigation = themed.aside`
+    position: relative;
+    z-index: 10000;
+
     &.navigation-collapsed {
         overflow: hidden;
         width: 0;
     }
     
     .scrollarea {
-        background: ${props => props.theme.menuBackground};
         height: 100%;
         
         .scrollbar-container {
@@ -46,11 +47,10 @@ const StyledNavigation = themed.aside`
         }
     }
 
-    position: absolute;
-    top: 0;
-    left: ${platform.select({ win32: '1px' }) || 0};
-    bottom: ${platform.select({ win32: '1px' }) || 0};
-    z-index: 150;
+    > nav {
+        background: url(/img/backBlur.png) -${props => props.theme.menuHeight}px 0;
+        height: 100%;
+    }
 `;
 
 const StyledBackButton = themed.button`
@@ -95,11 +95,8 @@ const StyledBackButton = themed.button`
 
 const StyledMenu = themed.div`
     overflow: hidden;
-    position: absolute;
-    bottom: 0px;
-    left: 0;
-    right: 0;
-    top: ${props => props.theme.headerHeight + props.theme.menuHeight + props.theme.toolbarHeight}px;
+    position: relative;
+    height: 100%;
 `;
 
 const StyledMenuContent = themed.div`
@@ -108,7 +105,6 @@ const StyledMenuContent = themed.div`
     right: 0;
     left: 0;
     bottom: 0;
-    background: ${props => props.theme.menuBackground};
 
     .title-wrap {
         text-overflow: ellipsis;
@@ -122,7 +118,8 @@ export interface INavigationProps {
     preloadingError: string;
     visible: boolean;
     width: number;
-    menus: TMenu[];
+    menus: IMenu[];
+    section: string;
     menuPop: () => void;
     ecosystemInit: (nullArg: null) => void;
 }
@@ -150,6 +147,7 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
                                         <Protypo
                                             context="menu"
                                             content={menu.content}
+                                            section={this.props.section}
                                         />
                                     </StyledMenuContent>
                                 </ScrollView>

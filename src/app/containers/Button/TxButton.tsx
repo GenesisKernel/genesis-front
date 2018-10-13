@@ -59,6 +59,7 @@ export interface ITxButtonProps {
 
     // Redirect if all previous actions succeeded
     page?: string;
+    section: string;
     pageParams?: { [key: string]: any } | (() => { [key: string]: any });
 
     // Page must be rendered within a modal dialog
@@ -119,6 +120,7 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonState & ITxButt
             contracts: contracts,
             page: this.props.page ? {
                 name: this.props.page,
+                section: this.props.section,
                 params: pageParams
             } : null,
             errorRedirects: errorRedirects

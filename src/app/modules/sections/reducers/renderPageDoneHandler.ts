@@ -27,7 +27,7 @@ import upsertSectionPage from '../util/upsertSectionPage';
 
 const renderPageDoneHandler: Reducer<typeof renderPage.done, State> = (state, payload) =>
     upsertSectionPage(state, payload.params.section, {
-        key: payload.params.key,
+        name: payload.params.name,
         status: 'LOADED',
         content: payload.result
     });

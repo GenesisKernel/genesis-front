@@ -20,75 +20,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import * as classNames from 'classnames';
-import imgClose from 'images/close.svg';
+import React from 'react';
+import classNames from 'classnames';
+import { Link } from 'react-router-dom';
 
 import themed from 'components/Theme/themed';
+import { generateRoute } from 'services/router';
 
-const StyledSectionButton = themed.button`
-    position: relative;
-    border-radius: 0;
-    padding: 0 20px;
-    margin: 0;
-    outline: 0;
-    border: 0;
-    background: 0;
+const StyledSectionButton = themed(Link)`
+    display: block;
+    padding: 0 1px 1px;
     color: ${props => props.theme.headerForeground};
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 300;
-    transition: background .15s;
+    text-decoration: none !important;
+    text-transform: uppercase;
 
     &:hover {
-        background: rgba(0,0,0,0.1);
+        color: ${props => props.theme.headerForegroundHighlight};
     }
 
     &.active {
-        background: ${props => props.theme.headerBackgroundActive};
         color: ${props => props.theme.headerForegroundActive};
-    }
-
-    &.closeable {
-        padding-right: 0;
-    }
-
-    .section-close {
-        padding: 0 10px 0 8px;
-        width: 0;
-        font-size: 15px;
-        opacity: 0.5;
-        transition: opacity ease-in-out .17s;
-        font-weight: bold;
-
-        &:hover {
-            opacity: 1;
-        }
+        font-weight: 400;
     }
 `;
 
 export interface ISectionButtonProps {
     active?: boolean;
-    closeable?: boolean;
-    onClick?: () => void;
-    onClose?: () => void;
+    section: string;
+    page: string;
+    params?: {
+        [name: string]: string;
+    };
 }
 
-const SectionButton: React.SFC<ISectionButtonProps> = props => {
-    const onClose = props.closeable ? (e: React.MouseEvent<HTMLSpanElement>) => {
-        e.stopPropagation();
-        props.onClose();
-    } : null;
-
-    return (
-        <StyledSectionButton onClick={props.onClick} className={classNames({ active: props.active, closeable: props.closeable })}>
-            {props.children}
-            {props.closeable && (
-                <span className="section-close" onClick={onClose}>
-                    <img src={imgClose} />
-                </span>
-            )}
-        </StyledSectionButton>
-    );
-};
+const SectionButton: React.SFC<ISectionButtonProps> = props => (
+    <StyledSectionButton
+        className={classNames({ active: props.active })}
+        to={generateRoute(`/${props.section}/${props.page}`, props.params)}
+    >
+        {props.children}
+    </StyledSectionButton>
+);
 
 export default SectionButton;

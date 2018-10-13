@@ -20,9 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import { Action } from 'redux';
 import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
-import { renderPage } from '../actions';
+import { renderPage, menuPush } from '../actions';
 /*import NodeObservable from 'modules/engine/util/NodeObservable';
 import keyring from 'lib/keyring';
 
@@ -41,11 +42,19 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
             params: action.payload.params,
             locale: state.storage.locale
 
-        })).map(content => renderPage.done({
-            params: action.payload,
-            result: content.tree
-
-        })).delay(1000);
+        })).flatMap(content => Observable.of<Action>(
+            renderPage.done({
+                params: action.payload,
+                result: content.tree
+            }),
+            menuPush({
+                section: action.payload.section,
+                menu: {
+                    name: content.menu,
+                    content: content.menutree
+                }
+            })
+        ));
 
         /*const state = store.getState();
         const client = api(state.auth.session);

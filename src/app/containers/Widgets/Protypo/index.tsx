@@ -44,6 +44,7 @@ export interface IProtypoContainerProps {
     selectTag?: any;
     selectedTag?: any;
     logic?: boolean;
+    section: string;
 }
 
 interface IProtypoContainerState {
@@ -67,7 +68,6 @@ const mapStateToProps = (state: IRootState) => {
 
     return {
         apiHost: state.auth.session && (state.auth.session.apiHost + '/api/v2'),
-        section: state.sections.section,
         page: 'default_page', // section && section.page && section.page.name
     };
 };

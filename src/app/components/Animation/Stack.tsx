@@ -24,12 +24,12 @@ import React from 'react';
 import Transition from 'react-transition-group/Transition';
 import TransitionGroup from 'react-transition-group/TransitionGroup';
 
-const animationDuration = 300;
+const animationDuration = 400;
 const animationDef = {
     defaultStyle: {
         transform: 'translateX(0)',
         transition: `transform ${animationDuration}ms cubic-bezier(0,0,0,1),opacity ${animationDuration}ms`,
-        boxShadow: 'rgba(0,0,0,0.1) 0 0 15px',
+        // boxShadow: 'rgba(0,0,0,0.1) 0 0 15px',
         opacity: 1,
         position: 'absolute',
         left: 0,
@@ -69,7 +69,7 @@ export interface IStackGroupProps {
     items: JSX.Element[];
 }
 
-const StackGroup: React.SFC<IStackGroupProps> = props => (
+const Stack: React.SFC<IStackGroupProps> = props => (
     <TransitionGroup>
         {props.items.map((item, index) => (
             <Fade key={index}>
@@ -79,4 +79,4 @@ const StackGroup: React.SFC<IStackGroupProps> = props => (
     </TransitionGroup>
 );
 
-export default StackGroup;
+export default Stack;

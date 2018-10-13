@@ -23,20 +23,36 @@
 import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
 import { locationChange } from '../actions';
-import { renderPage } from 'modules/sections/actions';
+import { renderPage, popPage } from 'modules/sections/actions';
+import findPage from 'modules/sections/util/findPage';
 
 const sectionLoadEpic: Epic = (action$, store, { routerService }) => action$.ofAction(locationChange)
     .flatMap(action => {
-        const match = routerService.matchRoute('(/)(:section)(/)(:page)(/)', action.payload.location.pathname);
-        if (match) {
-            const state = store.getState();
+        const state = store.getState();
+        const match = routerService.matchRoute('(/)(:section)(/)(:page)(/)', action.payload.location.pathname + action.payload.location.search);
+
+        if (state.auth.isAuthenticated && match) {
             const section = state.sections.sections[match.parts.section || state.sections.mainSection];
-            const page = match.parts.page || section.defaultPage;
+            const pageName = match.parts.page || section.defaultPage;
+
+            if ('POP' === action.payload.action) {
+                const pageIndex = findPage(state.sections, pageName);
+                if (pageIndex) {
+                    const page = state.sections.sections[pageIndex.section].pages[pageIndex.index];
+                    if (page.content || page.error) {
+                        return Observable.of(popPage({
+                            location: action.payload.location,
+                            section: section.name,
+                            name: pageName
+                        }));
+                    }
+                }
+            }
 
             return Observable.of(renderPage.started({
-                key: action.payload.location.key,
+                location: action.payload.location,
                 section: section.name,
-                name: page,
+                name: pageName,
                 params: match.query
             }));
         }

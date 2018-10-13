@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 import { combineEpics } from 'redux-observable';
-import closeSectionEpic from './epics/closeSectionEpic';
 import resetOnLoginEpic from './epics/resetOnLoginEpic';
 import reloadPageEpic from './epics/reloadPageEpic';
 import renderLegacyPageEpic from './epics/renderLegacyPageEpic';
@@ -29,7 +28,6 @@ import renderPageEpic from './epics/renderPageEpic';
 import sectionsInitEpic from './epics/sectionsInitEpic';
 
 export default combineEpics(
-    closeSectionEpic,
     resetOnLoginEpic,
     reloadPageEpic,
     renderLegacyPageEpic,

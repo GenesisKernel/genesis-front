@@ -42,6 +42,8 @@ interface IAppProps {
 }
 
 const ThemedApp = themed.div`
+    background: url(/img/back.png) 0 0;
+
     &.platform-windows {
         border: solid 1px ${props => props.theme.windowBorder};
     }

@@ -21,20 +21,13 @@
 // SOFTWARE.
 
 import { State } from '../reducer';
-import { renderSection } from '../actions';
+import { popPage } from '../actions';
 import { Reducer } from 'modules';
+import upsertSectionPage from '../util/upsertSectionPage';
 
-const closeSectionHandler: Reducer<typeof renderSection, State> = (state, payload) => {
-    return state.sections[payload] ? {
-        ...state,
-        sections: {
-            ...state.sections,
-            [payload]: {
-                ...state.sections[payload],
-                visible: false
-            }
-        }
-    } : state;
-};
+const popPageHandler: Reducer<typeof popPage, State> = (state, payload) =>
+    upsertSectionPage(state, payload.section, {
+        name: payload.name
+    });
 
-export default closeSectionHandler;
+export default popPageHandler;

@@ -22,8 +22,9 @@
 
 declare module 'genesis/content' {
     import { TProtypoElement } from 'genesis/protypo';
+    import { Location } from 'history';
 
-    type TMenu = {
+    type IMenu = {
         readonly name: string;
         readonly content: TProtypoElement[];
     };
@@ -32,7 +33,6 @@ declare module 'genesis/content' {
         'PENDING' | 'LOADED' | 'ERROR';
 
     interface IPage {
-        readonly key: string;
         readonly name: string;
         readonly status: TPageStatus;
         readonly legacy?: boolean;
@@ -41,12 +41,12 @@ declare module 'genesis/content' {
             [key: string]: string;
         };
         readonly error?: string;
+        readonly location: Location;
     }
 
     type TSection = {
         readonly key: string;
         readonly visible: boolean;
-        readonly closeable?: boolean;
         readonly menuDisabled?: boolean;
         readonly menuVisible: boolean;
         readonly pending: boolean;
@@ -54,7 +54,7 @@ declare module 'genesis/content' {
         readonly title: string;
         readonly force: boolean;
         readonly defaultPage: string;
-        readonly menus: TMenu[];
+        readonly menus: IMenu[];
         readonly pages: IPage[];
     }
 }

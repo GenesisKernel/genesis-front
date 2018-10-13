@@ -20,42 +20,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { IRootState } from 'modules';
-import { navigatePage } from '../../modules/sections/actions';
+import React from 'react';
+import { IPage } from 'genesis/content';
+import { Link } from 'react-router-dom';
 
-import PageLink from 'components/Routing/PageLink';
+import themed from 'components/Theme/themed';
 
-export interface IPageLinkContainerProps {
-    page: string;
-    section?: string;
-    className?: string;
-    params?: {
-        [key: string]: string;
-    };
+export interface IBreadcrumbsProps {
+    pages: IPage[];
 }
 
-interface IPageLinkContainerState {
-    mainSection: string;
-    currentSection: string;
-}
+const StyledBreadcrumbs = themed.ul`
+    border-bottom: solid 1px ${props => props.theme.headerBackground};
+    height: 45px;
+    line-height: 45px;
+    padding: 0 15px;
+    margin: 0;
+    font-size: 0;
+    
+    > li {
+        display: inline-block;
+        font-size: 15px;
+        height: 45px;
+        margin-right: 10px;
+    }
+`;
 
-interface IPageLinkContainerDispatch {
-    navigatePage: typeof navigatePage.started;
-}
-
-const PageLinkContainer: React.SFC<IPageLinkContainerProps & IPageLinkContainerState & IPageLinkContainerDispatch> = (props) => (
-    <PageLink {...props} />
+const Breadcrumbs: React.SFC<IBreadcrumbsProps> = (props) => (
+    <StyledBreadcrumbs>
+        {props.pages.map(page => (
+            <li key={'route' + page.location.key}>
+                <Link to={page.location}>
+                    {page.name} &gt;
+                </Link>
+            </li>
+        ))}
+    </StyledBreadcrumbs>
 );
 
-const mapStateToProps = (state: IRootState) => ({
-    mainSection: state.sections.mainSection,
-    currentSection: state.sections.section
-});
-
-const mapDispatchToProps = {
-    navigatePage: navigatePage.started
-};
-
-export default connect<IPageLinkContainerState, IPageLinkContainerDispatch, IPageLinkContainerProps>(mapStateToProps, mapDispatchToProps)(PageLinkContainer);
+export default Breadcrumbs;

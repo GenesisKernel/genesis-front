@@ -20,19 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Epic } from 'modules';
-import { closeSection, renderSection } from '..//actions';
-import { Observable } from 'rxjs/Observable';
+import themed from 'components/Theme/themed';
 
-const closeSectionEpic: Epic = (action$, store) => action$.ofAction(closeSection)
-    .flatMap(action => {
-        const state = store.getState();
-        if (action.payload === state.sections.section) {
-            return Observable.of(renderSection('home'));
-        }
-        else {
-            return Observable.empty<never>();
-        }
-    });
+const StyledSideButton = themed.button`
+    width: ${props => props.theme.menuHeight}px;
+    height: ${props => props.theme.menuHeight}px;
+    line-height: ${props => props.theme.menuHeight}px;
+    text-align: center;
+    background: none;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    border: none;
+    border-bottom: solid 1px rgba(255, 255, 255, 0.2);
 
-export default closeSectionEpic;
+    &:hover {
+        background: rgba(255,255,255,0.11);
+    }
+`;
+
+export default StyledSideButton;

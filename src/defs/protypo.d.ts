@@ -55,6 +55,7 @@ declare module 'genesis/protypo' {
 
     interface IButtonPage {
         name: string;
+        section: string;
         params: {
             [key: string]: any;
         };

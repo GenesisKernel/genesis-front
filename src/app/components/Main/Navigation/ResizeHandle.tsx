@@ -37,7 +37,6 @@ interface IResizeHandleProps {
 export const styles = {
     hoverWidth: 10,
     initialWidth: 2,
-    extendWidth: 2
 };
 
 const StyledResizeHandle = themed.button`
@@ -66,13 +65,12 @@ const StyledResizeHandle = themed.button`
         right: ${(styles.hoverWidth / 2) - (styles.initialWidth / 2)}px;
         margin: 0;
         width: ${styles.initialWidth}px;
-        background: ${props => props.theme.menuOutline};
         transition: all .16s;
+        background: ${props => props.theme.menuOutline};
     }
 
     &:hover > div, &.active > div {
-        width: ${styles.extendWidth * 2 + styles.initialWidth}px;
-        margin: 0 -${styles.extendWidth}px 0 0;
+        background: ${props => props.theme.menuOutlineActive};
     }
 `;
 

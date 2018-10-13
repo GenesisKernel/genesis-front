@@ -29,14 +29,16 @@ import { IValidationResult } from 'components/Validation/ValidatedForm';
 import Heading from 'components/Heading';
 import ToolButton, { IToolButtonProps } from 'containers/ToolButton/ToolButton';
 import { IConstructorElementProps } from 'genesis/editor';
+import { IMenu } from 'genesis/content';
 
 export interface IProtypoProps extends IConstructorElementProps {
     apiHost: string;
     wrapper?: JSX.Element;
     context: string;
     page: string;
+    section: string;
     content: TProtypoElement[];
-    menuPush: (params: { name: string, content: TProtypoElement[] }) => void;
+    menuPush: (params: { section: string, menu: IMenu }) => void;
     navigatePage: (params: { name: string, params: any, force?: boolean }) => void;
     navigate: (url: string) => void;
     displayData: (link: string) => void;

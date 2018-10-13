@@ -23,11 +23,12 @@
 declare module 'genesis/theme' {
     interface IThemeDefinition {
         windowBorder: string;
-        
+
         headerBackground: string;
         headerForeground: string;
         headerBackgroundActive: string;
         headerForegroundActive: string;
+        headerForegroundHighlight: string;
         headerHeight: number;
 
         toolbarBackground: string;
@@ -41,10 +42,10 @@ declare module 'genesis/theme' {
         progressBarForeground: string;
 
         menuHeight: number;
-        menuBackground: string;
         menuForeground: string;
         menuBackgroundActive: string;
         menuOutline: string;
+        menuOutlineActive: string;
         menuIconColor: string;
         menuPrimaryForeground: string;
         menuPrimaryActive: string;

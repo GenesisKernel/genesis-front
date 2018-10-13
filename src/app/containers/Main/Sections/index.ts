@@ -23,7 +23,7 @@
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { RouteComponentProps } from 'react-router-dom';
-import Section from 'components/Main/Section';
+import Sections from 'components/Main/Sections';
 
 export interface ISectionRouteParams {
     section: string;
@@ -34,11 +34,13 @@ export interface ISectionRouteProps extends RouteComponentProps<ISectionRoutePar
 }
 
 const mapStateToProps = (state: IRootState, props: ISectionRouteProps) => ({
-    pages: state.sections.sections[props.match.params.section].pages
+    section: props.match.params.section,
+    values: state.sections.sections,
+    navigationSize: state.storage.navigationSize
 });
 
 const mapDispatchToProps = {
 
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Section);
+export default connect(mapStateToProps, mapDispatchToProps)(Sections);

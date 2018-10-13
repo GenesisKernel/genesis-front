@@ -28,6 +28,7 @@ import { TProtypoElement } from 'genesis/protypo';
 
 export interface IPageModalProps {
     title: string;
+    section: string;
     width?: number;
     tree: TProtypoElement[];
 }
@@ -44,7 +45,11 @@ class PageModal extends Modal<IPageModalProps, boolean> {
                     {this.props.params.title}
                 </Modal.Header>
                 <Modal.Body>
-                    <Protypo context="page" content={this.props.params.tree} />
+                    <Protypo
+                        context="page"
+                        content={this.props.params.tree}
+                        section={this.props.params.section}
+                    />
                 </Modal.Body>
             </div>
         );
