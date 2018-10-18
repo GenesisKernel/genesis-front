@@ -83,7 +83,6 @@ export default class ValidatedDecimal extends React.Component<IValidatedDecimalP
         }
 
         const dotCount = (value.match(/\./g) || []).length;
-        // alert(dotCount);
 
         if (dotCount > 1) {
             return false;
