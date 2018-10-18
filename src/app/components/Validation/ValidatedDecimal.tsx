@@ -24,20 +24,21 @@ import * as React from 'react';
 import { FormControl, FormControlProps } from 'react-bootstrap';
 import { Validator } from './Validators';
 import * as propTypes from 'prop-types';
+import { MONEY_POWER } from 'lib/tx/convert';
 
 import ValidatedForm, { IValidatedControl } from './ValidatedForm';
 
-export interface IValidatedControlProps extends FormControlProps {
+export interface IValidatedDecimalProps extends FormControlProps {
     name: string;
     validators?: Validator[];
 }
 
-interface IValidatedControlState {
+interface IValidatedDecimalState {
     value: string;
 }
 
-export default class ValidatedControl extends React.Component<IValidatedControlProps, IValidatedControlState> implements IValidatedControl {
-    constructor(props: IValidatedControlProps) {
+export default class ValidatedDecimal extends React.Component<IValidatedDecimalProps, IValidatedDecimalState> implements IValidatedControl {
+    constructor(props: IValidatedDecimalProps) {
         super(props);
 
         this.state = {
@@ -57,10 +58,10 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
         }
     }
 
-    componentWillReceiveProps(props: IValidatedControlProps) {
+    componentWillReceiveProps(props: IValidatedDecimalProps) {
         if (this.props.value !== props.value) {
             this.setState({
-                value: props.value as string
+                value: props.value === null ? '' : props.value as string
             });
             (this.context.form as ValidatedForm).updateState(props.name, props.value);
         }
@@ -70,16 +71,46 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
         return this.state.value;
     }
 
+    validateValue(value: string) {
+        if (value === '') {
+            return true;
+        }
+
+        value = value.replace(',', '.');
+
+        if (!/^(0|[1-9]+[0-9]*)\.?\d*$/.test(value)) {
+            return false;
+        }
+
+        const dotCount = (value.match(/\./g) || []).length;
+
+        if (dotCount > 1) {
+            return false;
+        }
+
+        if (dotCount === 1 && value.split('.')[1].length > MONEY_POWER) {   // check precision
+            return false;
+        }
+
+        return true;
+    }
+
     onChange = (e: React.ChangeEvent<FormControl>) => {
+        const value = (e.target as any).value.replace(',', '.');
+
+        if (!this.validateValue(value)) {
+            return;
+        }
+
         this.setState({
-            value: (e.target as any).value
+            value
         });
 
         if (this.props.onChange) {
             this.props.onChange(e);
         }
 
-        (this.context.form as ValidatedForm).emitUpdate(this.props.name, (e.target as any).value);
+        (this.context.form as ValidatedForm).emitUpdate(this.props.name, value);
     }
 
     onBlur = (e: React.FocusEvent<FormControl>) => {
@@ -108,7 +139,6 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
                 id={this.props.id}
                 name={this.props.name}
                 inputRef={this.props.inputRef}
-                type={this.props.type}
                 placeholder={this.props.placeholder}
                 value={this.state.value}
                 noValidate
@@ -119,6 +149,6 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
     }
 }
 
-(ValidatedControl as React.ComponentClass).contextTypes = {
+(ValidatedDecimal as React.ComponentClass).contextTypes = {
     form: propTypes.instanceOf(ValidatedForm)
 };

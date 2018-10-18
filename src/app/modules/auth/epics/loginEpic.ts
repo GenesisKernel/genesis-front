@@ -85,12 +85,8 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
                         params: action.payload,
                         result: {
                             wallet: {
-                                id: wallet.key_id,
-                                encKey: action.payload.wallet.encKey,
-                                address: wallet.address,
-                                ecosystem: action.payload.wallet.ecosystem,
-                                ecosystemName,
-                                username: wallet.username
+                                ...action.payload.wallet,
+                                ecosystemName
                             },
                             roles: wallet.roles && wallet.roles.map(role => ({
                                 id: role.role_id,

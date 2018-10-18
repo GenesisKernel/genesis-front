@@ -80,8 +80,8 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                             id: proto.id,
                             schema: defaultSchema,
                             ecosystemID: parseInt(state.auth.wallet && state.auth.wallet.ecosystem || '1', 10),
-                            fields: txParams
-
+                            fields: txParams,
+                            maxSum: state.auth.wallet.settings && state.auth.wallet.settings.maxSum
                         }).sign(privateKey)).map(signature => ({
                             ...signature,
                             name: proto.name,

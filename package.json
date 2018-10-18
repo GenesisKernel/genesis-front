@@ -12,6 +12,7 @@
     "private": true,
     "main": "./electron/index.js",
     "dependencies": {
+        "big.js": "^5.2.1",
         "bluebird": "^3.5.1",
         "centrifuge": "^1.4.6",
         "chart.js": "^2.7.2",
@@ -90,6 +91,7 @@
         "release": "electron-builder --config electron-builder.json"
     },
     "devDependencies": {
+        "@types/big.js": "^4.0.5",
         "@types/bluebird": "^3.5.18",
         "@types/chart.js": "^2.7.22",
         "@types/classnames": "^2.2.3",

@@ -32,6 +32,7 @@ export interface IContractContext {
     id: number;
     schema: ISchema;
     ecosystemID: number;
+    maxSum?: string;
     fields: {
         [name: string]: IContractParam;
     };
@@ -40,6 +41,21 @@ export interface IContractContext {
 export interface IContractParam {
     type: string;
     value: object;
+}
+
+export interface IContractBuffer {
+    Header: {
+        ID: number;
+        Time: number;
+        EcosystemID: number;
+        KeyID: Int64BE;
+        NetworkID: number;
+        PublicKey: ArrayBuffer;
+    };
+    MaxSum?: string;
+    Params: {
+        [name: string]: any;
+    };
 }
 
 export default class Contract {
@@ -97,23 +113,22 @@ export default class Contract {
             params[name] = this._fields[name].get();
         });
 
-        const txBuffer = msgpack.encode(
-            {
-                Header: {
-                    ID: this._context.id,
-                    Time: this._time,
-                    EcosystemID: this._context.ecosystemID,
-                    KeyID: this._keyID,
-                    NetworkID: this._context.schema.network,
-                    PublicKey: this._publicKey
-                },
-                Params: params
+        const data: IContractBuffer = {
+            Header: {
+                ID: this._context.id,
+                Time: this._time,
+                EcosystemID: this._context.ecosystemID,
+                KeyID: this._keyID,
+                NetworkID: this._context.schema.network,
+                PublicKey: this._publicKey
             },
-            {
-                codec
-            }
-        );
+            Params: params
+        };
 
-        return txBuffer;
+        if (this._context.maxSum) {
+            data.MaxSum = convert.toMoney(this._context.maxSum);
+        }
+
+        return msgpack.encode(data, { codec });
     }
 }
