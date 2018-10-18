@@ -25,24 +25,23 @@ import { sectionsInit } from '../actions';
 import { Reducer } from 'modules';
 import { TSection } from 'genesis/content';
 
-const sectionsInitHandler: Reducer<typeof sectionsInit, State> = (state, payload) => {
+const sectionsInitDoneHandler: Reducer<typeof sectionsInit.done, State> = (state, payload) => {
     const sections: { [key: string]: TSection } = {};
-    for (let itr in state.sections) {
-        if (state.sections.hasOwnProperty(itr)) {
-            sections[itr] = {
-                ...state.sections[itr],
-                pending: false,
-                page: null,
-                menus: []
-            };
-        }
-    }
+    payload.result.sections.forEach(section => {
+        sections[section.name] = section;
+    });
+
+    state.systemSections.forEach(section => {
+        sections[section.name] = section;
+    });
 
     return {
         ...state,
-        section: payload,
+        inited: true,
+        mainSection: payload.result.mainSection,
+        section: payload.result.section,
         sections
     };
 };
 
-export default sectionsInitHandler;
+export default sectionsInitDoneHandler;

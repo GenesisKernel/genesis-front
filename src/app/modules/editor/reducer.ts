@@ -27,6 +27,8 @@ import changeEditorToolDoneHandler from './reducers/changeEditorToolDoneHandler'
 import changeEditorTabHandler from './reducers/changeEditorTabHandler';
 import changeEditorToolStartedHandler from './reducers/changeEditorToolStartedHandler';
 import closeEditorTabHandler from './reducers/closeEditorTabHandler';
+import closeAllEditorTabHandler from './reducers/closeAllEditorTabHandler';
+import closeSavedEditorTabHandler from './reducers/closeSavedEditorTabHandler';
 import createEditorTabDoneHandler from './reducers/createEditorTabDoneHandler';
 import reloadEditorTabHandler from './reducers/reloadEditorTabHandler';
 import revertEditorTabHandler from './reducers/revertEditorTabHandler';
@@ -63,6 +65,8 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.changeEditorTool.done, changeEditorToolDoneHandler)
     .case(actions.changeEditorTool.started, changeEditorToolStartedHandler)
     .case(actions.closeEditorTab, closeEditorTabHandler)
+    .case(actions.closeAllEditorTab, closeAllEditorTabHandler)
+    .case(actions.closeSavedEditorTab, closeSavedEditorTabHandler)
     .case(actions.createEditorTab.done, createEditorTabDoneHandler)
     .case(actions.loadEditorTab.done, loadEditorTabDoneHandler)
     .case(actions.reloadEditorTab, reloadEditorTabHandler)

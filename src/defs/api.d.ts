@@ -271,6 +271,25 @@ declare module 'genesis/api' {
         }[];
     }
 
+    interface ISectionsRequest {
+        locale: string;
+    }
+
+    interface ISectionResponse {
+        id: string;
+        ecosystem: string;
+        page: string;
+        roles_access: string;
+        status: string;
+        title: string;
+        urlname: string;
+    }
+
+    interface ISectionsResponse {
+        count: string;
+        list: ISectionResponse[];
+    }
+
     interface IHistoryRequest extends ISegmentRequest {
         id: string;
         table: string;
@@ -300,6 +319,8 @@ declare module 'genesis/api' {
         blockid: string;
         result: string;
         errmsg?: {
+            id?: string;
+
             type: string;
             error: string;
         };

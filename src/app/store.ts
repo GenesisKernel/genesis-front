@@ -23,7 +23,7 @@
 import 'rxjs';
 import 'lib/external/fsa';
 import { createStore, applyMiddleware, compose } from 'redux';
-import { routerMiddleware } from 'react-router-redux';
+import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createEpicMiddleware } from 'redux-observable';
 import { loadingBarMiddleware } from 'react-redux-loading-bar';
 import persistState, { mergePersistedState } from 'redux-localstorage';
@@ -97,7 +97,7 @@ const configureStore = (initialState?: IRootState) => {
     );
 
     return createStore<IRootState>(
-        reducer,
+        connectRouter(history)(reducer),
         initialState!,
         composedEnhancers
     );

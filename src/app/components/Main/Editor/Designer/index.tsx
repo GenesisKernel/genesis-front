@@ -289,7 +289,7 @@ class Constructor extends React.Component<IConstructorProps, IConstructorState> 
                             }}
                             scaffoldBlockPxWidth={10}
                             canDrag={(node: any) => { return node.node.canMove; }}
-                            canDrop={(node: any) => { return node.nextParent ? node.nextParent.canDrop : true; /*alert(JSON.stringify(node)); return node.node.canDrop;*/ }}
+                            canDrop={(node: any) => { return node.nextParent ? node.nextParent.canDrop : true; }}
                             innerStyle={{ padding: '15px 0', backgroundColor: '#465669', color: '#FFFFFF' }}
                             theme={TreeTheme}
                             generateNodeProps={({ node, path }) => ({

@@ -56,7 +56,6 @@ export type State = {
     readonly role: IRole;
     readonly roles: IRole[];
     readonly privateKey: string;
-    readonly ecosystem: string;
 };
 
 export const initialState: State = {
@@ -73,8 +72,7 @@ export const initialState: State = {
     wallet: null,
     role: null,
     roles: null,
-    privateKey: null,
-    ecosystem: null
+    privateKey: null
 };
 
 export default reducerWithInitialState<State>(initialState)

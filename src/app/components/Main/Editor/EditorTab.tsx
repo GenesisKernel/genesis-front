@@ -83,6 +83,7 @@ const StyledEditorTab = themed(EditorTab) `
     margin-right: 1px;
     text-align: left;
     min-width: 80px;
+    font-size: 0;
 
     &.active, &.active:hover {
         background: #fff;
@@ -131,6 +132,8 @@ const StyledEditorTab = themed(EditorTab) `
         cursor: pointer;
         height: 35px;
         line-height: 25px;
+        overflow: hidden;
+        font-size: 13px;
 
         .icon {
             position: absolute;

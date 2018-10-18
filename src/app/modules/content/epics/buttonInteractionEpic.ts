@@ -53,7 +53,8 @@ const buttonInteractionEpic: Epic = (action$, store, { api }) => action$.ofActio
                     Observable.of(txCall({
                         uuid: action.payload.uuid,
                         silent: action.payload.silent,
-                        contracts: action.payload.contracts
+                        contracts: action.payload.contracts,
+                        errorRedirects: action.payload.errorRedirects
                     })),
                     action$.filter(l =>
                         isType(l, txExec.done) || isType(l, txExec.failed)

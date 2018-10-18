@@ -21,23 +21,13 @@
 // SOFTWARE.
 
 import { State } from '../reducer';
-import { reset } from '../actions';
+import { closeEditorTab } from '../actions';
 import { Reducer } from 'modules';
 
-const resetHandler: Reducer<typeof reset.done, State> = (state, payload) => ({
+const closeEditorTabHandler: Reducer<typeof closeEditorTab, State> = (state, payload) => ({
     ...state,
-    sections: {
-        ...state.sections,
-        [state.section]: {
-            ...state.sections[state.section],
-            menus: [payload.result.menu],
-            page: {
-                params: {},
-                ...payload.result.page
-            },
-            pending: false
-        }
-    }
+    tabIndex: -1,
+    tabs: []
 });
 
-export default resetHandler;
+export default closeEditorTabHandler;

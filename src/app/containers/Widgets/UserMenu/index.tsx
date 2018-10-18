@@ -60,7 +60,7 @@ const mapStateToProps = (state: IRootState) => ({
         state.storage.wallets.filter(l =>
             l.id === state.auth.wallet.id
         ).sort((a, b) => parseInt(a.ecosystem, 10) - parseInt(b.ecosystem, 10)) : [],
-    ecosystem: state.auth.ecosystem
+    ecosystem: state.auth.wallet && state.auth.wallet.ecosystem
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({

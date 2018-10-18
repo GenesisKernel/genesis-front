@@ -79,10 +79,9 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                         return Observable.from(new Contract({
                             id: proto.id,
                             schema: defaultSchema,
-                            ecosystemID: state.auth.ecosystem ? parseInt(state.auth.ecosystem, 10) : 1,
+                            ecosystemID: parseInt(state.auth.wallet && state.auth.wallet.ecosystem || '1', 10),
                             fields: txParams,
                             maxSum: state.auth.wallet.settings && state.auth.wallet.settings.maxSum
-
                         }).sign(privateKey)).map(signature => ({
                             ...signature,
                             name: proto.name,
@@ -151,6 +150,7 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
 
                         case 'E_ERROR':
                             return Observable.throw({
+                                id: error.data.id,
                                 type: error.data.type,
                                 error: error.data.error,
                                 params: error.data.params
@@ -175,7 +175,11 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
 
             )).catch(error => Observable.of(txExec.failed({
                 params: action.payload,
-                error
+                error: 'id' in error ? error : {
+                    type: (error.errmsg ? error.errmsg.type : error.error),
+                    error: error.errmsg ? error.errmsg.error : error.msg,
+                    params: error.params || []
+                }
             })));
     });
 
