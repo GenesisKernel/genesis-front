@@ -21,12 +21,13 @@
 // SOFTWARE.
 
 import React from 'react';
+import propTypes from 'prop-types';
 import { Row, Col } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
 import DropdownToolButton from './Toolbar/DropdownToolButton';
 import Validation from '../Validation';
-import Button from 'components/Button';
+import { CloseDropdownButton } from 'components/DropdownButton';
 
 export interface ITxMenuProps {
     maxSum: string;
@@ -37,46 +38,52 @@ interface ITxMenuContext {
     closeDropdown: () => void;
 }
 
-const TxMenu: React.SFC<ITxMenuProps> = (props, context: ITxMenuContext) => (
+const TxMenuContent: React.SFC<ITxMenuProps> = (props, context: ITxMenuContext) => (
+    <div style={{ overflow: 'hidden' }}>
+        <div className="dropdown-heading">
+            <FormattedMessage id="tx.spending.limit.long" defaultMessage="Transaction spending limit" />
+        </div>
+        <div className="dropdown-info">
+            <FormattedMessage id="tx.spending.limit.desc" defaultMessage="Transactions executed on your behalf will not be able to spend more tokens than you specify here" />
+        </div>
+        <div style={{ padding: 8 }}>
+            <Validation.components.ValidatedForm onSubmitSuccess={payload => { props.onEdit(payload.maxSum === '' ? null : payload.maxSum); context.closeDropdown(); }}>
+                <Validation.components.ValidatedFormGroup for="maxSum">
+                    <Validation.components.ValidatedDecimal
+                        className="form-control"
+                        name="maxSum"
+                        value={props.maxSum}
+                        validators={[Validation.validators.min('0.000000000000000001'), Validation.validators.max('1000')]}
+                    />
+                </Validation.components.ValidatedFormGroup>
+                <Row>
+                    <Col xs={6} style={{ paddingRight: 5 }}>
+                        <CloseDropdownButton onClick={() => props.onEdit(null)} className="btn btn-block btn-default">
+                            <FormattedMessage id="clear" defaultMessage="Clear" />
+                        </CloseDropdownButton>
+                    </Col>
+                    <Col xs={6} style={{ paddingLeft: 5 }}>
+                        <Validation.components.ValidatedSubmit style={{ marginTop: 8 }} block bsStyle="primary">
+                            <FormattedMessage id="confirm" defaultMessage="Confirm" />
+                        </Validation.components.ValidatedSubmit>
+                    </Col>
+                </Row>
+            </Validation.components.ValidatedForm>
+        </div>
+    </div>
+);
+
+TxMenuContent.contextTypes = {
+    closeDropdown: propTypes.func.isRequired
+};
+
+const TxMenu: React.SFC<ITxMenuProps> = (props) => (
     <DropdownToolButton
         icon="icon-lock"
         right
         width={250}
         content={(
-            <div style={{ overflow: 'hidden' }}>
-                <div className="dropdown-heading">
-                    <FormattedMessage id="tx.spending.limit.long" defaultMessage="Transaction spending limit" />
-                </div>
-                <div className="dropdown-info">
-                    <FormattedMessage id="tx.spending.limit.desc" defaultMessage="Transactions executed on your behalf will not be able to spend more tokens than you specify here" />
-                </div>
-                <div style={{ padding: 8 }}>
-                    <Validation.components.ValidatedForm onSubmitSuccess={payload => props.onEdit(payload.maxSum)}>
-                        <Validation.components.ValidatedFormGroup for="maxSum">
-                            <Validation.components.ValidatedControl
-                                className="form-control"
-                                name="maxSum"
-                                type="number"
-                                defaultValue={props.maxSum}
-                                step="any"
-                                validators={[Validation.validators.required, Validation.validators.min(0)]}
-                            />
-                        </Validation.components.ValidatedFormGroup>
-                        <Row>
-                            <Col xs={6} style={{ paddingRight: 5 }}>
-                                <Button onClick={() => props.onEdit(null)} className="btn btn-block btn-default">
-                                    <FormattedMessage id="clear" defaultMessage="Clear" />
-                                </Button>
-                            </Col>
-                            <Col xs={6} style={{ paddingLeft: 5 }}>
-                                <Validation.components.ValidatedSubmit style={{ marginTop: 8 }} block bsStyle="primary">
-                                    <FormattedMessage id="confirm" defaultMessage="Confirm" />
-                                </Validation.components.ValidatedSubmit>
-                            </Col>
-                        </Row>
-                    </Validation.components.ValidatedForm>
-                </div>
-            </div>
+            <TxMenuContent {...props}/>
         )}
     >
         <span className="icon text-bold mr">

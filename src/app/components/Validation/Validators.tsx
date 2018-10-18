@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import Big from 'big.js';
+
 export class Validator {
     public name: string;
     public params?: any;
@@ -69,7 +71,22 @@ export const min: IValidatorGenerator = (minValue: number | string) => {
             }
 
             // Do not affect empty strings. 'required' must do this job
-            return value.length === 0 || parseInt(minValue.toString(), 10) <= parseInt(value.toString(), 10);
+            return value.length === 0 || Big(minValue).lte(Big(value));
+
+        }
+    });
+};
+
+export const max: IValidatorGenerator = (maxValue: number | string) => {
+    return new Validator({
+        name: 'max',
+        validate: (value) => {
+            if ('string' !== typeof value) {
+                throw new Error(`Unrecognized value type "${typeof value}"`);
+            }
+
+            // Do not affect empty strings. 'required' must do this job
+            return value.length === 0 || Big(maxValue).gte(Big(value));
         }
     });
 };

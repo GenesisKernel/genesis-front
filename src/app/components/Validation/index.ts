@@ -32,6 +32,7 @@ import ValidatedForm from './ValidatedForm';
 import ValidatedFormGroup from './ValidatedFormGroup';
 import ValidatedRadioGroup from './ValidatedRadioGroup';
 import ValidatedSubmit from './ValidatedSubmit';
+import ValidatedDecimal from './ValidatedDecimal';
 import * as validators from './Validators';
 
 export default {
@@ -47,7 +48,8 @@ export default {
         ValidatedFormGroup,
         ValidatedRadioGroup,
         ValidatedSubmit,
-        ValidationMessage
+        ValidationMessage,
+        ValidatedDecimal
     },
     validators
 };
