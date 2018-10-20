@@ -84,7 +84,7 @@ const baseTheme: IThemeDefinition = {
     systemButtonActive: 'rgba(0,0,0,0.1)',
 
     securityWarningBackground: '#ff5555',
-    securityWarningColor: '#ffffff'
+    securityWarningForeground: '#ffffff'
 };
 
 export default baseTheme;

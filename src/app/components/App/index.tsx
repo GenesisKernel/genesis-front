@@ -22,6 +22,7 @@
 
 import React from 'react';
 import { Route } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 import platform from 'lib/platform';
 import classnames from 'classnames';
 import themed from 'components/Theme/themed';
@@ -39,6 +40,7 @@ interface IAppProps {
     isAuthenticated: boolean;
     isLoaded: boolean;
     isCollapsed: boolean;
+    securityWarningClosed: boolean;
     switchWindow: (wnd: string) => void;
 }
 
@@ -71,7 +73,14 @@ class App extends React.Component<IAppProps> {
                 <InitHook />
                 <ModalProvider />
                 <NotificationsProvider />
-                <SecurityWarning />
+                {platform.select({
+                    web: !this.props.securityWarningClosed && (
+                        <SecurityWarning>
+                            <FormattedMessage id="general.security.warning" defaultMessage="Please use desktop version or mobile application for better security" />
+                        </SecurityWarning>
+                    )
+                })}
+
                 <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
                     {!this.props.isLoaded && (
                         <Route path="/" component={Splash} />

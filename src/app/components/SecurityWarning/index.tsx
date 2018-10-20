@@ -22,32 +22,24 @@
 
 import React from 'react';
 import themed from 'components/Theme/themed';
-import platform from 'lib/platform';
-import { FormattedMessage } from 'react-intl';
 
 export interface ISecurityWarningProps {
     className?: string;
-    closed?: boolean;
     close: () => void;
 }
 
-const SecurityWarning = platform.select<React.SFC<ISecurityWarningProps>>({
-    web: props => {
-        return props.closed ? null : (
-            <div className={props.className}>
-                <div>
-                    <FormattedMessage id="general.security.warning" defaultMessage="Please use desktop version or mobile application for better security." />
-                    <a href="#" onClick={() => props.close()}><em className="icon icon-close" /></a>
-                </div>
-            </div>
-        );
-    },
-    desktop: () => null
-});
+const SecurityWarning: React.SFC<ISecurityWarningProps> = props => (
+    <div className={props.className}>
+        <div>
+            {props.children}
+            <a href="#" onClick={() => props.close()}><em className="icon icon-close" /></a>
+        </div>
+    </div>
+);
 
 export default themed(SecurityWarning)`    
     background: ${props => props.theme.securityWarningBackground};
-    color: ${props => props.theme.securityWarningColor};
+    color: ${props => props.theme.securityWarningForeground};
     position: fixed;
     top: 5px;
     left: 50%;
@@ -65,7 +57,7 @@ export default themed(SecurityWarning)`
         top: 50%;
         line-height: 20px;
         margin-top: -10px;
-        color: ${props => props.theme.securityWarningColor};
+        color: ${props => props.theme.securityWarningForeground};
         text-decoration: none;
     }
 `;
