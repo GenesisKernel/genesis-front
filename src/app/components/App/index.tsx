@@ -33,6 +33,7 @@ import Splash from 'components/Splash';
 import InitHook from 'containers/App/InitHook';
 import ModalProvider from 'containers/Modal/ModalProvider';
 import NotificationsProvider from 'containers/Notifications/NotificationsProvider';
+import SecurityWarning from 'containers/SecurityWarning';
 
 interface IAppProps {
     isAuthenticated: boolean;
@@ -70,6 +71,7 @@ class App extends React.Component<IAppProps> {
                 <InitHook />
                 <ModalProvider />
                 <NotificationsProvider />
+                <SecurityWarning />
                 <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
                     {!this.props.isLoaded && (
                         <Route path="/" component={Splash} />

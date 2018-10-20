@@ -118,6 +118,7 @@
     "general.service.retry": "Retry now",
     "general.title": "Genesis",
     "general.title.format": "{title} | Genesis",
+    "general.security.warning": "Please use desktop version or mobile application for better security",
     "history.newer": "Newer",
     "history.older": "Older",
     "install.centrifugo.host": "Host",
