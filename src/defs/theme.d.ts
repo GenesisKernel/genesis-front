@@ -80,5 +80,8 @@ declare module 'genesis/theme' {
 
         systemButtonSecondary: string;
         systemButtonActive: string;
+
+        securityWarningBackground: string;
+        securityWarningForeground: string;
     }
 }

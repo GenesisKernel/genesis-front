@@ -118,6 +118,7 @@
     "general.service.retry": "Повторить попытку",
     "general.title": "Genesis",
     "general.title.format": "{title} | Genesis",
+    "general.security.warning": "Для большей безопасности используйте desktop или мобильное приложение",
     "history.newer": "Новее",
     "history.older": "Старше",
     "install.centrifugo.host": "Адрес",

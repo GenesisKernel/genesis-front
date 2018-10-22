@@ -81,7 +81,10 @@ const baseTheme: IThemeDefinition = {
     dropdownMenuSecondary: '#999',
 
     systemButtonSecondary: '#ffa500',
-    systemButtonActive: 'rgba(0,0,0,0.1)'
+    systemButtonActive: 'rgba(0,0,0,0.1)',
+
+    securityWarningBackground: '#ff5555',
+    securityWarningForeground: '#ffffff'
 };
 
 export default baseTheme;

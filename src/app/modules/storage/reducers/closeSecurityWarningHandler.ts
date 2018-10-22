@@ -20,14 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import actionCreatorFactory from 'typescript-fsa';
-import { IWallet, ISaveEncKeyCall } from 'genesis/auth';
+import { State } from '../reducer';
+import { closeSecurityWarning } from '../actions';
+import { Reducer } from 'modules';
 
-const actionCreator = actionCreatorFactory('storage');
-export const saveLocale = actionCreator<string>('SAVE_LOCALE');
-export const saveWallet = actionCreator<IWallet>('SAVE_WALLET');
-export const removeWallet = actionCreator<IWallet>('REMOVE_WALLET');
-export const saveNavigationSize = actionCreator<number>('SAVE_NAVIGATION_SIZE');
-export const mergeFullNodes = actionCreator<string[]>('MERGE_FULL_NODES');
-export const saveEncKey = actionCreator<ISaveEncKeyCall>('SAVE_ENC_KEY');
-export const closeSecurityWarning = actionCreator<string>('CLOSE_SECURITY_WARNING');
+const closeSecurityWarningHandler: Reducer<typeof closeSecurityWarning, State> = (state, payload) => ({
+    ...state,
+    securityWarningClosed: true
+});
+
+export default closeSecurityWarningHandler;
