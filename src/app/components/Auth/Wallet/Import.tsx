@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 
 import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';

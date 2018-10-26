@@ -20,13 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { importSeed } from '../actions';
-import { Reducer } from 'modules';
+import { Epic } from 'modules';
+import { importSeedConfirmation } from '../actions';
+import { Observable } from 'rxjs/Observable';
+import { readTextFile } from 'lib/fs';
 
-const importSeedDoneHandler: Reducer<typeof importSeed.done, State> = (state, payload) => ({
-    ...state,
-    seed: payload.result
-});
+const importSeedConfirmationEpic: Epic = (action$, store) => action$.ofAction(importSeedConfirmation.started)
+    .switchMap(action =>
+        Observable.from(readTextFile(action.payload))
+            .map(payload =>
+                importSeedConfirmation.done({
+                    params: null,
+                    result: payload
+                })
 
-export default importSeedDoneHandler;
+            ).catch(e =>
+                Observable.of(importSeedConfirmation.failed({
+                    params: null,
+                    error: null
+                }))
+            )
+    );
+
+export default importSeedConfirmationEpic;

@@ -35,6 +35,7 @@ import logoutEmptySessionEpic from './epics/logoutEmptySessionEpic';
 import inviteEcosystemEpic from './epics/inviteEcosystemEpic';
 import changePasswordEpic from './epics/changePasswordEpic';
 import changePasswordDoneEpic from './epics/changePasswordDoneEpic';
+import importSeedConfirmationEpic from './epics/importSeedConfirmationEpic';
 
 export default combineEpics(
     authorizeEpic,
@@ -42,6 +43,7 @@ export default combineEpics(
     generateSeedEpic,
     importWalletEpic,
     importSeedEpic,
+    importSeedConfirmationEpic,
     loginEpic,
     authErrorEpic,
     logoutEmptySessionEpic,

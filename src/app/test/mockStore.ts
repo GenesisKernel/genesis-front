@@ -26,7 +26,6 @@ import { IRootState } from 'modules';
 
 const state: IRootState = {
     auth: {
-        loadedSeed: '',
         isAuthenticated: true,
         isLoggingIn: false,
         isCreatingWallet: false,
