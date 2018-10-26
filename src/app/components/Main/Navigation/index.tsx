@@ -47,7 +47,7 @@ const StyledNavigation = themed.aside`
     }
 
     position: absolute;
-    top: 0;
+    top: ${platform.select({ win32: '1px' }) || 0};
     left: ${platform.select({ win32: '1px' }) || 0};
     bottom: ${platform.select({ win32: '1px' }) || 0};
     z-index: 150;
