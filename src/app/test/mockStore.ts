@@ -39,6 +39,7 @@ const state: IRootState = {
             refreshToken: '',
             apiHost: 'http://127.0.0.1:7079'
         },
+        sessions: [],
         defaultWallet: '',
         wallet: {
             id: '4158839290248807330',

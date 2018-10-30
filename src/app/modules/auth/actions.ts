@@ -23,9 +23,11 @@
 import actionCreatorFactory from 'typescript-fsa';
 import { IWallet, ILoginCall, IRole, ISession } from 'genesis/auth';
 import { ICreateWalletCall, IImportWalletCall } from 'genesis/auth';
+import { ITransactionCall } from 'genesis/tx';
 
 const actionCreator = actionCreatorFactory('auth');
 export const login = actionCreator.async<ILoginCall, { wallet: IWallet, roles: IRole[], privateKey: string, publicKey: string, session: ISession }, string>('LOGIN');
+export const loginNodes = actionCreator.async<ITransactionCall, ISession[], void>('LOGIN_NODES');
 export const logout = actionCreator.async('LOGOUT');
 export const inviteEcosystem = actionCreator<{ ecosystem: string, redirectPage?: string }>('INVITE_ECOSYSTEM');
 export const generateSeed = actionCreator.async<void, string>('GENERATE_SEED');

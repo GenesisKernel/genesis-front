@@ -23,7 +23,7 @@
 import queryString from 'query-string';
 import urlJoin from 'url-join';
 import urlTemplate from 'url-template';
-import { IUIDResponse, ILoginRequest, ILoginResponse, IRefreshResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, IContentJsonRequest, IContentJsonResponse, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, ISectionsRequest, ISectionsResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IRefreshRequest, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse, ITableRequest, TConfigRequest, ISystemParamsRequest, ISystemParamsResponse, IContentHashRequest, IContentHashResponse, TTxCallRequest, TTxCallResponse, TTxStatusRequest, TTxStatusResponse, ITxStatus } from 'genesis/api';
+import { IUIDResponse, ILoginRequest, ILoginResponse, IRefreshResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, IContentJsonRequest, IContentJsonResponse, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, ISectionsRequest, ISectionsResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IRefreshRequest, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse, ITableRequest, TConfigRequest, ISystemParamsRequest, ISystemParamsResponse, IContentHashRequest, IContentHashResponse, TTxCallRequest, TTxCallResponse, TTxStatusRequest, TTxStatusResponse, ITxStatus, ITxInfoMultiple, TTxInfoMultipleRequest, TTxInfoMultipleResponse } from 'genesis/api';
 
 export type TRequestMethod =
     'get' |
@@ -304,6 +304,18 @@ class GenesisAPI {
     public txStatus = <T>(params: TTxStatusRequest<T>) => this._txStatus({
         hashes: Object.keys(params).map(l => params[l])
     }) as Promise<TTxStatusResponse<T>>
+
+    private _txInfoMultiple = this.setSecuredEndpoint<{ hashes: string[] }, { [hash: string]: ITxInfoMultiple; }>('get', 'txinfomultiple', {
+        requestTransformer: request => ({
+            data: JSON.stringify({
+                hashes: request.hashes
+            })
+        }),
+        responseTransformer: response => response.results
+    });
+    public txInfoMultiple = <T>(params: TTxInfoMultipleRequest<T>) => this._txInfoMultiple({
+        hashes: Object.keys(params).map(l => params[l])
+    }) as Promise<TTxInfoMultipleResponse<T>>
 }
 
 export default GenesisAPI;

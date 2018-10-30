@@ -20,10 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import actionCreatorFactory from 'typescript-fsa';
-import { ITransactionCall, ITxError, ITransaction } from 'genesis/tx';
+import { State } from '../reducer';
+import { loginNodes } from '../actions';
+import { Reducer } from 'modules';
 
-const actionCreator = actionCreatorFactory('tx');
-export const txCall = actionCreator<ITransactionCall>('TX_CALL');
-export const txAuthorize = actionCreator.async<{}, string, void>('TX_AUTHORIZE');
-export const txExec = actionCreator.async<ITransactionCall, ITransaction[], ITxError>('TX_EXEC');
+const loginNodesDoneHandler: Reducer<typeof loginNodes.done, State> = (state, payload) => ({
+    ...state,
+    sessions: payload.result
+});
+
+export default loginNodesDoneHandler;

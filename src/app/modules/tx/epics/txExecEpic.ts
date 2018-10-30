@@ -29,14 +29,20 @@ import Contract, { IContractParam } from 'lib/tx/contract';
 import defaultSchema from 'lib/tx/schema/defaultSchema';
 import fileObservable from 'modules/io/util/fileObservable';
 import { enqueueNotification } from 'modules/notifications/actions';
+import { ISession } from 'genesis/auth';
 
 const TX_STATUS_INTERVAL = 3000;
+const TX_INFO_INTERVAL = 1000;
+const CONFIRM_FULLNODES_PERCENT = 50;
 
 export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(txExec.started)
     .flatMap(action => {
         const state = store.getState();
         const client = api(state.auth.session);
         const privateKey = state.auth.privateKey;
+        const fullNodes = (state.storage.fullNodes || []);
+        const confirmFullNodesCount = Math.ceil(fullNodes.length * CONFIRM_FULLNODES_PERCENT / 100.0);
+        const checkFullNodes: ISession[] = state.auth.sessions;
 
         return Observable.from(action.payload.contracts).flatMap(contract =>
             Observable.from(client.getContract({
@@ -160,7 +166,45 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                             return Observable.throw(error);
                     }
 
-                })));
+                }))).flatMap(jobList => {
+                    return Observable.from(checkFullNodes)
+                        .flatMap(node => {
+                            const nodeClient = api({ apiHost: node.apiHost, sessionToken: node.sessionToken });
+                            return Observable.from(
+                                nodeClient.txInfoMultiple(jobList.map(l => l.hash))
+                                    .then(info => ({ node, info }))
+                            );
+                        })
+                        .toArray()
+                        .flatMap(nodesInfo => {
+                            let pendingCount = jobList.length * checkFullNodes.length;
+                            nodesInfo.forEach(nodeInfo => {
+                                jobList.forEach(job => {
+                                    if (nodeInfo.info[job.hash] && nodeInfo.info[job.hash].confirm >= confirmFullNodesCount) {
+                                        pendingCount--;
+                                    }
+                                });
+                            });
+
+                            if (pendingCount > 0) {
+                                throw {
+                                    type: 'E_PENDING'
+                                };
+                            }
+                            else {
+                                return jobList;
+                            }
+                        })
+                        .retryWhen(errors => errors.flatMap(error => {
+                            switch (error.type) {
+                                case 'E_PENDING':
+                                    return Observable.of(error).delay(TX_INFO_INTERVAL);
+
+                                default:
+                                    return Observable.throw(error);
+                            }
+                        }));
+                });
 
             }, 1).toArray().flatMap(results => Observable.of<Action>(
                 txExec.done({
