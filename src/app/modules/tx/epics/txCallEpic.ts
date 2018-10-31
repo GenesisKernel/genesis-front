@@ -22,7 +22,7 @@
 
 import { Epic } from 'modules';
 import { Observable } from 'rxjs';
-import { txCall, txAuthorize, txExec } from '../actions';
+import { txCall, txExec, txAuthorize } from '../actions';
 import { isType } from 'typescript-fsa';
 import keyring from 'lib/keyring';
 

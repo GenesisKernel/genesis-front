@@ -332,4 +332,16 @@ declare module 'genesis/api' {
     type TTxStatusResponse<T> = {
         [K in keyof T]: ITxStatus;
     }
+
+    interface ITxInfoMultiple {
+        blockid: string;
+        confirm: number;
+    }
+
+    type TTxInfoMultipleRequest<T> =
+        Array<keyof T>;
+
+    type TTxInfoMultipleResponse<T> = {
+        [K in keyof T]: ITxInfoMultiple;
+    }
 }
