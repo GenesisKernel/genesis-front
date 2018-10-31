@@ -26,7 +26,6 @@ import { IWallet, IRole, ISession } from 'genesis/auth';
 import loginHandler from './reducers/loginHandler';
 import loginDoneHandler from './reducers/loginDoneHandler';
 import loginFailedHandler from './reducers/loginFailedHandler';
-import loginNodesDoneHandler from './reducers/loginNodesDoneHandler';
 import logoutDoneHandler from './reducers/logoutDoneHandler';
 import createWalletHandler from './reducers/createWalletHandler';
 import createWalletDoneHandler from './reducers/createWalletDoneHandler';
@@ -51,7 +50,6 @@ export type State = {
     readonly importWalletError: string;
     readonly id: string;
     readonly session: ISession;
-    readonly sessions: ISession[];
     readonly defaultWallet: string;
     readonly wallet: IWallet;
     readonly role: IRole;
@@ -69,7 +67,6 @@ export const initialState: State = {
     importWalletError: null,
     id: null,
     session: null,
-    sessions: [],
     defaultWallet: null,
     wallet: null,
     role: null,
@@ -81,7 +78,6 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.login.started, loginHandler)
     .case(actions.login.done, loginDoneHandler)
     .case(actions.login.failed, loginFailedHandler)
-    .case(actions.loginNodes.done, loginNodesDoneHandler)
     .case(actions.logout.done, logoutDoneHandler)
     .case(actions.createWallet.started, createWalletHandler)
     .case(actions.createWallet.done, createWalletDoneHandler)
