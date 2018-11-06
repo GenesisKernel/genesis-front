@@ -20,27 +20,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { IRootState } from 'modules';
-import { Epic } from 'redux-observable';
-import { Action } from 'redux';
-import { txExec } from '../actions';
-import { saveWallet } from 'modules/storage/actions';
+import { Epic } from 'modules';
+import { loadWallets } from '../actions';
 import { Observable } from 'rxjs';
+import { IKeyInfo } from 'genesis/api';
 
-const newEcosystemEpic: Epic<Action, IRootState> = (action$, store) => action$.ofAction(txExec.done)
-    .filter(l => !!l.payload.params.contracts.find(c => /^(@1)?NewEcosystem$/.test(c.name)))
-    .flatMap(action => Observable.from(action.payload.result).map(result => {
-        const ecosystem = result.status.result;
-        const wallet = store.getState().auth.wallet;
+const loadWalletsEpic: Epic = (action$, store, { api }) => action$.ofAction(loadWallets.started)
+    .flatMap(action => {
+        const state = store.getState();
+        const client = api({ apiHost: state.engine.nodeHost });
 
-        return saveWallet({
-            id: wallet.id,
-            encKey: wallet.encKey,
-            address: wallet.address,
-            username: null,
-            ecosystem,
-            ecosystemName: String(result.params.Name.value) || ecosystem
-        });
-    }));
+        return Observable.from(state.storage.wallets).flatMap(wallet =>
+            Observable.from(client.keyinfo({
+                id: wallet.id
+            }).catch(e => null as IKeyInfo[])).map(keys => ({
+                id: wallet.id,
+                address: wallet.address,
+                encKey: wallet.encKey,
+                publicKey: wallet.publicKey,
+                access: keys.map(key => ({
+                    ...key,
+                    roles: key.roles || []
+                }))
+            }))
 
-export default newEcosystemEpic;
+        ).toArray().map(wallets => loadWallets.done({
+            params: action.payload,
+            result: wallets
+
+        })).catch(e => Observable.of(loadWallets.failed({
+            params: action.payload,
+            error: e
+        })));
+    });
+
+export default loadWalletsEpic;

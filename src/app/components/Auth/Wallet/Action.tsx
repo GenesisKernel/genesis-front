@@ -42,9 +42,9 @@ const Action: React.SFC<IAction> = (props) => (
         <h4>
             {props.title}
         </h4>
-        <p>
+        <div>
             {props.description}
-        </p>
+        </div>
         <div className="text-right">
             <Button bsStyle="link" onClick={props.onClick}>
                 {props.action}
@@ -53,7 +53,7 @@ const Action: React.SFC<IAction> = (props) => (
     </Clearfix>
 );
 
-export default styled(Action) `
+export default styled(Action)`
     .action-icon {
         float: left;
         width: 100px;

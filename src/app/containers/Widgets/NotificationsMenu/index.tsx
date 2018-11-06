@@ -58,9 +58,9 @@ class NotificationsContainer extends React.Component<INotificationsMenuContainer
 
 const mapStateToProps = (state: IRootState) => {
     const notifications = state.auth.wallet ? state.socket.notifications.filter(l =>
-        ((state.auth.role && state.auth.role.id === l.role) || l.role === 0) &&  // role = 0 => single notification
-        l.id === state.auth.wallet.id &&
-        l.ecosystem === state.auth.wallet.ecosystem
+        ((state.auth.wallet.role && Number(state.auth.wallet.role.id) === l.role) || l.role === 0) &&
+        l.id === state.auth.wallet.wallet.id &&
+        l.ecosystem === state.auth.wallet.access.ecosystem
     ).map(l => l.count) : [];
     const count = notifications.length ? notifications.reduce((a, b) => a + b) : 0;
 

@@ -25,38 +25,15 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { modalShow } from 'modules/modal/actions';
 import { FormattedMessage } from 'react-intl';
-import { IWallet } from 'genesis/auth';
 
 import Backup from 'components/Main/Backup';
 
-export interface IBackupContainerProps {
-}
-
-interface IBackupContainerState {
-    wallet: IWallet;
-    ecosystems: string[];
-    privateKey: string;
-}
-
-interface IBackupContainerDispatch {
-    onError: () => void;
-    onCopy: () => void;
-}
-
-const BackupContainer: React.SFC<IBackupContainerProps & IBackupContainerState & IBackupContainerDispatch> = (props) => (
-    <Backup {...props} />
-);
-
 const mapStateToProps = (state: IRootState) => ({
     wallet: state.auth.wallet,
-    ecosystems: state.auth.wallet && state.storage.wallets
-        .filter(l => l.id === state.auth.wallet.id && '1' !== l.ecosystem)
-        .map(l => l.ecosystem)
-        .sort((a, b) => parseInt(a, 10) - parseInt(b, 10)),
     privateKey: state.auth.privateKey
 });
 
-const mapDispatchToProps = {
+export default connect(mapStateToProps, {
     onError: () => modalShow({
         id: 'E_INVALID_PASSWORD',
         type: 'AUTH_ERROR',
@@ -71,6 +48,4 @@ const mapDispatchToProps = {
             value: (<FormattedMessage id="alert.clipboard.copied" defaultMessage="alert.clipboard.copied" />)
         }
     })
-};
-
-export default connect<IBackupContainerState, IBackupContainerDispatch, IBackupContainerProps>(mapStateToProps, mapDispatchToProps)(BackupContainer);
+})(Backup);

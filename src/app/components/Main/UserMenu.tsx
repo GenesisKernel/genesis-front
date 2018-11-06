@@ -23,12 +23,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
-import { IWallet } from 'genesis/auth';
+import { IWallet, IAccountContext } from 'genesis/auth';
 
 import { CloseDropdownButton } from 'components/DropdownButton';
-import Avatar from 'containers/Avatar';
 import PageLink from 'containers/Routing/PageLink';
 import SystemButton from './SystemButton';
+import Avatar from 'containers/Avatar';
 
 const StyledUserMenu = styled.div`
     -webkit-app-region: no-drag;
@@ -78,9 +78,9 @@ const StyledUserMenu = styled.div`
 `;
 
 export interface IUserMenuProps {
-    wallet: IWallet;
+    wallet: IAccountContext;
     ecosystemWallets: IWallet[];
-    switchWallet: (wallet: IWallet) => void;
+    switchWallet: (wallet: IAccountContext) => void;
     logout: () => void;
     changePassword: () => void;
 }
@@ -123,7 +123,7 @@ class UserMenu extends React.Component<IUserMenuProps> {
                                 </CloseDropdownButton>
                             </li>
                         </ul>
-                        <div className="dropdown-heading">
+                        {/*<div className="dropdown-heading">
                             <FormattedMessage id="general.ecosystems" defaultMessage="Ecosystems" />
                         </div>
                         <ul className="dropdown-group">
@@ -140,34 +140,35 @@ class UserMenu extends React.Component<IUserMenuProps> {
                                         }
                                     </CloseDropdownButton>
                                 </li>
-                            ))}
-                            {/*_.map(this.props.wallet.ecosystems, ((value, key) => (
+                                    ))}
+                            {_.map(this.props.wallet.ecosystems, ((value, key) => (
                                 <li key={key}>
                                     <CloseDropdownButton onClick={key !== this.props.ecosystem && this.onSwitchEcosystem.bind(this, key)}>
                                         {value.name || key}
                                     </CloseDropdownButton>
                                 </li>
-                            )))*/}
+                            )))}
                         </ul>
+                        */}
                     </div>
                 }
             >
                 <StyledUserMenu>
                     <div className="user-info">
                         <div className="user-title">
-                            {this.props.wallet.username || this.props.wallet.address}
+                            {this.props.wallet.wallet.address}
                         </div>
                         <div className="user-subtitle">
-                            {this.props.wallet.ecosystemName || (
-                                <FormattedMessage id="general.wallet.ecosystemNo" defaultMessage="Ecosystem #{ecosystem}" values={{ ecosystem: this.props.wallet.ecosystem }} />
+                            {this.props.wallet.access.name || (
+                                <FormattedMessage id="general.wallet.ecosystemNo" defaultMessage="Ecosystem #{ecosystem}" values={{ ecosystem: this.props.wallet.access.ecosystem }} />
                             )}
                         </div>
                     </div>
                     <Avatar
                         className="user-avatar"
                         size={32}
-                        keyID={this.props.wallet.id}
-                        ecosystem={this.props.wallet.ecosystem}
+                        keyID={this.props.wallet.wallet.id}
+                        ecosystem={this.props.wallet.access.ecosystem}
                     />
                 </StyledUserMenu>
             </SystemButton>

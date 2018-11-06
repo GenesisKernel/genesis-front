@@ -20,26 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { IWallet } from 'genesis/auth';
-
-import PasswordPrompt from 'components/Auth/Login/PasswordPrompt';
+import { ILoginCall } from 'genesis/auth';
 import { logout, login } from 'modules/auth/actions';
 
-export interface IPasswordPromptContainerProps {
-
-}
-
-interface IPasswordPromptContainerState {
-    wallet: IWallet;
-}
-
-interface IPasswordPromptContainerDispatch {
-    onSubmit: (params: { wallet: IWallet, password: string }) => void;
-    onCancel: () => void;
-}
+import PasswordPrompt from 'components/Auth/Login/PasswordPrompt';
 
 const mapStateToProps = (state: IRootState) => ({
     wallet: state.auth.wallet
@@ -47,11 +33,7 @@ const mapStateToProps = (state: IRootState) => ({
 
 const mapDispatchToProps = {
     onCancel: () => logout.started(null),
-    onSubmit: (params: { wallet: IWallet, password: string }) => login.started(params)
+    onSubmit: (params: ILoginCall) => login.started(params)
 };
 
-const PasswordPromptContainer: React.SFC<IPasswordPromptContainerProps & IPasswordPromptContainerState & IPasswordPromptContainerDispatch> = props => (
-    <PasswordPrompt {...props} />
-);
-
-export default connect<IPasswordPromptContainerState, IPasswordPromptContainerDispatch, IPasswordPromptContainerProps>(mapStateToProps, mapDispatchToProps)(PasswordPromptContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(PasswordPrompt);

@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import Protypo from 'containers/Widgets/Protypo';
 import { FormattedMessage } from 'react-intl';
 import { TProtypoElement } from 'genesis/protypo';

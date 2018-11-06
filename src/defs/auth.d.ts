@@ -21,23 +21,18 @@
 // SOFTWARE.
 
 declare module 'genesis/auth' {
+    import { IAccount, IKeyInfo, IRoleInfo } from 'genesis/api';
+
     interface IWallet {
         id: string;
         encKey: string;
+        publicKey: string;
         address: string;
-        ecosystem: string;
-        ecosystemName: string;
-        username: string;
     }
 
     interface ISaveEncKeyCall {
         id: string;
         encKey: string;
-    }
-
-    interface IRole {
-        id: number;
-        name: string;
     }
 
     interface ISession {
@@ -46,8 +41,13 @@ declare module 'genesis/auth' {
         refreshToken: string;
     }
 
+    interface IAccountContext {
+        wallet: IAccount;
+        access: IKeyInfo;
+        role?: IRoleInfo;
+    }
+
     interface ILoginCall {
-        wallet: IWallet;
         password: string;
     }
 

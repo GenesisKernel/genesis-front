@@ -24,6 +24,7 @@ declare module 'genesis' {
     interface IWebSettings {
         fullNodes?: string[];
         socketUrl?: string;
+        activationEmail?: string;
         disableFullNodesSync?: boolean;
     }
 }

@@ -32,5 +32,6 @@ declare module 'genesis/gui' {
         readonly offsetY?: number;
         readonly socketUrl?: string;
         readonly disableFullNodesSync?: boolean;
+        readonly activationEmail?: string;
     }
 }

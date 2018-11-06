@@ -21,23 +21,25 @@
 // SOFTWARE.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IWallet, ILoginCall, IRole, ISession } from 'genesis/auth';
+import { IWallet, ILoginCall, ISession, IAccountContext } from 'genesis/auth';
 import { ICreateWalletCall, IImportWalletCall } from 'genesis/auth';
+import { IAccount } from 'genesis/api';
 
 const actionCreator = actionCreatorFactory('auth');
-export const login = actionCreator.async<ILoginCall, { wallet: IWallet, roles: IRole[], privateKey: string, publicKey: string, session: ISession }, string>('LOGIN');
+export const login = actionCreator.async<ILoginCall, { privateKey: string, publicKey: string, session: ISession }, string>('LOGIN');
 export const logout = actionCreator.async('LOGOUT');
 export const inviteEcosystem = actionCreator<{ ecosystem: string, redirectPage?: string }>('INVITE_ECOSYSTEM');
 export const generateSeed = actionCreator.async<void, string>('GENERATE_SEED');
-export const importSeed = actionCreator.async<Blob, string, undefined>('IMPORT_SEED');
-export const importSeedConfirmation = actionCreator.async<Blob, string, undefined>('IMPORT_SEED_CONFIRMATION');
+export const importSeed = actionCreator.async<Blob, string>('IMPORT_SEED');
+export const importSeedConfirmation = actionCreator.async<Blob, string>('IMPORT_SEED_CONFIRMATION');
 export const changeSeed = actionCreator<string>('CHANGE_SEED');
 export const changeSeedConfirmation = actionCreator<string>('CHANGE_SEED_CONFIRMATION');
 export const createWallet = actionCreator.async<ICreateWalletCall, IWallet, string>('CREATE_WALLET');
-export const importWallet = actionCreator.async<IImportWalletCall, IWallet[], string>('IMPORT_WALLET');
+export const importWallet = actionCreator.async<IImportWalletCall, IWallet, string>('IMPORT_WALLET');
 export const removeWallet = actionCreator<IWallet>('REMOVE_WALLET');
-export const selectWallet = actionCreator<IWallet>('SELECT_WALLET');
-export const selectRole = actionCreator.async<number, { sessionToken: string, refreshToken: string }>('SELECT_ROLE');
+export const selectWallet = actionCreator<IAccountContext>('SELECT_WALLET');
 export const authorize = actionCreator<string>('AUTHORIZE');
 export const deauthorize = actionCreator('DEAUTHORIZE');
 export const changePassword = actionCreator.async<void, { oldPassword: string, newPassword: string }, string>('CHANGE_PASSWORD');
+export const loadWallets = actionCreator.async<void, IAccount[]>('LOAD_WALLETS');
+export const loadWallet = actionCreator<IAccount>('LOAD_WALLET');

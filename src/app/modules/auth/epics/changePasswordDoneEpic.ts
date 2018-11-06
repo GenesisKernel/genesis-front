@@ -33,7 +33,7 @@ const changePasswordDoneEpic: Epic = (action$, store, { api }) => action$.ofActi
         const auth = store.getState().auth;
         const wallet = auth.wallet;
         const wallets = store.getState().storage.wallets;
-        const privateKey = keyring.decryptAES(wallet.encKey, action.payload.result.oldPassword);
+        const privateKey = keyring.decryptAES(wallet.wallet.encKey, action.payload.result.oldPassword);
 
         if (!keyring.validatePrivateKey(privateKey)) {
             return Observable.concat(
@@ -55,7 +55,7 @@ const changePasswordDoneEpic: Epic = (action$, store, { api }) => action$.ofActi
 
         return Observable.concat(
 
-            Observable.from(wallets.filter(l => l.id === wallet.id))
+            Observable.from(wallets.filter(l => l.id === wallet.wallet.id))
                 .map(w => saveWallet({
                     ...w,
                     encKey

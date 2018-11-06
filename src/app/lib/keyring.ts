@@ -171,23 +171,9 @@ const WORD_LIST = ['abandon', 'ability', 'able', 'about', 'above', 'absent', 'ab
     'wolf', 'woman', 'wonder', 'wood', 'wool', 'word', 'work', 'world', 'worry', 'worth', 'wrap', 'wreck', 'wrestle', 'wrist', 'write',
     'wrong', 'yard', 'year', 'yellow', 'you', 'young', 'youth', 'zebra', 'zero', 'zone', 'zoo'];
 
-export interface IKeyBackup {
-    privateKey: string;
-    ecosystems: string[];
-}
-
 const randomEngine = Random();
 const signAlg = 'SHA256withECDSA';
 const curveName = 'secp256r1';
-
-export interface IWalletData {
-    encKey: string;
-    encrypt: string;
-    public: string;
-    address: string;
-    stateID: number;
-    citizenID: number;
-}
 
 const keyring = {
     MAX_KEY_SIZE: 1024 * 10, // 10 KiB
@@ -293,37 +279,6 @@ const keyring = {
         signature.init({ d: privateKey, curve: curveName });
         signature.updateString(data);
         return signature.sign();
-    },
-
-    backup: (key: IKeyBackup) => {
-        return `${key.privateKey};${key.ecosystems.join(';')}`;
-    },
-
-    restore: (payload: string): IKeyBackup => {
-        const tokens = payload.split(';');
-        if (tokens.length) {
-            const privateKey = tokens[0].trim();
-            const ecosystems: string[] = [];
-
-            // Ecosystems are stored as string, but we still need to
-            // check if stored values are correct ones
-            for (let i = 1; i < tokens.length; i++) {
-                const ecosystemToken = parseInt(tokens[i], 10);
-
-                // Check if value is not NaN
-                if (ecosystemToken === ecosystemToken) {
-                    ecosystems.push(ecosystemToken.toString());
-                }
-            }
-
-            return {
-                privateKey,
-                ecosystems
-            };
-        }
-        else {
-            return null;
-        }
     },
 
     walletIdToAddr(id: string | number) {

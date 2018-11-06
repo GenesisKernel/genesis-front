@@ -64,9 +64,9 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
             }).flatMap(apiHost => Observable.from(
                 api({ apiHost }).contentHash({
                     name: action.payload.name,
-                    ecosystem: state.auth.wallet.ecosystem,
-                    walletID: state.auth.wallet.id,
-                    role: state.auth.role ? state.auth.role.id : null,
+                    ecosystem: state.auth.wallet.access.ecosystem,
+                    walletID: state.auth.wallet.wallet.id,
+                    role: state.auth.wallet.role ? Number(state.auth.wallet.role.id) : null,
                     locale: state.storage.locale,
                     params: action.payload.params
 

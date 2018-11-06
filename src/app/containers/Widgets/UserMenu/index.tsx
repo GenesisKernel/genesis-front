@@ -25,7 +25,7 @@ import { Dispatch, Action } from 'redux';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
 import { logout, selectWallet, changePassword } from 'modules/auth/actions';
-import { IWallet } from 'genesis/auth';
+import { IWallet, IAccountContext } from 'genesis/auth';
 
 import UserMenu from 'components/Main//UserMenu';
 
@@ -34,7 +34,7 @@ export interface IUserMenuContainerProps {
 }
 
 interface IUserMenuContainerState {
-    wallet: IWallet;
+    wallet: IAccountContext;
     ecosystemWallets: IWallet[];
 }
 
@@ -56,18 +56,18 @@ const UserMenuContainer: React.SFC<IUserMenuContainerProps & IUserMenuContainerS
 
 const mapStateToProps = (state: IRootState) => ({
     wallet: state.auth.wallet,
-    ecosystemWallets: state.auth.wallet ?
+    ecosystemWallets: [] as any[], /*state.auth.wallet ?
         state.storage.wallets.filter(l =>
             l.id === state.auth.wallet.id
-        ).sort((a, b) => parseInt(a.ecosystem, 10) - parseInt(b.ecosystem, 10)) : [],
-    ecosystem: state.auth.wallet && state.auth.wallet.ecosystem
+        ).sort((a, b) => parseInt(a.ecosystem, 10) - parseInt(b.ecosystem, 10)) : [],*/
+    ecosystem: state.auth.wallet && (state.auth.wallet.access.name || state.auth.wallet.access.ecosystem)
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
     logout: () => {
         dispatch(logout.started(null));
     },
-    selectWallet: (wallet: IWallet) => {
+    selectWallet: (wallet: IAccountContext) => {
         dispatch(logout.started(null));
         dispatch(selectWallet(wallet));
     },

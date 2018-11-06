@@ -23,7 +23,6 @@
 import React from 'react';
 import Backup from 'containers/Main/Backup';
 import Editor from 'containers/Main/Editor';
-import Invite from 'containers/Main/Legacy/Invite';
 
 export interface ILegacyPage {
     menu: string;
@@ -33,8 +32,7 @@ export interface ILegacyPage {
 
 const LEGACY_PAGES: { [page: string]: ILegacyPage } = {
     'backup': { section: null, menu: null, render: () => <Backup /> },
-    'editor': { section: 'editor', menu: null, render: (props: { open?: string, create?: string, name?: string, vde?: string }) => <Editor {...props} /> },
-    '@invite': { section: null, menu: null, render: (props: { ecosystem: string, page?: string }) => <Invite {...props} /> }
+    'editor': { section: 'editor', menu: null, render: (props: { open?: string, create?: string, name?: string, vde?: string }) => <Editor {...props} /> }
 };
 
 export {

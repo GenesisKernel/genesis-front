@@ -55,6 +55,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                 fullNodes: (platform.args.fullNode && platform.args.fullNode.length) ? platform.args.fullNode :
                     (result.fullNodes && Array.isArray(result.fullNodes) && result.fullNodes.length) ? result.fullNodes :
                         fullNodesFallback,
+                activationEmail: platform.args.activationEmail || result.activationEmail,
                 socketUrl: platform.args.socketUrl || ((result.socketUrl && 'string' === typeof result.socketUrl) ? result.socketUrl : null),
                 disableFullNodesSync: 'boolean' === typeof platform.args.disableFullNodesSync ? platform.args.disableFullNodesSync :
                     ('boolean' === typeof result.disableFullNodesSync) ? result.disableFullNodesSync : null
@@ -82,7 +83,8 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                         params: action.payload,
                         result: {
                             fullNodes: fullNodes,
-                            nodeHost: node
+                            nodeHost: node,
+                            activationEmail: config.activationEmail
                         }
                     })),
                     Observable.of(setLocale.started(state.storage.locale)),
@@ -91,7 +93,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                             const guestKey = action.payload.defaultKey || defaultKey;
 
                             return client.authorize(uid.token).login({
-                                publicKey: keyring.generatePublicKey(guestKey),
+                                publicKey: keyring.generatePublicKey(guestKey, true),
                                 signature: keyring.sign(uid.uid, guestKey)
 
                             }).then(loginResult => {
@@ -119,10 +121,8 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                                 Observable.of(saveWallet({
                                     id: result.login.key_id,
                                     encKey: keyring.encryptAES(action.payload.defaultKey, defaultPassword),
-                                    address: result.login.address,
-                                    ecosystem: result.login.ecosystem_id,
-                                    ecosystemName: null,
-                                    username: null
+                                    publicKey: keyring.generatePublicKey(action.payload.defaultKey),
+                                    address: result.login.address
                                 })),
                                 Observable.empty<never>()
                             ),
