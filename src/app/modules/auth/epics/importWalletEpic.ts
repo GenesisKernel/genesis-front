@@ -38,7 +38,7 @@ const importWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(imp
         }
 
         const privateKey = action.payload.backup;
-        const publicKey = keyring.generatePublicKey(action.payload.backup);
+        const publicKey = keyring.generatePublicKey(action.payload.backup, true);
         const encKey = keyring.encryptAES(privateKey, action.payload.password);
         const keyID = address(publicKey);
 

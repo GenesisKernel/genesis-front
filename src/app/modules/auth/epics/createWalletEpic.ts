@@ -31,7 +31,7 @@ import { address, addressString } from 'lib/crypto';
 const createWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(createWallet.started)
     .flatMap(action => {
         const keys = keyring.generateKeyPair(action.payload.seed);
-        const publicKey = keyring.generatePublicKey(keys.private);
+        const publicKey = keyring.generatePublicKey(keys.private, true);
         const encKey = keyring.encryptAES(keys.private, action.payload.password);
         const keyID = address(keys.public);
 
