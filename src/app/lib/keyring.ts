@@ -233,7 +233,7 @@ const keyring = {
         };
     },
 
-    generatePublicKey(privateKey: string, trimPadding?: boolean) {
+    generatePublicKey(privateKey: string, trimCompressionFlag?: boolean) {
         const curveParams = KJUR.crypto.ECParameterDB.getByName(curveName);
         const curveG = curveParams.G;
         const charLen = curveParams.keylen / 4;
@@ -243,7 +243,7 @@ const keyring = {
         const valueY = publicBig.getY().toBigInteger();
         const xHex = ('0000000000' + valueX.toString(16)).slice(-charLen);
         const yHex = ('0000000000' + valueY.toString(16)).slice(-charLen);
-        return trimPadding ? xHex + yHex : '04' + xHex + yHex;
+        return trimCompressionFlag ? xHex + yHex : '04' + xHex + yHex;
     },
 
     encryptAES: (data: string, password: string) => {

@@ -39,7 +39,7 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
             }));
         }
 
-        const publicKey = keyring.generatePublicKey(privateKey, true);
+        const publicKey = keyring.generatePublicKey(privateKey);
         const nodeHost = store.getState().engine.nodeHost;
         const client = api({ apiHost: nodeHost });
 

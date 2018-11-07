@@ -93,7 +93,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                             const guestKey = action.payload.defaultKey || defaultKey;
 
                             return client.authorize(uid.token).login({
-                                publicKey: keyring.generatePublicKey(guestKey, true),
+                                publicKey: keyring.generatePublicKey(guestKey),
                                 signature: keyring.sign(uid.uid, guestKey)
 
                             }).then(loginResult => {
