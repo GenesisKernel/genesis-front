@@ -70,7 +70,7 @@ export const privateToPublic = (privateKey: string) => {
     const valueY = publicBig.getY().toBigInteger();
     const xHex = ('0000000000' + valueX.toString(16)).slice(-charLen);
     const yHex = ('0000000000' + valueY.toString(16)).slice(-charLen);
-    return xHex + yHex;
+    return '04' + xHex + yHex;
 };
 
 export const sign = (data: string, privateKey: string): string => {
