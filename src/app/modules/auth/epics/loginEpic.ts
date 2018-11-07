@@ -49,8 +49,8 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
                     publicKey,
                     signature: keyring.sign(uid.uid, privateKey),
                     ecosystem: wallet.access.ecosystem,
-                    expire: 60 * 60 * 24 * 90
-
+                    expire: 60 * 60 * 24 * 90,
+                    role: wallet.role ? Number(wallet.role.id) : null
                 })
             )
 
