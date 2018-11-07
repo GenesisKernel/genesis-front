@@ -81,7 +81,7 @@ export const sign = (data: string, privateKey: string): string => {
 };
 
 export const address = (publicKey: string) => {
-    const keyDigest = SHA256(CryptoJS.enc.Hex.parse(publicKey));
+    const keyDigest = SHA256(CryptoJS.enc.Hex.parse(publicKey.slice(2)));
     const hashDigest = SHA512(keyDigest as any as LibWordArray).toString();
     const bytes = [];
     for (let i = 0; i < hashDigest.length; i += 2) {
