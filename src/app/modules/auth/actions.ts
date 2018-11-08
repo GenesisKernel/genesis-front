@@ -38,6 +38,7 @@ export const createWallet = actionCreator.async<ICreateWalletCall, IWallet, stri
 export const importWallet = actionCreator.async<IImportWalletCall, IWallet, string>('IMPORT_WALLET');
 export const removeWallet = actionCreator<IWallet>('REMOVE_WALLET');
 export const selectWallet = actionCreator<IAccountContext>('SELECT_WALLET');
+export const switchWallet = actionCreator<{ ecosystem: string, role: string }>('SWITCH_WALLET');
 export const authorize = actionCreator<string>('AUTHORIZE');
 export const deauthorize = actionCreator('DEAUTHORIZE');
 export const changePassword = actionCreator.async<void, { oldPassword: string, newPassword: string }, string>('CHANGE_PASSWORD');

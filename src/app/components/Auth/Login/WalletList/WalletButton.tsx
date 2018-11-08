@@ -89,7 +89,7 @@ const WalletButton: React.SFC<IWalletButtonProps> = (props) => (
                                 <div><b>({access.ecosystem}) {access.name && access.name}</b></div>
                                 <div>
                                     <span>
-                                        <FormattedMessage id="auth.login.as" defaultMessage="Login as" />:
+                                        <FormattedMessage id="auth.login.as" defaultMessage="Login with role" />:
                                     </span>
                                     <RoleButton className="wallet-btn" badge={getNotificationsCount(props.notifications, 0, access.ecosystem)} onClick={() => props.onSelect({ access, role: null })}>
                                         <FormattedMessage id="auth.role.guest" defaultMessage="Guest" />

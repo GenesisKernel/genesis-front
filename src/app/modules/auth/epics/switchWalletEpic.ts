@@ -20,32 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { IRootState } from 'modules';
-import { connect } from 'react-redux';
-import { logout, changePassword, switchWallet } from 'modules/auth/actions';
-import { modalShow } from 'modules/modal/actions';
+import { Epic } from 'modules';
+import { switchWallet, selectWallet, logout } from '../actions';
+import { Observable } from 'rxjs/Observable';
 
-import UserMenu from 'components/Main/UserMenu';
+const switchWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(switchWallet)
+    .flatMap(action => {
+        const state = store.getState();
+        const wallet = state.auth.wallets.find(l => l.id === state.auth.wallet.wallet.id);
+        const access = wallet.access.find(l => l.ecosystem === action.payload.ecosystem);
 
-const mapStateToProps = (state: IRootState) => ({
-    wallet: state.auth.wallet,
-    walletEcosystems: ((state.auth.wallet && state.auth.wallets) ? state.auth.wallets.find(l => l.id === state.auth.wallet.wallet.id).access : []).sort((a, b) => Number(a.ecosystem) - Number(b.ecosystem))
-});
+        return Observable.of(
+            logout.started(null),
+            selectWallet({
+                wallet,
+                access,
+                role: action.payload.role ? access.roles.find(l => l.id === action.payload.role) : null
+            })
+        );
+    });
 
-export default connect<any, any, any>(mapStateToProps, {
-    onLogout: () => logout.started(null),
-    onSwitchEcosystem: (ecosystem: string, defaultRole?: boolean) => defaultRole
-        ? switchWallet({
-            ecosystem,
-            role: null
-        })
-        : modalShow({
-            id: 'ROLE_PICKER',
-            type: 'ROLE_PICKER',
-            params: {
-                ecosystem
-            }
-        }),
-    onChangePassword: () => changePassword.started(null)
-
-})(UserMenu);
+export default switchWalletEpic;

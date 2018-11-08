@@ -48,6 +48,7 @@ import PageModal from './PageModal';
 import ChangeLocaleModal from './ChangeLocale';
 import CopyWalletModal from './Auth/CopyWalletModal';
 import RegisterModal from './Auth/RegisterModal';
+import RolePickerModal from 'containers/Modal/RolePickerModal';
 
 const MODAL_COMPONENTS = {
     'AUTHORIZE': AuthorizeModal,
@@ -71,7 +72,8 @@ const MODAL_COMPONENTS = {
     'INFO': InfoModal,
     'ERROR': ErrorModal,
     'ABOUT': AboutModal,
-    'CHANGE_LOCALE': ChangeLocaleModal
+    'CHANGE_LOCALE': ChangeLocaleModal,
+    'ROLE_PICKER': RolePickerModal
 };
 
 export interface IModalProviderProps {

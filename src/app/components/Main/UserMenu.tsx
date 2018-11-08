@@ -23,12 +23,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
-import { IWallet, IAccountContext } from 'genesis/auth';
+import { IAccountContext } from 'genesis/auth';
 
 import { CloseDropdownButton } from 'components/DropdownButton';
 import PageLink from 'containers/Routing/PageLink';
 import SystemButton from './SystemButton';
 import Avatar from 'containers/Avatar';
+import { IKeyInfo } from 'genesis/api';
 
 const StyledUserMenu = styled.div`
     -webkit-app-region: no-drag;
@@ -79,10 +80,10 @@ const StyledUserMenu = styled.div`
 
 export interface IUserMenuProps {
     wallet: IAccountContext;
-    ecosystemWallets: IWallet[];
-    switchWallet: (wallet: IAccountContext) => void;
-    logout: () => void;
-    changePassword: () => void;
+    walletEcosystems: IKeyInfo[];
+    onSwitchEcosystem: (ecosystem: string, defaultRole?: boolean) => void;
+    onLogout: () => void;
+    onChangePassword: () => void;
 }
 
 class UserMenu extends React.Component<IUserMenuProps> {
@@ -97,7 +98,7 @@ class UserMenu extends React.Component<IUserMenuProps> {
                     <div>
                         <ul className="dropdown-group">
                             <li>
-                                <CloseDropdownButton onClick={this.props.changePassword}>
+                                <CloseDropdownButton onClick={this.props.onChangePassword}>
                                     <em className="icon icon-key text-muted." />
                                     <span>
                                         <FormattedMessage id="general.wallet.changepassword" defaultMessage="Change password" />
@@ -115,7 +116,7 @@ class UserMenu extends React.Component<IUserMenuProps> {
                                 </PageLink>
                             </li>
                             <li>
-                                <CloseDropdownButton onClick={this.props.logout}>
+                                <CloseDropdownButton onClick={this.props.onLogout}>
                                     <em className="icon icon-logout text-danger" />
                                     <span>
                                         <FormattedMessage id="general.wallet.signout" defaultMessage="Sign out" />
@@ -123,33 +124,26 @@ class UserMenu extends React.Component<IUserMenuProps> {
                                 </CloseDropdownButton>
                             </li>
                         </ul>
-                        {/*<div className="dropdown-heading">
+                        <div className="dropdown-heading">
                             <FormattedMessage id="general.ecosystems" defaultMessage="Ecosystems" />
                         </div>
                         <ul className="dropdown-group">
-                            {this.props.ecosystemWallets.map(wallet => (
-                                <li key={wallet.ecosystem}>
-                                    <CloseDropdownButton onClick={wallet.ecosystem !== this.props.wallet.ecosystem && this.props.switchWallet.bind(this, wallet)}>
-                                        {wallet.ecosystemName ?
+                            {this.props.walletEcosystems.map(value => (
+                                <li key={value.ecosystem}>
+                                    {/*wallet.ecosystem !== this.props.wallet.ecosystem && this.props.switchWallet.bind(this, wallet)*/}
+                                    <CloseDropdownButton onClick={() => this.props.onSwitchEcosystem(value.ecosystem, !value.roles.length)}>
+                                        {value.name ?
                                             (
-                                                wallet.ecosystemName
+                                                value.name
                                             ) :
                                             (
-                                                <FormattedMessage id="general.wallet.ecosystemNo" defaultMessage="Ecosystem #{ecosystem}" values={{ ecosystem: wallet.ecosystem }} />
+                                                <FormattedMessage id="general.wallet.ecosystemNo" defaultMessage="Ecosystem #{ecosystem}" values={{ ecosystem: value.ecosystem }} />
                                             )
                                         }
                                     </CloseDropdownButton>
                                 </li>
-                                    ))}
-                            {_.map(this.props.wallet.ecosystems, ((value, key) => (
-                                <li key={key}>
-                                    <CloseDropdownButton onClick={key !== this.props.ecosystem && this.onSwitchEcosystem.bind(this, key)}>
-                                        {value.name || key}
-                                    </CloseDropdownButton>
-                                </li>
-                            )))}
+                            ))}
                         </ul>
-                        */}
                     </div>
                 }
             >
