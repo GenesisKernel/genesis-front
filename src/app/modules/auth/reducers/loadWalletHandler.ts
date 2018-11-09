@@ -20,16 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
-import { subscribe } from '../actions';
-import { saveWallet } from 'modules/storage/actions';
+import { State } from '../reducer';
+import { loadWallet } from '../actions';
+import { Reducer } from 'modules';
 
-const subscribeSavedWalletEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(saveWallet)
-        .map(action =>
-            subscribe.started(action.payload)
-        );
+const loadWalletHandler: Reducer<typeof loadWallet, State> = (state, payload) => ({
+    ...state,
+    wallets: [
+        ...(state.wallets || []).filter(l =>
+            l.id !== payload.id
+        ),
+        payload
+    ]
+});
 
-export default subscribeSavedWalletEpic;
+export default loadWalletHandler;

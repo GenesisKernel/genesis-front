@@ -79,10 +79,6 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
             const page = payload[0];
             const defaultPage = payload[1];
 
-            if (page.nodesCount > state.storage.fullNodes.length) {
-                return Observable.throw(invalidationError);
-            }
-
             return NodeObservable({
                 nodes: state.storage.fullNodes,
                 count: page.nodesCount,
@@ -92,9 +88,9 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
             }).flatMap(apiHost => Observable.from(
                 api({ apiHost }).contentHash({
                     name: action.payload.name,
-                    ecosystem: state.auth.wallet.ecosystem,
-                    walletID: state.auth.wallet.id,
-                    role: state.auth.role ? state.auth.role.id : null,
+                    ecosystem: state.auth.wallet.access.ecosystem,
+                    walletID: state.auth.wallet.wallet.id,
+                    role: state.auth.wallet.role ? Number(state.auth.wallet.role.id) : null,
                     locale: state.storage.locale,
                     params: action.payload.params
 
@@ -102,7 +98,7 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
             )).catch(e => Observable.throw(invalidationError)).toArray().map(result => {
                 const contentHash = keyring.hashData(page.plainText);
 
-                if (page.nodesCount !== result.length) {
+                if (0 < state.storage.fullNodes.length && page.nodesCount !== result.length) {
                     throw invalidationError;
                 }
 

@@ -26,45 +26,32 @@ import { Observable } from 'rxjs/Observable';
 import { createWallet } from '../actions';
 import { navigate } from 'modules/engine/actions';
 import keyring from 'lib/keyring';
+import { address, addressString } from 'lib/crypto';
 
 const createWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(createWallet.started)
     .flatMap(action => {
-        const state = store.getState();
         const keys = keyring.generateKeyPair(action.payload.seed);
-        const client = api({ apiHost: state.engine.nodeHost });
+        const publicKey = keyring.generatePublicKey(keys.private);
+        const encKey = keyring.encryptAES(keys.private, action.payload.password);
+        const keyID = address(keys.public);
 
-        return Observable.from(
-            client.getUid().then(uid => {
-                const signature = keyring.sign(uid.uid, keys.private);
-                return client
-                    .authorize(uid.token)
-                    .login({
-                        signature,
-                        publicKey: keys.public
-                    });
-            })
-        ).flatMap(payload =>
-            Observable.of<Action>(
-                createWallet.done({
-                    params: action.payload,
-                    result: {
-                        id: payload.key_id,
-                        encKey: keyring.encryptAES(keys.private, action.payload.password),
-                        address: payload.address,
-                        ecosystem: '1',
-                        ecosystemName: null,
-                        username: payload.key_id,
-                        settings: {}
-                    }
-                }),
-                navigate('/')
-            )
-        ).catch(e => Observable.of(
-            createWallet.failed({
+        return Observable.of<Action>(
+            createWallet.done({
                 params: action.payload,
-                error: e.error
-            }))
+                result: {
+                    id: keyID,
+                    encKey,
+                    publicKey,
+                    address: addressString(keyID),
+                    settings: {}
+                }
+            }),
+            navigate('/')
         );
-    });
+
+    }).catch(e => Observable.of(createWallet.failed({
+        params: null,
+        error: 'E_IMPORT_FAILED'
+    })));
 
 export default createWalletEpic;

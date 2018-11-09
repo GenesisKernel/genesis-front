@@ -20,53 +20,54 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import { Button } from 'react-bootstrap';
-import styled from 'styled-components';
+import React from 'react';
+
+import themed from 'components/Theme/themed';
 
 export interface IRoleButtonProps {
     className?: string;
-    id: number;
-    name: string;
-    notifications: number;
-    onSelect: () => void;
+    badge: number;
+    onClick: () => void;
 }
 
-const RoleButton: React.SFC<IRoleButtonProps> = props => (
-    <Button className={props.className} block bsStyle="default" onClick={props.onSelect}>
-        <div className="media-box text-left">
-            <div>
-                <p className="pl m0">
-                    {props.name}
-                </p>
-            </div>
-            {props.notifications ? (
-                <div className="notifications">
-                    {props.notifications}
-                </div>
-            ) : null}
-        </div>
-    </Button>
-);
-
-export default styled(RoleButton) `
-    position: relative;
-    border: solid 1px transparent;
+const StyledRoleButton = themed.button`
+    background: transparent;
+    border: solid 1px #4c7dbd;
+    border-radius: 2px;
+    outline: none;
+    font-size: 14px;
+    color: #4c7dbd;
+    height: 25px;
+    line-height: 23px;
     padding: 0;
-    height: 46px;
-    overflow: hidden;
-    padding-right: 45px;
-    position: relative;
+    vertical-align: top;
 
-    .notifications {
-        text-align: center;
-        position: absolute;
-        right: 10px;
-        top: 10px;
-        bottom: 10px;
-        width: 25px;
-        line-height: 25px;
-        background: #d87272;
-        color: #fff;
+    &:hover {
+        background: #e9e9e9;
+    }
+    
+    .button-content {
+        padding: 0 6px;
+        float: left;
+        height: 100%;
+    }
+
+    .button-badge {
+        float: right;
+        font-weight: bold;
+        height: 100%;
+        padding: 0 5px;
+        color: #ea4f4f;
     }
 `;
+
+const RoleButton: React.SFC<IRoleButtonProps> = (props) => (
+    <StyledRoleButton className={props.className} onClick={props.onClick}>
+        <div className="button-content">{props.children}</div>
+        {0 !== props.badge && (
+            <div className="button-badge">{props.badge}</div>
+        )}
+    </StyledRoleButton>
+);
+
+export default RoleButton;

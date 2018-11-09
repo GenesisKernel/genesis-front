@@ -20,16 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
-import { saveWallet } from '../actions';
-import { login } from 'modules/auth/actions';
+import { Epic } from 'modules';
+import { switchWallet, selectWallet, logout } from '../actions';
+import { Observable } from 'rxjs/Observable';
 
-const saveWalletOnLoginEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(login.done)
-        .map(action =>
-            saveWallet(action.payload.result.wallet)
+const switchWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(switchWallet)
+    .flatMap(action => {
+        const state = store.getState();
+        const wallet = state.auth.wallets.find(l => l.id === state.auth.wallet.wallet.id);
+        const access = wallet.access.find(l => l.ecosystem === action.payload.ecosystem);
+
+        return Observable.of(
+            logout.started(null),
+            selectWallet({
+                wallet,
+                access,
+                role: action.payload.role ? access.roles.find(l => l.id === action.payload.role) : null
+            })
         );
+    });
 
-export default saveWalletOnLoginEpic;
+export default switchWalletEpic;

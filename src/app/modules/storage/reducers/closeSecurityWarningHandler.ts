@@ -20,16 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
-import { switchWindow } from '../actions';
-import { selectRole } from 'modules/auth/actions';
+import { State } from '../reducer';
+import { closeSecurityWarning } from '../actions';
+import { Reducer } from 'modules';
 
-const switchWindowOnRoleEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(selectRole.done)
-        .map(action =>
-            switchWindow.started('main')
-        );
+const closeSecurityWarningHandler: Reducer<typeof closeSecurityWarning, State> = (state, payload) => ({
+    ...state,
+    securityWarningClosed: true
+});
 
-export default switchWindowOnRoleEpic;
+export default closeSecurityWarningHandler;

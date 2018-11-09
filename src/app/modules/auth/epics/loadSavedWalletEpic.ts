@@ -21,45 +21,29 @@
 // SOFTWARE.
 
 import { Epic } from 'modules';
-import { Action } from 'redux';
+import { loadWallet } from '../actions';
 import { Observable } from 'rxjs';
-import uuid from 'uuid';
-import { inviteEcosystem } from '../actions';
-import { enqueueNotification } from 'modules/notifications/actions';
-import { navigatePage } from 'modules/sections/actions';
 import { saveWallet } from 'modules/storage/actions';
 
-const inviteEcosystemEpic: Epic = (action$, store) => action$.ofAction(inviteEcosystem)
+const loadSavedWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(saveWallet)
     .flatMap(action => {
-        const wallet = store.getState().auth.wallet;
-        const notification = enqueueNotification({
-            id: uuid.v4(),
-            type: 'ECOSYSTEM_INVITED',
-            params: {
-                ecosystem: action.payload.ecosystem
-            }
-        });
+        const state = store.getState();
+        const client = api({ apiHost: state.engine.nodeHost });
 
-        const emitter = Observable.of<Action>(
-            notification,
-            saveWallet({
-                id: wallet.id,
-                encKey: wallet.encKey,
-                address: wallet.address,
-                ecosystem: action.payload.ecosystem,
-                ecosystemName: null,
-                username: null,
-                settings: {}
-            }),
-        );
+        return Observable.from(client.keyinfo({
+            id: action.payload.id
 
-        return action.payload.redirectPage ? emitter.concat(Observable.of(navigatePage.started({
-            name: action.payload.redirectPage,
-            force: true,
-            params: {
-                ecosystem: action.payload.ecosystem
-            }
-        }))) : emitter;
+        })).map(keys => loadWallet({
+            id: action.payload.id,
+            address: action.payload.address,
+            encKey: action.payload.encKey,
+            publicKey: action.payload.publicKey,
+            access: keys.map(key => ({
+                ...key,
+                roles: key.roles || []
+            }))
+
+        })).catch(e => Observable.empty<never>());
     });
 
-export default inviteEcosystemEpic;
+export default loadSavedWalletEpic;

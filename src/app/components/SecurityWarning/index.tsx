@@ -20,21 +20,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { IWallet } from 'genesis/auth';
+import React from 'react';
+import themed from 'components/Theme/themed';
 
-export default function (state: State, payload: { wallet: IWallet, role?: number }): number {
-    if ('number' === typeof payload.role) {
-        return state.notifications.filter(l =>
-            l.id === payload.wallet.id &&
-            l.ecosystem === payload.wallet.ecosystem &&
-            l.role === payload.role
-        ).map(l => l.count).concat([0]).reduce((a, b) => a + b);
-    }
-    else {
-        return state.notifications.filter(l =>
-            l.id === payload.wallet.id &&
-            l.ecosystem === payload.wallet.ecosystem
-        ).map(l => l.count).concat([0]).reduce((a, b) => a + b);
-    }
+export interface ISecurityWarningProps {
+    className?: string;
+    close: () => void;
 }
+
+const SecurityWarning: React.SFC<ISecurityWarningProps> = props => (
+    <div className={props.className}>
+        <div>
+            {props.children}
+            <a href="#" onClick={() => props.close()}><em className="icon icon-close" /></a>
+        </div>
+    </div>
+);
+
+export default themed(SecurityWarning)`    
+    background: ${props => props.theme.securityWarningBackground};
+    color: ${props => props.theme.securityWarningForeground};
+    position: fixed;
+    top: 5px;
+    left: 50%;
+    margin-left: -150px;
+    width: 300px;
+    padding: 10px 25px 10px 20px;
+    line-height: 20px;
+    z-index: 20000;
+    div {
+        position: relative;
+    }
+    a {
+        position: absolute;
+        right: -5px;
+        top: 50%;
+        line-height: 20px;
+        margin-top: -10px;
+        color: ${props => props.theme.securityWarningForeground};
+        text-decoration: none;
+    }
+`;

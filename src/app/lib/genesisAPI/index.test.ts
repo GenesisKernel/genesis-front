@@ -223,23 +223,6 @@ test('Login', () => {
     });
 });
 
-test('Refresh', () => {
-    const testRequest = {
-        token: '4815162342',
-        expire: 4815162342
-    };
-
-    return paramTestingAPIMock().refresh(testRequest).then((response: any) => {
-        expect(response).toEqual({
-            __requestUrl: `${paramTestingAPIHost}/${paramTestingAPIEndpoint}/refresh`,
-            body: mockFormData({
-                token: '4815162342',
-                expire: 4815162342
-            })
-        });
-    });
-});
-
 test('RequestNotifications', () => {
     const testRequest = [
         { id: '1', ecosystem: '2' },

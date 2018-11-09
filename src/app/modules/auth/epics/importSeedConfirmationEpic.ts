@@ -20,20 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import actionCreatorFactory from 'typescript-fsa';
-import { TProtypoElement, IButtonInteraction } from 'genesis/protypo';
+import { Epic } from 'modules';
+import { importSeedConfirmation } from '../actions';
+import { Observable } from 'rxjs/Observable';
+import { readTextFile } from 'lib/fs';
 
-const actionCreator = actionCreatorFactory('content');
+const importSeedConfirmationEpic: Epic = (action$, store) => action$.ofAction(importSeedConfirmation.started)
+    .switchMap(action =>
+        Observable.from(readTextFile(action.payload))
+            .map(payload =>
+                importSeedConfirmation.done({
+                    params: null,
+                    result: payload
+                })
 
-// Navigation
-export const setResizing = actionCreator<boolean>('SET_RESIZING');
-export const ecosystemInit = actionCreator.async<{ section?: string }, { stylesheet: string }, string>('ECOSYSTEM_INIT');
+            ).catch(e =>
+                Observable.of(importSeedConfirmation.failed({
+                    params: null,
+                    error: null
+                }))
+            )
+    );
 
-// Interaction
-export const buttonInteraction = actionCreator<IButtonInteraction>('BUTTON_INTERACTION');
-export const displayData = actionCreator.async<string, string, string>('DISPLAY_DATA');
-
-// Notifications
-export const fetchNotifications = actionCreator.async<void, TProtypoElement[], void>('FETCH_NOTIFICATIONS');
-
-export const reloadStylesheet = actionCreator<string>('RELOAD_STYLESHEET');
+export default importSeedConfirmationEpic;

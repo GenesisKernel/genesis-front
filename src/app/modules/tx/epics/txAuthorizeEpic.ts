@@ -52,7 +52,7 @@ const txAuthorizeEpic: Epic<Action, IRootState> =
                         .take(1)
                         .flatMap(result => {
                             if (result.payload.data) {
-                                const privateKey = keyring.decryptAES(store.getState().auth.wallet.encKey, result.payload.data || '');
+                                const privateKey = keyring.decryptAES(store.getState().auth.wallet.wallet.encKey, result.payload.data || '');
                                 if (keyring.validatePrivateKey(privateKey)) {
                                     return Observable.of<Action>(
                                         authorize(privateKey),

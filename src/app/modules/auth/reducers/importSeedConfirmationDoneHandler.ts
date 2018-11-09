@@ -21,23 +21,12 @@
 // SOFTWARE.
 
 import { State } from '../reducer';
-import { selectRole } from '../actions';
+import { importSeed } from '../actions';
 import { Reducer } from 'modules';
 
-const selectRoleDoneHandler: Reducer<typeof selectRole.done, State> = (state, payload) => ({
+const importSeedConfirmationDoneHandler: Reducer<typeof importSeed.done, State> = (state, payload) => ({
     ...state,
-    isAuthenticated: true,
-    isLoggingIn: false,
-    roles: null,
-    role: 'number' === typeof payload.params ? {
-        id: payload.params,
-        name: state.roles.find(l => l.id === payload.params).name
-    } : null,
-    session: {
-        ...state.session,
-        sessionToken: payload.result.sessionToken,
-        refreshToken: payload.result.refreshToken
-    }
+    seedConfirm: payload.result
 });
 
-export default selectRoleDoneHandler;
+export default importSeedConfirmationDoneHandler;

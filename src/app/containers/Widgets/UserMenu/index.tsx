@@ -20,60 +20,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
-import { Dispatch, Action } from 'redux';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
-import { logout, selectWallet, changePassword } from 'modules/auth/actions';
-import { IWallet } from 'genesis/auth';
+import { logout, changePassword, switchWallet } from 'modules/auth/actions';
+import { modalShow } from 'modules/modal/actions';
 
-import UserMenu from 'components/Main//UserMenu';
-
-export interface IUserMenuContainerProps {
-
-}
-
-interface IUserMenuContainerState {
-    wallet: IWallet;
-    ecosystemWallets: IWallet[];
-}
-
-interface IUserMenuContainerDispatch {
-    logout: typeof logout.started;
-    selectWallet: typeof selectWallet;
-    changePassword: typeof changePassword.started;
-}
-
-const UserMenuContainer: React.SFC<IUserMenuContainerProps & IUserMenuContainerState & IUserMenuContainerDispatch> = (props) => (
-    <UserMenu
-        wallet={props.wallet}
-        ecosystemWallets={props.ecosystemWallets}
-        logout={() => props.logout({})}
-        switchWallet={props.selectWallet}
-        changePassword={() => props.changePassword(null)}
-    />
-);
+import UserMenu from 'components/Main/UserMenu';
 
 const mapStateToProps = (state: IRootState) => ({
     wallet: state.auth.wallet,
-    ecosystemWallets: state.auth.wallet ?
-        state.storage.wallets.filter(l =>
-            l.id === state.auth.wallet.id
-        ).sort((a, b) => parseInt(a.ecosystem, 10) - parseInt(b.ecosystem, 10)) : [],
-    ecosystem: state.auth.ecosystem
+    walletEcosystems: ((state.auth.wallet && state.auth.wallets) ? state.auth.wallets.find(l => l.id === state.auth.wallet.wallet.id).access : []).sort((a, b) => Number(a.ecosystem) - Number(b.ecosystem))
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
-    logout: () => {
-        dispatch(logout.started(null));
-    },
-    selectWallet: (wallet: IWallet) => {
-        dispatch(logout.started(null));
-        dispatch(selectWallet(wallet));
-    },
-    changePassword: () => {
-        dispatch(changePassword.started(null));
-    }
-});
+export default connect<any, any, any>(mapStateToProps, {
+    onLogout: () => logout.started(null),
+    onSwitchEcosystem: (ecosystem: string, defaultRole?: boolean) => defaultRole
+        ? switchWallet({
+            ecosystem,
+            role: null
+        })
+        : modalShow({
+            id: 'ROLE_PICKER',
+            type: 'ROLE_PICKER',
+            params: {
+                ecosystem
+            }
+        }),
+    onChangePassword: () => changePassword.started(null)
 
-export default connect<IUserMenuContainerState, IUserMenuContainerDispatch, IUserMenuContainerProps>(mapStateToProps, mapDispatchToProps)(UserMenuContainer);
+})(UserMenu);

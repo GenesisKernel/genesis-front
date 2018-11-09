@@ -56,7 +56,6 @@ const storageAdapters = [
         'auth.isAuthenticated',
         'auth.session',
         'auth.id',
-        'auth.role',
         'auth.wallet',
     ])
 ];

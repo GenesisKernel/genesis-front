@@ -20,20 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import actionCreatorFactory from 'typescript-fsa';
-import { TProtypoElement, IButtonInteraction } from 'genesis/protypo';
+import { State } from '../reducer';
+import { loadWallets } from '../actions';
+import { Reducer } from 'modules';
 
-const actionCreator = actionCreatorFactory('content');
+const loadWalletsDoneHandler: Reducer<typeof loadWallets.done, State> = (state, payload) => ({
+    ...state,
+    wallets: payload.result
+});
 
-// Navigation
-export const setResizing = actionCreator<boolean>('SET_RESIZING');
-export const ecosystemInit = actionCreator.async<{ section?: string }, { stylesheet: string }, string>('ECOSYSTEM_INIT');
-
-// Interaction
-export const buttonInteraction = actionCreator<IButtonInteraction>('BUTTON_INTERACTION');
-export const displayData = actionCreator.async<string, string, string>('DISPLAY_DATA');
-
-// Notifications
-export const fetchNotifications = actionCreator.async<void, TProtypoElement[], void>('FETCH_NOTIFICATIONS');
-
-export const reloadStylesheet = actionCreator<string>('RELOAD_STYLESHEET');
+export default loadWalletsDoneHandler;

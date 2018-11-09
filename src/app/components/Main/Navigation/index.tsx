@@ -116,6 +116,10 @@ const StyledMenuContent = themed.div`
     left: 0;
     bottom: 0;
 
+    > div {
+        background: ${props => props.theme.menuBackground};
+    }
+
     .title-wrap {
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -131,7 +135,6 @@ export interface INavigationProps {
     menus: IMenu[];
     section: string;
     menuPop: () => void;
-    ecosystemInit: (nullArg: null) => void;
 }
 
 class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {

@@ -23,24 +23,13 @@
 import { State } from '../reducer';
 import { saveWallet } from '../actions';
 import { Reducer } from 'modules';
-import { IWallet } from 'genesis/auth';
 
-const saveWalletHandler: Reducer<typeof saveWallet, State> = (state, payload) => {
-    const wallet: Partial<IWallet> = state.wallets.find(l => l.id === payload.id && l.ecosystem === payload.ecosystem) || {};
-    return {
-        ...state,
-        wallets: [
-            ...state.wallets.filter(l => l.id !== payload.id || l.ecosystem !== payload.ecosystem),
-            {
-                ...wallet,
-                ...payload,
-                settings: {
-                    ...wallet.settings,
-                    ...payload.settings
-                }
-            }
-        ]
-    };
-};
+const saveWalletHandler: Reducer<typeof saveWallet, State> = (state, payload) => ({
+    ...state,
+    wallets: [
+        ...state.wallets.filter(l => l.id !== payload.id),
+        payload
+    ]
+});
 
 export default saveWalletHandler;

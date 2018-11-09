@@ -20,37 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
-import { connect } from 'react-redux';
-import { inviteEcosystem } from 'modules/auth/actions';
+import { Epic } from 'modules';
+import { subscribe, connect } from '../actions';
+import { Observable } from 'rxjs';
 
-export interface IInviteContainerProps {
-    ecosystem: string;
-    page?: string;
-}
+const subscribeReconnectEpic: Epic = (action$, store) => action$.ofAction(connect.done)
+    .flatMap(action =>
+        Observable.from(store.getState().auth.wallets).map(account =>
+            subscribe.started(account)
+        )
+    );
 
-interface IInviteContainerDispatch {
-    onLoad: typeof inviteEcosystem;
-}
-
-class InviteContainer extends React.Component<IInviteContainerProps & IInviteContainerDispatch> {
-    componentDidMount() {
-        const ecosystemID = parseInt(this.props.ecosystem, 10);
-        if (ecosystemID === ecosystemID) {
-            this.props.onLoad({
-                ecosystem: ecosystemID.toString(),
-                redirectPage: this.props.page
-            });
-        }
-    }
-
-    render() {
-        return null as JSX.Element;
-    }
-}
-
-const mapDispatchToProps = {
-    onLoad: inviteEcosystem
-};
-
-export default connect<{}, IInviteContainerDispatch, IInviteContainerProps>(null, mapDispatchToProps)(InviteContainer);
+export default subscribeReconnectEpic;

@@ -20,32 +20,45 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { modalShow } from 'modules/modal/actions';
-import { FormattedMessage } from 'react-intl';
+import { IModalProps } from 'components/Modal';
+import { switchWallet } from 'modules/auth/actions';
 
-import Backup from 'components/Main/Backup';
+import RolePickerModal from 'components/Modal/RolePickerModal';
+import { modalClose } from 'modules/modal/actions';
 
-const mapStateToProps = (state: IRootState) => ({
-    wallet: state.auth.wallet,
-    privateKey: state.auth.privateKey
+export interface IRolePickerModalProps {
+    walletID: string;
+    ecosystem: string;
+}
+
+const mapStateToProps = (state: IRootState, props: IModalProps<IRolePickerModalProps, void>) => ({
+    ...props,
+    params: {
+        walletID: state.auth.wallet.wallet.id,
+        ecosystem: props.params.ecosystem,
+        ecosystemName: state.auth.wallets
+            .find(w => w.id === state.auth.wallet.wallet.id).access.find(a => a.ecosystem === props.params.ecosystem).name,
+        roles: state.auth.wallets
+            .find(w => w.id === state.auth.wallet.wallet.id).access.find(a => a.ecosystem === props.params.ecosystem).roles
+    }
 });
 
 export default connect(mapStateToProps, {
-    onError: () => modalShow({
-        id: 'E_INVALID_PASSWORD',
-        type: 'AUTH_ERROR',
-        params: {
-            error: 'E_INVALID_PASSWORD'
-        }
-    }),
-    onCopy: () => modalShow({
-        id: 'I_COPIED',
-        type: 'INFO',
-        params: {
-            value: (<FormattedMessage id="alert.clipboard.copied" defaultMessage="alert.clipboard.copied" />)
-        }
-    })
-})(Backup);
+    onSwitchWallet: switchWallet,
+    modalClose: modalClose
+
+}, (state, dispatch: any, props) => ({
+    ...state,
+    onSwitchWallet: (role: string) => {
+        dispatch.modalClose({
+            reason: 'CLOSE',
+            data: null
+        });
+        dispatch.onSwitchWallet({
+            ecosystem: props.params.ecosystem,
+            role
+        });
+    }
+}))(RolePickerModal);

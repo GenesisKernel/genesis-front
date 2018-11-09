@@ -22,7 +22,8 @@
 
 import * as actions from './actions';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import { IWallet, IRole, ISession } from 'genesis/auth';
+import { ISession, IAccountContext } from 'genesis/auth';
+import { IAccount } from 'genesis/api';
 import loginHandler from './reducers/loginHandler';
 import loginDoneHandler from './reducers/loginDoneHandler';
 import loginFailedHandler from './reducers/loginFailedHandler';
@@ -38,11 +39,16 @@ import selectWalletHandler from './reducers/selectWalletHandler';
 import authorizeHandler from './reducers/authorizeHandler';
 import deauthorizeHandler from './reducers/deauthorizeHandler';
 import generateSeedDoneHandler from './reducers/generateSeedDoneHandler';
-import selectRoleDoneHandler from './reducers/selectRoleDoneHandler';
 import updateSettingsHandler from './reducers/updateSettingsHandler';
+import changeSeedHandler from './reducers/changeSeedHandler';
+import changeSeedConfirmationHandler from './reducers/changeSeedConfirmation';
+import importSeedConfirmationDoneHandler from './reducers/importSeedConfirmationDoneHandler';
+import loadWalletsDoneHandler from './reducers/loadWalletsDoneHandler';
+import loadWalletHandler from './reducers/loadWalletHandler';
 
 export type State = {
-    readonly loadedSeed: string;
+    readonly seed: string;
+    readonly seedConfirm: string;
     readonly isAuthenticated: boolean;
     readonly isLoggingIn: boolean;
     readonly isCreatingWallet: boolean;
@@ -52,15 +58,14 @@ export type State = {
     readonly id: string;
     readonly session: ISession;
     readonly defaultWallet: string;
-    readonly wallet: IWallet;
-    readonly role: IRole;
-    readonly roles: IRole[];
+    readonly wallet: IAccountContext;
+    readonly wallets: IAccount[];
     readonly privateKey: string;
-    readonly ecosystem: string;
 };
 
 export const initialState: State = {
-    loadedSeed: null,
+    seed: '',
+    seedConfirm: '',
     isAuthenticated: false,
     isLoggingIn: false,
     isCreatingWallet: false,
@@ -71,10 +76,8 @@ export const initialState: State = {
     session: null,
     defaultWallet: null,
     wallet: null,
-    role: null,
-    roles: null,
     privateKey: null,
-    ecosystem: null
+    wallets: []
 };
 
 export default reducerWithInitialState<State>(initialState)
@@ -89,9 +92,13 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.importWallet.done, importWalletDoneHandler)
     .case(actions.importWallet.failed, importWalletFailedHandler)
     .case(actions.importSeed.done, importSeedDoneHandler)
+    .case(actions.importSeedConfirmation.done, importSeedConfirmationDoneHandler)
     .case(actions.selectWallet, selectWalletHandler)
-    .case(actions.selectRole.done, selectRoleDoneHandler)
     .case(actions.authorize, authorizeHandler)
     .case(actions.deauthorize, deauthorizeHandler)
     .case(actions.generateSeed.done, generateSeedDoneHandler)
-    .case(actions.updateSettings, updateSettingsHandler);
+    .case(actions.updateSettings, updateSettingsHandler)
+    .case(actions.changeSeed, changeSeedHandler)
+    .case(actions.changeSeedConfirmation, changeSeedConfirmationHandler)
+    .case(actions.loadWallets.done, loadWalletsDoneHandler)
+    .case(actions.loadWallet, loadWalletHandler);

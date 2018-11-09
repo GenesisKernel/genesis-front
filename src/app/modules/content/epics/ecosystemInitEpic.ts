@@ -33,18 +33,14 @@ const ecosystemInitEpic: Epic = (action$, store, { api }) => action$.ofAction(ec
         const client = api(state.auth.session);
 
         return Observable.from(
-            Promise.all([
-                client.getParam({ name: 'stylesheet' }).then(l => l.value),
-                client.getEcosystemName({ id: state.auth.wallet && state.auth.wallet.ecosystem }).catch(e => '')
-            ])
+            client.getParam({ name: 'stylesheet' }).then(l => l.value)
         ).flatMap(payload =>
             Observable.of<Action>(
                 fetchNotifications.started(null),
                 ecosystemInit.done({
                     params: action.payload,
                     result: {
-                        stylesheet: payload[0],
-                        name: payload[1],
+                        stylesheet: payload
                     }
                 }),
                 sectionsInit.started(action.payload.section)

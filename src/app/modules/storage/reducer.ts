@@ -28,19 +28,22 @@ import saveWalletHandler from './reducers/saveWalletHandler';
 import removeWalletHandler from './reducers/removeWalletHandler';
 import saveNavigationSizeHandler from './reducers/saveNavigationSizeHandler';
 import mergeFullNodesHandler from './reducers/mergeFullNodesHandler';
+import closeSecurityWarningHandler from './reducers/closeSecurityWarningHandler';
 
 export type State = {
     readonly locale: string;
     readonly wallets: IWallet[];
     readonly navigationSize: number;
     readonly fullNodes: string[];
+    readonly securityWarningClosed: boolean;
 };
 
 export const initialState: State = {
     locale: 'en-US',
     wallets: [],
     navigationSize: 230,
-    fullNodes: []
+    fullNodes: [],
+    securityWarningClosed: false
 };
 
 export default reducerWithInitialState<State>(initialState)
@@ -48,4 +51,5 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.saveWallet, saveWalletHandler)
     .case(actions.removeWallet, removeWalletHandler)
     .case(actions.saveNavigationSize, saveNavigationSizeHandler)
-    .case(actions.mergeFullNodes, mergeFullNodesHandler);
+    .case(actions.mergeFullNodes, mergeFullNodesHandler)
+    .case(actions.closeSecurityWarning, closeSecurityWarningHandler);

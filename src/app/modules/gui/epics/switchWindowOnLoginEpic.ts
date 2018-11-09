@@ -20,22 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
+import { Epic } from 'modules';
 import { switchWindow } from '../actions';
 import { login } from 'modules/auth/actions';
-import { Observable } from 'rxjs/Observable';
 
-const switchWindowOnLoginEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(login.done)
-        .flatMap(action => {
-            if (action.payload.result.roles && action.payload.result.roles.length) {
-                return Observable.empty<never>();
-            }
-            else {
-                return Observable.of(switchWindow.started('main'));
-            }
-        });
+const switchWindowOnLoginEpic: Epic = (action$, store) => action$.ofAction(login.done)
+    .map(action =>
+        switchWindow.started('main')
+    );
 
 export default switchWindowOnLoginEpic;
