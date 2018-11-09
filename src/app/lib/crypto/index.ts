@@ -81,18 +81,23 @@ export const sign = (data: string, privateKey: string): string => {
 };
 
 export const address = (publicKey: string) => {
-    const keyDigest = SHA256(CryptoJS.enc.Hex.parse(publicKey.slice(2)));
-    const hashDigest = SHA512(keyDigest as any as LibWordArray).toString();
-    const bytes = [];
-    for (let i = 0; i < hashDigest.length; i += 2) {
-        bytes.push(parseInt(hashDigest[i] + hashDigest[i + 1], 16));
+    if (publicKey.startsWith('04')) {
+        const keyDigest = SHA256(CryptoJS.enc.Hex.parse(publicKey.slice(2)));
+        const hashDigest = SHA512(keyDigest as any as LibWordArray).toString();
+        const bytes = [];
+        for (let i = 0; i < hashDigest.length; i += 2) {
+            bytes.push(parseInt(hashDigest[i] + hashDigest[i + 1], 16));
+        }
+        const crc = crc64(bytes);
+        const value = '0'.repeat(addressLength - crc.length) + crc;
+        const crcDigits = value.split('').map(l => parseInt(l, 10));
+        const addrChecksum = checksum(crcDigits.slice(0, -1));
+        const crcLong = Long.fromString(crc);
+        return crcLong.sub(remainder(crc, 10)).add(addrChecksum).toString();
     }
-    const crc = crc64(bytes);
-    const value = '0'.repeat(addressLength - crc.length) + crc;
-    const crcDigits = value.split('').map(l => parseInt(l, 10));
-    const addrChecksum = checksum(crcDigits.slice(0, -1));
-    const crcLong = Long.fromString(crc);
-    return crcLong.sub(remainder(crc, 10)).add(addrChecksum).toString();
+    else {
+        throw new Error('Unsupported public key format');
+    }
 };
 
 export const addressString = (addr: string) => {

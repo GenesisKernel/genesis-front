@@ -193,7 +193,7 @@ class GenesisAPI {
     });
     public login = this.setSecuredEndpoint<ILoginRequest, ILoginResponse>('post', 'login', {
         requestTransformer: request => ({
-            pubkey: request.publicKey.slice(2),
+            pubkey: request.publicKey,
             signature: request.signature,
             ecosystem: request.ecosystem,
             role_id: request.role,

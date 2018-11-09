@@ -23,7 +23,6 @@
 import CryptoJS from 'crypto-js';
 import KJUR from 'jsrsasign';
 import Random from 'random-js';
-import { Int64BE, Uint64BE } from 'int64-buffer';
 
 // https://github.com/bitcoin/bips/blob/master/bip-0039/bip-0039-wordlists.md
 const WORD_LIST = ['abandon', 'ability', 'able', 'about', 'above', 'absent', 'absorb', 'abstract', 'absurd', 'abuse', 'access', 'accident',
@@ -279,18 +278,6 @@ const keyring = {
         signature.init({ d: privateKey, curve: curveName });
         signature.updateString(data);
         return signature.sign();
-    },
-
-    walletIdToAddr(id: string | number) {
-        const num = new Int64BE(id.toString(), 10);
-        const addr = new Uint64BE(num.toString(10), 10).toString(10);
-        return addr.match(new RegExp('.{1,4}', 'g')).join('-');
-    },
-
-    walletAddrToId(addr: string) {
-        const truncated = addr.replace(/-/g, '');
-        const num = new Uint64BE(truncated, 10);
-        return new Int64BE(num.toString(10), 10).toString(10);
     },
 
     hashData(data: string) {

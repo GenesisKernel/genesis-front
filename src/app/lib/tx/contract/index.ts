@@ -65,7 +65,7 @@ export default class Contract {
 
     async sign(privateKey: string) {
         const publicKey = privateToPublic(privateKey);
-        this._publicKey = convert.toArrayBuffer(publicKey.slice(2));
+        this._publicKey = convert.toArrayBuffer(publicKey);
         this._keyID = new Int64BE(address(publicKey));
 
         const data = this.serialize();
