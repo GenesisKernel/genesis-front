@@ -26,9 +26,10 @@ import { Reducer } from 'modules';
 
 const selectWalletHandler: Reducer<typeof selectWallet, State> = (state, payload) => ({
     ...state,
-    wallet: payload,
-    role: null,
-    roles: null
+    session: {
+        ...state.session,
+        ...payload
+    }
 });
 
 export default selectWalletHandler;

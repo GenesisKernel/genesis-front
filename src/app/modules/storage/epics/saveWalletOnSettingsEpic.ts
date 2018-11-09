@@ -20,16 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
+import { Epic } from 'modules';
 import { saveWallet } from '../actions';
 import { updateSettings } from 'modules/auth/actions';
 
-const saveWalletOnSettingsEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(updateSettings)
-        .map(action =>
-            saveWallet(store.getState().auth.wallet)
-        );
+const saveWalletOnSettingsEpic: Epic = (action$, store) => action$.ofAction(updateSettings)
+    .map(action =>
+        saveWallet(store.getState().auth.session.wallet)
+    );
 
 export default saveWalletOnSettingsEpic;

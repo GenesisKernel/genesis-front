@@ -24,9 +24,9 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { IModalProps } from 'components/Modal';
 import { switchWallet } from 'modules/auth/actions';
+import { modalClose } from 'modules/modal/actions';
 
 import RolePickerModal from 'components/Modal/RolePickerModal';
-import { modalClose } from 'modules/modal/actions';
 
 export interface IRolePickerModalProps {
     walletID: string;
@@ -36,12 +36,12 @@ export interface IRolePickerModalProps {
 const mapStateToProps = (state: IRootState, props: IModalProps<IRolePickerModalProps, void>) => ({
     ...props,
     params: {
-        walletID: state.auth.wallet.wallet.id,
+        walletID: state.auth.session.wallet.id,
         ecosystem: props.params.ecosystem,
         ecosystemName: state.auth.wallets
-            .find(w => w.id === state.auth.wallet.wallet.id).access.find(a => a.ecosystem === props.params.ecosystem).name,
+            .find(w => w.id === state.auth.session.wallet.id).access.find(a => a.ecosystem === props.params.ecosystem).name,
         roles: state.auth.wallets
-            .find(w => w.id === state.auth.wallet.wallet.id).access.find(a => a.ecosystem === props.params.ecosystem).roles
+            .find(w => w.id === state.auth.session.wallet.id).access.find(a => a.ecosystem === props.params.ecosystem).roles
     }
 });
 

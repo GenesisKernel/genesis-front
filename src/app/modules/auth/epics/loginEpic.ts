@@ -29,8 +29,8 @@ import { push } from 'connected-react-router';
 
 const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.started)
     .flatMap(action => {
-        const wallet = store.getState().auth.wallet;
-        const privateKey = keyring.decryptAES(wallet.wallet.encKey, action.payload.password);
+        const session = store.getState().auth.session;
+        const privateKey = keyring.decryptAES(session.wallet.encKey, action.payload.password);
 
         if (!keyring.validatePrivateKey(privateKey)) {
             return Observable.of(login.failed({
@@ -48,22 +48,22 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
                 client.authorize(uid.token).login({
                     publicKey,
                     signature: keyring.sign(uid.uid, privateKey),
-                    ecosystem: wallet.access.ecosystem,
+                    ecosystem: session.access.ecosystem,
                     expire: 60 * 60 * 24 * 90,
-                    role: wallet.role ? Number(wallet.role.id) : null
+                    role: session.role ? Number(session.role.id) : null
                 })
             )
 
             // Successful authentication. Yield the result
-            .flatMap(session => {
+            .flatMap(response => {
                 return Observable.of<Action>(
                     push('/'),
                     login.done({
                         params: action.payload,
                         result: {
                             session: {
-                                sessionToken: session.token,
-                                refreshToken: session.refresh,
+                                ...session,
+                                sessionToken: response.token,
                                 apiHost: nodeHost
                             },
                             privateKey,

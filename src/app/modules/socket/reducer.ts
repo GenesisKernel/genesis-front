@@ -23,7 +23,7 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import * as actions from './actions';
 import { INotificationsMessage } from 'genesis/socket';
-import { IWallet } from 'genesis/auth';
+import { IWalletData } from 'genesis/api';
 import connectDoneHandler from './reducers/connectDoneHandler';
 import disconnectDoneHandler from './reducers/disconnectDoneHandler';
 import subscribeDoneHandler from './reducers/subscribeDoneHandler';
@@ -37,7 +37,7 @@ export type State = {
     readonly connected: boolean;
     readonly notifications: INotificationsMessage[];
     readonly subscriptions: {
-        wallet: IWallet;
+        wallet: IWalletData;
         instance: ISubscription;
     }[];
 };

@@ -40,7 +40,7 @@ const removeWalletEpic: Epic = (action$, store) => action$.ofAction(removeWallet
                 .take(1)
                 .flatMap(result => {
                     if ('RESULT' === result.payload.reason) {
-                        return Observable.of(removeStoredWallet(action.payload));
+                        return Observable.of(removeStoredWallet(action.payload.id));
                     }
                     else {
                         return Observable.empty<never>();

@@ -26,11 +26,14 @@ import { Reducer } from 'modules';
 
 const updateSettingsHandler: Reducer<typeof updateSettings, State> = (state, payload) => ({
     ...state,
-    wallet: {
-        ...state.wallet,
-        settings: {
-            ...state.wallet.settings,
-            ...payload
+    session: {
+        ...state.session,
+        wallet: {
+            ...state.session.wallet,
+            settings: {
+                ...state.session.wallet.settings,
+                ...payload
+            }
         }
     }
 });

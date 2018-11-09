@@ -28,10 +28,8 @@ const loginDoneHandler: Reducer<typeof login.done, State> = (state, payload) => 
     ...state,
     isAuthenticated: true,
     isLoggingIn: false,
-    ecosystem: state.wallet.access.ecosystem,
     session: payload.result.session,
-    privateKey: payload.result.privateKey,
-    id: state.wallet.wallet.id
+    privateKey: payload.result.privateKey
 });
 
 export default loginDoneHandler;

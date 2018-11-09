@@ -20,36 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
 import { updateSettings } from 'modules/auth/actions';
 import TxMenu from 'components/Main/TxMenu';
 
-export interface ITxMenuContainerProps {
-
-}
-
-interface ITxMenuContainerState {
-    maxSum: string;
-}
-
-interface ITxMenuContainerDispatch {
-    onEdit: (maxSum: string) => void;
-}
-
-const TxMenuContainer: React.SFC<ITxMenuContainerProps & ITxMenuContainerState & ITxMenuContainerDispatch> = props => (
-    <TxMenu {...props} />
-);
-
 const mapStateToProps = (state: IRootState) => ({
-    maxSum: state.auth.wallet && state.auth.wallet.settings && state.auth.wallet.settings.maxSum
+    maxSum: state.auth.session && state.auth.session.wallet.settings && state.auth.session.wallet.settings.maxSum
 });
 
-const mapDispatchToProps = {
+export default connect(mapStateToProps, {
     onEdit: (maxSum: string) => updateSettings({
         maxSum
     })
-};
 
-export default connect<ITxMenuContainerState, ITxMenuContainerDispatch, ITxMenuContainerProps>(mapStateToProps, mapDispatchToProps)(TxMenuContainer);
+})(TxMenu);

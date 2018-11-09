@@ -38,7 +38,6 @@ declare module 'genesis/api' {
 
     interface ILoginResponse {
         token: string;
-        refresh: string;
         notify_key: string;
         timestamp: string;
         key_id: string;
@@ -53,7 +52,7 @@ declare module 'genesis/api' {
         }[];
     }
 
-    interface IAccount {
+    interface IWalletData {
         id: string;
         address: string;
         encKey: string;
@@ -67,6 +66,7 @@ declare module 'genesis/api' {
     }
 
     interface IKeyInfo {
+        id: string;
         ecosystem: string;
         name: string;
         roles: IRoleInfo[];

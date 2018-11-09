@@ -20,16 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
+import { Epic } from 'modules';
 import { unsubscribe } from '../actions';
 import { removeWallet } from 'modules/storage/actions';
 
-const unsubscribeRemovedWalletEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(removeWallet)
-        .map(action =>
-            unsubscribe.started(action.payload)
-        );
+const unsubscribeRemovedWalletEpic: Epic = (action$, store) => action$.ofAction(removeWallet)
+    .map(action =>
+        unsubscribe.started(action.payload)
+    );
 
 export default unsubscribeRemovedWalletEpic;

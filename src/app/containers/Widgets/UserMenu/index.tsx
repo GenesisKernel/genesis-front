@@ -28,8 +28,14 @@ import { modalShow } from 'modules/modal/actions';
 import UserMenu from 'components/Main/UserMenu';
 
 const mapStateToProps = (state: IRootState) => ({
-    wallet: state.auth.wallet,
-    walletEcosystems: ((state.auth.wallet && state.auth.wallets) ? state.auth.wallets.find(l => l.id === state.auth.wallet.wallet.id).access : []).sort((a, b) => Number(a.ecosystem) - Number(b.ecosystem))
+    session: state.auth.session,
+    walletEcosystems: ((state.auth.session.wallet && state.auth.wallets) ?
+        state.auth.wallets.find(l =>
+            l.id === state.auth.session.wallet.id
+        ).access : []
+    ).sort((a, b) =>
+        Number(a.ecosystem) - Number(b.ecosystem)
+    )
 });
 
 export default connect<any, any, any>(mapStateToProps, {

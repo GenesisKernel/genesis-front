@@ -30,10 +30,9 @@ import keyring from 'lib/keyring';
 
 const changePasswordDoneEpic: Epic = (action$, store, { api }) => action$.ofAction(changePassword.done)
     .flatMap(action => {
-        const auth = store.getState().auth;
-        const wallet = auth.wallet;
-        const wallets = store.getState().storage.wallets;
-        const privateKey = keyring.decryptAES(wallet.wallet.encKey, action.payload.result.oldPassword);
+        const state = store.getState();
+        const wallet = state.auth.session.wallet;
+        const privateKey = keyring.decryptAES(wallet.encKey, action.payload.result.oldPassword);
 
         if (!keyring.validatePrivateKey(privateKey)) {
             return Observable.concat(
@@ -53,26 +52,21 @@ const changePasswordDoneEpic: Epic = (action$, store, { api }) => action$.ofActi
 
         const encKey = keyring.encryptAES(privateKey, action.payload.result.newPassword);
 
-        return Observable.concat(
-
-            Observable.from(wallets.filter(l => l.id === wallet.wallet.id))
-                .map(w => saveWallet({
-                    ...w,
-                    encKey
-                })),
-
-            Observable.merge(
-                Observable.of(modalShow({
-                    id: 'AUTH_PASSWORD_CHANGED',
-                    type: 'AUTH_PASSWORD_CHANGED',
-                    params: {}
-                })),
-                action$.ofAction(modalClose)
-                    .take(1)
-                    .flatMap(result => {
-                        return Observable.of(logout.started(null));
-                    })
-            )
+        return Observable.merge(
+            Observable.of(saveWallet({
+                ...wallet,
+                encKey
+            })),
+            Observable.of(modalShow({
+                id: 'AUTH_PASSWORD_CHANGED',
+                type: 'AUTH_PASSWORD_CHANGED',
+                params: {}
+            })),
+            action$.ofAction(modalClose)
+                .take(1)
+                .flatMap(result =>
+                    Observable.of(logout.started(null))
+                )
         );
     });
 

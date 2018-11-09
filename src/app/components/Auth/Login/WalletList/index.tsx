@@ -22,28 +22,27 @@
 
 import React from 'react';
 import classNames from 'classnames';
+import { INotificationsMessage } from 'genesis/socket';
+import { IKeyInfo, IRoleInfo, IWalletData } from 'genesis/api';
 import { FormattedMessage } from 'react-intl';
-import { IWallet, IAccountContext } from 'genesis/auth';
-import { IAccount } from 'genesis/api';
 
 import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import Heading from 'components/Auth/Heading';
 import ContextButton from '../ContextButton';
 import WalletButton from './WalletButton';
-import { INotificationsMessage } from 'genesis/socket';
 
 export interface IWalletListProps {
     className?: string;
     pending: boolean;
-    wallets: IAccount[];
+    wallets: IWalletData[];
     notifications: INotificationsMessage[];
     activationEnabled: boolean;
     onCreate: () => any;
-    onRemove: (wallet: IWallet) => any;
-    onLogin: (params: { wallet: IWallet, password: string }) => any;
-    onCopy: (wallet: IWallet) => any;
-    onRegister: (wallet: IWallet) => any;
-    onSelect: (params: IAccountContext) => any;
+    onRemove: (wallet: IWalletData) => any;
+    onLogin: (params: { wallet: IWalletData, password: string }) => any;
+    onCopy: (wallet: IWalletData) => any;
+    onRegister: (wallet: IWalletData) => any;
+    onSelect: (params: { wallet: IWalletData, access: IKeyInfo, role?: IRoleInfo }) => any;
 }
 
 const WalletList: React.SFC<IWalletListProps> = props => (
@@ -62,7 +61,11 @@ const WalletList: React.SFC<IWalletListProps> = props => (
                             onRemove={() => props.onRemove(wallet)}
                             onCopy={() => props.onCopy(wallet)}
                             onRegister={props.activationEnabled ? () => props.onRegister(wallet) : null}
-                            onSelect={params => props.onSelect({ ...params, wallet })}
+                            onSelect={params => props.onSelect({
+                                access: params.access,
+                                role: params.role,
+                                wallet
+                            })}
                         />
                     )}
                 </div>

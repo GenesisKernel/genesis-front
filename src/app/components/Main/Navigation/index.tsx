@@ -117,7 +117,8 @@ const StyledMenuContent = themed.div`
     bottom: 0;
 
     > div {
-        background: ${props => props.theme.menuBackground};
+        background: props => props.theme.menuBackground;
+        background: #ff0000;
     }
 
     .title-wrap {

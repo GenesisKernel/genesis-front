@@ -44,7 +44,7 @@ const sectionsInitEpic: Epic = (action$, store, { api }) => action$.ofAction(sec
     .flatMap(action => {
         const state = store.getState();
         const client = api(state.auth.session);
-        const roleID = state.auth.wallet.role && state.auth.wallet.role.id;
+        const roleID = state.auth.session.role && state.auth.session.role.id;
 
         return Observable.from(Promise.all([
             client.sections({

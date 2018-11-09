@@ -22,8 +22,8 @@
 
 import * as actions from './actions';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import { ISession, IAccountContext } from 'genesis/auth';
-import { IAccount } from 'genesis/api';
+import { ISession } from 'genesis/auth';
+import { IWalletData } from 'genesis/api';
 import loginHandler from './reducers/loginHandler';
 import loginDoneHandler from './reducers/loginDoneHandler';
 import loginFailedHandler from './reducers/loginFailedHandler';
@@ -55,11 +55,9 @@ export type State = {
     readonly createWalletError: string;
     readonly isImportingWallet: boolean;
     readonly importWalletError: string;
-    readonly id: string;
-    readonly session: ISession;
     readonly defaultWallet: string;
-    readonly wallet: IAccountContext;
-    readonly wallets: IAccount[];
+    readonly session: ISession;
+    readonly wallets: IWalletData[];
     readonly privateKey: string;
 };
 
@@ -72,10 +70,8 @@ export const initialState: State = {
     createWalletError: null,
     isImportingWallet: false,
     importWalletError: null,
-    id: null,
     session: null,
     defaultWallet: null,
-    wallet: null,
     privateKey: null,
     wallets: []
 };

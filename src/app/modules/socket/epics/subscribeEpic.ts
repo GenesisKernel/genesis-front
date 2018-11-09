@@ -51,12 +51,12 @@ const subscribeEpic: Epic = (action$, store) => action$.ofAction(subscribe.start
                         const subState = store.getState();
                         if (subState.auth.isAuthenticated &&
                             (
-                                subState.auth.wallet.role && subState.auth.wallet.role.id === String(n.role_id) ||
+                                subState.auth.session.role && subState.auth.session.role.id === String(n.role_id) ||
                                 0 === n.role_id
                             ) &&
-                            subState.auth.wallet &&
-                            subState.auth.wallet.wallet.id === action.payload.id &&
-                            subState.auth.wallet.access.ecosystem === n.ecosystem.toString()
+                            subState.auth.session.wallet &&
+                            subState.auth.session.wallet.id === action.payload.id &&
+                            subState.auth.session.access.ecosystem === n.ecosystem.toString()
                         ) {
                             count += n.count;
                         }

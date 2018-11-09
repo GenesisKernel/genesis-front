@@ -27,8 +27,8 @@ import { logout } from 'modules/auth/actions';
 import Login from 'components/Auth/Login';
 
 const mapStateToProps = (state: IRootState) => ({
-    wallet: state.auth.wallet,
-    isAuthenticating: state.auth.wallet && !state.auth.isAuthenticated
+    session: state.auth.session,
+    isAuthenticating: state.auth.session && !state.auth.isAuthenticated
 });
 
 const mapDispatchToProps = {

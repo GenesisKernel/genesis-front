@@ -27,8 +27,9 @@ import { Observable } from 'rxjs/Observable';
 const switchWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(switchWallet)
     .flatMap(action => {
         const state = store.getState();
-        const wallet = state.auth.wallets.find(l => l.id === state.auth.wallet.wallet.id);
-        const access = wallet.access.find(l => l.ecosystem === action.payload.ecosystem);
+        const wallet = state.storage.wallets.find(l => l.id === state.auth.session.wallet.id);
+        const walletData = state.auth.wallets.find(l => l.id === state.auth.session.wallet.id);
+        const access = walletData.access.find(l => l.ecosystem === action.payload.ecosystem);
 
         return Observable.of(
             logout.started(null),

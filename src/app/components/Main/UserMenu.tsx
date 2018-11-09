@@ -23,13 +23,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
-import { IAccountContext } from 'genesis/auth';
+import { ISession } from 'genesis/auth';
+import { IKeyInfo } from 'genesis/api';
 
 import { CloseDropdownButton } from 'components/DropdownButton';
-import PageLink from 'containers/Routing/PageLink';
 import SystemButton from './SystemButton';
 import Avatar from 'containers/Avatar';
-import { IKeyInfo } from 'genesis/api';
+import PageLink from 'components/Routing/PageLink';
 
 const StyledUserMenu = styled.div`
     -webkit-app-region: no-drag;
@@ -79,7 +79,7 @@ const StyledUserMenu = styled.div`
 `;
 
 export interface IUserMenuProps {
-    wallet: IAccountContext;
+    session: ISession;
     walletEcosystems: IKeyInfo[];
     onSwitchEcosystem: (ecosystem: string, defaultRole?: boolean) => void;
     onLogout: () => void;
@@ -88,7 +88,7 @@ export interface IUserMenuProps {
 
 class UserMenu extends React.Component<IUserMenuProps> {
     render() {
-        return this.props.wallet ? (
+        return this.props.session ? (
             <SystemButton
                 className="p0"
                 width={225}
@@ -99,7 +99,7 @@ class UserMenu extends React.Component<IUserMenuProps> {
                         <ul className="dropdown-group">
                             <li>
                                 <CloseDropdownButton onClick={this.props.onChangePassword}>
-                                    <em className="icon icon-key text-muted." />
+                                    <em className="icon icon-key text-muted" />
                                     <span>
                                         <FormattedMessage id="general.wallet.changepassword" defaultMessage="Change password" />
                                     </span>
@@ -150,19 +150,23 @@ class UserMenu extends React.Component<IUserMenuProps> {
                 <StyledUserMenu>
                     <div className="user-info">
                         <div className="user-title">
-                            {this.props.wallet.wallet.address}
+                            {this.props.session.wallet.address}
                         </div>
                         <div className="user-subtitle">
-                            {this.props.wallet.access.name || (
-                                <FormattedMessage id="general.wallet.ecosystemNo" defaultMessage="Ecosystem #{ecosystem}" values={{ ecosystem: this.props.wallet.access.ecosystem }} />
+                            {this.props.session.access.name || (
+                                <FormattedMessage
+                                    id="general.wallet.ecosystemNo"
+                                    defaultMessage="Ecosystem #{ecosystem}"
+                                    values={{ ecosystem: this.props.session.access.ecosystem }}
+                                />
                             )}
                         </div>
                     </div>
                     <Avatar
                         className="user-avatar"
                         size={32}
-                        keyID={this.props.wallet.wallet.id}
-                        ecosystem={this.props.wallet.access.ecosystem}
+                        keyID={this.props.session.wallet.id}
+                        ecosystem={this.props.session.access.ecosystem}
                     />
                 </StyledUserMenu>
             </SystemButton>

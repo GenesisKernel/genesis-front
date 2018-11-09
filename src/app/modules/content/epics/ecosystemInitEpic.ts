@@ -47,11 +47,11 @@ const ecosystemInitEpic: Epic = (action$, store, { api }) => action$.ofAction(ec
             )
         ).catch(e => {
             if ('E_OFFLINE' === e.error || 'E_SERVER' === e.error || 'E_TOKENEXPIRED' === e.error) {
-                const wallet = store.getState().auth.wallet;
+                const session = store.getState().auth.session;
 
                 return Observable.of<Action>(
                     logout.started(null),
-                    selectWallet(wallet),
+                    selectWallet(session),
                     ecosystemInit.failed({
                         params: action.payload,
                         error: e.error

@@ -22,20 +22,22 @@
 
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { IAccountContext } from 'genesis/auth';
+import { ISession } from 'genesis/auth';
 
 import WalletList from 'containers/Auth/Login/WalletList';
 import PasswordPrompt from 'containers/Auth/Login/PasswordPrompt';
 
 export interface ILoginProps {
-    wallet: IAccountContext;
+    session: ISession;
     isAuthenticating: boolean;
 }
 
 const Login: React.SFC<ILoginProps> = props => (
     <div>
         <Switch>
-            {props.wallet && props.isAuthenticating ? <Route path="/" component={PasswordPrompt} /> : null}
+            {props.session && props.isAuthenticating && (
+                <Route path="/" component={PasswordPrompt} />
+            )}
             <Route path="/" component={WalletList} />
         </Switch>
     </div>

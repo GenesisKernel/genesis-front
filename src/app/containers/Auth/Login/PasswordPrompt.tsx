@@ -28,7 +28,7 @@ import { logout, login } from 'modules/auth/actions';
 import PasswordPrompt from 'components/Auth/Login/PasswordPrompt';
 
 const mapStateToProps = (state: IRootState) => ({
-    wallet: state.auth.wallet
+    session: state.auth.session
 });
 
 const mapDispatchToProps = {

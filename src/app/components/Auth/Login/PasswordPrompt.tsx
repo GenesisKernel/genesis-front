@@ -23,7 +23,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
-import { ILoginCall, IAccountContext } from 'genesis/auth';
+import { ILoginCall, ISession } from 'genesis/auth';
 
 import Avatar from 'containers/Avatar';
 import Validation from 'components/Validation';
@@ -31,52 +31,45 @@ import Heading from 'components/Auth/Heading';
 
 export interface IPasswordPromptProps {
     className?: string;
-    wallet: IAccountContext;
+    session: ISession;
     onSubmit: (params: ILoginCall) => void;
     onCancel: () => void;
 }
 
-const PasswordPrompt: React.SFC<IPasswordPromptProps & InjectedIntlProps> = props => {
-    const onSubmit = (values: { [key: string]: any }) =>
-        props.onSubmit({
-            password: values.password
-        });
-
-    return (
-        <div className={props.className}>
-            <Validation.components.ValidatedForm className="form-horizontal" onSubmitSuccess={onSubmit}>
-                <Heading onReturn={props.onCancel}>
-                    <FormattedMessage id="auth.authentication" defaultMessage="Authentication" />
-                </Heading>
-                <div className="text-center desktop-flex-stretch">
-                    <div className="avatar-holder">
-                        <Avatar
-                            size={100}
-                            keyID={props.wallet.wallet.id}
-                            ecosystem={props.wallet.access.ecosystem}
-                        />
-                    </div>
-                    <h4 className="text-center mt0">
-                        {`${props.wallet.wallet.address} (${props.wallet.access.name || props.wallet.access.ecosystem})`}
-                    </h4>
-                    <p>
-                        <FormattedMessage id="auth.session.prompt" defaultMessage="Please enter your password to sign in" />
-                    </p>
-                    <div className="password-prompt">
-                        <Validation.components.ValidatedControl
-                            type="password"
-                            name="password"
-                            placeholder={props.intl.formatMessage({ id: 'auth.password', defaultMessage: 'Enter your password...' })}
-                        />
-                        <Validation.components.ValidatedSubmit className="btn-block">
-                            <em className="icon icon-login" />
-                        </Validation.components.ValidatedSubmit>
-                    </div>
+const PasswordPrompt: React.SFC<IPasswordPromptProps & InjectedIntlProps> = props => (
+    <div className={props.className}>
+        <Validation.components.ValidatedForm className="form-horizontal" onSubmitSuccess={values => props.onSubmit({ password: values.password })}>
+            <Heading onReturn={props.onCancel}>
+                <FormattedMessage id="auth.authentication" defaultMessage="Authentication" />
+            </Heading>
+            <div className="text-center desktop-flex-stretch">
+                <div className="avatar-holder">
+                    <Avatar
+                        size={100}
+                        keyID={props.session.wallet.id}
+                        ecosystem={props.session.access.ecosystem}
+                    />
                 </div>
-            </Validation.components.ValidatedForm>
-        </div>
-    );
-};
+                <h4 className="text-center mt0">
+                    {`${props.session.wallet.address} (${props.session.access.name || props.session.access.ecosystem})`}
+                </h4>
+                <p>
+                    <FormattedMessage id="auth.session.prompt" defaultMessage="Please enter your password to sign in" />
+                </p>
+                <div className="password-prompt">
+                    <Validation.components.ValidatedControl
+                        type="password"
+                        name="password"
+                        placeholder={props.intl.formatMessage({ id: 'auth.password', defaultMessage: 'Enter your password...' })}
+                    />
+                    <Validation.components.ValidatedSubmit className="btn-block">
+                        <em className="icon icon-login" />
+                    </Validation.components.ValidatedSubmit>
+                </div>
+            </div>
+        </Validation.components.ValidatedForm>
+    </div>
+);
 
 export default styled(injectIntl(PasswordPrompt))`
     .avatar-holder {

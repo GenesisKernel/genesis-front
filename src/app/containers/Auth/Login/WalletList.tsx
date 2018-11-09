@@ -25,6 +25,7 @@ import { IRootState } from 'modules';
 import { login, selectWallet, removeWallet } from 'modules/auth/actions';
 import { navigate } from 'modules/engine/actions';
 import { IWallet } from 'genesis/auth';
+import { IWalletData } from 'genesis/api';
 import { modalShow } from 'modules/modal/actions';
 
 import WalletList from 'components/Auth/Login/WalletList';
@@ -38,7 +39,7 @@ const mapStateToProps = (state: IRootState) => ({
         publicKey: wallet.publicKey,
         id: wallet.id,
         ...(state.auth.wallets || []).find(l => l.id === wallet.id)
-    })),
+    })) as IWalletData[],
     notifications: state.socket.notifications,
     activationEmail: state.engine.activationEmail
 });
@@ -75,7 +76,7 @@ export default connect(mapStateToProps, mapDispatchToProps, (state, dispatch: an
     onLogin: dispatch.onLogin,
     onSelect: dispatch.onSelect,
     onCopy: dispatch.onCopy,
-    onRegister: (wallet: IWallet) => dispatch.onRegister(wallet, state.activationEmail),
+    onRegister: (wallet: IWalletData) => dispatch.onRegister(wallet, state.activationEmail),
     onCreate: dispatch.onCreate
 
 }))(WalletList);

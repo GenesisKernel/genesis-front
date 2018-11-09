@@ -22,17 +22,17 @@
 
 import React from 'react';
 import styled from 'styled-components';
+import { IKeyInfo, IRoleInfo, IWalletData } from 'genesis/api';
+import { INotificationsMessage } from 'genesis/socket';
 import { FormattedMessage } from 'react-intl';
 import { Button, Clearfix } from 'react-bootstrap';
-import { IAccount, IKeyInfo, IRoleInfo } from 'genesis/api';
-import { INotificationsMessage } from 'genesis/socket';
 
 import Avatar from 'containers/Avatar';
 import RoleButton from './RoleButton';
 
 export interface IWalletButtonProps {
     className?: string;
-    wallet: IAccount;
+    wallet: IWalletData;
     notifications: INotificationsMessage[];
     onCopy: () => void;
     onRemove: () => void;
