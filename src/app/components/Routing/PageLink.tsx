@@ -23,18 +23,31 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { generateRoute } from 'services/router';
+import { TBreadcrumbType } from 'genesis/content';
 
 export interface IPageLinkProps {
+    className?: string;
     section: string;
     page: string;
     params?: {
         [key: string]: string
     };
-    className?: string;
+    from?: {
+        name: string;
+        type: TBreadcrumbType;
+    };
 }
 
 const PageLink: React.SFC<IPageLinkProps> = props => (
-    <Link to={generateRoute(`/${props.section}/${props.page}`, props.params)} className={props.className}>
+    <Link
+        to={{
+            pathname: generateRoute(`/${props.section}/${props.page}`, props.params),
+            state: {
+                from: props.from
+            }
+        }}
+        className={props.className}
+    >
         {props.children}
     </Link>
 );

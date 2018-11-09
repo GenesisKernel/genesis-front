@@ -20,24 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
+import { ISection } from 'genesis/content';
 
-const findMenu = (state: State, name: string) => {
-    for (let sectionName in state.sections) {
-        if (state.sections.hasOwnProperty(sectionName)) {
-            const section = state.sections[sectionName];
-            const menuIndex = section.menus.findIndex(m => m.name === name);
-
-            if (-1 !== menuIndex) {
-                return {
-                    index: menuIndex,
-                    section: section.name
-                };
-            }
-        }
-    }
-
-    return null;
-};
+const findMenu = (section: ISection, name: string) =>
+    section.menus.findIndex(m => m.name === name);
 
 export default findMenu;

@@ -24,10 +24,25 @@ declare module 'genesis/content' {
     import { TProtypoElement } from 'genesis/protypo';
     import { Location } from 'history';
 
-    type IMenu = {
+    interface IMenu {
         readonly name: string;
         readonly content: TProtypoElement[];
-    };
+    }
+
+    type TBreadcrumbType =
+        'MENU' | 'PAGE';
+
+    type TPageParams = {
+        [key: string]: string;
+    }
+
+    interface IBreadcrumb {
+        readonly caller: string;
+        readonly type: TBreadcrumbType;
+        readonly section: string;
+        readonly page: string;
+        readonly params: TPageParams;
+    }
 
     type TPageStatus =
         'PENDING' | 'LOADED' | 'ERROR';
@@ -37,14 +52,12 @@ declare module 'genesis/content' {
         readonly status: TPageStatus;
         readonly legacy?: boolean;
         readonly content: TProtypoElement[];
-        readonly params: {
-            [key: string]: string;
-        };
+        readonly params: TPageParams;
         readonly error?: string;
         readonly location: Location;
     }
 
-    type TSection = {
+    interface ISection {
         readonly key: string;
         readonly visible: boolean;
         readonly menuDisabled?: boolean;
@@ -54,6 +67,7 @@ declare module 'genesis/content' {
         readonly title: string;
         readonly force: boolean;
         readonly defaultPage: string;
+        readonly breadcrumbs: IBreadcrumb[];
         readonly menus: IMenu[];
         readonly pages: IPage[];
     }

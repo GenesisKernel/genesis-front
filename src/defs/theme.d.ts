@@ -44,6 +44,8 @@ declare module 'genesis/theme' {
         menuHeight: number;
         menuForeground: string;
         menuBackgroundActive: string;
+        menuActive: string;
+        menuSeparator: string;
         menuOutline: string;
         menuOutlineActive: string;
         menuIconColor: string;

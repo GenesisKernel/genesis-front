@@ -99,6 +99,10 @@ const buttonInteractionEpic: Epic = (action$, store, { api, routerService }) => 
                 return Observable.of(action);
             }
         });
+    }).catch(e => {
+        // tslint:disable-next-line:no-console
+        console.error(e);
+        return Observable.empty<never>();
     });
 
 export default buttonInteractionEpic;

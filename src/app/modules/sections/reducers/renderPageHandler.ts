@@ -24,14 +24,32 @@ import { State } from '../reducer';
 import { renderPage } from '../actions';
 import { Reducer } from 'modules';
 import upsertSectionPage from '../util/upsertSectionPage';
+import upsertSectionBreadcrumb from '../util/upsertSectionBreadcrumb';
 
-const renderPageHandler: Reducer<typeof renderPage.started, State> = (state, payload) =>
-    upsertSectionPage(state, payload.section, {
-        name: payload.name,
-        status: 'PENDING',
-        legacy: false,
-        params: payload.params,
-        location: payload.location
-    });
+const renderPageHandler: Reducer<typeof renderPage.started, State> = (state, payload) => ({
+    ...state,
+    sections: {
+        ...state.sections,
+        [payload.section]: {
+            ...upsertSectionPage(state.sections[payload.section], {
+                name: payload.name,
+                status: 'PENDING',
+                legacy: false,
+                params: payload.params,
+                location: payload.location
+            }),
+            breadcrumbs: upsertSectionBreadcrumb(
+                state.sections[payload.section],
+                {
+                    caller: payload.location.state && payload.location.state.from && payload.location.state.from.name,
+                    type: payload.location.state && payload.location.state.from && payload.location.state.from.type,
+                    section: payload.section,
+                    page: payload.name,
+                    params: payload.params
+                }
+            )
+        }
+    }
+});
 
 export default renderPageHandler;

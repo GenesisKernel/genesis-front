@@ -45,11 +45,12 @@ export interface IProtypoContainerProps {
     selectedTag?: any;
     logic?: boolean;
     section: string;
+    page?: string;
+    menu?: string;
 }
 
 interface IProtypoContainerState {
     apiHost: string;
-    page: string;
 }
 
 interface IProtypoContainerDispatch {
@@ -63,14 +64,10 @@ const ProtypoContainer: React.SFC<IProtypoContainerState & IProtypoContainerDisp
     <Protypo {...props} />
 );
 
-const mapStateToProps = (state: IRootState) => {
-    // const section = state.sections.sections[state.sections.section];
-
-    return {
-        apiHost: state.auth.session && (state.auth.session.apiHost + '/api/v2'),
-        page: 'default_page', // section && section.page && section.page.name
-    };
-};
+const mapStateToProps = (state: IRootState, props: IProtypoContainerProps) => ({
+    apiHost: state.auth.session && (state.auth.session.apiHost + '/api/v2'),
+    page: props.page
+});
 
 const mapDispatchToProps = {
     navigatePage: navigatePage.started,

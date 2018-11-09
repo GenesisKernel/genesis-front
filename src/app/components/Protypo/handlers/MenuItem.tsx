@@ -36,23 +36,27 @@ export interface IMenuItemProps {
 }
 
 export const StyledMenuItem = themed.div`
+    position: relative;
+
     > a, > a:hover {
         text-decoration: none !important;
     }
 
     &.active {
-        > .link-active-decorator {
+        .link-active-decorator {
             opacity: 1;
         }
     }
 
-    > .link-active-decorator {
+    .link-active-decorator {
         display: block;
         opacity: 0;
-        background: #4c7dbd;
-        float: left;
-        width: 4px;
-        height: 50px;
+        background: ${props => props.theme.menuActive};
+        position: absolute;
+        top: 4px;
+        bottom: 4px;
+        left: 3px;
+        width: 2px;
         transition: opacity .2s ease-in-out;
     }
 
@@ -61,13 +65,14 @@ export const StyledMenuItem = themed.div`
     }
 
     .link-body {
+        border-bottom: solid 1px ${props => props.theme.menuSeparator};
         display: block;
         height: 50px;
         line-height: 50px;
-        padding: 0 25px;
+        padding: 0 19px;
         color: ${props => props.theme.menuForeground};
         font-size: 14px;
-        font-weight: 200;
+        font-weight: 400;
         text-align: left;
         text-decoration: none;
         overflow: hidden;
@@ -77,9 +82,9 @@ export const StyledMenuItem = themed.div`
         .icon {
             margin-right: 14px;
             color: ${props => props.theme.menuIconColor};
-            font-size: 17px;
+            font-size: 22px;
             position: relative;
-            top: 3px;
+            top: 5px;
         }
     }
 `;
@@ -89,14 +94,21 @@ interface IMenuItemContext {
 }
 
 const MenuItem: React.SFC<IMenuItemProps> = (props, context: IMenuItemContext) => {
-    const isActive = context.protypo.getCurrentPage() === props.page;
     const classes = classnames({
-        active: isActive
+        active: context.protypo.props.page === props.page
     });
 
     return (
         <StyledMenuItem className={classes}>
-            <PageLink page={props.page} section={context.protypo.props.section} params={context.protypo.resolveParams(props.params)}>
+            <PageLink
+                page={props.page}
+                section={context.protypo.props.section}
+                params={context.protypo.resolveParams(props.params)}
+                from={{
+                    type: 'MENU',
+                    name: context.protypo.props.menu
+                }}
+            >
                 <span className="link-active-decorator" />
                 <span className="link-body">
                     {props.icon && (<em className={`icon ${props.icon}`} />)}

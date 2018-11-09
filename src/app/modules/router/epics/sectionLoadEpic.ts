@@ -36,9 +36,9 @@ const sectionLoadEpic: Epic = (action$, store, { routerService }) => action$.ofA
             const pageName = match.parts.page || section.defaultPage;
 
             if ('POP' === action.payload.action) {
-                const pageIndex = findPage(state.sections, pageName);
-                if (pageIndex) {
-                    const page = state.sections.sections[pageIndex.section].pages[pageIndex.index];
+                const pageIndex = findPage(section, pageName);
+                if (-1 !== pageIndex) {
+                    const page = state.sections.sections[section.name].pages[pageIndex];
                     if (page.content || page.error) {
                         return Observable.of(popPage({
                             location: action.payload.location,

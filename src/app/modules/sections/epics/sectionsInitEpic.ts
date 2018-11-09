@@ -88,7 +88,8 @@ const sectionsInitEpic: Epic = (action$, store, { api }) => action$.ofAction(sec
                                 force: false,
                                 menus: [],
                                 menuVisible: true,
-                                pages: []
+                                pages: [],
+                                breadcrumbs: []
                             }))
                         ]
                     },

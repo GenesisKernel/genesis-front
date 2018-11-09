@@ -25,11 +25,16 @@ import { renderPage } from '../actions';
 import { Reducer } from 'modules';
 import upsertSectionPage from '../util/upsertSectionPage';
 
-const renderPageDoneHandler: Reducer<typeof renderPage.done, State> = (state, payload) =>
-    upsertSectionPage(state, payload.params.section, {
-        name: payload.params.name,
-        status: 'LOADED',
-        content: payload.result
-    });
+const renderPageDoneHandler: Reducer<typeof renderPage.done, State> = (state, payload) => ({
+    ...state,
+    sections: {
+        ...state.sections,
+        [payload.params.section]: upsertSectionPage(state.sections[payload.params.section], {
+            name: payload.params.name,
+            status: 'LOADED',
+            content: payload.result
+        })
+    }
+});
 
 export default renderPageDoneHandler;

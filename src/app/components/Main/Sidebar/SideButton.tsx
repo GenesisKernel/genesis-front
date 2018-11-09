@@ -20,6 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import React from 'react';
+import classNames from 'classnames';
+
 import themed from 'components/Theme/themed';
 
 const StyledSideButton = themed.button`
@@ -30,13 +33,31 @@ const StyledSideButton = themed.button`
     background: none;
     color: #fff;
     font-size: 14px;
-    outline: none;
-    border: none;
-    border-bottom: solid 1px rgba(255, 255, 255, 0.2);
+
+    &,&:hover,&:active,&:focus{
+        outline: none;
+        border: none;
+        border-bottom: solid 1px rgba(255, 255, 255, 0.2);
+    }
 
     &:hover {
         background: rgba(255,255,255,0.11);
     }
+
+    &.button-active {
+        border-left: solid 4px #c0d1e7;
+        background-color: rgba(255,255,255,0.12);
+    }
 `;
 
-export default StyledSideButton;
+export interface ISideButtonProps {
+    active?: boolean;
+}
+
+const SideButton: React.SFC<ISideButtonProps> = props => (
+    <StyledSideButton className={classNames({ 'button-active': props.active })}>
+        {props.children}
+    </StyledSideButton>
+);
+
+export default SideButton;

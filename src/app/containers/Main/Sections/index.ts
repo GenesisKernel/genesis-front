@@ -35,6 +35,7 @@ export interface ISectionRouteProps extends RouteComponentProps<ISectionRoutePar
 
 const mapStateToProps = (state: IRootState, props: ISectionRouteProps) => ({
     section: props.match.params.section,
+    page: props.match.params.page,
     values: state.sections.sections,
     navigationSize: state.storage.navigationSize
 });

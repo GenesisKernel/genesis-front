@@ -22,7 +22,7 @@
 
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { TSection } from 'genesis/content';
+import { ISection } from 'genesis/content';
 import { history } from 'store';
 
 import { AnimatedSwitch } from 'components/Animation';
@@ -31,31 +31,13 @@ import Sections from 'containers/Main/Sections';
 import NotFound from 'components/NotFound';
 import themed from 'components/Theme/themed';
 import SideButton from './Sidebar/SideButton';
-// import TransactionsMenu from './TransactionsMenu';
 
 export interface IMainProps {
     section: string;
-    sections: { [name: string]: TSection };
+    sections: { [name: string]: ISection };
     stylesheet: string;
     onSwitchSection: (section: string) => void;
 }
-
-/*const StyledControls = themed.div`
-    position: absolute;
-    top: ${platform.select({ win32: '1px' }) || 0};
-    left: ${platform.select({ win32: '1px' }) || 0};
-    right: ${platform.select({ win32: '1px' }) || 0};
-    z-index: 10000;
-`;
-
-const StyledTitlebar = themed.div`
-    background: ${props => props.theme.headerBackground};
-    height: ${props => props.theme.headerHeight}px;
-    line-height: ${props => props.theme.headerHeight}px;
-    font-size: 15px;
-    color: #fff;
-    text-align: center;
-`;*/
 
 const StyledContent = themed.div`
     position: fixed;
@@ -84,6 +66,17 @@ class Main extends React.Component<IMainProps> {
                     <SideButton>
                         <em className="icon-menu" />
                     </SideButton>
+                    <SideButton active>
+                        <em className="icon-compass" />
+                    </SideButton>
+                    <SideButton>
+                        <em className="icon-flag" />
+                    </SideButton>
+                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+                        <SideButton>
+                            <em className="icon-user" />
+                        </SideButton>
+                    </div>
                 </Sidebar>
                 <StyledContent>
                     <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>

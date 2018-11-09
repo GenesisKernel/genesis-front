@@ -33,6 +33,7 @@
         "src/app/setupTests.ts",
         "tests",
         "**/*.test.ts",
-        "**/test"
+        "**/test",
+        "public"
     ]
 }

@@ -35,7 +35,8 @@ export interface IProtypoProps extends IConstructorElementProps {
     apiHost: string;
     wrapper?: JSX.Element;
     context: string;
-    page: string;
+    page?: string;
+    menu?: string;
     section: string;
     content: TProtypoElement[];
     menuPush: (params: { section: string, menu: IMenu }) => void;

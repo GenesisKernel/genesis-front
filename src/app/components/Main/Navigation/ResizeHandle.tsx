@@ -36,7 +36,7 @@ interface IResizeHandleProps {
 
 export const styles = {
     hoverWidth: 10,
-    initialWidth: 2,
+    initialWidth: 1,
 };
 
 const StyledResizeHandle = themed.button`

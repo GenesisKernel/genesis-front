@@ -47,7 +47,8 @@ const Page: React.SFC<IPageProps> = (props) => {
                 <Protypo
                     context="page"
                     section={props.section}
-                    {...props.value}
+                    page={props.value.name}
+                    content={props.value.content}
                 />
             </div>
         );

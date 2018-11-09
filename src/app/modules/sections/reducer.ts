@@ -22,7 +22,7 @@
 
 import * as actions from './actions';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import { TSection } from 'genesis/content';
+import { ISection } from 'genesis/content';
 import renderSectionHandler from './reducers/renderSectionHandler';
 import switchSectionHandler from './reducers/switchSectionHandler';
 import updateSectionHandler from './reducers/updateSectionHandler';
@@ -41,7 +41,7 @@ import popPageHandler from './reducers/popPageHandler';
 export type State = {
     readonly mainSection: string;
     readonly sections: {
-        readonly [name: string]: TSection;
+        readonly [name: string]: ISection;
     };
 };
 
@@ -58,6 +58,13 @@ export const initialState: State = {
             title: 'Home',
             force: false,
             defaultPage: 'default_page',
+            breadcrumbs: [{
+                caller: 'default_menu',
+                type: 'MENU',
+                section: 'home',
+                page: 'default_page',
+                params: {},
+            }],
             menus: [],
             pages: []
         },
@@ -70,7 +77,14 @@ export const initialState: State = {
             name: 'developer',
             title: 'Developer',
             force: false,
-            defaultPage: 'admin_index',
+            defaultPage: 'admin_dashboard',
+            breadcrumbs: [{
+                caller: 'admin_dashboard',
+                type: 'MENU',
+                section: 'developer',
+                page: 'admin_dashboard',
+                params: {},
+            }],
             menus: [],
             pages: []
         }

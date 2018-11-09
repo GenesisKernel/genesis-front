@@ -22,7 +22,7 @@
 
 import React from 'react';
 import _ from 'lodash';
-import { TSection } from 'genesis/content';
+import { ISection } from 'genesis/content';
 
 import themed from 'components/Theme/themed';
 import Navigation from 'containers/Main/Navigation';
@@ -42,6 +42,7 @@ const StyledSections = themed.div`
     }
 
     .sections-content {
+        background: #fff;
         flex: 1;
         display: flex;
         flex-direction: row;
@@ -50,13 +51,14 @@ const StyledSections = themed.div`
 
 export interface ISectionsProps {
     section: string;
+    page: string;
     values: {
-        [key: string]: TSection;
+        [key: string]: ISection;
     };
     navigationSize: number;
 }
 
-const mapSectionParam = (section: TSection) => {
+const mapSectionParam = (section: ISection) => {
     const lastPage = section.pages[section.pages.length - 1];
     const page = lastPage ? lastPage.name : section.defaultPage;
     const params = lastPage ? lastPage.params : {};
@@ -83,6 +85,7 @@ const Sections: React.SFC<ISectionsProps> = (props) => (
             <Section
                 name={props.section}
                 pages={props.values[props.section].pages}
+                breadcrumbs={props.values[props.section].breadcrumbs}
             />
         </div>
     </StyledSections>

@@ -29,6 +29,7 @@ const StyledSidebar = themed.div`
     background-attachment: fixed;
     width: ${props => props.theme.menuHeight}px;
     height: 100%;
+    position: relative;
 `;
 
 export interface ISidebarProps {

@@ -25,7 +25,7 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { ecosystemInit } from 'modules/content/actions';
 import { renderPage, renderLegacyPage, navigatePage, switchSection } from 'modules/sections/actions';
-import { TSection } from 'genesis/content';
+import { ISection } from 'genesis/content';
 import { Link } from 'react-router-dom';
 
 export interface IPageContainerProps {
@@ -38,7 +38,7 @@ export interface IPageContainerProps {
 
 interface IPageContainerState {
     sections: {
-        [name: string]: TSection;
+        [name: string]: ISection;
     };
 }
 

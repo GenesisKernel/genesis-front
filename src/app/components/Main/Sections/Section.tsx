@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import React from 'react';
-import { IPage } from 'genesis/content';
+import { IPage, IBreadcrumb } from 'genesis/content';
 
 import Page from 'components/Main/Page';
 import Stack from 'components/Animation/Stack';
@@ -31,7 +31,9 @@ import themed from 'components/Theme/themed';
 export interface ISectionProps {
     name: string;
     pages: IPage[];
+    breadcrumbs: IBreadcrumb[];
 }
+
 const StyledContent = themed.section`
     && { background: ${props => props.theme.contentBackground}; }
     color: ${props => props.theme.contentForeground};
@@ -50,7 +52,7 @@ const StyledContent = themed.section`
 const Section: React.SFC<ISectionProps> = (props) => (
     <div className="fullscreen">
         <StyledContent>
-            <Breadcrumbs pages={props.pages} />
+            <Breadcrumbs values={props.breadcrumbs} />
             <div className="flex-stretch" style={{ position: 'relative' }}>
                 <Stack
                     items={(props.pages || []).map(page => (

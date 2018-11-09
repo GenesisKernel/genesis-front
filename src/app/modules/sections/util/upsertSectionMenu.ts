@@ -20,40 +20,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { IMenu } from 'genesis/content';
+import { IMenu, ISection } from 'genesis/content';
 import findMenu from './findMenu';
 
-const upsertSectionMenu = (state: State, sectionName: string, menu: IMenu) => {
-    const menuIndex = findMenu(state, menu.name);
+const upsertSectionMenu = (section: ISection, menu: IMenu): ISection => {
+    const menuIndex = findMenu(section, menu.name);
     let menus: IMenu[];
 
-    if (menuIndex) {
-        const section = state.sections[menuIndex.section];
+    if (-1 !== menuIndex) {
         menus = [
-            ...section.menus.slice(0, menuIndex.index),
+            ...section.menus.slice(0, menuIndex),
             {
-                ...section.menus[menuIndex.index],
+                ...section.menus[menuIndex],
                 ...menu
             }
         ];
     }
     else {
         menus = [
-            ...state.sections[sectionName].menus,
+            ...section.menus,
             menu
         ];
     }
 
     return {
-        ...state,
-        sections: {
-            ...state.sections,
-            [sectionName]: {
-                ...state.sections[sectionName],
-                menus
-            }
-        }
+        ...section,
+        menus
     };
 };
 

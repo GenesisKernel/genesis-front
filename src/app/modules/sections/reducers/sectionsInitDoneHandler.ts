@@ -23,10 +23,10 @@
 import { State } from '../reducer';
 import { sectionsInit } from '../actions';
 import { Reducer } from 'modules';
-import { TSection } from 'genesis/content';
+import { ISection } from 'genesis/content';
 
 const sectionsInitDoneHandler: Reducer<typeof sectionsInit.done, State> = (state, payload) => {
-    const sections: { [key: string]: TSection } = {};
+    const sections: { [key: string]: ISection } = {};
     payload.result.sections.forEach(section => {
         sections[section.name] = section;
     });

@@ -48,8 +48,18 @@ const StyledNavigation = themed.aside`
     }
 
     > nav {
-        background: url(/img/backBlur.png) -${props => props.theme.menuHeight}px 0;
+        background-attachment: fixed;
         height: 100%;
+    }
+
+    .navigation-controls {
+        background: ${props => props.theme.headerBackground};
+        padding: 0 10px;
+        height: 45px;
+        line-height: 45px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #666;
     }
 `;
 
@@ -129,6 +139,9 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
         return (
             <StyledNavigation className={this.props.visible ? '' : 'navigation-collapsed'} style={{ width: this.props.visible ? this.props.width : 0 }}>
                 <nav>
+                    <div className="navigation-controls">
+                        &lt;&lt;&lt; Collapse
+                    </div>
                     <StyledMenu>
                         <StackGroup
                             items={(this.props.menus || []).map((menu, index) => (
@@ -148,6 +161,7 @@ class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
                                             context="menu"
                                             content={menu.content}
                                             section={this.props.section}
+                                            menu={menu.name}
                                         />
                                     </StyledMenuContent>
                                 </ScrollView>

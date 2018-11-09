@@ -20,11 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import * as propTypes from 'prop-types';
+import React from 'react';
+import propTypes from 'prop-types';
 
 import Protypo, { IParamsSpec } from '../Protypo';
 import StyledComponent from './StyledComponent';
+import PageLink from 'components/Routing/PageLink';
 
 export interface ILinkPageProps {
     'class'?: string;
@@ -38,27 +39,23 @@ interface ILinkPageContext {
     navigatePage: (params: { name: string, params: any, force?: boolean }) => void;
 }
 
-const LinkPage: React.SFC<ILinkPageProps> = (props, context: ILinkPageContext) => {
-    const onNavigate = (e: React.MouseEvent<HTMLAnchorElement>) => {
-        e.preventDefault();
-        context.navigatePage({
-            name: props.page,
-            params: context.protypo.resolveParams(props.pageparams),
-            force: true
-        });
-        return false;
-    };
-
-    return (
-        <a href="#" className={[props.class, props.className].join(' ')} onClick={onNavigate}>
-            {props.children}
-        </a>
-    );
-};
+const LinkPage: React.SFC<ILinkPageProps> = (props, context: ILinkPageContext) => (
+    <PageLink
+        className={[props.class, props.className].join(' ')}
+        section={context.protypo.props.section}
+        page={props.page}
+        params={context.protypo.resolveParams(props.pageparams)}
+        from={{
+            type: 'PAGE',
+            name: context.protypo.props.page
+        }}
+    >
+        {props.children}
+    </PageLink>
+);
 
 LinkPage.contextTypes = {
     protypo: propTypes.object.isRequired,
-    navigatePage: propTypes.func.isRequired
 };
 
 export default StyledComponent(LinkPage);

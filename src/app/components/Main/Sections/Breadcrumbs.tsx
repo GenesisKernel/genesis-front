@@ -21,13 +21,13 @@
 // SOFTWARE.
 
 import React from 'react';
-import { IPage } from 'genesis/content';
-import { Link } from 'react-router-dom';
+import { IBreadcrumb } from 'genesis/content';
 
 import themed from 'components/Theme/themed';
+import PageLink from 'components/Routing/PageLink';
 
 export interface IBreadcrumbsProps {
-    pages: IPage[];
+    values: IBreadcrumb[];
 }
 
 const StyledBreadcrumbs = themed.ul`
@@ -41,6 +41,7 @@ const StyledBreadcrumbs = themed.ul`
     > li {
         display: inline-block;
         font-size: 15px;
+        font-weight: 400;
         height: 45px;
         margin-right: 10px;
     }
@@ -48,11 +49,15 @@ const StyledBreadcrumbs = themed.ul`
 
 const Breadcrumbs: React.SFC<IBreadcrumbsProps> = (props) => (
     <StyledBreadcrumbs>
-        {props.pages.map(page => (
-            <li key={'route' + page.location.key}>
-                <Link to={page.location}>
-                    {page.name} &gt;
-                </Link>
+        {props.values.map((breadcrumb, i) => (
+            <li key={i}>
+                <PageLink
+                    section={breadcrumb.section}
+                    page={breadcrumb.page}
+                    params={breadcrumb.params}
+                >
+                    {breadcrumb.page} &gt;
+                </PageLink>
             </li>
         ))}
     </StyledBreadcrumbs>

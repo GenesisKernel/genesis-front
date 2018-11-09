@@ -20,19 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { popPage } from '../actions';
-import { Reducer } from 'modules';
-import upsertSectionPage from '../util/upsertSectionPage';
+import { ISection, IBreadcrumb } from 'genesis/content';
 
-const popPageHandler: Reducer<typeof popPage, State> = (state, payload) => ({
-    ...state,
-    sections: {
-        ...state.sections,
-        [payload.section]: upsertSectionPage(state.sections[payload.section], {
-            name: payload.name
-        })
+const findBreadcrumb = (section: ISection, breadcrumb: IBreadcrumb) => {
+    const pageIndex = section.breadcrumbs.findIndex(m =>
+        m.page === breadcrumb.page
+    );
+
+    if (-1 !== pageIndex) {
+        return pageIndex;
     }
-});
 
-export default popPageHandler;
+    const callerIndex = section.breadcrumbs.findIndex(m =>
+        m.caller === breadcrumb.caller && m.type === breadcrumb.type
+    );
+
+    return callerIndex;
+};
+
+export default findBreadcrumb;

@@ -20,8 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { IPage } from 'genesis/content';
+import { IPage, ISection } from 'genesis/content';
 import findPage from './findPage';
 
 const defaultValues: IPage = {
@@ -40,23 +39,22 @@ const defaultValues: IPage = {
     }
 };
 
-const upsertSectionPage = (state: State, sectionName: string, page: Partial<IPage>) => {
-    const pageIndex = findPage(state, page.name);
+const upsertSectionPage = (section: ISection, page: Partial<IPage>): ISection => {
+    const pageIndex = findPage(section, page.name);
     let pages: IPage[];
 
-    if (pageIndex) {
-        const section = state.sections[pageIndex.section];
+    if (-1 !== pageIndex) {
         pages = [
-            ...section.pages.slice(0, pageIndex.index),
+            ...section.pages.slice(0, pageIndex),
             {
-                ...section.pages[pageIndex.index],
+                ...section.pages[pageIndex],
                 ...page
             }
         ];
     }
     else {
         pages = [
-            ...state.sections[sectionName].pages,
+            ...section.pages,
             {
                 ...defaultValues,
                 ...page
@@ -65,14 +63,8 @@ const upsertSectionPage = (state: State, sectionName: string, page: Partial<IPag
     }
 
     return {
-        ...state,
-        sections: {
-            ...state.sections,
-            [sectionName]: {
-                ...state.sections[sectionName],
-                pages
-            }
-        }
+        ...section,
+        pages
     };
 };
 

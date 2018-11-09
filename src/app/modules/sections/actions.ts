@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { IMenu, IPage, TSection } from 'genesis/content';
+import { IMenu, IPage, ISection } from 'genesis/content';
 import { TProtypoElement } from 'genesis/protypo';
 import { Location } from 'history';
 
@@ -29,7 +29,7 @@ const actionCreator = actionCreatorFactory('section');
 
 // Navigation
 export const renderSection = actionCreator<string>('RENDER_SECTION');
-export const updateSection = actionCreator<TSection>('UPDATE_SECTION');
+export const updateSection = actionCreator<ISection>('UPDATE_SECTION');
 export const switchSection = actionCreator<string>('SWITCH_SECTION');
 export const reset = actionCreator('RESET');
 export const menuPop = actionCreator('MENU_POP');
@@ -40,4 +40,4 @@ export const renderPage = actionCreator.async<{ section: string, name: string, p
 export const renderLegacyPage = actionCreator.async<{ section: string, name: string, menu: string, params?: { [key: string]: any } }, { menu: IMenu }>('RENDER_LEGACY_PAGE');
 export const reloadPage = actionCreator.async<{}, { params: { [key: string]: any }, menu: IMenu, page: IPage }, string>('RELOAD_PAGE');
 export const popPage = actionCreator<{ section: string, name: string, location: Location }>('POP_PAGE');
-export const sectionsInit = actionCreator.async<string, { mainSection: string, section: string, sections: TSection[] }>('SECTIONS_INIT');
+export const sectionsInit = actionCreator.async<string, { mainSection: string, section: string, sections: ISection[] }>('SECTIONS_INIT');
