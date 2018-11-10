@@ -53,15 +53,23 @@ declare module 'apla/api' {
         }[];
     }
 
-    interface IRefreshRequest {
-        token: string;
-        expire?: number;
+    interface IAccount {
+        id: string;
+        address: string;
+        encKey: string;
+        publicKey: string;
+        access: IKeyInfo[];
     }
 
-    interface IRefreshResponse {
-        token: string;
-        refresh: string;
-        expiry: number;
+    interface IRoleInfo {
+        id: string;
+        name: string;
+    }
+
+    interface IKeyInfo {
+        ecosystem: string;
+        name: string;
+        roles: IRoleInfo[];
     }
 
     interface INotificationsRequest {

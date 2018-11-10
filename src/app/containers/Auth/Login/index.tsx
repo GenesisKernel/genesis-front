@@ -20,39 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { IWallet } from 'apla/auth';
+import { logout } from 'modules/auth/actions';
 
 import Login from 'components/Auth/Login';
 
-export interface ILoginContainerProps {
-
-}
-
-interface ILoginContainerState {
-    wallet: IWallet;
-    isAuthenticating: boolean;
-    isSelectingRole: boolean;
-}
-
-interface ILoginContainerDispatch {
-    onLogout: () => void;
-}
-
 const mapStateToProps = (state: IRootState) => ({
     wallet: state.auth.wallet,
-    isAuthenticating: state.auth.wallet && !state.auth.isAuthenticated,
-    isSelectingRole: state.auth.roles && state.auth.roles.length && state.auth.wallet && !state.auth.isAuthenticated
+    isAuthenticating: state.auth.wallet && !state.auth.isAuthenticated
 });
 
 const mapDispatchToProps = {
-
+    onLogout: logout.started
 };
 
-const LoginContainer: React.SFC<ILoginContainerProps & ILoginContainerState & ILoginContainerDispatch> = props => (
-    <Login {...props} />
-);
-
-export default connect<ILoginContainerState, ILoginContainerDispatch, ILoginContainerProps>(mapStateToProps, mapDispatchToProps)(LoginContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

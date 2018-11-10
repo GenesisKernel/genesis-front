@@ -26,7 +26,7 @@ import { Reducer } from 'modules';
 
 const generateSeedDoneHandler: Reducer<typeof generateSeed.done, State> = (state, payload) => ({
     ...state,
-    loadedSeed: payload.result
+    seed: payload.result
 });
 
 export default generateSeedDoneHandler;

@@ -21,46 +21,23 @@
 // SOFTWARE.
 
 import { Epic } from 'modules';
-import { selectRole } from '../actions';
+import { switchWallet, selectWallet, logout } from '../actions';
 import { Observable } from 'rxjs/Observable';
-import keyring from 'lib/keyring';
 
-const selectRoleEpic: Epic = (action$, store, { api }) => action$.ofAction(selectRole.started)
+const switchWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(switchWallet)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.auth.session);
-        const privateKey = state.auth.privateKey;
-        const publicKey = keyring.generatePublicKey(privateKey);
-        const wallet = state.auth.wallet;
+        const wallet = state.auth.wallets.find(l => l.id === state.auth.wallet.wallet.id);
+        const access = wallet.access.find(l => l.ecosystem === action.payload.ecosystem);
 
-        return Observable.from(client.getUid()).flatMap(uid => {
-            const signature = keyring.sign(uid.uid, privateKey);
-            const authClient = client.authorize(uid.token);
-
-            return Observable.from(authClient.login({
-                publicKey,
-                signature,
-                ecosystem: wallet.ecosystem,
-                role: action.payload
-
-            })).map(loginResult =>
-                selectRole.done({
-                    params: action.payload,
-                    result: {
-                        sessionToken: loginResult.token,
-                        refreshToken: loginResult.refresh
-                    }
-                })
-            );
-
-        }).catch(e =>
-            Observable.of(
-                selectRole.failed({
-                    params: null,
-                    error: e.error
-                })
-            )
+        return Observable.of(
+            logout.started(null),
+            selectWallet({
+                wallet,
+                access,
+                role: action.payload.role ? access.roles.find(l => l.id === action.payload.role) : null
+            })
         );
     });
 
-export default selectRoleEpic;
+export default switchWalletEpic;

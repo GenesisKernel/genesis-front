@@ -20,16 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
-import { saveWallet } from '../actions';
-import { selectWallet } from 'modules/auth/actions';
+import { State } from '../reducer';
+import { changeSeed } from '../actions';
+import { Reducer } from 'modules';
 
-const saveWalletOnSelectEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(selectWallet)
-        .map(action =>
-            saveWallet(action.payload)
-        );
+const changeSeedHandler: Reducer<typeof changeSeed, State> = (state, payload) => ({
+    ...state,
+    seed: payload
+});
 
-export default saveWalletOnSelectEpic;
+export default changeSeedHandler;

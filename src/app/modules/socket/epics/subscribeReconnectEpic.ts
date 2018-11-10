@@ -20,16 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
-import { saveWallet } from '../actions';
-import { login } from 'modules/auth/actions';
+import { Epic } from 'modules';
+import { subscribe, connect } from '../actions';
+import { Observable } from 'rxjs';
 
-const saveWalletOnLoginEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(login.done)
-        .map(action =>
-            saveWallet(action.payload.result.wallet)
-        );
+const subscribeReconnectEpic: Epic = (action$, store) => action$.ofAction(connect.done)
+    .flatMap(action =>
+        Observable.from(store.getState().auth.wallets).map(account =>
+            subscribe.started(account)
+        )
+    );
 
-export default saveWalletOnLoginEpic;
+export default subscribeReconnectEpic;

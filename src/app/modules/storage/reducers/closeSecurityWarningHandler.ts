@@ -20,13 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Epic } from 'modules';
-import { switchWindow } from '../actions';
-import { login } from 'modules/auth/actions';
+import { State } from '../reducer';
+import { closeSecurityWarning } from '../actions';
+import { Reducer } from 'modules';
 
-const switchWindowOnLoginEpic: Epic = (action$, store) => action$.ofAction(login.done)
-    .map(action =>
-        switchWindow.started('main')
-    );
+const closeSecurityWarningHandler: Reducer<typeof closeSecurityWarning, State> = (state, payload) => ({
+    ...state,
+    securityWarningClosed: true
+});
 
-export default switchWindowOnLoginEpic;
+export default closeSecurityWarningHandler;

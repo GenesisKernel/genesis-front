@@ -21,23 +21,18 @@
 // SOFTWARE.
 
 declare module 'apla/auth' {
+    import { IAccount, IKeyInfo, IRoleInfo } from 'apla/api';
+
     interface IWallet {
         id: string;
         encKey: string;
+        publicKey: string;
         address: string;
-        ecosystem: string;
-        ecosystemName: string;
-        username: string;
     }
 
     interface ISaveEncKeyCall {
         id: string;
         encKey: string;
-    }
-
-    interface IRole {
-        id: number;
-        name: string;
     }
 
     interface ISession {
@@ -46,8 +41,13 @@ declare module 'apla/auth' {
         refreshToken: string;
     }
 
+    interface IAccountContext {
+        wallet: IAccount;
+        access: IKeyInfo;
+        role?: IRoleInfo;
+    }
+
     interface ILoginCall {
-        wallet: IWallet;
         password: string;
     }
 

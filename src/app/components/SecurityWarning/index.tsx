@@ -20,13 +20,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Epic } from 'modules';
-import { switchWindow } from '../actions';
-import { login } from 'modules/auth/actions';
+import React from 'react';
+import themed from 'components/Theme/themed';
 
-const switchWindowOnLoginEpic: Epic = (action$, store) => action$.ofAction(login.done)
-    .map(action =>
-        switchWindow.started('main')
-    );
+export interface ISecurityWarningProps {
+    className?: string;
+    close: () => void;
+}
 
-export default switchWindowOnLoginEpic;
+const SecurityWarning: React.SFC<ISecurityWarningProps> = props => (
+    <div className={props.className}>
+        <div>
+            {props.children}
+            <a href="#" onClick={() => props.close()}><em className="icon icon-close" /></a>
+        </div>
+    </div>
+);
+
+export default themed(SecurityWarning)`    
+    background: ${props => props.theme.securityWarningBackground};
+    color: ${props => props.theme.securityWarningForeground};
+    position: fixed;
+    top: 5px;
+    left: 50%;
+    margin-left: -150px;
+    width: 300px;
+    padding: 10px 25px 10px 20px;
+    line-height: 20px;
+    z-index: 20000;
+    div {
+        position: relative;
+    }
+    a {
+        position: absolute;
+        right: -5px;
+        top: 50%;
+        line-height: 20px;
+        margin-top: -10px;
+        color: ${props => props.theme.securityWarningForeground};
+        text-decoration: none;
+    }
+`;

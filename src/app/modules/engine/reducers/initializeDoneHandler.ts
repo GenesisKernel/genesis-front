@@ -29,7 +29,8 @@ const initializeDoneHandler: Reducer<typeof initialize.done, State> = (state, pa
     isLoaded: true,
     isOffline: false,
     isConnecting: false,
-    nodeHost: payload.result.nodeHost
+    nodeHost: payload.result.nodeHost,
+    activationEmail: payload.result.activationEmail
 });
 
 export default initializeDoneHandler;

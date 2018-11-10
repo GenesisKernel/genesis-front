@@ -23,7 +23,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
-import { IWallet } from 'apla/auth';
+import { ILoginCall, IAccountContext } from 'apla/auth';
 
 import Avatar from 'containers/Avatar';
 import Validation from 'components/Validation';
@@ -31,15 +31,14 @@ import Heading from 'components/Auth/Heading';
 
 export interface IPasswordPromptProps {
     className?: string;
-    wallet: IWallet;
-    onSubmit: (params: { wallet: IWallet, password: string }) => void;
+    wallet: IAccountContext;
+    onSubmit: (params: ILoginCall) => void;
     onCancel: () => void;
 }
 
 const PasswordPrompt: React.SFC<IPasswordPromptProps & InjectedIntlProps> = props => {
     const onSubmit = (values: { [key: string]: any }) =>
         props.onSubmit({
-            wallet: props.wallet,
             password: values.password
         });
 
@@ -53,15 +52,15 @@ const PasswordPrompt: React.SFC<IPasswordPromptProps & InjectedIntlProps> = prop
                     <div className="avatar-holder">
                         <Avatar
                             size={100}
-                            keyID={props.wallet.id}
-                            ecosystem={props.wallet.ecosystem}
+                            keyID={props.wallet.wallet.id}
+                            ecosystem={props.wallet.access.ecosystem}
                         />
                     </div>
                     <h4 className="text-center mt0">
-                        {`${props.wallet.username || props.wallet.id} (${props.wallet.ecosystemName || props.wallet.ecosystem})`}
+                        {`${props.wallet.wallet.address} (${props.wallet.access.name || props.wallet.access.ecosystem})`}
                     </h4>
                     <p>
-                        <FormattedMessage id="auth.session.expired" defaultMessage="Your session has expired. Please enter your password to sign in" />
+                        <FormattedMessage id="auth.session.prompt" defaultMessage="Please enter your password to sign in" />
                     </p>
                     <div className="password-prompt">
                         <Validation.components.ValidatedControl
@@ -79,7 +78,7 @@ const PasswordPrompt: React.SFC<IPasswordPromptProps & InjectedIntlProps> = prop
     );
 };
 
-export default styled(injectIntl(PasswordPrompt)) `
+export default styled(injectIntl(PasswordPrompt))`
     .avatar-holder {
         width: 100px;
         height: 100px;

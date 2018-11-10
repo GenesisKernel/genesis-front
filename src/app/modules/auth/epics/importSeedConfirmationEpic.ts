@@ -20,37 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
-import { connect } from 'react-redux';
-import { inviteEcosystem } from 'modules/auth/actions';
+import { Epic } from 'modules';
+import { importSeedConfirmation } from '../actions';
+import { Observable } from 'rxjs/Observable';
+import { readTextFile } from 'lib/fs';
 
-export interface IInviteContainerProps {
-    ecosystem: string;
-    page?: string;
-}
+const importSeedConfirmationEpic: Epic = (action$, store) => action$.ofAction(importSeedConfirmation.started)
+    .switchMap(action =>
+        Observable.from(readTextFile(action.payload))
+            .map(payload =>
+                importSeedConfirmation.done({
+                    params: null,
+                    result: payload
+                })
 
-interface IInviteContainerDispatch {
-    onLoad: typeof inviteEcosystem;
-}
+            ).catch(e =>
+                Observable.of(importSeedConfirmation.failed({
+                    params: null,
+                    error: null
+                }))
+            )
+    );
 
-class InviteContainer extends React.Component<IInviteContainerProps & IInviteContainerDispatch> {
-    componentDidMount() {
-        const ecosystemID = parseInt(this.props.ecosystem, 10);
-        if (ecosystemID === ecosystemID) {
-            this.props.onLoad({
-                ecosystem: ecosystemID.toString(),
-                redirectPage: this.props.page
-            });
-        }
-    }
-
-    render() {
-        return null as JSX.Element;
-    }
-}
-
-const mapDispatchToProps = {
-    onLoad: inviteEcosystem
-};
-
-export default connect<{}, IInviteContainerDispatch, IInviteContainerProps>(null, mapDispatchToProps)(InviteContainer);
+export default importSeedConfirmationEpic;

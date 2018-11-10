@@ -41,6 +41,7 @@ interface IAppContainerState {
     isLoaded: boolean;
     isCollapsed: boolean;
     localeMessages: { [key: string]: string };
+    securityWarningClosed: boolean;
 }
 
 interface IAppContainerDispatch {
@@ -55,6 +56,7 @@ const AppContainer: React.SFC<IAppContainerProps & IAppContainerState & IAppCont
                 isLoaded={props.isLoaded}
                 isCollapsed={props.isCollapsed}
                 switchWindow={props.switchWindow}
+                securityWarningClosed={props.securityWarningClosed}
             />
         </ThemeProvider>
     </IntlProvider>
@@ -65,7 +67,8 @@ const mapStateToProps = (state: IRootState) => ({
     localeMessages: state.engine.localeMessages,
     isAuthenticated: state.auth.isAuthenticated,
     isCollapsed: state.engine.isCollapsed,
-    isLoaded: state.engine.isLoaded
+    isLoaded: state.engine.isLoaded,
+    securityWarningClosed: state.storage.securityWarningClosed
 });
 
 const mapDispatchToProps = {

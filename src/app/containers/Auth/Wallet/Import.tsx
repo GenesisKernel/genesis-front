@@ -42,7 +42,7 @@ interface IImportContainerDispatch {
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    backup: state.auth.loadedSeed,
+    backup: state.auth.seed,
     pending: false
 });
 

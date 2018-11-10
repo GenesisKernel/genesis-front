@@ -20,24 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { selectRole } from '../actions';
-import { Reducer } from 'modules';
+import { Epic } from 'modules';
+import { subscribe } from '../actions';
+import { loadWallet } from 'modules/auth/actions';
 
-const selectRoleDoneHandler: Reducer<typeof selectRole.done, State> = (state, payload) => ({
-    ...state,
-    isAuthenticated: true,
-    isLoggingIn: false,
-    roles: null,
-    role: 'number' === typeof payload.params ? {
-        id: payload.params,
-        name: state.roles.find(l => l.id === payload.params).name
-    } : null,
-    session: {
-        ...state.session,
-        sessionToken: payload.result.sessionToken,
-        refreshToken: payload.result.refreshToken
-    }
-});
+const subscribeWalletEpic: Epic = (action$, store) => action$.ofAction(loadWallet)
+    .map(action =>
+        subscribe.started(action.payload)
+    );
 
-export default selectRoleDoneHandler;
+export default subscribeWalletEpic;

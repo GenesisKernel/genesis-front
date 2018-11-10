@@ -42,6 +42,7 @@ const command = commander
     .option('-y, --offset-y <value>', null, parseInt)
     .option('-s, --socket-url <url>', null)
     .option('-u, --disable-full-nodes-sync', null)
+    .option('-e, --activation-email', null)
     .parse(argv);
 
 const args: IInferredArguments = {

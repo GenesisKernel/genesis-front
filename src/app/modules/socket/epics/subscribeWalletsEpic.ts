@@ -20,21 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { IWallet } from 'apla/auth';
+import { Epic } from 'modules';
+import { subscribe } from '../actions';
+import { loadWallets } from 'modules/auth/actions';
+import { Observable } from 'rxjs';
 
-export default function (state: State, payload: { wallet: IWallet, role?: number }): number {
-    if ('number' === typeof payload.role) {
-        return state.notifications.filter(l =>
-            l.id === payload.wallet.id &&
-            l.ecosystem === payload.wallet.ecosystem &&
-            l.role === payload.role
-        ).map(l => l.count).concat([0]).reduce((a, b) => a + b);
-    }
-    else {
-        return state.notifications.filter(l =>
-            l.id === payload.wallet.id &&
-            l.ecosystem === payload.wallet.ecosystem
-        ).map(l => l.count).concat([0]).reduce((a, b) => a + b);
-    }
-}
+const subscribeWalletsEpic: Epic = (action$, store) => action$.ofAction(loadWallets.done)
+    .flatMap(action =>
+        Observable.from(action.payload.result).map(account =>
+            subscribe.started(account)
+        )
+    );
+
+export default subscribeWalletsEpic;

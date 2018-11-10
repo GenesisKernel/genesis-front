@@ -21,35 +21,37 @@
 // SOFTWARE.
 
 import { Epic } from 'modules';
-import { Observable } from 'rxjs/Observable';
-import { changePassword } from '../actions';
-import { modalShow, modalClose } from 'modules/modal/actions';
+import { loadWallets } from '../actions';
+import { Observable } from 'rxjs';
+import { IKeyInfo } from 'apla/api';
 
-const changePasswordEpic: Epic = (action$, store, { api }) => action$.ofAction(changePassword.started)
+const loadWalletsEpic: Epic = (action$, store, { api }) => action$.ofAction(loadWallets.started)
     .flatMap(action => {
-        const encKey = store.getState().auth.wallet.wallet.encKey;
-        return Observable.merge(
-            Observable.of(modalShow({
-                id: 'AUTH_CHANGE_PASSWORD',
-                type: 'AUTH_CHANGE_PASSWORD',
-                params: {
-                    encKey
-                }
-            })),
-            action$.ofAction(modalClose)
-                .take(1)
-                .flatMap(result => {
-                    if ('RESULT' === result.payload.reason) {
-                        return Observable.of(changePassword.done({
-                            params: action.payload,
-                            result: result.payload.data
-                        }));
-                    }
-                    else {
-                        return Observable.empty<never>();
-                    }
-                })
-        );
+        const state = store.getState();
+        const client = api({ apiHost: state.engine.nodeHost });
+
+        return Observable.from(state.storage.wallets).flatMap(wallet =>
+            Observable.from(client.keyinfo({
+                id: wallet.id
+            }).catch(e => null as IKeyInfo[])).map(keys => ({
+                id: wallet.id,
+                address: wallet.address,
+                encKey: wallet.encKey,
+                publicKey: wallet.publicKey,
+                access: keys.map(key => ({
+                    ...key,
+                    roles: key.roles || []
+                }))
+            }))
+
+        ).toArray().map(wallets => loadWallets.done({
+            params: action.payload,
+            result: wallets
+
+        })).catch(e => Observable.of(loadWallets.failed({
+            params: action.payload,
+            error: e
+        })));
     });
 
-export default changePasswordEpic;
+export default loadWalletsEpic;

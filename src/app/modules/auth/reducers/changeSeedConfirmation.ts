@@ -20,27 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { IRootState } from 'modules';
-import { Epic } from 'redux-observable';
-import { Action } from 'redux';
-import { txExec } from '../actions';
-import { saveWallet } from 'modules/storage/actions';
-import { Observable } from 'rxjs';
+import { State } from '../reducer';
+import { changeSeed } from '../actions';
+import { Reducer } from 'modules';
 
-const newEcosystemEpic: Epic<Action, IRootState> = (action$, store) => action$.ofAction(txExec.done)
-    .filter(l => !!l.payload.params.contracts.find(c => /^(@1)?NewEcosystem$/.test(c.name)))
-    .flatMap(action => Observable.from(action.payload.result).map(result => {
-        const ecosystem = result.status.result;
-        const wallet = store.getState().auth.wallet;
+const changeSeedConfirmationHandler: Reducer<typeof changeSeed, State> = (state, payload) => ({
+    ...state,
+    seedConfirm: payload
+});
 
-        return saveWallet({
-            id: wallet.id,
-            encKey: wallet.encKey,
-            address: wallet.address,
-            username: null,
-            ecosystem,
-            ecosystemName: String(result.params.Name.value) || ecosystem
-        });
-    }));
-
-export default newEcosystemEpic;
+export default changeSeedConfirmationHandler;

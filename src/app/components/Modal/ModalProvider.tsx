@@ -46,6 +46,9 @@ import AuthPasswordChangedModal from 'components/Modal/Auth/AuthPasswordChangedM
 import TxConfirmModal from './Tx/ConfirmModal';
 import PageModal from './PageModal';
 import ChangeLocaleModal from './ChangeLocale';
+import CopyWalletModal from './Auth/CopyWalletModal';
+import RegisterModal from './Auth/RegisterModal';
+import RolePickerModal from 'containers/Modal/RolePickerModal';
 
 const MODAL_COMPONENTS = {
     'AUTHORIZE': AuthorizeModal,
@@ -53,6 +56,8 @@ const MODAL_COMPONENTS = {
     'AUTH_REMOVE_WALLET': AuthRemoveWalletModal,
     'AUTH_CHANGE_PASSWORD': AuthChangePasswordModal,
     'AUTH_PASSWORD_CHANGED': AuthPasswordChangedModal,
+    'REGISTER_WALLET': RegisterModal,
+    'COPY_WALLET': CopyWalletModal,
     'TX_CONFIRM': TxConfirmModal,
     'TX_ERROR': TxErrorModal,
     'TX_SIGNATURE': SignatureModal,
@@ -67,7 +72,8 @@ const MODAL_COMPONENTS = {
     'INFO': InfoModal,
     'ERROR': ErrorModal,
     'ABOUT': AboutModal,
-    'CHANGE_LOCALE': ChangeLocaleModal
+    'CHANGE_LOCALE': ChangeLocaleModal,
+    'ROLE_PICKER': RolePickerModal
 };
 
 export interface IModalProviderProps {

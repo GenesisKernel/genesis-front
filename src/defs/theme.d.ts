@@ -80,5 +80,8 @@ declare module 'apla/theme' {
 
         systemButtonSecondary: string;
         systemButtonActive: string;
+
+        securityWarningBackground: string;
+        securityWarningForeground: string;
     }
 }
