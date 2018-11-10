@@ -214,7 +214,7 @@ test('Login', () => {
             body: mockFormData({
                 ecosystem: '1',
                 expire: 4815162342,
-                pubkey: '123456789',
+                pubkey: '04123456789',
                 signature: 'test',
                 role_id: 123,
             }),
