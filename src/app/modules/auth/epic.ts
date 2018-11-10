@@ -30,12 +30,14 @@ import importSeedEpic from './epics/importSeedEpic';
 import generateSeedEpic from './epics/generateSeedEpic';
 import authErrorEpic from './epics/authErrorEpic';
 import removeWalletEpic from './epics/removeWalletEpic';
-import selectRoleEpic from './epics/selectRoleEpic';
 import logoutEmptySessionEpic from './epics/logoutEmptySessionEpic';
-import inviteEcosystemEpic from './epics/inviteEcosystemEpic';
 import changePasswordEpic from './epics/changePasswordEpic';
 import changePasswordDoneEpic from './epics/changePasswordDoneEpic';
 import importSeedConfirmationEpic from './epics/importSeedConfirmationEpic';
+import loadWalletsEpic from './epics/loadWalletsEpic';
+import reloadWalletsEpic from './epics/reloadWalletsEpic';
+import loadSavedWalletEpic from './epics/loadSavedWalletEpic';
+import switchWalletEpic from './epics/switchWalletEpic';
 
 export default combineEpics(
     authorizeEpic,
@@ -49,8 +51,10 @@ export default combineEpics(
     logoutEmptySessionEpic,
     logoutEpic,
     removeWalletEpic,
-    selectRoleEpic,
-    inviteEcosystemEpic,
+    loadWalletsEpic,
+    loadSavedWalletEpic,
+    reloadWalletsEpic,
     changePasswordEpic,
-    changePasswordDoneEpic
+    changePasswordDoneEpic,
+    switchWalletEpic
 );

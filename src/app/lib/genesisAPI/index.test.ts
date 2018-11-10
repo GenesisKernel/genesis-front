@@ -214,28 +214,11 @@ test('Login', () => {
             body: mockFormData({
                 ecosystem: '1',
                 expire: 4815162342,
-                pubkey: '123456789',
+                pubkey: '04123456789',
                 signature: 'test',
                 role_id: 123,
             }),
             roles: []
-        });
-    });
-});
-
-test('Refresh', () => {
-    const testRequest = {
-        token: '4815162342',
-        expire: 4815162342
-    };
-
-    return paramTestingAPIMock().refresh(testRequest).then((response: any) => {
-        expect(response).toEqual({
-            __requestUrl: `${paramTestingAPIHost}/${paramTestingAPIEndpoint}/refresh`,
-            body: mockFormData({
-                token: '4815162342',
-                expire: 4815162342
-            })
         });
     });
 });

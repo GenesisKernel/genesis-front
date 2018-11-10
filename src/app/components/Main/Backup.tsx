@@ -25,7 +25,7 @@ import { Button, Panel } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import keyring from 'lib/keyring';
 import { sendAttachment } from 'lib/fs';
-import { IWallet } from 'genesis/auth';
+import { IAccountContext } from 'genesis/auth';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import QRCode from 'qrcode.react';
 
@@ -33,11 +33,10 @@ import Wrapper from 'components/Wrapper';
 import Validation from 'components/Validation';
 
 export interface IBackupProps {
-    wallet: IWallet;
-    ecosystems: string[];
+    wallet: IAccountContext;
     privateKey: string;
-    onError: () => void;
-    onCopy: () => void;
+    onError?: () => any;
+    onCopy?: () => any;
 }
 
 interface IBackupState {
@@ -46,7 +45,7 @@ interface IBackupState {
 }
 
 class Backup extends React.Component<IBackupProps, IBackupState> {
-    constructor(props: any) {
+    constructor(props: IBackupProps) {
         super(props);
         this.state = {
             privateKey: props.privateKey,
@@ -54,8 +53,8 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
         };
     }
 
-    onSubmit(values: { [key: string]: string }) {
-        const privateKey = keyring.decryptAES(this.props.wallet.encKey, values.password);
+    onSubmit = (values: { [key: string]: string }) => {
+        const privateKey = keyring.decryptAES(this.props.wallet.wallet.encKey, values.password);
 
         if (keyring.validatePrivateKey(privateKey)) {
             const publicKey = keyring.generatePublicKey(privateKey);
@@ -69,19 +68,12 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
         }
     }
 
-    onKeyDownlaod() {
-        sendAttachment('key.txt', this.generatePayload());
+    onKeyDownlaod = () => {
+        sendAttachment('key.txt', this.props.privateKey);
     }
 
-    formatKey(key: string) {
+    formatKey = (key: string) => {
         return key.match(/.{1,2}/g).join(' ');
-    }
-
-    generatePayload() {
-        return keyring.backup({
-            privateKey: this.state.privateKey,
-            ecosystems: this.props.ecosystems
-        });
     }
 
     renderFirst() {
@@ -116,14 +108,14 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
                 footer={(
                     <div className="clearfix">
                         <div className="pull-left">
-                            <CopyToClipboard text={this.generatePayload()} onCopy={this.props.onCopy}>
+                            <CopyToClipboard text={this.props.privateKey} onCopy={this.props.onCopy}>
                                 <Button bsStyle="primary">
                                     <FormattedMessage id="general.clipboard.copy" defaultMessage="Copy to clipboard" />
                                 </Button>
                             </CopyToClipboard>
                         </div>
                         <div className="pull-right">
-                            <Button bsStyle="primary" onClick={this.onKeyDownlaod.bind(this)}>
+                            <Button bsStyle="primary" onClick={this.onKeyDownlaod}>
                                 <FormattedMessage id="general.download.asfile" defaultMessage="Download as file" />
                             </Button>
                         </div>
@@ -148,13 +140,7 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
                             <td>
                                 <FormattedMessage id="general.address" defaultMessage="Address" />
                             </td>
-                            <td>{this.props.wallet.address}</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <FormattedMessage id="general.ecosystems" defaultMessage="Ecosystems" />
-                            </td>
-                            <td>{this.props.ecosystems.join(',')}</td>
+                            <td>{this.props.wallet.wallet.address}</td>
                         </tr>
                         <tr>
                             <td>
@@ -162,7 +148,7 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
                             </td>
                             <td>
                                 <div className="text-center">
-                                    <QRCode value={this.generatePayload()} />
+                                    <QRCode value={this.props.privateKey || this.state.privateKey} />
                                     <div className="text-muted">
                                         <FormattedMessage id="auth.qrcode.desc" defaultMessage="Use this code to import the wallet on your mobile device" />
                                     </div>
@@ -193,7 +179,7 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
                 }
             >
                 {this.props.wallet && (
-                    <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit.bind(this)}>
+                    <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit}>
                         {this.state.privateKey ? this.renderSecond() : this.renderFirst()}
                     </Validation.components.ValidatedForm>
                 )}

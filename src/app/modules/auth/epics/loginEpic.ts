@@ -29,7 +29,8 @@ import { push } from 'connected-react-router';
 
 const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.started)
     .flatMap(action => {
-        const privateKey = keyring.decryptAES(action.payload.wallet.encKey, action.payload.password);
+        const wallet = store.getState().auth.wallet;
+        const privateKey = keyring.decryptAES(wallet.wallet.encKey, action.payload.password);
 
         if (!keyring.validatePrivateKey(privateKey)) {
             return Observable.of(login.failed({
@@ -47,58 +48,22 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
                 client.authorize(uid.token).login({
                     publicKey,
                     signature: keyring.sign(uid.uid, privateKey),
-                    ecosystem: action.payload.wallet.ecosystem,
-                    expire: 60 * 60 * 24 * 90
-
-                }).then(loginResult => {
-                    const authClient = client.authorize(loginResult.token);
-                    return Promise.all([
-                        authClient.getRow({
-                            id: loginResult.key_id,
-                            table: 'members',
-                            columns: ['member_name']
-
-                        }).then(memberResult => ({
-                            ...loginResult,
-                            username: memberResult.value.member_name
-
-                        })).catch(e => ({
-                            ...loginResult,
-                            avatar: null,
-                            username: null
-                        })),
-                        authClient.getEcosystemName({
-                            id: action.payload.wallet.ecosystem
-                        }).catch(e => '')
-                    ]);
+                    ecosystem: wallet.access.ecosystem,
+                    expire: 60 * 60 * 24 * 90,
+                    role: wallet.role ? Number(wallet.role.id) : null
                 })
             )
 
             // Successful authentication. Yield the result
-            .flatMap(payload => {
-                const wallet = payload[0];
-                const ecosystemName = payload[1];
-
+            .flatMap(session => {
                 return Observable.of<Action>(
                     push('/'),
                     login.done({
                         params: action.payload,
                         result: {
-                            wallet: {
-                                id: wallet.key_id,
-                                encKey: action.payload.wallet.encKey,
-                                address: wallet.address,
-                                ecosystem: action.payload.wallet.ecosystem,
-                                ecosystemName,
-                                username: wallet.username
-                            },
-                            roles: wallet.roles && wallet.roles.map(role => ({
-                                id: role.role_id,
-                                name: role.role_name
-                            })),
                             session: {
-                                sessionToken: wallet.token,
-                                refreshToken: wallet.refresh,
+                                sessionToken: session.token,
+                                refreshToken: session.refresh,
                                 apiHost: nodeHost
                             },
                             privateKey,

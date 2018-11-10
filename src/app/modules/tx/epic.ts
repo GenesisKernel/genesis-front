@@ -24,7 +24,6 @@ import { combineEpics } from 'redux-observable';
 import txCallEpic from './epics/txCallEpic';
 import txAuthorizeEpic from './epics/txAuthorizeEpic';
 import txExecEpic from './epics/txExecEpic';
-import newEcosystemEpic from './epics/newEcosystemEpic';
 import txExecFailedEpic from './epics/txExecFailedEpic';
 import reloadStylesheetEpic from './epics/reloadStylesheetEpic';
 
@@ -33,6 +32,5 @@ export default combineEpics(
     txAuthorizeEpic,
     txExecEpic,
     txExecFailedEpic,
-    newEcosystemEpic,
     reloadStylesheetEpic
 );

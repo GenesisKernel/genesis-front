@@ -24,68 +24,40 @@ import { Action } from 'redux';
 import { Epic } from 'modules';
 import { importWallet } from '../actions';
 import { Observable } from 'rxjs/Observable';
-import { IWallet } from 'genesis/auth';
 import { navigate } from 'modules/engine/actions';
+import { address, addressString } from 'lib/crypto';
 import keyring from 'lib/keyring';
 
 const importWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(importWallet.started)
     .flatMap(action => {
-        const backup = keyring.restore(action.payload.backup);
-        if (!backup || backup.privateKey.length !== keyring.KEY_LENGTH) {
+        if (!action.payload.backup || action.payload.backup.length !== keyring.KEY_LENGTH) {
             return Observable.of(importWallet.failed({
                 params: action.payload,
                 error: 'E_INVALID_KEY'
             }));
         }
 
-        const ecosystems = ['1', ...backup.ecosystems];
-        const publicKey = keyring.generatePublicKey(backup.privateKey);
+        const privateKey = action.payload.backup;
+        const publicKey = keyring.generatePublicKey(action.payload.backup);
+        const encKey = keyring.encryptAES(privateKey, action.payload.password);
+        const keyID = address(publicKey);
 
-        return Observable.from(ecosystems)
-            .distinct()
-            .flatMap(ecosystem => {
-                const client = api({ apiHost: store.getState().engine.nodeHost });
-                return Observable.from(client.getUid().then(uid =>
-                    client.authorize(uid.token).login({
-                        publicKey,
-                        signature: keyring.sign(uid.uid, backup.privateKey),
-                        ecosystem
-                    })
-
-                )).catch(e => Observable.empty<never>());
-
-            }).toArray().flatMap(results => {
-                const encKey = keyring.encryptAES(backup.privateKey, action.payload.password);
-                const wallets: IWallet[] = results.map(wallet => ({
-                    id: wallet.key_id,
+        return Observable.of<Action>(
+            importWallet.done({
+                params: action.payload,
+                result: {
+                    id: keyID,
                     encKey,
-                    address: wallet.address,
-                    ecosystem: wallet.ecosystem_id,
-                    ecosystemName: null,
-                    username: wallet.key_id,
-                    avatar: null
-                }));
-
-                if (wallets.length) {
-                    return Observable.of<Action>(
-                        importWallet.done({
-                            params: action.payload,
-                            result: wallets
-                        }),
-                        navigate('/')
-                    );
+                    publicKey,
+                    address: addressString(keyID)
                 }
-                else {
-                    return Observable.of(importWallet.failed({
-                        params: null,
-                        error: 'E_OFFLINE'
-                    }));
-                }
+            }),
+            navigate('/')
+        );
 
-            }).catch(e => Observable.of(importWallet.failed({
-                params: null,
-                error: 'E_IMPORT_FAILED'
-            })));
-    });
+    }).catch(e => Observable.of(importWallet.failed({
+        params: null,
+        error: 'E_IMPORT_FAILED'
+    })));
 
 export default importWalletEpic;

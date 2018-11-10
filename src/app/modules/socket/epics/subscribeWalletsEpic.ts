@@ -20,16 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
-import { switchWindow } from '../actions';
-import { selectRole } from 'modules/auth/actions';
+import { Epic } from 'modules';
+import { subscribe } from '../actions';
+import { loadWallets } from 'modules/auth/actions';
+import { Observable } from 'rxjs';
 
-const switchWindowOnRoleEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(selectRole.done)
-        .map(action =>
-            switchWindow.started('main')
-        );
+const subscribeWalletsEpic: Epic = (action$, store) => action$.ofAction(loadWallets.done)
+    .flatMap(action =>
+        Observable.from(action.payload.result).map(account =>
+            subscribe.started(account)
+        )
+    );
 
-export default switchWindowOnRoleEpic;
+export default subscribeWalletsEpic;

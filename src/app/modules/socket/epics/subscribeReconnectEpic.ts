@@ -20,19 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
-import { saveWallet } from '../actions';
-import { ecosystemInit } from '../../content/actions';
+import { Epic } from 'modules';
+import { subscribe, connect } from '../actions';
+import { Observable } from 'rxjs';
 
-const saveWalletOnEcosystemInitEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(ecosystemInit.done)
-        .map(action =>
-            saveWallet({
-                ...store.getState().auth.wallet,
-                ecosystemName: action.payload.result.name
-            })
-        );
+const subscribeReconnectEpic: Epic = (action$, store) => action$.ofAction(connect.done)
+    .flatMap(action =>
+        Observable.from(store.getState().auth.wallets).map(account =>
+            subscribe.started(account)
+        )
+    );
 
-export default saveWalletOnEcosystemInitEpic;
+export default subscribeReconnectEpic;

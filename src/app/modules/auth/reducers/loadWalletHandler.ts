@@ -21,20 +21,17 @@
 // SOFTWARE.
 
 import { State } from '../reducer';
-import { IWallet } from 'genesis/auth';
+import { loadWallet } from '../actions';
+import { Reducer } from 'modules';
 
-export default function (state: State, payload: { wallet: IWallet, role?: number }): number {
-    if ('number' === typeof payload.role) {
-        return state.notifications.filter(l =>
-            l.id === payload.wallet.id &&
-            l.ecosystem === payload.wallet.ecosystem &&
-            l.role === payload.role
-        ).map(l => l.count).concat([0]).reduce((a, b) => a + b);
-    }
-    else {
-        return state.notifications.filter(l =>
-            l.id === payload.wallet.id &&
-            l.ecosystem === payload.wallet.ecosystem
-        ).map(l => l.count).concat([0]).reduce((a, b) => a + b);
-    }
-}
+const loadWalletHandler: Reducer<typeof loadWallet, State> = (state, payload) => ({
+    ...state,
+    wallets: [
+        ...(state.wallets || []).filter(l =>
+            l.id !== payload.id
+        ),
+        payload
+    ]
+});
+
+export default loadWalletHandler;

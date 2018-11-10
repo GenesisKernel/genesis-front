@@ -23,7 +23,7 @@
 import queryString from 'query-string';
 import urlJoin from 'url-join';
 import urlTemplate from 'url-template';
-import { IUIDResponse, ILoginRequest, ILoginResponse, IRefreshResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, IContentJsonRequest, IContentJsonResponse, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, ISectionsRequest, ISectionsResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IRefreshRequest, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse, ITableRequest, TConfigRequest, ISystemParamsRequest, ISystemParamsResponse, IContentHashRequest, IContentHashResponse, TTxCallRequest, TTxCallResponse, TTxStatusRequest, TTxStatusResponse, ITxStatus } from 'genesis/api';
+import { IUIDResponse, ILoginRequest, ILoginResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, IContentJsonRequest, IContentJsonResponse, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, ISectionsRequest, ISectionsResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse, ITableRequest, TConfigRequest, ISystemParamsRequest, ISystemParamsResponse, IContentHashRequest, IContentHashResponse, TTxCallRequest, TTxCallResponse, TTxStatusRequest, TTxStatusResponse, ITxStatus, IKeyInfo } from 'genesis/api';
 
 export type TRequestMethod =
     'get' |
@@ -193,7 +193,7 @@ class GenesisAPI {
     });
     public login = this.setSecuredEndpoint<ILoginRequest, ILoginResponse>('post', 'login', {
         requestTransformer: request => ({
-            pubkey: request.publicKey.slice(2),
+            pubkey: request.publicKey,
             signature: request.signature,
             ecosystem: request.ecosystem,
             role_id: request.role,
@@ -204,7 +204,9 @@ class GenesisAPI {
             roles: response.roles || []
         })
     });
-    public refresh = this.setSecuredEndpoint<IRefreshRequest, IRefreshResponse>('post', 'refresh');
+    public keyinfo = this.setEndpoint<{ id: string }, IKeyInfo[]>('get', 'keyinfo/{id}', {
+        requestTransformer: request => null
+    });
     public requestNotifications = this.setSecuredEndpoint<INotificationsRequest[], void>('post', 'updnotificator', {
         requestTransformer: request => ({
             ids: JSON.stringify(request)

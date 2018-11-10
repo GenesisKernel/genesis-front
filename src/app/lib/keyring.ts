@@ -23,7 +23,6 @@
 import CryptoJS from 'crypto-js';
 import KJUR from 'jsrsasign';
 import Random from 'random-js';
-import { Int64BE, Uint64BE } from 'int64-buffer';
 
 // https://github.com/bitcoin/bips/blob/master/bip-0039/bip-0039-wordlists.md
 const WORD_LIST = ['abandon', 'ability', 'able', 'about', 'above', 'absent', 'absorb', 'abstract', 'absurd', 'abuse', 'access', 'accident',
@@ -171,23 +170,9 @@ const WORD_LIST = ['abandon', 'ability', 'able', 'about', 'above', 'absent', 'ab
     'wolf', 'woman', 'wonder', 'wood', 'wool', 'word', 'work', 'world', 'worry', 'worth', 'wrap', 'wreck', 'wrestle', 'wrist', 'write',
     'wrong', 'yard', 'year', 'yellow', 'you', 'young', 'youth', 'zebra', 'zero', 'zone', 'zoo'];
 
-export interface IKeyBackup {
-    privateKey: string;
-    ecosystems: string[];
-}
-
 const randomEngine = Random();
 const signAlg = 'SHA256withECDSA';
 const curveName = 'secp256r1';
-
-export interface IWalletData {
-    encKey: string;
-    encrypt: string;
-    public: string;
-    address: string;
-    stateID: number;
-    citizenID: number;
-}
 
 const keyring = {
     MAX_KEY_SIZE: 1024 * 10, // 10 KiB
@@ -247,7 +232,7 @@ const keyring = {
         };
     },
 
-    generatePublicKey(privateKey: string, trimPadding?: boolean) {
+    generatePublicKey(privateKey: string) {
         const curveParams = KJUR.crypto.ECParameterDB.getByName(curveName);
         const curveG = curveParams.G;
         const charLen = curveParams.keylen / 4;
@@ -257,7 +242,7 @@ const keyring = {
         const valueY = publicBig.getY().toBigInteger();
         const xHex = ('0000000000' + valueX.toString(16)).slice(-charLen);
         const yHex = ('0000000000' + valueY.toString(16)).slice(-charLen);
-        return trimPadding ? xHex + yHex : '04' + xHex + yHex;
+        return '04' + xHex + yHex;
     },
 
     encryptAES: (data: string, password: string) => {
@@ -293,49 +278,6 @@ const keyring = {
         signature.init({ d: privateKey, curve: curveName });
         signature.updateString(data);
         return signature.sign();
-    },
-
-    backup: (key: IKeyBackup) => {
-        return `${key.privateKey};${key.ecosystems.join(';')}`;
-    },
-
-    restore: (payload: string): IKeyBackup => {
-        const tokens = payload.split(';');
-        if (tokens.length) {
-            const privateKey = tokens[0].trim();
-            const ecosystems: string[] = [];
-
-            // Ecosystems are stored as string, but we still need to
-            // check if stored values are correct ones
-            for (let i = 1; i < tokens.length; i++) {
-                const ecosystemToken = parseInt(tokens[i], 10);
-
-                // Check if value is not NaN
-                if (ecosystemToken === ecosystemToken) {
-                    ecosystems.push(ecosystemToken.toString());
-                }
-            }
-
-            return {
-                privateKey,
-                ecosystems
-            };
-        }
-        else {
-            return null;
-        }
-    },
-
-    walletIdToAddr(id: string | number) {
-        const num = new Int64BE(id.toString(), 10);
-        const addr = new Uint64BE(num.toString(10), 10).toString(10);
-        return addr.match(new RegExp('.{1,4}', 'g')).join('-');
-    },
-
-    walletAddrToId(addr: string) {
-        const truncated = addr.replace(/-/g, '');
-        const num = new Uint64BE(truncated, 10);
-        return new Int64BE(num.toString(10), 10).toString(10);
     },
 
     hashData(data: string) {
