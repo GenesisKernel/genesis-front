@@ -21,29 +21,32 @@
 // SOFTWARE.
 
 import { Epic } from 'modules';
+import { from, empty } from 'rxjs';
+import { flatMap, map, catchError } from 'rxjs/operators';
 import { loadWallet } from '../actions';
-import { Observable } from 'rxjs';
 import { saveWallet } from 'modules/storage/actions';
 
-const loadSavedWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(saveWallet)
-    .flatMap(action => {
-        const state = store.getState();
-        const client = api({ apiHost: state.engine.nodeHost });
+const loadSavedWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(saveWallet).pipe(
+    flatMap(action => {
+        const client = api({ apiHost: store.value.engine.nodeHost });
 
-        return Observable.from(client.keyinfo({
+        return from(client.keyinfo({
             id: action.payload.id
+        })).pipe(
+            map(keys => loadWallet({
+                id: action.payload.id,
+                address: action.payload.address,
+                encKey: action.payload.encKey,
+                publicKey: action.payload.publicKey,
+                access: keys.map(key => ({
+                    ...key,
+                    roles: key.roles || []
+                }))
 
-        })).map(keys => loadWallet({
-            id: action.payload.id,
-            address: action.payload.address,
-            encKey: action.payload.encKey,
-            publicKey: action.payload.publicKey,
-            access: keys.map(key => ({
-                ...key,
-                roles: key.roles || []
-            }))
-
-        })).catch(e => Observable.empty<never>());
-    });
+            })),
+            catchError(e => empty())
+        );
+    })
+);
 
 export default loadSavedWalletEpic;

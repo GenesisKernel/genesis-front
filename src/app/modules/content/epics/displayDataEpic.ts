@@ -20,40 +20,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
 import { Epic } from 'modules';
-import { Observable } from 'rxjs/Observable';
 import { displayData } from 'modules/content/actions';
 import { modalShow } from 'modules/modal/actions';
 import urlJoin from 'url-join';
+import { flatMap, catchError } from 'rxjs/operators';
+import { ajax } from 'rxjs/ajax';
+import { of } from 'rxjs';
 
-const displayDataEpic: Epic = (action$, store, { api }) => action$.ofAction(displayData.started)
-    .flatMap(action => {
-        const state = store.getState();
-
-        return Observable.ajax({
-            url: urlJoin(state.auth.session.apiHost, 'api/v2', action.payload),
+const displayDataEpic: Epic = (action$, store, { api }) => action$.ofAction(displayData.started).pipe(
+    flatMap(action => {
+        return ajax({
+            url: urlJoin(store.value.auth.session.apiHost, 'api/v2', action.payload),
             responseType: 'text'
 
-        }).flatMap(payload => Observable.of<Action>(
-            modalShow({
-                id: 'DISPLAY_INFO',
-                type: 'INFO',
-                params: {
-                    value: payload.response
-                }
-            }),
-            displayData.done({
-                params: action.payload,
-                result: payload.response
-            })
+        }).pipe(
+            flatMap(payload => of(
+                modalShow({
+                    id: 'DISPLAY_INFO',
+                    type: 'INFO',
+                    params: {
+                        value: payload.response
+                    }
+                }),
+                displayData.done({
+                    params: action.payload,
+                    result: payload.response
+                })
 
-        )).catch(e =>
-            Observable.of(displayData.failed({
+            )),
+            catchError(e => of(displayData.failed({
                 params: action.payload,
                 error: e
-            }))
+            })))
         );
-    });
+    })
+);
 
 export default displayDataEpic;

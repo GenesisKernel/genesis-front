@@ -20,22 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
+import { Epic } from 'modules';
 import { closeEditorTab } from '../actions';
 import { updateSection } from 'modules/sections/actions';
+import { map } from 'rxjs/operators';
 
-const closeEditorTabEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(closeEditorTab)
-        .map(action => {
-            const state = store.getState();
-            const section = state.sections.sections.editor;
-
-            return updateSection({
-                ...section,
-                visible: 0 < state.editor.tabs.length
-            });
-        });
+const closeEditorTabEpic: Epic = (action$, store) => action$.ofAction(closeEditorTab).pipe(
+    map(action => updateSection({
+        ...store.value.sections.sections.editor,
+        visible: 0 < store.value.editor.tabs.length
+    }))
+);
 
 export default closeEditorTabEpic;

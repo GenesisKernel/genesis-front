@@ -24,7 +24,7 @@ import React from 'react';
 import propTypes from 'prop-types';
 import InteractionManager, { TConditionMap, TReaction } from '../interaction';
 
-type TComponentConstructor<T> = React.ComponentClass<T & IInteractiveComponentProps> | React.SFC<T & IInteractiveComponentProps>;
+type TComponentConstructor<T> = React.ComponentClass<T> | React.SFC<T>;
 
 export interface IVisibilityCondition {
     [key: string]: string;
@@ -62,7 +62,7 @@ const tryRegisterConditions = (props: IInteractiveComponentProps, interactionMan
     }
 };
 
-const bindComponent: <T>(Component: TComponentConstructor<T & IInteractiveComponentProps>) => React.SFC<IInteractiveComponentProps> = (Component) => {
+const bindComponent: <T>(Component: TComponentConstructor<T>) => React.SFC<IInteractiveComponentProps> = (Component) => {
     const BoundComponent: React.SFC<IInteractiveComponentProps> = (props, context: IInteractiveComponentContext) => {
         const conditionMap = (context.conditionMap && context.conditionMap[props.id]) || {};
         tryRegisterConditions(props, context.interactionManager);
@@ -82,7 +82,7 @@ const bindComponent: <T>(Component: TComponentConstructor<T & IInteractiveCompon
     return BoundComponent;
 };
 
-export default function interactiveComponent<T>(Component: TComponentConstructor<T & IInteractiveComponentProps>) {
+export default function interactiveComponent<T>(Component: TComponentConstructor<T>) {
     const BoundComponent = bindComponent<T>(Component);
 
     return (props: T & IInteractiveComponentProps) => (

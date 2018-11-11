@@ -23,13 +23,13 @@
 import { Epic } from 'modules';
 import { subscribe } from '../actions';
 import { loadWallets } from 'modules/auth/actions';
-import { Observable } from 'rxjs';
+import { from } from 'rxjs';
+import { flatMap, map } from 'rxjs/operators';
 
-const subscribeWalletsEpic: Epic = (action$, store) => action$.ofAction(loadWallets.done)
-    .flatMap(action =>
-        Observable.from(action.payload.result).map(account =>
-            subscribe.started(account)
-        )
-    );
+const subscribeWalletsEpic: Epic = (action$, store) => action$.ofAction(loadWallets.done).pipe(
+    flatMap(action => from(action.payload.result).pipe(
+        map(account => subscribe.started(account))
+    ))
+);
 
 export default subscribeWalletsEpic;

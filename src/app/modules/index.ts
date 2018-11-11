@@ -39,14 +39,22 @@ import * as notifications from './notifications';
 import * as storage from './storage';
 import * as socket from './socket';
 import * as router from './router';
-import { ActionCreator, Failure, Success } from 'typescript-fsa';
+import { ActionCreator, Failure, Success, isType } from 'typescript-fsa';
+import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
-export type Epic = NativeEpic<Action, IRootState, IStoreDependencies>;
+export type Epic = NativeEpic<Action<any>, Action<any>, IRootState, IStoreDependencies>;
 export type Reducer<T, S> =
     T extends ActionCreator<Failure<infer P, infer E>> ? (state: S, payload: Failure<P, E>) => S :
-    T extends ActionCreator<Success<infer P, infer R>> ? (state: S, payload: Success<P, R>) => S :
-    T extends ActionCreator<infer R> ? (state: S, payload: R) => S :
+    T extends ActionCreator<Success<infer P2, infer R>> ? (state: S, payload: Success<P2, R>) => S :
+    T extends ActionCreator<infer R2> ? (state: S, payload: R2) => S :
     (state: S, payload: T) => S;
+
+export const ofAction = <A>(actionCreator: ActionCreator<A>) => (source: Observable<any>) => source.pipe(
+    filter<Action<A>>(action =>
+        isType(action, actionCreator)
+    )
+);
 
 export interface IRootState {
     auth: auth.State;

@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { createWallet, importSeed, generateSeed, changeSeed, changeSeedConfirmation, importSeedConfirmation } from 'modules/auth/actions';
@@ -29,31 +28,12 @@ import { sendAttachment } from 'modules/io/actions';
 
 import Create from 'components/Auth/Wallet/Create';
 
-export interface ICreateContainerProps {
-
-}
-
-interface ICreateContainerState {
-    seed: string;
-    seedConfirm: string;
-}
-
-interface ICreateContainerDispatch {
-    onImportSeed: () => void;
-    onImportSeedConfirmation: () => void;
-    onCreate: typeof createWallet.started;
-    onGenerateSeed: () => void;
-    onChangeSeed: (value: string) => void;
-    onChangeSeedConfirmation: (value: string) => void;
-    onDownloadSeed: (seed: string) => void;
-}
-
 const mapStateToProps = (state: IRootState) => ({
     seed: state.auth.seed,
     seedConfirm: state.auth.seedConfirm
 });
 
-const mapDispatchToProps = {
+export default connect(mapStateToProps, {
     onCreate: (params: ICreateWalletCall) => createWallet.started(params),
     onImportSeed: (file: File) => importSeed.started(file),
     onImportSeedConfirmation: (file: File) => importSeedConfirmation.started(file),
@@ -64,10 +44,4 @@ const mapDispatchToProps = {
         name: 'seed.txt',
         data: seed
     })
-};
-
-const CreateContainer: React.SFC<ICreateContainerProps & ICreateContainerState & ICreateContainerDispatch> = props => (
-    <Create {...props} />
-);
-
-export default connect<ICreateContainerState, ICreateContainerDispatch, ICreateContainerProps>(mapStateToProps, mapDispatchToProps)(CreateContainer);
+})(Create);

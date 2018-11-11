@@ -21,88 +21,102 @@
 // SOFTWARE.
 
 import { Epic } from 'modules';
-import { Observable } from 'rxjs/Observable';
 import { buttonInteraction } from 'modules/content/actions';
-import { isType } from 'typescript-fsa';
+import { isType, Action } from 'typescript-fsa';
 import { txCall, txExec } from 'modules/tx/actions';
 import { modalShow, modalClose, modalPage } from 'modules/modal/actions';
+import { flatMap, take, filter, catchError } from 'rxjs/operators';
+import { merge, of, empty } from 'rxjs';
+import { push } from 'connected-react-router';
 
-const buttonInteractionEpic: Epic = (action$, store, { api, routerService }) => action$.ofAction(buttonInteraction)
+const buttonInteractionEpic: Epic = (action$, store, { api, routerService }) => action$.ofAction(buttonInteraction).pipe(
     // Show confirmation window if there is any
-    .flatMap(rootAction => {
-        return Observable.if(
-            () => !!rootAction.payload.confirm,
-            Observable.merge(
-                Observable.of(modalShow({
-                    id: rootAction.payload.uuid,
+    flatMap(action => {
+        if (action.payload.confirm) {
+            return merge(
+                of(modalShow({
+                    id: action.payload.uuid,
                     type: 'TX_CONFIRM',
-                    params: rootAction.payload.confirm
+                    params: action.payload.confirm
                 })),
-                action$.ofAction(modalClose).take(1).flatMap(modalPayload => Observable.if(
-                    () => 'RESULT' === modalPayload.payload.reason,
-                    Observable.of(rootAction),
-                    Observable.empty<never>()
-                ))
-            ),
-            Observable.of(rootAction)
-
-        ).flatMap(action => {
-            if (isType(action, buttonInteraction) && action.payload.contracts.length) {
-                return Observable.merge(
-                    Observable.of(txCall({
-                        uuid: action.payload.uuid,
-                        silent: action.payload.silent,
-                        contracts: action.payload.contracts,
-                        errorRedirects: action.payload.errorRedirects
-                    })),
-                    action$.filter(l =>
-                        isType(l, txExec.done) || isType(l, txExec.failed)
-
-                    ).filter((l: ReturnType<typeof txExec.done> | ReturnType<typeof txExec.failed>) =>
-                        action.payload.uuid === l.payload.params.uuid
-
-                    ).take(1).flatMap(result => {
-                        if (isType(result, txExec.done)) {
-                            return Observable.of(action);
+                action$.ofAction(modalClose).pipe(
+                    take(1),
+                    flatMap(modalPayload => {
+                        if ('RESULT' === modalPayload.payload.reason) {
+                            return of(action);
                         }
                         else {
-                            return Observable.empty<never>();
+                            return empty();
+                        }
+                    }
+                    )
+                )
+            );
+        }
+        else {
+            return of(action);
+        }
+    }),
+
+    // Perform contract exection if there is any
+    flatMap(action => {
+        if (isType(action, buttonInteraction) && action.payload.contracts.length) {
+            return merge(
+                of(txCall({
+                    uuid: action.payload.uuid,
+                    silent: action.payload.silent,
+                    contracts: action.payload.contracts,
+                    errorRedirects: action.payload.errorRedirects
+                })),
+                action$.pipe(
+                    filter(l => isType(l, txExec.done) || isType(l, txExec.failed)),
+                    filter<ReturnType<typeof txExec.done | typeof txExec.failed>>(l => action.payload.uuid === l.payload.params.uuid),
+                    take(1),
+                    flatMap(result => {
+                        if (isType(result, txExec.done)) {
+                            return of(action);
+                        }
+                        else {
+                            return empty();
                         }
                     })
-                );
-            }
-            else {
-                return Observable.of(action);
-            }
+                )
+            );
+        }
+        else {
+            return of(action);
+        }
+    }),
 
-        }).flatMap(action => {
-            if (isType(action, buttonInteraction)) {
-                if (action.payload.page) {
-                    if (action.payload.popup) {
-                        return Observable.of(modalPage({
-                            name: action.payload.page.name,
-                            params: action.payload.page.params,
-                            title: action.payload.popup.title,
-                            width: action.payload.popup.width
-                        }));
-                    }
-                    else {
-                        routerService.navigate(`/${action.payload.page.section}/${action.payload.page.name}`, action.payload.page.params);
-                        return Observable.empty<never>();
-                    }
+    // Perform page redirection if there is any
+    flatMap(action => {
+        if (isType(action, buttonInteraction)) {
+            if (action.payload.page) {
+                if (action.payload.popup) {
+                    return of(modalPage({
+                        name: action.payload.page.name,
+                        params: action.payload.page.params,
+                        title: action.payload.popup.title,
+                        width: action.payload.popup.width
+                    }));
                 }
                 else {
-                    return Observable.empty<never>();
+                    // TODO: refactoring
+                    const redirectUrl = routerService.generateRoute(`/${action.payload.page.section}/${action.payload.page.name}`, action.payload.page.params);
+                    return of<Action<any>>(
+                        push(redirectUrl)
+                    );
                 }
             }
             else {
-                return Observable.of(action);
+                return empty();
             }
-        });
-    }).catch(e => {
-        // tslint:disable-next-line:no-console
-        console.error(e);
-        return Observable.empty<never>();
-    });
+        }
+        else {
+            return of<Action<any>>(action);
+        }
+    }),
+    catchError(e => empty())
+);
 
 export default buttonInteractionEpic;

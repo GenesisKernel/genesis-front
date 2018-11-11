@@ -23,12 +23,13 @@
 import { Action } from 'typescript-fsa';
 import { Epic } from 'modules';
 import { logout } from '../actions';
+import { filter, map } from 'rxjs/operators';
 
-const logoutEmptySessionEpic: Epic = (action$, store) => action$
-    .filter(l => {
+const logoutEmptySessionEpic: Epic = (action$, store) => action$.pipe(
+    filter(l => {
         const action = l as Action<any>;
 
-        if (store.getState().auth.isAuthenticated && action.payload && action.payload.error) {
+        if (store.value.auth.isAuthenticated && action.payload && action.payload.error) {
             switch (action.payload.error) {
                 case 'E_OFFLINE':
                 case 'E_TOKENEXPIRED':
@@ -42,8 +43,8 @@ const logoutEmptySessionEpic: Epic = (action$, store) => action$
             return false;
         }
 
-    }).map(action =>
-        logout.started(null)
-    );
+    }),
+    map(action => logout.started(null))
+);
 
 export default logoutEmptySessionEpic;

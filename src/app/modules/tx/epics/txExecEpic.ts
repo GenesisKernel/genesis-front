@@ -22,79 +22,79 @@
 
 import { Action } from 'redux';
 import { Epic } from 'modules';
-import { Observable } from 'rxjs';
+import { Observable, from, defer, of } from 'rxjs';
 import { txExec } from '../actions';
 import uuid from 'uuid';
 import Contract, { IContractParam } from 'lib/tx/contract';
 import defaultSchema from 'lib/tx/schema/defaultSchema';
 import fileObservable from 'modules/io/util/fileObservable';
 import { enqueueNotification } from 'modules/notifications/actions';
+import { flatMap, filter, map, toArray, retryWhen, delay, catchError } from 'rxjs/operators';
 
 const TX_STATUS_INTERVAL = 3000;
 
-export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(txExec.started)
-    .flatMap(action => {
-        const state = store.getState();
-        const client = api(state.auth.session);
-        const privateKey = state.auth.privateKey;
+export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(txExec.started).pipe(
+    flatMap(action => {
+        const client = api(store.value.auth.session);
+        const privateKey = store.value.auth.privateKey;
 
-        return Observable.from(action.payload.contracts).flatMap(contract =>
-            Observable.from(client.getContract({
-                name: contract.name
+        return from(action.payload.contracts).pipe(
+            flatMap(contract => from(client.getContract({ name: contract.name })).pipe(
+                flatMap(proto => from(contract.params).pipe(
+                    flatMap(params => from(proto.fields).pipe(
+                        filter(l => l.type === 'file' && params[l.name]),
+                        flatMap(field => fileObservable(params[field.name]).pipe(
+                            map(buffer => {
+                                const blob = params[field.name] as File;
+                                return {
+                                    field: field.name,
+                                    name: blob.name,
+                                    type: blob.type,
+                                    value: buffer,
+                                };
+                            }),
+                            toArray(),
+                        )),
+                        flatMap(files => {
+                            const txParams: { [name: string]: IContractParam } = {};
+                            const logParams: { [name: string]: IContractParam } = {};
 
-            })).flatMap(proto => Observable.from(contract.params).flatMap(params =>
-                Observable.from(proto.fields)
-                    .filter(l => l.type === 'file' && params[l.name])
-                    .flatMap(field => fileObservable(params[field.name])
-                        .map(buffer => {
-                            const blob = params[field.name] as File;
-                            return {
-                                field: field.name,
-                                name: blob.name,
-                                type: blob.type,
-                                value: buffer,
-                            };
+                            proto.fields.forEach(field => {
+                                const file = files.find(f => f.field === field.name);
+                                txParams[field.name] = {
+                                    type: field.type,
+                                    value: file ? {
+                                        name: file.name,
+                                        type: file.type,
+                                        value: file.value
+                                    } : params[field.name]
+                                };
+                                logParams[field.name] = {
+                                    type: field.type,
+                                    value: file ? null : params[field.name]
+                                };
+                            });
+
+                            return from(new Contract({
+                                id: proto.id,
+                                schema: defaultSchema,
+                                ecosystemID: parseInt(store.value.auth.session.wallet && store.value.auth.session.access.ecosystem || '1', 10),
+                                fields: txParams,
+                                maxSum: store.value.auth.session.wallet.settings && store.value.auth.session.wallet.settings.maxSum
+
+                            }).sign(privateKey)).pipe(
+                                map(signature => ({
+                                    ...signature,
+                                    name: proto.name,
+                                    params: logParams
+                                }))
+                            );
                         })
-                    ).toArray()
-                    .flatMap(files => {
-                        const txParams: { [name: string]: IContractParam } = {};
-                        const logParams: { [name: string]: IContractParam } = {};
-
-                        proto.fields.forEach(field => {
-                            const file = files.find(f => f.field === field.name);
-                            txParams[field.name] = {
-                                type: field.type,
-                                value: file ? {
-                                    name: file.name,
-                                    type: file.type,
-                                    value: file.value
-                                } : params[field.name]
-                            };
-                            logParams[field.name] = {
-                                type: field.type,
-                                value: file ? null : params[field.name]
-                            };
-                        });
-
-                        return Observable.from(new Contract({
-                            id: proto.id,
-                            schema: defaultSchema,
-                            ecosystemID: parseInt(state.auth.session.wallet && state.auth.session.access.ecosystem || '1', 10),
-                            fields: txParams,
-                            maxSum: state.auth.session.wallet.settings && state.auth.session.wallet.settings.maxSum
-
-                        }).sign(privateKey)).map(signature => ({
-                            ...signature,
-                            name: proto.name,
-                            params: logParams
-                        }));
-                    })
-
-                // Contract params serialization concurrency
-            ), 1).toArray()
-
-            // Contracts serialization concurrency
-            , 1).flatMap(contracts => {
+                    ))
+                )),
+            ), 1),
+            toArray(),
+            flatMap(contracts => {
                 const request = {};
                 const jobs: {
                     name: string,
@@ -113,57 +113,66 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                     });
                 });
 
-                return Observable.from(client.txSend(request)).flatMap(sendResponse => Observable.defer(() =>
-                    client.txStatus(contracts.map(l => l.hash))
-
-                ).map(status => {
-                    let pending = contracts.length;
-                    contracts.forEach(contract => {
-                        const tx = status[contract.hash];
-                        if (tx.errmsg) {
-                            throw {
-                                type: 'E_ERROR',
-                                data: tx.errmsg
-                            };
-                        }
-                        else if (tx.blockid) {
-                            pending--;
-                        }
-                    });
-
-                    if (0 === pending) {
-                        return jobs.map(job => ({
-                            ...job,
-                            status: status[job.hash]
-                        }));
-                    }
-                    else {
-                        throw {
-                            type: 'E_PENDING',
-                            count: pending
-                        };
-                    }
-
-                }).retryWhen(errors => errors.flatMap(error => {
-                    switch (error.type) {
-                        case 'E_PENDING':
-                            return Observable.of(error).delay(TX_STATUS_INTERVAL);
-
-                        case 'E_ERROR':
-                            return Observable.throw({
-                                id: error.data.id,
-                                type: error.data.type,
-                                error: error.data.error,
-                                params: error.data.params
+                return from(client.txSend(request)).pipe(
+                    flatMap(sendResponse => defer(() =>
+                        client.txStatus(contracts.map(l => l.hash))
+                    ).pipe(
+                        map(status => {
+                            let pending = contracts.length;
+                            contracts.forEach(contract => {
+                                const tx = status[contract.hash];
+                                if (tx.errmsg) {
+                                    throw {
+                                        type: 'E_ERROR',
+                                        data: tx.errmsg
+                                    };
+                                }
+                                else if (tx.blockid) {
+                                    pending--;
+                                }
                             });
 
-                        default:
-                            return Observable.throw(error);
-                    }
+                            if (0 === pending) {
+                                return jobs.map(job => ({
+                                    ...job,
+                                    status: status[job.hash]
+                                }));
+                            }
+                            else {
+                                throw {
+                                    type: 'E_PENDING',
+                                    count: pending
+                                };
+                            }
 
-                })));
+                        }),
+                        retryWhen(errors => errors.pipe(
+                            flatMap(error => {
+                                switch (error.type) {
+                                    case 'E_PENDING':
+                                        return of(error).pipe(
+                                            delay(TX_STATUS_INTERVAL)
+                                        );
 
-            }, 1).toArray().flatMap(results => Observable.of<Action>(
+                                    case 'E_ERROR':
+                                        return Observable.throw({
+                                            id: error.data.id,
+                                            type: error.data.type,
+                                            error: error.data.error,
+                                            params: error.data.params
+                                        });
+
+                                    default:
+                                        return Observable.throw(error);
+                                }
+
+                            })
+                        ))
+                    ))
+                );
+            }, 1),
+            toArray(),
+            flatMap(results => of<Action>(
                 txExec.done({
                     params: action.payload,
                     result: Array.prototype.concat.apply([], results)
@@ -174,14 +183,17 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                     params: {}
                 })
 
-            )).catch(error => Observable.of(txExec.failed({
+            )),
+            catchError(error => of(txExec.failed({
                 params: action.payload,
                 error: 'id' in error ? error : {
                     type: (error.errmsg ? error.errmsg.type : error.error),
                     error: error.errmsg ? error.errmsg.error : error.msg,
                     params: error.params || []
                 }
-            })));
-    });
+            })))
+        );
+    })
+);
 
 export default txExecEpic;

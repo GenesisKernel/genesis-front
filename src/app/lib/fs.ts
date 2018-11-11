@@ -40,7 +40,7 @@ export const readTextFile = (file: Blob) => {
     return new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => {
-            const loadedFile = (e.target as any).result;
+            const loadedFile = reader.result as string;
             loadedFile ? resolve(loadedFile) : reject();
         };
         reader.readAsText(file);
@@ -51,7 +51,7 @@ export const readBinaryFile = (file: Blob) => {
     return new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => {
-            const loadedFile = reader.result;
+            const loadedFile = reader.result as string;
             loadedFile ? resolve(loadedFile) : reject();
         };
         reader.readAsDataURL(file);

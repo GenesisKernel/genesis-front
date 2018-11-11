@@ -28,7 +28,7 @@ import classnames from 'classnames';
 import themed from 'components/Theme/themed';
 
 import { AnimatedSwitch } from 'components/Animation';
-import Main from 'containers/Main';
+import Main from 'components/Main';
 import Auth from 'containers/Auth';
 import Splash from 'components/Splash';
 import InitHook from 'containers/App/InitHook';

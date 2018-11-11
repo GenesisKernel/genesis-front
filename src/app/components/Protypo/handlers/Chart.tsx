@@ -24,7 +24,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import * as propTypes from 'prop-types';
 import { ISource, TChartType } from 'genesis/protypo';
-import ChartComponent, { Bar, Line, Pie } from 'react-chartjs-2';
+import { Bar, Line, Pie } from 'react-chartjs-2';
 
 import StyledComponent from './StyledComponent';
 
@@ -41,7 +41,9 @@ interface IChartContext {
     resolveSource: (name: string) => ISource;
 }
 
-const chartTypes: { [K in TChartType]: new () => ChartComponent<any> } = {
+// TODO: refactoring
+// const chartTypes: { [K in TChartType]: new () => ChartComponent<any> } = {
+const chartTypes: { [K in TChartType]: any } = {
     bar: Bar,
     line: Line,
     pie: Pie
@@ -60,7 +62,8 @@ class Chart extends React.Component<IChartProps> {
     }
 
     render() {
-        const context: IChartContext = this.context;
+        // TODO: refactoring
+        const context: IChartContext = (this as any).context;
 
         this._cachedSourceData = context.resolveSource(this.props.source);
 

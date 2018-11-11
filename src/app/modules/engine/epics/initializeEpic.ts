@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import { Epic } from 'modules';
-import { Observable } from 'rxjs';
+import { of, concat, from, forkJoin, iif, empty } from 'rxjs';
 import { connect } from 'modules/socket/actions';
 import { initialize, setLocale } from '../actions';
 import { IWebSettings } from 'genesis';
@@ -30,123 +30,140 @@ import platform from 'lib/platform';
 import NodeObservable from '../util/NodeObservable';
 import keyring from 'lib/keyring';
 import { mergeFullNodes, saveWallet } from 'modules/storage/actions';
+import { flatMap, catchError, map, defaultIfEmpty } from 'rxjs/operators';
+import { ajax } from 'rxjs/ajax';
+import { Action } from 'redux';
 
 const fullNodesFallback = ['http://127.0.0.1:7079'];
 
-const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword }) => action$.ofAction(initialize.started)
-    .flatMap(action => {
+const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword }) => action$.ofAction(initialize.started).pipe(
+    flatMap(action => {
         const requestUrl = platform.select({
             web: urlJoin(process.env.PUBLIC_URL || location.origin, 'settings.json'),
             desktop: './settings.json'
         });
 
-        return Observable.ajax.getJSON<IWebSettings>(
+        return ajax.getJSON<IWebSettings>(
             requestUrl
 
-        ).catch(e =>
-            Observable.of({} as IWebSettings)
+        ).pipe(
+            catchError(e => of<IWebSettings>({})),
+            map(result => {
+                if (!result) {
+                    result = {};
+                }
 
-        ).map(result => {
-            if (!result) {
-                result = {};
-            }
+                const config: IWebSettings = {
+                    fullNodes: (platform.args.fullNode && platform.args.fullNode.length) ? platform.args.fullNode :
+                        (result.fullNodes && Array.isArray(result.fullNodes) && result.fullNodes.length) ? result.fullNodes :
+                            fullNodesFallback,
+                    activationEmail: platform.args.activationEmail || result.activationEmail,
+                    socketUrl: platform.args.socketUrl || ((result.socketUrl && 'string' === typeof result.socketUrl) ? result.socketUrl : null),
+                    disableFullNodesSync: 'boolean' === typeof platform.args.disableFullNodesSync ? platform.args.disableFullNodesSync :
+                        ('boolean' === typeof result.disableFullNodesSync) ? result.disableFullNodesSync : null
+                };
+                return config;
 
-            const config: IWebSettings = {
-                fullNodes: (platform.args.fullNode && platform.args.fullNode.length) ? platform.args.fullNode :
-                    (result.fullNodes && Array.isArray(result.fullNodes) && result.fullNodes.length) ? result.fullNodes :
-                        fullNodesFallback,
-                activationEmail: platform.args.activationEmail || result.activationEmail,
-                socketUrl: platform.args.socketUrl || ((result.socketUrl && 'string' === typeof result.socketUrl) ? result.socketUrl : null),
-                disableFullNodesSync: 'boolean' === typeof platform.args.disableFullNodesSync ? platform.args.disableFullNodesSync :
-                    ('boolean' === typeof result.disableFullNodesSync) ? result.disableFullNodesSync : null
-            };
-            return config;
+            }),
+            flatMap(config => {
+                const fullNodes = config.disableFullNodesSync ? config.fullNodes : [
+                    ...(store.value.storage.fullNodes || []),
+                    ...config.fullNodes
+                ];
+                return NodeObservable({
+                    nodes: fullNodes,
+                    count: 1,
+                    timeout: 5000,
+                    concurrency: 10,
+                    api
 
-        }).flatMap(config => {
-            const fullNodes = config.disableFullNodesSync ? config.fullNodes : [
-                ...(store.getState().storage.fullNodes || []),
-                ...config.fullNodes
-            ];
-            return NodeObservable({
-                nodes: fullNodes,
-                count: 1,
-                timeout: 5000,
-                concurrency: 10,
-                api
+                }).pipe(
+                    flatMap(node => {
+                        const client = api({ apiHost: node });
 
-            }).flatMap(node => {
-                const state = store.getState();
-                const client = api({ apiHost: node });
-
-                return Observable.concat(
-                    Observable.of(initialize.done({
-                        params: action.payload,
-                        result: {
-                            fullNodes: fullNodes,
-                            nodeHost: node,
-                            activationEmail: config.activationEmail
-                        }
-                    })),
-                    Observable.of(setLocale.started(state.storage.locale)),
-                    Observable.from(client.getUid())
-                        .flatMap(uid => {
-                            const guestKey = action.payload.defaultKey || defaultKey;
-
-                            return client.authorize(uid.token).login({
-                                publicKey: keyring.generatePublicKey(guestKey),
-                                signature: keyring.sign(uid.uid, guestKey)
-
-                            }).then(loginResult => {
-                                const securedClient = client.authorize(loginResult.token);
-
-                                return Promise.all([
-                                    config.socketUrl ? Promise.resolve(config.socketUrl) : client.getConfig({ name: 'centrifugo' }).catch(e => null),
-                                    config.disableFullNodesSync ? Promise.resolve(fullNodes) :
-                                        securedClient.getSystemParams({ names: ['full_nodes'] })
-                                            .then(l =>
-                                                JSON.parse(l.list.find(p => p.name === 'full_nodes').value)
-                                                    .map((n: any) => n.api_address)
-                                            ).catch(e =>
-                                                []
-                                            )
-                                ]).then(result => ({
-                                    centrifugo: result[0],
-                                    login: loginResult,
-                                    fullNodes: result[1]
-                                }));
-                            });
-                        }).flatMap(result => Observable.concat(
-                            Observable.if(
-                                () => !!action.payload.defaultKey,
-                                Observable.of(saveWallet({
-                                    id: result.login.key_id,
-                                    encKey: keyring.encryptAES(action.payload.defaultKey, defaultPassword),
-                                    publicKey: keyring.generatePublicKey(action.payload.defaultKey),
-                                    address: result.login.address,
-                                    settings: {}
-                                })),
-                                Observable.empty<never>()
-                            ),
-                            Observable.of(connect.started({
-                                wsHost: result.centrifugo,
-                                session: result.login.token,
-                                socketToken: result.login.notify_key,
-                                timestamp: result.login.timestamp,
-                                userID: result.login.key_id
+                        return concat(
+                            of(initialize.done({
+                                params: action.payload,
+                                result: {
+                                    fullNodes: fullNodes,
+                                    nodeHost: node,
+                                    activationEmail: config.activationEmail
+                                }
                             })),
-                            Observable.of(mergeFullNodes([...result.fullNodes, ...config.fullNodes]))
-
-                        )).catch(e => Observable.of(connect.failed({
-                            params: null,
-                            error: 'E_SOCKET_OFFLINE'
-                        })))
+                            of(setLocale.started(store.value.storage.locale)),
+                            from(client.getUid()).pipe(
+                                flatMap(uid => {
+                                    const guestKey = action.payload.defaultKey || defaultKey;
+                                    return from(client.authorize(uid.token).login({
+                                        publicKey: keyring.generatePublicKey(guestKey),
+                                        signature: keyring.sign(uid.uid, guestKey)
+                                    })).pipe(
+                                        flatMap(loginResult => {
+                                            const securedClient = client.authorize(loginResult.token);
+                                            return forkJoin(
+                                                iif(
+                                                    () => !!config.socketUrl,
+                                                    of(config.socketUrl),
+                                                    from(securedClient.getConfig({ name: 'centrifugo' })).pipe(
+                                                        catchError(e => of(null as string))
+                                                    )
+                                                ),
+                                                iif(
+                                                    () => !!config.disableFullNodesSync,
+                                                    of(fullNodes),
+                                                    from(securedClient.getSystemParams({ names: ['full_nodes'] })).pipe(
+                                                        map(paramsResult => {
+                                                            const value = paramsResult.list.find(p => p.name === 'full_nodes').value;
+                                                            return JSON.parse(value).map((paramValue: any) => paramValue.api_address) as string[];
+                                                        }),
+                                                        catchError(e => of([] as string[]))
+                                                    )
+                                                )
+                                            ).pipe(
+                                                map(([centrifugo, remoteFullNodes]) => ({
+                                                    centrifugo,
+                                                    fullNodes: remoteFullNodes,
+                                                    login: loginResult
+                                                }))
+                                            );
+                                        })
+                                    );
+                                }),
+                                flatMap(workConfig => concat(
+                                    iif(
+                                        () => !!action.payload.defaultKey,
+                                        of(saveWallet({
+                                            id: workConfig.login.key_id,
+                                            encKey: keyring.encryptAES(action.payload.defaultKey, defaultPassword),
+                                            publicKey: keyring.generatePublicKey(action.payload.defaultKey),
+                                            address: workConfig.login.address,
+                                            settings: {}
+                                        })),
+                                        empty()
+                                    ),
+                                    of<Action>(connect.started({
+                                        wsHost: workConfig.centrifugo,
+                                        session: workConfig.login.token,
+                                        socketToken: workConfig.login.notify_key,
+                                        timestamp: workConfig.login.timestamp,
+                                        userID: workConfig.login.key_id
+                                    })),
+                                    of<Action>(mergeFullNodes([
+                                        ...workConfig.fullNodes,
+                                        ...config.fullNodes
+                                    ]))
+                                ))
+                            )
+                        );
+                    }),
+                    defaultIfEmpty(initialize.failed({
+                        params: action.payload,
+                        error: 'E_OFFLINE'
+                    }))
                 );
-
-            }).defaultIfEmpty(initialize.failed({
-                params: action.payload,
-                error: 'E_OFFLINE'
-            }));
-        });
-    });
+            }),
+        );
+    })
+);
 
 export default initializeEpic;

@@ -23,10 +23,10 @@
 import { Epic } from 'modules';
 import { switchWindow } from '../actions';
 import { login } from 'modules/auth/actions';
+import { map } from 'rxjs/operators';
 
-const switchWindowOnLoginEpic: Epic = (action$, store) => action$.ofAction(login.done)
-    .map(action =>
-        switchWindow.started('main')
-    );
+const switchWindowOnLoginEpic: Epic = (action$, store) => action$.ofAction(login.done).pipe(
+    map(action => switchWindow.started('main'))
+);
 
 export default switchWindowOnLoginEpic;

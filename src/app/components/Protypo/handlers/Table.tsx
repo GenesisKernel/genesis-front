@@ -55,7 +55,8 @@ class Table extends React.Component<ITableProps> {
     }
 
     render() {
-        const context = this.context as ITableContext;
+        // TODO: refactoring
+        const context = (this as any).context as ITableContext;
 
         this._cachedSourceData = context.resolveSource(this.props.source);
 

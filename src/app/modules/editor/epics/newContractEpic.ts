@@ -21,17 +21,17 @@
 // SOFTWARE.
 
 import * as uuid from 'uuid';
-import { Observable } from 'rxjs';
+import { from } from 'rxjs';
 import { Epic } from 'modules';
 import { editorSave, reloadEditorTab } from '../actions';
 import TxObservable from 'modules/tx/util/TxObservable';
+import { flatMap, filter, map } from 'rxjs/operators';
 
-const newContractEpic: Epic = (action$, store, { api }) => action$.ofAction(editorSave)
-    .filter(l => l.payload.new && 'contract' === l.payload.type)
-    .flatMap(action => {
+const newContractEpic: Epic = (action$, store, { api }) => action$.ofAction(editorSave).pipe(
+    filter(l => l.payload.new && 'contract' === l.payload.type),
+    flatMap(action => {
         const id = uuid.v4();
-        const state = store.getState();
-        const client = api(state.auth.session);
+        const client = api(store.value.auth.session);
 
         return TxObservable(action$, {
             tx: {
@@ -45,21 +45,25 @@ const newContractEpic: Epic = (action$, store, { api }) => action$.ofAction(edit
                     }]
                 }]
             },
-            success: results => Observable.from(results).flatMap(result => Observable.fromPromise(client.getRow({
-                table: 'contracts',
-                id: result.status.result
-
-            })).map(response => reloadEditorTab({
-                type: action.payload.type,
-                id: action.payload.id,
-                data: {
-                    new: false,
-                    id: String(result.status.result),
-                    name: response.value.name,
-                    initialValue: action.payload.value
-                }
-            })))
+            success: results => from(results).pipe(
+                flatMap(result => from(client.getRow({
+                    table: 'contracts',
+                    id: result.status.result
+                })).pipe(
+                    map(response => reloadEditorTab({
+                        type: action.payload.type,
+                        id: action.payload.id,
+                        data: {
+                            new: false,
+                            id: String(result.status.result),
+                            name: response.value.name,
+                            initialValue: action.payload.value
+                        }
+                    }))
+                ))
+            )
         });
-    });
+    })
+);
 
 export default newContractEpic;

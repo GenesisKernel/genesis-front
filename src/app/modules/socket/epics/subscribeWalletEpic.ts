@@ -23,10 +23,10 @@
 import { Epic } from 'modules';
 import { subscribe } from '../actions';
 import { loadWallet } from 'modules/auth/actions';
+import { map } from 'rxjs/operators';
 
-const subscribeWalletEpic: Epic = (action$, store) => action$.ofAction(loadWallet)
-    .map(action =>
-        subscribe.started(action.payload)
-    );
+const subscribeWalletEpic: Epic = (action$, store) => action$.ofAction(loadWallet).pipe(
+    map(action => subscribe.started(action.payload))
+);
 
 export default subscribeWalletEpic;

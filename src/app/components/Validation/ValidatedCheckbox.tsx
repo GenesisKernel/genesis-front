@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
+import propTypes from 'prop-types';
 import { Validator } from './Validators';
-import * as propTypes from 'prop-types';
 
 import ValidatedForm, { IValidatedControl } from './ValidatedForm';
 
@@ -52,14 +52,14 @@ export default class ValidatedCheckbox extends React.Component<IValidatedCheckbo
     }
 
     componentDidMount() {
-        if (this.context.form) {
-            (this.context.form as ValidatedForm)._registerElement(this);
+        if ((this as any).context.form) {
+            ((this as any).context.form as ValidatedForm)._registerElement(this);
         }
     }
 
     componentWillUnmount() {
-        if (this.context.form) {
-            (this.context.form as ValidatedForm)._unregisterElement(this);
+        if ((this as any).context.form) {
+            ((this as any).context.form as ValidatedForm)._unregisterElement(this);
         }
     }
 
@@ -68,7 +68,7 @@ export default class ValidatedCheckbox extends React.Component<IValidatedCheckbo
             this.setState({
                 checked: props.checked
             });
-            (this.context.form as ValidatedForm).updateState(props.name, props.checked);
+            ((this as any).context.form as ValidatedForm).updateState(props.name, props.checked);
         }
     }
 
@@ -85,11 +85,11 @@ export default class ValidatedCheckbox extends React.Component<IValidatedCheckbo
             this.props.onChange(e);
         }
 
-        (this.context.form as ValidatedForm).emitUpdate(this.props.name, String(e.target.checked));
+        ((this as any).context.form as ValidatedForm).emitUpdate(this.props.name, String(e.target.checked));
     }
 
     onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-        (this.context.form as ValidatedForm).updateState(this.props.name);
+        ((this as any).context.form as ValidatedForm).updateState(this.props.name);
 
         if (this.props.onBlur) {
             this.props.onBlur(e);

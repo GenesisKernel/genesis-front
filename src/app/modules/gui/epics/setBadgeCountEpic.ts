@@ -20,22 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
+import { Epic } from 'modules';
 import { setBadgeCount } from '../actions';
-import { Observable } from 'rxjs/Observable';
 import platform from 'lib/platform';
+import { flatMap } from 'rxjs/operators';
+import { empty } from 'rxjs';
 
-const setBadgeCountEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(setBadgeCount)
-        .flatMap(action => {
-            platform.on('desktop', () => {
-                const Electron = require('electron');
-                Electron.remote.app.setBadgeCount(action.payload);
-            });
-
-            return Observable.empty();
+const setBadgeCountEpic: Epic = (action$, store) => action$.ofAction(setBadgeCount).pipe(
+    flatMap(action => {
+        platform.on('desktop', () => {
+            const Electron = require('electron');
+            Electron.remote.app.setBadgeCount(action.payload);
         });
+
+        return empty();
+    })
+);
 
 export default setBadgeCountEpic;

@@ -21,16 +21,19 @@
 // SOFTWARE.
 
 import { Epic } from 'modules';
-import { Observable } from 'rxjs/Observable';
 import { authorize, deauthorize } from '../actions';
+import { switchMap, map, takeUntil } from 'rxjs/operators';
+import { timer } from 'rxjs';
 
-const authorizeEpic: Epic = (action$, store) => action$.ofAction(authorize)
-    .switchMap(action =>
-        Observable.timer(60000 * 60)
-            .map(() => {
+const authorizeEpic: Epic = (action$, store) => action$.ofAction(authorize).pipe(
+    switchMap(action =>
+        timer(60000 * 60).pipe(
+            map(() => {
                 return deauthorize(null);
             })
-            .takeUntil(action$.ofAction(authorize))
-    );
+        )
+    ),
+    takeUntil(action$.ofAction(authorize))
+);
 
 export default authorizeEpic;

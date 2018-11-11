@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
+import propTypes from 'prop-types';
 import { FormControl, FormControlProps } from 'react-bootstrap';
 import { Validator } from './Validators';
-import * as propTypes from 'prop-types';
 
 import ValidatedForm, { IValidatedControl } from './ValidatedForm';
 
@@ -46,14 +46,14 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
     }
 
     componentDidMount() {
-        if (this.context.form) {
-            (this.context.form as ValidatedForm)._registerElement(this);
+        if ((this as any).context.form) {
+            ((this as any).context.form as ValidatedForm)._registerElement(this);
         }
     }
 
     componentWillUnmount() {
-        if (this.context.form) {
-            (this.context.form as ValidatedForm)._unregisterElement(this);
+        if ((this as any).context.form) {
+            ((this as any).context.form as ValidatedForm)._unregisterElement(this);
         }
     }
 
@@ -62,7 +62,7 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
             this.setState({
                 value: props.value as string
             });
-            (this.context.form as ValidatedForm).updateState(props.name, props.value);
+            ((this as any).context.form as ValidatedForm).updateState(props.name, props.value);
         }
     }
 
@@ -79,12 +79,12 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
             this.props.onChange(e);
         }
 
-        (this.context.form as ValidatedForm).emitUpdate(this.props.name, (e.target as any).value);
+        ((this as any).context.form as ValidatedForm).emitUpdate(this.props.name, (e.target as any).value);
     }
 
     onBlur = (e: React.FocusEvent<FormControl>) => {
-        if (this.context.form) {
-            (this.context.form as ValidatedForm).updateState(this.props.name);
+        if ((this as any).context.form) {
+            ((this as any).context.form as ValidatedForm).updateState(this.props.name);
         }
 
         if (this.props.onBlur) {

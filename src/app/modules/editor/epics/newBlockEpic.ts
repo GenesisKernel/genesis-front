@@ -21,18 +21,18 @@
 // SOFTWARE.
 
 import * as uuid from 'uuid';
-import { Observable } from 'rxjs';
+import { from } from 'rxjs';
 import { Epic } from 'modules';
 import { editorSave, reloadEditorTab } from '../actions';
 import ModalObservable from 'modules/modal/util/ModalObservable';
 import TxObservable from 'modules/tx/util/TxObservable';
+import { flatMap, filter, map } from 'rxjs/operators';
 
-const newBlockEpic: Epic = (action$, store, { api }) => action$.ofAction(editorSave)
-    .filter(l => l.payload.new && 'block' === l.payload.type)
-    .flatMap(action => {
+const newBlockEpic: Epic = (action$, store, { api }) => action$.ofAction(editorSave).pipe(
+    filter(l => l.payload.new && 'block' === l.payload.type),
+    flatMap(action => {
         const id = uuid.v4();
-        const state = store.getState();
-        const client = api(state.auth.session);
+        const client = api(store.value.auth.session);
 
         return ModalObservable<{ name: string, conditions: string }>(action$, {
             modal: {
@@ -55,21 +55,24 @@ const newBlockEpic: Epic = (action$, store, { api }) => action$.ofAction(editorS
                         }]
                     }]
                 },
-                success: tx => Observable.fromPromise(client.getBlock({
+                success: tx => from(client.getBlock({
                     name: result.name
 
-                })).map(response => reloadEditorTab({
-                    type: action.payload.type,
-                    id: action.payload.id,
-                    data: {
-                        new: false,
-                        id: String(response.id),
-                        name: response.name,
-                        initialValue: response.value
-                    }
-                }))
+                })).pipe(
+                    map(response => reloadEditorTab({
+                        type: action.payload.type,
+                        id: action.payload.id,
+                        data: {
+                            new: false,
+                            id: String(response.id),
+                            name: response.name,
+                            initialValue: response.value
+                        }
+                    }))
+                )
             })
         });
-    });
+    })
+);
 
 export default newBlockEpic;

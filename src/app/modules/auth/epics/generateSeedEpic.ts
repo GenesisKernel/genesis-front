@@ -22,14 +22,16 @@
 
 import { Epic } from 'modules';
 import { generateSeed } from '../actions';
+import { map } from 'rxjs/operators';
 import keyring from 'lib/keyring';
 
-const authorizeEpic: Epic = (action$, store) => action$.ofAction(generateSeed.started)
-    .map(action =>
+const generateSeedEpic: Epic = (action$, store) => action$.ofAction(generateSeed.started).pipe(
+    map(action =>
         generateSeed.done({
             params: action.payload,
             result: keyring.generateSeed()
         })
-    );
+    )
+);
 
-export default authorizeEpic;
+export default generateSeedEpic;

@@ -22,13 +22,15 @@
 
 import { Epic } from 'modules';
 import { subscribe, connect } from '../actions';
-import { Observable } from 'rxjs';
+import { from } from 'rxjs';
+import { flatMap, map } from 'rxjs/operators';
 
-const subscribeReconnectEpic: Epic = (action$, store) => action$.ofAction(connect.done)
-    .flatMap(action =>
-        Observable.from(store.getState().auth.wallets).map(account =>
-            subscribe.started(account)
+const subscribeReconnectEpic: Epic = (action$, store) => action$.ofAction(connect.done).pipe(
+    flatMap(action =>
+        from(store.value.auth.wallets).pipe(
+            map(account => subscribe.started(account))
         )
-    );
+    )
+);
 
 export default subscribeReconnectEpic;

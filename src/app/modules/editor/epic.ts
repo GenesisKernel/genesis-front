@@ -31,7 +31,6 @@ import closeEditorTabEpic from './epics/closeEditorTabEpic';
 import createEditorTabEpic from './epics/createEditorTabEpic';
 import changeEditorToolEpic from './epics/changeEditorToolEpic';
 import loadEditorTabEpic from './epics/loadEditorTabEpic';
-import changePageEpic from './epics/changePageEpic';
 import debugContractEpic from './epics/debugContractEpic';
 
 export default combineEpics(
@@ -45,6 +44,5 @@ export default combineEpics(
     newContractEpic,
     newMenuEpic,
     newPageEpic,
-    changePageEpic,
     debugContractEpic
 );

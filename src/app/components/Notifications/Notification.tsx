@@ -40,8 +40,8 @@ const Notification: React.SFC<INotificationProps> = props => (
                 <em className={props.proto.icon} />
             </div>
         )}
-        <div className="notification-title">{typeof props.proto.title === 'function' ? props.proto.title(props.params) : props.proto.title}</div>
-        <div className="notification-body">{typeof props.proto.body === 'function' ? props.proto.body(props.params) : props.proto.body}</div>
+        {/*<div className="notification-title">{typeof props.proto.title === 'function' ? props.proto.title(props.params) : props.proto.title}</div>
+        <div className="notification-body">{typeof props.proto.body === 'function' ? props.proto.body(props.params) : props.proto.body}</div>*/}
         {/*<div className="notification-controls">
             <NotificationButton>Confirm</NotificationButton>
             <NotificationButton>Cancel</NotificationButton>
@@ -49,7 +49,7 @@ const Notification: React.SFC<INotificationProps> = props => (
     </div>
 );
 
-export default themed(Notification) `
+export default themed(Notification)`
     background: ${props => props.theme.notificationBackground};
     width: 350px;
     margin-bottom: 15px;

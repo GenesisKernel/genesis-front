@@ -39,7 +39,6 @@ const definitions: { [key: string]: INotificationProto<any> } = {
 
 export interface INotificationsProviderProps {
     notifications: INotification[];
-    spawnNotification: (notification: INotification) => void;
     destroyNotification: (id: string) => void;
 }
 

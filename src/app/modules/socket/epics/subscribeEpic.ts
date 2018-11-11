@@ -23,40 +23,45 @@
 import { Action } from 'redux';
 import { Observable } from 'rxjs/Observable';
 import { Epic } from 'modules';
-import { Observer } from 'rxjs';
+import { Observer, of } from 'rxjs';
 import { setBadgeCount } from 'modules/gui/actions';
 import { subscribe, setNotificationsCount, getNotificationsCount } from '../actions';
+import { flatMap } from 'rxjs/operators';
 
-const subscribeEpic: Epic = (action$, store) => action$.ofAction(subscribe.started)
-    .flatMap(action => {
-        const state = store.getState();
-        if (state.socket.subscriptions.find(l => l.wallet.id === action.payload.id)) {
-            return Observable.of(subscribe.failed({
+interface INotificationPck {
+    role_id: number;
+    ecosystem: number;
+    count: number;
+}
+
+const subscribeEpic: Epic = (action$, store) => action$.ofAction(subscribe.started).pipe(
+    flatMap(action => {
+        if (store.value.socket.subscriptions.find(l => l.wallet.id === action.payload.id)) {
+            return of(subscribe.failed({
                 params: action.payload,
                 error: 'E_ALREADY_SUBSCRIBED'
             }));
         }
-        else if (!state.socket.socket) {
-            return Observable.of(subscribe.failed({
+        else if (!store.value.socket.socket) {
+            return of(subscribe.failed({
                 params: action.payload,
                 error: 'E_SOCKET_OFFLINE'
             }));
         }
         else {
-            return Observable.create((observer: Observer<Action>) => {
-                const sub = state.socket.socket.subscribe<{ role_id: number, ecosystem: number, count: number }[]>('client' + action.payload.id, message => {
+            return new Observable<Action>((observer: Observer<Action>) => {
+                const sub = store.value.socket.socket.subscribe<INotificationPck[]>('client' + action.payload.id, message => {
                     let count = 0;
 
                     message.data.forEach(n => {
-                        const subState = store.getState();
-                        if (subState.auth.isAuthenticated &&
+                        if (store.value.auth.isAuthenticated &&
                             (
-                                subState.auth.session.role && subState.auth.session.role.id === String(n.role_id) ||
+                                store.value.auth.session.role && store.value.auth.session.role.id === String(n.role_id) ||
                                 0 === n.role_id
                             ) &&
-                            subState.auth.session.wallet &&
-                            subState.auth.session.wallet.id === action.payload.id &&
-                            subState.auth.session.access.ecosystem === n.ecosystem.toString()
+                            store.value.auth.session.wallet &&
+                            store.value.auth.session.wallet.id === action.payload.id &&
+                            store.value.auth.session.access.ecosystem === n.ecosystem.toString()
                         ) {
                             count += n.count;
                         }
@@ -91,6 +96,7 @@ const subscribeEpic: Epic = (action$, store) => action$.ofAction(subscribe.start
                 }));
             });
         }
-    });
+    })
+);
 
 export default subscribeEpic;

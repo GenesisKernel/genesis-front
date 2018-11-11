@@ -45,14 +45,14 @@ export default class ValidatedTextarea extends React.Component<IValidatedTextare
     }
 
     componentDidMount() {
-        if (this.context.form) {
-            (this.context.form as ValidatedForm)._registerElement(this);
+        if ((this as any).context.form) {
+            ((this as any).context.form as ValidatedForm)._registerElement(this);
         }
     }
 
     componentWillUnmount() {
-        if (this.context.form) {
-            (this.context.form as ValidatedForm)._unregisterElement(this);
+        if ((this as any).context.form) {
+            ((this as any).context.form as ValidatedForm)._unregisterElement(this);
         }
     }
 
@@ -61,7 +61,7 @@ export default class ValidatedTextarea extends React.Component<IValidatedTextare
             this.setState({
                 value: props.value as string
             });
-            (this.context.form as ValidatedForm).updateState(props.name, props.value);
+            ((this as any).context.form as ValidatedForm).updateState(props.name, props.value);
         }
     }
 
@@ -78,11 +78,11 @@ export default class ValidatedTextarea extends React.Component<IValidatedTextare
             this.props.onChange(e);
         }
 
-        (this.context.form as ValidatedForm).emitUpdate(this.props.name, e.target.value);
+        ((this as any).context.form as ValidatedForm).emitUpdate(this.props.name, e.target.value);
     }
 
     onBlur = (e: React.FocusEvent<HTMLTextAreaElement>) => {
-        (this.context.form as ValidatedForm).updateState(this.props.name);
+        ((this as any).context.form as ValidatedForm).updateState(this.props.name);
 
         if (this.props.onBlur) {
             this.props.onBlur(e);

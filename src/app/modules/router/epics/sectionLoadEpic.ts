@@ -21,26 +21,26 @@
 // SOFTWARE.
 
 import { Epic } from 'modules';
-import { Observable } from 'rxjs/Observable';
 import { locationChange } from '../actions';
 import { renderPage, popPage } from 'modules/sections/actions';
 import findPage from 'modules/sections/util/findPage';
+import { of, empty } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
 
-const sectionLoadEpic: Epic = (action$, store, { routerService }) => action$.ofAction(locationChange)
-    .flatMap(action => {
-        const state = store.getState();
+const sectionLoadEpic: Epic = (action$, store, { routerService }) => action$.ofAction(locationChange).pipe(
+    flatMap(action => {
         const match = routerService.matchRoute('(/)(:section)(/)(:page)(/)', action.payload.location.pathname + action.payload.location.search);
 
-        if (state.auth.isAuthenticated && match) {
-            const section = state.sections.sections[match.parts.section || state.sections.mainSection];
+        if (store.value.auth.isAuthenticated && match) {
+            const section = store.value.sections.sections[match.parts.section || store.value.sections.mainSection];
             const pageName = match.parts.page || section.defaultPage;
 
             if ('POP' === action.payload.action) {
                 const pageIndex = findPage(section, pageName);
                 if (-1 !== pageIndex) {
-                    const page = state.sections.sections[section.name].pages[pageIndex];
+                    const page = store.value.sections.sections[section.name].pages[pageIndex];
                     if (page.content || page.error) {
-                        return Observable.of(popPage({
+                        return of(popPage({
                             location: action.payload.location,
                             section: section.name,
                             name: pageName
@@ -49,7 +49,7 @@ const sectionLoadEpic: Epic = (action$, store, { routerService }) => action$.ofA
                 }
             }
 
-            return Observable.of(renderPage.started({
+            return of(renderPage.started({
                 location: action.payload.location,
                 section: section.name,
                 name: pageName,
@@ -57,8 +57,9 @@ const sectionLoadEpic: Epic = (action$, store, { routerService }) => action$.ofA
             }));
         }
         else {
-            return Observable.empty<never>();
+            return empty();
         }
-    });
+    })
+);
 
 export default sectionLoadEpic;

@@ -20,42 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { ecosystemInit } from 'modules/content/actions';
-import { menuPop, menuPush } from 'modules/sections/actions';
-import { IMenu } from 'genesis/content';
+import { menuPop } from 'modules/sections/actions';
 
 import Navigation from 'components/Main/Navigation';
 
-interface INavigationContainerProps {
+export interface INavigationProps {
     section: string;
 }
 
-interface INavigationContainerState {
-    preloading: boolean;
-    preloadingError: string;
-    visible: boolean;
-    width: number;
-    menus: IMenu[];
-}
-
-interface INavigationContainerDispatch {
-    menuPop: typeof menuPop;
-    menuPush: typeof menuPush;
-    ecosystemInit: typeof ecosystemInit.started;
-}
-
-const NavigationContainer: React.SFC<INavigationContainerProps & INavigationContainerState & INavigationContainerDispatch> = (props) => (
-    <Navigation {...props} />
-);
-
-const mapStateToProps = (state: IRootState, props: INavigationContainerProps) => {
+const mapStateToProps = (state: IRootState, props: INavigationProps) => {
     const section = state.sections.sections[props.section] || state.sections.sections.home;
     return {
-        preloading: state.content.preloading,
-        preloadingError: state.content.preloadingError,
         visible: state.sections.sections[props.section] && (
             state.sections.sections[props.section].menuDisabled ?
                 false :
@@ -66,10 +43,6 @@ const mapStateToProps = (state: IRootState, props: INavigationContainerProps) =>
     };
 };
 
-const mapDispatchToProps = {
-    menuPop,
-    menuPush,
-    ecosystemInit: ecosystemInit.started
-};
-
-export default connect<INavigationContainerState, INavigationContainerDispatch, INavigationContainerProps>(mapStateToProps, mapDispatchToProps)(NavigationContainer);
+export default connect(mapStateToProps, {
+    menuPop
+})(Navigation);

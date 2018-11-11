@@ -23,15 +23,16 @@
 import { Action } from 'redux';
 import { Epic } from 'modules';
 import { importWallet } from '../actions';
-import { Observable } from 'rxjs/Observable';
 import { navigate } from 'modules/engine/actions';
 import { address, addressString } from 'lib/crypto';
 import keyring from 'lib/keyring';
+import { flatMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
-const importWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(importWallet.started)
-    .flatMap(action => {
+const importWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(importWallet.started).pipe(
+    flatMap(action => {
         if (!action.payload.backup || action.payload.backup.length !== keyring.KEY_LENGTH) {
-            return Observable.of(importWallet.failed({
+            return of(importWallet.failed({
                 params: action.payload,
                 error: 'E_INVALID_KEY'
             }));
@@ -42,7 +43,7 @@ const importWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(imp
         const encKey = keyring.encryptAES(privateKey, action.payload.password);
         const keyID = address(publicKey);
 
-        return Observable.of<Action>(
+        return of<Action>(
             importWallet.done({
                 params: action.payload,
                 result: {
@@ -55,10 +56,7 @@ const importWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(imp
             }),
             navigate('/')
         );
-
-    }).catch(e => Observable.of(importWallet.failed({
-        params: null,
-        error: 'E_IMPORT_FAILED'
-    })));
+    })
+);
 
 export default importWalletEpic;

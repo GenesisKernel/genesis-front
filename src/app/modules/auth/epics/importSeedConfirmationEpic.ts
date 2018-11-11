@@ -22,24 +22,26 @@
 
 import { Epic } from 'modules';
 import { importSeedConfirmation } from '../actions';
-import { Observable } from 'rxjs/Observable';
 import { readTextFile } from 'lib/fs';
+import { switchMap, map, catchError } from 'rxjs/operators';
+import { from, of } from 'rxjs';
 
-const importSeedConfirmationEpic: Epic = (action$, store) => action$.ofAction(importSeedConfirmation.started)
-    .switchMap(action =>
-        Observable.from(readTextFile(action.payload))
-            .map(payload =>
-                importSeedConfirmation.done({
-                    params: null,
-                    result: payload
+const importSeedConfirmationEpic: Epic = (action$, store) => action$.ofAction(importSeedConfirmation.started).pipe(
+    switchMap(action =>
+        from(readTextFile(action.payload)).pipe(
+            map(payload => importSeedConfirmation.done({
+                params: action.payload,
+                result: payload
+            })),
+        ).pipe(
+            catchError(e => of(
+                importSeedConfirmation.failed({
+                    params: action.payload,
+                    error: e
                 })
-
-            ).catch(e =>
-                Observable.of(importSeedConfirmation.failed({
-                    params: null,
-                    error: null
-                }))
-            )
-    );
+            ))
+        )
+    )
+);
 
 export default importSeedConfirmationEpic;

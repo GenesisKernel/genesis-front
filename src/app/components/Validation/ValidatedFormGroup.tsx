@@ -32,7 +32,7 @@ interface IValidatedFormGroupProps extends FormGroupProps {
 
 export default class ValidatedFormGroup extends React.Component<IValidatedFormGroupProps> {
     render() {
-        const valid = this.context.form ? (this.context.form as ValidatedForm).getState(this.props.for) : true;
+        const valid = (this as any).context.form ? ((this as any).context.form as ValidatedForm).getState(this.props.for) : true;
         return (
             <FormGroup
                 className={this.props.className}

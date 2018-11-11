@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 import React from 'react';
-import { injectIntl, InjectedIntlProps } from 'react-intl';
 import { IMenu } from 'genesis/content';
 
 import StackGroup from 'components/Animation/StackGroup';
@@ -129,8 +128,6 @@ const StyledMenuContent = themed.div`
 `;
 
 export interface INavigationProps {
-    preloading: boolean;
-    preloadingError: string;
     visible: boolean;
     width: number;
     menus: IMenu[];
@@ -138,45 +135,39 @@ export interface INavigationProps {
     menuPop: () => void;
 }
 
-class Navigation extends React.Component<INavigationProps & InjectedIntlProps> {
-    render() {
-        return (
-            <StyledNavigation className={this.props.visible ? '' : 'navigation-collapsed'} style={{ width: this.props.visible ? this.props.width : 0 }}>
-                <nav>
-                    <div className="navigation-controls">
-                        &lt;&lt;&lt; Collapse
-                    </div>
-                    <StyledMenu>
-                        <StackGroup
-                            items={(this.props.menus || []).map((menu, index) => (
-                                <ScrollView disableHorizontal>
-                                    <StyledMenuContent>
-                                        {index > 0 && (
-                                            <StyledBackButton onClick={() => this.props.menuPop()} disabled={1 >= this.props.menus.length}>
-                                                <div className="title-wrap">
-                                                    <span className="icon">
-                                                        <em className="icon-arrow-left" />
-                                                    </span>
-                                                    <span>{menu.name}</span>
-                                                </div>
-                                            </StyledBackButton>
-                                        )}
-                                        <Protypo
-                                            context="menu"
-                                            content={menu.content}
-                                            section={this.props.section}
-                                            menu={menu.name}
-                                        />
-                                    </StyledMenuContent>
-                                </ScrollView>
-                            ))}
-                        />
-                    </StyledMenu>
-                </nav>
-                <ResizeHandle />
-            </StyledNavigation>
-        );
-    }
-}
+const Navigation: React.SFC<INavigationProps> = props => (
+    <StyledNavigation className={props.visible ? '' : 'navigation-collapsed'} style={{ width: props.visible ? props.width : 0 }}>
+        <nav>
+            <div className="navigation-controls">&lt;&lt;&lt; Collapse</div>
+            <StyledMenu>
+                <StackGroup
+                    items={(props.menus || []).map((menu, index) => (
+                        <ScrollView disableHorizontal>
+                            <StyledMenuContent>
+                                {index > 0 && (
+                                    <StyledBackButton onClick={props.menuPop} disabled={1 >= props.menus.length}>
+                                        <div className="title-wrap">
+                                            <span className="icon">
+                                                <em className="icon-arrow-left" />
+                                            </span>
+                                            <span>{menu.name}</span>
+                                        </div>
+                                    </StyledBackButton>
+                                )}
+                                <Protypo
+                                    context="menu"
+                                    content={menu.content}
+                                    section={props.section}
+                                    menu={menu.name}
+                                />
+                            </StyledMenuContent>
+                        </ScrollView>
+                    ))}
+                />
+            </StyledMenu>
+        </nav>
+        <ResizeHandle />
+    </StyledNavigation>
+);
 
-export default injectIntl(Navigation);
+export default Navigation;

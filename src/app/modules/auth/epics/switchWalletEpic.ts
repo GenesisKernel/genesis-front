@@ -22,16 +22,16 @@
 
 import { Epic } from 'modules';
 import { switchWallet, selectWallet, logout } from '../actions';
-import { Observable } from 'rxjs/Observable';
+import { flatMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
-const switchWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(switchWallet)
-    .flatMap(action => {
-        const state = store.getState();
-        const wallet = state.storage.wallets.find(l => l.id === state.auth.session.wallet.id);
-        const walletData = state.auth.wallets.find(l => l.id === state.auth.session.wallet.id);
+const switchWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(switchWallet).pipe(
+    flatMap(action => {
+        const wallet = store.value.storage.wallets.find(l => l.id === store.value.auth.session.wallet.id);
+        const walletData = store.value.auth.wallets.find(l => l.id === store.value.auth.session.wallet.id);
         const access = walletData.access.find(l => l.ecosystem === action.payload.ecosystem);
 
-        return Observable.of(
+        return of(
             logout.started(null),
             selectWallet({
                 wallet,
@@ -39,6 +39,7 @@ const switchWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(swi
                 role: action.payload.role ? access.roles.find(l => l.id === action.payload.role) : null
             })
         );
-    });
+    })
+);
 
 export default switchWalletEpic;

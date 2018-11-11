@@ -20,29 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
+import { Epic } from 'modules';
 import { disconnect } from '../actions';
+import { map } from 'rxjs/operators';
 
-const disconnectEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(disconnect.started)
-        .map(action => {
-            const socket = store.getState().socket.socket;
+const disconnectEpic: Epic = (action$, store) => action$.ofAction(disconnect.started).pipe(
+    map(action => {
+        const socket = store.value.socket.socket;
 
-            if (socket) {
-                socket.disconnect();
-                return disconnect.done({
-                    params: action.payload,
-                    result: null
-                });
-            }
-            else {
-                return disconnect.failed({
-                    params: action.payload,
-                    error: null
-                });
-            }
-        });
+        if (socket) {
+            socket.disconnect();
+            return disconnect.done({
+                params: action.payload,
+                result: null
+            });
+        }
+        else {
+            return disconnect.failed({
+                params: action.payload,
+                error: null
+            });
+        }
+    })
+);
 
 export default disconnectEpic;

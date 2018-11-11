@@ -21,58 +21,61 @@
 // SOFTWARE.
 
 import * as uuid from 'uuid';
-import { Observable } from 'rxjs';
+import { from } from 'rxjs';
 import { Epic } from 'modules';
 import { editorSave, reloadEditorTab } from '../actions';
 import ModalObservable from 'modules/modal/util/ModalObservable';
 import TxObservable from 'modules/tx/util/TxObservable';
+import { flatMap, filter, map } from 'rxjs/operators';
 
-const newPageEpic: Epic = (action$, store, { api }) => action$.ofAction(editorSave)
-    .filter(l => l.payload.new && 'page' === l.payload.type)
-    .flatMap(action => {
-        const state = store.getState();
-        const client = api(state.auth.session);
+const newPageEpic: Epic = (action$, store, { api }) => action$.ofAction(editorSave).pipe(
+    filter(l => l.payload.new && 'page' === l.payload.type),
+    flatMap(action => {
+        const client = api(store.value.auth.session);
         const id = uuid.v4();
 
-        return Observable.fromPromise(client.getData({
+        return from(client.getData({
             name: 'menu',
             columns: ['name']
-
-        })).flatMap(menus => ModalObservable<{ name: string, menu: string, conditions: string }>(action$, {
-            modal: {
-                id,
-                type: 'CREATE_PAGE',
-                params: {
-                    menus: menus.list.map(l => l.name)
-                }
-            },
-            success: result => TxObservable(action$, {
-                tx: {
-                    uuid: id,
-                    contracts: [{
-                        name: '@1NewPage',
-                        params: [{
-                            Name: result.name,
-                            Value: action.payload.value,
-                            Menu: result.menu,
-                            Conditions: result.conditions,
-                            ApplicationId: action.payload.appId || 0
-                        }]
-                    }]
+        })).pipe(
+            flatMap(menus => ModalObservable<{ name: string, menu: string, conditions: string }>(action$, {
+                modal: {
+                    id,
+                    type: 'CREATE_PAGE',
+                    params: {
+                        menus: menus.list.map(l => l.name)
+                    }
                 },
-                success: tx => Observable.from(client.getPage({ name: result.name }))
-                    .map(response => reloadEditorTab({
-                        type: action.payload.type,
-                        id: action.payload.id,
-                        data: {
-                            new: false,
-                            id: String(response.id),
-                            name: response.name,
-                            initialValue: response.value
-                        }
-                    }))
-            })
-        }));
-    });
+                success: result => TxObservable(action$, {
+                    tx: {
+                        uuid: id,
+                        contracts: [{
+                            name: '@1NewPage',
+                            params: [{
+                                Name: result.name,
+                                Value: action.payload.value,
+                                Menu: result.menu,
+                                Conditions: result.conditions,
+                                ApplicationId: action.payload.appId || 0
+                            }]
+                        }]
+                    },
+                    success: tx => from(client.getPage({ name: result.name })).pipe(
+                        map(response => reloadEditorTab({
+                            type: action.payload.type,
+                            id: action.payload.id,
+                            data: {
+                                new: false,
+                                id: String(response.id),
+                                name: response.name,
+                                initialValue: response.value
+                            }
+                        }))
+                    )
+                })
+            }))
+        );
+    })
+);
 
 export default newPageEpic;

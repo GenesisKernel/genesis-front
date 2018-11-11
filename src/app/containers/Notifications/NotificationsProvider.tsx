@@ -20,37 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { INotification } from 'genesis/notifications';
 import { destroyNotification } from 'modules/notifications/actions';
 
 import Notifications from 'components/Notifications/NotificationsProvider';
-
-export interface INotificationsProviderContainerProps {
-
-}
-
-interface INotificationsProviderContainerState {
-    notifications: INotification[];
-}
-
-interface INotificationsProviderContainerDispatch {
-    spawnNotification: (notification: INotification) => void;
-    destroyNotification: (id: string) => void;
-}
-
-const NotificationsProviderContainer: React.SFC<INotificationsProviderContainerProps & INotificationsProviderContainerState & INotificationsProviderContainerDispatch> = props => (
-    <Notifications {...props} />
-);
 
 const mapStateToProps = (state: IRootState) => ({
     notifications: state.notifications.notifications
 });
 
-const mapDispatchToProps = {
+export default connect(mapStateToProps, {
     destroyNotification
-};
 
-export default connect<INotificationsProviderContainerState, INotificationsProviderContainerDispatch, INotificationsProviderContainerProps>(mapStateToProps, mapDispatchToProps)(NotificationsProviderContainer);
+})(Notifications);

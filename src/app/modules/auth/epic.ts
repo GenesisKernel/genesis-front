@@ -32,7 +32,6 @@ import authErrorEpic from './epics/authErrorEpic';
 import removeWalletEpic from './epics/removeWalletEpic';
 import logoutEmptySessionEpic from './epics/logoutEmptySessionEpic';
 import changePasswordEpic from './epics/changePasswordEpic';
-import changePasswordDoneEpic from './epics/changePasswordDoneEpic';
 import importSeedConfirmationEpic from './epics/importSeedConfirmationEpic';
 import loadWalletsEpic from './epics/loadWalletsEpic';
 import reloadWalletsEpic from './epics/reloadWalletsEpic';
@@ -55,6 +54,5 @@ export default combineEpics(
     loadSavedWalletEpic,
     reloadWalletsEpic,
     changePasswordEpic,
-    changePasswordDoneEpic,
     switchWalletEpic
 );

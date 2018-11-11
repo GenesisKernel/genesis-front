@@ -22,8 +22,10 @@
 
 import { Action } from 'redux';
 import { Epic } from 'modules';
-import { Observable } from 'rxjs/Observable';
 import { renderPage, menuPush } from '../actions';
+import { flatMap } from 'rxjs/operators';
+import { from, of } from 'rxjs';
+
 /*import NodeObservable from 'modules/engine/util/NodeObservable';
 import keyring from 'lib/keyring';
 
@@ -31,109 +33,112 @@ const invalidationError = {
     error: 'E_INVALIDATED'
 };*/
 
-const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(renderPage.started)
-    .flatMap(action => {
-        const state = store.getState();
-        const client = api(state.auth.session);
+// TODO: refactoring
+const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(renderPage.started).pipe(
+    flatMap(action => {
+        const client = api(store.value.auth.session);
 
-        return Observable.from(client.content({
+        return from(client.content({
             type: 'page',
             name: action.payload.name,
             params: action.payload.params,
-            locale: state.storage.locale
+            locale: store.value.storage.locale
 
-        })).flatMap(content => Observable.of<Action>(
-            renderPage.done({
-                params: action.payload,
-                result: content.tree
-            }),
-            menuPush({
-                section: action.payload.section,
-                menu: {
-                    name: content.menu,
-                    content: content.menutree
-                }
-            })
-        ));
-
-        /*const state = store.getState();
-        const client = api(state.auth.session);
-        const section = state.sections.sections[action.payload.section || state.sections.section];
-
-        return Observable.from(Promise.all([
-            client.content({
-                type: 'page',
-                name: action.payload.name,
-                params: action.payload.params,
-                locale: state.storage.locale
-
-            }),
-            (!section.menus.length && section.defaultPage !== action.payload.name) ? client.content({
-                type: 'page',
-                name: section.defaultPage,
-                params: {},
-                locale: state.storage.locale
-            }) : Promise.resolve(null)
-
-        ])).flatMap(payload => {
-            const page = payload[0];
-            const defaultPage = payload[1];
-
-            return NodeObservable({
-                nodes: state.storage.fullNodes,
-                count: page.nodesCount,
-                concurrency: 3,
-                api
-
-            }).flatMap(apiHost => Observable.from(
-                api({ apiHost }).contentHash({
-                    name: action.payload.name,
-                    ecosystem: state.auth.wallet.access.ecosystem,
-                    walletID: state.auth.wallet.wallet.id,
-                    role: state.auth.wallet.role ? Number(state.auth.wallet.role.id) : null,
-                    locale: state.storage.locale,
-                    params: action.payload.params
-
-                })
-            )).catch(e => Observable.throw(invalidationError)).toArray().map(result => {
-                const contentHash = keyring.hashData(page.plainText);
-
-                if (0 < state.storage.fullNodes.length && page.nodesCount !== result.length) {
-                    throw invalidationError;
-                }
-
-                for (let i = 0; i < result.length; i++) {
-                    if (contentHash !== result[i].hash) {
-                        throw invalidationError;
-                    }
-                }
-
-                return renderPage.done({
+        })).pipe(
+            flatMap(content => of<Action>(
+                renderPage.done({
                     params: action.payload,
-                    result: {
-                        defaultMenu: defaultPage && defaultPage.menu !== page.menu && {
-                            name: defaultPage.menu,
-                            content: defaultPage.menutree
-                        },
-                        menu: {
-                            name: page.menu,
-                            content: page.menutree
-                        },
-                        page: {
-                            params: action.payload.params,
-                            name: action.payload.name,
-                            content: page.tree
-                        }
+                    result: content.tree
+                }),
+                menuPush({
+                    section: action.payload.section,
+                    menu: {
+                        name: content.menu,
+                        content: content.menutree
                     }
-                });
-            });
+                })
+            ))
+        );
+    })
+);
 
-        }).catch(e =>
-            Observable.of(renderPage.failed({
-                params: action.payload,
-                error: e.error
-            }))
-        );*/
+/*const state = store.getState();
+const client = api(state.auth.session);
+const section = state.sections.sections[action.payload.section || state.sections.section];
+
+return Observable.from(Promise.all([
+    client.content({
+        type: 'page',
+        name: action.payload.name,
+        params: action.payload.params,
+        locale: state.storage.locale
+
+    }),
+    (!section.menus.length && section.defaultPage !== action.payload.name) ? client.content({
+        type: 'page',
+        name: section.defaultPage,
+        params: {},
+        locale: state.storage.locale
+    }) : Promise.resolve(null)
+
+])).flatMap(payload => {
+    const page = payload[0];
+    const defaultPage = payload[1];
+
+    return NodeObservable({
+        nodes: state.storage.fullNodes,
+        count: page.nodesCount,
+        concurrency: 3,
+        api
+
+    }).flatMap(apiHost => Observable.from(
+        api({ apiHost }).contentHash({
+            name: action.payload.name,
+            ecosystem: state.auth.wallet.access.ecosystem,
+            walletID: state.auth.wallet.wallet.id,
+            role: state.auth.wallet.role ? Number(state.auth.wallet.role.id) : null,
+            locale: state.storage.locale,
+            params: action.payload.params
+
+        })
+    )).catch(e => Observable.throw(invalidationError)).toArray().map(result => {
+        const contentHash = keyring.hashData(page.plainText);
+
+        if (0 < state.storage.fullNodes.length && page.nodesCount !== result.length) {
+            throw invalidationError;
+        }
+
+        for (let i = 0; i < result.length; i++) {
+            if (contentHash !== result[i].hash) {
+                throw invalidationError;
+            }
+        }
+
+        return renderPage.done({
+            params: action.payload,
+            result: {
+                defaultMenu: defaultPage && defaultPage.menu !== page.menu && {
+                    name: defaultPage.menu,
+                    content: defaultPage.menutree
+                },
+                menu: {
+                    name: page.menu,
+                    content: page.menutree
+                },
+                page: {
+                    params: action.payload.params,
+                    name: action.payload.name,
+                    content: page.tree
+                }
+            }
+        });
     });
+
+}).catch(e =>
+    Observable.of(renderPage.failed({
+        params: action.payload,
+        error: e.error
+    }))
+);*/
 
 export default renderPageEpic;

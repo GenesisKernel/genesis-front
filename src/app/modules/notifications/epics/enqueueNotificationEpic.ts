@@ -22,16 +22,17 @@
 
 import { Epic } from 'modules';
 import { enqueueNotification, spawnNotification, pushNotificationQueue } from '../actions';
+import { map } from 'rxjs/operators';
 
-const enqueueNotificationEpic: Epic = (action$, store) => action$.ofAction(enqueueNotification)
-    .map(action => {
-        const state = store.getState();
-        if (state.notifications.NOTIFICATIONS_PER_SCREEN <= state.notifications.notifications.length) {
+const enqueueNotificationEpic: Epic = (action$, store) => action$.ofAction(enqueueNotification).pipe(
+    map(action => {
+        if (store.value.notifications.NOTIFICATIONS_PER_SCREEN <= store.value.notifications.notifications.length) {
             return pushNotificationQueue(action.payload);
         }
         else {
             return spawnNotification(action.payload);
         }
-    });
+    })
+);
 
 export default enqueueNotificationEpic;

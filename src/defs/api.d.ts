@@ -291,6 +291,7 @@ declare module 'genesis/api' {
         status: string;
         title: string;
         urlname: string;
+        order: string;
     }
 
     interface ISectionsResponse {

@@ -21,23 +21,26 @@
 // SOFTWARE.
 
 import { Epic } from 'modules';
-import * as actions from '../actions';
+import { from, empty } from 'rxjs';
+import { flatMap, map, catchError } from 'rxjs/operators';
 import { modalShow } from 'modules/modal/actions';
-import { Observable } from 'rxjs';
+import { debugContract } from '../actions';
 
-const debugContractEpic: Epic = (action$, store, { api }) => action$.ofAction(actions.debugContract)
-    .flatMap(action => {
-        const state = store.getState();
-        const client = api(state.auth.session);
-        return Observable.from(client.getContract({ name: action.payload }))
-            .map(contract => modalShow({
+const debugContractEpic: Epic = (action$, store, { api }) => action$.ofAction(debugContract).pipe(
+    flatMap(action => {
+        const client = api(store.value.auth.session);
+        return from(client.getContract({ name: action.payload })).pipe(
+            map(contract => modalShow({
                 id: 'DEBUG_CONTRACT',
                 type: 'DEBUG_CONTRACT',
                 params: {
                     contract: action.payload,
                     fields: contract.fields
                 }
-            }));
-    });
+            })),
+            catchError(e => empty())
+        );
+    })
+);
 
 export default debugContractEpic;

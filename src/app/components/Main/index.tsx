@@ -22,8 +22,6 @@
 
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { ISection } from 'genesis/content';
-import { history } from 'store';
 
 import { AnimatedSwitch } from 'components/Animation';
 import Sidebar from './Sidebar';
@@ -33,8 +31,6 @@ import themed from 'components/Theme/themed';
 import SideButton from './Sidebar/SideButton';
 
 export interface IMainProps {
-    section: string;
-    sections: { [name: string]: ISection };
     stylesheet: string;
     onSwitchSection: (section: string) => void;
 }
@@ -47,46 +43,34 @@ const StyledContent = themed.div`
     bottom: 0;
 `;
 
-class Main extends React.Component<IMainProps> {
-    onBack() {
-        history.goBack();
-    }
-
-    onForward() {
-        history.goForward();
-    }
-
-    render() {
-        return (
-            <div className="wrapper">
-                <style type="text/css">
-                    {this.props.stylesheet}
-                </style>
-                <Sidebar>
-                    <SideButton>
-                        <em className="icon-menu" />
-                    </SideButton>
-                    <SideButton active>
-                        <em className="icon-compass" />
-                    </SideButton>
-                    <SideButton>
-                        <em className="icon-flag" />
-                    </SideButton>
-                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-                        <SideButton>
-                            <em className="icon-user" />
-                        </SideButton>
-                    </div>
-                </Sidebar>
-                <StyledContent>
-                    <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
-                        <Route exact path="/:section/:page?" component={Sections} />
-                        <Route path="*" render={() => <NotFound main />} />
-                    </AnimatedSwitch>
-                </StyledContent>
+const Main: React.SFC<IMainProps> = props => (
+    <div className="wrapper">
+        <style type="text/css">
+            {props.stylesheet}
+        </style>
+        <Sidebar>
+            <SideButton>
+                <em className="icon-menu" />
+            </SideButton>
+            <SideButton active>
+                <em className="icon-compass" />
+            </SideButton>
+            <SideButton>
+                <em className="icon-flag" />
+            </SideButton>
+            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+                <SideButton>
+                    <em className="icon-user" />
+                </SideButton>
             </div>
-        );
-    }
-}
+        </Sidebar>
+        <StyledContent>
+            <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
+                <Route exact path="/:section/:page?" component={Sections} />
+                <Route path="*" render={() => <NotFound main />} />
+            </AnimatedSwitch>
+        </StyledContent>
+    </div>
+);
 
 export default Main;

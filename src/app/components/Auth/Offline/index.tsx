@@ -38,7 +38,7 @@ interface IOfflineState {
 }
 
 class Offline extends React.Component<IOfflineProps, IOfflineState> {
-    private _interval: number;
+    private _interval: any;
 
     constructor(props: IOfflineProps) {
         super(props);

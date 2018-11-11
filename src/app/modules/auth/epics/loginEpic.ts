@@ -20,31 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
 import { Epic } from 'modules';
 import { login } from '../actions';
-import { Observable } from 'rxjs/Observable';
 import keyring from 'lib/keyring';
 import { push } from 'connected-react-router';
+import { flatMap, catchError } from 'rxjs/operators';
+import { of, from } from 'rxjs';
 
-const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.started)
-    .flatMap(action => {
-        const session = store.getState().auth.session;
+const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.started).pipe(
+    flatMap(action => {
+        const session = store.value.auth.session;
         const privateKey = keyring.decryptAES(session.wallet.encKey, action.payload.password);
 
         if (!keyring.validatePrivateKey(privateKey)) {
-            return Observable.of(login.failed({
+            return of(login.failed({
                 params: action.payload,
                 error: 'E_INVALID_PASSWORD'
             }));
         }
 
         const publicKey = keyring.generatePublicKey(privateKey);
-        const nodeHost = store.getState().engine.nodeHost;
+        const nodeHost = store.value.engine.nodeHost;
         const client = api({ apiHost: nodeHost });
 
-        return Observable.from(client.getUid())
-            .flatMap(uid =>
+        return from(client.getUid()).pipe(
+            flatMap(uid =>
                 client.authorize(uid.token).login({
                     publicKey,
                     signature: keyring.sign(uid.uid, privateKey),
@@ -52,11 +52,11 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
                     expire: 60 * 60 * 24 * 90,
                     role: session.role ? Number(session.role.id) : null
                 })
-            )
+            ),
 
             // Successful authentication. Yield the result
-            .flatMap(response => {
-                return Observable.of<Action>(
+            flatMap(response => {
+                return of(
                     push('/'),
                     login.done({
                         params: action.payload,
@@ -71,16 +71,17 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
                         }
                     })
                 );
-            })
+            }),
 
             // Catch actual login error, yield result
-            .catch(e => Observable.of(
+            catchError(e => of(
                 login.failed({
                     params: action.payload,
                     error: e.error
                 })
-            ));
-
-    });
+            ))
+        );
+    })
+);
 
 export default loginEpic;

@@ -23,10 +23,10 @@
 import { Epic } from 'modules';
 import { unsubscribe } from '../actions';
 import { removeWallet } from 'modules/storage/actions';
+import { map } from 'rxjs/operators';
 
-const unsubscribeRemovedWalletEpic: Epic = (action$, store) => action$.ofAction(removeWallet)
-    .map(action =>
-        unsubscribe.started(action.payload)
-    );
+const unsubscribeRemovedWalletEpic: Epic = (action$, store) => action$.ofAction(removeWallet).pipe(
+    map(action => unsubscribe.started(action.payload))
+);
 
 export default unsubscribeRemovedWalletEpic;

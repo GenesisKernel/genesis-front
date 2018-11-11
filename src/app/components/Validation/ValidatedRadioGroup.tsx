@@ -56,14 +56,14 @@ export default class ValidatedRadioGroup extends React.Component<IValidatedRadio
     }
 
     componentDidMount() {
-        if (this.context.form) {
-            (this.context.form as ValidatedForm)._registerElement(this);
+        if ((this as any).context.form) {
+            ((this as any).context.form as ValidatedForm)._registerElement(this);
         }
     }
 
     componentWillUnmount() {
-        if (this.context.form) {
-            (this.context.form as ValidatedForm)._unregisterElement(this);
+        if ((this as any).context.form) {
+            ((this as any).context.form as ValidatedForm)._unregisterElement(this);
         }
     }
 
@@ -72,7 +72,7 @@ export default class ValidatedRadioGroup extends React.Component<IValidatedRadio
             this.setState({
                 checked: props.checked
             });
-            (this.context.form as ValidatedForm).updateState(props.name, props.checked);
+            ((this as any).context.form as ValidatedForm).updateState(props.name, props.checked);
         }
     }
 
@@ -91,7 +91,7 @@ export default class ValidatedRadioGroup extends React.Component<IValidatedRadio
     }
 
     onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-        (this.context.form as ValidatedForm).updateState(this.props.name);
+        ((this as any).context.form as ValidatedForm).updateState(this.props.name);
 
         if (this.props.onBlur) {
             this.props.onBlur(e);

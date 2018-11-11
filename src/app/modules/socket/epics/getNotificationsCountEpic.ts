@@ -22,16 +22,18 @@
 
 import { Epic } from 'modules';
 import { getNotificationsCount } from '../actions';
-import { Observable } from 'rxjs/Observable';
+import { flatMap, catchError } from 'rxjs/operators';
+import { from, empty } from 'rxjs';
 
-const getNotificationsCountEpic: Epic = (action$, store, { api }) => action$.ofAction(getNotificationsCount)
-    .flatMap(action => {
-        const state = store.getState();
-        const client = api({ apiHost: state.engine.nodeHost, sessionToken: state.socket.session });
+const getNotificationsCountEpic: Epic = (action$, store, { api }) => action$.ofAction(getNotificationsCount).pipe(
+    flatMap(action => {
+        const client = api({ apiHost: store.value.engine.nodeHost, sessionToken: store.value.socket.session });
 
-        return Observable.fromPromise(client.requestNotifications(action.payload.ids))
-            .flatMap(() => Observable.empty<never>())
-            .catch(() => Observable.empty<never>());
-    });
+        return from(client.requestNotifications(action.payload.ids)).pipe(
+            flatMap(() => empty()),
+            catchError(() => empty())
+        );
+    })
+);
 
 export default getNotificationsCountEpic;

@@ -22,18 +22,19 @@
 
 import { Epic } from 'modules';
 import { destroyNotification, spawnNotification } from '../actions';
-import { Observable } from 'rxjs/Observable';
+import { flatMap } from 'rxjs/operators';
+import { of, empty } from 'rxjs';
 
-const destroyNotificationEpic: Epic = (action$, store) => action$.ofAction(destroyNotification)
-    .flatMap(action => {
-        const state = store.getState();
-        if (state.notifications.queue.length) {
-            const queuedNotification = state.notifications.queue[0];
-            return Observable.of(spawnNotification(queuedNotification));
+const destroyNotificationEpic: Epic = (action$, store) => action$.ofAction(destroyNotification).pipe(
+    flatMap(action => {
+        if (store.value.notifications.queue.length) {
+            const queuedNotification = store.value.notifications.queue[0];
+            return of(spawnNotification(queuedNotification));
         }
         else {
-            return Observable.empty();
+            return empty();
         }
-    });
+    })
+);
 
 export default destroyNotificationEpic;

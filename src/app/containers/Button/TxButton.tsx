@@ -55,12 +55,12 @@ export interface ITxButtonProps {
 
     // Executed after batch
     contract?: string;
-    contractParams?: { [key: string]: any } | (() => { [key: string]: any });
+    contractParams?: () => { [key: string]: any };
 
     // Redirect if all previous actions succeeded
     page?: string;
     section: string;
-    pageParams?: { [key: string]: any } | (() => { [key: string]: any });
+    pageParams?: () => { [key: string]: any };
 
     // Page must be rendered within a modal dialog
     popup?: {
@@ -85,6 +85,7 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonState & ITxButt
     onClick = () => {
         this._uuid = uuid.v4();
 
+        // TODO: refactoring
         const contractParams = 'function' === typeof this.props.contractParams ?
             this.props.contractParams() :
             this.props.contractParams;

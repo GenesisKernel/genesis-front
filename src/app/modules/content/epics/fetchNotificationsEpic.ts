@@ -21,31 +21,31 @@
 // SOFTWARE.
 
 import { Epic } from 'modules';
-import { Observable } from 'rxjs/Observable';
 import { fetchNotifications } from 'modules/content/actions';
+import { flatMap, map, catchError } from 'rxjs/operators';
+import { from, of } from 'rxjs';
 
-const fetchNotificationsEpic: Epic = (action$, store, { api }) => action$.ofAction(fetchNotifications.started)
-    .flatMap(action => {
-        const state = store.getState();
-        const client = api(state.auth.session);
+const fetchNotificationsEpic: Epic = (action$, store, { api }) => action$.ofAction(fetchNotifications.started).pipe(
+    flatMap(action => {
+        const client = api(store.value.auth.session);
 
-        return Observable.fromPromise(client.content({
+        return from(client.content({
             type: 'page',
             name: 'notifications',
             params: {},
-            locale: state.storage.locale
+            locale: store.value.storage.locale
 
-        })).map(payload =>
-            fetchNotifications.done({
+        })).pipe(
+            map(payload => fetchNotifications.done({
                 params: action.payload,
                 result: payload.tree
-            })
-        ).catch(e =>
-            Observable.of(fetchNotifications.failed({
+            })),
+            catchError(e => of(fetchNotifications.failed({
                 params: action.payload,
                 error: null
-            }))
+            })))
         );
-    });
+    })
+);
 
 export default fetchNotificationsEpic;

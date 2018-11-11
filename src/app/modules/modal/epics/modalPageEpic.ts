@@ -22,21 +22,21 @@
 
 import { Epic } from 'modules';
 import { modalPage, modalShow } from '../actions';
-import { Observable } from 'rxjs/Observable';
+import { flatMap, catchError, map } from 'rxjs/operators';
+import { from, empty } from 'rxjs';
 
-const modalPageEpic: Epic = (action$, store, { api }) => action$.ofAction(modalPage)
-    .flatMap(action => {
-        const state = store.getState();
-        const client = api(state.auth.session);
+const modalPageEpic: Epic = (action$, store, { api }) => action$.ofAction(modalPage).pipe(
+    flatMap(action => {
+        const client = api(store.value.auth.session);
 
-        return Observable.fromPromise(client.content({
+        return from(client.content({
             type: 'page',
             name: action.payload.name,
             params: action.payload.params,
-            locale: state.storage.locale
+            locale: store.value.storage.locale
 
-        })).map(payload =>
-            modalShow({
+        })).pipe(
+            map(payload => modalShow({
                 id: 'PAGE_MODAL',
                 type: 'PAGE_MODAL',
                 params: {
@@ -45,11 +45,10 @@ const modalPageEpic: Epic = (action$, store, { api }) => action$.ofAction(modalP
                     tree: payload.tree
                 }
 
-            })
-
-        ).catch(e =>
-            Observable.empty<never>()
+            })),
+            catchError(e => empty())
         );
-    });
+    })
+);
 
 export default modalPageEpic;

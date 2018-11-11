@@ -21,35 +21,79 @@
 // SOFTWARE.
 
 import { Epic } from 'modules';
-import { Observable } from 'rxjs/Observable';
-import { changePassword } from '../actions';
+import { changePassword, logout } from '../actions';
+import { of, merge } from 'rxjs';
+import { flatMap, take, map } from 'rxjs/operators';
 import { modalShow, modalClose } from 'modules/modal/actions';
+import { saveWallet } from 'modules/storage/actions';
+import keyring from 'lib/keyring';
 
-const changePasswordEpic: Epic = (action$, store, { api }) => action$.ofAction(changePassword.started)
-    .flatMap(action => Observable.merge(
-        Observable.of(modalShow({
-            id: 'AUTH_CHANGE_PASSWORD',
-            type: 'AUTH_CHANGE_PASSWORD',
-            params: {
-                encKey: store.getState().auth.session.wallet.encKey
-            }
-        })),
-        action$.ofAction(modalClose)
-            .take(1)
-            .map(result => {
-                if ('RESULT' === result.payload.reason) {
-                    return changePassword.done({
-                        params: action.payload,
-                        result: result.payload.data
-                    });
+const changePasswordEpic: Epic = (action$, store, { api }) => action$.ofAction(changePassword.started).pipe(
+    flatMap(action =>
+        merge(
+            of(modalShow({
+                id: 'AUTH_CHANGE_PASSWORD',
+                type: 'AUTH_CHANGE_PASSWORD',
+                params: {
+                    encKey: store.value.auth.session.wallet.encKey
                 }
-                else {
-                    return changePassword.failed({
-                        params: action.payload,
-                        error: null
-                    });
-                }
-            })
-    ));
+            })),
+            action$.ofAction(modalClose).pipe(
+                take(1),
+                flatMap(result => {
+                    if ('RESULT' === result.payload.reason) {
+                        const wallet = store.value.auth.session.wallet;
+                        const privateKey = keyring.decryptAES(wallet.encKey, result.payload.data.oldPassword);
+
+                        if (!keyring.validatePrivateKey(privateKey)) {
+                            return of(
+                                changePassword.failed({
+                                    params: null,
+                                    error: 'E_INVALID_PASSWORD'
+                                }),
+                                modalShow({
+                                    id: 'AUTH_ERROR',
+                                    type: 'AUTH_ERROR',
+                                    params: {
+                                        error: 'E_INVALID_PASSWORD'
+                                    }
+                                })
+                            );
+                        }
+
+                        const encKey = keyring.encryptAES(privateKey, result.payload.data.newPassword);
+                        return merge(
+                            of(
+                                changePassword.done({
+                                    params: action.payload,
+                                    result: null
+                                }),
+                                saveWallet({
+                                    ...wallet,
+                                    encKey
+                                }),
+                                modalShow({
+                                    id: 'AUTH_PASSWORD_CHANGED',
+                                    type: 'AUTH_PASSWORD_CHANGED',
+                                    params: {}
+                                }),
+                            ),
+                            action$.ofAction(modalClose).pipe(
+                                take(1),
+                                map(() => logout.started(null))
+                            )
+                        );
+                    }
+                    else {
+                        return of(changePassword.failed({
+                            params: action.payload,
+                            error: null
+                        }));
+                    }
+                })
+            )
+        )
+    )
+);
 
 export default changePasswordEpic;

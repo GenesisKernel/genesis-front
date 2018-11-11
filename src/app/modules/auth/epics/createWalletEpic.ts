@@ -20,22 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
 import { Epic } from 'modules';
-import { Observable } from 'rxjs/Observable';
 import { createWallet } from '../actions';
 import { navigate } from 'modules/engine/actions';
-import keyring from 'lib/keyring';
 import { address, addressString } from 'lib/crypto';
+import keyring from 'lib/keyring';
+import { of } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
 
-const createWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(createWallet.started)
-    .flatMap(action => {
+const createWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(createWallet.started).pipe(
+    flatMap(action => {
         const keys = keyring.generateKeyPair(action.payload.seed);
         const publicKey = keyring.generatePublicKey(keys.private);
         const encKey = keyring.encryptAES(keys.private, action.payload.password);
         const keyID = address(keys.public);
 
-        return Observable.of<Action>(
+        return of(
             createWallet.done({
                 params: action.payload,
                 result: {
@@ -48,10 +48,7 @@ const createWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(cre
             }),
             navigate('/')
         );
-
-    }).catch(e => Observable.of(createWallet.failed({
-        params: null,
-        error: 'E_IMPORT_FAILED'
-    })));
+    })
+);
 
 export default createWalletEpic;

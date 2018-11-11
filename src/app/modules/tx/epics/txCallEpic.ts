@@ -21,26 +21,29 @@
 // SOFTWARE.
 
 import { Epic } from 'modules';
-import { Observable } from 'rxjs';
+import { iif, of, merge, empty } from 'rxjs';
 import { txCall, txAuthorize, txExec } from '../actions';
 import { isType } from 'typescript-fsa';
 import keyring from 'lib/keyring';
+import { flatMap, take } from 'rxjs/operators';
 
-const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall)
+const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall).pipe(
     // Ask for password if there is no privateKey
-    .flatMap(action => Observable.if(
-        () => keyring.validatePrivateKey(store.getState().auth.privateKey),
-        Observable.of(txExec.started(action.payload)),
-        Observable.merge(
-            Observable.of(txAuthorize.started({})),
-            action$.filter(l => txAuthorize.done.match(l) || txAuthorize.failed.match(l))
-                .take(1)
-                .flatMap(result => Observable.if(
+    flatMap(action => iif(
+        () => keyring.validatePrivateKey(store.value.auth.privateKey),
+        of(txExec.started(action.payload)),
+        merge(
+            of(txAuthorize.started({})),
+            action$.filter(l => txAuthorize.done.match(l) || txAuthorize.failed.match(l)).pipe(
+                take(1),
+                flatMap(result => iif(
                     () => isType(result, txAuthorize.done),
-                    Observable.of(txExec.started(action.payload)),
-                    Observable.empty<never>()
+                    of(txExec.started(action.payload)),
+                    empty()
                 ))
+            )
         )
-    ));
+    ))
+);
 
 export default txCallEpic;

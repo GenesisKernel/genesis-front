@@ -20,24 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
+import { Epic } from 'modules';
 import { switchWindow } from '../actions';
 import platform from 'lib/platform';
+import { map } from 'rxjs/operators';
 
-const switchWindowEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(switchWindow.started)
-        .map(action => {
-            platform.on('desktop', () => {
-                const Electron = require('electron');
-                Electron.ipcRenderer.sendSync('switchWindow', action.payload);
-            });
-
-            return switchWindow.done({
-                params: action.payload,
-                result: action.payload
-            });
+const switchWindowEpic: Epic = (action$, store) => action$.ofAction(switchWindow.started).pipe(
+    map(action => {
+        platform.on('desktop', () => {
+            const Electron = require('electron');
+            Electron.ipcRenderer.sendSync('switchWindow', action.payload);
         });
+
+        return switchWindow.done({
+            params: action.payload,
+            result: action.payload
+        });
+    })
+);
 
 export default switchWindowEpic;

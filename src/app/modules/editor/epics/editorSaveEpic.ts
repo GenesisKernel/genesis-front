@@ -20,12 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as actions from '../actions';
 import uuid from 'uuid';
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
+import { Epic } from 'modules';
 import { txCall } from 'modules/tx/actions';
+import { editorSave } from '../actions';
+import { filter, map } from 'rxjs/operators';
 
 const connections = {
     contract: '@1EditContract',
@@ -34,19 +33,18 @@ const connections = {
     block: '@1EditBlock',
 };
 
-const editorSaveEpic: Epic<Action, IRootState> = (action$, store) => action$.ofAction(actions.editorSave)
-    .filter(l => !l.payload.new && connections[l.payload.type])
-    .map(action =>
-        txCall({
-            uuid: uuid.v4(),
-            contracts: [{
-                name: connections[action.payload.type],
-                params: [{
-                    Id: action.payload.id,
-                    Value: action.payload.value
-                }]
+const editorSaveEpic: Epic = (action$, store) => action$.ofAction(editorSave).pipe(
+    filter(l => !l.payload.new && connections[l.payload.type]),
+    map(action => txCall({
+        uuid: uuid.v4(),
+        contracts: [{
+            name: connections[action.payload.type],
+            params: [{
+                Id: action.payload.id,
+                Value: action.payload.value
             }]
-        })
-    );
+        }]
+    }))
+);
 
 export default editorSaveEpic;

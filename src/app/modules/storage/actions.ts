@@ -30,4 +30,4 @@ export const removeWallet = actionCreator<string>('REMOVE_WALLET');
 export const saveNavigationSize = actionCreator<number>('SAVE_NAVIGATION_SIZE');
 export const mergeFullNodes = actionCreator<string[]>('MERGE_FULL_NODES');
 export const saveEncKey = actionCreator<ISaveEncKeyCall>('SAVE_ENC_KEY');
-export const closeSecurityWarning = actionCreator<string>('CLOSE_SECURITY_WARNING');
+export const closeSecurityWarning = actionCreator('CLOSE_SECURITY_WARNING');

@@ -76,7 +76,7 @@ class ScrollView extends React.Component<IScrollViewProps> {
 
         return (
             <StyledScrollBar
-                innerRef={l => this._scrollBar = l}
+                ref={(l: ScrollBar) => this._scrollBar = l}
                 className={classes}
                 onWheel={this.props.horizontalWheel && this.onMouseWheel}
                 renderTrackHorizontal={this.calcValue(this.props.disableHorizontal, this.props.hideHorizontal)}

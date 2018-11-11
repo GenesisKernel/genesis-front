@@ -23,10 +23,10 @@
 import { Epic } from 'modules';
 import { importWallet } from 'modules/auth/actions';
 import { saveWallet } from '../actions';
+import { map } from 'rxjs/operators';
 
-const saveWalletOnImportEpic: Epic = (action$, store) => action$.ofAction(importWallet.done)
-    .map(action =>
-        saveWallet(action.payload.result)
-    );
+const saveWalletOnImportEpic: Epic = (action$, store) => action$.ofAction(importWallet.done).pipe(
+    map(action => saveWallet(action.payload.result))
+);
 
 export default saveWalletOnImportEpic;

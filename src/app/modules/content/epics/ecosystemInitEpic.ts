@@ -22,49 +22,47 @@
 
 import { Action } from 'redux';
 import { Epic } from 'modules';
-import { Observable } from 'rxjs/Observable';
 import { ecosystemInit, fetchNotifications } from 'modules/content/actions';
 import { sectionsInit } from 'modules/sections/actions';
 import { logout, selectWallet } from 'modules/auth/actions';
+import { flatMap, catchError } from 'rxjs/operators';
+import { from, of } from 'rxjs';
 
-const ecosystemInitEpic: Epic = (action$, store, { api }) => action$.ofAction(ecosystemInit.started)
-    .flatMap(action => {
-        const state = store.getState();
-        const client = api(state.auth.session);
+const ecosystemInitEpic: Epic = (action$, store, { api }) => action$.ofAction(ecosystemInit.started).pipe(
+    flatMap(action => {
+        const client = api(store.value.auth.session);
 
-        return Observable.from(
-            client.getParam({ name: 'stylesheet' }).then(l => l.value)
-        ).flatMap(payload =>
-            Observable.of<Action>(
-                fetchNotifications.started(null),
+        return from(client.getParam({ name: 'stylesheet' })).pipe(
+            flatMap(payload => of<Action>(
                 ecosystemInit.done({
                     params: action.payload,
                     result: {
-                        stylesheet: payload
+                        stylesheet: payload.value
                     }
                 }),
+                fetchNotifications.started(null),
                 sectionsInit.started(action.payload.section)
-            )
-        ).catch(e => {
-            if ('E_OFFLINE' === e.error || 'E_SERVER' === e.error || 'E_TOKENEXPIRED' === e.error) {
-                const session = store.getState().auth.session;
-
-                return Observable.of<Action>(
-                    logout.started(null),
-                    selectWallet(session),
+            )),
+            catchError(e => {
+                if ('E_OFFLINE' === e.error || 'E_SERVER' === e.error || 'E_TOKENEXPIRED' === e.error) {
+                    return of(
+                        logout.started(null),
+                        selectWallet(store.value.auth.session),
+                        ecosystemInit.failed({
+                            params: action.payload,
+                            error: e.error
+                        })
+                    );
+                }
+                return of(
                     ecosystemInit.failed({
                         params: action.payload,
                         error: e.error
                     })
                 );
-            }
-            return Observable.of<Action>(
-                ecosystemInit.failed({
-                    params: action.payload,
-                    error: e.error
-                })
-            );
-        });
-    });
+            })
+        );
+    })
+);
 
 export default ecosystemInitEpic;

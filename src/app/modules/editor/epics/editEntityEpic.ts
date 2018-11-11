@@ -20,12 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { Observable } from 'rxjs';
-import { IRootState } from 'modules';
+import { from } from 'rxjs';
+import { Epic } from 'modules';
 import { txExec } from 'modules/tx/actions';
 import { reloadEditorTab } from '../actions';
+import { flatMap, filter, map } from 'rxjs/operators';
 
 const connections = {
     '@1EditBlock': 'block',
@@ -34,18 +33,19 @@ const connections = {
     '@1EditMenu': 'menu'
 };
 
-const editEntityEpic: Epic<Action, IRootState> = (action$, store) => action$.ofAction(txExec.done)
-    .flatMap(action => Observable.from(action.payload.params.contracts)
-        .filter(l => connections[l.name])
-        .flatMap(contract => Observable.from(contract.params).map(params =>
-            reloadEditorTab({
+const editEntityEpic: Epic = (action$, store) => action$.ofAction(txExec.done).pipe(
+    flatMap(action => from(action.payload.params.contracts).pipe(
+        filter(l => connections[l.name]),
+        flatMap(contract => from(contract.params).pipe(
+            map(params => reloadEditorTab({
                 type: connections[contract.name],
                 id: params.Id,
                 data: {
                     initialValue: params.Value
                 }
-            })
-        ))
-    );
+            })))
+        )
+    ))
+);
 
 export default editEntityEpic;

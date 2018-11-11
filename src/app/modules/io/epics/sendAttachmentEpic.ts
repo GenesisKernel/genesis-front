@@ -20,18 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { IRootState } from 'modules';
-import { Epic } from 'redux-observable';
-import { Action } from 'redux';
-import { Observable } from 'rxjs/Observable';
+import { Epic } from 'modules';
 import { sendAttachment } from '../actions';
 import { sendAttachment as fsSend } from 'lib/fs';
+import { flatMap } from 'rxjs/operators';
+import { empty } from 'rxjs';
 
-const sendAttachmentEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(sendAttachment)
-        .flatMap(action => {
-            fsSend(action.payload.name, action.payload.data);
-            return Observable.empty();
-        });
+const sendAttachmentEpic: Epic = (action$, store) => action$.ofAction(sendAttachment).pipe(
+    flatMap(action => {
+        fsSend(action.payload.name, action.payload.data);
+        return empty();
+    })
+);
 
 export default sendAttachmentEpic;
