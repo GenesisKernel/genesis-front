@@ -21,24 +21,26 @@
 // SOFTWARE.
 
 import { Action } from 'redux';
-import { Observable } from 'rxjs';
+import { Observable, merge, empty, of } from 'rxjs';
 import { ActionsObservable } from 'redux-observable';
 import { modalShow, modalClose } from '../actions';
 import { IModalCall, TModalResultReason } from 'genesis/modal';
+import { take, flatMap } from 'rxjs/operators';
 
 const ModalObservable = <T>(action$: ActionsObservable<Action>, params: { modal: IModalCall, success?: (data: T) => Observable<Action>, failure?: (reason: TModalResultReason) => Observable<Action> }) =>
-    Observable.merge(
-        action$.ofAction(modalClose)
-            .take(1)
-            .flatMap(result => {
+    merge(
+        action$.ofAction(modalClose).pipe(
+            take(1),
+            flatMap(result => {
                 if ('RESULT' === result.payload.reason) {
-                    return params.success ? params.success(result.payload.data) : Observable.empty<never>();
+                    return params.success ? params.success(result.payload.data) : empty();
                 }
                 else {
-                    return params.failure ? params.failure(result.payload.reason) : Observable.empty<never>();
+                    return params.failure ? params.failure(result.payload.reason) : empty();
                 }
-            }),
-        Observable.of(modalShow(params.modal))
+            })
+        ),
+        of(modalShow(params.modal))
     );
 
 export default ModalObservable;

@@ -23,7 +23,7 @@
 import 'rxjs';
 import 'lib/external/fsa';
 import { createStore, applyMiddleware, compose } from 'redux';
-import { connectRouter, routerMiddleware } from 'connected-react-router';
+import { routerMiddleware } from 'connected-react-router';
 import { createEpicMiddleware } from 'redux-observable';
 import { loadingBarMiddleware } from 'react-redux-loading-bar';
 import persistState, { mergePersistedState } from 'redux-localstorage';
@@ -46,8 +46,8 @@ export const history = platform.select<() => History>({
 const reducer = platform.select({
     web: compose(
         mergePersistedState()
-    )(rootReducer),
-    desktop: rootReducer
+    )(rootReducer(history)),
+    desktop: rootReducer(history)
 });
 
 const storageAdapters = [
@@ -67,12 +67,14 @@ platform.on('web', () => {
 const storage = compose.apply(null, storageAdapters)(adapter(window.localStorage));
 
 const configureStore = (initialState?: IRootState) => {
+    const epicMiddleware = createEpicMiddleware({
+        dependencies
+    });
+
     const enhancers: any[] = [];
     const middleware = [
         routerMiddleware(history),
-        createEpicMiddleware(rootEpic, {
-            dependencies
-        }),
+        epicMiddleware,
         loadingBarMiddleware({
             promiseTypeSuffixes: ['STARTED', 'DONE', 'FAILED']
         })
@@ -95,11 +97,15 @@ const configureStore = (initialState?: IRootState) => {
         ...enhancers
     );
 
-    return createStore<IRootState>(
-        connectRouter(history)(reducer),
+    const value = createStore(
+        reducer,
         initialState!,
         composedEnhancers
     );
+
+    epicMiddleware.run(rootEpic);
+
+    return value;
 };
 
 const store = platform.select({

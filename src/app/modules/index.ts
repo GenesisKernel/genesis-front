@@ -42,6 +42,8 @@ import * as router from './router';
 import { ActionCreator, Failure, Success, isType } from 'typescript-fsa';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { connectRouter } from 'connected-react-router';
+import { History } from 'history';
 
 export type Epic = NativeEpic<Action<any>, Action<any>, IRootState, IStoreDependencies>;
 export type Reducer<T, S> =
@@ -89,7 +91,7 @@ export const rootEpic = combineEpics(
     socket.epic
 );
 
-export default combineReducers<IRootState>({
+export default (history: History) => combineReducers<IRootState>({
     auth: auth.reducer,
     content: content.reducer,
     sections: sections.reducer,
@@ -98,9 +100,10 @@ export default combineReducers<IRootState>({
     editor: editor.reducer,
     tx: tx.reducer,
     gui: gui.reducer,
+    io: null,
     notifications: notifications.reducer,
-    router: router.reducer,
     storage: storage.reducer,
     socket: socket.reducer,
-    loadingBar: loadingBarReducer
+    loadingBar: loadingBarReducer,
+    router: connectRouter(history)
 });

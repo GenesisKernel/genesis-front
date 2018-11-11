@@ -21,35 +21,37 @@
 // SOFTWARE.
 
 import { Action as ReduxAction } from 'redux';
-import { Observable } from 'rxjs';
+import { Observable, merge, of, empty } from 'rxjs';
 import { ActionsObservable } from 'redux-observable';
 import { txCall, txExec } from '../actions';
 import { ITransactionCall, ITxError, ITransaction } from 'genesis/tx';
 import { isType } from 'typescript-fsa';
+import { take, filter, flatMap } from 'rxjs/operators';
 
 type TTxDoneAction =
     ReturnType<typeof txExec.done> |
     ReturnType<typeof txExec.failed>;
 
 const TxObservable = (action$: ActionsObservable<ReduxAction>, params: { tx: ITransactionCall, success?: (tx: ITransaction[]) => Observable<ReduxAction>, failure?: (error: ITxError) => Observable<ReduxAction> }) =>
-    Observable.merge(
-        action$.filter(l => isType(l, txExec.done) || isType(l, txExec.failed))
-            .filter((l: TTxDoneAction) => {
+    merge(
+        action$.filter(l => isType(l, txExec.done) || isType(l, txExec.failed)).pipe(
+            filter((l: TTxDoneAction) => {
                 return params.tx.uuid === l.payload.params.uuid;
-            })
-            .take(1)
-            .flatMap(result => {
+            }),
+            take(1),
+            flatMap(result => {
                 if (isType(result, txExec.done)) {
-                    return params.success ? params.success(result.payload.result) : Observable.empty<never>();
+                    return params.success ? params.success(result.payload.result) : empty();
                 }
                 else if (isType(result, txExec.failed)) {
-                    return params.failure ? params.failure(result.payload.error) : Observable.empty<never>();
+                    return params.failure ? params.failure(result.payload.error) : empty();
                 }
                 else {
-                    return Observable.empty<never>();
+                    return empty();
                 }
-            }),
-        Observable.of(txCall(params.tx))
+            })
+        ),
+        of(txCall(params.tx))
     );
 
 export default TxObservable;
