@@ -22,20 +22,14 @@
 
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { RouteComponentProps } from 'react-router-dom';
 import Sections from 'components/Main/Sections';
 
-export interface ISectionRouteParams {
+export interface ISectionsProps {
     section: string;
     page: string;
 }
 
-export interface ISectionRouteProps extends RouteComponentProps<ISectionRouteParams> {
-}
-
-const mapStateToProps = (state: IRootState, props: ISectionRouteProps) => ({
-    section: props.match.params.section,
-    page: props.match.params.page,
+const mapStateToProps = (state: IRootState, props: ISectionsProps) => ({
     values: state.sections.sections,
     navigationSize: state.storage.navigationSize
 });

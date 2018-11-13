@@ -25,9 +25,10 @@ import { locationChange } from '../actions';
 import { renderPage, popPage } from 'modules/sections/actions';
 import findPage from 'modules/sections/util/findPage';
 import { of, empty } from 'rxjs';
-import { flatMap } from 'rxjs/operators';
+import { flatMap, filter } from 'rxjs/operators';
 
 const sectionLoadEpic: Epic = (action$, store, { routerService }) => action$.ofAction(locationChange).pipe(
+    filter(l => store.value.auth.isAcquired),
     flatMap(action => {
         const match = routerService.matchRoute('(/)(:section)(/)(:page)(/)', action.payload.location.pathname + action.payload.location.search);
 

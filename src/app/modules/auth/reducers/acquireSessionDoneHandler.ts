@@ -21,17 +21,13 @@
 // SOFTWARE.
 
 import { State } from '../reducer';
-import { logout } from '../actions';
+import { acquireSession } from '../actions';
 import { Reducer } from 'modules';
 
-const logoutDoneHandler: Reducer<typeof logout.done, State> = (state, payload) => ({
+const acquireSessionDoneHandler: Reducer<typeof acquireSession.done, State> = (state, payload) => ({
     ...state,
-    session: {
-        ...state.session,
-        wallet: null
-    },
-    isAuthenticated: false,
-    isLoggingIn: false
+    isAuthenticated: payload.result,
+    isAcquired: payload.result
 });
 
-export default logoutDoneHandler;
+export default acquireSessionDoneHandler;

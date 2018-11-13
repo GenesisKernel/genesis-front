@@ -22,7 +22,7 @@
 
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, IntlProvider } from 'react-intl';
 import platform from 'lib/platform';
 import classnames from 'classnames';
 import themed from 'components/Theme/themed';
@@ -35,11 +35,16 @@ import InitHook from 'containers/App/InitHook';
 import ModalProvider from 'containers/Modal/ModalProvider';
 import NotificationsProvider from 'containers/Notifications/NotificationsProvider';
 import SecurityWarning from 'containers/SecurityWarning';
+import ThemeProvider from 'components/Theme/ThemeProvider';
+import baseTheme from 'components/Theme/baseTheme';
 
 interface IAppProps {
+    locale: string;
+    localeMessages: { [key: string]: string };
     isAuthenticated: boolean;
     isLoaded: boolean;
     isCollapsed: boolean;
+    sessionAcquired: boolean;
     securityWarningClosed: boolean;
     switchWindow: (wnd: string) => void;
 }
@@ -71,28 +76,35 @@ class App extends React.Component<IAppProps> {
         });
 
         return (
-            <ThemedApp className={classes}>
-                <InitHook />
-                <ModalProvider />
-                <NotificationsProvider />
-                {platform.select({
-                    web: !this.props.securityWarningClosed && (
-                        <SecurityWarning>
-                            <FormattedMessage id="general.security.warning" defaultMessage="Please use desktop version or mobile application for better security" />
-                        </SecurityWarning>
-                    )
-                })}
+            <IntlProvider locale={this.props.locale} defaultLocale="en-US" messages={this.props.localeMessages}>
+                <ThemeProvider theme={baseTheme}>
+                    <ThemedApp className={classes}>
+                        <InitHook />
+                        <ModalProvider />
+                        <NotificationsProvider />
+                        {platform.select({
+                            web: !this.props.securityWarningClosed && (
+                                <SecurityWarning>
+                                    <FormattedMessage id="general.security.warning" defaultMessage="Please use desktop version or mobile application for better security" />
+                                </SecurityWarning>
+                            )
+                        })}
 
-                <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
-                    {!this.props.isLoaded && (
-                        <Route path="/" component={Splash} />
-                    )}
-                    {!this.props.isAuthenticated && (
-                        <Route path="/" component={Auth} />
-                    )}
-                    <Route path="/" component={Main} />
-                </AnimatedSwitch>
-            </ThemedApp>
+                        <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
+                            {!this.props.isLoaded && (
+                                <Route path="/" component={Splash} />
+                            )}
+                            {!this.props.isAuthenticated && (
+                                <Route path="/" component={Auth} />
+                            )}
+                            {!this.props.sessionAcquired && (
+                                <Route path="/" component={Splash} />
+                            )}
+                            <Route path="/" component={Main} />
+                        </AnimatedSwitch>
+                    </ThemedApp>
+                </ThemeProvider>
+            </IntlProvider>
         );
     }
 }

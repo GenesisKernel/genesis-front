@@ -33,6 +33,7 @@ import { mergeFullNodes, saveWallet } from 'modules/storage/actions';
 import { flatMap, catchError, map, defaultIfEmpty } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax';
 import { Action } from 'redux';
+import { acquireSession } from 'modules/auth/actions';
 
 const fullNodesFallback = ['http://127.0.0.1:7079'];
 
@@ -139,6 +140,11 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                                             address: workConfig.login.address,
                                             settings: {}
                                         })),
+                                        empty()
+                                    ),
+                                    iif(
+                                        () => store.value.auth.isAuthenticated && !!store.value.auth.session,
+                                        of(acquireSession.started(store.value.auth.session)),
                                         empty()
                                     ),
                                     of<Action>(connect.started({

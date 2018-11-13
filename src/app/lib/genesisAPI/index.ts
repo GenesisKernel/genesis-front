@@ -248,7 +248,7 @@ class GenesisAPI {
         })
     });
 
-    public sections = this.setSecuredEndpoint<ISectionsRequest, ISectionsResponse>('get', 'sections', {
+    public getSections = this.setSecuredEndpoint<ISectionsRequest, ISectionsResponse>('get', 'sections', {
         requestTransformer: request => ({
             lang: request.locale
         })

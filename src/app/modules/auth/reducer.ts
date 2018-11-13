@@ -45,11 +45,14 @@ import changeSeedConfirmationHandler from './reducers/changeSeedConfirmation';
 import importSeedConfirmationDoneHandler from './reducers/importSeedConfirmationDoneHandler';
 import loadWalletsDoneHandler from './reducers/loadWalletsDoneHandler';
 import loadWalletHandler from './reducers/loadWalletHandler';
+import acquireSessionHandler from './reducers/acquireSessionHandler';
+import acquireSessionDoneHandler from './reducers/acquireSessionDoneHandler';
 
 export type State = {
     readonly seed: string;
     readonly seedConfirm: string;
     readonly isAuthenticated: boolean;
+    readonly isAcquired: boolean;
     readonly isLoggingIn: boolean;
     readonly isCreatingWallet: boolean;
     readonly createWalletError: string;
@@ -65,6 +68,7 @@ export const initialState: State = {
     seed: '',
     seedConfirm: '',
     isAuthenticated: false,
+    isAcquired: false,
     isLoggingIn: false,
     isCreatingWallet: false,
     createWalletError: null,
@@ -81,6 +85,8 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.login.done, loginDoneHandler)
     .case(actions.login.failed, loginFailedHandler)
     .case(actions.logout.done, logoutDoneHandler)
+    .case(actions.acquireSession.started, acquireSessionHandler)
+    .case(actions.acquireSession.done, acquireSessionDoneHandler)
     .case(actions.createWallet.started, createWalletHandler)
     .case(actions.createWallet.done, createWalletDoneHandler)
     .case(actions.createWallet.failed, createWalletFailedHandler)

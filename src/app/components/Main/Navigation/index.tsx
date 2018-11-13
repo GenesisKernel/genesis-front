@@ -128,15 +128,15 @@ const StyledMenuContent = themed.div`
 `;
 
 export interface INavigationProps {
-    visible: boolean;
     width: number;
     menus: IMenu[];
     section: string;
     menuPop: () => void;
 }
 
+// TODO: refactoring
 const Navigation: React.SFC<INavigationProps> = props => (
-    <StyledNavigation className={props.visible ? '' : 'navigation-collapsed'} style={{ width: props.visible ? props.width : 0 }}>
+    <StyledNavigation className={true ? '' : 'navigation-collapsed'} style={{ width: true ? props.width : 0 }}>
         <nav>
             <div className="navigation-controls">&lt;&lt;&lt; Collapse</div>
             <StyledMenu>

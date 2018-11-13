@@ -66,7 +66,7 @@ const Main: React.SFC<IMainProps> = props => (
         </Sidebar>
         <StyledContent>
             <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
-                <Route exact path="/:section/:page?" component={Sections} />
+                <Route exact path="/:section/:page?" render={route => <Sections section={route.match.params.section} page={route.match.params.page} />} />
                 <Route path="*" render={() => <NotFound main />} />
             </AnimatedSwitch>
         </StyledContent>

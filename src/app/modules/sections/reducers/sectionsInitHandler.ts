@@ -21,17 +21,13 @@
 // SOFTWARE.
 
 import { State } from '../reducer';
-import { logout } from '../actions';
+import { sectionsInit } from '../actions';
 import { Reducer } from 'modules';
 
-const logoutDoneHandler: Reducer<typeof logout.done, State> = (state, payload) => ({
+const sectionsInitHandler: Reducer<typeof sectionsInit, State> = (state, payload) => ({
     ...state,
-    session: {
-        ...state.session,
-        wallet: null
-    },
-    isAuthenticated: false,
-    isLoggingIn: false
+    mainSection: payload.mainSection,
+    sections: payload.sections
 });
 
-export default logoutDoneHandler;
+export default sectionsInitHandler;

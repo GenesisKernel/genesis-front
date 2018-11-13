@@ -23,7 +23,6 @@
 import { Action } from 'redux';
 import { Epic } from 'modules';
 import { ecosystemInit, fetchNotifications } from 'modules/content/actions';
-import { sectionsInit } from 'modules/sections/actions';
 import { logout, selectWallet } from 'modules/auth/actions';
 import { flatMap, catchError } from 'rxjs/operators';
 import { from, of } from 'rxjs';
@@ -40,8 +39,7 @@ const ecosystemInitEpic: Epic = (action$, store, { api }) => action$.ofAction(ec
                         stylesheet: payload.value
                     }
                 }),
-                fetchNotifications.started(null),
-                sectionsInit.started(action.payload.section)
+                fetchNotifications.started(null)
             )),
             catchError(e => {
                 if ('E_OFFLINE' === e.error || 'E_SERVER' === e.error || 'E_TOKENEXPIRED' === e.error) {

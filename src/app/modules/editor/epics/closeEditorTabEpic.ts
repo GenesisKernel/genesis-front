@@ -27,8 +27,7 @@ import { map } from 'rxjs/operators';
 
 const closeEditorTabEpic: Epic = (action$, store) => action$.ofAction(closeEditorTab).pipe(
     map(action => updateSection({
-        ...store.value.sections.sections.editor,
-        visible: 0 < store.value.editor.tabs.length
+        ...store.value.sections.sections.editor
     }))
 );
 

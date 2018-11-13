@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Epic } from 'modules';
+/* import { Epic } from 'modules';
 import { sectionsInit } from 'modules/sections/actions';
 import { flatMap, map, catchError } from 'rxjs/operators';
 import { forkJoin, iif, from, of, concat } from 'rxjs';
@@ -37,7 +37,7 @@ const sectionsInitEpic: Epic = (action$, store, { api }) => action$.ofAction(sec
         const roleID = store.value.auth.session.role && store.value.auth.session.role.id;
 
         return forkJoin(
-            client.sections({ locale: store.value.storage.locale }),
+            client.getSections({ locale: store.value.storage.locale }),
             iif<string, string>(
                 () => !!roleID,
                 from(client.getRow({
@@ -62,7 +62,7 @@ const sectionsInitEpic: Epic = (action$, store, { api }) => action$.ofAction(sec
                     },
                     ...remoteSections.filter(l => l.id !== mainSection.id)
                 ].sort((a, b) =>
-                    Number(a.order) - Number(b.order) || Number(a.id) - Number(b.id)
+                    Number(a.id) - Number(b.id)
                 );
 
                 return concat(
@@ -98,4 +98,4 @@ const sectionsInitEpic: Epic = (action$, store, { api }) => action$.ofAction(sec
     })
 );
 
-export default sectionsInitEpic;
+export default sectionsInitEpic;*/

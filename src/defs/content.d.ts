@@ -59,13 +59,9 @@ declare module 'genesis/content' {
 
     interface ISection {
         readonly key: string;
-        readonly visible: boolean;
-        readonly menuDisabled?: boolean;
-        readonly menuVisible: boolean;
         readonly pending: boolean;
         readonly name: string;
         readonly title: string;
-        readonly force: boolean;
         readonly defaultPage: string;
         readonly breadcrumbs: IBreadcrumb[];
         readonly menus: IMenu[];

@@ -73,6 +73,9 @@ const mapSectionParam = (section: ISection) => {
 
 const Sections: React.SFC<ISectionsProps> = (props) => (
     <StyledSections className="fullscreen">
+        <div style={{ position: 'fixed', background: 'red', color: '#fff', bottom: 0, right: 0, left: 0, height: 50, zIndex: 999999 }}>
+            {props.section} {props.page}
+        </div>
         <div className="sections-heading">
             <Selector
                 section={props.section}

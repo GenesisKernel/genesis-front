@@ -31,13 +31,8 @@ export interface INavigationProps {
 }
 
 const mapStateToProps = (state: IRootState, props: INavigationProps) => {
-    const section = state.sections.sections[props.section] || state.sections.sections.home;
+    const section = state.sections.sections[props.section];
     return {
-        visible: state.sections.sections[props.section] && (
-            state.sections.sections[props.section].menuDisabled ?
-                false :
-                state.sections.sections[props.section].menuVisible
-        ),
         width: state.storage.navigationSize,
         menus: section ? section.menus : []
     };

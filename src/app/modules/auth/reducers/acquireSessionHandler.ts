@@ -21,27 +21,12 @@
 // SOFTWARE.
 
 import { State } from '../reducer';
-import { sectionsInit } from '../actions';
+import { acquireSession } from '../actions';
 import { Reducer } from 'modules';
-import { ISection } from 'genesis/content';
 
-const sectionsInitDoneHandler: Reducer<typeof sectionsInit.done, State> = (state, payload) => {
-    const sections: { [key: string]: ISection } = {};
-    payload.result.sections.forEach(section => {
-        sections[section.name] = section;
-    });
+const acquireSessionHandler: Reducer<typeof acquireSession.started, State> = (state, payload) => ({
+    ...state,
+    isAcquired: false
+});
 
-    /*state.systemSections.forEach(section => {
-        sections[section.name] = section;
-    });*/
-
-    return {
-        ...state,
-        inited: true,
-        mainSection: payload.result.mainSection,
-        section: payload.result.section,
-        sections
-    };
-};
-
-export default sectionsInitDoneHandler;
+export default acquireSessionHandler;

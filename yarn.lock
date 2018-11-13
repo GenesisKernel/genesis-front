@@ -217,26 +217,12 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-dnd-html5-backend@^2.1.8":
-  version "2.1.9"
-  resolved "https://registry.yarnpkg.com/@types/react-dnd-html5-backend/-/react-dnd-html5-backend-2.1.9.tgz#dfc9efe2a68bd12407815a2d61ddfd18bb8686fb"
-  integrity sha512-o42zIpcgXXj04xYDT9o9kXoldqDa81ie5XAKKCo7/fOWEhOCRt9UYu+LzOXC308eKKf8v0HzbJaDTr93j3JrTw==
-  dependencies:
-    "@types/react-dnd" "*"
-
 "@types/react-dnd@*":
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/@types/react-dnd/-/react-dnd-3.0.2.tgz#939e5a8ca5b83f847c3f64dabbe2f49a9fefb192"
   integrity sha512-Z1BqHYGFtfSPfWs+kgX4b6wQmwwtqq4/pLo4zdO9xcDUB1ZQP8iWTAYNf3EJ2f0WiVQpSLN8UytP+ILzZHDLYw==
   dependencies:
     react-dnd "*"
-
-"@types/react-dnd@^2.0.34":
-  version "2.0.36"
-  resolved "https://registry.yarnpkg.com/@types/react-dnd/-/react-dnd-2.0.36.tgz#67e08a3608f112a3af27201d1fb6f79334d43214"
-  integrity sha512-jA95HjQxuHNSnr0PstVBjRwVcFJZoinxbtsS4bpi5nwAL5GUOtjrLrq1bDi4WNYxW+77KHvqSAZ2EgA2q9evdA==
-  dependencies:
-    "@types/react" "*"
 
 "@types/react-document-title@^2.0.0":
   version "2.0.3"
@@ -3309,16 +3295,6 @@ dmg-builder@6.2.1:
     parse-color "^1.0.0"
     sanitize-filename "^1.6.1"
 
-dnd-core@^2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/dnd-core/-/dnd-core-2.6.0.tgz#12bad66d58742c6e5f7cf2943fb6859440f809c4"
-  integrity sha1-ErrWbVh0LG5ffPKUP7aFlED4CcQ=
-  dependencies:
-    asap "^2.0.6"
-    invariant "^2.0.0"
-    lodash "^4.2.0"
-    redux "^3.7.1"
-
 dnd-core@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/dnd-core/-/dnd-core-3.0.2.tgz#e947577620531c7ee37a518cd5dde17d0efdf0f3"
@@ -4904,7 +4880,7 @@ hoist-non-react-statics@^1.2.0:
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-1.2.0.tgz#aa448cf0986d55cc40773b17174b7dd066cb7cfb"
   integrity sha1-qkSM8JhtVcxAdzsXF0t90GbLfPs=
 
-hoist-non-react-statics@^2.1.0, hoist-non-react-statics@^2.3.1, hoist-non-react-statics@^2.5.0, hoist-non-react-statics@^2.5.5:
+hoist-non-react-statics@^2.3.1, hoist-non-react-statics@^2.5.0, hoist-non-react-statics@^2.5.5:
   version "2.5.5"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-2.5.5.tgz#c5903cf409c0dfd908f388e619d86b9c1174cb47"
   integrity sha512-rqcy4pJo55FTTLWt+bU8ukscqHeE/e9KWvsOW2b/a3afxQZhwkQdT1rPPCJ0rYXdj4vNcasY8zHTH+jF/qStxw==
@@ -8826,13 +8802,6 @@ react-dnd-html5-backend@3.0.2:
     lodash "^4.2.0"
     shallowequal "^1.0.2"
 
-react-dnd-html5-backend@^2.5.4:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/react-dnd-html5-backend/-/react-dnd-html5-backend-2.6.0.tgz#590cd1cca78441bb274edd571fef4c0b16ddcf8e"
-  integrity sha1-WQzRzKeEQbsnTt1XH+9MCxbdz44=
-  dependencies:
-    lodash "^4.2.0"
-
 react-dnd-scrollzone@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/react-dnd-scrollzone/-/react-dnd-scrollzone-4.0.0.tgz#d707170c0cd3b7ab3d991dd6a8cc0b3712454139"
@@ -8868,18 +8837,6 @@ react-dnd@3.0.2:
     lodash "^4.2.0"
     prop-types "^15.5.10"
     shallowequal "^1.0.2"
-
-react-dnd@^2.5.4:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/react-dnd/-/react-dnd-2.6.0.tgz#7fa25676cf827d58a891293e3c1ab59da002545a"
-  integrity sha1-f6JWds+CfViokSk+PBq1naACVFo=
-  dependencies:
-    disposables "^1.0.1"
-    dnd-core "^2.6.0"
-    hoist-non-react-statics "^2.1.0"
-    invariant "^2.1.0"
-    lodash "^4.2.0"
-    prop-types "^15.5.10"
 
 react-document-title@^2.0.3:
   version "2.0.3"
@@ -9404,7 +9361,7 @@ redux@*, redux@^4.0.0, redux@^4.0.1:
     loose-envify "^1.4.0"
     symbol-observable "^1.2.0"
 
-redux@^3.6.0, redux@^3.7.1:
+redux@^3.6.0:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/redux/-/redux-3.7.2.tgz#06b73123215901d25d065be342eb026bc1c8537b"
   integrity sha512-pNqnf9q1hI5HHZRBkj3bAngGZW/JMCmexDlOxw4XagXY2o1327nHH54LoTjiPJ0gizoqPDRqWyX/00g0hD6w+A==

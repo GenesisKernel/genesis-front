@@ -40,4 +40,4 @@ export const renderPage = actionCreator.async<{ section: string, name: string, p
 export const renderLegacyPage = actionCreator.async<{ section: string, name: string, menu: string, params?: { [key: string]: any } }, { menu: IMenu }>('RENDER_LEGACY_PAGE');
 export const reloadPage = actionCreator.async<{}, { params: { [key: string]: any }, menu: IMenu, page: IPage }, string>('RELOAD_PAGE');
 export const popPage = actionCreator<{ section: string, name: string, location: Location }>('POP_PAGE');
-export const sectionsInit = actionCreator.async<string, { mainSection: string, section: string, sections: ISection[] }>('SECTIONS_INIT');
+export const sectionsInit = actionCreator<{ mainSection: string, sections: { [name: string]: ISection } }>('SECTIONS_INIT');

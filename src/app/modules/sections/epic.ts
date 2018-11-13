@@ -24,11 +24,9 @@ import { combineEpics } from 'redux-observable';
 import resetOnLoginEpic from './epics/resetOnLoginEpic';
 import reloadPageEpic from './epics/reloadPageEpic';
 import renderPageEpic from './epics/renderPageEpic';
-import sectionsInitEpic from './epics/sectionsInitEpic';
 
 export default combineEpics(
     resetOnLoginEpic,
     reloadPageEpic,
-    renderPageEpic,
-    sectionsInitEpic
+    renderPageEpic
 );

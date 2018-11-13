@@ -27,7 +27,7 @@ import renderSectionHandler from './reducers/renderSectionHandler';
 import switchSectionHandler from './reducers/switchSectionHandler';
 import updateSectionHandler from './reducers/updateSectionHandler';
 import resetHandler from './reducers/resetHandler';
-import sectionsInitDoneHandler from './reducers/sectionsInitDoneHandler';
+import sectionsInitHandler from './reducers/sectionsInitHandler';
 import menuPopHandler from './reducers/menuPopHandler';
 import menuPushHandler from './reducers/menuPushHandler';
 import navigationToggleHandler from './reducers/navigationToggleHandler';
@@ -48,7 +48,7 @@ export type State = {
 export const initialState: State = {
     mainSection: 'home',
     sections: {
-        home: {
+        /*home: {
             key: 'home',
             visible: true,
             menuDisabled: false,
@@ -87,7 +87,7 @@ export const initialState: State = {
             }],
             menus: [],
             pages: []
-        }
+        }*/
     }
 };
 
@@ -105,4 +105,4 @@ export default reducerWithInitialState(initialState)
     .case(actions.renderPage.failed, renderPageFailedHandler)
     .case(actions.renderPage.started, renderPageHandler)
     .case(actions.popPage, popPageHandler)
-    .case(actions.sectionsInit.done, sectionsInitDoneHandler);
+    .case(actions.sectionsInit, sectionsInitHandler);

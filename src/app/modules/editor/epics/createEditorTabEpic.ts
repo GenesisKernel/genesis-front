@@ -73,8 +73,7 @@ const createEditorTabEpic: Epic = (action$, store) => action$.ofAction(createEdi
         return of<Action>(
             replace('/editor'),
             updateSection({
-                ...editor,
-                visible: true
+                ...editor
             }),
             action
         );

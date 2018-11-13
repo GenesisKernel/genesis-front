@@ -27,6 +27,7 @@ import { IWalletData, IKeyInfo, IRoleInfo } from 'genesis/api';
 
 const actionCreator = actionCreatorFactory('auth');
 export const login = actionCreator.async<ILoginCall, { privateKey: string, publicKey: string, session: ISession }, string>('LOGIN');
+export const acquireSession = actionCreator.async<ISession, boolean>('ACQUIRE_SESSION');
 export const logout = actionCreator.async('LOGOUT');
 export const inviteEcosystem = actionCreator<{ ecosystem: string, redirectPage?: string }>('INVITE_ECOSYSTEM');
 export const generateSeed = actionCreator.async<void, string>('GENERATE_SEED');
