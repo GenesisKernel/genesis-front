@@ -88,7 +88,7 @@ export interface IUserMenuProps {
 
 class UserMenu extends React.Component<IUserMenuProps> {
     render() {
-        return this.props.wallet ? (
+        return this.props.wallet && this.props.wallet.wallet ? (
             <SystemButton
                 className="p0"
                 width={225}
