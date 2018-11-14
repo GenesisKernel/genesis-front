@@ -150,6 +150,7 @@ export default styled(WalletButton)`
 
     .wallet-btn {
         margin-left: 5px;
+        margin-bottom: 5px;
     }
 
     .btn-action {
