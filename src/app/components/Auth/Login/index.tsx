@@ -35,7 +35,7 @@ export interface ILoginProps {
 const Login: React.SFC<ILoginProps> = props => (
     <div>
         <Switch>
-            {props.wallet && props.isAuthenticating ? <Route path="/" component={PasswordPrompt} /> : null}
+            {props.wallet && props.wallet.wallet && props.isAuthenticating ? <Route path="/" component={PasswordPrompt} /> : null}
             <Route path="/" component={WalletList} />
         </Switch>
     </div>
