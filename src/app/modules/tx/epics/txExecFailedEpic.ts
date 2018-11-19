@@ -51,7 +51,8 @@ export const txExecFailedEpic: Epic<Action, IRootState> =
                     name: l.value,
                     title: action.payload.error.type,
                     params: action.payload.error,
-                    showError: true
+                    showError: true,
+                    closeButton: true
                 });
 
             })

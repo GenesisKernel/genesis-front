@@ -25,12 +25,29 @@ import React from 'react';
 import Modal from './';
 import Protypo from 'containers/Widgets/Protypo';
 import { TProtypoElement } from 'genesis/protypo';
+import themed from 'components/Theme/themed';
 
 export interface IPageModalProps {
     title: string;
     width?: number;
+    closeButton?: boolean;
     tree: TProtypoElement[];
 }
+
+const CloseButton = themed.a`
+    float: right;
+    font-size: 30px;
+    line-height: 40px;
+    text-decoration: none;
+    color: white;
+    opacity: 0.8;
+    transition: opacity .5s ease-in-out;
+    &:hover {
+        opacity: 1;
+        text-decoration: none;
+        color: white;
+    }
+`;
 
 class PageModal extends Modal<IPageModalProps, boolean> {
     onSuccess(values: { [key: string]: any }) {
@@ -42,6 +59,11 @@ class PageModal extends Modal<IPageModalProps, boolean> {
             <div style={{ width: (this.props.params.width || 50) + 'vw', overflow: 'hidden' }}>
                 <Modal.Header>
                     {this.props.params.title}
+                    {this.props.params.closeButton &&
+                        <CloseButton  href="#" onClick={this.props.onCancel.bind(this)}>
+                            &times;
+                        </CloseButton>
+                    }
                 </Modal.Header>
                 <Modal.Body>
                     <Protypo context="page" content={this.props.params.tree} />

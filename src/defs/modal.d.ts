@@ -42,6 +42,7 @@ declare module 'genesis/modal' {
     interface IModalCall {
         id: string;
         type: string;
+        closeButton?: boolean;
         params: {
             [key: string]: any;
         }
@@ -60,6 +61,7 @@ declare module 'genesis/modal' {
             [key: string]: any;
         };
         showError?: boolean;
+        closeButton?: boolean;
     }
 
     interface IModal {
