@@ -59,6 +59,7 @@ declare module 'genesis/modal' {
         params: {
             [key: string]: any;
         };
+        showError?: boolean;
     }
 
     interface IModal {

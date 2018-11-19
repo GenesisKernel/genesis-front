@@ -44,12 +44,23 @@ const modalPageEpic: Epic = (action$, store, { api }) => action$.ofAction(modalP
                     width: action.payload.width,
                     tree: payload.tree
                 }
-
             })
 
-        ).catch(e =>
-            Observable.empty<never>()
-        );
+        ).catch(e => {
+            if (action.payload.showError) {
+                return Observable.of(modalShow({
+                    id: 'TX_ERROR',
+                    type: 'TX_ERROR',
+                    params: {
+                        type: 'errorPageNotFound',
+                        params: [action.payload.name]
+                    }
+                }));
+            }
+            else {
+                return Observable.empty<never>();
+            }
+        });
     });
 
 export default modalPageEpic;

@@ -24,13 +24,13 @@ import { IRootState } from 'modules';
 import { Epic } from 'redux-observable';
 import { Action } from 'redux';
 import { txExec } from '../actions';
-import { modalShow } from '../../modal/actions';
+import { modalShow, modalPage } from '../../modal/actions';
 import { navigatePage } from '../../sections/actions';
 
 export const txExecFailedEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.ofAction(txExec.failed)
+    (action$, store, { api }) => action$.ofAction(txExec.failed)
         .filter(l => !l.payload.params.silent)
-        .map(action => {
+        .flatMap(action => {
             if (action.payload.error.id && action.payload.params.errorRedirects) {
                 const errorRedirect = action.payload.params.errorRedirects[action.payload.error.id];
                 if (errorRedirect) {
@@ -41,10 +41,29 @@ export const txExecFailedEpic: Epic<Action, IRootState> =
                     });
                 }
             }
-            return modalShow({
-                id: 'TX_ERROR',
-                type: 'TX_ERROR',
-                params: action.payload.error
+
+            const state = store.getState();
+            const client = api(state.auth.session);
+            const errorPageName = 'error_page';
+
+            return client.getParam({ name: errorPageName }).then((l: any) => {
+                return modalPage({
+                    name: l.value,
+                    title: action.payload.error.type,
+                    params: action.payload.error,
+                    showError: true
+                });
+
+            })
+            .catch((e: any) => {
+                return modalShow({
+                    id: 'TX_ERROR',
+                    type: 'TX_ERROR',
+                    params: {
+                        type: 'errorPageParam',
+                        params: [errorPageName]
+                    }
+                });
             });
         });
 
