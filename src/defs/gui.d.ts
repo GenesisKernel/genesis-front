@@ -21,9 +21,6 @@
 // SOFTWARE.
 
 declare module 'genesis/gui' {
-    type TWindowType =
-        'general' | 'main';
-
     interface IInferredArguments {
         readonly privateKey?: string;
         readonly fullNode?: string[];

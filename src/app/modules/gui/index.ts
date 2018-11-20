@@ -20,13 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import reducer, { State } from './reducer';
 import epic from './epic';
 import * as actions from './actions';
 
-export type State = State;
 export {
     actions,
-    reducer,
     epic
 };

@@ -94,10 +94,9 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                             of(setLocale.started(store.value.storage.locale)),
                             from(client.getUid()).pipe(
                                 flatMap(uid => {
-                                    const guestKey = action.payload.defaultKey || defaultKey;
                                     return from(client.authorize(uid.token).login({
-                                        publicKey: keyring.generatePublicKey(guestKey),
-                                        signature: keyring.sign(uid.uid, guestKey)
+                                        publicKey: keyring.generatePublicKey(defaultKey),
+                                        signature: keyring.sign(uid.uid, defaultKey)
                                     })).pipe(
                                         flatMap(loginResult => {
                                             const securedClient = client.authorize(loginResult.token);

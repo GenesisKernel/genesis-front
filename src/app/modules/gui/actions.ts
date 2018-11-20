@@ -21,8 +21,6 @@
 // SOFTWARE.
 
 import actionCreatorFactory from 'typescript-fsa';
-import { TWindowType } from 'genesis/gui';
 
 const actionCreator = actionCreatorFactory('gui');
-export const switchWindow = actionCreator.async<TWindowType, TWindowType, void>('SWITCH_WINDOW');
 export const setBadgeCount = actionCreator<number>('SET_BADGE_COUNT');

@@ -60,7 +60,6 @@ export interface IRootState {
     engine: engine.State;
     editor: editor.State;
     tx: tx.State;
-    gui: gui.State;
     io: io.State;
     notifications: notifications.State;
     storage: storage.State;
@@ -107,7 +106,7 @@ export default (history: History) => combineReducers({
     engine: engine.reducer,
     editor: editor.reducer,
     tx: tx.reducer,
-    gui: gui.reducer,
+    gui: null as any,
     io: null as any,
     notifications: notifications.reducer,
     socket: socket.reducer,
