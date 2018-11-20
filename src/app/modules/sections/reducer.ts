@@ -23,10 +23,7 @@
 import * as actions from './actions';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { ISection } from 'genesis/content';
-import renderSectionHandler from './reducers/renderSectionHandler';
-import switchSectionHandler from './reducers/switchSectionHandler';
 import updateSectionHandler from './reducers/updateSectionHandler';
-import resetHandler from './reducers/resetHandler';
 import sectionsInitHandler from './reducers/sectionsInitHandler';
 import menuPopHandler from './reducers/menuPopHandler';
 import menuPushHandler from './reducers/menuPushHandler';
@@ -45,55 +42,11 @@ export type State = {
 
 export const initialState: State = {
     mainSection: 'home',
-    sections: {
-        /*home: {
-            key: 'home',
-            visible: true,
-            menuDisabled: false,
-            menuVisible: true,
-            pending: false,
-            name: 'home',
-            title: 'Home',
-            force: false,
-            defaultPage: 'default_page',
-            breadcrumbs: [{
-                caller: 'default_menu',
-                type: 'MENU',
-                section: 'home',
-                page: 'default_page',
-                params: {},
-            }],
-            menus: [],
-            pages: []
-        },
-        developer: {
-            key: 'developer',
-            visible: true,
-            menuDisabled: false,
-            menuVisible: true,
-            pending: false,
-            name: 'developer',
-            title: 'Developer',
-            force: false,
-            defaultPage: 'admin_dashboard',
-            breadcrumbs: [{
-                caller: 'admin_dashboard',
-                type: 'MENU',
-                section: 'developer',
-                page: 'admin_dashboard',
-                params: {},
-            }],
-            menus: [],
-            pages: []
-        }*/
-    }
+    sections: {}
 };
 
 export default reducerWithInitialState(initialState)
-    .case(actions.renderSection, renderSectionHandler)
-    .case(actions.switchSection, switchSectionHandler)
     .case(actions.updateSection, updateSectionHandler)
-    .case(actions.reset, resetHandler)
     .case(actions.menuPop, menuPopHandler)
     .case(actions.menuPush, menuPushHandler)
     .case(actions.navigationToggle, navigationToggleHandler)

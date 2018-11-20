@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import { Epic } from 'modules';
-import { login } from '../actions';
+import { login, acquireSession } from '../actions';
 import keyring from 'lib/keyring';
 import { push } from 'connected-react-router';
 import { flatMap, catchError } from 'rxjs/operators';
@@ -56,20 +56,23 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
 
             // Successful authentication. Yield the result
             flatMap(response => {
+                const sessionResult = {
+                    ...session,
+                    sessionToken: response.token,
+                    apiHost: nodeHost
+                };
+
                 return of(
                     push('/'),
                     login.done({
                         params: action.payload,
                         result: {
-                            session: {
-                                ...session,
-                                sessionToken: response.token,
-                                apiHost: nodeHost
-                            },
+                            session: sessionResult,
                             privateKey,
                             publicKey
                         }
-                    })
+                    }),
+                    acquireSession.started(sessionResult)
                 );
             }),
 

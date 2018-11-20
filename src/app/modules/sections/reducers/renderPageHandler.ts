@@ -26,7 +26,7 @@ import { Reducer } from 'modules';
 import upsertSectionPage from '../util/upsertSectionPage';
 import upsertSectionBreadcrumb from '../util/upsertSectionBreadcrumb';
 
-const renderPageHandler: Reducer<typeof renderPage.started, State> = (state, payload) => ({
+const renderPageHandler: Reducer<typeof renderPage.started, State> = (state, payload): State => ({
     ...state,
     sections: {
         ...state.sections,

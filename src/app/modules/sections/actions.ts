@@ -28,10 +28,7 @@ import { Location } from 'history';
 const actionCreator = actionCreatorFactory('section');
 
 // Navigation
-export const renderSection = actionCreator<string>('RENDER_SECTION');
 export const updateSection = actionCreator<ISection>('UPDATE_SECTION');
-export const switchSection = actionCreator<string>('SWITCH_SECTION');
-export const reset = actionCreator('RESET');
 export const menuPop = actionCreator('MENU_POP');
 export const menuPush = actionCreator<{ section: string, menu: IMenu }>('MENU_PUSH');
 export const navigatePage = actionCreator.async<{ name?: string, section?: string, force?: boolean, params: { [key: string]: any } }, { section: string }, undefined>('NAVIGATE_PAGE');

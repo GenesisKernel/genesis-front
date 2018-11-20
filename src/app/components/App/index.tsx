@@ -21,13 +21,12 @@
 // SOFTWARE.
 
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { FormattedMessage, IntlProvider } from 'react-intl';
 import platform from 'lib/platform';
 import classnames from 'classnames';
 import themed from 'components/Theme/themed';
 
-import { AnimatedSwitch } from 'components/Animation';
 import Main from 'components/Main';
 import Auth from 'containers/Auth';
 import Splash from 'components/Splash';
@@ -82,18 +81,20 @@ const App: React.SFC<IAppProps> = props => {
                         )
                     })}
 
-                    <AnimatedSwitch animation={AnimatedSwitch.animations!.fade()}>
-                        {!props.isLoaded && (
-                            <Route path="/" component={Splash} />
-                        )}
-                        {!props.isAuthenticated && (
-                            <Route path="/" component={Auth} />
-                        )}
-                        {!props.sessionAcquired && (
-                            <Route path="/" component={Splash} />
-                        )}
-                        <Route path="/" component={Main} />
-                    </AnimatedSwitch>
+                    <div className="switch-wrapper">
+                        <Switch>
+                            {!props.isLoaded && (
+                                <Route path="/" component={Splash} />
+                            )}
+                            {!props.isAuthenticated && (
+                                <Route path="/" component={Auth} />
+                            )}
+                            {!props.sessionAcquired && (
+                                <Route path="/" component={Splash} />
+                            )}
+                            <Route path="/" component={Main} />
+                        </Switch>
+                    </div>
                 </ThemedApp>
             </ThemeProvider>
         </IntlProvider>

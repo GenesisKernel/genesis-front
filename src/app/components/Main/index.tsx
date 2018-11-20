@@ -21,9 +21,8 @@
 // SOFTWARE.
 
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
-import { AnimatedSwitch } from 'components/Animation';
 import Sidebar from './Sidebar';
 import Sections from 'containers/Main/Sections';
 import NotFound from 'components/NotFound';
@@ -32,7 +31,6 @@ import SideButton from './Sidebar/SideButton';
 
 export interface IMainProps {
     stylesheet: string;
-    onSwitchSection: (section: string) => void;
 }
 
 const StyledContent = themed.div`
@@ -65,10 +63,12 @@ const Main: React.SFC<IMainProps> = props => (
             </div>
         </Sidebar>
         <StyledContent>
-            <AnimatedSwitch animation={AnimatedSwitch.animations!.fade()}>
-                <Route exact path="/:section/:page?" render={route => <Sections section={route.match.params.section} page={route.match.params.page} />} />
-                <Route path="*" render={() => <NotFound main />} />
-            </AnimatedSwitch>
+            <div className="switch-wrapper">
+                <Switch>
+                    <Route exact path="/:section/:page?" render={route => <Sections section={route.match.params.section} page={route.match.params.page} />} />
+                    <Route path="*" render={() => <NotFound main />} />
+                </Switch>
+            </div>
         </StyledContent>
     </div>
 );

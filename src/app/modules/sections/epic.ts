@@ -21,12 +21,10 @@
 // SOFTWARE.
 
 import { combineEpics } from 'redux-observable';
-import resetOnLoginEpic from './epics/resetOnLoginEpic';
 import reloadPageEpic from './epics/reloadPageEpic';
 import renderPageEpic from './epics/renderPageEpic';
 
 export default combineEpics(
-    resetOnLoginEpic,
     reloadPageEpic,
     renderPageEpic
 );

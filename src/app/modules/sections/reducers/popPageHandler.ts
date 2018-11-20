@@ -25,7 +25,7 @@ import { popPage } from '../actions';
 import { Reducer } from 'modules';
 import upsertSectionPage from '../util/upsertSectionPage';
 
-const popPageHandler: Reducer<typeof popPage, State> = (state, payload) => ({
+const popPageHandler: Reducer<typeof popPage, State> = (state, payload): State => ({
     ...state,
     sections: {
         ...state.sections,

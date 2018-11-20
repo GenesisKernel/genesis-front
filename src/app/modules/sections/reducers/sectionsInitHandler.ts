@@ -24,7 +24,7 @@ import { State } from '../reducer';
 import { sectionsInit } from '../actions';
 import { Reducer } from 'modules';
 
-const sectionsInitHandler: Reducer<typeof sectionsInit, State> = (state, payload) => ({
+const sectionsInitHandler: Reducer<typeof sectionsInit, State> = (state, payload): State => ({
     ...state,
     mainSection: payload.mainSection,
     sections: payload.sections

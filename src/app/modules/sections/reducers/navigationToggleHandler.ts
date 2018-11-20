@@ -24,7 +24,7 @@ import { State } from '../reducer';
 import { navigationToggle } from '../actions';
 import { Reducer } from 'modules';
 
-const navigationToggleHandler: Reducer<typeof navigationToggle, State> = (state, payload) => ({
+const navigationToggleHandler: Reducer<typeof navigationToggle, State> = (state, payload): State => ({
     ...state,
     /*sections: {
         ...state.sections,

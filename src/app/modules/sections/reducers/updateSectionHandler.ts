@@ -24,7 +24,7 @@ import { State } from '../reducer';
 import { updateSection } from '../actions';
 import { Reducer } from 'modules';
 
-const updateSectionHandler: Reducer<typeof updateSection, State> = (state, payload) => ({
+const updateSectionHandler: Reducer<typeof updateSection, State> = (state, payload): State => ({
     ...state,
     sections: {
         ...state.sections,

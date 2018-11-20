@@ -25,7 +25,7 @@ import { menuPush } from '../actions';
 import { Reducer } from 'modules';
 import upsertSectionMenu from '../util/upsertSectionMenu';
 
-const menuPushHandler: Reducer<typeof menuPush, State> = (state, payload) => ({
+const menuPushHandler: Reducer<typeof menuPush, State> = (state, payload): State => ({
     ...state,
     sections: {
         ...state.sections,
