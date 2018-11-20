@@ -28,7 +28,10 @@ import { logout, login } from 'modules/auth/actions';
 import PasswordPrompt from 'components/Auth/Login/PasswordPrompt';
 
 const mapStateToProps = (state: IRootState) => ({
-    session: state.auth.session
+    keyID: state.auth.session.wallet ? state.auth.session.wallet.id : '',
+    address: state.auth.session.wallet ? state.auth.session.wallet.address : '',
+    ecosystem: state.auth.session.access ? state.auth.session.access.ecosystem : '',
+    ecosystemName: state.auth.session.access && state.auth.session.access.name
 });
 
 export default connect(mapStateToProps, {

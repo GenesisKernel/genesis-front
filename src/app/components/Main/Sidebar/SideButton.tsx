@@ -32,7 +32,8 @@ const StyledSideButton = themed.button`
     text-align: center;
     background: none;
     color: #fff;
-    font-size: 14px;
+    font-size: 18px;
+    position: relative;
 
     &,&:hover,&:active,&:focus{
         outline: none;
@@ -45,8 +46,21 @@ const StyledSideButton = themed.button`
     }
 
     &.button-active {
-        border-left: solid 4px #c0d1e7;
-        background-color: rgba(255,255,255,0.12);
+        .button-decorator {
+            display: block;
+        }
+    }
+
+    .button-decorator {
+        position: absolute;
+        display: none;
+        width: 4px;
+        background: #c0d1e7;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        margin-top: -1px;
+        margin-bottom: -1px;
     }
 `;
 
@@ -56,6 +70,7 @@ export interface ISideButtonProps {
 
 const SideButton: React.SFC<ISideButtonProps> = props => (
     <StyledSideButton className={classNames({ 'button-active': props.active })}>
+        <div className="button-decorator"/>
         {props.children}
     </StyledSideButton>
 );
