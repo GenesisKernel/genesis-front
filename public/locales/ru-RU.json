@@ -21,7 +21,7 @@
     "auth.wallet.register.desc": "Этот кошелёк ожидает активации. Нажмите 'Активировать', чтобы начать процесс",
     "auth.wallet.registration": "Активация",
     "auth.wallet.registration.type.email": "Активация через E-Mail",
-    "auth.wallet.registration.type.email.desc": "Для активации через E-Mail скопируйте свой открытый ключ и отправьте его на почтовый адрес {mail}",
+    "auth.wallet.registration.type.email.desc": "Отправьте ваш открытый ключ, который можно получить при нажатии на кнопку \"скопировать открытый ключ\" по адресу {mail} для начала прохождения процедуры KYC (know your customer)",
     "auth.wallet.registration.type.email.confirm": "Отправить E-Mail",
     "auth.wallet.remove": "Удалить",
     "auth.wallet.share": "Копировать",
