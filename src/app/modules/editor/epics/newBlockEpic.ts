@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as uuid from 'uuid';
-import { from } from 'rxjs';
+import uuid from 'uuid';
+import { from, empty } from 'rxjs';
 import { Epic } from 'modules';
 import { editorSave, reloadEditorTab } from '../actions';
 import ModalObservable from 'modules/modal/util/ModalObservable';
@@ -69,8 +69,10 @@ const newBlockEpic: Epic = (action$, store, { api }) => action$.ofAction(editorS
                             initialValue: response.value
                         }
                     }))
-                )
-            })
+                ),
+                failure: () => empty()
+            }),
+            failure: () => empty()
         });
     })
 );

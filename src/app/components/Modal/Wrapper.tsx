@@ -21,16 +21,16 @@
 // SOFTWARE.
 
 import React from 'react';
-import Transition from 'react-transition-group/Transition';
+import Transition, { TransitionStatus } from 'react-transition-group/Transition';
 import themed from 'components/Theme/themed';
 
 const containerAnimationDuration = 210;
-const containerAnimationDef = {
-    defaultStyle: {
-        transition: 'opacity .21s ease-in-out',
-        opacity: 0
-    },
+const containerDefaultStyle: React.CSSProperties = {
+    transition: 'opacity .21s ease-in-out',
+    opacity: 0
+};
 
+const containerAnimationDef: { [K in TransitionStatus]?: React.CSSProperties } = {
     entering: {
         height: 'auto',
         display: 'block',
@@ -53,13 +53,13 @@ const containerAnimationDef = {
 };
 
 const childAnimationDuration = 210;
-const childAnimationDef = {
-    defaultStyle: {
-        transform: 'translateY(-30px)',
-        transition: 'transform .21s ease-in-out, opacity .21s ease-in-out',
-        opacity: 0
-    },
+const childDefaultStyle: React.CSSProperties = {
+    transform: 'translateY(-30px)',
+    transition: 'transform .21s ease-in-out, opacity .21s ease-in-out',
+    opacity: 0
+};
 
+const childAnimationDef: { [K in TransitionStatus]?: React.CSSProperties } = {
     entering: {
         transform: 'translateY(0)',
         opacity: 1
@@ -183,9 +183,9 @@ class ModalWrapper extends React.Component<IModalWrapperProps, IModalWrapperStat
         }
     }
 
-    renderChild(state: string) {
+    renderChild = (state: TransitionStatus) => {
         return (
-            <div className="modal-wnd" style={{ ...childAnimationDef.defaultStyle, ...childAnimationDef[state] }}>
+            <div className="modal-wnd" style={{ ...childDefaultStyle, ...childAnimationDef[state] }}>
                 {this.state.activeModal}
             </div>
         );
@@ -194,10 +194,10 @@ class ModalWrapper extends React.Component<IModalWrapperProps, IModalWrapperStat
     render() {
         return (
             <Transition in={this.state.active} timeout={containerAnimationDuration} onEntered={this.onEntered} onExited={this.onExited} unmountOnExit>
-                {(state: string) => (
-                    <StyledModalWrapper style={{ ...containerAnimationDef.defaultStyle, ...containerAnimationDef[state] }}>
+                {state => (
+                    <StyledModalWrapper style={{ ...containerDefaultStyle, ...containerAnimationDef[state] }}>
                         <Transition in={state === 'entered'} timeout={childAnimationDuration}>
-                            {this.renderChild.bind(this)}
+                            {childState => this.renderChild(childState)}
                         </Transition>
                     </StyledModalWrapper>
                 )}

@@ -20,22 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import Transition from 'react-transition-group/Transition';
+import React from 'react';
+import Transition, { TransitionStatus } from 'react-transition-group/Transition';
 
 const animationDuration = 300;
-const containerAnimationDef = {
-    defaultStyle: {
-        position: 'absolute',
-        overflow: 'hidden',
-        zIndex: 600
-    },
+const containerDefaultStyle: React.CSSProperties = {
+    position: 'absolute',
+    overflow: 'hidden',
+    zIndex: 600
+};
 
-    alignStyle: {
-        left: { left: 0 },
-        right: { right: 0 }
-    },
+const containerAlignStyle: { [K in 'left' | 'right']: React.CSSProperties } = {
+    left: { left: 0 },
+    right: { right: 0 }
+};
 
+const containerAnimationDef: { [K in TransitionStatus]?: React.CSSProperties } = {
     // Negative margins are used to mitigate padding that is used to
     // show the box-shadow. After animation completes we reset overflow
     // back to visible, so we don't need those again
@@ -57,12 +57,13 @@ const containerAnimationDef = {
     }
 };
 
-const animationDef = {
-    defaultStyle: {
-        transition: `transform ${animationDuration}ms cubic-bezier(0,0.5,0,1)`,
-        transform: 'translateY(-100%)',
-        marginTop: '0'
-    },
+const animationDefaultStyle: React.CSSProperties = {
+    transition: `transform ${animationDuration}ms cubic-bezier(0,0.5,0,1)`,
+    transform: 'translateY(-100%)',
+    marginTop: '0'
+};
+
+const animationDef: { [K in TransitionStatus]?: React.CSSProperties } = {
     entering: {
         transform: 'translateY(0)'
     },
@@ -86,9 +87,9 @@ export interface IDropdownProps {
 
 const Dropdown: React.SFC<IDropdownProps> = props => (
     <Transition in={props.visible} timeout={animationDuration}>
-        {(state: string) => (
-            <div style={{ ...containerAnimationDef.defaultStyle, ...containerAnimationDef[state], ...(props.align ? containerAnimationDef.alignStyle[props.align] : null) }}>
-                <div style={{ ...animationDef.defaultStyle, ...animationDef[state], width: props.width }}>
+        {state => (
+            <div style={{ ...containerDefaultStyle, ...containerAnimationDef[state], ...(props.align ? containerAlignStyle[props.align] : null) }}>
+                <div style={{ ...animationDefaultStyle, ...animationDef[state], width: props.width }}>
                     {props.children}
                 </div>
             </div>

@@ -26,7 +26,7 @@ import { txExec } from 'modules/tx/actions';
 import { reloadEditorTab } from '../actions';
 import { flatMap, filter, map } from 'rxjs/operators';
 
-const connections = {
+const connections: { [name: string]: string } = {
     '@1EditBlock': 'block',
     '@1EditPage': 'page',
     '@1EditContract': 'contract',
@@ -35,7 +35,7 @@ const connections = {
 
 const editEntityEpic: Epic = (action$, store) => action$.ofAction(txExec.done).pipe(
     flatMap(action => from(action.payload.params.contracts).pipe(
-        filter(l => connections[l.name]),
+        filter(l => l.name in connections),
         flatMap(contract => from(contract.params).pipe(
             map(params => reloadEditorTab({
                 type: connections[contract.name],

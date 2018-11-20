@@ -33,10 +33,11 @@ import { flatMap, filter, map, toArray, retryWhen, delay, catchError } from 'rxj
 
 const TX_STATUS_INTERVAL = 3000;
 
+// TODO: refactoring
 export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(txExec.started).pipe(
     flatMap(action => {
         const client = api(store.value.auth.session);
-        const privateKey = store.value.auth.privateKey;
+        const privateKey = store.value.auth.privateKey!;
 
         return from(action.payload.contracts).pipe(
             flatMap(contract => from(client.getContract({ name: contract.name })).pipe(
@@ -78,9 +79,9 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                             return from(new Contract({
                                 id: proto.id,
                                 schema: defaultSchema,
-                                ecosystemID: parseInt(store.value.auth.session.wallet && store.value.auth.session.access.ecosystem || '1', 10),
+                                ecosystemID: parseInt(store.value.auth.session.access!.ecosystem || '1', 10),
                                 fields: txParams,
-                                maxSum: store.value.auth.session.wallet.settings && store.value.auth.session.wallet.settings.maxSum
+                                maxSum: store.value.auth.session.wallet!.settings && store.value.auth.session.wallet!.settings.maxSum
 
                             }).sign(privateKey)).pipe(
                                 map(signature => ({
@@ -95,7 +96,7 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
             ), 1),
             toArray(),
             flatMap(contracts => {
-                const request = {};
+                const request: { [hash: string]: Blob } = {};
                 const jobs: {
                     name: string,
                     hash: string,

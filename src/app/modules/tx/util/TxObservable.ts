@@ -28,16 +28,12 @@ import { ITransactionCall, ITxError, ITransaction } from 'genesis/tx';
 import { isType } from 'typescript-fsa';
 import { take, filter, flatMap } from 'rxjs/operators';
 
-type TTxDoneAction =
-    ReturnType<typeof txExec.done> |
-    ReturnType<typeof txExec.failed>;
-
-const TxObservable = (action$: ActionsObservable<ReduxAction>, params: { tx: ITransactionCall, success?: (tx: ITransaction[]) => Observable<ReduxAction>, failure?: (error: ITxError) => Observable<ReduxAction> }) =>
+const TxObservable = (action$: ActionsObservable<ReduxAction>, params: { tx: ITransactionCall, success: (tx: ITransaction[]) => Observable<ReduxAction>, failure: (error: ITxError) => Observable<ReduxAction> }) =>
     merge(
-        action$.filter(l => isType(l, txExec.done) || isType(l, txExec.failed)).pipe(
-            filter((l: TTxDoneAction) => {
-                return params.tx.uuid === l.payload.params.uuid;
-            }),
+        action$.ofAction(txExec.done, txExec.failed).pipe(
+            filter(l =>
+                params.tx.uuid === l.payload.params.uuid
+            ),
             take(1),
             flatMap(result => {
                 if (isType(result, txExec.done)) {

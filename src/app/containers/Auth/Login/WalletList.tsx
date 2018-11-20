@@ -31,31 +31,27 @@ import { modalShow } from 'modules/modal/actions';
 import WalletList from 'components/Auth/Login/WalletList';
 
 const mapStateToProps = (state: IRootState) => ({
-    pending: state.auth.isLoggingIn,
     wallets: state.storage.wallets.sort((a, b) => a.address > b.address ? 1 : -1).map(wallet => ({
         access: [],
-        address: wallet.address,
-        encKey: wallet.encKey,
-        publicKey: wallet.publicKey,
-        id: wallet.id,
-        ...(state.auth.wallets || []).find(l => l.id === wallet.id)
-    })) as IWalletData[],
+        ...wallet,
+        ...state.auth.wallets.find(l => l.id === wallet.id),
+    })) as (IWallet & IWalletData)[],
     notifications: state.socket.notifications,
     activationEmail: state.engine.activationEmail
 });
 
-const mapDispatchToProps = {
+export default connect(mapStateToProps, {
     onRemove: removeWallet,
     onLogin: login.started,
     onSelect: selectWallet,
-    onCopy: (wallet: IWallet) => modalShow({
+    onCopy: (wallet: IWalletData) => modalShow({
         id: 'COPY_WALLET',
         type: 'COPY_WALLET',
         params: {
             wallet
         }
     }),
-    onRegister: (wallet: IWallet, activationEmail: string) => modalShow({
+    onRegister: (wallet: IWalletData, activationEmail?: string) => modalShow({
         id: 'REGISTER_WALLET',
         type: 'REGISTER_WALLET',
         params: {
@@ -64,11 +60,9 @@ const mapDispatchToProps = {
         }
     }),
     onCreate: () => navigate('/wallet')
-};
 
-export default connect(mapStateToProps, mapDispatchToProps, (state, dispatch: any, props) => ({
+}, (state, dispatch, props) => ({
     ...props,
-    pending: state.pending,
     wallets: state.wallets,
     notifications: state.notifications,
     activationEnabled: !!state.activationEmail,

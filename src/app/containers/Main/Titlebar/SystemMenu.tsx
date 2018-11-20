@@ -20,55 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
 import { modalShow } from 'modules/modal/actions';
 
 import SystemMenu from 'components/Main/Titlebar/SystemMenu';
 
-export interface ISystemMenuContainerProps {
-    align: 'left' | 'right';
-}
-
-interface ISystemMenuContainerState {
-    locale: string;
-}
-
-interface ISystemMenuContainerDispatch {
-    modalShow: typeof modalShow;
-}
-
-const SystemMenuContainer: React.SFC<ISystemMenuContainerProps & ISystemMenuContainerState & ISystemMenuContainerDispatch> = (props) => {
-    const onAbout = () => {
-        props.modalShow({
-            id: 'ABOUT',
-            type: 'ABOUT',
-            params: {}
-        });
-    };
-
-    const onChangeLocale = () => {
-        props.modalShow({
-            id: 'CHANGE_LOCALE',
-            type: 'CHANGE_LOCALE',
-            params: {
-                value: props.locale
-            }
-        });
-    };
-
-    return (
-        <SystemMenu align={props.align} onAbout={onAbout} onChangeLocale={onChangeLocale} />
-    );
-};
-
 const mapStateToProps = (state: IRootState) => ({
     locale: state.storage.locale
 });
 
-const mapDispatchToProps = {
-    modalShow: modalShow
-};
+export default connect(mapStateToProps, {
+    modalShow
 
-export default connect<ISystemMenuContainerState, ISystemMenuContainerDispatch, ISystemMenuContainerProps>(mapStateToProps, mapDispatchToProps)(SystemMenuContainer);
+}, (state, dispatch, props) => ({
+    onAbout: () => dispatch.modalShow({
+        id: 'ABOUT',
+        type: 'ABOUT',
+        params: {}
+    }),
+
+    onChangeLocale: () => dispatch.modalShow({
+        id: 'CHANGE_LOCALE',
+        type: 'CHANGE_LOCALE',
+        params: {
+            value: state.locale
+        }
+    })
+}))(SystemMenu);

@@ -28,7 +28,7 @@ const txExecDoneHandler: Reducer<typeof txExec.done, State> = (state, payload) =
     ...state,
     transactions: state.transactions.set(payload.params.uuid, {
         status: 'done',
-        error: null,
+        error: undefined,
         stack: payload.result
     })
 });

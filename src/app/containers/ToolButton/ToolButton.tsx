@@ -53,7 +53,7 @@ interface IToolButtonDispatch {
 }
 
 class ToolButtonContainer extends React.Component<IToolButtonProps & IToolButtonState & IToolButtonDispatch> {
-    private _uuid: string = null;
+    private _uuid: string = '';
 
     onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
@@ -61,16 +61,16 @@ class ToolButtonContainer extends React.Component<IToolButtonProps & IToolButton
 
         const pageParams = this.props.pageparams;
 
-        if (null === pageParams) {
+        if (undefined === pageParams) {
             return;
         }
 
-        let popup: { title?: string, width?: number } = null;
+        let popup: { title?: string, width?: number } | undefined = undefined;
         if (this.props.popup) {
-            const width = parseInt(this.props.popup.width, 10);
+            const width = this.props.popup.width ? parseInt(this.props.popup.width, 10) : undefined;
             popup = {
                 title: this.props.popup.header,
-                width: width === width ? width : null
+                width: width === width ? width : undefined
             };
         }
 
@@ -82,7 +82,7 @@ class ToolButtonContainer extends React.Component<IToolButtonProps & IToolButton
                 name: this.props.page,
                 section: this.props.section,
                 params: pageParams
-            } : null
+            } : undefined
         });
     }
 
@@ -100,4 +100,4 @@ const mapDispatchToProps = {
     buttonInteraction
 };
 
-export default connect<IToolButtonState, IToolButtonDispatch, IToolButtonProps>(mapStateToProps, mapDispatchToProps)(ToolButtonContainer);
+export default connect<IToolButtonState, IToolButtonDispatch, IToolButtonProps, IRootState>(mapStateToProps, mapDispatchToProps)(ToolButtonContainer);

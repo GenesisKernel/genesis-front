@@ -42,9 +42,9 @@ declare module 'genesis/auth' {
 
     interface ISession {
         apiHost: string;
-        sessionToken: string;
-        wallet: IWallet;
-        access: IKeyInfo;
+        sessionToken?: string;
+        wallet?: IWallet;
+        access?: IKeyInfo;
         role?: IRoleInfo;
     }
 

@@ -36,7 +36,7 @@ export interface IRolePickerModalParams {
 }
 
 export interface IRolePickerModalProps extends IModalProps<IRolePickerModalParams, void> {
-    onSwitchWallet: (role: string) => void;
+    onSwitchWallet: (role?: string) => void;
 }
 
 class RolePickerModal extends ModalContainer<IRolePickerModalProps> {
@@ -70,7 +70,7 @@ class RolePickerModal extends ModalContainer<IRolePickerModalProps> {
                                 {r.name}
                             </button>
                         ))}
-                        <button className="btn btn-link btn-block" onClick={() => this.props.onSwitchWallet(null)}>
+                        <button className="btn btn-link btn-block" onClick={() => this.props.onSwitchWallet()}>
                             <FormattedMessage id="auth.role.guest" defaultMessage="Guest" />
                         </button>
                     </div>

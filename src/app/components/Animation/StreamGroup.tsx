@@ -20,17 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import Transition from 'react-transition-group/Transition';
+import React from 'react';
+import Transition, { TransitionStatus } from 'react-transition-group/Transition';
 import TransitionGroup from 'react-transition-group/TransitionGroup';
 
 const animationDuration = 300;
-const animationDef = {
-    defaultStyle: {
-        transform: 'translateX(0)',
-        transition: `transform ${animationDuration}ms cubic-bezier(0,0.5,0.5,1),opacity ${animationDuration}ms`,
-        opacity: 1
-    },
+const animationDefaultStyle: React.CSSProperties = {
+    transform: 'translateX(0)',
+    transition: `transform ${animationDuration}ms cubic-bezier(0,0.5,0.5,1),opacity ${animationDuration}ms`,
+    opacity: 1
+};
+
+const animationDef: { [K in TransitionStatus]?: React.CSSProperties } = {
     entering: {
         transform: 'translateX(50px)',
         opacity: 0,
@@ -41,7 +42,7 @@ const animationDef = {
     },
     exiting: {
         transform: 'translateX(50px)',
-        transition: `transform ${animationDuration}ms cubic-bezier(1,0.4,0.2,1),opacity ${animationDuration}ms`,        
+        transition: `transform ${animationDuration}ms cubic-bezier(1,0.4,0.2,1),opacity ${animationDuration}ms`,
         opacity: 0,
     },
     exited: {
@@ -51,8 +52,8 @@ const animationDef = {
 
 const Fade: React.SFC<{ in?: boolean }> = props => (
     <Transition in={props.in} timeout={{ enter: 0, exit: animationDuration }}>
-        {(state: string) => (
-            <div style={{ ...animationDef.defaultStyle, ...animationDef[state] }}>
+        {state => (
+            <div style={{ ...animationDefaultStyle, ...animationDef[state] }}>
                 {props.children}
             </div>
         )}

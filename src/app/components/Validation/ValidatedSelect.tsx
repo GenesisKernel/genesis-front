@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { Validator } from './Validators';
-import * as propTypes from 'prop-types';
+import propTypes from 'prop-types';
 
 import ValidatedForm, { IValidatedControl } from './ValidatedForm';
 
@@ -43,6 +43,10 @@ interface IValidatedSelectState {
 }
 
 export default class ValidatedSelect extends React.Component<IValidatedSelectProps, IValidatedSelectState> implements IValidatedControl {
+    static contextTypes = {
+        form: propTypes.instanceOf(ValidatedForm)
+    };
+
     constructor(props: IValidatedSelectProps) {
         super(props);
 
@@ -112,7 +116,3 @@ export default class ValidatedSelect extends React.Component<IValidatedSelectPro
         );
     }
 }
-
-(ValidatedSelect as React.ComponentClass).contextTypes = {
-    form: propTypes.instanceOf(ValidatedForm)
-};

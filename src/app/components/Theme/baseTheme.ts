@@ -31,7 +31,7 @@ const baseTheme: IThemeDefinition = {
     headerBackgroundActive: '#f3f3f3',
     headerForegroundActive: '#000',
     headerForegroundHighlight: '#999',
-    headerHeight: platform.select({ desktop: 28, web: 0 }),
+    headerHeight: platform.target({ desktop: 28, web: 0 }),
 
     toolbarBackground: '#f3f3f3',
     toolbarForeground: '#194a8a',

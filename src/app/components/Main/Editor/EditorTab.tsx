@@ -32,8 +32,8 @@ export interface IEditorTabProps extends TEditorTab {
     icon: string;
     active?: boolean;
     className?: string;
-    onClick?: (e: React.MouseEvent<HTMLElement>) => void;
-    onClose?: (e: React.MouseEvent<HTMLElement>) => void;
+    onClick: (e: React.MouseEvent<HTMLElement>) => void;
+    onClose: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 const EditorTab: React.SFC<IEditorTabProps> = props => {
@@ -75,7 +75,7 @@ const EditorTab: React.SFC<IEditorTabProps> = props => {
     );
 };
 
-const StyledEditorTab = themed(EditorTab) `
+const StyledEditorTab = themed(EditorTab)`
     position: relative;
     background: #ddd;
     color: #7a899c;

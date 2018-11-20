@@ -39,7 +39,6 @@ const definitions: { [key: string]: INotificationProto<any> } = {
 
 export interface INotificationsProviderProps {
     notifications: INotification[];
-    destroyNotification: (id: string) => void;
 }
 
 class NotificationsProvider extends React.Component<INotificationsProviderProps> {
@@ -47,15 +46,12 @@ class NotificationsProvider extends React.Component<INotificationsProviderProps>
         return (
             <div style={{ position: 'fixed', bottom: 20, right: 20, zIndex: 10000 }}>
                 <StreamGroup
-                    items={this.props.notifications.map(n => {
-                        const proto = definitions[n.type];
-                        return proto ? {
-                            key: n.id,
-                            content: (
-                                <Notification proto={proto} params={n.params} />
-                            )
-                        } : null;
-                    })}
+                    items={this.props.notifications.filter(n => n.type in definitions).map(n => ({
+                        key: n.id,
+                        content: (
+                            <Notification proto={definitions[n.type]} params={n.params} />
+                        )
+                    }))}
                 />
             </div>
         );

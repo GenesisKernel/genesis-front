@@ -36,17 +36,21 @@ export interface IValidatedFileProps {
 }
 
 interface IValidatedFileState {
-    value: File;
+    value?: File;
     filename: string;
 }
 
 export default class ValidatedFile extends React.Component<IValidatedFileProps, IValidatedFileState> implements IValidatedControl {
-    private _inputRef: HTMLInputElement = null;
+    private _inputRef: HTMLInputElement | null = null;
+
+    static contextTypes = {
+        form: propTypes.instanceOf(ValidatedForm)
+    };
 
     constructor(props: IValidatedFileProps) {
         super(props);
         this.state = {
-            value: null,
+            value: undefined,
             filename: ''
         };
     }
@@ -79,7 +83,7 @@ export default class ValidatedFile extends React.Component<IValidatedFileProps, 
 
     onChange = (e: React.ChangeEvent<FormControl>) => {
         const target = (e.target as object as HTMLInputElement);
-        if (target.files.length) {
+        if (target.files && target.files.length) {
             const file = target.files[0];
             this.setState({
                 value: file,
@@ -90,7 +94,9 @@ export default class ValidatedFile extends React.Component<IValidatedFileProps, 
     }
 
     onBrowse() {
-        this._inputRef.click();
+        if (this._inputRef) {
+            this._inputRef.click();
+        }
     }
 
     onBlur = (e: React.FocusEvent<FormControl>) => {
@@ -119,7 +125,3 @@ export default class ValidatedFile extends React.Component<IValidatedFileProps, 
         );
     }
 }
-
-(ValidatedFile as React.ComponentClass).contextTypes = {
-    form: propTypes.instanceOf(ValidatedForm)
-};

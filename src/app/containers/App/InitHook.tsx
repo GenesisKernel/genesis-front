@@ -27,18 +27,11 @@ import { initialize } from 'modules/engine/actions';
 import platform from 'lib/platform';
 
 export interface IInitHookProps {
-
-}
-
-interface IInitHookState {
-
-}
-
-interface IInitHookDispatch {
     initialize: typeof initialize.started;
 }
 
-class InitHook extends React.Component<IInitHookProps & IInitHookState & IInitHookDispatch> {
+// TODO: refactoring
+class InitHook extends React.Component<IInitHookProps> {
     componentDidMount() {
         this.props.initialize({
             defaultKey: platform.args.privateKey
@@ -46,7 +39,7 @@ class InitHook extends React.Component<IInitHookProps & IInitHookState & IInitHo
     }
 
     render() {
-        return null as JSX.Element;
+        return null;
     }
 }
 
@@ -58,4 +51,4 @@ const mapDispatchToProps = {
     initialize: initialize.started
 };
 
-export default connect<IInitHookState, IInitHookDispatch, IInitHookProps>(mapStateToProps, mapDispatchToProps)(InitHook);
+export default connect(mapStateToProps, mapDispatchToProps)(InitHook);

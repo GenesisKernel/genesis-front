@@ -41,7 +41,7 @@ interface IImportState {
 }
 
 class Import extends React.Component<IImportProps & InjectedIntlProps, IImportState> {
-    private _inputFile: HTMLInputElement;
+    private _inputFile: HTMLInputElement | null = null;
 
     constructor(props: IImportProps & InjectedIntlProps) {
         super(props);
@@ -52,7 +52,9 @@ class Import extends React.Component<IImportProps & InjectedIntlProps, IImportSt
     }
 
     componentWillReceiveProps(props: IImportProps) {
-        this._inputFile.setAttribute('value', null);
+        if (this._inputFile) {
+            this._inputFile.setAttribute('value', '');
+        }
 
         if (this.props.backup !== props.backup) {
             this.setState({
@@ -81,11 +83,15 @@ class Import extends React.Component<IImportProps & InjectedIntlProps, IImportSt
     }
 
     onLoad = () => {
-        this._inputFile.click();
+        if (this._inputFile) {
+            this._inputFile.click();
+        }
     }
 
     onLoadSuccess = (e: React.ChangeEvent<HTMLInputElement>) => {
-        this.props.onImportBackup(e.target.files[0]);
+        if (e.target.files) {
+            this.props.onImportBackup(e.target.files[0]);
+        }
     }
 
     render() {

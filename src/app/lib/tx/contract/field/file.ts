@@ -34,8 +34,8 @@ export interface IFileData {
     Body: ArrayBuffer;
 }
 
-class File implements IField<IFileStruct, IFileData> {
-    private _value: IFileStruct;
+class File implements IField<IFileStruct, IFileData | undefined> {
+    private _value?: IFileStruct;
 
     set(value: IFileStruct) {
         this._value = value;
@@ -46,7 +46,7 @@ class File implements IField<IFileStruct, IFileData> {
             Name: this._value.name,
             MimeType: this._value.type,
             Body: this._value.value
-        } : null;
+        } : undefined;
     }
 }
 

@@ -28,7 +28,7 @@ const txExecHandler: Reducer<typeof txExec.started, State> = (state, payload) =>
     ...state,
     transactions: state.transactions.set(payload.uuid, {
         status: 'pending',
-        error: null,
+        error: undefined,
         stack: []
     })
 });

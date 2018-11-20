@@ -20,9 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 
 import Validation from 'components/Validation';
+
+type TImageFormat = 'png' | 'jpg' | 'jpeg';
+
+const imageFormats: TImageFormat[] = ['png', 'jpg', 'jpeg'];
+const ratioMatcher = /^ *(\d*) *\/ *(\d*) *$/;
 
 export interface IInputProps {
     'format'?: string;
@@ -31,33 +36,42 @@ export interface IInputProps {
     'ratio'?: string;
 }
 
-const ImageInput: React.SFC<IInputProps> = (props) => {
-    const matches = /^ *(\d*) *\/ *(\d*) *$/.exec(props.ratio);
-    let ratio: number = null;
-    let width: number = null;
+const ImageInput: React.SFC<IInputProps> = props => {
+    let ratio: number | undefined = undefined;
+    let width: number | undefined = undefined;
+    let format: TImageFormat = 'png';
 
-    if (matches) {
-        const left = parseInt(matches[1], 10);
-        const right = parseInt(matches[2], 10);
-        ratio = left / right;
-    }
-
-    try {
-        width = parseInt(props.width, 10);
-
-        // Check if value is NaN, otherwise cropper will throw
-        if (width !== width) {
-            width = null;
+    if (props.ratio) {
+        const matches = ratioMatcher.exec(props.ratio);
+        if (matches) {
+            const left = parseInt(matches[1], 10);
+            const right = parseInt(matches[2], 10);
+            ratio = left / right;
         }
     }
-    catch (e) {
-        width = null;
+
+    if (props.width) {
+        try {
+            width = parseInt(props.width, 10);
+
+            // Check if value is NaN, otherwise cropper will throw
+            if (width !== width) {
+                width = undefined;
+            }
+        }
+        catch (e) {
+            width = undefined;
+        }
+    }
+
+    if (props.format && -1 !== imageFormats.indexOf(props.format as TImageFormat)) {
+        format = props.format as TImageFormat;
     }
 
     return (
         <Validation.components.ValidatedImage
-            format={props.format as any}
-            name={props.name}
+            format={format}
+            name={props.name || ''}
             aspectRatio={ratio}
             width={width}
         />

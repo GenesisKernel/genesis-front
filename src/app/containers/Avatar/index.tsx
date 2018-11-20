@@ -20,40 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 
 import Avatar from 'components/Avatar';
 
-interface IAvatarContainerProps {
+export interface IAvatarContainerProps {
     className?: string;
     keyID: string;
     ecosystem: string;
     size?: number;
 }
 
-interface IAvatarContainerState {
-    nodeHost: string;
-}
-
-interface IAvatarContainerDispatch {
-
-}
-
-const AvatarContainer: React.SFC<IAvatarContainerProps & IAvatarContainerState & IAvatarContainerDispatch> = props => (
-    <Avatar
-        className={props.className}
-        size={props.size}
-        url={`${props.nodeHost}/api/v2/avatar/${props.ecosystem}/${props.keyID}`}
-    />
-);
-
-const mapStateToProps = (state: IRootState) => ({
+const mapStateToProps = (state: IRootState, props: IAvatarContainerProps) => ({
     nodeHost: state.engine.nodeHost
 });
 
-const mapDispatchToProps = {
-};
+// TODO: refactoring
+export default connect(mapStateToProps, null, (state, dispatch, props) => ({
+    ...props,
+    url: `${state.nodeHost}/api/v2/avatar/${props.ecosystem}/${props.keyID}`
 
-export default connect<IAvatarContainerState, IAvatarContainerDispatch, IAvatarContainerProps>(mapStateToProps, mapDispatchToProps)(AvatarContainer);
+}))(Avatar);

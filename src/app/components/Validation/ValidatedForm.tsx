@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { Form, FormProps } from 'react-bootstrap';
 import { Validator } from './Validators';
-import * as propTypes from 'prop-types';
+import propTypes from 'prop-types';
 
 export interface IValidatedFormProps extends FormProps {
     pending?: boolean;
@@ -95,7 +95,7 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
         this._elements[name].push({
             name,
             node,
-            validators: node.props.validators
+            validators: node.props.validators || []
         });
     }
 
@@ -119,7 +119,7 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
         const payload = this.validateAll();
 
         if (payload.valid && this.props.onSubmitSuccess) {
-            const values = {};
+            const values: { [name: string]: any } = {};
             for (let itr in payload.payload) {
                 if (payload.payload.hasOwnProperty(itr)) {
                     values[itr] = payload.payload[itr] && payload.payload[itr].value;
@@ -221,7 +221,7 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
     }
 
     validateAll(): { valid: boolean, payload: { [key: string]: IValidationResult } } {
-        const values = {
+        const values: { valid: boolean, payload: { [name: string]: any } } = {
             valid: true,
             payload: {}
         };

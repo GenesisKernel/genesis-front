@@ -47,7 +47,7 @@ const setLocaleEpic: Epic = (action$, store) => action$.ofAction(setLocale.start
             );
         }
         else {
-            const requestUrl = platform.select({
+            const requestUrl = platform.target({
                 web: urlJoin(process.env.PUBLIC_URL || location.origin, `locales/${action.payload}.json`),
                 desktop: `./locales/${action.payload}.json`
             });

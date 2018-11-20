@@ -21,13 +21,17 @@
 // SOFTWARE.
 
 import { State } from '../reducer';
-import { createWallet } from '../actions';
+import { logout } from '../actions';
 import { Reducer } from 'modules';
 
-const createWalletDoneHandler: Reducer<typeof createWallet.done, State> = (state, payload) => ({
+const logoutHandler: Reducer<typeof logout, State> = (state, payload): State => ({
     ...state,
-    isCreatingWallet: false,
-    createWalletError: null
+    session: {
+        ...state.session,
+        wallet: undefined
+    },
+    isAuthenticated: false,
+    privateKey: undefined
 });
 
-export default createWalletDoneHandler;
+export default logoutHandler;

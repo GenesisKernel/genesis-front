@@ -70,7 +70,7 @@ declare module 'genesis/editor' {
         value: string
     }
 
-    interface ICreateEditorTabCall{
+    interface ICreateEditorTabCall {
         type: string;
         appId: number;
     }
@@ -86,113 +86,10 @@ declare module 'genesis/editor' {
         data: Partial<TEditorTab>;
     }
 
-    interface IChangePageCall {
-        text?: string;
-        attrName?: string;
-        attrValue?: string;
-        canDropPosition?: string;
-        tagID: string;
-        pageID?: string;
-    }
-
-    interface IChangePageResult {
-        jsonData: TProtypoElement[];
-        treeData: TConstructorTreeElement[];
-        selectedTag?: TProtypoElement;
-    }
-
-    interface IGetPageTreeResult {
-        name?: string;
-        jsonData: TProtypoElement[];
-        treeData?: TConstructorTreeElement[];
-        error?: string;
-    }
-
-    interface IAddTagCall {
-        tag: ISourceElement;
-        destinationTagID?: string;
-        position?: string;
-    }
-
-    interface IOperateTagCall {
-        tag: TProtypoElement;
-        destinationTagID?: string;
-        position?: string;
-    }
-
-    interface IOperateTagResult {
-        jsonData: TProtypoElement[];
-        treeData: TConstructorTreeElement[];
-    }
-
-    interface IMoveTreeTag {
-        treeData: TConstructorTreeElement[];
-        tagID: string;
-    }
-
-    interface ISaveConstructorHistoryResult {
-        data: TProtypoElement[][];
-        position: number;
-        canUndo: boolean;
-        canRedo: boolean;
-    }
-
-    interface IConstructorUndoRedoResult {
-        position: number;
-        canUndo: boolean;
-        canRedo: boolean;
-        jsonData: TProtypoElement[];
-        treeData: TConstructorTreeElement[];
-    }
-
-    interface ISetTagCanDropPositionCall {
-        tagID: string;
-        position: string;
-    }
-
-    interface ISetTagCanDropPositionResult {
-        jsonData: TProtypoElement[];
-        treeData: TConstructorTreeElement[];
-    }
-
-    interface ISelectTagResult {
-        selectedTag: TProtypoElement;
-        treeData: TConstructorTreeElement[];
-    }
-
     interface ISourceElement {
         new: boolean;
         element: string;
         template?: string;
         text?: string;
-    }
-
-    interface IConstructorElementProps {
-        editable?: boolean;
-        selected?: boolean;
-        logic?: boolean;
-        changePage?: (attrs: IChangePageCall) => void;
-        setTagCanDropPosition?: (attrs: ISetTagCanDropPositionCall) => void;
-        addTag?: (attrs: IAddTagCall) => void;
-        copyTag?: (attrs: IOperateTagCall) => void;
-        moveTag?: (attrs: IOperateTagCall) => void;
-        removeTag?: (attrs: IOperateTagCall) => void;
-        selectTag?: (attrs: TProtypoElement) => void;
-        selectedTag?: TProtypoElement;
-        tag?: TProtypoElement;
-        canDropPosition?: string;
-        isOver?: boolean;
-        isDragging?: boolean;
-
-        connectDropTarget?: any;
-        connectDragSource?: any;
-        connectDragPreview?: any;
-    }
-
-    interface IFindTagResult {
-        el: TProtypoElement | null;
-        parent: TProtypoElement | null,
-        parentPosition: number,
-        tail: boolean
     }
 }

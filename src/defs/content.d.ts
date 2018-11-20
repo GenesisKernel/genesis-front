@@ -50,7 +50,6 @@ declare module 'genesis/content' {
     interface IPage {
         readonly name: string;
         readonly status: TPageStatus;
-        readonly legacy?: boolean;
         readonly content: TProtypoElement[];
         readonly params: TPageParams;
         readonly error?: string;

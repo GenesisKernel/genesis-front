@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as _ from 'lodash';
-import * as React from 'react';
-import * as propTypes from 'prop-types';
+import _ from 'lodash';
+import React from 'react';
+import propTypes from 'prop-types';
 import { ISource, TChartType } from 'genesis/protypo';
 import { Bar, Line, Pie } from 'react-chartjs-2';
 
@@ -50,20 +50,29 @@ const chartTypes: { [K in TChartType]: any } = {
 };
 
 class Chart extends React.Component<IChartProps> {
-    private _cachedSourceData: ISource;
+    private _cachedSourceData?: ISource;
 
     static contextTypes = {
         resolveSource: propTypes.func.isRequired
     };
 
     shouldComponentUpdate(props: IChartProps, state: never, context: IChartContext) {
-        const source = context.resolveSource(props.source);
-        return !_.isEqual(props, this.props) || !_.isEqual(this._cachedSourceData, source);
+        if (props.source) {
+            const source = context.resolveSource(props.source);
+            return !_.isEqual(props, this.props) || !_.isEqual(this._cachedSourceData, source);
+        }
+        else {
+            return false;
+        }
     }
 
     render() {
         // TODO: refactoring
         const context: IChartContext = (this as any).context;
+
+        if (!this.props.source || !this.props.fieldlabel || !this.props.fieldvalue || !this.props.type) {
+            return null;
+        }
 
         this._cachedSourceData = context.resolveSource(this.props.source);
 

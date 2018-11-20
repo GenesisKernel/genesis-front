@@ -28,8 +28,13 @@ export type State =
     RouterState;
 
 export const initialState: RouterState = {
-    location: null,
-    action: null
+    location: {
+        pathname: '',
+        search: '',
+        state: {},
+        hash: ''
+    },
+    action: 'PUSH'
 };
 
 export default reducerWithInitialState<State>(initialState);

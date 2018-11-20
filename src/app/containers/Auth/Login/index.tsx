@@ -31,8 +31,6 @@ const mapStateToProps = (state: IRootState) => ({
     isAuthenticating: state.auth.session && !state.auth.isAuthenticated
 });
 
-const mapDispatchToProps = {
-    onLogout: logout.started
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, {
+    onLogout: logout
+})(Login);

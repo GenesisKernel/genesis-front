@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
+import propTypes from 'prop-types';
 import { Validator } from './Validators';
-import * as propTypes from 'prop-types';
 
 import ValidatedForm, { IValidatedControl } from './ValidatedForm';
 
@@ -43,15 +43,19 @@ export interface IValidatedRadioProps {
 }
 
 interface IValidatedRadioState {
-    checked: string;
+    checked?: string;
 }
 
 export default class ValidatedRadioGroup extends React.Component<IValidatedRadioProps, IValidatedRadioState> implements IValidatedControl {
+    static contextTypes = {
+        form: propTypes.instanceOf(ValidatedForm)
+    };
+
     constructor(props: IValidatedRadioProps) {
         super(props);
 
         this.state = {
-            checked: props.checked || props.defaultChecked || null
+            checked: props.checked || props.defaultChecked || undefined
         };
     }
 
@@ -122,7 +126,3 @@ export default class ValidatedRadioGroup extends React.Component<IValidatedRadio
         );
     }
 }
-
-(ValidatedRadioGroup as React.ComponentClass).contextTypes = {
-    form: propTypes.instanceOf(ValidatedForm)
-};

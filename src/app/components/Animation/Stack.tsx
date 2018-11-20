@@ -21,23 +21,23 @@
 // SOFTWARE.
 
 import React from 'react';
-import Transition from 'react-transition-group/Transition';
+import Transition, { TransitionStatus } from 'react-transition-group/Transition';
 import TransitionGroup from 'react-transition-group/TransitionGroup';
 
 const animationDuration = 400;
-const animationDef = {
-    defaultStyle: {
-        transform: 'translateX(0)',
-        transition: `transform ${animationDuration}ms cubic-bezier(0,0,0,1),opacity ${animationDuration}ms`,
-        // boxShadow: 'rgba(0,0,0,0.1) 0 0 15px',
-        opacity: 1,
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        right: 0,
-        bottom: 0,
-        overflow: 'hidden'
-    },
+const animationDefaultStyle: React.CSSProperties = {
+    transform: 'translateX(0)',
+    transition: `transform ${animationDuration}ms cubic-bezier(0,0,0,1),opacity ${animationDuration}ms`,
+    opacity: 1,
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    overflow: 'hidden'
+};
+
+const animationDef: { [K in TransitionStatus]?: React.CSSProperties } = {
     entering: {
         transform: 'translateX(50px)',
         opacity: 0,
@@ -57,8 +57,8 @@ const animationDef = {
 
 const Fade: React.SFC<{ in?: boolean }> = props => (
     <Transition in={props.in} timeout={{ enter: 0, exit: animationDuration }}>
-        {(state: string) => (
-            <div style={{ ...animationDef.defaultStyle, ...animationDef[state] }}>
+        {state => (
+            <div style={{ ...animationDefaultStyle, ...animationDef[state] }}>
                 {props.children}
             </div>
         )}

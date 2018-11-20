@@ -43,16 +43,23 @@
 /* tslint:disable */
 import { ActionsObservable } from 'redux-observable';
 import { Action, ActionCreator, isType } from 'typescript-fsa';
-import * as Redux from 'redux';
+import { Action as ReduxAction } from 'redux';
 import 'rxjs/add/operator/filter';
 
 declare module 'redux-observable' {
-    interface ActionsObservable<T extends Redux.Action> {
-        ofAction<T, P>(action: ActionCreator<P>): ActionsObservable<Action<P>>;
+    interface ActionsObservable<T extends ReduxAction> {
+        ofAction<P>(action: ActionCreator<P>): ActionsObservable<Action<P>>;
+        ofAction<P1, P2>(item1: ActionCreator<P1>, item2: ActionCreator<P2>): ActionsObservable<Action<P1 | P2>>;
+        ofAction<P1, P2, P3>(item1: ActionCreator<P1>, item2: ActionCreator<P2>, item3: ActionCreator<P3>): ActionsObservable<Action<P1 | P2 | P3>>;
+        ofAction<P1, P2, P3, P4>(item1: ActionCreator<P1>, item2: ActionCreator<P2>, item3: ActionCreator<P3>, item4: ActionCreator<P4>): ActionsObservable<Action<P1 | P2 | P3 | P4>>;
+        ofAction<P1, P2, P3, P4, P5>(item1: ActionCreator<P1>, item2: ActionCreator<P2>, item3: ActionCreator<P3>, item4: ActionCreator<P4>, item5: ActionCreator<P5>): ActionsObservable<Action<P1 | P2 | P3 | P4 | P5>>;
+        ofAction<P1, P2, P3, P4, P5, P6>(item1: ActionCreator<P1>, item2: ActionCreator<P2>, item3: ActionCreator<P3>, item4: ActionCreator<P4>, item5: ActionCreator<P5>, item6: ActionCreator<P6>): ActionsObservable<Action<P1 | P2 | P3 | P4 | P5 | P6>>;
     }
 }
 
 ActionsObservable.prototype.ofAction =
-    function <P>(this: ActionsObservable<Action<P>>, actionCreater: ActionCreator<P>): ActionsObservable<Action<P>> {
-        return this.filter(action => (isType(action, actionCreater))) as ActionsObservable<Action<P>>;
+    function (this: ActionsObservable<Action<any>>, ...actionCreators: ActionCreator<any>[]): ActionsObservable<Action<any>> {
+        return this.filter(action =>
+            actionCreators.some(actionCreator => isType(action, actionCreator))
+        ) as ActionsObservable<Action<any>>;
     };

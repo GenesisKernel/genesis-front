@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import * as _ from 'lodash';
+import React from 'react';
+import _ from 'lodash';
 import { withGoogleMap, GoogleMap, withScriptjs, Polygon } from 'react-google-maps';
 
 export interface IMapProps {
@@ -38,12 +38,12 @@ export interface IMapViewProps extends IMapProps {
 }
 
 class Map extends React.Component<IMapProps> {
-    private _map: GoogleMap = null;
+    private _map: GoogleMap | null = null;
     private _defaultCenter = { lat: 36.07574221562708, lng: 5.0921630859375 };
 
     componentDidMount() {
         this.processEvents(this.props);
-        if (this.props.polygon && this.props.polygon.length) {
+        if (this._map && this.props.polygon && this.props.polygon.length) {
             this._map.fitBounds(this.calcBounds(this.getPolygon(this.props.polygon)));
         }
     }

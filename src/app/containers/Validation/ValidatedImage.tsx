@@ -20,14 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import * as uuid from 'uuid';
+import React from 'react';
+import uuid from 'uuid';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { IModal } from 'genesis/modal';
 import { modalShow } from 'modules/modal/actions';
-
 import { Validator } from 'components/Validation/Validators';
+
 import ValidatedImage from 'components/Validation/ValidatedImage';
 
 export interface IValidatedImageContainerProps {
@@ -52,7 +52,7 @@ class ValidatedImageContainer extends React.Component<IValidatedImageContainerPr
     constructor(props: any) {
         super(props);
         this.state = {
-            result: null
+            result: ''
         };
     }
 
@@ -96,4 +96,4 @@ const mapDispatchToProps = {
     modalShow: modalShow
 };
 
-export default connect<IValidatedImageContainerState, IValidatedImageContainerDispatch, IValidatedImageContainerProps>(mapStateToProps, mapDispatchToProps)(ValidatedImageContainer);
+export default connect<IValidatedImageContainerState, IValidatedImageContainerDispatch, IValidatedImageContainerProps, IRootState>(mapStateToProps, mapDispatchToProps)(ValidatedImageContainer);

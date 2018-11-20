@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as uuid from 'uuid';
-import { from } from 'rxjs';
+import uuid from 'uuid';
+import { from, empty } from 'rxjs';
 import { Epic } from 'modules';
 import { editorSave, reloadEditorTab } from '../actions';
 import TxObservable from 'modules/tx/util/TxObservable';
@@ -61,7 +61,8 @@ const newContractEpic: Epic = (action$, store, { api }) => action$.ofAction(edit
                         }
                     }))
                 ))
-            )
+            ),
+            failure: () => empty()
         });
     })
 );

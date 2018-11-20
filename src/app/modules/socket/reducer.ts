@@ -33,7 +33,7 @@ import setConnectedHandler from './reducers/setConnectedHandler';
 
 export type State = {
     readonly session: string;
-    readonly socket: ICentrifuge;
+    readonly socket?: ICentrifuge;
     readonly connected: boolean;
     readonly notifications: INotificationsMessage[];
     readonly subscriptions: {
@@ -43,8 +43,8 @@ export type State = {
 };
 
 export const initialState: State = {
-    session: null,
-    socket: null,
+    session: '',
+    socket: undefined,
     connected: false,
     notifications: [],
     subscriptions: []

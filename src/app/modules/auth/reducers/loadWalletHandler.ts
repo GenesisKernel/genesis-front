@@ -24,10 +24,10 @@ import { State } from '../reducer';
 import { loadWallet } from '../actions';
 import { Reducer } from 'modules';
 
-const loadWalletHandler: Reducer<typeof loadWallet, State> = (state, payload) => ({
+const loadWalletHandler: Reducer<typeof loadWallet, State> = (state, payload): State => ({
     ...state,
     wallets: [
-        ...(state.wallets || []).filter(l =>
+        ...state.wallets.filter(l =>
             l.id !== payload.id
         ),
         payload

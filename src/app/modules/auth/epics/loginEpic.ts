@@ -30,7 +30,7 @@ import { of, from } from 'rxjs';
 const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.started).pipe(
     flatMap(action => {
         const session = store.value.auth.session;
-        const privateKey = keyring.decryptAES(session.wallet.encKey, action.payload.password);
+        const privateKey = keyring.decryptAES(session.wallet!.encKey, action.payload.password);
 
         if (!keyring.validatePrivateKey(privateKey)) {
             return of(login.failed({
@@ -48,9 +48,9 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
                 client.authorize(uid.token).login({
                     publicKey,
                     signature: keyring.sign(uid.uid, privateKey),
-                    ecosystem: session.access.ecosystem,
+                    ecosystem: session.access!.ecosystem,
                     expire: 60 * 60 * 24 * 90,
-                    role: session.role ? Number(session.role.id) : null
+                    role: session.role && Number(session.role.id)
                 })
             ),
 

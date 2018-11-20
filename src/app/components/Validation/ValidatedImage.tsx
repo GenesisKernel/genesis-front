@@ -35,7 +35,7 @@ export interface IValidatedImageProps {
     aspectRatio?: number;
     width?: number;
     validators?: Validator[];
-    openEditor: (params: { mime: string, data: string, aspectRatio: number, width: number }) => void;
+    openEditor: (params: { mime: string, data: string }) => void;
 }
 
 interface IValidatedImageState {
@@ -45,8 +45,12 @@ interface IValidatedImageState {
 }
 
 export default class ValidatedImage extends React.Component<IValidatedImageProps, IValidatedImageState> implements IValidatedControl {
-    private _inputRef: HTMLInputElement = null;
+    private _inputRef: HTMLInputElement | null = null;
     private _value: string = '';
+
+    static contextTypes = {
+        form: propTypes.instanceOf(ValidatedForm)
+    };
 
     constructor(props: IValidatedImageProps) {
         super(props);
@@ -86,18 +90,16 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
 
     onChange = (e: React.ChangeEvent<FormControl>) => {
         const target = (e.target as object as HTMLInputElement);
-        if (target.files.length) {
+        if (target.files && target.files.length) {
             const file = target.files[0];
-            readBinaryFile(file).then(r => {
+            readBinaryFile(file).then(binary => {
                 this.setState({
-                    value: r,
+                    value: binary,
                     filename: file.name
                 });
                 this.props.openEditor({
                     mime: this.resolveMIME(),
-                    data: r,
-                    aspectRatio: this.props.aspectRatio,
-                    width: this.props.width
+                    data: binary
                 });
             });
         }
@@ -105,7 +107,9 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
     }
 
     onBrowse() {
-        this._inputRef.click();
+        if (this._inputRef) {
+            this._inputRef.click();
+        }
     }
 
     onBlur = (e: React.FocusEvent<FormControl>) => {
@@ -115,7 +119,7 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
     onResult(data: string) {
         this._value = data;
         this.setState({
-            value: data ? this.state.value : null,
+            value: data ? this.state.value : '',
             resultFilename: data ? this.state.filename : ''
         });
     }
@@ -153,7 +157,3 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
         );
     }
 }
-
-(ValidatedImage as React.ComponentClass).contextTypes = {
-    form: propTypes.instanceOf(ValidatedForm)
-};

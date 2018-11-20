@@ -34,7 +34,7 @@ export const txExecFailedEpic: Epic = (action$, store) => action$.ofAction(txExe
             if (errorRedirect) {
                 return navigatePage.started({
                     name: errorRedirect.pagename,
-                    params: errorRedirect.pageparams,
+                    params: errorRedirect.pageparams || {},
                     force: true
                 });
             }

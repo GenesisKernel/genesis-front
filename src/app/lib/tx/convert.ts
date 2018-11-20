@@ -32,7 +32,7 @@ export const toHex = (buffer: ArrayBuffer): string => {
 };
 
 export const toArrayBuffer = (hex: string): ArrayBuffer => {
-    const uint8 = new Uint8Array(hex.match(/[\da-f]{2}/gi).map(h =>
+    const uint8 = new Uint8Array((hex.match(/[\da-f]{2}/gi) || []).map(h =>
         parseInt(h, 16)
     ));
 
@@ -90,7 +90,7 @@ export const encodeLengthPlusData = (buffer: Uint8Array | ArrayBuffer): ArrayBuf
 export const toMoney = (value: number | string) => {
     const match = /([\d]+)((\.|,)([\d]+))?/.exec(String(value));
     if (!match) {
-        return null;
+        return undefined;
     }
     const integer = match[1];
     const fraction = match[4] || '';

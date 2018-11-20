@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import { Action } from 'redux';
 import { Epic } from 'modules';
 import { changePassword, logout } from '../actions';
 import { of, merge } from 'rxjs';
@@ -35,20 +36,20 @@ const changePasswordEpic: Epic = (action$, store, { api }) => action$.ofAction(c
                 id: 'AUTH_CHANGE_PASSWORD',
                 type: 'AUTH_CHANGE_PASSWORD',
                 params: {
-                    encKey: store.value.auth.session.wallet.encKey
+                    encKey: store.value.auth.session.wallet!.encKey
                 }
             })),
             action$.ofAction(modalClose).pipe(
                 take(1),
                 flatMap(result => {
                     if ('RESULT' === result.payload.reason) {
-                        const wallet = store.value.auth.session.wallet;
+                        const wallet = store.value.auth.session.wallet!;
                         const privateKey = keyring.decryptAES(wallet.encKey, result.payload.data.oldPassword);
 
                         if (!keyring.validatePrivateKey(privateKey)) {
                             return of(
                                 changePassword.failed({
-                                    params: null,
+                                    params: undefined,
                                     error: 'E_INVALID_PASSWORD'
                                 }),
                                 modalShow({
@@ -63,10 +64,10 @@ const changePasswordEpic: Epic = (action$, store, { api }) => action$.ofAction(c
 
                         const encKey = keyring.encryptAES(privateKey, result.payload.data.newPassword);
                         return merge(
-                            of(
+                            of<Action>(
                                 changePassword.done({
                                     params: action.payload,
-                                    result: null
+                                    result: undefined
                                 }),
                                 saveWallet({
                                     ...wallet,
@@ -80,14 +81,14 @@ const changePasswordEpic: Epic = (action$, store, { api }) => action$.ofAction(c
                             ),
                             action$.ofAction(modalClose).pipe(
                                 take(1),
-                                map(() => logout.started(null))
+                                map(() => logout())
                             )
                         );
                     }
                     else {
                         return of(changePassword.failed({
                             params: action.payload,
-                            error: null
+                            error: undefined
                         }));
                     }
                 })

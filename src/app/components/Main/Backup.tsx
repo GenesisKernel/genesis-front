@@ -23,9 +23,6 @@
 import React from 'react';
 import { Button, Panel } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import keyring from 'lib/keyring';
-import { sendAttachment } from 'lib/fs';
-import { ISession } from 'genesis/auth';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import QRCode from 'qrcode.react';
 
@@ -33,47 +30,24 @@ import Wrapper from 'components/Wrapper';
 import Validation from 'components/Validation';
 
 export interface IBackupProps {
-    session: ISession;
-    privateKey: string;
-    onError?: () => any;
-    onCopy?: () => any;
-}
-
-interface IBackupState {
-    privateKey: string;
+    encKey: string;
     publicKey: string;
+    privateKey?: string;
+    address: string;
+    onAuthorize: (password: string) => void;
+    onError: () => void;
+    onCopy: () => void;
+    onDownload: () => void;
 }
 
-class Backup extends React.Component<IBackupProps, IBackupState> {
-    constructor(props: IBackupProps) {
-        super(props);
-        this.state = {
-            privateKey: props.privateKey,
-            publicKey: props.privateKey ? keyring.generatePublicKey(props.privateKey) : null
-        };
-    }
-
+class Backup extends React.Component<IBackupProps> {
     onSubmit = (values: { [key: string]: string }) => {
-        const privateKey = keyring.decryptAES(this.props.session.wallet.encKey, values.password);
-
-        if (keyring.validatePrivateKey(privateKey)) {
-            const publicKey = keyring.generatePublicKey(privateKey);
-            this.setState({
-                privateKey,
-                publicKey
-            });
-        }
-        else {
-            this.props.onError();
-        }
-    }
-
-    onKeyDownlaod = () => {
-        sendAttachment('key.txt', this.props.privateKey);
+        this.props.onAuthorize(values.password);
     }
 
     formatKey = (key: string) => {
-        return key.match(/.{1,2}/g).join(' ');
+        const match = key.match(/.{1,2}/g);
+        return match ? match.join(' ') : '';
     }
 
     renderFirst() {
@@ -108,14 +82,14 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
                 footer={(
                     <div className="clearfix">
                         <div className="pull-left">
-                            <CopyToClipboard text={this.props.privateKey} onCopy={this.props.onCopy}>
+                            <CopyToClipboard text={this.props.privateKey || ''} onCopy={this.props.onCopy}>
                                 <Button bsStyle="primary">
                                     <FormattedMessage id="general.clipboard.copy" defaultMessage="Copy to clipboard" />
                                 </Button>
                             </CopyToClipboard>
                         </div>
                         <div className="pull-right">
-                            <Button bsStyle="primary" onClick={this.onKeyDownlaod}>
+                            <Button bsStyle="primary" onClick={this.props.onDownload}>
                                 <FormattedMessage id="general.download.asfile" defaultMessage="Download as file" />
                             </Button>
                         </div>
@@ -128,19 +102,19 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
                             <td style={{ minWidth: 100 }}>
                                 <FormattedMessage id="general.key.private" defaultMessage="Private key" />
                             </td>
-                            <td>{this.formatKey(this.state.privateKey)}</td>
+                            <td>{this.formatKey(this.props.privateKey || '')}</td>
                         </tr>
                         <tr>
                             <td style={{ minWidth: 100 }}>
                                 <FormattedMessage id="general.key.public" defaultMessage="Public key" />
                             </td>
-                            <td>{this.formatKey(this.state.publicKey)}</td>
+                            <td>{this.formatKey(this.props.publicKey)}</td>
                         </tr>
                         <tr>
                             <td>
                                 <FormattedMessage id="general.address" defaultMessage="Address" />
                             </td>
-                            <td>{this.props.session.wallet.address}</td>
+                            <td>{this.props.address}</td>
                         </tr>
                         <tr>
                             <td>
@@ -148,7 +122,7 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
                             </td>
                             <td>
                                 <div className="text-center">
-                                    <QRCode value={this.props.privateKey || this.state.privateKey} />
+                                    <QRCode value={this.props.privateKey || ''} />
                                     <div className="text-muted">
                                         <FormattedMessage id="auth.qrcode.desc" defaultMessage="Use this code to import the wallet on your mobile device" />
                                     </div>
@@ -178,9 +152,9 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
                     <FormattedMessage id="general.wallet.backup" defaultMessage="This section is used to backup your wallet data. You will not be able to restore access to your wallet if you forget your password or lose the private key" />
                 }
             >
-                {this.props.session && (
+                {this.props.privateKey && (
                     <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit}>
-                        {this.state.privateKey ? this.renderSecond() : this.renderFirst()}
+                        {this.props.privateKey ? this.renderSecond() : this.renderFirst()}
                     </Validation.components.ValidatedForm>
                 )}
             </Wrapper>

@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
+import propTypes from 'prop-types';
 import { Validator } from './Validators';
-import * as propTypes from 'prop-types';
 
 import ValidatedForm, { IValidatedControl } from './ValidatedForm';
 
@@ -36,6 +36,10 @@ interface IValidatedTextareaState {
 }
 
 export default class ValidatedTextarea extends React.Component<IValidatedTextareaProps, IValidatedTextareaState> implements IValidatedControl {
+    static contextTypes = {
+        form: propTypes.instanceOf(ValidatedForm)
+    };
+
     constructor(props: IValidatedTextareaProps) {
         super(props);
 
@@ -102,7 +106,3 @@ export default class ValidatedTextarea extends React.Component<IValidatedTextare
         );
     }
 }
-
-(ValidatedTextarea as React.ComponentClass).contextTypes = {
-    form: propTypes.instanceOf(ValidatedForm)
-};

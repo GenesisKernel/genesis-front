@@ -22,7 +22,6 @@
 
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { switchWindow } from 'modules/gui/actions';
 
 import App from 'components/App';
 
@@ -36,7 +35,4 @@ const mapStateToProps = (state: IRootState) => ({
     securityWarningClosed: state.storage.securityWarningClosed
 });
 
-export default connect(mapStateToProps, {
-    switchWindow: switchWindow.started
-
-}, null, { pure: false })(App);
+export default connect(mapStateToProps, null, null, { pure: false })(App);

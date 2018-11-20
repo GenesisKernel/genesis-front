@@ -31,7 +31,7 @@ const changeEditorToolStartedHandler: Reducer<typeof changeEditorTool.started, S
         {
             ...state.tabs[state.tabIndex],
             tool: payload,
-            preview: null
+            preview: undefined
         },
         ...state.tabs.slice(state.tabIndex + 1),
     ]

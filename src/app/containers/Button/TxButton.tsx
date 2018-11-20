@@ -27,9 +27,9 @@ import { OrderedMap } from 'immutable';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
 import { buttonInteraction } from 'modules/content/actions';
+import { IErrorRedirect } from 'genesis/protypo';
 
 import Button from 'components/Button';
-import { IErrorRedirect } from 'genesis/protypo';
 
 export interface ITxButtonProps {
     disabled?: boolean;
@@ -55,19 +55,19 @@ export interface ITxButtonProps {
 
     // Executed after batch
     contract?: string;
-    contractParams?: () => { [key: string]: any };
+    contractParams?: () => ({ [key: string]: any } | undefined);
 
     // Redirect if all previous actions succeeded
     page?: string;
     section: string;
-    pageParams?: () => { [key: string]: any };
-
+    pageParams?: () => ({ [key: string]: any } | undefined);
+    
     // Page must be rendered within a modal dialog
     popup?: {
         title?: string;
         width?: number;
     };
-
+    
     errorRedirects?: { [key: string]: IErrorRedirect } | (() => { [key: string]: IErrorRedirect });
 }
 
@@ -80,7 +80,7 @@ interface ITxButtonDispatch {
 }
 
 class TxButton extends React.Component<ITxButtonProps & ITxButtonState & ITxButtonDispatch> {
-    private _uuid: string = null;
+    private _uuid: string = '';
 
     onClick = () => {
         this._uuid = uuid.v4();
@@ -90,14 +90,14 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonState & ITxButt
             this.props.contractParams() :
             this.props.contractParams;
 
-        if (null === contractParams) {
+        if (undefined === contractParams) {
             return;
         }
         const pageParams = 'function' === typeof this.props.pageParams ?
             this.props.pageParams() :
             this.props.pageParams;
 
-        if (null === pageParams) {
+        if (undefined === pageParams) {
             return;
         }
 
@@ -105,7 +105,7 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonState & ITxButt
         if (this.props.contract) {
             contracts.push({
                 name: this.props.contract,
-                params: [contractParams]
+                params: contractParams ? [contractParams] : []
             });
         }
 
@@ -122,8 +122,8 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonState & ITxButt
             page: this.props.page ? {
                 name: this.props.page,
                 section: this.props.section,
-                params: pageParams
-            } : null,
+                params: pageParams || {}
+            } : undefined,
             errorRedirects: errorRedirects
         });
     }
@@ -150,4 +150,4 @@ const mapDispatchToProps = {
     buttonInteraction
 };
 
-export default connect<ITxButtonState, ITxButtonDispatch, ITxButtonProps>(mapStateToProps, mapDispatchToProps)(TxButton);
+export default connect<ITxButtonState, ITxButtonDispatch, ITxButtonProps, IRootState>(mapStateToProps, mapDispatchToProps)(TxButton);

@@ -24,7 +24,7 @@ import { State } from '../reducer';
 import { authorize } from '../actions';
 import { Reducer } from 'modules';
 
-const authorizeHandler: Reducer<typeof authorize, State> = (state, payload) => ({
+const authorizeHandler: Reducer<typeof authorize, State> = (state, payload): State => ({
     ...state,
     privateKey: payload
 });

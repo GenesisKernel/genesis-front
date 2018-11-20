@@ -26,7 +26,7 @@ import { updateSettings } from 'modules/auth/actions';
 import TxMenu from 'components/Main/TxMenu';
 
 const mapStateToProps = (state: IRootState) => ({
-    maxSum: state.auth.session && state.auth.session.wallet.settings && state.auth.session.wallet.settings.maxSum
+    maxSum: state.auth.session.wallet && state.auth.session.wallet.settings && state.auth.session.wallet.settings.maxSum
 });
 
 export default connect(mapStateToProps, {

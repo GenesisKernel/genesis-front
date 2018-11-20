@@ -29,7 +29,6 @@ const state: IRootState = {
         isAuthenticated: true,
         isLoggingIn: false,
         isCreatingWallet: false,
-        createWalletError: '',
         isImportingWallet: false,
         importWalletError: '',
         id: '4158839290248807330',

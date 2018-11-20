@@ -31,13 +31,13 @@ const unsubscribeEpic: Epic = (action$, store) => action$.ofAction(unsubscribe.s
             sub.instance.unsubscribe();
             return unsubscribe.done({
                 params: action.payload,
-                result: null
+                result: undefined
             });
         }
         else {
             return unsubscribe.failed({
                 params: action.payload,
-                error: null
+                error: undefined
             });
         }
     })

@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 
@@ -37,7 +37,7 @@ export interface IDropdownToolButtonProps {
 }
 
 const DropdownToolButton: React.SFC<IDropdownToolButtonProps> = props => (
-    <li className={classNames({ disabled: props.disabled }, props.className)} style={{ float: props.right ? 'right' : null }}>
+    <li className={classNames({ disabled: props.disabled }, props.className)} style={{ float: props.right ? 'right' : 'none' }}>
         <DropdownButton
             align={props.right ? 'right' : 'left'}
             width={props.width || 200}

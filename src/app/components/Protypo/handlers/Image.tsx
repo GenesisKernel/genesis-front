@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import * as propTypes from 'prop-types';
+import React from 'react';
+import propTypes from 'prop-types';
 
 import Protypo from '../Protypo';
 import StyledComponent from './StyledComponent';
@@ -37,11 +37,13 @@ interface IImageContext {
     protypo: Protypo;
 }
 
-const Image: React.SFC<IImageProps> = (props, context: IImageContext) => {
-    return (
-        <img className={[props.class, props.className].join(' ')} src={context.protypo.resolveData(props.src)} alt={props.alt} />
-    );
-};
+const Image: React.SFC<IImageProps> = (props, context: IImageContext) => (
+    <img
+        className={[props.class, props.className].join(' ')}
+        src={props.src ? context.protypo.resolveData(props.src) : ''}
+        alt={props.alt}
+    />
+);
 
 Image.contextTypes = {
     protypo: propTypes.object.isRequired

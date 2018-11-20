@@ -53,7 +53,7 @@ export const required = new Validator({
         }
 
         switch (type) {
-            case 'string': return value && !!value.length;
+            case 'string': return !!(value && !!value.length);
             case 'undefined': return false;
             default: throw new Error(`Unrecognized value type "${typeof value}"`);
         }
@@ -113,7 +113,7 @@ export const password = new Validator({
         }
 
         switch (type) {
-            case 'string': return value && value.length >= minLength && value.length <= maxLength;
+            case 'string': return !!(value && value.length >= minLength && value.length <= maxLength);
             case 'undefined': return false;
             default: throw new Error(`Unrecognized value type "${typeof value}"`);
         }

@@ -23,19 +23,20 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import { IWallet } from 'genesis/auth';
+import { IWalletData } from 'genesis/api';
 import QRCode from 'qrcode.react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 import Modal from '../';
 
 export interface ICopyWalletModalParams {
-    wallet: IWallet;
+    wallet: IWalletData;
 }
 
 class CopyWalletModal extends Modal<ICopyWalletModalParams, void> {
     formatKey = (key: string) => {
-        return key.match(/.{1,2}/g).join(' ');
+        const match = key.match(/.{1,2}/g);
+        return match ? match.join(' ') : '';
     }
 
     getCopyPayload = () => {

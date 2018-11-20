@@ -166,7 +166,7 @@ interface ICentrifuge {
 
     on(event: 'connect', callback: (context?: { client: string, transport: TCentrifugeTransport, latency: number }) => void): void;
     on(event: 'disconnect', callback: (context?: { reason: string, reconnect: boolean }) => void): void;
-    on(event: 'error', callback: (error?: { message: { method: string, error: string, advice: string } }) => void): void;
+    on(event: 'error', callback: (error: { message: { method: string, error: string, advice: string } }) => void): void;
 }
 
 declare module 'centrifuge' {

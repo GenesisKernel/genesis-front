@@ -51,7 +51,8 @@ const makeTable = (poly: Long) => {
 const makeCRC = function (table: Long[], value: number[]) {
     var crc = Long.MAX_UNSIGNED_VALUE;
     for (let i = 0; i < value.length; i++) {
-        const lookup = table[crc.xor(value[i]).and(LONG_255).toString()];
+        const index = Number(crc.xor(value[i]).and(LONG_255).toString());
+        const lookup = table[index];
         crc = crc.shiftRightUnsigned(8).xor(lookup);
     }
     return crc.xor(Long.MAX_UNSIGNED_VALUE);

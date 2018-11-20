@@ -24,7 +24,8 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import { render } from 'react-dom';
-import store, { history } from 'store';
+import { PersistGate } from 'redux-persist/integration/react';
+import store, { persistor, history } from 'store';
 
 import 'jspolyfill-array.prototype.find';
 import 'font-awesome/css/font-awesome.css';
@@ -38,9 +39,11 @@ const TARGET_ROOT = document.querySelector('#root');
 
 render(
     <Provider store={store}>
-        <ConnectedRouter history={history}>
-            <App />
-        </ConnectedRouter>
+        <PersistGate loading={null} persistor={persistor}>
+            <ConnectedRouter history={history}>
+                <App />
+            </ConnectedRouter>
+        </PersistGate>
     </Provider>,
     TARGET_ROOT
 );

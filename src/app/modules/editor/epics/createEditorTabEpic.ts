@@ -44,7 +44,7 @@ const createEditorTabEpic: Epic = (action$, store) => action$.ofAction(createEdi
                     params: action.payload,
                     result: {
                         id,
-                        name: null,
+                        name: 'NewContract',
                         value: 'contract ... {\n    data {\n\n    }\n    conditions {\n\n    }\n    action {\n\n    }\n}'
                     }
                 });

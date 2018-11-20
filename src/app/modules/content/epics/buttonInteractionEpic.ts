@@ -70,7 +70,7 @@ const buttonInteractionEpic: Epic = (action$, store, { api, routerService }) => 
                 })),
                 action$.pipe(
                     filter(l => isType(l, txExec.done) || isType(l, txExec.failed)),
-                    filter<ReturnType<typeof txExec.done | typeof txExec.failed>>(l => action.payload.uuid === l.payload.params.uuid),
+                    filter((l: any) => action.payload.uuid === l.payload.params.uuid),
                     take(1),
                     flatMap(result => {
                         if (isType(result, txExec.done)) {

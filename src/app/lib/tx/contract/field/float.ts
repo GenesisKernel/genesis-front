@@ -23,7 +23,7 @@
 import IField from './';
 
 class Float implements IField<string | number, number> {
-    private _value: number;
+    private _value: number = 0;
 
     set(value: string | number) {
         if ('number' === typeof value) {

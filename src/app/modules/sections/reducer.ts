@@ -31,8 +31,6 @@ import sectionsInitHandler from './reducers/sectionsInitHandler';
 import menuPopHandler from './reducers/menuPopHandler';
 import menuPushHandler from './reducers/menuPushHandler';
 import navigationToggleHandler from './reducers/navigationToggleHandler';
-import renderLegacyPageDoneHandler from './reducers/renderLegacyPageDoneHandler';
-import renderLegacyPageHandler from './reducers/renderLegacyPageHandler';
 import renderPageDoneHandler from './reducers/renderPageDoneHandler';
 import renderPageFailedHandler from './reducers/renderPageFailedHandler';
 import renderPageHandler from './reducers/renderPageHandler';
@@ -99,8 +97,6 @@ export default reducerWithInitialState(initialState)
     .case(actions.menuPop, menuPopHandler)
     .case(actions.menuPush, menuPushHandler)
     .case(actions.navigationToggle, navigationToggleHandler)
-    .case(actions.renderLegacyPage.done, renderLegacyPageDoneHandler)
-    .case(actions.renderLegacyPage.started, renderLegacyPageHandler)
     .case(actions.renderPage.done, renderPageDoneHandler)
     .case(actions.renderPage.failed, renderPageFailedHandler)
     .case(actions.renderPage.started, renderPageHandler)

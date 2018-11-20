@@ -47,7 +47,7 @@ interface IValidatedContractFormDispatchProps {
 }
 
 class ValidatedContractForm extends React.Component<IValidatedContractFormProps & IValidatedContractFormStateProps & IValidatedContractFormDispatchProps> {
-    private _uuid: string = null;
+    private _uuid: string = '';
 
     componentWillReceiveProps(props: IValidatedContractFormProps & IValidatedContractFormStateProps & IValidatedContractFormDispatchProps) {
         const oldTransaction = this.props.transactions.get(this._uuid);
@@ -70,7 +70,7 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
             this.props.contractParams(payload) :
             this.props.contractParams;
 
-        if (null === contractParams) {
+        if (null === contractParams || !this.props.contract) {
             return;
         }
 
@@ -79,7 +79,7 @@ class ValidatedContractForm extends React.Component<IValidatedContractFormProps 
             silent: this.props.silent,
             contracts: [{
                 name: this.props.contract,
-                params: [contractParams]
+                params: contractParams ? [contractParams] : []
             }]
         });
     }
@@ -104,4 +104,4 @@ const mapDispatchToProps = {
     txCall
 };
 
-export default connect<IValidatedContractFormStateProps, IValidatedContractFormDispatchProps, IValidatedContractFormProps>(mapStateToProps, mapDispatchToProps)(ValidatedContractForm);
+export default connect<IValidatedContractFormStateProps, IValidatedContractFormDispatchProps, IValidatedContractFormProps, IRootState>(mapStateToProps, mapDispatchToProps)(ValidatedContractForm);

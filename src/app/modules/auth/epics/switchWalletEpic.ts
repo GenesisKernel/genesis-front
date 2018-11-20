@@ -27,16 +27,16 @@ import { of } from 'rxjs';
 
 const switchWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(switchWallet).pipe(
     flatMap(action => {
-        const wallet = store.value.storage.wallets.find(l => l.id === store.value.auth.session.wallet.id);
-        const walletData = store.value.auth.wallets.find(l => l.id === store.value.auth.session.wallet.id);
-        const access = walletData.access.find(l => l.ecosystem === action.payload.ecosystem);
+        const wallet = store.value.storage.wallets.find(l => l.id === store.value.auth.session.wallet!.id)!;
+        const walletData = store.value.auth.wallets.find(l => l.id === store.value.auth.session.wallet!.id)!;
+        const access = walletData!.access.find(l => l.ecosystem === action.payload.ecosystem)!;
 
         return of(
-            logout.started(null),
+            logout(),
             selectWallet({
                 wallet,
                 access,
-                role: action.payload.role ? access.roles.find(l => l.id === action.payload.role) : null
+                role: access.roles.find(l => l.id === action.payload.role)
             })
         );
     })

@@ -101,13 +101,13 @@ const MenuItem: React.SFC<IMenuItemProps> = (props, context: IMenuItemContext) =
     return (
         <StyledMenuItem className={classes}>
             <PageLink
-                page={props.page}
+                page={props.page || ''}
                 section={context.protypo.props.section}
-                params={context.protypo.resolveParams(props.params)}
-                from={{
+                params={props.params ? context.protypo.resolveParams(props.params) : {}}
+                from={context.protypo.props.menu ? {
                     type: 'MENU',
                     name: context.protypo.props.menu
-                }}
+                } : undefined}
             >
                 <span className="link-active-decorator" />
                 <span className="link-body">

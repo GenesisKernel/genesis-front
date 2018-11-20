@@ -20,35 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { navigate } from 'modules/engine/actions';
+import { push } from 'connected-react-router';
 
 import Welcome from 'components/Auth/Welcome';
-
-export interface IWelcomeContainerProps {
-
-}
-
-interface IWelcomeContainerState {
-
-}
-
-interface IWelcomeContainerDispatch {
-    onConfirm: () => void;
-}
 
 const mapStateToProps = (state: IRootState) => ({
 
 });
 
-const mapDispatchToProps = {
-    onConfirm: () => navigate('/wallet')
-};
-
-const WelcomeContainer: React.SFC<IWelcomeContainerProps & IWelcomeContainerState & IWelcomeContainerDispatch> = props => (
-    <Welcome {...props} />
-);
-
-export default connect<IWelcomeContainerState, IWelcomeContainerDispatch, IWelcomeContainerProps>(mapStateToProps, mapDispatchToProps)(WelcomeContainer);
+export default connect(mapStateToProps, {
+    onConfirm: () => push('/wallet')
+})(Welcome);

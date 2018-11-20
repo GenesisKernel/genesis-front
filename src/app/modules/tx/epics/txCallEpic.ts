@@ -30,7 +30,7 @@ import { flatMap, take } from 'rxjs/operators';
 const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall).pipe(
     // Ask for password if there is no privateKey
     flatMap(action => iif(
-        () => keyring.validatePrivateKey(store.value.auth.privateKey),
+        () => 'privateKey' in store.value.auth && keyring.validatePrivateKey(store.value.auth.privateKey!),
         of(txExec.started(action.payload)),
         merge(
             of(txAuthorize.started({})),

@@ -50,7 +50,7 @@ import CopyWalletModal from './Auth/CopyWalletModal';
 import RegisterModal from './Auth/RegisterModal';
 import RolePickerModal from 'containers/Modal/RolePickerModal';
 
-const MODAL_COMPONENTS = {
+const MODAL_COMPONENTS: { [name: string]: React.ComponentClass<any> } = {
     'AUTHORIZE': AuthorizeModal,
     'AUTH_ERROR': AuthErrorModal,
     'AUTH_REMOVE_WALLET': AuthRemoveWalletModal,

@@ -34,7 +34,6 @@ const renderPageHandler: Reducer<typeof renderPage.started, State> = (state, pay
             ...upsertSectionPage(state.sections[payload.section], {
                 name: payload.name,
                 status: 'PENDING',
-                legacy: false,
                 params: payload.params,
                 location: payload.location
             }),

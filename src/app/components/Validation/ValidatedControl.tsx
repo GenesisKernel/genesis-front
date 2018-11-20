@@ -37,6 +37,10 @@ interface IValidatedControlState {
 }
 
 export default class ValidatedControl extends React.Component<IValidatedControlProps, IValidatedControlState> implements IValidatedControl {
+    static contextTypes = {
+        form: propTypes.instanceOf(ValidatedForm)
+    };
+
     constructor(props: IValidatedControlProps) {
         super(props);
 
@@ -118,7 +122,3 @@ export default class ValidatedControl extends React.Component<IValidatedControlP
         );
     }
 }
-
-(ValidatedControl as React.ComponentClass).contextTypes = {
-    form: propTypes.instanceOf(ValidatedForm)
-};

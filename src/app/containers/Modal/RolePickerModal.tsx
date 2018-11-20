@@ -33,15 +33,16 @@ export interface IRolePickerModalProps {
     ecosystem: string;
 }
 
+// TODO: refactoring
 const mapStateToProps = (state: IRootState, props: IModalProps<IRolePickerModalProps, void>) => ({
     ...props,
     params: {
-        walletID: state.auth.session.wallet.id,
+        walletID: state.auth.session.wallet!.id,
         ecosystem: props.params.ecosystem,
         ecosystemName: state.auth.wallets
-            .find(w => w.id === state.auth.session.wallet.id).access.find(a => a.ecosystem === props.params.ecosystem).name,
+            .find(w => w.id === state.auth.session.wallet!.id)!.access.find(a => a.ecosystem === props.params.ecosystem)!.name,
         roles: state.auth.wallets
-            .find(w => w.id === state.auth.session.wallet.id).access.find(a => a.ecosystem === props.params.ecosystem).roles
+            .find(w => w.id === state.auth.session.wallet!.id)!.access.find(a => a.ecosystem === props.params.ecosystem)!.roles
     }
 });
 
@@ -51,7 +52,7 @@ export default connect(mapStateToProps, {
 
 }, (state, dispatch: any, props) => ({
     ...state,
-    onSwitchWallet: (role: string) => {
+    onSwitchWallet: (role?: string) => {
         dispatch.modalClose({
             reason: 'CLOSE',
             data: null

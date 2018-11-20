@@ -28,9 +28,9 @@ import { timer } from 'rxjs';
 const authorizeEpic: Epic = (action$, store) => action$.ofAction(authorize).pipe(
     switchMap(action =>
         timer(60000 * 60).pipe(
-            map(() => {
-                return deauthorize(null);
-            })
+            map(() =>
+                deauthorize()
+            )
         )
     ),
     takeUntil(action$.ofAction(authorize))

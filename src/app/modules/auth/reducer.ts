@@ -24,16 +24,8 @@ import * as actions from './actions';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { ISession } from 'genesis/auth';
 import { IWalletData } from 'genesis/api';
-import loginHandler from './reducers/loginHandler';
 import loginDoneHandler from './reducers/loginDoneHandler';
-import loginFailedHandler from './reducers/loginFailedHandler';
-import logoutDoneHandler from './reducers/logoutDoneHandler';
-import createWalletHandler from './reducers/createWalletHandler';
-import createWalletDoneHandler from './reducers/createWalletDoneHandler';
-import createWalletFailedHandler from './reducers/createWalletFailedHandler';
-import importWalletHandler from './reducers/importWalletHandler';
-import importWalletDoneHandler from './reducers/importWalletDoneHandler';
-import importWalletFailedHandler from './reducers/importWalletFailedHandler';
+import logoutHandler from './reducers/logoutHandler';
 import importSeedDoneHandler from './reducers/importSeedDoneHandler';
 import selectWalletHandler from './reducers/selectWalletHandler';
 import authorizeHandler from './reducers/authorizeHandler';
@@ -53,15 +45,10 @@ export type State = {
     readonly seedConfirm: string;
     readonly isAuthenticated: boolean;
     readonly isAcquired: boolean;
-    readonly isLoggingIn: boolean;
-    readonly isCreatingWallet: boolean;
-    readonly createWalletError: string;
-    readonly isImportingWallet: boolean;
-    readonly importWalletError: string;
-    readonly defaultWallet: string;
+    readonly defaultWallet?: string;
     readonly session: ISession;
     readonly wallets: IWalletData[];
-    readonly privateKey: string;
+    readonly privateKey?: string;
 };
 
 export const initialState: State = {
@@ -69,30 +56,19 @@ export const initialState: State = {
     seedConfirm: '',
     isAuthenticated: false,
     isAcquired: false,
-    isLoggingIn: false,
-    isCreatingWallet: false,
-    createWalletError: null,
-    isImportingWallet: false,
-    importWalletError: null,
-    session: null,
-    defaultWallet: null,
-    privateKey: null,
+    session: {
+        apiHost: 'http://127.0.0.1:7079'
+    },
+    defaultWallet: undefined,
+    privateKey: undefined,
     wallets: []
 };
 
 export default reducerWithInitialState<State>(initialState)
-    .case(actions.login.started, loginHandler)
     .case(actions.login.done, loginDoneHandler)
-    .case(actions.login.failed, loginFailedHandler)
-    .case(actions.logout.done, logoutDoneHandler)
+    .case(actions.logout, logoutHandler)
     .case(actions.acquireSession.started, acquireSessionHandler)
     .case(actions.acquireSession.done, acquireSessionDoneHandler)
-    .case(actions.createWallet.started, createWalletHandler)
-    .case(actions.createWallet.done, createWalletDoneHandler)
-    .case(actions.createWallet.failed, createWalletFailedHandler)
-    .case(actions.importWallet.started, importWalletHandler)
-    .case(actions.importWallet.done, importWalletDoneHandler)
-    .case(actions.importWallet.failed, importWalletFailedHandler)
     .case(actions.importSeed.done, importSeedDoneHandler)
     .case(actions.importSeedConfirmation.done, importSeedConfirmationDoneHandler)
     .case(actions.selectWallet, selectWalletHandler)

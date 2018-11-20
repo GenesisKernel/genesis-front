@@ -36,7 +36,7 @@ export interface IWalletButtonProps {
     notifications: INotificationsMessage[];
     onCopy: () => void;
     onRemove: () => void;
-    onSelect: (params: { access: IKeyInfo, role: IRoleInfo }) => void;
+    onSelect: (params: { access: IKeyInfo, role?: IRoleInfo }) => void;
     onRegister?: () => void;
 }
 
@@ -91,7 +91,7 @@ const WalletButton: React.SFC<IWalletButtonProps> = (props) => (
                                     <span>
                                         <FormattedMessage id="auth.login.as" defaultMessage="Login with role" />:
                                     </span>
-                                    <RoleButton className="wallet-btn" badge={getNotificationsCount(props.notifications, 0, access.ecosystem)} onClick={() => props.onSelect({ access, role: null })}>
+                                    <RoleButton className="wallet-btn" badge={getNotificationsCount(props.notifications, 0, access.ecosystem)} onClick={() => props.onSelect({ access })}>
                                         <FormattedMessage id="auth.role.guest" defaultMessage="Guest" />
                                     </RoleButton>
                                     {access.roles.map(role => (

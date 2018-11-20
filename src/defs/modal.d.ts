@@ -64,7 +64,7 @@ declare module 'genesis/modal' {
     interface IModal {
         id: string;
         type: string;
-        result: IModalResult;
+        result?: IModalResult;
         params: {
             [key: string]: any;
         }

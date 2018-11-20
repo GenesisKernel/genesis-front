@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import * as propTypes from 'prop-types';
+import React from 'react';
+import propTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 
 import ValidatedForm from './ValidatedForm';
@@ -43,7 +43,7 @@ const ValidationMessage: React.SFC<IValidationMessageProps> = (props, context: I
 
     if (context.form) {
         const value = !context.form.getState(props.for) && context.form.validate(props.for);
-        if (value && value.error) {
+        if (value && value.error && value.validator) {
             const message = props.messages && props.messages[value.validator.name];
             if (!message) {
                 result = (

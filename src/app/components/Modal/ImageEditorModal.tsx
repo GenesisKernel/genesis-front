@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button, Well } from 'react-bootstrap';
 import Cropper from 'react-cropper';
@@ -36,16 +36,20 @@ export interface IImageEditorModalProps {
 }
 
 class ImageEditorModal extends Modal<IImageEditorModalProps, string> {
-    private _cropper: Cropper = null;
+    private _cropper: Cropper | null = null;
 
     onSuccess() {
+        if (!this._cropper) {
+            return;
+        }
+
         const input = this._cropper.getCroppedCanvas();
 
         if (this.props.params.width) {
             const output = document.createElement('canvas'),
-                ctx = output.getContext('2d'),
+                ctx = output.getContext('2d')!,
                 oc = document.createElement('canvas'),
-                octx = oc.getContext('2d');
+                octx = oc.getContext('2d')!;
 
             output.width = this.props.params.width;
             output.height = this.props.params.width * input.height / input.width;

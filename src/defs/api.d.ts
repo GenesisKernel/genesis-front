@@ -199,7 +199,7 @@ declare module 'genesis/api' {
     interface IContentResponse {
         menu: string;
         tree: TProtypoElement[];
-        menutree?: TProtypoElement[];
+        menutree: TProtypoElement[];
         plainText: string;
         nodesCount: number;
     }

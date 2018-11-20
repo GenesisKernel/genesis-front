@@ -20,11 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { Validator } from './Validators';
-import * as propTypes from 'prop-types';
+import propTypes from 'prop-types';
 import { IMapEditorEvent } from 'genesis/geo';
-import { IMapEditorModalProps } from 'components/Modal/MapEditorModal';
 
 import ValidatedForm, { IValidatedControl } from './ValidatedForm';
 
@@ -36,7 +35,7 @@ export interface IValidatedMapProps {
     center?: { lat: number, lng: number };
     zoom?: number;
     validators?: Validator[];
-    openEditor: (params: IMapEditorModalProps) => void;
+    openEditor: () => void;
 }
 
 interface IValidatedMapState {
@@ -48,6 +47,10 @@ export default class ValidatedMap extends React.Component<IValidatedMapProps, IV
         coords: [],
         address: '',
         area: 0
+    };
+
+    static contextTypes = {
+        form: propTypes.instanceOf(ValidatedForm)
     };
 
     constructor(props: IValidatedMapProps) {
@@ -94,22 +97,13 @@ export default class ValidatedMap extends React.Component<IValidatedMapProps, IV
         });
     }
 
-    openEditor = () => {
-        this.props.openEditor({
-            mapType: this.props.mapType,
-            coords: this.props.value && this.props.value.coords,
-            center: this.props.center,
-            zoom: this.props.zoom
-        });
-    }
-
     render() {
         return (
             <div className="input-group">
                 <input type="text" className="form-control" value={this.state.address} onChange={this.onChange} disabled={!this.props.value} />
 
                 <div className="group-span-filestyle input-group-btn">
-                    <button className="btn btn-default" style={{ border: 'solid 1px #dde6e9' }} type="button" onClick={this.openEditor}>
+                    <button className="btn btn-default" style={{ border: 'solid 1px #dde6e9' }} type="button" onClick={this.props.openEditor}>
                         <span className="text-muted icon-span-filestyle glyphicon fa fa-map-marker" />
                         <span className="buttonText" />
                     </button>
@@ -118,7 +112,3 @@ export default class ValidatedMap extends React.Component<IValidatedMapProps, IV
         );
     }
 }
-
-(ValidatedMap as React.ComponentClass).contextTypes = {
-    form: propTypes.instanceOf(ValidatedForm)
-};

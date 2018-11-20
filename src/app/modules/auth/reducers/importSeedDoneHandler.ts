@@ -24,7 +24,7 @@ import { State } from '../reducer';
 import { importSeed } from '../actions';
 import { Reducer } from 'modules';
 
-const importSeedDoneHandler: Reducer<typeof importSeed.done, State> = (state, payload) => ({
+const importSeedDoneHandler: Reducer<typeof importSeed.done, State> = (state, payload): State => ({
     ...state,
     seed: payload.result
 });

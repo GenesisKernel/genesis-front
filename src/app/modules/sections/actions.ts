@@ -37,7 +37,6 @@ export const menuPush = actionCreator<{ section: string, menu: IMenu }>('MENU_PU
 export const navigatePage = actionCreator.async<{ name?: string, section?: string, force?: boolean, params: { [key: string]: any } }, { section: string }, undefined>('NAVIGATE_PAGE');
 export const navigationToggle = actionCreator('NAVIGATION_TOGGLE');
 export const renderPage = actionCreator.async<{ section: string, name: string, params: { [key: string]: string }, location: Location }, TProtypoElement[], string>('RENDER_PAGE');
-export const renderLegacyPage = actionCreator.async<{ section: string, name: string, menu: string, params?: { [key: string]: any } }, { menu: IMenu }>('RENDER_LEGACY_PAGE');
 export const reloadPage = actionCreator.async<{}, { params: { [key: string]: any }, menu: IMenu, page: IPage }, string>('RELOAD_PAGE');
 export const popPage = actionCreator<{ section: string, name: string, location: Location }>('POP_PAGE');
 export const sectionsInit = actionCreator<{ mainSection: string, sections: { [name: string]: ISection } }>('SECTIONS_INIT');

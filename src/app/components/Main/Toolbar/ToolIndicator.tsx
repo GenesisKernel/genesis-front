@@ -34,7 +34,7 @@ export interface IToolIndicatorProps {
 }
 
 const ToolIndicator: React.SFC<IToolIndicatorProps> = props => (
-    <li className={props.className} style={{ float: props.right ? 'right' : null }}>
+    <li className={props.className} style={{ float: props.right ? 'right' : 'none' }}>
         <Tooltip title={props.title} body={props.titleDesc}>
             <div className="tool-body">
                 <em className={`tool-icon ${props.icon}`} />

@@ -22,10 +22,11 @@
 
 import { Epic } from 'modules';
 import { acquireSession } from '../actions';
-import { forkJoin, of, iif, from, defer } from 'rxjs';
-import { flatMap, map, catchError, filter, toArray } from 'rxjs/operators';
+import { forkJoin, of, from } from 'rxjs';
+import { flatMap, catchError, filter, toArray, map } from 'rxjs/operators';
 import { ISection } from 'genesis/content';
 import { sectionsInit } from 'modules/sections/actions';
+import { fetchNotifications, ecosystemInit } from 'modules/content/actions';
 
 enum RemoteSectionStatus {
     Removed = '0',
@@ -46,21 +47,12 @@ const acquireSessionEpic: Epic = (action$, store, { api }) => action$.ofAction(a
                 filter(section => RemoteSectionStatus.Removed !== section.status),
                 toArray()
             ),
-
-            // Resolve default page for the role
-            iif<string, string>(
-                () => !!(action.payload.role && action.payload.role.id),
-                defer(() => from(client.getRow({
-                    table: 'roles',
-                    id: action.payload.role.id,
-                })).pipe(
-                    map(row => row.value.default_page),
-                    catchError(e => of(null))
-                )),
-                of(null)
+            from(client.getParam({ name: 'stylesheet' })).pipe(
+                map(result => result.value),
+                catchError(e => of(''))
             )
         ).pipe(
-            flatMap(([sections, defaultPage]) => {
+            flatMap(([sections, stylesheet]) => {
                 const sectionsResult: { [name: string]: ISection } = {};
                 const mainSection = sections.find(l => RemoteSectionStatus.Main === l.status);
                 sections.forEach(section => {
@@ -69,7 +61,7 @@ const acquireSessionEpic: Epic = (action$, store, { api }) => action$.ofAction(a
                         pending: false,
                         name: section.urlname,
                         title: section.title,
-                        defaultPage: (RemoteSectionStatus.Main === section.status && defaultPage) || section.page,
+                        defaultPage: section.page,
                         breadcrumbs: [],
                         menus: [],
                         pages: []
@@ -81,6 +73,10 @@ const acquireSessionEpic: Epic = (action$, store, { api }) => action$.ofAction(a
                         mainSection: mainSection ? mainSection.urlname : sections[0].urlname,
                         sections: sectionsResult
                     }),
+                    ecosystemInit({
+                        stylesheet
+                    }),
+                    fetchNotifications.started(undefined),
                     acquireSession.done({
                         params: action.payload,
                         result: true

@@ -43,12 +43,12 @@ const LinkPage: React.SFC<ILinkPageProps> = (props, context: ILinkPageContext) =
     <PageLink
         className={[props.class, props.className].join(' ')}
         section={context.protypo.props.section}
-        page={props.page}
-        params={context.protypo.resolveParams(props.pageparams)}
-        from={{
+        page={props.page || ''}
+        params={props.pageparams ? context.protypo.resolveParams(props.pageparams) : {}}
+        from={context.protypo.props.page ? {
             type: 'PAGE',
             name: context.protypo.props.page
-        }}
+        } : undefined}
     >
         {props.children}
     </PageLink>

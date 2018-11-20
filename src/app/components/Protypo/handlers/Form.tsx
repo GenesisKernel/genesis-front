@@ -32,7 +32,7 @@ export interface IFormProps {
 }
 
 interface IFormState {
-    form: ValidatedForm;
+    form?: ValidatedForm;
     conditionMap: {
         [id: string]: TConditionMap;
     };
@@ -41,19 +41,15 @@ interface IFormState {
 class Form extends React.Component<IFormProps, IFormState> {
     private _interactionManager = new InteractionManager();
 
+    state: IFormState = {
+        conditionMap: {}
+    };
+
     static childContextTypes = {
         form: propTypes.instanceOf(ValidatedForm),
         interactionManager: propTypes.instanceOf(InteractionManager),
         conditionMap: propTypes.object
     };
-
-    constructor(props: IFormProps) {
-        super(props);
-        this.state = {
-            form: null,
-            conditionMap: {}
-        };
-    }
 
     getChildContext() {
         return {

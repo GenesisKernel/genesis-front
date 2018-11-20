@@ -45,7 +45,7 @@ const Input: React.SFC<IInputProps> = (props) => {
     const compiledValidators: Validator[] = [];
     const className = [props.class, props.className].join(' ');
     _.forEach(props.validate, (value, name) => {
-        const validator = Validation.validators[name];
+        const validator = (Validation.validators as any)[name];
         if (validator) {
             if (validator instanceof Validator) {
                 compiledValidators.push(validator);
@@ -62,7 +62,7 @@ const Input: React.SFC<IInputProps> = (props) => {
             return (
                 <Validation.components.ValidatedFile
                     disabled={!!props.disabled}
-                    name={props.name}
+                    name={props.name || ''}
                     placeholder={props.placeholder}
                     validators={compiledValidators}
                 />
@@ -73,7 +73,7 @@ const Input: React.SFC<IInputProps> = (props) => {
                 <Validation.components.ValidatedCheckbox
                     className={className}
                     disabled={!!props.disabled}
-                    name={props.name}
+                    name={props.name || ''}
                     title={props.placeholder}
                     defaultChecked={'true' === props.value}
                     validators={compiledValidators}
@@ -85,7 +85,7 @@ const Input: React.SFC<IInputProps> = (props) => {
                 <Validation.components.ValidatedTextarea
                     className={className}
                     disabled={!!props.disabled}
-                    name={props.name}
+                    name={props.name || ''}
                     placeholder={props.placeholder}
                     defaultValue={props.value}
                     validators={compiledValidators}
@@ -97,7 +97,7 @@ const Input: React.SFC<IInputProps> = (props) => {
                 <Validation.components.ValidatedControl
                     className={className}
                     disabled={!!props.disabled}
-                    name={props.name}
+                    name={props.name || ''}
                     placeholder={props.placeholder}
                     type={props.type}
                     defaultValue={props.value}

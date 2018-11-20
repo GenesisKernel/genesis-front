@@ -31,7 +31,7 @@ const modalShowHandler: Reducer<typeof modalShow, State> = (state, payload) => (
     params: {
         ...payload.params
     },
-    result: null
+    result: undefined
 });
 
 export default modalShowHandler;

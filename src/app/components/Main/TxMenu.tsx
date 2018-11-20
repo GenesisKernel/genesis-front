@@ -29,7 +29,7 @@ import Validation from '../Validation';
 import Button from 'components/Button';
 
 export interface ITxMenuProps {
-    maxSum: string;
+    maxSum?: string;
     onEdit: (value: string) => any;
 }
 
@@ -64,7 +64,7 @@ const TxMenu: React.SFC<ITxMenuProps> = (props, context: ITxMenuContext) => (
                         </Validation.components.ValidatedFormGroup>
                         <Row>
                             <Col xs={6} style={{ paddingRight: 5 }}>
-                                <Button onClick={() => props.onEdit(null)} className="btn btn-block btn-default">
+                                <Button onClick={() => props.onEdit('')} className="btn btn-block btn-default">
                                     <FormattedMessage id="clear" defaultMessage="Clear" />
                                 </Button>
                             </Col>

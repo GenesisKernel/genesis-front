@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { FormGroup, FormGroupProps } from 'react-bootstrap';
-import * as propTypes from 'prop-types';
+import propTypes from 'prop-types';
 
 import ValidatedForm from './ValidatedForm';
 
@@ -31,12 +31,16 @@ interface IValidatedFormGroupProps extends FormGroupProps {
 }
 
 export default class ValidatedFormGroup extends React.Component<IValidatedFormGroupProps> {
+    static contextTypes = {
+        form: propTypes.instanceOf(ValidatedForm)
+    };
+
     render() {
         const valid = (this as any).context.form ? ((this as any).context.form as ValidatedForm).getState(this.props.for) : true;
         return (
             <FormGroup
                 className={this.props.className}
-                validationState={valid ? null : 'error'}
+                validationState={valid ? 'success' : 'error'}
                 bsClass={this.props.bsClass}
                 bsSize={this.props.bsSize}
                 controlId={this.props.controlId}
@@ -46,7 +50,3 @@ export default class ValidatedFormGroup extends React.Component<IValidatedFormGr
         );
     }
 }
-
-(ValidatedFormGroup as React.ComponentClass).contextTypes = {
-    form: propTypes.instanceOf(ValidatedForm)
-};

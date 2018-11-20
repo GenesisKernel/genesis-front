@@ -29,20 +29,20 @@ const executable = argv.shift();
 if (!argv[0] || argv[0] && argv[0] !== '.') {
     argv.unshift('');
 }
-argv.unshift(executable);
+argv.unshift(executable!);
 
 const command = commander
-    .option('-n, --full-node <url>', null, (value, stack) => {
+    .option('-n, --full-node <url>', undefined, (value, stack) => {
         stack.push(value);
         return stack;
     }, [])
     .option('-k, --private-key <key>')
     .option('-d, --dry')
-    .option('-x, --offset-x <value>', null, parseInt)
-    .option('-y, --offset-y <value>', null, parseInt)
-    .option('-s, --socket-url <url>', null)
-    .option('-u, --disable-full-nodes-sync', null)
-    .option('-e, --activation-email', null)
+    .option('-x, --offset-x <value>', undefined, parseInt)
+    .option('-y, --offset-y <value>', undefined, parseInt)
+    .option('-s, --socket-url <url>', undefined)
+    .option('-u, --disable-full-nodes-sync', undefined)
+    .option('-e, --activation-email', undefined)
     .parse(argv);
 
 const args: IInferredArguments = {

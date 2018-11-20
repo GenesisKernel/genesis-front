@@ -24,10 +24,9 @@ import { State } from '../reducer';
 import { login } from '../actions';
 import { Reducer } from 'modules';
 
-const loginDoneHandler: Reducer<typeof login.done, State> = (state, payload) => ({
+const loginDoneHandler: Reducer<typeof login.done, State> = (state, payload): State => ({
     ...state,
     isAuthenticated: true,
-    isLoggingIn: false,
     session: payload.result.session,
     privateKey: payload.result.privateKey
 });

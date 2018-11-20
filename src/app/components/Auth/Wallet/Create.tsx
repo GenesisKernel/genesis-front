@@ -47,7 +47,7 @@ interface ICreateState {
 }
 
 class Create extends React.Component<ICreateProps & InjectedIntlProps, ICreateState> {
-    private _inputFile: HTMLInputElement;
+    private _inputFile: HTMLInputElement | null = null;
 
     constructor(props: ICreateProps & InjectedIntlProps) {
         super(props);
@@ -59,7 +59,9 @@ class Create extends React.Component<ICreateProps & InjectedIntlProps, ICreateSt
     }
 
     componentWillReceiveProps(props: ICreateProps) {
-        this._inputFile.setAttribute('value', null);
+        if (this._inputFile) {
+            this._inputFile.setAttribute('value', '');
+        }
     }
 
     onReturn = () => {
@@ -109,15 +111,19 @@ class Create extends React.Component<ICreateProps & InjectedIntlProps, ICreateSt
     }
 
     onLoad = () => {
-        this._inputFile.click();
+        if (this._inputFile) {
+            this._inputFile.click();
+        }
     }
 
     onLoadSuccess = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (this.state.isConfirming) {
-            this.props.onImportSeedConfirmation(e.target.files[0]);
-        }
-        else {
-            this.props.onImportSeed(e.target.files[0]);
+        if (e.target.files) {
+            if (this.state.isConfirming) {
+                this.props.onImportSeedConfirmation(e.target.files[0]);
+            }
+            else {
+                this.props.onImportSeed(e.target.files[0]);
+            }
         }
     }
 
@@ -125,7 +131,7 @@ class Create extends React.Component<ICreateProps & InjectedIntlProps, ICreateSt
         return (
             <LocalizedDocumentTitle title="wallet.create" defaultTitle="Create wallet">
                 <div>
-                    <Heading returnUrl={this.state.isConfirming ? null : '/wallet'} onReturn={this.state.isConfirming ? this.onReturn : null}>
+                    <Heading returnUrl={this.state.isConfirming ? undefined : '/wallet'} onReturn={this.state.isConfirming ? this.onReturn : undefined}>
                         <FormattedMessage id="wallet.create" defaultMessage="Create wallet" />
                     </Heading>
                     <input type="file" className="hidden" onChange={this.onLoadSuccess} ref={l => this._inputFile = l} />

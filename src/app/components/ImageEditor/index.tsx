@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 
 export interface IImageEditorProps {
     active: boolean;
@@ -76,7 +76,7 @@ class ImageEditor extends React.Component<IImageEditorProps, IImateEditorState> 
     }
 
     render() {
-        return null as JSX.Element;
+        return null;
     }
 }
 

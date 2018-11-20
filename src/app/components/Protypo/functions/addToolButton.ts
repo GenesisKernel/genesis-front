@@ -34,7 +34,7 @@ const addToolButton = (context: Protypo, props: IAddToolButtonProps) => {
     context.addToolButton({
         ...props,
         section: context.props.section,
-        pageparams: context.resolveParams(props.pageparams)
+        pageparams: props.pageparams ? context.resolveParams(props.pageparams) : {}
     });
 };
 

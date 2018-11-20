@@ -33,10 +33,10 @@ export interface IRouteMatch {
     };
 }
 
-export const matchRoute = (path: string, match: string): IRouteMatch => {
+export const matchRoute = (path: string, match: string): IRouteMatch | undefined => {
     const route = new Route(path).match(match);
     if (!route) {
-        return null;
+        return undefined;
     }
 
     return {
@@ -46,13 +46,13 @@ export const matchRoute = (path: string, match: string): IRouteMatch => {
 };
 
 export const generateRoute = (path: string, params?: { [name: string]: string }) => {
-    const query = querystring.stringify(params);
+    const query = params ? querystring.stringify(params) : '';
     return `${path}${query && '?' + query}`;
 };
 
 export const navigate = (path: string, params?: { [key: string]: any }) => {
     history.push({
         pathname: path,
-        search: querystring.stringify(params)
+        search: params ? querystring.stringify(params) : ''
     });
 };

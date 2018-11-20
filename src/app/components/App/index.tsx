@@ -46,7 +46,6 @@ interface IAppProps {
     isCollapsed: boolean;
     sessionAcquired: boolean;
     securityWarningClosed: boolean;
-    switchWindow: (wnd: string) => void;
 }
 
 const ThemedApp = themed.div`
@@ -57,56 +56,48 @@ const ThemedApp = themed.div`
     }
 `;
 
-class App extends React.Component<IAppProps> {
-    componentWillReceiveProps(props: IAppProps) {
-        if (this.props.isAuthenticated !== props.isAuthenticated) {
-            props.switchWindow(props.isAuthenticated ? 'main' : 'general');
-        }
-    }
+const App: React.SFC<IAppProps> = props => {
+    const classes = classnames({
+        'wrapper': true,
+        'layout-fixed': true,
+        'aside-collapsed': props.isCollapsed,
+        'aside-toggled': !props.isCollapsed,
+        'platform-desktop': platform.select({ desktop: true }),
+        'platform-web': platform.select({ web: true }),
+        'platform-windows': platform.select({ win32: true })
+    });
 
-    render() {
-        const classes = classnames({
-            'wrapper': true,
-            'layout-fixed': true,
-            'aside-collapsed': this.props.isCollapsed,
-            'aside-toggled': !this.props.isCollapsed,
-            'platform-desktop': platform.select({ desktop: true }),
-            'platform-web': platform.select({ web: true }),
-            'platform-windows': platform.select({ win32: true })
-        });
+    return (
+        <IntlProvider locale={props.locale} defaultLocale="en-US" messages={props.localeMessages}>
+            <ThemeProvider theme={baseTheme}>
+                <ThemedApp className={classes}>
+                    <InitHook />
+                    <ModalProvider />
+                    <NotificationsProvider />
+                    {platform.select({
+                        web: !props.securityWarningClosed && (
+                            <SecurityWarning>
+                                <FormattedMessage id="general.security.warning" defaultMessage="Please use desktop version or mobile application for better security" />
+                            </SecurityWarning>
+                        )
+                    })}
 
-        return (
-            <IntlProvider locale={this.props.locale} defaultLocale="en-US" messages={this.props.localeMessages}>
-                <ThemeProvider theme={baseTheme}>
-                    <ThemedApp className={classes}>
-                        <InitHook />
-                        <ModalProvider />
-                        <NotificationsProvider />
-                        {platform.select({
-                            web: !this.props.securityWarningClosed && (
-                                <SecurityWarning>
-                                    <FormattedMessage id="general.security.warning" defaultMessage="Please use desktop version or mobile application for better security" />
-                                </SecurityWarning>
-                            )
-                        })}
-
-                        <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
-                            {!this.props.isLoaded && (
-                                <Route path="/" component={Splash} />
-                            )}
-                            {!this.props.isAuthenticated && (
-                                <Route path="/" component={Auth} />
-                            )}
-                            {!this.props.sessionAcquired && (
-                                <Route path="/" component={Splash} />
-                            )}
-                            <Route path="/" component={Main} />
-                        </AnimatedSwitch>
-                    </ThemedApp>
-                </ThemeProvider>
-            </IntlProvider>
-        );
-    }
-}
+                    <AnimatedSwitch animation={AnimatedSwitch.animations!.fade()}>
+                        {!props.isLoaded && (
+                            <Route path="/" component={Splash} />
+                        )}
+                        {!props.isAuthenticated && (
+                            <Route path="/" component={Auth} />
+                        )}
+                        {!props.sessionAcquired && (
+                            <Route path="/" component={Splash} />
+                        )}
+                        <Route path="/" component={Main} />
+                    </AnimatedSwitch>
+                </ThemedApp>
+            </ThemeProvider>
+        </IntlProvider>
+    );
+};
 
 export default App;

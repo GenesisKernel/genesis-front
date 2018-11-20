@@ -31,19 +31,19 @@ const mapStateToProps = (state: IRootState) => ({
     session: state.auth.session,
     walletEcosystems: ((state.auth.session.wallet && state.auth.wallets) ?
         state.auth.wallets.find(l =>
-            l.id === state.auth.session.wallet.id
-        ).access : []
+            l.id === state.auth.session.wallet!.id
+        )!.access : []
     ).sort((a, b) =>
         Number(a.ecosystem) - Number(b.ecosystem)
     )
 });
 
-export default connect<any, any, any>(mapStateToProps, {
-    onLogout: () => logout.started(null),
+export default connect(mapStateToProps, {
+    onLogout: logout,
     onSwitchEcosystem: (ecosystem: string, defaultRole?: boolean) => defaultRole
         ? switchWallet({
             ecosystem,
-            role: null
+            role: ''
         })
         : modalShow({
             id: 'ROLE_PICKER',
@@ -52,6 +52,6 @@ export default connect<any, any, any>(mapStateToProps, {
                 ecosystem
             }
         }),
-    onChangePassword: () => changePassword.started(null)
+    onChangePassword: () => changePassword.started(undefined)
 
 })(UserMenu);

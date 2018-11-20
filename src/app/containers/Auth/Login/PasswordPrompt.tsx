@@ -31,9 +31,7 @@ const mapStateToProps = (state: IRootState) => ({
     session: state.auth.session
 });
 
-const mapDispatchToProps = {
-    onCancel: () => logout.started(null),
+export default connect(mapStateToProps, {
+    onCancel: logout,
     onSubmit: (params: ILoginCall) => login.started(params)
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(PasswordPrompt);
+})(PasswordPrompt);

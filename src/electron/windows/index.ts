@@ -27,8 +27,8 @@ import menu from '../menu';
 import generalWindow from './general';
 import mainWindow from './main';
 
-export let window: BrowserWindow;
-export let windowName: string;
+export let window: BrowserWindow | undefined;
+export let windowName: string | undefined;
 
 const ENV = process.env.NODE_ENV || 'production';
 const PROTOCOL = process.env.HTTPS === 'true' ? 'https' : 'http';
@@ -79,8 +79,8 @@ export const spawnWindow = (name: string) => {
     });
 
     wnd.on('closed', () => {
-        window = null;
-        windowName = null;
+        window = undefined;
+        windowName = undefined;
     });
 
     window = wnd;

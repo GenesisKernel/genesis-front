@@ -23,7 +23,7 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import { IWallet } from 'genesis/auth';
+import { IWalletData } from 'genesis/api';
 
 import Modal from '../';
 import Action from 'components/Auth/Wallet/Action';
@@ -31,7 +31,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 
 export interface IRegisterModalParams {
     activationEmail: string;
-    wallet: IWallet;
+    wallet: IWalletData;
 }
 
 class RegisterModal extends Modal<IRegisterModalParams, void> {

@@ -49,17 +49,17 @@ const StyledScrollBar = styled(ScrollBar)`
 `;
 
 class ScrollView extends React.Component<IScrollViewProps> {
-    private _scrollBar: ScrollBar;
+    private _scrollBar?: ScrollBar;
 
     onMouseWheel: React.EventHandler<React.WheelEvent<ScrollBar>> = e => {
-        if (!e.deltaX) {
+        if (this._scrollBar && !e.deltaX) {
             e.preventDefault();
             const currentScrollDelta = this._scrollBar.getScrollLeft();
             this._scrollBar.scrollLeft(currentScrollDelta + (e.deltaY * 8));
         }
     }
 
-    calcValue = (...args: boolean[]) => {
+    calcValue = (...args: (boolean | undefined)[]) => {
         if (args.find(l => l === true)) {
             return Nop;
         }
@@ -78,7 +78,7 @@ class ScrollView extends React.Component<IScrollViewProps> {
             <StyledScrollBar
                 ref={(l: ScrollBar) => this._scrollBar = l}
                 className={classes}
-                onWheel={this.props.horizontalWheel && this.onMouseWheel}
+                onWheel={this.props.horizontalWheel ? this.onMouseWheel : undefined}
                 renderTrackHorizontal={this.calcValue(this.props.disableHorizontal, this.props.hideHorizontal)}
                 renderThumbHorizontal={this.calcValue(this.props.disableHorizontal, this.props.hideHorizontal)}
                 renderTrackVertical={this.calcValue(this.props.disableVertical, this.props.hideVertical)}

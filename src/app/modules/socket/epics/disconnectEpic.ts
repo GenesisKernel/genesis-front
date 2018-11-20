@@ -32,13 +32,13 @@ const disconnectEpic: Epic = (action$, store) => action$.ofAction(disconnect.sta
             socket.disconnect();
             return disconnect.done({
                 params: action.payload,
-                result: null
+                result: {}
             });
         }
         else {
             return disconnect.failed({
                 params: action.payload,
-                error: null
+                error: {}
             });
         }
     })

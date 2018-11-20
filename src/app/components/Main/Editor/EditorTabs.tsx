@@ -36,8 +36,7 @@ export const TYPE_ICONS: { [type: string]: string } = {
     contract: imgSim,
     page: imgTpl,
     menu: imgTpl,
-    block: imgTpl,
-    default: null
+    block: imgTpl
 };
 
 const StyledTabsMenu = themed.div`
@@ -72,7 +71,7 @@ const EditorTabs: React.SFC<IEditorTabsProps> = (props) => (
                             {...tab}
                             key={index}
                             active={props.tabIndex === index}
-                            icon={TYPE_ICONS[tab.type] || TYPE_ICONS.default}
+                            icon={TYPE_ICONS[tab.type]}
                             onClick={props.onChange.bind(null, index)}
                             onClose={props.onClose.bind(null, index)}
                         />
@@ -90,7 +89,7 @@ const EditorTabs: React.SFC<IEditorTabsProps> = (props) => (
                     <div>
                         <ul className="dropdown-group">
                             <li>
-                                <CloseDropdownButton onClick={props.tabs.length && props.onCloseSaved} disabled={!props.tabs.length}>
+                                <CloseDropdownButton onClick={props.onCloseSaved} disabled={0 === props.tabs.length}>
                                     <em className="icon icon-docs" />
                                     <span>
                                         <FormattedMessage id="editor.close.saved" defaultMessage="Close saved tabs" />
@@ -98,7 +97,7 @@ const EditorTabs: React.SFC<IEditorTabsProps> = (props) => (
                                 </CloseDropdownButton>
                             </li>
                             <li>
-                                <CloseDropdownButton onClick={props.tabs.length && props.onCloseAll} disabled={!props.tabs.length}>
+                                <CloseDropdownButton onClick={props.onCloseAll} disabled={0 === props.tabs.length}>
                                     <em className="icon icon-docs text-danger" />
                                     <span>
                                         <FormattedMessage id="editor.close.all" defaultMessage="Close all tabs" />
@@ -112,7 +111,7 @@ const EditorTabs: React.SFC<IEditorTabsProps> = (props) => (
                 <em className="icon-options" />
             </SystemButton>
         </StyledTabsMenu>
-    </div>
+    </div >
 );
 
 const StyledEditorTabs = themed(EditorTabs)`

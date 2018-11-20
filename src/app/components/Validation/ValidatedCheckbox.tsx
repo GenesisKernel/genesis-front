@@ -43,6 +43,10 @@ interface IValidatedCheckboxState {
 }
 
 export default class ValidatedCheckbox extends React.Component<IValidatedCheckboxProps, IValidatedCheckboxState> implements IValidatedControl {
+    static contextTypes = {
+        form: propTypes.instanceOf(ValidatedForm)
+    };
+
     constructor(props: IValidatedCheckboxProps) {
         super(props);
 
@@ -66,7 +70,7 @@ export default class ValidatedCheckbox extends React.Component<IValidatedCheckbo
     componentWillReceiveProps(props: IValidatedCheckboxProps) {
         if (this.props.checked !== props.checked) {
             this.setState({
-                checked: props.checked
+                checked: !!props.checked
             });
             ((this as any).context.form as ValidatedForm).updateState(props.name, props.checked);
         }
@@ -115,7 +119,3 @@ export default class ValidatedCheckbox extends React.Component<IValidatedCheckbo
         );
     }
 }
-
-(ValidatedCheckbox as React.ComponentClass).contextTypes = {
-    form: propTypes.instanceOf(ValidatedForm)
-};

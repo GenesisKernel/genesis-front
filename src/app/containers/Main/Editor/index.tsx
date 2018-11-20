@@ -41,7 +41,7 @@ interface IEditorContainerProps {
 interface IEditorContainerState {
     tabIndex: number;
     tabs: TEditorTab[];
-    modalResult: IModalResult;
+    modalResult?: IModalResult;
 }
 
 interface IEditorContainerDispatch {
@@ -56,7 +56,7 @@ interface IEditorContainerDispatch {
 }
 
 class EditorContainer extends React.Component<IEditorContainerProps & InjectedIntlProps & IEditorContainerState & IEditorContainerDispatch> {
-    private _pendingClose: number;
+    private _pendingClose?: number;
 
     constructor(props: IEditorContainerProps & InjectedIntlProps & IEditorContainerState & IEditorContainerDispatch) {
         super(props);
@@ -81,7 +81,7 @@ class EditorContainer extends React.Component<IEditorContainerProps & InjectedIn
                 this.props.onTabClose(this._pendingClose);
             }
 
-            this._pendingClose = null;
+            this._pendingClose = undefined;
         }
 
         if (props.open && props.name && (this.props.open !== props.open || this.props.name !== props.name)) {
@@ -152,4 +152,4 @@ const mapDispatchToProps = {
     onTabUpdate: updateEditorTab,
 };
 
-export default connect<IEditorContainerState, IEditorContainerDispatch, IEditorContainerProps>(mapStateToProps, mapDispatchToProps)(injectIntl(EditorContainer));
+export default connect<IEditorContainerState, IEditorContainerDispatch, IEditorContainerProps, IRootState>(mapStateToProps, mapDispatchToProps)(injectIntl(EditorContainer));

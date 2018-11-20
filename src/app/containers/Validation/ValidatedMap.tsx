@@ -49,13 +49,13 @@ interface IValidatedMapContainerDispatch {
     modalShow: typeof modalShow;
 }
 
-class ValidatedMapContainer extends React.Component<IValidatedMapContainerProps & IValidatedMapContainerState & IValidatedMapContainerDispatch, { result: IMapEditorEvent }> {
+class ValidatedMapContainer extends React.Component<IValidatedMapContainerProps & IValidatedMapContainerState & IValidatedMapContainerDispatch, { result?: IMapEditorEvent }> {
     private _id: string = uuid.v4();
 
     constructor(props: any) {
         super(props);
         this.state = {
-            result: null
+            result: undefined
         };
     }
 
@@ -100,4 +100,4 @@ const mapDispatchToProps = {
     modalShow: modalShow
 };
 
-export default connect<IValidatedMapContainerState, IValidatedMapContainerDispatch, IValidatedMapContainerProps>(mapStateToProps, mapDispatchToProps)(ValidatedMapContainer);
+export default connect<IValidatedMapContainerState, IValidatedMapContainerDispatch, IValidatedMapContainerProps, IRootState>(mapStateToProps, mapDispatchToProps)(ValidatedMapContainer);

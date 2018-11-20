@@ -20,17 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 
 import ValidationMessage from 'components/Validation/ValidationMessage';
 
 export interface IInputErrProps {
-    'name'?: string;
     [key: string]: string;
 }
 
 const InputErr: React.SFC<IInputErrProps> = (props) => (
-    <ValidationMessage for={props.name} messages={props} />
+    <ValidationMessage for={props.name || ''} messages={props} />
 );
 
 export default InputErr;

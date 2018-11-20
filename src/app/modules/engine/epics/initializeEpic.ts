@@ -39,7 +39,7 @@ const fullNodesFallback = ['http://127.0.0.1:7079'];
 
 const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword }) => action$.ofAction(initialize.started).pipe(
     flatMap(action => {
-        const requestUrl = platform.select({
+        const requestUrl = platform.target({
             web: urlJoin(process.env.PUBLIC_URL || location.origin, 'settings.json'),
             desktop: './settings.json'
         });
@@ -59,17 +59,17 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                         (result.fullNodes && Array.isArray(result.fullNodes) && result.fullNodes.length) ? result.fullNodes :
                             fullNodesFallback,
                     activationEmail: platform.args.activationEmail || result.activationEmail,
-                    socketUrl: platform.args.socketUrl || ((result.socketUrl && 'string' === typeof result.socketUrl) ? result.socketUrl : null),
+                    socketUrl: platform.args.socketUrl || ((result.socketUrl && 'string' === typeof result.socketUrl) ? result.socketUrl : undefined),
                     disableFullNodesSync: 'boolean' === typeof platform.args.disableFullNodesSync ? platform.args.disableFullNodesSync :
-                        ('boolean' === typeof result.disableFullNodesSync) ? result.disableFullNodesSync : null
+                        ('boolean' === typeof result.disableFullNodesSync) ? result.disableFullNodesSync : undefined
                 };
                 return config;
 
             }),
             flatMap(config => {
-                const fullNodes = config.disableFullNodesSync ? config.fullNodes : [
+                const fullNodes = config.disableFullNodesSync ? config.fullNodes! : [
                     ...(store.value.storage.fullNodes || []),
-                    ...config.fullNodes
+                    ...config.fullNodes!
                 ];
                 return NodeObservable({
                     nodes: fullNodes,
@@ -106,7 +106,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                                                     () => !!config.socketUrl,
                                                     of(config.socketUrl),
                                                     from(securedClient.getConfig({ name: 'centrifugo' })).pipe(
-                                                        catchError(e => of(null as string))
+                                                        catchError(e => of(''))
                                                     )
                                                 ),
                                                 iif(
@@ -114,7 +114,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                                                     of(fullNodes),
                                                     from(securedClient.getSystemParams({ names: ['full_nodes'] })).pipe(
                                                         map(paramsResult => {
-                                                            const value = paramsResult.list.find(p => p.name === 'full_nodes').value;
+                                                            const value = paramsResult.list.find(p => p.name === 'full_nodes')!.value;
                                                             return JSON.parse(value).map((paramValue: any) => paramValue.api_address) as string[];
                                                         }),
                                                         catchError(e => of([] as string[]))
@@ -132,11 +132,11 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                                 }),
                                 flatMap(workConfig => concat(
                                     iif(
-                                        () => !!action.payload.defaultKey,
+                                        () => 'defaultKey' in action.payload,
                                         of(saveWallet({
                                             id: workConfig.login.key_id,
-                                            encKey: keyring.encryptAES(action.payload.defaultKey, defaultPassword),
-                                            publicKey: keyring.generatePublicKey(action.payload.defaultKey),
+                                            encKey: keyring.encryptAES(action.payload.defaultKey!, defaultPassword),
+                                            publicKey: keyring.generatePublicKey(action.payload.defaultKey!),
                                             address: workConfig.login.address,
                                             settings: {}
                                         })),
@@ -148,7 +148,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                                         empty()
                                     ),
                                     of<Action>(connect.started({
-                                        wsHost: workConfig.centrifugo,
+                                        wsHost: workConfig.centrifugo!,
                                         session: workConfig.login.token,
                                         socketToken: workConfig.login.notify_key,
                                         timestamp: workConfig.login.timestamp,
@@ -156,7 +156,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                                     })),
                                     of<Action>(mergeFullNodes([
                                         ...workConfig.fullNodes,
-                                        ...config.fullNodes
+                                        ...config.fullNodes!
                                     ]))
                                 ))
                             )
@@ -165,7 +165,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                     defaultIfEmpty(initialize.failed({
                         params: action.payload,
                         error: 'E_OFFLINE'
-                    }))
+                    }) as any)
                 );
             }),
         );

@@ -22,10 +22,6 @@
 
 import GenesisAPI from 'lib/genesisAPI';
 import * as routerService from 'services/router';
-import CodeGenerator, { setIds, convertToTreeData, findTagById, copyObject, idGenerator, updateChildrenText, html2childrenTags } from 'lib/constructor';
-import Properties from 'lib/constructor/properties';
-import getConstructorTemplate from 'lib/constructor/templates';
-import resolveTagHandler from 'lib/constructor/tags';
 import 'whatwg-fetch';
 
 export const apiEndpoint = 'api/v2';
@@ -34,7 +30,6 @@ export interface IStoreDependencies {
     api: IAPIDependency;
     defaultKey: string;
     defaultPassword: string;
-    constructorModule: IConstructorDependenies;
     routerService: typeof routerService;
 }
 
@@ -42,22 +37,8 @@ export interface IAPIDependency {
     (options: { apiHost: string, sessionToken?: string }): GenesisAPI;
 }
 
-interface IConstructorDependenies {
-    setIds: typeof setIds;
-    convertToTreeData: typeof convertToTreeData;
-    findTagById: typeof findTagById;
-    copyObject: typeof copyObject;
-    getConstructorTemplate: typeof getConstructorTemplate;
-    idGenerator: typeof idGenerator;
-    updateChildrenText: typeof updateChildrenText;
-    html2childrenTags: typeof html2childrenTags;
-    resolveTagHandler: typeof resolveTagHandler;
-    CodeGenerator: typeof CodeGenerator;
-    Properties: typeof Properties;
-}
-
 const storeDependencies: IStoreDependencies = {
-    api: (params: { apiHost: string, sessionToken?: string } = { apiHost: null }) => new GenesisAPI({
+    api: (params: { apiHost: string, sessionToken?: string } = { apiHost: 'http://127.0.0.1:7079' }) => new GenesisAPI({
         transport: request => fetch(request.url, {
             method: request.method,
             headers: request.headers,
@@ -83,19 +64,6 @@ const storeDependencies: IStoreDependencies = {
     }),
     defaultKey: 'e5a87a96a445cb55a214edaad3661018061ef2936e63a0a93bdb76eb28251c1f',
     defaultPassword: 'genesis',
-    constructorModule: {
-        setIds,
-        convertToTreeData,
-        findTagById,
-        copyObject,
-        getConstructorTemplate,
-        idGenerator,
-        updateChildrenText,
-        html2childrenTags,
-        resolveTagHandler,
-        CodeGenerator,
-        Properties
-    },
 
     routerService
 };

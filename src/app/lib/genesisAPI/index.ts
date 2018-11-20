@@ -47,7 +47,7 @@ export interface IRequestOptions<P, R> {
 }
 
 export interface IEndpointFactory {
-    <R>(method: TRequestMethod, endpoint: string, options?: IRequestOptions<never, R>): IParameterLessEndpoint<R>;
+    <R>(method: TRequestMethod, endpoint: string, options?: IRequestOptions<undefined, R>): IParameterLessEndpoint<R>;
     <P, R>(method: TRequestMethod, endpoint: string, options?: IRequestOptions<P, R>): IEndpoint<P, R>;
 }
 
@@ -115,10 +115,10 @@ class GenesisAPI {
         };
 
         let json: any = null;
-        let text: string = null;
+        let text: string = '';
 
         const query = 'get' === method ? queryString.stringify(params) : '';
-        const body = 'get' === method ? null : this.serializeFormData(params);
+        const body = 'get' === method ? undefined : this.serializeFormData(params);
 
         try {
             const response = await this._options.transport({
@@ -154,13 +154,13 @@ class GenesisAPI {
 
     protected setEndpoint: IEndpointFactory = <P extends IRequestParams, R>(method: TRequestMethod, endpoint: string, options: IRequestOptions<P, R> = {}) => {
         return async (requestParams?: P) => {
-            return this.request(method, endpoint, requestParams, options);
+            return this.request<P, R>(method, endpoint, requestParams as P, options);
         };
     }
 
     protected setSecuredEndpoint: IEndpointFactory = <P extends IRequestParams, R>(method: TRequestMethod, endpoint: string, options: IRequestOptions<P, R> = {}) => {
         return async (requestParams?: P) => {
-            return this.request(method, endpoint, requestParams, {
+            return this.request(method, endpoint, requestParams as P, {
                 ...options,
                 headers: {
                     ...options.headers,
@@ -204,9 +204,7 @@ class GenesisAPI {
             roles: response.roles || []
         })
     });
-    public keyinfo = this.setEndpoint<{ id: string }, IKeyInfo[]>('get', 'keyinfo/{id}', {
-        requestTransformer: request => null
-    });
+    public keyinfo = this.setEndpoint<{ id: string }, IKeyInfo[]>('get', 'keyinfo/{id}', { requestTransformer: request => ({}) });
     public requestNotifications = this.setSecuredEndpoint<INotificationsRequest[], void>('post', 'updnotificator', {
         requestTransformer: request => ({
             ids: JSON.stringify(request)
@@ -222,21 +220,21 @@ class GenesisAPI {
     public getEcosystemName = this.setEndpoint<{ id: string | number }, string>('get', 'ecosystemname', {
         responseTransformer: response => response.ecosystem_name
     });
-    public getConfig = this.setEndpoint<{ name: TConfigRequest }, string>('get', 'config/{name}', { requestTransformer: request => null });
-    public getContract = this.setSecuredEndpoint<IContractRequest, IContractResponse>('get', 'contract/{name}', { requestTransformer: request => null });
+    public getConfig = this.setEndpoint<{ name: TConfigRequest }, string>('get', 'config/{name}', { requestTransformer: request => ({}) });
+    public getContract = this.setSecuredEndpoint<IContractRequest, IContractResponse>('get', 'contract/{name}', { requestTransformer: request => ({}) });
     public getContracts = this.setSecuredEndpoint<ISegmentRequest, IContractsResponse>('get', 'contracts');
-    public getParam = this.setSecuredEndpoint<IParamRequest, IParamResponse>('get', 'ecosystemparam/{name}', { requestTransformer: request => null });
+    public getParam = this.setSecuredEndpoint<IParamRequest, IParamResponse>('get', 'ecosystemparam/{name}', { requestTransformer: request => ({}) });
     public getParams = this.setSecuredEndpoint<IParamsRequest, IParamsResponse>('get', 'ecosystemparams', {
         requestTransformer: request => ({
             names: (request.names || []).join(',')
         })
     });
-    public getPage = this.setSecuredEndpoint<ITemplateRequest, IPageResponse>('get', 'interface/page/{name}', { requestTransformer: request => null });
-    public getBlock = this.setSecuredEndpoint<ITemplateRequest, IBlockResponse>('get', 'interface/block/{name}', { requestTransformer: request => null });
-    public getMenu = this.setSecuredEndpoint<ITemplateRequest, IMenuResponse>('get', 'interface/menu/{name}', { requestTransformer: request => null });
-    public getTable = this.setSecuredEndpoint<ITableRequest, ITableResponse>('get', 'table/{name}', { requestTransformer: request => null });
+    public getPage = this.setSecuredEndpoint<ITemplateRequest, IPageResponse>('get', 'interface/page/{name}', { requestTransformer: request => ({}) });
+    public getBlock = this.setSecuredEndpoint<ITemplateRequest, IBlockResponse>('get', 'interface/block/{name}', { requestTransformer: request => ({}) });
+    public getMenu = this.setSecuredEndpoint<ITemplateRequest, IMenuResponse>('get', 'interface/menu/{name}', { requestTransformer: request => ({}) });
+    public getTable = this.setSecuredEndpoint<ITableRequest, ITableResponse>('get', 'table/{name}', { requestTransformer: request => ({}) });
     public getTables = this.setSecuredEndpoint<ISegmentRequest, ITablesResponse>('get', 'tables');
-    public getHistory = this.setSecuredEndpoint<IHistoryRequest, IHistoryResponse>('get', 'history/{table}/{id}', { requestTransformer: () => null });
+    public getHistory = this.setSecuredEndpoint<IHistoryRequest, IHistoryResponse>('get', 'history/{table}/{id}', { requestTransformer: request => ({}) });
     public getRow = this.setSecuredEndpoint<IRowRequest, IRowResponse>('get', 'row/{table}/{id}', {
         requestTransformer: request => ({
             columns: (request.columns || []).join(',')
@@ -304,7 +302,7 @@ class GenesisAPI {
         responseTransformer: response => response.results
     });
     public txStatus = <T>(params: TTxStatusRequest<T>) => this._txStatus({
-        hashes: Object.keys(params).map(l => params[l])
+        hashes: params as string[]
     }) as Promise<TTxStatusResponse<T>>
 }
 

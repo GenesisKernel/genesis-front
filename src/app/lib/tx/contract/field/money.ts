@@ -23,8 +23,8 @@
 import IField from './';
 import { toMoney } from 'lib/tx/convert';
 
-class Money implements IField<string, string> {
-    private _value: string = '';
+class Money implements IField<string, string | undefined> {
+    private _value?: string = '';
 
     set(value: string) {
         const intermediary = value ? value.toString().replace(',', '.') : '0';

@@ -23,12 +23,12 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
+import { IErrorRedirect } from 'genesis/protypo';
 import StyledComponent from './StyledComponent';
 
 import Protypo, { IParamsSpec } from '../Protypo';
 import ValidatedForm from 'components/Validation/ValidatedForm';
 import TxButton from 'containers/Button/TxButton';
-import { IErrorRedirect } from 'genesis/protypo';
 
 export interface IButtonProps {
     'class'?: string;
@@ -55,8 +55,8 @@ export interface IButtonProps {
     'params'?: IParamsSpec;
     'formID'?: number;
 
-    errredirect?: {
-        [key: string]: IErrorRedirect
+    'errredirect'?: {
+        [key: string]: IErrorRedirect;
     };
 }
 
@@ -67,12 +67,16 @@ interface IButtonContext {
 
 const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IButtonContext) => {
     const getParams = () => {
-        const params = {};
+        const params: { [name: string]: any } = {};
+
+        if (!props.params) {
+            return {};
+        }
 
         if (context.form) {
             const payload = context.form.validateAll();
             if (!payload.valid) {
-                return null;
+                return undefined;
             }
 
             for (let itr in payload.payload) {
@@ -94,10 +98,14 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
     };
 
     const getPageParams = () => {
+        if (!props.pageparams) {
+            return {};
+        }
+
         if (context.form) {
             const payload = context.form.validateAll();
             if (!payload.valid) {
-                return null;
+                return undefined;
             }
 
             return context.protypo.resolveParams(props.pageparams, payload.payload);
@@ -114,34 +122,39 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
             return {};
         }
 
+        let formPayload = context.form ? context.form.validateAll() : undefined;
+        const formValid = !!formPayload && formPayload.valid;
+
         for (let itr in props.errredirect) {
             if (props.errredirect.hasOwnProperty(itr)) {
-                let pageparams = null;
-                if (context.form) {
-                    const payload = context.form.validateAll();
-                    if (payload.valid) {
-                        pageparams = context.protypo.resolveParams(props.errredirect[itr].pageparams, payload.payload);
+                const paramsSpec = props.errredirect[itr].pageparams;
+                let pageparams: { [name: string]: any } = {};
 
+                if (paramsSpec) {
+                    if (formPayload && formValid) {
+                        pageparams = context.protypo.resolveParams(paramsSpec, formPayload.payload);
+                    }
+                    else {
+                        pageparams = context.protypo.resolveParams(paramsSpec);
                     }
                 }
-                else {
-                    pageparams = context.protypo.resolveParams(props.errredirect[itr].pageparams);
-                }
+
                 result[itr] = {
                     pagename: props.errredirect[itr].pagename,
                     pageparams
                 };
             }
         }
+
         return result;
     };
 
-    let popup: { title?: string, width?: number } = null;
+    let popup: { title?: string, width?: number } | undefined = undefined;
     if (props.popup) {
-        const width = parseInt(props.popup.width, 10);
+        const width = 'string' === typeof props.popup.width ? parseInt(props.popup.width, 10) : undefined;
         popup = {
             title: props.popup.header,
-            width: width === width ? width : null
+            width: width === width ? width : undefined
         };
     }
 

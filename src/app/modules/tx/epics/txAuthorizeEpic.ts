@@ -33,10 +33,10 @@ import { switchMap, take, flatMap } from 'rxjs/operators';
 
 const txAuthorizeEpic: Epic = (action$, store) => action$.ofAction(txAuthorize.started).pipe(
     switchMap(action => {
-        if (keyring.validatePrivateKey(store.value.auth.privateKey)) {
+        if ('privateKey' in store.value.auth && keyring.validatePrivateKey(store.value.auth.privateKey!)) {
             return of(txAuthorize.done({
                 params: action.payload,
-                result: null
+                result: ''
             }));
         }
         else {
@@ -50,7 +50,7 @@ const txAuthorizeEpic: Epic = (action$, store) => action$.ofAction(txAuthorize.s
                     take(1),
                     flatMap(result => {
                         if (result.payload.data) {
-                            const privateKey = keyring.decryptAES(store.value.auth.session.wallet.encKey, result.payload.data || '');
+                            const privateKey = keyring.decryptAES(store.value.auth.session.wallet!.encKey, result.payload.data || '');
                             if (keyring.validatePrivateKey(privateKey)) {
                                 return of<Action>(
                                     authorize(privateKey),
@@ -64,7 +64,7 @@ const txAuthorizeEpic: Epic = (action$, store) => action$.ofAction(txAuthorize.s
                                 return of<Action>(
                                     txAuthorize.failed({
                                         params: action.payload,
-                                        error: null
+                                        error: undefined
                                     }),
                                     enqueueNotification({
                                         id: uuid.v4(),
@@ -77,7 +77,7 @@ const txAuthorizeEpic: Epic = (action$, store) => action$.ofAction(txAuthorize.s
                         else {
                             return of(txAuthorize.failed({
                                 params: action.payload,
-                                error: null
+                                error: undefined
                             }));
                         }
                     })

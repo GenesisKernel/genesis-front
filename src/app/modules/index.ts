@@ -26,6 +26,11 @@ import { IStoreDependencies } from './dependencies';
 import { combineReducers } from 'redux';
 import { combineEpics } from 'redux-observable';
 import { loadingBarReducer } from 'react-redux-loading-bar';
+import { ActionCreator, Failure, Success } from 'typescript-fsa';
+import { connectRouter } from 'connected-react-router';
+import { History } from 'history';
+import { persistReducer, PersistConfig } from 'redux-persist';
+import storagePersistor from 'redux-persist/lib/storage';
 import * as auth from './auth';
 import * as content from './content';
 import * as sections from './sections';
@@ -39,11 +44,6 @@ import * as notifications from './notifications';
 import * as storage from './storage';
 import * as socket from './socket';
 import * as router from './router';
-import { ActionCreator, Failure, Success, isType } from 'typescript-fsa';
-import { Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { connectRouter } from 'connected-react-router';
-import { History } from 'history';
 
 export type Epic = NativeEpic<Action<any>, Action<any>, IRootState, IStoreDependencies>;
 export type Reducer<T, S> =
@@ -51,12 +51,6 @@ export type Reducer<T, S> =
     T extends ActionCreator<Success<infer P2, infer R>> ? (state: S, payload: Success<P2, R>) => S :
     T extends ActionCreator<infer R2> ? (state: S, payload: R2) => S :
     (state: S, payload: T) => S;
-
-export const ofAction = <A>(actionCreator: ActionCreator<A>) => (source: Observable<any>) => source.pipe(
-    filter<Action<A>>(action =>
-        isType(action, actionCreator)
-    )
-);
 
 export interface IRootState {
     auth: auth.State;
@@ -71,7 +65,7 @@ export interface IRootState {
     notifications: notifications.State;
     storage: storage.State;
     socket: socket.State;
-    loadingBar: number;
+    loadingBar: any;
     router: router.State;
 }
 
@@ -91,8 +85,22 @@ export const rootEpic = combineEpics(
     socket.epic
 );
 
-export default (history: History) => combineReducers<IRootState>({
-    auth: auth.reducer,
+const authPersistConfig: PersistConfig = {
+    key: 'auth',
+    whitelist: ['isAuthenticated', 'session', 'id', 'wallet'] as (keyof auth.State)[],
+    throttle: 1000,
+    storage: storagePersistor
+};
+
+const storagePersistConfig: PersistConfig = {
+    key: 'storage',
+    throttle: 1000,
+    storage: storagePersistor
+};
+
+export default (history: History) => combineReducers({
+    auth: persistReducer(authPersistConfig, auth.reducer),
+    storage: persistReducer(storagePersistConfig, storage.reducer),
     content: content.reducer,
     sections: sections.reducer,
     modal: modal.reducer,
@@ -100,10 +108,9 @@ export default (history: History) => combineReducers<IRootState>({
     editor: editor.reducer,
     tx: tx.reducer,
     gui: gui.reducer,
-    io: null,
+    io: null as any,
     notifications: notifications.reducer,
-    storage: storage.reducer,
     socket: socket.reducer,
     loadingBar: loadingBarReducer,
-    router: connectRouter(history)
+    router: connectRouter(history) as any
 });

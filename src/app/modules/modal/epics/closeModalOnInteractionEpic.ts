@@ -29,7 +29,7 @@ import { iif, empty, of } from 'rxjs';
 
 const closeModalOnInteractionEpic: Epic = (action$, store, { api }) => action$.filter(action => isType(action, navigatePage.started)).pipe(
     flatMap(action => iif(
-        () => store.value.modal.type && !store.value.modal.result,
+        () => !!(store.value.modal.type && !store.value.modal.result),
         of(modalClose({
             reason: 'CANCEL',
             data: null

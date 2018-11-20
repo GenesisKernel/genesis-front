@@ -20,37 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { navigate } from 'modules/engine/actions';
 
 import ActionSelector from 'components/Auth/Wallet/ActionSelector';
-
-export interface IActionSelectorContainerProps {
-
-}
-
-interface IActionSelectorContainerState {
-
-}
-
-interface IActionSelectorContainerDispatch {
-    onImport: () => void;
-    onCreate: () => void;
-}
+import { push } from 'connected-react-router';
 
 const mapStateToProps = (state: IRootState) => ({
 
 });
 
-const mapDispatchToProps = {
-    onImport: () => navigate('/wallet/import'),
-    onCreate: () => navigate('/wallet/create')
-};
+export default connect(mapStateToProps, {
+    onImport: () => push('/wallet/import'),
+    onCreate: () => push('/wallet/create')
 
-const ActionSelectorContainer: React.SFC<IActionSelectorContainerProps & IActionSelectorContainerState & IActionSelectorContainerDispatch> = props => (
-    <ActionSelector {...props} />
-);
-
-export default connect<IActionSelectorContainerState, IActionSelectorContainerDispatch, IActionSelectorContainerProps>(mapStateToProps, mapDispatchToProps)(ActionSelectorContainer);
+})(ActionSelector);

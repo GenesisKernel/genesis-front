@@ -28,10 +28,9 @@ import { TProtypoElement, ISource } from 'genesis/protypo';
 import { IValidationResult } from 'components/Validation/ValidatedForm';
 import Heading from 'components/Heading';
 import ToolButton, { IToolButtonProps } from 'containers/ToolButton/ToolButton';
-import { IConstructorElementProps } from 'genesis/editor';
 import { IMenu } from 'genesis/content';
 
-export interface IProtypoProps extends IConstructorElementProps {
+export interface IProtypoProps {
     apiHost: string;
     wrapper?: JSX.Element;
     context: string;
@@ -56,16 +55,16 @@ export interface IParamSpec {
 }
 
 class Protypo extends React.Component<IProtypoProps> {
-    private _lastID: number;
+    private _lastID: number = 0;
     private _menuPushBind: Function;
     private _navigatePageBind: Function;
     private _navigateBind: Function;
     private _resolveSourceBind: Function;
     private _renderElementsBind: Function;
-    private _title: string;
-    private _toolButtons: IToolButtonProps[];
-    private _sources: { [key: string]: ISource };
-    private _errors: { name: string, description: string }[];
+    private _title: string = '';
+    private _toolButtons: IToolButtonProps[] = [];
+    private _sources: { [key: string]: ISource } = {};
+    private _errors: { name: string, description: string }[] = [];
 
     constructor(props: IProtypoProps) {
         super(props);
@@ -121,7 +120,7 @@ class Protypo extends React.Component<IProtypoProps> {
             if (values.hasOwnProperty(itr)) {
                 const param = values[itr];
                 switch (param.type) {
-                    case 'text': result[itr] = param.text; break;
+                    case 'text': result[itr] = param.text || ''; break;
                     case 'Val':
                         const inputName = param.params[0];
                         const inputValue = formValues && formValues[inputName] && formValues[inputName].value;
@@ -156,7 +155,7 @@ class Protypo extends React.Component<IProtypoProps> {
                                 id={key}
                                 childrenTree={element.children}
                             >
-                                {this.renderElements(element.children)}
+                                {element.children ? this.renderElements(element.children) : null}
                             </Handler>
                         );
                     }
@@ -181,10 +180,6 @@ class Protypo extends React.Component<IProtypoProps> {
     }
 
     renderElements(elements: TProtypoElement[], keyPrefix?: string): React.ReactNode[] {
-        if (!elements) {
-            return null;
-        }
-
         return elements.map((element, index) => (
             this.renderElement(element, keyPrefix ? `${keyPrefix}_${index}` : undefined)
         ));
@@ -207,7 +202,7 @@ class Protypo extends React.Component<IProtypoProps> {
         this._lastID = 0;
         this._sources = {};
         this._toolButtons = [];
-        this._title = null;
+        this._title = '';
         this._errors = [];
 
         const body = this.renderElements(this.props.content);

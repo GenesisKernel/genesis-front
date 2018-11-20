@@ -80,12 +80,14 @@ class InteractionManager {
     }
 
     getConditionsFor(id: string, reaction: TReaction) {
-        const conditions = this._listeners[id][reaction];
+        if (this._listeners[id] && this._listeners[id][reaction]) {
+            const conditions = this._listeners[id][reaction]!;
 
-        for (let i = 0; i < conditions.length; i++) {
-            const condition = conditions[i];
-            if (this.getConditionFor(id, reaction, condition)) {
-                return true;
+            for (let i = 0; i < conditions.length; i++) {
+                const condition = conditions[i];
+                if (this.getConditionFor(id, reaction, condition)) {
+                    return true;
+                }
             }
         }
 
@@ -99,7 +101,7 @@ class InteractionManager {
             const listener = this._listeners[id];
             result[id] = {};
 
-            Object.keys(listener).forEach((reaction: TReaction) => {
+            (Object.keys(listener) as TReaction[]).forEach((reaction: TReaction) => {
                 result[id][reaction] = this.getConditionsFor(id, reaction);
             });
         });

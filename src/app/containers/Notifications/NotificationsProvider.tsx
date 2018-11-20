@@ -22,7 +22,6 @@
 
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { destroyNotification } from 'modules/notifications/actions';
 
 import Notifications from 'components/Notifications/NotificationsProvider';
 
@@ -30,7 +29,4 @@ const mapStateToProps = (state: IRootState) => ({
     notifications: state.notifications.notifications
 });
 
-export default connect(mapStateToProps, {
-    destroyNotification
-
-})(Notifications);
+export default connect(mapStateToProps)(Notifications);

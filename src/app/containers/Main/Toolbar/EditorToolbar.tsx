@@ -36,7 +36,7 @@ export interface IEditorToolbarProps {
 }
 
 interface IEditorToolbarState {
-    modalResult: IModalResult;
+    modalResult?: IModalResult;
     currentTab: TEditorTab;
     currentTabIndex: number;
     canSave: boolean;
@@ -52,7 +52,7 @@ interface IEditorToolbarDispatch {
 }
 
 class EditorToolbarContainer extends React.Component<IEditorToolbarProps & InjectedIntlProps & IEditorToolbarState & IEditorToolbarDispatch> {
-    private _pendingRevert: number;
+    private _pendingRevert?: number;
 
     onRevert = () => {
         this._pendingRevert = this.props.currentTabIndex;
@@ -83,7 +83,7 @@ class EditorToolbarContainer extends React.Component<IEditorToolbarProps & Injec
             if ('RESULT' === props.modalResult.reason) {
                 this.props.revertEditorTab(this._pendingRevert);
             }
-            this._pendingRevert = null;
+            this._pendingRevert = undefined;
         }
     }
 
@@ -124,4 +124,4 @@ const mapDispatchToProps = {
     editorSave
 };
 
-export default connect<IEditorToolbarState, IEditorToolbarDispatch, IEditorToolbarProps>(mapStateToProps, mapDispatchToProps)(injectIntl(EditorToolbarContainer));
+export default connect<IEditorToolbarState, IEditorToolbarDispatch, IEditorToolbarProps, IRootState>(mapStateToProps, mapDispatchToProps)(injectIntl(EditorToolbarContainer));

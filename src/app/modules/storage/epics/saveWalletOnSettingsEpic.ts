@@ -26,7 +26,7 @@ import { updateSettings } from 'modules/auth/actions';
 import { map } from 'rxjs/operators';
 
 const saveWalletOnSettingsEpic: Epic = (action$, store) => action$.ofAction(updateSettings).pipe(
-    map(action => saveWallet(store.value.auth.session.wallet))
+    map(action => saveWallet(store.value.auth.session.wallet!))
 );
 
 export default saveWalletOnSettingsEpic;

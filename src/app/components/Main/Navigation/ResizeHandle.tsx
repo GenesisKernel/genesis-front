@@ -75,43 +75,40 @@ const StyledResizeHandle = themed.button`
 `;
 
 class ResizeHandle extends React.Component<IResizeHandleProps> {
-    private _mouseUpListenerBind: (e: MouseEvent) => void;
-    private _mouseMoveListenerBind: (e: MouseEvent) => void;
-    private _clickThresholdValue: number;
+    private _clickThresholdValue = 0;
     private _clickThreshold = 1;
 
     componentDidMount() {
-        this._mouseMoveListenerBind = this.onMouseMove.bind(this);
-        this._mouseUpListenerBind = this.onMouseUp.bind(this);
-        document.body.addEventListener('mousemove', this._mouseMoveListenerBind);
-        document.body.addEventListener('mouseup', this._mouseUpListenerBind);
+        document.body.addEventListener('mousemove', this.onMouseMove);
+        document.body.addEventListener('mouseup', this.onMouseUp);
     }
 
     componentWillUnmount() {
-        document.body.removeEventListener('mousemove', this._mouseMoveListenerBind);
+        document.body.removeEventListener('mousemove', this.onMouseMove);
+        document.body.removeEventListener('mouseup', this.onMouseUp);
     }
 
-    onMouseMove(e: MouseEvent) {
+    onMouseMove = (e: MouseEvent) => {
         if (!this.props.disabled && this.props.resizing && e.clientX !== this.props.width) {
             this.props.navigationResize(e.clientX);
             this._clickThresholdValue++;
         }
     }
 
-    onMouseDown(e: React.MouseEvent<HTMLButtonElement>) {
+    onMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
         if (!this.props.disabled && !this.props.resizing && 0 === e.button) {
             this.props.setResizing(true);
             this._clickThresholdValue = 0;
         }
     }
 
-    onMouseUp(e: MouseEvent) {
+    onMouseUp = (e: MouseEvent) => {
         if (!this.props.disabled && this.props.resizing && 0 === e.button) {
             this.props.setResizing(false);
         }
     }
 
-    onClick() {
+    onClick = () => {
         // TODO: Temporarily disabled
         if (!this.props.disabled && this._clickThresholdValue < this._clickThreshold) {
             // this.props.navigationToggle();
@@ -125,7 +122,7 @@ class ResizeHandle extends React.Component<IResizeHandleProps> {
         });
 
         return (
-            <StyledResizeHandle onClick={this.onClick.bind(this)} onMouseDown={e => this.onMouseDown(e)} className={classes}>
+            <StyledResizeHandle onClick={this.onClick} onMouseDown={this.onMouseDown} className={classes}>
                 <div />
             </StyledResizeHandle>
         );

@@ -35,10 +35,10 @@ export interface ISectionToolButtonProps {
 const SectionToolButton: React.SFC<ISectionToolButtonProps> = props => (
     <li className={props.className}>
         <ul className="button-sections">
-            {props.items.map((l, i) => (
-                <li key={i} className={props.activeIndex === i ? 'active' : null}>
+            {props.items.map((item, i) => (
+                <li key={i} className={props.activeIndex === i ? 'active' : undefined}>
                     <button onClick={props.onChange && props.onChange.bind(null, i)}>
-                        {l}
+                        {item}
                     </button>
                 </li>
             ))}
@@ -46,7 +46,7 @@ const SectionToolButton: React.SFC<ISectionToolButtonProps> = props => (
     </li>
 );
 
-const StyledSectionToolButton = themed(SectionToolButton) `
+const StyledSectionToolButton = themed(SectionToolButton)`
     height: 40px;
     padding: 9px;
     float: right;

@@ -26,15 +26,15 @@ import { txCall } from 'modules/tx/actions';
 import { editorSave } from '../actions';
 import { filter, map } from 'rxjs/operators';
 
-const connections = {
+const connections: { [name: string]: string } = {
     contract: '@1EditContract',
     page: '@1EditPage',
     menu: '@1EditMenu',
-    block: '@1EditBlock',
+    block: '@1EditBlock'
 };
 
 const editorSaveEpic: Epic = (action$, store) => action$.ofAction(editorSave).pipe(
-    filter(l => !l.payload.new && connections[l.payload.type]),
+    filter(l => !l.payload.new && l.payload.type in connections),
     map(action => txCall({
         uuid: uuid.v4(),
         contracts: [{

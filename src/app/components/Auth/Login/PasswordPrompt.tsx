@@ -23,7 +23,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
-import { ILoginCall, ISession } from 'genesis/auth';
+import { ILoginCall } from 'genesis/auth';
 
 import Avatar from 'containers/Avatar';
 import Validation from 'components/Validation';
@@ -31,7 +31,10 @@ import Heading from 'components/Auth/Heading';
 
 export interface IPasswordPromptProps {
     className?: string;
-    session: ISession;
+    keyID: string;
+    address: string;
+    ecosystem: string;
+    ecosystemName?: string;
     onSubmit: (params: ILoginCall) => void;
     onCancel: () => void;
 }
@@ -46,12 +49,12 @@ const PasswordPrompt: React.SFC<IPasswordPromptProps & InjectedIntlProps> = prop
                 <div className="avatar-holder">
                     <Avatar
                         size={100}
-                        keyID={props.session.wallet.id}
-                        ecosystem={props.session.access.ecosystem}
+                        keyID={props.keyID}
+                        ecosystem={props.ecosystem}
                     />
                 </div>
                 <h4 className="text-center mt0">
-                    {`${props.session.wallet.address} (${props.session.access.name || props.session.access.ecosystem})`}
+                    {`${props.address} (${props.ecosystemName || props.ecosystem})`}
                 </h4>
                 <p>
                     <FormattedMessage id="auth.session.prompt" defaultMessage="Please enter your password to sign in" />

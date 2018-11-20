@@ -22,7 +22,7 @@
 
 import React from 'react';
 import { Button, Well, Row, Col } from 'react-bootstrap';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { ITransactionCollection, ITxStatus, ITxError } from 'genesis/tx';
 import { TContractFieldType } from 'genesis/api';
 
@@ -42,17 +42,14 @@ export interface IDebugContractModalProps {
 
 interface IDebugContractModalState {
     pending: boolean;
-    result: ITxError | ITxStatus;
+    result?: ITxError | ITxStatus;
 }
 
 class DebugContractModal extends Modal<IDebugContractModalProps, void, IDebugContractModalState> {
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            pending: false,
-            result: null
-        };
-    }
+    state: IDebugContractModalState = {
+        pending: false,
+        result: undefined
+    };
 
     mapContractParams = (payload: { [key: string]: any }) => {
         this.setState({
@@ -164,4 +161,4 @@ class DebugContractModal extends Modal<IDebugContractModalProps, void, IDebugCon
         );
     }
 }
-export default injectIntl(DebugContractModal);
+export default DebugContractModal;

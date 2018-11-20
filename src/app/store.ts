@@ -21,50 +21,24 @@
 // SOFTWARE.
 
 import 'rxjs';
-import 'lib/external/fsa';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { routerMiddleware } from 'connected-react-router';
 import { createEpicMiddleware } from 'redux-observable';
 import { loadingBarMiddleware } from 'react-redux-loading-bar';
-import persistState, { mergePersistedState } from 'redux-localstorage';
-import adapter from 'redux-localstorage/lib/adapters/localStorage';
-import filter from 'redux-localstorage-filter';
-import debounce from 'redux-localstorage-debounce';
 
 import { History } from 'history';
 import createHistory from 'history/createBrowserHistory';
 import createMemoryHistory from 'history/createMemoryHistory';
-import rootReducer, { rootEpic, IRootState } from './modules';
+import reducer, { rootEpic, IRootState } from './modules';
 import platform from 'lib/platform';
 import dependencies from 'modules/dependencies';
+import 'lib/external/fsa';
+import { persistStore } from 'redux-persist';
 
-export const history = platform.select<() => History>({
+export const history = platform.target<() => History>({
     desktop: createMemoryHistory,
     web: createHistory
 })();
-
-const reducer = platform.select({
-    web: compose(
-        mergePersistedState()
-    )(rootReducer(history)),
-    desktop: rootReducer(history)
-});
-
-const storageAdapters = [
-    filter([
-        'storage',
-        'auth.isAuthenticated',
-        'auth.session',
-        'auth.id',
-        'auth.wallet',
-    ])
-];
-
-platform.on('web', () => {
-    storageAdapters.unshift(debounce(1000, 5000));
-});
-
-const storage = compose.apply(null, storageAdapters)(adapter(window.localStorage));
 
 const configureStore = (initialState?: IRootState) => {
     const epicMiddleware = createEpicMiddleware({
@@ -88,18 +62,14 @@ const configureStore = (initialState?: IRootState) => {
         }
     }
 
-    platform.on('web', () => {
-        enhancers.unshift(persistState(storage, 'persistentData'));
-    });
-
     const composedEnhancers: any = compose(
         applyMiddleware(...middleware),
         ...enhancers
     );
 
     const value = createStore(
-        reducer,
-        initialState!,
+        reducer(history),
+        initialState,
         composedEnhancers
     );
 
@@ -108,24 +78,6 @@ const configureStore = (initialState?: IRootState) => {
     return value;
 };
 
-const store = platform.select({
-    web: () => configureStore(),
-    desktop: () => {
-        const Electron = require('electron');
-        const storedState = Electron.ipcRenderer.sendSync('getState');
-        const storeInstance = (storedState && Object.keys(storedState).length) ? configureStore(storedState) : configureStore();
-
-        storeInstance.subscribe(() => {
-            const state = storeInstance.getState();
-            Electron.ipcRenderer.send('setState', {
-                auth: state.auth,
-                engine: state.engine,
-                storage: state.storage
-            });
-        });
-
-        return storeInstance;
-    }
-})();
-
+const store = configureStore();
+export const persistor = persistStore(store);
 export default store;

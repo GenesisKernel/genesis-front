@@ -22,10 +22,24 @@
 
 /// <reference types="monaco-editor" />
 
-import * as _ from 'lodash';
+import _ from 'lodash';
 import syntax from './monarch';
 
 const langName = 'protypo';
+
+export interface IFunctionParam {
+    label: string;
+    documentation: string;
+    insertText: string;
+}
+
+export interface IFunctionDef {
+    label: string;
+    kind: monaco.languages.CompletionItemKind;
+    documentation: string;
+    insertText: string;
+    params?: IFunctionParam[];
+}
 
 const register = (editor: typeof monaco) => {
     if (monaco.languages.getLanguages().find(l => langName === l.id)) {
@@ -47,7 +61,7 @@ const register = (editor: typeof monaco) => {
         }
     };
 
-    const functionDefs = {
+    const functionDefs: { [name: string]: IFunctionDef } = {
         Address: {
             label: 'Address',
             documentation: 'Converts wallet ID to address in readable format',
@@ -69,25 +83,21 @@ const register = (editor: typeof monaco) => {
             params: [
                 {
                     label: 'Title',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Button title to show',
                     insertText: 'Title:'
                 },
                 {
                     label: 'Icon',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Optional icon to show near the button',
                     insertText: 'Icon: '
                 },
                 {
                     label: 'Page',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Page that will be loaded on click',
                     insertText: 'Page: '
                 },
                 {
                     label: 'PageParams',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Parameters which will be passed to the page upon redirection',
                     insertText: 'Params: '
                 }
@@ -272,7 +282,6 @@ const register = (editor: typeof monaco) => {
             params: [
                 {
                     label: 'Name',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Variable name to get the value of',
                     insertText: 'Name: '
                 }
@@ -355,7 +364,6 @@ const register = (editor: typeof monaco) => {
             params: [
                 {
                     label: 'Name',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Page or block name to include',
                     insertText: 'Name: '
                 }
@@ -490,13 +498,11 @@ const register = (editor: typeof monaco) => {
             params: [
                 {
                     label: 'Name',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Unique resource name to get',
                     insertText: 'Name: '
                 },
                 {
                     label: 'Lang',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Explicitly set language of the resource to get',
                     insertText: 'Lang: '
                 }
@@ -553,31 +559,26 @@ const register = (editor: typeof monaco) => {
             params: [
                 {
                     label: 'Title',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Title of the menu button',
                     insertText: 'Title: '
                 },
                 {
                     label: 'Page',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Page that will be loaded on click',
                     insertText: 'Page: '
                 },
                 {
                     label: 'Params',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Parameters which will be passed to the page upon redirection',
                     insertText: 'Params: '
                 },
                 {
                     label: 'Icon',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Optional icon to show near the button',
                     insertText: 'Icon: '
                 },
                 {
                     label: 'Vde',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Sets link destination: "true" for VDE and "false" for blockchain',
                     insertText: 'Vde: '
                 }
@@ -656,25 +657,21 @@ const register = (editor: typeof monaco) => {
                 {
                     label: 'Source',
                     documentation: 'Source identificator to bind results',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     insertText: 'Source: '
                 },
                 {
                     label: 'From',
                     documentation: 'Initial counter value',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     insertText: 'From: '
                 },
                 {
                     label: 'To',
                     documentation: 'Final counter value(exclusive)',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     insertText: 'To: '
                 },
                 {
                     label: 'Step',
                     documentation: 'Value that will be added for each step',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     insertText: 'Step: '
                 }
             ]
@@ -722,13 +719,11 @@ const register = (editor: typeof monaco) => {
             params: [
                 {
                     label: 'Name',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Variable name to set the value of',
                     insertText: 'Name: '
                 },
                 {
                     label: 'Value',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Variable name to set the value of',
                     insertText: 'Value: '
                 }
@@ -742,7 +737,6 @@ const register = (editor: typeof monaco) => {
             params: [
                 {
                     label: 'Title',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Text to show in the header',
                     insertText: 'Title: '
                 }
@@ -781,7 +775,6 @@ const register = (editor: typeof monaco) => {
                 },
                 {
                     label: 'Columns',
-                    kind: monaco.languages.CompletionItemKind.Property,
                     documentation: 'Optional filter for the coulmns to show. Format: ColumnTitle1=column1,ColumnTitl2=column2',
                     insertText: 'Columns: '
                 }
@@ -802,7 +795,13 @@ const register = (editor: typeof monaco) => {
             if (paramsMatch) {
                 const token = paramsMatch[paramsMatch.length - 1].slice(0, -1);
                 if (functionDefs[token]) {
-                    return functionDefs[token].params;
+                    const functionDef = functionDefs[token];
+                    if (functionDef.params) {
+                        return functionDef.params.map(param => ({
+                            ...param,
+                            kind: monaco.languages.CompletionItemKind.Property
+                        }));
+                    }
                 }
             }
 
@@ -842,8 +841,8 @@ const register = (editor: typeof monaco) => {
     });
 
     editor.languages.setMonarchTokensProvider(langName, syntax(
-        _.map(functionDefs, (value, key) => value.kind === monaco.languages.CompletionItemKind.Method ? key : null).filter(l => l),
-        _.map(functionDefs, (value, key) => value.kind === monaco.languages.CompletionItemKind.Function ? key : null).filter(l => l)
+        _.map(functionDefs, (value, key) => value.kind === monaco.languages.CompletionItemKind.Method ? key : '').filter(l => !!l),
+        _.map(functionDefs, (value, key) => value.kind === monaco.languages.CompletionItemKind.Function ? key : '').filter(l => !!l)
     ));
 };
 

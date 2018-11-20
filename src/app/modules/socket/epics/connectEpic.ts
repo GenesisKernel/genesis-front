@@ -33,7 +33,7 @@ const connectEpic: Epic = (action$, store) => action$.ofAction(connect.started).
     flatMap(action => {
         if (action.payload.wsHost && action.payload.userID && action.payload.timestamp && action.payload.socketToken) {
             return new Observable<Action>(observer => {
-                observer.next(disconnect.started(null));
+                observer.next(disconnect.started({}));
 
                 const centrifuge = new Centrifuge({
                     url: action.payload.wsHost,
@@ -73,7 +73,7 @@ const connectEpic: Epic = (action$, store) => action$.ofAction(connect.started).
         else {
             return of(connect.failed({
                 params: action.payload,
-                error: null
+                error: ''
             }));
         }
 

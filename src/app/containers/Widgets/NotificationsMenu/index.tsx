@@ -46,7 +46,7 @@ interface INotificationsMenuContainerDispatch {
 class NotificationsContainer extends React.Component<INotificationsMenuContainerProps & INotificationsMenuContainerState & INotificationsMenuContainerDispatch> {
     componentWillReceiveProps(props: INotificationsMenuContainerProps & INotificationsMenuContainerState & INotificationsMenuContainerDispatch) {
         if (this.props.count !== props.count) {
-            props.fetchNotifications(null);
+            props.fetchNotifications(undefined);
         }
     }
 
@@ -60,8 +60,8 @@ class NotificationsContainer extends React.Component<INotificationsMenuContainer
 const mapStateToProps = (state: IRootState) => {
     const notifications = (state.auth.session && state.auth.session.wallet) ? state.socket.notifications.filter(l =>
         ((state.auth.session.role && Number(state.auth.session.role.id) === l.role) || l.role === 0) &&
-        l.id === state.auth.session.wallet.id &&
-        l.ecosystem === state.auth.session.access.ecosystem
+        l.id === state.auth.session.wallet!.id &&
+        l.ecosystem === state.auth.session.access!.ecosystem
     ).map(l => l.count) : [];
     const count = notifications.length ? notifications.reduce((a, b) => a + b) : 0;
 
@@ -77,4 +77,4 @@ const mapDispatchToProps = {
     fetchNotifications: fetchNotifications.started
 };
 
-export default connect<INotificationsMenuContainerState, INotificationsMenuContainerDispatch, INotificationsMenuContainerProps>(mapStateToProps, mapDispatchToProps)(NotificationsContainer);
+export default connect<INotificationsMenuContainerState, INotificationsMenuContainerDispatch, INotificationsMenuContainerProps, IRootState>(mapStateToProps, mapDispatchToProps)(NotificationsContainer);

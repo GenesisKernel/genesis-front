@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { navigate } from 'modules/engine/actions';
@@ -76,4 +76,4 @@ const mapDispatchToProps = {
     displayData: displayData.started
 };
 
-export default connect<IProtypoContainerState, IProtypoContainerDispatch, IProtypoContainerProps>(mapStateToProps, mapDispatchToProps)(ProtypoContainer);
+export default connect<IProtypoContainerState, IProtypoContainerDispatch, IProtypoContainerProps, IRootState>(mapStateToProps, mapDispatchToProps)(ProtypoContainer);

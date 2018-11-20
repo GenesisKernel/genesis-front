@@ -37,7 +37,7 @@ export default connect(mapStateToProps, {
     onCreate: (params: ICreateWalletCall) => createWallet.started(params),
     onImportSeed: (file: File) => importSeed.started(file),
     onImportSeedConfirmation: (file: File) => importSeedConfirmation.started(file),
-    onGenerateSeed: () => generateSeed.started(null),
+    onGenerateSeed: () => generateSeed.started(undefined),
     onChangeSeed: (value: string) => changeSeed(value),
     onChangeSeedConfirmation: (value: string) => changeSeedConfirmation(value),
     onDownloadSeed: (seed: string) => sendAttachment({

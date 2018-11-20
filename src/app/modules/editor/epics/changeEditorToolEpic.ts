@@ -20,9 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
 import { Epic } from 'modules';
-import { changeEditorTool, getPageTree } from '../actions';
+import { changeEditorTool } from '../actions';
 import { flatMap, map, catchError } from 'rxjs/operators';
 import { from, of } from 'rxjs';
 
@@ -50,18 +49,10 @@ const changeEditorToolEpic: Epic = (action$, store, { api }) => action$.ofAction
                     })))
                 );
 
-            case 'constructor':
-                return of<Action>(
-                    getPageTree.started(null),
-                    changeEditorTool.done({
-                        params: action.payload,
-                        result: null
-                    }));
-
             default:
                 return of(changeEditorTool.done({
                     params: action.payload,
-                    result: null
+                    result: []
                 }));
         }
     })

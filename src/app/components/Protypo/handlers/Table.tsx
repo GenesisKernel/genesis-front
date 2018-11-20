@@ -42,7 +42,7 @@ interface ITableContext {
 }
 
 class Table extends React.Component<ITableProps> {
-    private _cachedSourceData: ISource;
+    private _cachedSourceData?: ISource;
 
     static contextTypes = {
         resolveSource: propTypes.func.isRequired,
@@ -50,13 +50,22 @@ class Table extends React.Component<ITableProps> {
     };
 
     shouldComponentUpdate(props: ITableProps, state: never, context: ITableContext) {
-        const source = context.resolveSource(props.source);
-        return !_.isEqual(props, this.props) || !_.isEqual(this._cachedSourceData, source);
+        if (props.source) {
+            const source = context.resolveSource(props.source);
+            return !_.isEqual(props, this.props) || !_.isEqual(this._cachedSourceData, source);
+        }
+        else {
+            return false;
+        }
     }
 
     render() {
         // TODO: refactoring
         const context = (this as any).context as ITableContext;
+
+        if (!this.props.source) {
+            return null;
+        }
 
         this._cachedSourceData = context.resolveSource(this.props.source);
 
@@ -67,7 +76,7 @@ class Table extends React.Component<ITableProps> {
         let columns: { title: string, index: number }[] = [];
         if (this.props.columns) {
             this.props.columns.forEach(col => {
-                const index = this._cachedSourceData.columns.indexOf(col.Name);
+                const index = this._cachedSourceData!.columns.indexOf(col.Name);
                 if (-1 !== index) {
                     columns.push({
                         title: col.Title,
@@ -141,7 +150,7 @@ class Table extends React.Component<ITableProps> {
                         <tr key={rowIndex}>
                             {columns.map((col) => (
                                 <td key={col.index}>
-                                    {renderValue(row[col.index], this._cachedSourceData.types[col.index])}
+                                    {renderValue(row[col.index], this._cachedSourceData!.types[col.index])}
                                 </td>
                             ))}
                         </tr>

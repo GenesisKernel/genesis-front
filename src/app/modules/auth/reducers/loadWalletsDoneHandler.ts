@@ -24,7 +24,7 @@ import { State } from '../reducer';
 import { loadWallets } from '../actions';
 import { Reducer } from 'modules';
 
-const loadWalletsDoneHandler: Reducer<typeof loadWallets.done, State> = (state, payload) => ({
+const loadWalletsDoneHandler: Reducer<typeof loadWallets.done, State> = (state, payload): State => ({
     ...state,
     wallets: payload.result
 });

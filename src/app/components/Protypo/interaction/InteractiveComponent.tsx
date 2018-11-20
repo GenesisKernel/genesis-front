@@ -51,7 +51,7 @@ const conditionContext: { [K in TReaction]: keyof IInteractiveComponentReactions
 
 const tryRegisterConditions = (props: IInteractiveComponentProps, interactionManager: InteractionManager) => {
     if (interactionManager) {
-        Object.keys(conditionContext).forEach((reaction: TReaction) => {
+        (Object.keys(conditionContext) as TReaction[]).forEach((reaction: TReaction) => {
             const dependentPropName = conditionContext[reaction];
             const dependentProp = props[dependentPropName];
 

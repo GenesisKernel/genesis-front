@@ -52,7 +52,7 @@ import SimpleSource from './handlers/SimpleSource';
 import setTitle from './functions/setTitle';
 import addToolButton from './functions/addToolButton';
 
-const handlers = {
+const handlers: { [type: string]: any } = {
     'arraytosource': SimpleSource,
     'button': Button,
     'code': Code,
@@ -86,7 +86,7 @@ const handlers = {
     'hint': Hint
 };
 
-const functions = {
+const functions: { [name: string]: any } = {
     'settitle': setTitle,
     'addtoolbutton': addToolButton
 };

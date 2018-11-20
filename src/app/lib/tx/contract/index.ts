@@ -60,9 +60,9 @@ export interface IContractBuffer {
 
 export default class Contract {
     private _context: IContractContext;
-    private _keyID: Int64BE;
+    private _keyID?: Int64BE;
+    private _publicKey?: ArrayBuffer;
     private _time: number;
-    private _publicKey: ArrayBuffer;
     private _fields: {
         [name: string]: IField;
     } = {};
@@ -118,9 +118,9 @@ export default class Contract {
                 ID: this._context.id,
                 Time: this._time,
                 EcosystemID: this._context.ecosystemID,
-                KeyID: this._keyID,
+                KeyID: this._keyID!,
                 NetworkID: this._context.schema.network,
-                PublicKey: this._publicKey
+                PublicKey: this._publicKey!
             },
             Params: params
         };

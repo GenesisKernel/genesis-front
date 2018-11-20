@@ -57,8 +57,8 @@ const StyledTooltip = themed.div`
 `;
 
 class Tooltip extends React.Component<ITooltipProps, ITooltipState> {
-    private _container: HTMLDivElement = null;
-    private _tooltip: HTMLDivElement = null;
+    private _container: HTMLDivElement | null = null;
+    private _tooltip: HTMLDivElement | null = null;
 
     state: ITooltipState = {
         active: false,
@@ -69,6 +69,10 @@ class Tooltip extends React.Component<ITooltipProps, ITooltipState> {
     };
 
     onHover = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!this._container || !this._tooltip) {
+            return;
+        }
+
         let left = 0;
         let top = this._container.offsetTop;
 

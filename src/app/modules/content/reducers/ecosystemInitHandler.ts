@@ -24,10 +24,9 @@ import { State } from '../reducer';
 import { ecosystemInit } from '../actions';
 import { Reducer } from 'modules';
 
-const ecosystemInitHandler: Reducer<typeof ecosystemInit.started, State> = (state, payload) => ({
+const ecosystemInitHandler: Reducer<typeof ecosystemInit, State> = (state, payload): State => ({
     ...state,
-    preloading: true,
-    preloadingError: null
+    stylesheet: payload.stylesheet
 });
 
 export default ecosystemInitHandler;

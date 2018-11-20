@@ -34,7 +34,7 @@ export interface IToolButtonProps {
 }
 
 const ToolButton: React.SFC<IToolButtonProps> = props => (
-    <li className={classNames({ disabled: props.disabled }, props.className)} style={{ float: props.right ? 'right' : null }}>
+    <li className={classNames({ disabled: props.disabled }, props.className)} style={{ float: props.right ? 'right' : 'none' }}>
         <button onClick={props.onClick} disabled={props.disabled}>
             <em className={`icon ${props.icon}`} />
             {props.children && (<span className="button-label">{props.children}</span>)}
@@ -42,7 +42,7 @@ const ToolButton: React.SFC<IToolButtonProps> = props => (
     </li>
 );
 
-const StyledToolButton = themed(ToolButton) `
+const StyledToolButton = themed(ToolButton)`
     display: inline-block;
     vertical-align: top;
 

@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button } from 'react-bootstrap';
 
@@ -30,7 +30,7 @@ import Heading from 'components/Auth/Heading';
 export interface IOfflineProps {
     isConnecting: boolean;
     isConnected: boolean;
-    checkOnline?: (params: null) => void;
+    checkOnline: () => void;
 }
 
 interface IOfflineState {
@@ -71,7 +71,7 @@ class Offline extends React.Component<IOfflineProps, IOfflineState> {
         const seconds = this.state.seconds - 1;
 
         if (0 >= seconds) {
-            this.props.checkOnline(null);
+            this.props.checkOnline();
         }
         else {
             this.setState({
@@ -107,7 +107,7 @@ class Offline extends React.Component<IOfflineProps, IOfflineState> {
                             )}
                         </p>
                         <div>
-                            <Button bsStyle="link" onClick={this.props.isConnecting ? null : this.props.checkOnline}>
+                            <Button bsStyle="link" onClick={this.props.isConnecting ? undefined : this.props.checkOnline}>
                                 <FormattedMessage id="general.service.retry" defaultMessage="Retry now" />
                             </Button>
                         </div>

@@ -24,7 +24,7 @@ import { State } from '../reducer';
 import { selectWallet } from '../actions';
 import { Reducer } from 'modules';
 
-const selectWalletHandler: Reducer<typeof selectWallet, State> = (state, payload) => ({
+const selectWalletHandler: Reducer<typeof selectWallet, State> = (state, payload): State => ({
     ...state,
     session: {
         ...state.session,

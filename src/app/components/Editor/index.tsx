@@ -22,7 +22,7 @@
 
 /// <reference types="monaco-editor" />
 
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import MonacoEditor from 'react-monaco-editor';
 import registerProtypo from './protypo';
@@ -51,8 +51,6 @@ interface IEditorProps {
 }
 
 export default class Editor extends React.Component<IEditorProps> {
-    public editor: monaco.editor.ICodeEditor;
-
     editorWillMount(editor: typeof monaco) {
         registerProtypo(editor);
         registerSimvolio(editor);
@@ -60,9 +58,8 @@ export default class Editor extends React.Component<IEditorProps> {
 
     render() {
         return (
-            <StyledEditor className={this.props.height ? null : 'editor-flex'}>
+            <StyledEditor className={this.props.height ? undefined : 'editor-flex'}>
                 <MonacoEditor
-                    ref={l => this.editor = l && l.editor}
                     language={this.props.language}
                     value={this.props.value}
                     onChange={this.props.onChange && this.props.onChange.bind(this)}

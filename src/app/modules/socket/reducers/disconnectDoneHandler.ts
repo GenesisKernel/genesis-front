@@ -26,8 +26,8 @@ import { Reducer } from 'modules';
 
 const disconnectDone: Reducer<typeof disconnect.done, State> = (state, payload) => ({
     ...state,
-    socket: null,
-    session: null,
+    socket: undefined,
+    session: '',
     subscriptions: [],
     connected: false
 });

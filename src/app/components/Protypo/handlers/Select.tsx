@@ -49,17 +49,17 @@ interface ISelectContext {
 const Select: React.SFC<ISelectProps> = (props, context: ISelectContext) => {
     const compiledValidators: Validator[] = [];
     _.forEach(props.validate, (value, name) => {
-        const validator = Validation.validators[name];
+        const validator = (Validation.validators as any)[name];
         if (validator) {
             compiledValidators.push(validator(value));
         }
     });
 
-    const source = context.protypo.resolveSource(props.source);
+    const source = props.source ? context.protypo.resolveSource(props.source) : undefined;
     let options: { name: string, value: string }[] = [];
     if (source) {
-        const nameIndex = source.columns.indexOf(props.namecolumn);
-        const valueIndex = source.columns.indexOf(props.valuecolumn);
+        const nameIndex = props.namecolumn ? source.columns.indexOf(props.namecolumn) : -1;
+        const valueIndex = props.valuecolumn ? source.columns.indexOf(props.valuecolumn) : -1;
         const nameType = source.types[nameIndex];
 
         options = source.data.map(row => {
@@ -96,9 +96,9 @@ const Select: React.SFC<ISelectProps> = (props, context: ISelectContext) => {
     return (
         <Validation.components.ValidatedSelect
             className={[props.class, props.className].join(' ')}
-            name={props.name}
+            name={props.name || ''}
             validators={compiledValidators}
-            defaultValue={defaultValue || (options && options.length && options[0].value)}
+            defaultValue={defaultValue || (options && options.length && options[0].value).toString()}
         >
             {options.map((l, index) => (
                 <option key={index} value={l.value}>

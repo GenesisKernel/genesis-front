@@ -25,13 +25,13 @@ import { login, importWallet, createWallet } from '../actions';
 import { modalShow } from 'modules/modal/actions';
 import { map } from 'rxjs/operators';
 
-const authErrorEpic: Epic = action$ => action$.ofType(login.failed.type, importWallet.failed.type, createWallet.failed.type).pipe(
+const authErrorEpic: Epic = action$ => action$.ofAction(login.failed, importWallet.failed, createWallet.failed).pipe(
     map(action =>
         modalShow({
             id: 'AUTH_ERROR',
             type: 'AUTH_ERROR',
             params: {
-                error: (action as any).payload.error
+                error: action.payload.error
             }
         })
     )

@@ -30,10 +30,10 @@ export type State =
     IModal;
 
 export const initialState: State = {
-    id: null,
-    type: null,
-    result: null,
-    params: null
+    id: '',
+    type: '',
+    result: undefined,
+    params: {}
 };
 
 export default reducerWithInitialState<State>(initialState)

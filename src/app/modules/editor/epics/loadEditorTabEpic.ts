@@ -48,7 +48,7 @@ const loadEditorTabEpic: Epic = (action$, store, { api }) => action$.ofAction(lo
                     })).pipe(
                         map(row => ({
                             id: contract.tableid.toString(),
-                            name: nameParser.exec(contract.name)[2],
+                            name: nameParser.exec(contract.name)![2],
                             contract: row.value
                         })),
                         map(data => loadEditorTab.done({
@@ -142,7 +142,7 @@ const loadEditorTabEpic: Epic = (action$, store, { api }) => action$.ofAction(lo
         })
     )),
     catchError(error => of(loadEditorTab.failed({
-        params: null,
+        params: null as any,
         error
     })))
 );

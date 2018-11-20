@@ -24,11 +24,11 @@ import { State } from '../reducer';
 import { updateSettings } from '../actions';
 import { Reducer } from 'modules';
 
-const updateSettingsHandler: Reducer<typeof updateSettings, State> = (state, payload) => ({
+const updateSettingsHandler: Reducer<typeof updateSettings, State> = (state, payload): State => ({
     ...state,
     session: {
         ...state.session,
-        wallet: {
+        wallet: state.session.wallet && {
             ...state.session.wallet,
             settings: {
                 ...state.session.wallet.settings,

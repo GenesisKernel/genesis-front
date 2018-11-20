@@ -23,6 +23,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { INotificationsMessage } from 'genesis/socket';
+import { IWallet } from 'genesis/auth';
 import { IKeyInfo, IRoleInfo, IWalletData } from 'genesis/api';
 import { FormattedMessage } from 'react-intl';
 
@@ -33,8 +34,7 @@ import WalletButton from './WalletButton';
 
 export interface IWalletListProps {
     className?: string;
-    pending: boolean;
-    wallets: IWalletData[];
+    wallets: (IWallet & IWalletData)[];
     notifications: INotificationsMessage[];
     activationEnabled: boolean;
     onCreate: () => any;
@@ -42,7 +42,7 @@ export interface IWalletListProps {
     onLogin: (params: { wallet: IWalletData, password: string }) => any;
     onCopy: (wallet: IWalletData) => any;
     onRegister: (wallet: IWalletData) => any;
-    onSelect: (params: { wallet: IWalletData, access: IKeyInfo, role?: IRoleInfo }) => any;
+    onSelect: (params: { wallet: IWallet, access: IKeyInfo, role?: IRoleInfo }) => any;
 }
 
 const WalletList: React.SFC<IWalletListProps> = props => (
@@ -60,7 +60,7 @@ const WalletList: React.SFC<IWalletListProps> = props => (
                             notifications={props.notifications.filter(l => l.id === wallet.id)}
                             onRemove={() => props.onRemove(wallet)}
                             onCopy={() => props.onCopy(wallet)}
-                            onRegister={props.activationEnabled ? () => props.onRegister(wallet) : null}
+                            onRegister={props.activationEnabled ? () => props.onRegister(wallet) : undefined}
                             onSelect={params => props.onSelect({
                                 access: params.access,
                                 role: params.role,

@@ -131,7 +131,7 @@ export interface ITableProps {
 }
 
 interface ITableState {
-    sorter: {
+    sorter?: {
         columnIndex: number;
         descending: boolean;
     };
@@ -155,26 +155,24 @@ class Table extends React.Component<ITableProps, ITableState> {
             }
         }
 
-        return null;
+        return undefined;
     }
 
     setSorter(columnIndex: number) {
         this.setState({
             sorter: {
                 columnIndex,
-                descending: this.state.sorter && this.state.sorter.columnIndex === columnIndex && !this.state.sorter.descending
+                descending: !!(this.state.sorter && this.state.sorter.columnIndex === columnIndex && !this.state.sorter.descending)
             }
         });
     }
 
     getSortedData() {
-        if (!this.state.sorter) {
-            return this.props.data;
-        }
-        else {
+        if (this.state.sorter) {
+            const sorter = this.state.sorter;
             return this.props.data.sort((left, right) => {
-                let valueA: any = left[this.state.sorter.columnIndex].toString();
-                let valueB: any = right[this.state.sorter.columnIndex].toString();
+                let valueA: any = left[sorter.columnIndex].toString();
+                let valueB: any = right[sorter.columnIndex].toString();
 
                 if (valueA === valueB) {
                     return 0;
@@ -189,13 +187,16 @@ class Table extends React.Component<ITableProps, ITableState> {
                     valueB = valueBNumeric;
                 }
 
-                if (this.state.sorter.descending) {
+                if (sorter.descending) {
                     return valueB > valueA ? 1 : -1;
                 }
                 else {
                     return valueB > valueA ? -1 : 11;
                 }
             });
+        }
+        else {
+            return this.props.data;
         }
     }
 

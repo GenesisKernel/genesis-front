@@ -26,12 +26,10 @@ import { map } from 'rxjs/operators';
 import keyring from 'lib/keyring';
 
 const generateSeedEpic: Epic = (action$, store) => action$.ofAction(generateSeed.started).pipe(
-    map(action =>
-        generateSeed.done({
-            params: action.payload,
-            result: keyring.generateSeed()
-        })
-    )
+    map(action => generateSeed.done({
+        params: action.payload,
+        result: keyring.generateSeed()
+    }))
 );
 
 export default generateSeedEpic;

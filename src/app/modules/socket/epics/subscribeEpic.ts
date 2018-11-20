@@ -50,7 +50,7 @@ const subscribeEpic: Epic = (action$, store) => action$.ofAction(subscribe.start
         }
         else {
             return new Observable<Action>((observer: Observer<Action>) => {
-                const sub = store.value.socket.socket.subscribe<INotificationPck[]>('client' + action.payload.id, message => {
+                const sub = store.value.socket.socket!.subscribe<INotificationPck[]>('client' + action.payload.id, message => {
                     let count = 0;
 
                     message.data.forEach(n => {
@@ -61,7 +61,7 @@ const subscribeEpic: Epic = (action$, store) => action$.ofAction(subscribe.start
                             ) &&
                             store.value.auth.session.wallet &&
                             store.value.auth.session.wallet.id === action.payload.id &&
-                            store.value.auth.session.access.ecosystem === n.ecosystem.toString()
+                            store.value.auth.session.access!.ecosystem === n.ecosystem.toString()
                         ) {
                             count += n.count;
                         }

@@ -24,7 +24,7 @@ import { State } from '../reducer';
 import { changeSeed } from '../actions';
 import { Reducer } from 'modules';
 
-const changeSeedConfirmationHandler: Reducer<typeof changeSeed, State> = (state, payload) => ({
+const changeSeedConfirmationHandler: Reducer<typeof changeSeed, State> = (state, payload): State => ({
     ...state,
     seedConfirm: payload
 });

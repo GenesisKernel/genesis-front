@@ -25,10 +25,13 @@ import { IInferredArguments } from 'genesis/gui';
 export type TPlatformType =
     'desktop' | 'web' | 'win32' | 'linux' | 'darwin';
 
-const isElectron = navigator.userAgent.toLowerCase().indexOf(' electron/') > -1;
-const platform: TPlatformType = isElectron ? 'desktop' : 'web';
+export type TTargetType =
+    'desktop' | 'web';
 
-let os: NodeJS.Platform = null;
+const isElectron = navigator.userAgent.toLowerCase().indexOf(' electron/') > -1;
+const target: TTargetType = isElectron ? 'desktop' : 'web';
+
+let os: NodeJS.Platform | 'web' = 'web';
 let args: IInferredArguments = {};
 
 if (isElectron) {
@@ -42,23 +45,21 @@ export default {
     // Platform.select will return only 1 value depending on which platform
     // this application runs. If 'desktop' is specified instead of providing
     // extact platform name - it will be returned instead
-    select: function <T>(platforms: {
-        desktop?: T,
-        web?: T,
-        win32?: T,
-        linux?: T,
-        darwin?: T
-    }): T {
-        if (isElectron && platforms[os]) {
-            return platforms[os];
+    select: function <T>(platforms: { [K in TPlatformType]?: T }): T | undefined {
+        if (isElectron && os in platforms) {
+            return platforms[os as TPlatformType];
         }
         else {
-            return platforms[platform];
+            return platforms[target];
         }
     },
 
+    target: function <T>(targets: { [K in TTargetType]: T }): T {
+        return targets[target];
+    },
+
     on: (platformType: TPlatformType, callback: () => void) => {
-        if (platformType === platform) {
+        if (platformType === target) {
             callback();
         }
     },
