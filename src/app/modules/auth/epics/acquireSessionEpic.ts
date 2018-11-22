@@ -23,7 +23,7 @@
 import { Epic } from 'modules';
 import { acquireSession } from '../actions';
 import { forkJoin, of, from } from 'rxjs';
-import { flatMap, catchError, filter, toArray, map } from 'rxjs/operators';
+import { flatMap, catchError, map } from 'rxjs/operators';
 import { ISection } from 'genesis/content';
 import { sectionsInit } from 'modules/sections/actions';
 import { fetchNotifications, ecosystemInit } from 'modules/content/actions';
@@ -39,13 +39,10 @@ const acquireSessionEpic: Epic = (action$, store, { api }) => action$.ofAction(a
         const client = api(action.payload);
 
         return forkJoin(
-            // Resolve sections list
             from(client.getSections({
                 locale: store.value.storage.locale
             })).pipe(
-                flatMap(sections => from(sections.list)),
-                filter(section => RemoteSectionStatus.Removed !== section.status),
-                toArray()
+                map(sections => sections.list),
             ),
             from(client.getParam({ name: 'stylesheet' })).pipe(
                 map(result => result.value),
@@ -57,12 +54,16 @@ const acquireSessionEpic: Epic = (action$, store, { api }) => action$.ofAction(a
                 const mainSection = sections.find(l => RemoteSectionStatus.Main === l.status);
                 sections.forEach(section => {
                     sectionsResult[section.urlname] = {
-                        key: section.urlname,
-                        pending: false,
                         name: section.urlname,
                         title: section.title,
                         defaultPage: section.page,
-                        breadcrumbs: [],
+                        breadcrumbs: [{
+                            caller: '',
+                            type: 'PAGE',
+                            section: section.urlname,
+                            page: section.page,
+                            params: {}
+                        }],
                         menus: [],
                         pages: []
                     };

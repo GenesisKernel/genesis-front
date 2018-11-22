@@ -57,8 +57,6 @@ declare module 'genesis/content' {
     }
 
     interface ISection {
-        readonly key: string;
-        readonly pending: boolean;
         readonly name: string;
         readonly title: string;
         readonly defaultPage: string;
