@@ -20,18 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { TConfigValueType } from '../';
+import { TSchemaValueType } from '../';
 
-const stringArrayType: TConfigValueType<string[]> = {
-    name: 'string[]',
+const stringType: TSchemaValueType<string> = {
+    name: 'string',
     isDefined: (value) => {
-        return Array.isArray(value) && 0 < value.length && value.every(l => 'string' === typeof l);
+        return null !== value && undefined !== value && 'string' === typeof value && 0 < value.length;
     },
     tryGetValue: (value, defaultValue, ...fallbackValues) => {
         const values = [value, ...fallbackValues];
         for (let i = 0; i < values.length; i++) {
             const valueCandidate = values[i];
-            if (stringArrayType.isDefined(valueCandidate)) {
+            if (stringType.isDefined(valueCandidate)) {
                 return valueCandidate;
             }
         }
@@ -40,4 +40,4 @@ const stringArrayType: TConfigValueType<string[]> = {
     }
 };
 
-export default stringArrayType;
+export default stringType;

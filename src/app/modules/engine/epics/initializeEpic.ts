@@ -30,7 +30,6 @@ import platform from 'lib/platform';
 import NodeObservable from '../util/NodeObservable';
 import keyring from 'lib/keyring';
 import { webConfigSchema } from 'lib/config';
-import Config from 'services/config';
 import { mergeFullNodes, saveWallet } from 'modules/storage/actions';
 import { flatMap, catchError, map, defaultIfEmpty } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax';
@@ -56,12 +55,11 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                     result = {};
                 }
 
-                const configParser = new Config(webConfigSchema);
                 const config: IWebSettings = {
-                    fullNodes: configParser.tryGetValue('fullNodes', platform.args.fullNode, result.fullNodes, fullNodesFallback),
-                    activationEmail: configParser.tryGetValue('activationEmail', platform.args.activationEmail, result.activationEmail),
-                    socketUrl: configParser.tryGetValue('socketUrl', platform.args.socketUrl, result.socketUrl),
-                    disableFullNodesSync: configParser.tryGetValue('disableFullNodesSync', platform.args.disableFullNodesSync, result.disableFullNodesSync)
+                    fullNodes: webConfigSchema.tryGetValue('fullNodes', platform.args.fullNode, result.fullNodes, fullNodesFallback),
+                    activationEmail: webConfigSchema.tryGetValue('activationEmail', platform.args.activationEmail, result.activationEmail),
+                    socketUrl: webConfigSchema.tryGetValue('socketUrl', platform.args.socketUrl, result.socketUrl),
+                    disableFullNodesSync: webConfigSchema.tryGetValue('disableFullNodesSync', platform.args.disableFullNodesSync, result.disableFullNodesSync)
                 };
 
                 return config;

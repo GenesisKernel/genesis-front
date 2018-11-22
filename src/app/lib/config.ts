@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { TConfigurationSchema } from 'services/config';
+import ValidationSchema from 'services/schema';
 import { IWebSettings } from 'genesis';
 
-export const webConfigSchema: TConfigurationSchema<IWebSettings> = {
+export const webConfigSchema = new ValidationSchema<IWebSettings>({
     fullNodes: {
         type: 'string[]',
         defaultValue: []
@@ -40,4 +40,4 @@ export const webConfigSchema: TConfigurationSchema<IWebSettings> = {
         type: 'boolean',
         defaultValue: false
     }
-};
+});

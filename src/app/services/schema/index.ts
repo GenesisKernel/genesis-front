@@ -24,41 +24,41 @@ import stringType from './types/string';
 import stringArrayType from './types/stringArray';
 import booleanType from './types/boolean';
 
-export type TSchemaValueType =
+export type TSchemaType =
     'string' | 'string[]' |
     'boolean';
 
 export interface ISchemaValue<T> {
-    type: TSchemaValueType;
+    type: TSchemaType;
     defaultValue: T;
 }
 
-export type TConfigurationSchema<T> = {
+export type TValidationSchema<T> = {
     [K in keyof T]: ISchemaValue<T[K]>;
 };
 
-export type TConfigValueType<T> = {
-    name: TSchemaValueType;
+export type TSchemaValueType<T> = {
+    name: TSchemaType;
     isDefined: (value: any) => boolean;
     tryGetValue: (value: any, defaultValue: T, ...fallbackValues: any[]) => T;
 };
 
-const configValueTypes: { [K in TSchemaValueType]: TConfigValueType<any> } = {
+const schemaValueTypes: { [K in TSchemaType]: TSchemaValueType<any> } = {
     'string': stringType,
     'string[]': stringArrayType,
     'boolean': booleanType,
 };
 
-class Config<T> {
-    private _schema: TConfigurationSchema<T>;
+class ValidationSchema<T> {
+    private _schema: TValidationSchema<T>;
 
-    constructor(schema: TConfigurationSchema<T>) {
+    constructor(schema: TValidationSchema<T>) {
         this._schema = schema;
     }
 
     public tryGetValue = <K extends keyof T>(key: K, value: any, ...fallbackValues: any[]) => {
         const valueSchema = this._schema[key];
-        return configValueTypes[valueSchema.type].tryGetValue(value, valueSchema.defaultValue, ...fallbackValues) as T[K];
+        return schemaValueTypes[valueSchema.type].tryGetValue(value, valueSchema.defaultValue, ...fallbackValues) as T[K];
     }
 
     public deserialize = (candidate: any) => {
@@ -74,4 +74,4 @@ class Config<T> {
     }
 }
 
-export default Config;
+export default ValidationSchema;

@@ -20,18 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { TConfigValueType } from '../';
+import { TSchemaValueType } from '../';
 
-const booleanType: TConfigValueType<boolean> = {
-    name: 'boolean',
+const stringArrayType: TSchemaValueType<string[]> = {
+    name: 'string[]',
     isDefined: (value) => {
-        return null !== value && undefined !== value && 'boolean' === typeof value;
+        return Array.isArray(value) && 0 < value.length && value.every(l => 'string' === typeof l);
     },
     tryGetValue: (value, defaultValue, ...fallbackValues) => {
         const values = [value, ...fallbackValues];
         for (let i = 0; i < values.length; i++) {
             const valueCandidate = values[i];
-            if (booleanType.isDefined(valueCandidate)) {
+            if (stringArrayType.isDefined(valueCandidate)) {
                 return valueCandidate;
             }
         }
@@ -40,4 +40,4 @@ const booleanType: TConfigValueType<boolean> = {
     }
 };
 
-export default booleanType;
+export default stringArrayType;

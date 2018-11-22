@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Config from './';
+import ValidationSchema from './';
 
 interface ISettingsMock {
     stringParam: string;
@@ -28,8 +28,8 @@ interface ISettingsMock {
     booleanParam: boolean;
 }
 
-const createConfigMock = () =>
-    new Config<ISettingsMock>({
+const createSchemaMock = () =>
+    new ValidationSchema<ISettingsMock>({
         stringParam: {
             type: 'string',
             defaultValue: ''
@@ -45,68 +45,68 @@ const createConfigMock = () =>
     });
 
 test('String value', () => {
-    const config = createConfigMock();
-    expect(config.tryGetValue('stringParam', 'test')).toMatch('test');
+    const schema = createSchemaMock();
+    expect(schema.tryGetValue('stringParam', 'test')).toMatch('test');
 });
 
 test('String invalid value fallback to proposal', () => {
-    const config = createConfigMock();
-    expect(config.tryGetValue('stringParam', 123, 'PROPOSAL')).toMatch('PROPOSAL');
+    const schema = createSchemaMock();
+    expect(schema.tryGetValue('stringParam', 123, 'PROPOSAL')).toMatch('PROPOSAL');
 });
 
 test('String invalid value fallback to multiple proposals', () => {
-    const config = createConfigMock();
-    expect(config.tryGetValue('stringParam', 123, 12345678, 'PROPOSAL')).toMatch('PROPOSAL');
+    const schema = createSchemaMock();
+    expect(schema.tryGetValue('stringParam', 123, 12345678, 'PROPOSAL')).toMatch('PROPOSAL');
 });
 
 test('String invalid value fallback to default', () => {
-    const config = createConfigMock();
-    expect(config.tryGetValue('stringParam', 123)).toMatch('');
+    const schema = createSchemaMock();
+    expect(schema.tryGetValue('stringParam', 123)).toMatch('');
 });
 
 test('String array value', () => {
-    const config = createConfigMock();
-    expect(config.tryGetValue('stringArrayParam', ['test'])).toEqual(['test']);
+    const schema = createSchemaMock();
+    expect(schema.tryGetValue('stringArrayParam', ['test'])).toEqual(['test']);
 });
 
 test('String array invalid value fallback to proposal', () => {
-    const config = createConfigMock();
-    expect(config.tryGetValue('stringArrayParam', 'test', ['PROPOSAL'])).toEqual(['PROPOSAL']);
+    const schema = createSchemaMock();
+    expect(schema.tryGetValue('stringArrayParam', 'test', ['PROPOSAL'])).toEqual(['PROPOSAL']);
 });
 
 test('String array invalid value fallback to multiple proposals', () => {
-    const config = createConfigMock();
-    expect(config.tryGetValue('stringArrayParam', 123, [], 12345678, ['PROPOSAL'])).toEqual(['PROPOSAL']);
+    const schema = createSchemaMock();
+    expect(schema.tryGetValue('stringArrayParam', 123, [], 12345678, ['PROPOSAL'])).toEqual(['PROPOSAL']);
 });
 
 test('String array invalid value fallback to default', () => {
-    const config = createConfigMock();
-    expect(config.tryGetValue('stringArrayParam', 'test')).toEqual([]);
+    const schema = createSchemaMock();
+    expect(schema.tryGetValue('stringArrayParam', 'test')).toEqual([]);
 });
 
 test('Boolean value', () => {
-    const config = createConfigMock();
-    expect(config.tryGetValue('booleanParam', true)).toEqual(true);
+    const schema = createSchemaMock();
+    expect(schema.tryGetValue('booleanParam', true)).toEqual(true);
 });
 
 test('Boolean invalid value fallback to proposal', () => {
-    const config = createConfigMock();
-    expect(config.tryGetValue('booleanParam', 123, true)).toEqual(true);
+    const schema = createSchemaMock();
+    expect(schema.tryGetValue('booleanParam', 123, true)).toEqual(true);
 });
 
 test('Boolean invalid value fallback to multiple proposals', () => {
-    const config = createConfigMock();
-    expect(config.tryGetValue('booleanParam', 123, 12345678, true)).toEqual(true);
+    const schema = createSchemaMock();
+    expect(schema.tryGetValue('booleanParam', 123, 12345678, true)).toEqual(true);
 });
 
 test('Boolean invalid value fallback to default', () => {
-    const config = createConfigMock();
-    expect(config.tryGetValue('booleanParam', 123)).toEqual(false);
+    const schema = createSchemaMock();
+    expect(schema.tryGetValue('booleanParam', 123)).toEqual(false);
 });
 
 test('Complex deserialization with truthy values', () => {
-    const config = createConfigMock();
-    expect(config.deserialize({
+    const schema = createSchemaMock();
+    expect(schema.deserialize({
         stringParam: 'hello',
         stringArrayParam: ['world'],
         booleanParam: true
@@ -118,8 +118,8 @@ test('Complex deserialization with truthy values', () => {
 });
 
 test('Complex deserialization with falsy values', () => {
-    const config = createConfigMock();
-    expect(config.deserialize({
+    const schema = createSchemaMock();
+    expect(schema.deserialize({
         stringParam: 123,
         stringArrayParam: 456,
         booleanParam: 789
@@ -131,8 +131,8 @@ test('Complex deserialization with falsy values', () => {
 });
 
 test('Complex deserialization with missing values', () => {
-    const config = createConfigMock();
-    expect(config.deserialize({})).toEqual({
+    const schema = createSchemaMock();
+    expect(schema.deserialize({})).toEqual({
         stringParam: '',
         stringArrayParam: [],
         booleanParam: false
