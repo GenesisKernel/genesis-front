@@ -29,6 +29,8 @@ import urlJoin from 'url-join';
 import platform from 'lib/platform';
 import NodeObservable from '../util/NodeObservable';
 import keyring from 'lib/keyring';
+import { webConfigSchema } from 'lib/config';
+import Config from 'services/config';
 import { mergeFullNodes, saveWallet } from 'modules/storage/actions';
 import { flatMap, catchError, map, defaultIfEmpty } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax';
@@ -54,15 +56,14 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                     result = {};
                 }
 
+                const configParser = new Config(webConfigSchema);
                 const config: IWebSettings = {
-                    fullNodes: (platform.args.fullNode && platform.args.fullNode.length) ? platform.args.fullNode :
-                        (result.fullNodes && Array.isArray(result.fullNodes) && result.fullNodes.length) ? result.fullNodes :
-                            fullNodesFallback,
-                    activationEmail: platform.args.activationEmail || result.activationEmail,
-                    socketUrl: platform.args.socketUrl || ((result.socketUrl && 'string' === typeof result.socketUrl) ? result.socketUrl : undefined),
-                    disableFullNodesSync: 'boolean' === typeof platform.args.disableFullNodesSync ? platform.args.disableFullNodesSync :
-                        ('boolean' === typeof result.disableFullNodesSync) ? result.disableFullNodesSync : undefined
+                    fullNodes: configParser.tryGetValue('fullNodes', platform.args.fullNode, result.fullNodes, fullNodesFallback),
+                    activationEmail: configParser.tryGetValue('activationEmail', platform.args.activationEmail, result.activationEmail),
+                    socketUrl: configParser.tryGetValue('socketUrl', platform.args.socketUrl, result.socketUrl),
+                    disableFullNodesSync: configParser.tryGetValue('disableFullNodesSync', platform.args.disableFullNodesSync, result.disableFullNodesSync)
                 };
+
                 return config;
 
             }),

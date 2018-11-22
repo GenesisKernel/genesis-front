@@ -76,7 +76,7 @@ test('String array invalid value fallback to proposal', () => {
 
 test('String array invalid value fallback to multiple proposals', () => {
     const config = createConfigMock();
-    expect(config.tryGetValue('stringArrayParam', 123, 12345678, ['PROPOSAL'])).toEqual(['PROPOSAL']);
+    expect(config.tryGetValue('stringArrayParam', 123, [], 12345678, ['PROPOSAL'])).toEqual(['PROPOSAL']);
 });
 
 test('String array invalid value fallback to default', () => {
