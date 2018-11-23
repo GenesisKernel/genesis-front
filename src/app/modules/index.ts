@@ -20,13 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
+import { Action as ReduxAction } from 'redux';
 import { Epic as NativeEpic } from 'redux-observable';
 import { IStoreDependencies } from './dependencies';
 import { combineReducers } from 'redux';
 import { combineEpics } from 'redux-observable';
 import { loadingBarReducer } from 'react-redux-loading-bar';
-import { ActionCreator, Failure, Success } from 'typescript-fsa';
+import { ActionCreator, Failure, Success, isType, Action } from 'typescript-fsa';
 import { connectRouter } from 'connected-react-router';
 import { History } from 'history';
 import { persistReducer, PersistConfig } from 'redux-persist';
@@ -44,8 +44,10 @@ import * as notifications from './notifications';
 import * as storage from './storage';
 import * as socket from './socket';
 import * as router from './router';
+import { Observable } from 'rxjs/Observable';
+import { filter } from 'rxjs/operators';
 
-export type Epic = NativeEpic<Action<any>, Action<any>, IRootState, IStoreDependencies>;
+export type Epic = NativeEpic<ReduxAction<any>, ReduxAction<any>, IRootState, IStoreDependencies>;
 export type Reducer<T, S> =
     T extends ActionCreator<Failure<infer P, infer E>> ? (state: S, payload: Failure<P, E>) => S :
     T extends ActionCreator<Success<infer P2, infer R>> ? (state: S, payload: Success<P2, R>) => S :
@@ -67,6 +69,12 @@ export interface IRootState {
     loadingBar: any;
     router: router.State;
 }
+
+export const ofAction = <A>(actionCreator: ActionCreator<A>) => (source: Observable<any>) => source.pipe(
+    filter<Action<A>>(action => {
+        return isType(action, actionCreator);
+    })
+);
 
 export const rootEpic = combineEpics(
     auth.epic,

@@ -20,16 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Epic } from 'modules';
+import { Epic, ofAction } from 'modules';
 import { locationChange } from '../actions';
 import { renderPage, popPage } from 'modules/sections/actions';
 import findPage from 'modules/sections/util/findPage';
 import { of, empty } from 'rxjs';
-import { flatMap, filter } from 'rxjs/operators';
+import { filter, delayWhen, switchMap } from 'rxjs/operators';
 
-const sectionLoadEpic: Epic = (action$, store, { routerService }) => action$.ofAction(locationChange).pipe(
-    filter(l => store.value.auth.isAcquired),
-    flatMap(action => {
+const sectionLoadEpic: Epic = (action$, store, { routerService }) => action$.pipe(
+    delayWhen(() => store.pipe(
+        filter(l => l.auth.isAcquired)
+    )),
+    ofAction(locationChange),
+    switchMap(action => {
         const match = routerService.matchRoute('(/)(:section)(/)(:page)(/)', action.payload.location.pathname + action.payload.location.search);
 
         if (store.value.auth.isAuthenticated && match) {
