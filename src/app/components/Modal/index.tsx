@@ -33,10 +33,6 @@ export interface IModalProps<P, R> {
     children: React.ReactNode[];
 }
 
-export type TModalComponentClass<P, R> =
-    React.ComponentType<IModalProps<P, R>> |
-    React.SFC<IModalProps<P, R>>;
-
 const StyledHeader = themed.div`
     background: ${props => props.theme.modalHeaderBackground};
     color: ${props => props.theme.modalHeaderForeground};

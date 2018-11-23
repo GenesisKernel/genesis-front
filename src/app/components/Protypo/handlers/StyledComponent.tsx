@@ -23,12 +23,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-type TComponentConstructor<T> = React.ComponentClass<T & IStyledComponentProps> | React.SFC<T & IStyledComponentProps>;
-
 interface IStyledComponentProps {
     style?: string;
 }
 
-export default function styledComponent<T>(Component: TComponentConstructor<T & IStyledComponentProps>) {
+export default function styledComponent<T>(Component: React.ComponentType<T & IStyledComponentProps>) {
     return styled(Component)`${props => props.style}`;
 }
