@@ -49,8 +49,9 @@ import ChangeLocaleModal from './ChangeLocale';
 import CopyWalletModal from './Auth/CopyWalletModal';
 import RegisterModal from './Auth/RegisterModal';
 import RolePickerModal from 'containers/Modal/RolePickerModal';
+import { IModalProps } from '.';
 
-const MODAL_COMPONENTS: { [name: string]: React.ComponentClass<any> } = {
+const MODAL_COMPONENTS: { [name: string]: React.ComponentType<IModalProps<any, any>> } = {
     'AUTHORIZE': AuthorizeModal,
     'AUTH_ERROR': AuthErrorModal,
     'AUTH_REMOVE_WALLET': AuthRemoveWalletModal,
@@ -84,21 +85,21 @@ export interface IModalProviderProps {
 }
 
 class ModalProvider extends React.Component<IModalProviderProps> {
-    onResult(data: any) {
+    onResult = (data: any) => {
         this.props.onResult({
             reason: 'RESULT',
             data
         });
     }
 
-    onCancel() {
+    onCancel = () => {
         this.props.onResult({
             reason: 'CANCEL',
             data: null
         });
     }
 
-    notify(type: string, params: any) {
+    notify = (type: string, params: any) => {
         this.props.enqueueNotification({
             id: uuid.v4(),
             type,
@@ -113,10 +114,9 @@ class ModalProvider extends React.Component<IModalProviderProps> {
                 {Modal && (
                     <Modal
                         key={this.props.modal.id}
-                        active
-                        onResult={this.onResult.bind(this)}
-                        onCancel={this.onCancel.bind(this)}
-                        notify={this.notify.bind(this)}
+                        onResult={this.onResult}
+                        onCancel={this.onCancel}
+                        notify={this.notify}
                         changeLocale={this.props.changeLocale}
                         {...this.props.modal}
                     />

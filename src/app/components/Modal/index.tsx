@@ -30,7 +30,6 @@ export interface IModalProps<P, R> {
     onCancel: () => void;
     notify: (type: string, params: any) => void;
     changeLocale: (locale: string) => void;
-    children: React.ReactNode[];
 }
 
 const StyledHeader = themed.div`
