@@ -37,7 +37,6 @@ const modalPageEpic: Epic = (action$, store, { api }) => action$.ofAction(modalP
 
         })).pipe(
             map(payload => modalShow({
-                id: 'PAGE_MODAL',
                 type: 'PAGE_MODAL',
                 params: {
                     section: action.payload.section,

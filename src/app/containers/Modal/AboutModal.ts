@@ -20,31 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
-import { TProtypoElement } from 'genesis/protypo';
+import { connect } from 'react-redux';
+import { MAIN_WEBSITE } from 'lib/consts';
+import { navigateUrl } from 'modules/engine/actions';
 
-import Modal, { IModalProps } from './';
-import Protypo from 'containers/Widgets/Protypo';
+import AboutModal from 'components/Modal/AboutModal';
 
-export interface IPageModalParams {
-    title: string;
-    section: string;
-    width?: number;
-    tree: TProtypoElement[];
-}
+export default connect(null, {
+    onOpenWebsite: () => navigateUrl(MAIN_WEBSITE)
 
-const PageModal: React.SFC<IModalProps<IPageModalParams>> = props => (
-    <div style={{ width: (props.params.width || 50) + 'vw', overflow: 'hidden' }}>
-        <Modal.Header>
-            {props.params.title}
-        </Modal.Header>
-        <Modal.Body>
-            <Protypo
-                context="page"
-                content={props.params.tree}
-                section={props.params.section}
-            />
-        </Modal.Body>
-    </div>
-);
-export default PageModal;
+})(AboutModal);

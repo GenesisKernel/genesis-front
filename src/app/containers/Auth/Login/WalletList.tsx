@@ -22,7 +22,7 @@
 
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { login, selectWallet, removeWallet } from 'modules/auth/actions';
+import { login, selectWallet } from 'modules/auth/actions';
 import { navigate } from 'modules/engine/actions';
 import { IWallet } from 'genesis/auth';
 import { IWalletData } from 'genesis/api';
@@ -41,18 +41,21 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 export default connect(mapStateToProps, {
-    onRemove: removeWallet,
+    onRemove: (wallet: IWalletData) => modalShow({
+        type: 'REMOVE_WALLET',
+        params: {
+            wallet
+        }
+    }),
     onLogin: login.started,
     onSelect: selectWallet,
     onCopy: (wallet: IWalletData) => modalShow({
-        id: 'COPY_WALLET',
         type: 'COPY_WALLET',
         params: {
             wallet
         }
     }),
     onRegister: (wallet: IWalletData, activationEmail: string) => modalShow({
-        id: 'REGISTER_WALLET',
         type: 'REGISTER_WALLET',
         params: {
             wallet,
@@ -66,11 +69,11 @@ export default connect(mapStateToProps, {
     wallets: state.wallets,
     notifications: state.notifications,
     activationEnabled: !!state.activationEmail,
-    onRemove: dispatch.onRemove,
     onLogin: dispatch.onLogin,
     onSelect: dispatch.onSelect,
     onCopy: dispatch.onCopy,
-    onRegister: (wallet: IWalletData) => dispatch.onRegister(wallet, state.activationEmail || ''),
-    onCreate: dispatch.onCreate
+    onCreate: dispatch.onCreate,
+    onRemove: dispatch.onRemove,
+    onRegister: (wallet: IWalletData) => dispatch.onRegister(wallet, state.activationEmail || '')
 
 }))(WalletList);

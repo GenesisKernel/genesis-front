@@ -23,8 +23,10 @@
 import { combineEpics } from 'redux-observable';
 import modalPageEpic from './epics/modalPageEpic';
 import closeModalOnInteractionEpic from './epics/closeModalOnInteractionEpic';
+import tryAuthorizeEpic from './epics/tryAuthorizeEpic';
 
 export default combineEpics(
     modalPageEpic,
-    closeModalOnInteractionEpic
+    closeModalOnInteractionEpic,
+    tryAuthorizeEpic
 );

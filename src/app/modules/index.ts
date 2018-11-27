@@ -25,7 +25,7 @@ import { Epic as NativeEpic } from 'redux-observable';
 import { IStoreDependencies } from './dependencies';
 import { combineReducers } from 'redux';
 import { combineEpics } from 'redux-observable';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { loadingBarReducer } from 'react-redux-loading-bar';
 import { ActionCreator, Failure, Success, isType, Action } from 'typescript-fsa';
@@ -69,12 +69,20 @@ export interface IRootState {
     loadingBar: any;
     router: router.State;
 }
+interface IActionsObservable {
+    <P>(action: ActionCreator<P>): (source: Observable<ReduxAction>) => Observable<Action<P>>;
+    <P1, P2>(item1: ActionCreator<P1>, item2: ActionCreator<P2>): (source: Observable<ReduxAction>) => Observable<Action<P1 | P2>>;
+    <P1, P2, P3>(item1: ActionCreator<P1>, item2: ActionCreator<P2>, item3: ActionCreator<P3>): (source: Observable<ReduxAction>) => Observable<Action<P1 | P2 | P3>>;
+    <P1, P2, P3, P4>(item1: ActionCreator<P1>, item2: ActionCreator<P2>, item3: ActionCreator<P3>, item4: ActionCreator<P4>): (source: Observable<ReduxAction>) => Observable<Action<P1 | P2 | P3 | P4>>;
+    <P1, P2, P3, P4, P5>(item1: ActionCreator<P1>, item2: ActionCreator<P2>, item3: ActionCreator<P3>, item4: ActionCreator<P4>, item5: ActionCreator<P5>): (source: Observable<ReduxAction>) => Observable<Action<P1 | P2 | P3 | P4 | P5>>;
+    <P1, P2, P3, P4, P5, P6>(item1: ActionCreator<P1>, item2: ActionCreator<P2>, item3: ActionCreator<P3>, item4: ActionCreator<P4>, item5: ActionCreator<P5>, item6: ActionCreator<P6>): (source: Observable<ReduxAction>) => Observable<Action<P1 | P2 | P3 | P4 | P5 | P6>>;
+}
 
-export const ofAction = <A>(actionCreator: ActionCreator<A>) => (source: Observable<any>) => source.pipe(
-    filter<Action<A>>(action => {
-        return isType(action, actionCreator);
-    })
-);
+export const ofAction: IActionsObservable = (...actionCreators: ActionCreator<any>[]) => {
+    return filter((action: any) =>
+        actionCreators.some(actionCreator => isType(action, actionCreator))
+    );
+};
 
 export const rootEpic = combineEpics(
     auth.epic,

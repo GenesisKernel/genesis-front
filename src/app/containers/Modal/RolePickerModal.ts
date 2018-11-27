@@ -33,7 +33,7 @@ export interface IRolePickerModalProps {
 }
 
 // TODO: refactoring
-const mapStateToProps = (state: IRootState, props: IModalProps<IRolePickerModalProps, void>) => ({
+const mapStateToProps = (state: IRootState, props: IModalProps<IRolePickerModalProps>) => ({
     ...props,
     params: {
         walletID: state.auth.session.wallet!.id,
@@ -51,7 +51,7 @@ export default connect(mapStateToProps, {
 }, (state, dispatch, props) => ({
     ...state,
     onSwitchWallet: (role?: string) => {
-        props.onCancel();
+        props.onClose();
         dispatch.onSwitchWallet({
             ecosystem: props.params.ecosystem,
             role

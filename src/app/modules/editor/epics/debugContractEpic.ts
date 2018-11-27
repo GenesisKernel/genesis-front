@@ -31,7 +31,6 @@ const debugContractEpic: Epic = (action$, store, { api }) => action$.ofAction(de
         const client = api(store.value.auth.session);
         return from(client.getContract({ name: action.payload })).pipe(
             map(contract => modalShow({
-                id: 'DEBUG_CONTRACT',
                 type: 'DEBUG_CONTRACT',
                 params: {
                     contract: action.payload,

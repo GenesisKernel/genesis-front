@@ -20,45 +20,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Button } from 'react-bootstrap';
+import { MAIN_WEBSITE, VERSION } from 'lib/consts';
 import imgLogo from 'images/logoInverse.svg';
 
 import Modal, { IModalProps } from './';
-import { FormattedMessage } from 'react-intl';
 
-const MAIN_WEBSITE = 'http://genesis.space';
-
-class AboutModal extends React.Component<IModalProps<void, void>> {
-    openWebsite() {
-        const electron = require('electron');
-        electron.shell.openExternal(MAIN_WEBSITE);
-    }
-
-    render() {
-        return (
-            <div>
-                <Modal.Header>
-                    <FormattedMessage id="general.about" defaultMessage="About" />
-                </Modal.Header>
-                <Modal.Body>
-                    <div className="text-center" style={{ padding: '10px 50px' }}>
-                        <img src={imgLogo} style={{ height: 50 }} />
-                        <div className="text-muted">
-                            {process.env.REACT_APP_VERSION ? `v${process.env.REACT_APP_VERSION}` : 'DEVELOPER BUILD'}
-                        </div>
-                        <Button bsStyle="link" onClick={this.openWebsite}>
-                            {MAIN_WEBSITE}
-                        </Button>
-                    </div>
-                </Modal.Body>
-                <Modal.Footer className="text-right">
-                    <Button type="button" bsStyle="primary" onClick={this.props.onCancel.bind(this)}>
-                        <FormattedMessage id="close" defaultMessage="Close" />
-                    </Button>
-                </Modal.Footer>
-            </div>
-        );
-    }
+export interface IAboutModalProps extends IModalProps {
+    onOpenWebsite: () => void;
 }
+
+const AboutModal: React.SFC<IAboutModalProps> = props => (
+    <div>
+        <Modal.Header>
+            <FormattedMessage id="general.about" defaultMessage="About" />
+        </Modal.Header>
+        <Modal.Body>
+            <div className="text-center" style={{ padding: '10px 50px' }}>
+                <img src={imgLogo} style={{ height: 50 }} />
+                <div className="text-muted">
+                    {VERSION}
+                </div>
+                <Button bsStyle="link" onClick={props.onOpenWebsite}>
+                    {MAIN_WEBSITE}
+                </Button>
+            </div>
+        </Modal.Body>
+        <Modal.Footer className="text-right">
+            <Button type="button" bsStyle="primary" onClick={props.onClose}>
+                <FormattedMessage id="close" defaultMessage="Close" />
+            </Button>
+        </Modal.Footer>
+    </div>
+);
+
 export default AboutModal;

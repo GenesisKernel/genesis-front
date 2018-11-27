@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Epic } from 'modules';
+import { Epic, ofAction } from 'modules';
 import { buttonInteraction } from 'modules/content/actions';
 import { isType, Action } from 'typescript-fsa';
 import { txCall, txExec } from 'modules/tx/actions';
@@ -35,21 +35,15 @@ const buttonInteractionEpic: Epic = (action$, store, { api, routerService }) => 
         if (action.payload.confirm) {
             return merge(
                 of(modalShow({
-                    id: action.payload.uuid,
                     type: 'TX_CONFIRM',
                     params: action.payload.confirm
                 })),
                 action$.ofAction(modalClose).pipe(
                     take(1),
                     flatMap(modalPayload => {
-                        if ('RESULT' === modalPayload.payload.reason) {
-                            return of(action);
-                        }
-                        else {
-                            return empty();
-                        }
-                    }
-                    )
+                        // TODO: refactoring
+                        return of(action);
+                    })
                 )
             );
         }
@@ -69,8 +63,8 @@ const buttonInteractionEpic: Epic = (action$, store, { api, routerService }) => 
                     errorRedirects: action.payload.errorRedirects
                 })),
                 action$.pipe(
-                    filter(l => isType(l, txExec.done) || isType(l, txExec.failed)),
-                    filter((l: any) => action.payload.uuid === l.payload.params.uuid),
+                    ofAction(txExec.done, txExec.failed),
+                    filter(l => action.payload.uuid === l.payload.params.uuid),
                     take(1),
                     flatMap(result => {
                         if (isType(result, txExec.done)) {

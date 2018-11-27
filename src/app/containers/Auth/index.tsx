@@ -34,7 +34,6 @@ const mapStateToProps = (state: IRootState) => ({
 
 export default connect(mapStateToProps, {
     changeLocale: (locale: string) => modalShow({
-        id: 'CHANGE_LOCALE',
         type: 'CHANGE_LOCALE',
         params: {
             value: locale

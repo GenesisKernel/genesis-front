@@ -40,7 +40,6 @@ export const txExecFailedEpic: Epic = (action$, store) => action$.ofAction(txExe
             }
         }*/
         return modalShow({
-            id: 'TX_ERROR',
             type: 'TX_ERROR',
             params: action.payload.error
         });

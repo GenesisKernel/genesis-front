@@ -28,17 +28,17 @@ import 'cropperjs/dist/cropper.css';
 
 import Modal, { IModalProps } from './';
 
-export interface IImageEditorModalProps {
+export interface IImageEditorModalParams {
     mime: string;
     data: string;
     aspectRatio: number;
     width: number;
 }
 
-class ImageEditorModal extends React.Component<IModalProps<IImageEditorModalProps, string>> {
+class ImageEditorModal extends React.Component<IModalProps<IImageEditorModalParams>> {
     private _cropper: Cropper | null = null;
 
-    onSuccess() {
+    onSuccess = () => {
         if (!this._cropper) {
             return;
         }
@@ -73,10 +73,12 @@ class ImageEditorModal extends React.Component<IModalProps<IImageEditorModalProp
             }
 
             ctx.drawImage(oc, 0, 0, current.width, current.height, 0, 0, output.width, output.height);
-            this.props.onResult(output.toDataURL(this.props.params.mime));
+            // TODO: refactoring
+            // this.props.onClose(output.toDataURL(this.props.params.mime));
         }
         else {
-            this.props.onResult(input.toDataURL(this.props.params.mime));
+            // TODO: refactoring
+            // this.props.onClose(input.toDataURL(this.props.params.mime));
         }
     }
 
@@ -99,10 +101,10 @@ class ImageEditorModal extends React.Component<IModalProps<IImageEditorModalProp
                     />
                 </Modal.Body>
                 <Modal.Footer className="text-right">
-                    <Button type="button" bsStyle="link" onClick={this.props.onCancel.bind(this)}>
+                    <Button type="button" bsStyle="link" onClick={this.props.onClose}>
                         <FormattedMessage id="modal.imageeditor.cancel" defaultMessage="Cancel" />
                     </Button>
-                    <Button type="button" bsStyle="primary" onClick={this.onSuccess.bind(this)}>
+                    <Button type="button" bsStyle="primary" onClick={this.onSuccess}>
                         <FormattedMessage id="modal.imageeditor.confirm" defaultMessage="Confirm" />
                     </Button>
                 </Modal.Footer>

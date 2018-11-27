@@ -26,14 +26,12 @@ import { reducerWithInitialState } from 'typescript-fsa-reducers/dist';
 import modalShowHandler from './reducers/modalShowHandler';
 import modalCloseHandler from './reducers/modalCloseHandler';
 
-export type State =
-    IModal<any>;
+export type State = {
+    instance?: IModal<any>;
+};
 
 export const initialState: State = {
-    id: '',
-    type: '',
-    result: undefined,
-    params: {}
+    instance: undefined
 };
 
 export default reducerWithInitialState<State>(initialState)

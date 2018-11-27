@@ -20,35 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Epic } from 'modules';
-import { removeWallet } from '../actions';
-import { removeWallet as removeStoredWallet } from 'modules/storage/actions';
-import { modalClose, modalShow } from 'modules/modal/actions';
-import { of, empty, merge } from 'rxjs';
-import { flatMap, take } from 'rxjs/operators';
+import { connect } from 'react-redux';
+import { tryAuthorize } from 'modules/modal/actions';
 
-const removeWalletEpic: Epic = (action$, store) => action$.ofAction(removeWallet).pipe(
-    flatMap(action => merge(
-        of(modalShow({
-            id: 'AUTH_REMOVE_WALLET',
-            type: 'AUTH_REMOVE_WALLET',
-            params: {
-                wallet: action.payload
-            }
-        })),
-        action$.ofAction(modalClose).pipe(
-            take(1),
-            flatMap(result => {
-                if ('RESULT' === result.payload.reason) {
-                    return of(removeStoredWallet(action.payload.id));
-                }
-                else {
-                    return empty();
-                }
-            })
-        )
-    )
-    )
-);
+import AuthorizeModal from 'components/Modal/Tx/AuthorizeModal';
 
-export default removeWalletEpic;
+export default connect(null, {
+    onAuthorize: tryAuthorize
+
+})(AuthorizeModal);

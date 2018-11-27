@@ -37,12 +37,12 @@ export interface IWalletListProps {
     wallets: (IWallet & IWalletData)[];
     notifications: INotificationsMessage[];
     activationEnabled: boolean;
-    onCreate: () => any;
-    onRemove: (wallet: IWalletData) => any;
-    onLogin: (params: { wallet: IWalletData, password: string }) => any;
-    onCopy: (wallet: IWalletData) => any;
-    onRegister: (wallet: IWalletData) => any;
-    onSelect: (params: { wallet: IWallet, access: IKeyInfo, role?: IRoleInfo }) => any;
+    onCreate: () => void;
+    onRemove: (wallet: IWalletData) => void;
+    onLogin: (params: { wallet: IWalletData, password: string }) => void;
+    onCopy: (wallet: IWalletData) => void;
+    onRegister: (wallet: IWalletData) => void;
+    onSelect: (params: { wallet: IWallet, access: IKeyInfo, role?: IRoleInfo }) => void;
 }
 
 const WalletList: React.SFC<IWalletListProps> = props => (

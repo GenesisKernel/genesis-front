@@ -31,40 +31,41 @@ export interface IAuthorizeModalParams {
     contract?: string;
 }
 
-class AuthorizeModal extends React.Component<IModalProps<IAuthorizeModalParams, string>> {
-    onSuccess = (values: { [key: string]: any }) => {
-        this.props.onResult(values.password);
-    }
-
-    render() {
-        return (
-            <Validation.components.ValidatedForm onSubmitSuccess={this.onSuccess}>
-                <Modal.Header>
-                    <FormattedMessage id="modal.authorization.title" defaultMessage="Authorization" />
-                </Modal.Header>
-                <Modal.Body>
-                    <div className="pb">
-                        <FormattedMessage id="modal.authorization.password" defaultMessage="Enter your password to sign contract {contract}" values={{ contract: this.props.params.contract }} />
-                    </div>
-                    <Validation.components.ValidatedFormGroup for="password">
-                        <Validation.components.ValidatedControl
-                            type="password"
-                            name="password"
-                            noValidate
-                            validators={[Validation.validators.required]}
-                        />
-                    </Validation.components.ValidatedFormGroup>
-                </Modal.Body>
-                <Modal.Footer className="text-right">
-                    <Button type="button" bsStyle="link" onClick={this.props.onCancel.bind(this)}>
-                        <FormattedMessage id="cancel" defaultMessage="Cancel" />
-                    </Button>
-                    <Validation.components.ValidatedSubmit bsStyle="primary">
-                        <FormattedMessage id="confirm" defaultMessage="Confirm" />
-                    </Validation.components.ValidatedSubmit>
-                </Modal.Footer>
-            </Validation.components.ValidatedForm>
-        );
-    }
+export interface IAuthorizeModalProps extends IModalProps<IAuthorizeModalParams> {
+    onAuthorize: (password: string) => void;
 }
+
+const AuthorizeModal: React.SFC<IAuthorizeModalProps> = props => (
+    <Validation.components.ValidatedForm onSubmitSuccess={values => props.onAuthorize(values.password)}>
+        <Modal.Header>
+            <FormattedMessage id="modal.authorization.title" defaultMessage="Authorization" />
+        </Modal.Header>
+        <Modal.Body>
+            <div className="pb">
+                <FormattedMessage
+                    id="modal.authorization.password"
+                    defaultMessage="Enter your password to sign contract {contract}"
+                    values={{ contract: props.params.contract }}
+                />
+            </div>
+            <Validation.components.ValidatedFormGroup for="password">
+                <Validation.components.ValidatedControl
+                    type="password"
+                    name="password"
+                    noValidate
+                    validators={[Validation.validators.required]}
+                />
+            </Validation.components.ValidatedFormGroup>
+        </Modal.Body>
+        <Modal.Footer className="text-right">
+            <Button type="button" bsStyle="link" onClick={props.onClose}>
+                <FormattedMessage id="cancel" defaultMessage="Cancel" />
+            </Button>
+            <Validation.components.ValidatedSubmit bsStyle="primary">
+                <FormattedMessage id="confirm" defaultMessage="Confirm" />
+            </Validation.components.ValidatedSubmit>
+        </Modal.Footer>
+    </Validation.components.ValidatedForm>
+);
+
 export default AuthorizeModal;

@@ -25,7 +25,6 @@ import * as uuid from 'uuid';
 import { List } from 'immutable';
 import { FormattedMessage } from 'react-intl';
 import { Button } from 'react-bootstrap';
-import { IMapEditorEvent } from 'genesis/geo';
 import themed from 'components/Theme/themed';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 
@@ -76,7 +75,9 @@ const PlacesAutocompleteList = themed.div`
     }
 `;
 
-class MapEditorModal extends React.Component<IModalProps<IMapEditorModalProps, IMapEditorEvent>, IMapEditorModalState> {
+// TODO: refactoring
+// IMapEditorEvent
+class MapEditorModal extends React.Component<IModalProps<IMapEditorModalProps>, IMapEditorModalState> {
     private _isMounted = false;
 
     constructor(props: any) {
@@ -99,11 +100,11 @@ class MapEditorModal extends React.Component<IModalProps<IMapEditorModalProps, I
         this._isMounted = false;
     }
 
-    componentWillReceiveProps(props: IModalProps<IMapEditorModalProps, IMapEditorEvent>) {
+    componentWillReceiveProps(props: IModalProps<IMapEditorModalProps>) {
         this.initialize(props);
     }
 
-    initialize(props: IModalProps<IMapEditorModalProps, IMapEditorEvent>) {
+    initialize(props: IModalProps<IMapEditorModalProps>) {
         this.setState({
             points: List(props.params.coords || [])
         });
@@ -132,11 +133,12 @@ class MapEditorModal extends React.Component<IModalProps<IMapEditorModalProps, I
 
         this.calcResult(points, result => {
             if (this._isMounted) {
-                this.props.onResult({
-                    coords: this.state.points.toArray(),
-                    area: this.state.area,
-                    address: result ? result.formatted_address : ''
-                });
+                // TODO: refactoring
+                // this.props.onClose({
+                //     coords: this.state.points.toArray(),
+                //     area: this.state.area,
+                //     address: result ? result.formatted_address : ''
+                // });
                 this.setState({
                     pending: false
                 });
@@ -270,7 +272,7 @@ class MapEditorModal extends React.Component<IModalProps<IMapEditorModalProps, I
                     </div>
                 </Modal.Body>
                 <Modal.Footer className="text-right">
-                    <Button type="button" bsStyle="link" onClick={this.props.onCancel.bind(this)}>
+                    <Button type="button" bsStyle="link" onClick={this.props.onClose.bind(this)}>
                         <FormattedMessage id="cancel" defaultMessage="Cancel" />
                     </Button>
                     <Validation.components.ValidatedSubmit bsStyle="primary" disabled={this.state.pending}>

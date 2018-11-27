@@ -24,14 +24,14 @@ import { State } from '../reducer';
 import { modalShow } from '../actions';
 import { Reducer } from 'modules';
 
-const modalShowHandler: Reducer<typeof modalShow, State> = (state, payload) => ({
+const modalShowHandler: Reducer<typeof modalShow, State> = (state, payload): State => ({
     ...state,
-    id: payload.id,
-    type: payload.type,
-    params: {
-        ...payload.params
-    },
-    result: undefined
+    instance: {
+        type: payload.type,
+        params: {
+            ...payload.params
+        }
+    }
 });
 
 export default modalShowHandler;

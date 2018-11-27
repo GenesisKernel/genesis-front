@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 import React from 'react';
-import uuid from 'uuid';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { IModal } from 'lib/modal';
@@ -39,7 +38,7 @@ export interface IValidatedImageContainerProps {
 }
 
 interface IValidatedImageContainerState {
-    modal: IModal<any>;
+    modal?: IModal<any>;
 }
 
 interface IValidatedImageContainerDispatch {
@@ -47,8 +46,6 @@ interface IValidatedImageContainerDispatch {
 }
 
 class ValidatedImageContainer extends React.Component<IValidatedImageContainerProps & IValidatedImageContainerState & IValidatedImageContainerDispatch, { result: string }> {
-    private _id: string = uuid.v4();
-
     constructor(props: any) {
         super(props);
         this.state = {
@@ -57,20 +54,22 @@ class ValidatedImageContainer extends React.Component<IValidatedImageContainerPr
     }
 
     openEditor(params: { mime: string, data: string, aspectRatio: number, width: number }) {
-        this.props.modalShow({
-            id: this._id,
-            type: 'IMAGE_EDITOR',
-            params
-        });
+        // TODO: refactoring
+        // this.props.modalShow({
+        //     id: this._id,
+        //     type: 'IMAGE_EDITOR',
+        //     params
+        // });
     }
 
     componentWillReceiveProps(props: IValidatedImageContainerProps & IValidatedImageContainerState & IValidatedImageContainerDispatch) {
-        const result = props.modal && this._id === props.modal.id && props.modal.result;
-        if (result && 'RESULT' === result.reason) {
-            this.setState({
-                result: result.data as any
-            });
-        }
+        // TODO: refactoring
+        // const result = props.modal && this._id === props.modal.id && props.modal.result;
+        // if (result && 'RESULT' === result.reason) {
+        //     this.setState({
+        //         result: result.data as any
+        //     });
+        // }
     }
 
     render() {
@@ -89,7 +88,7 @@ class ValidatedImageContainer extends React.Component<IValidatedImageContainerPr
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    modal: state.modal
+    modal: state.modal.instance
 });
 
 const mapDispatchToProps = {

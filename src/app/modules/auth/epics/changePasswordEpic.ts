@@ -36,7 +36,6 @@ const changePasswordEpic: Epic = (action$, store) => action$.ofAction(changePass
 
         if (!keyring.validatePrivateKey(privateKey)) {
             return of(modalShow({
-                id: 'AUTH_ERROR',
                 type: 'AUTH_ERROR',
                 params: {
                     error: 'E_INVALID_PASSWORD',
@@ -52,8 +51,7 @@ const changePasswordEpic: Epic = (action$, store) => action$.ofAction(changePass
                     encKey
                 }),
                 modalShow({
-                    id: 'AUTH_PASSWORD_CHANGED',
-                    type: 'AUTH_PASSWORD_CHANGED',
+                    type: 'PASSWORD_CHANGED',
                     params: {}
                 })
             );

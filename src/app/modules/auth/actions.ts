@@ -36,7 +36,6 @@ export const changeSeed = actionCreator<string>('CHANGE_SEED');
 export const changeSeedConfirmation = actionCreator<string>('CHANGE_SEED_CONFIRMATION');
 export const createWallet = actionCreator.async<ICreateWalletCall, IWallet, string>('CREATE_WALLET');
 export const importWallet = actionCreator.async<IImportWalletCall, IWallet, string>('IMPORT_WALLET');
-export const removeWallet = actionCreator<IWalletData>('REMOVE_WALLET');
 export const selectWallet = actionCreator<{ wallet: IWallet, access: IKeyInfo, role?: IRoleInfo }>('SELECT_WALLET');
 export const switchWallet = actionCreator<{ ecosystem: string, role?: string }>('SWITCH_WALLET');
 export const authorize = actionCreator<string>('AUTHORIZE');

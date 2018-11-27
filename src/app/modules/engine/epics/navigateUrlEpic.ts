@@ -20,31 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
-import { TProtypoElement } from 'genesis/protypo';
+import { Epic } from 'modules';
+import { navigateUrl } from '../actions';
+import { flatMap } from 'rxjs/operators';
+import { empty } from 'rxjs';
+import platform from 'lib/platform';
 
-import Modal, { IModalProps } from './';
-import Protypo from 'containers/Widgets/Protypo';
+const navigateUrlEpic: Epic = (action$) => action$.ofAction(navigateUrl).pipe(
+    flatMap(action => {
+        platform.target({
+            desktop: () => {
+                const electron = require('electron');
+                electron.shell.openExternal(action.payload);
+            },
+            web: () => {
+                window.open(action.payload);
+            }
+        });
 
-export interface IPageModalParams {
-    title: string;
-    section: string;
-    width?: number;
-    tree: TProtypoElement[];
-}
-
-const PageModal: React.SFC<IModalProps<IPageModalParams>> = props => (
-    <div style={{ width: (props.params.width || 50) + 'vw', overflow: 'hidden' }}>
-        <Modal.Header>
-            {props.params.title}
-        </Modal.Header>
-        <Modal.Body>
-            <Protypo
-                context="page"
-                content={props.params.tree}
-                section={props.params.section}
-            />
-        </Modal.Body>
-    </div>
+        return empty();
+    })
 );
-export default PageModal;
+
+export default navigateUrlEpic;

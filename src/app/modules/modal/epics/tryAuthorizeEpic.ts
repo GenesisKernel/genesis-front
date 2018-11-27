@@ -20,29 +20,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import { Button } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl';
+import uuid from 'uuid';
+import { Action } from 'redux';
+import { Epic } from 'modules';
+import { tryAuthorize, modalClose } from '../actions';
+import { flatMap } from 'rxjs/operators';
+import { empty, of } from 'rxjs';
+import { authorize } from 'modules/auth/actions';
+import { enqueueNotification } from 'modules/notifications/actions';
+import keyring from 'lib/keyring';
 
-import Modal, { IModalProps } from '../';
+const tryAuthorizeEpic: Epic = (action$, store) => action$.ofAction(tryAuthorize).pipe(
+    flatMap(action => {
+        const session = store.value.auth.session;
+        if (!session.wallet) {
+            return empty();
+        }
 
-class AuthPasswordChangedModal extends React.Component<IModalProps<{}, void>> {
-    render() {
-        return (
-            <div>
-                <Modal.Header>
-                    <FormattedMessage id="alert.info" defaultMessage="Information" />
-                </Modal.Header>
-                <Modal.Body>
-                    <div><FormattedMessage id="auth.password.changed" defaultMessage="Password changed. Please login with new password" /></div>
-                </Modal.Body>
-                <Modal.Footer className="text-right">
-                    <Button type="button" bsStyle="primary" onClick={this.props.onCancel.bind(this)}>
-                        <FormattedMessage id="close" defaultMessage="Close" />
-                    </Button>
-                </Modal.Footer>
-            </div>
-        );
-    }
-}
-export default AuthPasswordChangedModal;
+        const encKey = session.wallet.encKey;
+        const privateKey = keyring.decryptAES(encKey, action.payload);
+
+        if (keyring.validatePrivateKey(privateKey)) {
+            return of<Action>(
+                modalClose(),
+                authorize(privateKey)
+            );
+        }
+        else {
+            return of(enqueueNotification({
+                id: uuid.v4(),
+                type: 'INVALID_PASSWORD',
+                params: {}
+            }));
+        }
+    })
+);
+
+export default tryAuthorizeEpic;

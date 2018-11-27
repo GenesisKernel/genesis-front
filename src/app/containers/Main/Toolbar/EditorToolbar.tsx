@@ -27,7 +27,6 @@ import { modalShow } from 'modules/modal/actions';
 import { editorSave, revertEditorTab, changeEditorTool, debugContract } from 'modules/editor/actions';
 import { TEditorTab } from 'genesis/editor';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { IModalResult } from 'lib/modal';
 
 import EditorToolbar from 'components/Main/Toolbar/EditorToolbar';
 
@@ -36,7 +35,6 @@ export interface IEditorToolbarProps {
 }
 
 interface IEditorToolbarState {
-    modalResult?: IModalResult<any>;
     currentTab: TEditorTab;
     currentTabIndex: number;
     canSave: boolean;
@@ -52,10 +50,9 @@ interface IEditorToolbarDispatch {
 }
 
 class EditorToolbarContainer extends React.Component<IEditorToolbarProps & InjectedIntlProps & IEditorToolbarState & IEditorToolbarDispatch> {
-    private _pendingRevert?: number;
-
     onRevert = () => {
-        this._pendingRevert = this.props.currentTabIndex;
+        // TODO: refactoring
+        /*this._pendingRevert = this.props.currentTabIndex;
         this.props.modalShow({
             id: 'EDITOR_REVERT',
             type: 'CONFIRM',
@@ -65,7 +62,7 @@ class EditorToolbarContainer extends React.Component<IEditorToolbarProps & Injec
                     defaultMessage: 'Do you really want to discard all changes?'
                 })
             }
-        });
+        });*/
     }
 
     onSave = () => {
@@ -79,12 +76,13 @@ class EditorToolbarContainer extends React.Component<IEditorToolbarProps & Injec
     }
 
     componentWillReceiveProps(props: IEditorToolbarProps & IEditorToolbarState & IEditorToolbarDispatch) {
-        if ('number' === typeof this._pendingRevert && props.modalResult) {
+        // TODO: refactoring
+        /*if ('number' === typeof this._pendingRevert && props.modalResult) {
             if ('RESULT' === props.modalResult.reason) {
                 this.props.revertEditorTab(this._pendingRevert);
             }
             this._pendingRevert = undefined;
-        }
+        }*/
     }
 
     render() {
@@ -108,7 +106,6 @@ const mapStateToProps = (state: IRootState) => {
     return {
         currentTab,
         currentTabIndex: state.editor.tabIndex,
-        modalResult: state.modal.result,
         canSave: !state.editor.pending &&
             currentTab && currentTab.dirty,
         canRevert: !state.editor.pending &&

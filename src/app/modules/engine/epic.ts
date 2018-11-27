@@ -23,8 +23,10 @@
 import { combineEpics } from 'redux-observable';
 import initializeEpic from './epics/initializeEpic';
 import setLocaleEpic from './epics/setLocaleEpic';
+import navigateUrlEpic from './epics/navigateUrlEpic';
 
 export default combineEpics(
     initializeEpic,
-    setLocaleEpic
+    setLocaleEpic,
+    navigateUrlEpic
 );

@@ -31,23 +31,21 @@ export interface IAuthErrorModalParams {
     message: string;
 }
 
-class AuthErrorModal extends React.Component<IModalProps<IAuthErrorModalParams, void>> {
-    render() {
-        return (
-            <div>
-                <Modal.Header>
-                    <FormattedMessage id="alert.error" defaultMessage="Error" />
-                </Modal.Header>
-                <Modal.Body>
-                    <FormattedMessage id={`auth.error.${this.props.params.error}`} defaultMessage={this.props.params.message} />
-                </Modal.Body>
-                <Modal.Footer className="text-right">
-                    <Button type="button" bsStyle="primary" onClick={this.props.onCancel.bind(this)}>
-                        <FormattedMessage id="close" defaultMessage="Close" />
-                    </Button>
-                </Modal.Footer>
-            </div>
-        );
-    }
-}
+const AuthErrorModal: React.SFC<IModalProps<IAuthErrorModalParams>> = props => (
+    <div>
+        <Modal.Header>
+            <FormattedMessage id="alert.error" defaultMessage="Error" />
+        </Modal.Header>
+        <Modal.Body>
+            <FormattedMessage id={`auth.error.${props.params.error}`} defaultMessage={props.params.message} />
+        </Modal.Body>
+        <Modal.Footer className="text-right">
+            <Button type="button" bsStyle="primary" onClick={props.onClose}>
+                <FormattedMessage id="close" defaultMessage="Close" />
+            </Button>
+        </Modal.Footer>
+    </div>
+
+);
+
 export default AuthErrorModal;

@@ -27,36 +27,32 @@ import locales from 'lib/locales';
 
 import Modal, { IModalProps } from './';
 
-export interface IChangeLocaleModalProps {
+export interface IChangeLocaleModalParams {
     value: string;
 }
 
-class ChangeLocaleModal extends React.Component<IModalProps<IChangeLocaleModalProps, void>> {
-    changeLocale = (locale: string) => {
-        this.props.changeLocale(locale);
-        this.props.onCancel();
-    }
-
-    render() {
-        return (
-            <div>
-                <Modal.Header>
-                    <FormattedMessage id="modal.locale.title" defaultMessage="Switch language" />
-                </Modal.Header>
-                <Modal.Body>
-                    {locales.map(l => (
-                        <Button key={l.name} block disabled={l.name === this.props.params.value} type="button" bsStyle="default" onClick={() => this.changeLocale(l.name)}>
-                            <span>{l.title}</span>
-                        </Button>
-                    ))}
-                </Modal.Body>
-                <Modal.Footer className="text-right">
-                    <Button type="button" bsStyle="primary" onClick={this.props.onCancel.bind(this)}>
-                        <FormattedMessage id="close" defaultMessage="Close" />
-                    </Button>
-                </Modal.Footer>
-            </div>
-        );
-    }
+export interface IChangeLocaleModalProps extends IModalProps<IChangeLocaleModalParams> {
+    onChangeLocale: (locale: string) => void;
 }
+
+const ChangeLocaleModal: React.SFC<IChangeLocaleModalProps> = props => (
+    <div>
+        <Modal.Header>
+            <FormattedMessage id="modal.locale.title" defaultMessage="Switch language" />
+        </Modal.Header>
+        <Modal.Body>
+            {locales.map(l => (
+                <Button key={l.name} block disabled={l.name === props.params.value} type="button" bsStyle="default" onClick={() => props.onChangeLocale(l.name)}>
+                    <span>{l.title}</span>
+                </Button>
+            ))}
+        </Modal.Body>
+        <Modal.Footer className="text-right">
+            <Button type="button" bsStyle="primary" onClick={props.onClose}>
+                <FormattedMessage id="close" defaultMessage="Close" />
+            </Button>
+        </Modal.Footer>
+    </div>
+);
+
 export default ChangeLocaleModal;

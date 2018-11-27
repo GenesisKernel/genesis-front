@@ -35,53 +35,50 @@ export interface IRolePickerModalParams {
     roles: IRoleInfo[];
 }
 
-export interface IRolePickerModalProps extends IModalProps<IRolePickerModalParams, void> {
+export interface IRolePickerModalProps extends IModalProps<IRolePickerModalParams> {
     onSwitchWallet: (role?: string) => void;
 }
 
-class RolePickerModal extends React.Component<IRolePickerModalProps> {
-    render() {
-        return (
-            <div>
-                <Modal.Header>
-                    <FormattedMessage id="auth.role.select" defaultMessage="Role selection" />
-                </Modal.Header>
-                <Modal.Body>
-                    <div className="pull-left">
-                        <Avatar
-                            size={44}
-                            keyID={this.props.params.walletID}
-                            ecosystem={this.props.params.ecosystem}
-                        />
-                    </div>
-                    <div className="pl media-box-body clearfix">
-                        <div>
-                            <div><b>({this.props.params.ecosystem}) {this.props.params.ecosystemName}</b></div>
-                            <div>
-                                <span>
-                                    <FormattedMessage id="auth.login.as" defaultMessage="Login with role" />:
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="mt">
-                        {this.props.params.roles.map(r => (
-                            <button key={r.id} className="btn btn-default btn-block" onClick={() => this.props.onSwitchWallet(r.id)}>
-                                {r.name}
-                            </button>
-                        ))}
-                        <button className="btn btn-link btn-block" onClick={() => this.props.onSwitchWallet()}>
-                            <FormattedMessage id="auth.role.guest" defaultMessage="Guest" />
-                        </button>
-                    </div>
-                </Modal.Body>
-                <Modal.Footer className="text-right">
-                    <Button type="button" bsStyle="primary" onClick={this.props.onCancel.bind(this)}>
-                        <FormattedMessage id="cancel" defaultMessage="Cancel" />
-                    </Button>
-                </Modal.Footer>
+const RolePickerModal: React.SFC<IRolePickerModalProps> = props => (
+    <div>
+        <Modal.Header>
+            <FormattedMessage id="auth.role.select" defaultMessage="Role selection" />
+        </Modal.Header>
+        <Modal.Body>
+            <div className="pull-left">
+                <Avatar
+                    size={44}
+                    keyID={props.params.walletID}
+                    ecosystem={props.params.ecosystem}
+                />
             </div>
-        );
-    }
-}
+            <div className="pl media-box-body clearfix">
+                <div>
+                    <div><b>({props.params.ecosystem}) {props.params.ecosystemName}</b></div>
+                    <div>
+                        <span>
+                            <FormattedMessage id="auth.login.as" defaultMessage="Login with role" />:
+                                </span>
+                    </div>
+                </div>
+            </div>
+            <div className="mt">
+                {props.params.roles.map(r => (
+                    <button key={r.id} className="btn btn-default btn-block" onClick={() => props.onSwitchWallet(r.id)}>
+                        {r.name}
+                    </button>
+                ))}
+                <button className="btn btn-link btn-block" onClick={() => props.onSwitchWallet()}>
+                    <FormattedMessage id="auth.role.guest" defaultMessage="Guest" />
+                </button>
+            </div>
+        </Modal.Body>
+        <Modal.Footer className="text-right">
+            <Button type="button" bsStyle="primary" onClick={props.onClose}>
+                <FormattedMessage id="cancel" defaultMessage="Cancel" />
+            </Button>
+        </Modal.Footer>
+    </div>
+);
+
 export default RolePickerModal;

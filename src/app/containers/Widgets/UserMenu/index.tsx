@@ -46,7 +46,6 @@ export default connect(mapStateToProps, {
             role: ''
         })
         : modalShow({
-            id: 'ROLE_PICKER',
             type: 'ROLE_PICKER',
             params: {
                 // TODO: refactoring
@@ -55,9 +54,8 @@ export default connect(mapStateToProps, {
             }
         }),
     onChangePassword: () => modalShow({
-        id: 'CHANGE_PASSWORD',
-        type: 'AUTH_CHANGE_PASSWORD',
-        params: undefined
+        type: 'CHANGE_PASSWORD',
+        params: {}
     })
 
 })(UserMenu);

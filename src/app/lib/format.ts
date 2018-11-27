@@ -20,31 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
-import { TProtypoElement } from 'genesis/protypo';
+import { IWalletData } from 'genesis/api';
 
-import Modal, { IModalProps } from './';
-import Protypo from 'containers/Widgets/Protypo';
+export const spacedHex = (value: string) => {
+    const match = value.match(/.{1,2}/g);
+    return match ? match.join(' ') : '';
+};
 
-export interface IPageModalParams {
-    title: string;
-    section: string;
-    width?: number;
-    tree: TProtypoElement[];
-}
+export const walletPublicData = (wallet: IWalletData) =>
+    `${wallet.address}\n${wallet.publicKey}`;
 
-const PageModal: React.SFC<IModalProps<IPageModalParams>> = props => (
-    <div style={{ width: (props.params.width || 50) + 'vw', overflow: 'hidden' }}>
-        <Modal.Header>
-            {props.params.title}
-        </Modal.Header>
-        <Modal.Body>
-            <Protypo
-                context="page"
-                content={props.params.tree}
-                section={props.params.section}
-            />
-        </Modal.Body>
-    </div>
-);
-export default PageModal;
+export const activationLink = (email: string, publicKey: string) =>
+    `mailto:${email}?body=${publicKey}`;

@@ -24,7 +24,7 @@ import { connect } from 'react-redux';
 import { enqueueNotification } from 'modules/notifications/actions';
 import { changePassword } from 'modules/auth/actions';
 
-import ChangePasswordModal from 'components/Modal/Auth/AuthChangePasswordModal';
+import ChangePasswordModal from 'components/Modal/Auth/ChangePasswordModal';
 
 export interface IRolePickerModalProps {
     walletID: string;

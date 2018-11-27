@@ -23,18 +23,14 @@
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { modalClose } from 'modules/modal/actions';
-import { enqueueNotification } from 'modules/notifications/actions';
-import { setLocale } from 'modules/engine/actions';
 
 import ModalProvider from 'components/Modal/ModalProvider';
 
 const mapStateToProps = (state: IRootState) => ({
-    modal: state.modal
+    modal: state.modal.instance
 });
 
 export default connect(mapStateToProps, {
-    onResult: modalClose,
-    enqueueNotification,
-    changeLocale: setLocale.started
+    onClose: modalClose
 
 })(ModalProvider);

@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 import * as React from 'react';
-import * as uuid from 'uuid';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { modalShow } from 'modules/modal/actions';
@@ -42,7 +41,7 @@ export interface IValidatedMapContainerProps {
 }
 
 interface IValidatedMapContainerState {
-    modal: IModal<any>;
+    modal?: IModal<any>;
 }
 
 interface IValidatedMapContainerDispatch {
@@ -50,8 +49,6 @@ interface IValidatedMapContainerDispatch {
 }
 
 class ValidatedMapContainer extends React.Component<IValidatedMapContainerProps & IValidatedMapContainerState & IValidatedMapContainerDispatch, { result?: IMapEditorEvent }> {
-    private _id: string = uuid.v4();
-
     constructor(props: any) {
         super(props);
         this.state = {
@@ -61,19 +58,19 @@ class ValidatedMapContainer extends React.Component<IValidatedMapContainerProps 
 
     openEditor(params: { mime: string, data: string, aspectRatio: number, width: number }) {
         this.props.modalShow({
-            id: this._id,
             type: 'MAP_EDITOR',
             params
         });
     }
 
     componentWillReceiveProps(props: IValidatedMapContainerProps & IValidatedMapContainerState & IValidatedMapContainerDispatch) {
-        const result = props.modal && this._id === props.modal.id && props.modal.result;
+        // TODO: refactoring
+        /*const result = props.modal && this._id === props.modal.id && props.modal.result;
         if (result && 'RESULT' === result.reason) {
             this.setState({
                 result: result.data as any
             });
-        }
+        }*/
     }
 
     render() {
@@ -93,7 +90,7 @@ class ValidatedMapContainer extends React.Component<IValidatedMapContainerProps 
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    modal: state.modal
+    modal: state.modal.instance
 });
 
 const mapDispatchToProps = {

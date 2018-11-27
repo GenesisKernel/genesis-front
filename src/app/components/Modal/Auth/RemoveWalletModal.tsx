@@ -23,49 +23,35 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import { TTxError } from 'genesis/tx';
+import { IWalletData } from 'genesis/api';
 
 import Modal, { IModalProps } from '../';
 
-export interface ITxErrorModalParams {
-    type: TTxError;
-    error?: string;
-    errorParams?: string[];
+export interface IRemoveWalletModalParams {
+    wallet: IWalletData;
 }
 
-const normalizeParams = (params: string[] = []) => {
-    const normalizedParams: { [key: string]: string } = {};
-    if (params) {
-        params.forEach((p, i) => {
-            normalizedParams[i] = p;
-        });
-    }
-    return normalizedParams;
-};
+export interface IRemoveWalletModalProps extends IModalProps<IRemoveWalletModalParams> {
+    onConfirm: () => void;
+}
 
-const TxErrorModal: React.SFC<IModalProps<ITxErrorModalParams>> = props => (
+const RemoveWalletModal: React.SFC<IRemoveWalletModalProps> = props => (
     <div>
         <Modal.Header>
-            <FormattedMessage id={`tx.error.${props.params.type}`} defaultMessage={props.params.type} />
+            <FormattedMessage id="modal.confirm.title" defaultMessage="Confirmation" />
         </Modal.Header>
         <Modal.Body>
-            <div>
-                <FormattedMessage
-                    id={`tx.error.${props.params.type}.desc`}
-                    defaultMessage={props.params.type}
-                    values={{
-                        error: props.params.error,
-                        ...normalizeParams(props.params.errorParams)
-                    }}
-                />
-            </div>
+            <FormattedMessage id="auth.remove.desc" defaultMessage="Do you really want to delete this wallet? THIS ACTION IS IRREVERSIBLE" />
         </Modal.Body>
         <Modal.Footer className="text-right">
-            <Button type="button" bsStyle="primary" onClick={props.onClose}>
+            <Button type="button" bsStyle="link" onClick={props.onClose}>
                 <FormattedMessage id="close" defaultMessage="Close" />
+            </Button>
+            <Button bsStyle="primary" onClick={props.onConfirm}>
+                <FormattedMessage id="process.confirm" defaultMessage="Confirm" />
             </Button>
         </Modal.Footer>
     </div>
 );
 
-export default TxErrorModal;
+export default RemoveWalletModal;

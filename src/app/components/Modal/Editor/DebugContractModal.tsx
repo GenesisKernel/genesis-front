@@ -45,7 +45,7 @@ interface IDebugContractModalState {
     result?: ITxError | ITxStatus;
 }
 
-class DebugContractModal extends React.Component<IModalProps<IDebugContractModalProps, void>, IDebugContractModalState> {
+class DebugContractModal extends React.Component<IModalProps<IDebugContractModalProps>, IDebugContractModalState> {
     state: IDebugContractModalState = {
         pending: false,
         result: undefined
@@ -150,7 +150,7 @@ class DebugContractModal extends React.Component<IModalProps<IDebugContractModal
                     </Row>
                 </Modal.Body >
                 <Modal.Footer className="text-right">
-                    <Button type="button" bsStyle="link" onClick={this.props.onCancel.bind(this)}>
+                    <Button type="button" bsStyle="link" onClick={this.props.onClose}>
                         <FormattedMessage id="cancel" defaultMessage="Cancel" />
                     </Button>
                     <Validation.components.ValidatedSubmit bsStyle="primary">

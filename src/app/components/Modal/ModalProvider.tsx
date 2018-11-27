@@ -21,43 +21,25 @@
 // SOFTWARE.
 
 import React from 'react';
-import { MODAL_COMPONENTS, IModal, TModalResultReason, TModalType } from 'lib/modal';
-import { IModalProps } from '.';
+import { MODAL_COMPONENTS, IModal, TModalType, TModalProps } from 'lib/modal';
 
 import Wrapper from 'components/Modal/Wrapper';
 
 export interface IModalProviderProps<T extends TModalType> {
-    modal: IModal<T>;
-    onResult: (params: { reason: TModalResultReason, data: any }) => void;
-    changeLocale: (locale: string) => void;
+    modal?: IModal<T>;
+    onClose: () => void;
 }
 
 class ModalProvider<T extends TModalType> extends React.Component<IModalProviderProps<T>> {
-    onResult = (data: any) => {
-        this.props.onResult({
-            reason: 'RESULT',
-            data
-        });
-    }
-
-    onCancel = () => {
-        this.props.onResult({
-            reason: 'CANCEL',
-            data: null
-        });
-    }
-
     render() {
-        const Modal: React.ComponentType<IModalProps<any, any>> | null = this.props.modal.result ? null : MODAL_COMPONENTS[this.props.modal.type] as any;
+        const modal = this.props.modal;
+        const Component: React.ComponentType<TModalProps<T>> | undefined = modal && MODAL_COMPONENTS[modal.type] as any;
         return (
             <Wrapper>
-                {Modal && (
-                    <Modal
-                        key={this.props.modal.id}
-                        onResult={this.onResult}
-                        onCancel={this.onCancel}
-                        changeLocale={this.props.changeLocale}
-                        params={this.props.modal.params}
+                {modal && Component && (
+                    <Component
+                        onClose={this.props.onClose}
+                        params={modal.params}
                     />
                 )}
             </Wrapper>

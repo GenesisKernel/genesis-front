@@ -24,6 +24,7 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { IWalletData } from 'genesis/api';
+import { spacedHex, walletPublicData } from 'lib/format';
 import QRCode from 'qrcode.react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
@@ -33,64 +34,52 @@ export interface ICopyWalletModalParams {
     wallet: IWalletData;
 }
 
-class CopyWalletModal extends React.Component<IModalProps<ICopyWalletModalParams, void>> {
-    formatKey = (key: string) => {
-        const match = key.match(/.{1,2}/g);
-        return match ? match.join(' ') : '';
-    }
-
-    getCopyPayload = () => {
-        return `${this.props.params.wallet.address}\n${this.props.params.wallet.publicKey}`;
-    }
-
-    render() {
-        return (
-            <div>
-                <Modal.Header>
-                    <FormattedMessage id="auth.wallet.share.long" defaultMessage="Share wallet" />
-                </Modal.Header>
-                <Modal.Body>
-                    <table className="table table-striped table-bordered table-hover preline mb0" style={{ maxWidth: 500 }}>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <FormattedMessage id="general.address" defaultMessage="Address" />
-                                </td>
-                                <td>{this.props.params.wallet.address}</td>
-                            </tr>
-                            <tr>
-                                <td style={{ minWidth: 100 }}>
-                                    <FormattedMessage id="general.key.public" defaultMessage="Public key" />
-                                </td>
-                                <td>{this.formatKey(this.props.params.wallet.publicKey)}</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <FormattedMessage id="auth.qrcode" defaultMessage="QR-Code" />
-                                </td>
-                                <td>
-                                    <div className="text-center">
-                                        <QRCode value={this.getCopyPayload()} />
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div className="text-center">
-                        <CopyToClipboard text={this.getCopyPayload()}>
-                            <Button bsStyle="link">
-                                <FormattedMessage id="general.clipboard.copy" defaultMessage="Copy to clipboard" />
-                            </Button>
-                        </CopyToClipboard>
-                    </div>
-                </Modal.Body>
-                <Modal.Footer className="text-right">
-                    <Button type="button" bsStyle="primary" onClick={this.props.onCancel}>
-                        <FormattedMessage id="close" defaultMessage="Close" />
+const CopyWalletModal: React.SFC<IModalProps<ICopyWalletModalParams>> = props => (
+    <div>
+        <Modal.Header>
+            <FormattedMessage id="auth.wallet.share.long" defaultMessage="Share wallet" />
+        </Modal.Header>
+        <Modal.Body>
+            <table className="table table-striped table-bordered table-hover preline mb0" style={{ maxWidth: 500 }}>
+                <tbody>
+                    <tr>
+                        <td>
+                            <FormattedMessage id="general.address" defaultMessage="Address" />
+                        </td>
+                        <td>{props.params.wallet.address}</td>
+                    </tr>
+                    <tr>
+                        <td style={{ minWidth: 100 }}>
+                            <FormattedMessage id="general.key.public" defaultMessage="Public key" />
+                        </td>
+                        <td>{spacedHex(props.params.wallet.publicKey)}</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <FormattedMessage id="auth.qrcode" defaultMessage="QR-Code" />
+                        </td>
+                        <td>
+                            <div className="text-center">
+                                <QRCode value={walletPublicData(props.params.wallet)} />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div className="text-center">
+                <CopyToClipboard text={walletPublicData(props.params.wallet)}>
+                    <Button bsStyle="link">
+                        <FormattedMessage id="general.clipboard.copy" defaultMessage="Copy to clipboard" />
                     </Button>
-                </Modal.Footer>
+                </CopyToClipboard>
             </div>
-        );
-    }
-}
+        </Modal.Body>
+        <Modal.Footer className="text-right">
+            <Button type="button" bsStyle="primary" onClick={props.onClose}>
+                <FormattedMessage id="close" defaultMessage="Close" />
+            </Button>
+        </Modal.Footer>
+    </div>
+);
+
 export default CopyWalletModal;

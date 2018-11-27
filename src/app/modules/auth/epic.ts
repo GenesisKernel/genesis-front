@@ -28,7 +28,6 @@ import importWalletEpic from './epics/importWalletEpic';
 import importSeedEpic from './epics/importSeedEpic';
 import generateSeedEpic from './epics/generateSeedEpic';
 import authErrorEpic from './epics/authErrorEpic';
-import removeWalletEpic from './epics/removeWalletEpic';
 import logoutEmptySessionEpic from './epics/logoutEmptySessionEpic';
 import changePasswordEpic from './epics/changePasswordEpic';
 import importSeedConfirmationEpic from './epics/importSeedConfirmationEpic';
@@ -48,7 +47,6 @@ export default combineEpics(
     loginEpic,
     authErrorEpic,
     logoutEmptySessionEpic,
-    removeWalletEpic,
     loadWalletsEpic,
     loadSavedWalletEpic,
     reloadWalletsEpic,

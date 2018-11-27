@@ -22,16 +22,14 @@
 
 import actionCreatorFactory, { Action, ActionCreator } from 'typescript-fsa';
 import { IModalPageCall } from 'genesis/modal';
-import { IModalCall, TModalType, IModalResult, TModalResult } from 'lib/modal';
+import { IModal, TModalType } from 'lib/modal';
 
 const actionCreator = actionCreatorFactory('modal');
 
-export const modalShow = actionCreator<IModalCall<TModalType>>('MODAL_SHOW') as
-    ActionCreator<IModalCall<never>> &
-    (<T extends TModalType>(params: IModalCall<T>) => Action<IModalCall<T>>);
+export const modalShow = actionCreator<IModal<TModalType>>('MODAL_SHOW') as
+    ActionCreator<IModal<never>> &
+    (<T extends TModalType>(params: IModal<T>) => Action<IModal<T>>);
 
-export const modalClose = actionCreator<TModalResult<TModalType>>('MODAL_CLOSE') as
-    (<T extends TModalType>(params: IModalResult<T>) => Action<IModalResult<T>>) &
-    ActionCreator<IModalResult<any>>;
-
+export const modalClose = actionCreator('MODAL_CLOSE');
 export const modalPage = actionCreator<IModalPageCall>('MODAL_PAGE');
+export const tryAuthorize = actionCreator<string>('TRY_AUTHORIZE');

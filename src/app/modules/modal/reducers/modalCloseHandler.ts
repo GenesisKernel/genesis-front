@@ -24,9 +24,9 @@ import { State } from '../reducer';
 import { modalClose } from '../actions';
 import { Reducer } from 'modules';
 
-const modalCloseHandler: Reducer<typeof modalClose, State> = (state, payload) => ({
+const modalCloseHandler: Reducer<typeof modalClose, State> = (state, payload): State => ({
     ...state,
-    result: payload
+    instance: undefined
 });
 
 export default modalCloseHandler;

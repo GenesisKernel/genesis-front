@@ -27,17 +27,17 @@ import { FormattedMessage } from 'react-intl';
 import Modal, { IModalProps } from '../';
 import Validation from 'components/Validation';
 
-export interface IAuthChangePasswordModalState {
+export interface IChangePasswordModalState {
     password: string;
 }
 
-export interface IAuthChangePasswordModalProps extends IModalProps<void, void> {
-    onInvalidPassword: () => any;
-    onChangePassword: (params: { oldPassword: string, newPassword: string }) => any;
+export interface IChangePasswordModalProps extends IModalProps {
+    onInvalidPassword: () => void;
+    onChangePassword: (params: { oldPassword: string, newPassword: string }) => void;
 }
 
-class AuthChangePasswordModal extends React.Component<IAuthChangePasswordModalProps, IAuthChangePasswordModalState> {
-    state: IAuthChangePasswordModalState = {
+class ChangePasswordModal extends React.Component<IChangePasswordModalProps, IChangePasswordModalState> {
+    state: IChangePasswordModalState = {
         password: '',
     };
 
@@ -101,7 +101,7 @@ class AuthChangePasswordModal extends React.Component<IAuthChangePasswordModalPr
 
                 </Modal.Body >
                 <Modal.Footer className="text-right">
-                    <Button type="button" bsStyle="link" onClick={this.props.onCancel}>
+                    <Button type="button" bsStyle="link" onClick={this.props.onClose}>
                         <FormattedMessage id="cancel" defaultMessage="Cancel" />
                     </Button>
                     <Validation.components.ValidatedSubmit bsStyle="primary">
@@ -113,4 +113,4 @@ class AuthChangePasswordModal extends React.Component<IAuthChangePasswordModalPr
     }
 }
 
-export default AuthChangePasswordModal;
+export default ChangePasswordModal;

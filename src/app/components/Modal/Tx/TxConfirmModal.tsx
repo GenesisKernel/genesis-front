@@ -23,34 +23,52 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import { IWalletData } from 'genesis/api';
 
 import Modal, { IModalProps } from '../';
 
-export interface IAuthRemoveWalletModalProps {
-    wallet: IWalletData;
+export interface ITxConfirmModalParams {
+    type?: string;
+    title?: string;
+    text?: string;
+    confirmButton?: string;
+    cancelButton?: string;
 }
 
-class AuthRemoveWalletModal extends React.Component<IModalProps<IAuthRemoveWalletModalProps, void>> {
-    render() {
-        return (
-            <div>
-                <Modal.Header>
+const TxConfirmModal: React.SFC<IModalProps<ITxConfirmModalParams>> = props => (
+    <div>
+        <Modal.Header>
+            {props.params.title ?
+                (
+                    <div>{props.params.title}</div>
+                ) : (
                     <FormattedMessage id="modal.confirm.title" defaultMessage="Confirmation" />
-                </Modal.Header>
-                <Modal.Body>
-                    <FormattedMessage id="auth.remove.desc" defaultMessage="Do you really want to delete this wallet? THIS ACTION IS IRREVERSIBLE" />
-                </Modal.Body>
-                <Modal.Footer className="text-right">
-                    <Button type="button" bsStyle="link" onClick={this.props.onCancel.bind(this)}>
-                        <FormattedMessage id="close" defaultMessage="Close" />
-                    </Button>
-                    <Button bsStyle="primary" onClick={this.props.onResult.bind(null, true)}>
-                        <FormattedMessage id="process.confirm" defaultMessage="Confirm" />
-                    </Button>
-                </Modal.Footer>
-            </div>
-        );
-    }
-}
-export default AuthRemoveWalletModal;
+                )
+            }
+        </Modal.Header>
+        <Modal.Body>
+            <div>{props.params.text}</div>
+        </Modal.Body>
+        <Modal.Footer className="text-right">
+            <Button type="button" bsStyle="link" onClick={props.onClose}>
+                {props.params.cancelButton ?
+                    (
+                        <div>{props.params.cancelButton}</div>
+                    ) : (
+                        <FormattedMessage id="cancel" defaultMessage="Cancel" />
+                    )
+                }
+            </Button>
+            <Button bsStyle="primary" onClick={props.onClose}>
+                {props.params.confirmButton ?
+                    (
+                        <div>{props.params.confirmButton}</div>
+                    ) : (
+                        <FormattedMessage id="confirm" defaultMessage="Confirm" />
+                    )
+                }
+            </Button>
+        </Modal.Footer>
+    </div>
+);
+
+export default TxConfirmModal;

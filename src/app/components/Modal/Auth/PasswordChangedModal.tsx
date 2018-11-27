@@ -23,42 +23,16 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import { TTxError } from 'genesis/tx';
 
 import Modal, { IModalProps } from '../';
 
-export interface ITxErrorModalParams {
-    type: TTxError;
-    error?: string;
-    errorParams?: string[];
-}
-
-const normalizeParams = (params: string[] = []) => {
-    const normalizedParams: { [key: string]: string } = {};
-    if (params) {
-        params.forEach((p, i) => {
-            normalizedParams[i] = p;
-        });
-    }
-    return normalizedParams;
-};
-
-const TxErrorModal: React.SFC<IModalProps<ITxErrorModalParams>> = props => (
+const PasswordChangedModal: React.SFC<IModalProps> = props => (
     <div>
         <Modal.Header>
-            <FormattedMessage id={`tx.error.${props.params.type}`} defaultMessage={props.params.type} />
+            <FormattedMessage id="alert.info" defaultMessage="Information" />
         </Modal.Header>
         <Modal.Body>
-            <div>
-                <FormattedMessage
-                    id={`tx.error.${props.params.type}.desc`}
-                    defaultMessage={props.params.type}
-                    values={{
-                        error: props.params.error,
-                        ...normalizeParams(props.params.errorParams)
-                    }}
-                />
-            </div>
+            <div><FormattedMessage id="auth.password.changed" defaultMessage="Password changed. Please login with new password" /></div>
         </Modal.Body>
         <Modal.Footer className="text-right">
             <Button type="button" bsStyle="primary" onClick={props.onClose}>
@@ -68,4 +42,4 @@ const TxErrorModal: React.SFC<IModalProps<ITxErrorModalParams>> = props => (
     </div>
 );
 
-export default TxErrorModal;
+export default PasswordChangedModal;

@@ -37,7 +37,6 @@ const displayDataEpic: Epic = (action$, store, { api }) => action$.ofAction(disp
         }).pipe(
             flatMap(payload => of(
                 modalShow({
-                    id: 'DISPLAY_INFO',
                     type: 'INFO',
                     params: {
                         value: payload.response

@@ -29,7 +29,6 @@ import { changeEditorTab, closeEditorTab, closeAllEditorTab, closeSavedEditorTab
 import { TEditorTab } from 'genesis/editor';
 
 import Editor from 'components/Main/Editor';
-import { IModalResult } from 'lib/modal';
 
 interface IEditorContainerProps {
     open?: string;
@@ -41,7 +40,6 @@ interface IEditorContainerProps {
 interface IEditorContainerState {
     tabIndex: number;
     tabs: TEditorTab[];
-    modalResult?: IModalResult<any>;
 }
 
 interface IEditorContainerDispatch {
@@ -56,8 +54,6 @@ interface IEditorContainerDispatch {
 }
 
 class EditorContainer extends React.Component<IEditorContainerProps & InjectedIntlProps & IEditorContainerState & IEditorContainerDispatch> {
-    private _pendingClose?: number;
-
     constructor(props: IEditorContainerProps & InjectedIntlProps & IEditorContainerState & IEditorContainerDispatch) {
         super(props);
 
@@ -76,7 +72,8 @@ class EditorContainer extends React.Component<IEditorContainerProps & InjectedIn
     }
 
     componentWillReceiveProps(props: IEditorContainerProps & IEditorContainerState & IEditorContainerDispatch) {
-        if ('number' === typeof this._pendingClose && props.modalResult) {
+        // TODO: refactoring
+        /*if ('number' === typeof this._pendingClose && props.modalResult) {
             if ('RESULT' === props.modalResult.reason) {
                 this.props.onTabClose(this._pendingClose);
             }
@@ -96,14 +93,15 @@ class EditorContainer extends React.Component<IEditorContainerProps & InjectedIn
                 type: props.create,
                 appId: props.appId
             });
-        }
+        }*/
     }
 
     onTabClose = (index: number) => {
         const tab = this.props.tabs[index];
 
         if (tab.dirty) {
-            this._pendingClose = index;
+            // TODO: refactoring
+            /*this._pendingClose = index;
             this.props.modalShow({
                 id: 'EDITOR_CLOSE',
                 type: 'CONFIRM',
@@ -113,7 +111,7 @@ class EditorContainer extends React.Component<IEditorContainerProps & InjectedIn
                         defaultMessage: 'Do you really want to close \'{name}\' without saving changes?'
                     }, { name: tab.name })
                 }
-            });
+            });*/
         }
         else {
             this.props.onTabClose(index);
@@ -137,8 +135,7 @@ class EditorContainer extends React.Component<IEditorContainerProps & InjectedIn
 
 const mapStateToProps = (state: IRootState) => ({
     tabIndex: state.editor.tabIndex,
-    tabs: state.editor.tabs,
-    modalResult: state.modal.result
+    tabs: state.editor.tabs
 });
 
 const mapDispatchToProps = {

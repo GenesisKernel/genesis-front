@@ -24,12 +24,9 @@ import React from 'react';
 
 import themed from 'components/Theme/themed';
 
-export interface IModalProps<P, R> {
+export interface IModalProps<P = {}> {
     params: P;
-    onResult: (data: R) => void;
-    onCancel: () => void;
-    // TODO: refactoring
-    changeLocale: (locale: string) => void;
+    onClose: () => void;
 }
 
 const StyledHeader = themed.div`
@@ -52,7 +49,7 @@ const StyledFooter = themed.div`
     border-top: solid 1px #d0dff3;
 `;
 
-export default abstract class Modal<P, R, S = {}> extends React.Component<IModalProps<P, R>, S> {
+export default abstract class Modal<P, R, S = {}> extends React.Component<IModalProps<P>, S> {
     public static Header = StyledHeader;
     public static Body = StyledBody;
     public static Footer = StyledFooter;

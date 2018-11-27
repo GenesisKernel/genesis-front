@@ -35,7 +35,6 @@ const mapStateToProps = (state: IRootState) => ({
 
 export default connect(mapStateToProps, {
     onError: () => modalShow({
-        id: 'E_INVALID_PASSWORD',
         type: 'AUTH_ERROR',
         params: {
             error: 'E_INVALID_PASSWORD',
@@ -43,7 +42,6 @@ export default connect(mapStateToProps, {
         }
     }),
     onCopy: () => modalShow({
-        id: 'I_COPIED',
         type: 'INFO',
         params: {
             value: (<FormattedMessage id="alert.clipboard.copied" defaultMessage="alert.clipboard.copied" />)

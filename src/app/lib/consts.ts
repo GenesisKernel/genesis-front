@@ -20,31 +20,5 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
-import { TProtypoElement } from 'genesis/protypo';
-
-import Modal, { IModalProps } from './';
-import Protypo from 'containers/Widgets/Protypo';
-
-export interface IPageModalParams {
-    title: string;
-    section: string;
-    width?: number;
-    tree: TProtypoElement[];
-}
-
-const PageModal: React.SFC<IModalProps<IPageModalParams>> = props => (
-    <div style={{ width: (props.params.width || 50) + 'vw', overflow: 'hidden' }}>
-        <Modal.Header>
-            {props.params.title}
-        </Modal.Header>
-        <Modal.Body>
-            <Protypo
-                context="page"
-                content={props.params.tree}
-                section={props.params.section}
-            />
-        </Modal.Body>
-    </div>
-);
-export default PageModal;
+export const VERSION = process.env.REACT_APP_VERSION ? `v${process.env.REACT_APP_VERSION}` : 'DEVELOPER BUILD';
+export const MAIN_WEBSITE = 'http://genesis.space';
