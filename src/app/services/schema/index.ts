@@ -34,7 +34,7 @@ export interface ISchemaValue<T> {
 }
 
 export type TValidationSchema<T> = {
-    [K in keyof T]: ISchemaValue<T[K]>;
+    [K in keyof T]-?: ISchemaValue<T[K]>;
 };
 
 export type TSchemaValueType<T> = {
