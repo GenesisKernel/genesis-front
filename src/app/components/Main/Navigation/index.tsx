@@ -32,11 +32,6 @@ import ScrollView from 'components/ScrollView';
 const StyledNavigation = themed.aside`
     position: relative;
     z-index: 10000;
-
-    &.navigation-collapsed {
-        overflow: hidden;
-        width: 0;
-    }
     
     .scrollarea {
         height: 100%;
@@ -131,7 +126,7 @@ export interface INavigationProps {
 
 // TODO: refactoring
 const Navigation: React.SFC<INavigationProps> = props => (
-    <StyledNavigation className={true ? '' : 'navigation-collapsed'} style={{ width: true ? props.width : 0 }}>
+    <StyledNavigation style={{ width: props.width }}>
         <nav>
             <div className="navigation-controls">&lt;&lt;&lt; Collapse</div>
             <StyledMenu>

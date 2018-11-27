@@ -25,13 +25,14 @@ import classNames from 'classnames';
 
 import themed from 'components/Theme/themed';
 
-interface IResizeHandleProps {
+export interface IResizeHandleProps {
     width: number;
-    resizing: boolean;
-    disabled: boolean;
-    setResizing: (resizing: boolean) => void;
-    navigationResize: (width: number) => void;
-    navigationToggle: () => void;
+    offsetX?: number;
+    onResize: (width: number) => void;
+}
+
+interface IResizeHandleState {
+    active: boolean;
 }
 
 export const styles = {
@@ -74,9 +75,10 @@ const StyledResizeHandle = themed.button`
     }
 `;
 
-class ResizeHandle extends React.Component<IResizeHandleProps> {
-    private _clickThresholdValue = 0;
-    private _clickThreshold = 1;
+class ResizeHandle extends React.Component<IResizeHandleProps, IResizeHandleState> {
+    state: IResizeHandleState = {
+        active: false
+    };
 
     componentDidMount() {
         document.body.addEventListener('mousemove', this.onMouseMove);
@@ -89,40 +91,31 @@ class ResizeHandle extends React.Component<IResizeHandleProps> {
     }
 
     onMouseMove = (e: MouseEvent) => {
-        if (!this.props.disabled && this.props.resizing && e.clientX !== this.props.width) {
-            this.props.navigationResize(e.clientX);
-            this._clickThresholdValue++;
+        const newX = e.clientX - (this.props.offsetX || 0);
+        if (this.state.active && newX !== this.props.width) {
+            this.props.onResize(newX);
         }
     }
 
     onMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
-        if (!this.props.disabled && !this.props.resizing && 0 === e.button) {
-            this.props.setResizing(true);
-            this._clickThresholdValue = 0;
+        if (!this.state.active && 0 === e.button) {
+            this.setState({ active: true });
         }
     }
 
     onMouseUp = (e: MouseEvent) => {
-        if (!this.props.disabled && this.props.resizing && 0 === e.button) {
-            this.props.setResizing(false);
-        }
-    }
-
-    onClick = () => {
-        // TODO: Temporarily disabled
-        if (!this.props.disabled && this._clickThresholdValue < this._clickThreshold) {
-            // this.props.navigationToggle();
+        if (this.state.active && 0 === e.button) {
+            this.setState({ active: false });
         }
     }
 
     render() {
         const classes = classNames({
-            disabled: this.props.disabled,
-            active: this.props.resizing
+            active: this.state.active
         });
 
         return (
-            <StyledResizeHandle onClick={this.onClick} onMouseDown={this.onMouseDown} className={classes}>
+            <StyledResizeHandle onMouseDown={this.onMouseDown} className={classes}>
                 <div />
             </StyledResizeHandle>
         );

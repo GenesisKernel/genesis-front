@@ -25,14 +25,12 @@ import { IMenu, IPage, ISection } from 'genesis/content';
 import { TProtypoElement } from 'genesis/protypo';
 import { Location } from 'history';
 
-const actionCreator = actionCreatorFactory('section');
+const actionCreator = actionCreatorFactory('navigator');
 
-// Navigation
 export const updateSection = actionCreator<ISection>('UPDATE_SECTION');
 export const menuPop = actionCreator('MENU_POP');
 export const menuPush = actionCreator<{ section: string, menu: IMenu }>('MENU_PUSH');
 export const navigatePage = actionCreator.async<{ name?: string, section?: string, force?: boolean, params: { [key: string]: any } }, { section: string }, undefined>('NAVIGATE_PAGE');
-export const navigationToggle = actionCreator('NAVIGATION_TOGGLE');
 export const renderPage = actionCreator.async<{ section: string, name: string, params: { [key: string]: string }, location: Location }, TProtypoElement[], string>('RENDER_PAGE');
 export const reloadPage = actionCreator.async<{}, { params: { [key: string]: any }, menu: IMenu, page: IPage }, string>('RELOAD_PAGE');
 export const popPage = actionCreator<{ section: string, name: string, location: Location }>('POP_PAGE');

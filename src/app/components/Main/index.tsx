@@ -23,11 +23,10 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import Sidebar from './Sidebar';
+import Sidebar from 'containers/Sidebar';
 import Sections from 'containers/Main/Sections';
 import NotFound from 'components/NotFound';
 import themed from 'components/Theme/themed';
-import SideButton from './Sidebar/SideButton';
 
 export interface IMainProps {
     stylesheet: string;
@@ -35,7 +34,7 @@ export interface IMainProps {
 
 const StyledContent = themed.div`
     position: fixed;
-    left: ${props => props.theme.menuHeight}px;
+    left: ${props => props.theme.menuWidth}px;
     top: 0;
     right: 0;
     bottom: 0;
@@ -46,22 +45,7 @@ const Main: React.SFC<IMainProps> = props => (
         <style type="text/css">
             {props.stylesheet}
         </style>
-        <Sidebar>
-            <SideButton>
-                <em className="icon-menu" />
-            </SideButton>
-            <SideButton active>
-                <em className="icon-compass" />
-            </SideButton>
-            <SideButton>
-                <em className="icon-flag" />
-            </SideButton>
-            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-                <SideButton>
-                    <em className="icon-user" />
-                </SideButton>
-            </div>
-        </Sidebar>
+        <Sidebar />
         <StyledContent>
             <div className="switch-wrapper">
                 <Switch>

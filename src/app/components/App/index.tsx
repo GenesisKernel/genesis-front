@@ -42,8 +42,7 @@ interface IAppProps {
     localeMessages: { [key: string]: string };
     isAuthenticated: boolean;
     isLoaded: boolean;
-    isCollapsed: boolean;
-    sessionAcquired: boolean;
+    isSessionAcquired: boolean;
     securityWarningClosed: boolean;
 }
 
@@ -59,8 +58,6 @@ const App: React.SFC<IAppProps> = props => {
     const classes = classnames({
         'wrapper': true,
         'layout-fixed': true,
-        'aside-collapsed': props.isCollapsed,
-        'aside-toggled': !props.isCollapsed,
         'platform-desktop': platform.select({ desktop: true }),
         'platform-web': platform.select({ web: true }),
         'platform-windows': platform.select({ win32: true })
@@ -89,7 +86,7 @@ const App: React.SFC<IAppProps> = props => {
                             {!props.isAuthenticated && (
                                 <Route path="/" component={Auth} />
                             )}
-                            {!props.sessionAcquired && (
+                            {!props.isSessionAcquired && (
                                 <Route path="/" component={Splash} />
                             )}
                             <Route path="/" component={Main} />

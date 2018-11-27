@@ -41,7 +41,7 @@ declare module 'genesis/theme' {
 
         progressBarForeground: string;
 
-        menuHeight: number;
+        menuWidth: number;
         menuForeground: string;
         menuBackgroundActive: string;
         menuActive: string;

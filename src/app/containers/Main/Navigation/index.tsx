@@ -22,7 +22,7 @@
 
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { menuPop } from 'modules/sections/actions';
+import { menuPop } from 'modules/navigator/actions';
 
 import Navigation from 'components/Main/Navigation';
 
@@ -31,7 +31,7 @@ export interface INavigationProps {
 }
 
 const mapStateToProps = (state: IRootState, props: INavigationProps) => {
-    const section = state.sections.sections[props.section];
+    const section = state.navigator.sections[props.section];
     return {
         width: state.storage.navigationSize,
         menus: section ? section.menus : []

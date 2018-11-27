@@ -20,13 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
 import { Epic } from 'modules';
 import { createEditorTab } from '../actions';
-import { updateSection } from 'modules/sections/actions';
-import { replace } from 'connected-react-router';
 import { delay, map, flatMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { empty } from 'rxjs';
 
 const createEditorTabEpic: Epic = (action$, store) => action$.ofAction(createEditorTab.started).pipe(
     delay(0),
@@ -67,17 +64,19 @@ const createEditorTabEpic: Epic = (action$, store) => action$.ofAction(createEdi
             });
         }
     }),
-    flatMap(action => {
-        const editor = store.value.sections.sections.editor;
+    flatMap(action => empty())
+    // TODO: refactoring
+    // flatMap(action => {
+    //     const editor = store.value.sections.sections.editor;
 
-        return of<Action>(
-            replace('/editor'),
-            updateSection({
-                ...editor
-            }),
-            action
-        );
-    })
+    //     return of<Action>(
+    //         replace('/editor'),
+    //         updateSection({
+    //             ...editor
+    //         }),
+    //         action
+    //     );
+    // })
 );
 
 export default createEditorTabEpic;

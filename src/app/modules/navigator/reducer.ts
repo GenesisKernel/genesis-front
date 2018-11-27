@@ -27,7 +27,6 @@ import updateSectionHandler from './reducers/updateSectionHandler';
 import sectionsInitHandler from './reducers/sectionsInitHandler';
 import menuPopHandler from './reducers/menuPopHandler';
 import menuPushHandler from './reducers/menuPushHandler';
-import navigationToggleHandler from './reducers/navigationToggleHandler';
 import renderPageDoneHandler from './reducers/renderPageDoneHandler';
 import renderPageFailedHandler from './reducers/renderPageFailedHandler';
 import renderPageHandler from './reducers/renderPageHandler';
@@ -49,7 +48,6 @@ export default reducerWithInitialState(initialState)
     .case(actions.updateSection, updateSectionHandler)
     .case(actions.menuPop, menuPopHandler)
     .case(actions.menuPush, menuPushHandler)
-    .case(actions.navigationToggle, navigationToggleHandler)
     .case(actions.renderPage.done, renderPageDoneHandler)
     .case(actions.renderPage.failed, renderPageFailedHandler)
     .case(actions.renderPage.started, renderPageHandler)

@@ -38,7 +38,7 @@ const StyledSections = themed.div`
         background: ${props => props.theme.headerBackground};
         border-bottom: solid 1px ${props => props.theme.menuOutline};
         padding: 15px 15px 12px;
-        height: ${props => props.theme.menuHeight};
+        height: ${props => props.theme.menuWidth};
     }
 
     .sections-content {

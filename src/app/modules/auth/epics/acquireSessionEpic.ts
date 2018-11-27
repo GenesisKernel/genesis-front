@@ -25,7 +25,7 @@ import { acquireSession } from '../actions';
 import { forkJoin, of, from } from 'rxjs';
 import { flatMap, catchError, map } from 'rxjs/operators';
 import { ISection } from 'genesis/content';
-import { sectionsInit } from 'modules/sections/actions';
+import { sectionsInit } from 'modules/navigator/actions';
 import { fetchNotifications, ecosystemInit } from 'modules/content/actions';
 
 enum RemoteSectionStatus {

@@ -20,13 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { setResizing } from '../actions';
-import { Reducer } from 'modules';
+import { connect } from 'react-redux';
+import { IRootState } from 'modules';
 
-const setResizingHandler: Reducer<typeof setResizing, State> = (state, payload) => ({
-    ...state,
-    navigationResizing: payload
+import Sidebar from 'components/Main/Sidebar';
+
+const mapStateToProps = (state: IRootState) => ({
+
 });
 
-export default setResizingHandler;
+const mapDispatchToProps = {
+    onCollapseToggle: () => null
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);

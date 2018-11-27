@@ -29,9 +29,8 @@ const mapStateToProps = (state: IRootState) => ({
     locale: state.storage.locale,
     localeMessages: state.engine.localeMessages,
     isAuthenticated: state.auth.isAuthenticated,
-    isCollapsed: state.engine.isCollapsed,
     isLoaded: state.engine.isLoaded,
-    sessionAcquired: state.auth.isAcquired,
+    isSessionAcquired: state.auth.isAcquired,
     securityWarningClosed: state.storage.securityWarningClosed
 });
 

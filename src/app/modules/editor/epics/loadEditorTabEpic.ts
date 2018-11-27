@@ -20,13 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
 import { Epic } from 'modules';
 import { loadEditorTab } from '../actions';
-import { updateSection } from 'modules/sections/actions';
-import { replace } from 'connected-react-router';
 import { flatMap, map, catchError } from 'rxjs/operators';
-import { from, of } from 'rxjs';
+import { from, of, empty } from 'rxjs';
 
 // TODO: refactoring
 const nameParser = /^(@[0-9]+)?(.*)$/i;
@@ -133,14 +130,16 @@ const loadEditorTabEpic: Epic = (action$, store, { api }) => action$.ofAction(lo
         }
 
     }),
-    flatMap(action => of<Action>(
-        replace('/editor'),
-        action,
-        updateSection({
-            ...store.value.sections.sections.editor,
-            pages: []
-        })
-    )),
+    flatMap(() => empty()),
+    // TODO: refactoring
+    // flatMap(action => of<Action>(
+    //     replace('/editor'),
+    //     action,
+    //     updateSection({
+    //         ...store.value.sections.sections.editor,
+    //         pages: []
+    //     })
+    // )),
     catchError(error => of(loadEditorTab.failed({
         params: null as any,
         error

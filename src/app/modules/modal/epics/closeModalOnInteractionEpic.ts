@@ -23,7 +23,7 @@
 import { Epic } from 'modules';
 import { isType } from 'typescript-fsa';
 import { modalClose } from '../actions';
-import { navigatePage } from 'modules/sections/actions';
+import { navigatePage } from 'modules/navigator/actions';
 import { flatMap } from 'rxjs/operators';
 import { iif, empty, of } from 'rxjs';
 

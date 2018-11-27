@@ -25,6 +25,8 @@ import { Epic as NativeEpic } from 'redux-observable';
 import { IStoreDependencies } from './dependencies';
 import { combineReducers } from 'redux';
 import { combineEpics } from 'redux-observable';
+import { Observable } from 'rxjs/Observable';
+import { filter } from 'rxjs/operators';
 import { loadingBarReducer } from 'react-redux-loading-bar';
 import { ActionCreator, Failure, Success, isType, Action } from 'typescript-fsa';
 import { connectRouter } from 'connected-react-router';
@@ -33,7 +35,7 @@ import { persistReducer, PersistConfig } from 'redux-persist';
 import storagePersistor from 'redux-persist/lib/storage';
 import * as auth from './auth';
 import * as content from './content';
-import * as sections from './sections';
+import * as navigator from './navigator';
 import * as modal from './modal';
 import * as engine from './engine';
 import * as editor from './editor';
@@ -44,8 +46,6 @@ import * as notifications from './notifications';
 import * as storage from './storage';
 import * as socket from './socket';
 import * as router from './router';
-import { Observable } from 'rxjs/Observable';
-import { filter } from 'rxjs/operators';
 
 export type Epic = NativeEpic<ReduxAction<any>, ReduxAction<any>, IRootState, IStoreDependencies>;
 export type Reducer<T, S> =
@@ -57,7 +57,7 @@ export type Reducer<T, S> =
 export interface IRootState {
     auth: auth.State;
     content: content.State;
-    sections: sections.State;
+    navigator: navigator.State;
     modal: modal.State;
     engine: engine.State;
     editor: editor.State;
@@ -79,7 +79,7 @@ export const ofAction = <A>(actionCreator: ActionCreator<A>) => (source: Observa
 export const rootEpic = combineEpics(
     auth.epic,
     content.epic,
-    sections.epic,
+    navigator.epic,
     modal.epic,
     engine.epic,
     editor.epic,
@@ -109,7 +109,7 @@ export default (history: History) => combineReducers({
     auth: persistReducer(authPersistConfig, auth.reducer),
     storage: persistReducer(storagePersistConfig, storage.reducer),
     content: content.reducer,
-    sections: sections.reducer,
+    navigator: navigator.reducer,
     modal: modal.reducer,
     engine: engine.reducer,
     editor: editor.reducer,

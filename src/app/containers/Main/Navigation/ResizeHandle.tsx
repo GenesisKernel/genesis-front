@@ -22,21 +22,15 @@
 
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { setResizing } from 'modules/content/actions';
-import { navigationToggle } from 'modules/sections/actions';
 import { saveNavigationSize } from 'modules/storage/actions';
 
 import ResizeHandle from 'components/Main/Navigation/ResizeHandle';
 
 const mapStateToProps = (state: IRootState) => ({
-    width: state.storage.navigationSize,
-    resizing: state.content.navigationResizing,
-    disabled: !state.engine.isCollapsed
+    width: state.storage.navigationSize
 });
 
 export default connect(mapStateToProps, {
-    setResizing,
-    navigationResize: saveNavigationSize,
-    navigationToggle
+    onResize: saveNavigationSize
 
 })(ResizeHandle);

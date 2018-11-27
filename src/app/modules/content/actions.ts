@@ -26,7 +26,6 @@ import { TProtypoElement, IButtonInteraction } from 'genesis/protypo';
 const actionCreator = actionCreatorFactory('content');
 
 // Navigation
-export const setResizing = actionCreator<boolean>('SET_RESIZING');
 export const ecosystemInit = actionCreator<{ stylesheet: string }>('ECOSYSTEM_INIT');
 
 // Interaction

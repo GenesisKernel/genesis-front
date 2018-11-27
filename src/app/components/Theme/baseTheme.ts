@@ -43,7 +43,7 @@ const baseTheme: IThemeDefinition = {
 
     progressBarForeground: '#b2c5dc',
 
-    menuHeight: 50,
+    menuWidth: 50,
     menuForeground: '#0a1d33',
     menuBackgroundActive: '#ececec',
     menuActive: '#4092ff',

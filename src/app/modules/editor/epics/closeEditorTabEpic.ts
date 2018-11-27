@@ -22,13 +22,15 @@
 
 import { Epic } from 'modules';
 import { closeEditorTab } from '../actions';
-import { updateSection } from 'modules/sections/actions';
-import { map } from 'rxjs/operators';
+import { flatMap } from 'rxjs/operators';
+import { empty } from 'rxjs';
 
 const closeEditorTabEpic: Epic = (action$, store) => action$.ofAction(closeEditorTab).pipe(
-    map(action => updateSection({
+    flatMap(() => empty())
+    // TODO: refactoring
+    /*map(action => updateSection({
         ...store.value.sections.sections.editor
-    }))
+    }))*/
 );
 
 export default closeEditorTabEpic;

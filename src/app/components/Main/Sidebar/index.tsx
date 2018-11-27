@@ -23,22 +23,48 @@
 import React from 'react';
 
 import themed from 'components/Theme/themed';
+import SideButton from './SideButton';
 
 const StyledSidebar = themed.div`
     background: url(/img/backDark.png);
     background-attachment: fixed;
-    width: ${props => props.theme.menuHeight}px;
+    width: ${props => props.theme.menuWidth}px;
     height: 100%;
     position: relative;
+
+    .sidebar-bottom {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    &.sidebar-active {
+        width: 150px;
+    }
 `;
 
 export interface ISidebarProps {
-
+    collapsed?: boolean;
+    onCollapseToggle: () => void;
 }
 
 const Sidebar: React.SFC<ISidebarProps> = props => (
     <StyledSidebar>
-        {props.children}
+        <SideButton>
+            <em className="icon-menu" />
+        </SideButton>
+        <SideButton active>
+            <em className="icon-compass" />
+        </SideButton>
+        <SideButton>
+            <em className="icon-flag" />
+        </SideButton>
+        <div className="sidebar-bottom">
+            <SideButton>
+                <em className="icon-user" />
+            </SideButton>
+        </div>
     </StyledSidebar>
 );
 

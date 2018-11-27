@@ -22,8 +22,8 @@
 
 import { Epic, ofAction } from 'modules';
 import { locationChange } from '../actions';
-import { renderPage, popPage } from 'modules/sections/actions';
-import findPage from 'modules/sections/util/findPage';
+import { renderPage, popPage } from 'modules/navigator/actions';
+import findPage from 'modules/navigator/util/findPage';
 import { of, empty } from 'rxjs';
 import { filter, delayWhen, switchMap } from 'rxjs/operators';
 
@@ -36,13 +36,13 @@ const sectionLoadEpic: Epic = (action$, store, { routerService }) => action$.pip
         const match = routerService.matchRoute('(/)(:section)(/)(:page)(/)', action.payload.location.pathname + action.payload.location.search);
 
         if (store.value.auth.isAuthenticated && match) {
-            const section = store.value.sections.sections[match.parts.section || store.value.sections.mainSection];
+            const section = store.value.navigator.sections[match.parts.section || store.value.navigator.mainSection];
             const pageName = match.parts.page || section.defaultPage;
 
             if ('POP' === action.payload.action) {
                 const pageIndex = findPage(section, pageName);
                 if (-1 !== pageIndex) {
-                    const page = store.value.sections.sections[section.name].pages[pageIndex];
+                    const page = store.value.navigator.sections[section.name].pages[pageIndex];
                     if (page.content || page.error) {
                         return of(popPage({
                             location: action.payload.location,

@@ -23,7 +23,7 @@
 import { Epic } from 'modules';
 import { txExec } from '../actions';
 import { modalShow } from 'modules/modal/actions';
-import { navigatePage } from 'modules/sections/actions';
+import { navigatePage } from 'modules/navigator/actions';
 import { map, filter } from 'rxjs/operators';
 
 export const txExecFailedEpic: Epic = (action$, store) => action$.ofAction(txExec.failed).pipe(

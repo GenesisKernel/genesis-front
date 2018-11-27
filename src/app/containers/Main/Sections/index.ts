@@ -30,7 +30,7 @@ export interface ISectionsProps {
 }
 
 const mapStateToProps = (state: IRootState, props: ISectionsProps) => ({
-    values: state.sections.sections,
+    values: state.navigator.sections,
     navigationSize: state.storage.navigationSize
 });
 

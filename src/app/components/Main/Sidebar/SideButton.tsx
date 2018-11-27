@@ -26,9 +26,9 @@ import classNames from 'classnames';
 import themed from 'components/Theme/themed';
 
 const StyledSideButton = themed.button`
-    width: ${props => props.theme.menuHeight}px;
-    height: ${props => props.theme.menuHeight}px;
-    line-height: ${props => props.theme.menuHeight}px;
+    width: ${props => props.theme.menuWidth}px;
+    height: ${props => props.theme.menuWidth}px;
+    line-height: ${props => props.theme.menuWidth}px;
     text-align: center;
     background: none;
     color: #fff;
@@ -36,6 +36,7 @@ const StyledSideButton = themed.button`
     position: relative;
 
     &,&:hover,&:active,&:focus{
+        padding: 0;
         outline: none;
         border: none;
         border-bottom: solid 1px rgba(255, 255, 255, 0.2);
