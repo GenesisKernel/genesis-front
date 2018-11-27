@@ -31,7 +31,8 @@ const authErrorEpic: Epic = action$ => action$.ofAction(login.failed, importWall
             id: 'AUTH_ERROR',
             type: 'AUTH_ERROR',
             params: {
-                error: action.payload.error
+                error: action.payload.error,
+                message: action.payload.error
             }
         })
     )

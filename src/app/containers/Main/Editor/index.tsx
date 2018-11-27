@@ -27,9 +27,9 @@ import { IRootState } from 'modules';
 import { modalShow } from 'modules/modal/actions';
 import { changeEditorTab, closeEditorTab, closeAllEditorTab, closeSavedEditorTab, updateEditorTab, loadEditorTab, createEditorTab } from 'modules/editor/actions';
 import { TEditorTab } from 'genesis/editor';
-import { IModalResult } from 'genesis/modal';
 
 import Editor from 'components/Main/Editor';
+import { IModalResult } from 'lib/modal';
 
 interface IEditorContainerProps {
     open?: string;
@@ -41,7 +41,7 @@ interface IEditorContainerProps {
 interface IEditorContainerState {
     tabIndex: number;
     tabs: TEditorTab[];
-    modalResult?: IModalResult;
+    modalResult?: IModalResult<any>;
 }
 
 interface IEditorContainerDispatch {

@@ -26,7 +26,7 @@ import { FormattedMessage } from 'react-intl';
 import { ITransactionCollection, ITxStatus, ITxError } from 'genesis/tx';
 import { TContractFieldType } from 'genesis/api';
 
-import Modal from '../';
+import Modal, { IModalProps } from '../';
 import Validation from 'components/Validation';
 import ValidatedContractForm from 'containers/Widgets/ValidatedContractForm';
 import Table, { ICellRenderer } from 'components/Table';
@@ -45,7 +45,7 @@ interface IDebugContractModalState {
     result?: ITxError | ITxStatus;
 }
 
-class DebugContractModal extends Modal<IDebugContractModalProps, void, IDebugContractModalState> {
+class DebugContractModal extends React.Component<IModalProps<IDebugContractModalProps, void>, IDebugContractModalState> {
     state: IDebugContractModalState = {
         pending: false,
         result: undefined

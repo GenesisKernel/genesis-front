@@ -20,18 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
-import Modal from '../';
+import Modal, { IModalProps } from '../';
 import Validation from 'components/Validation';
 
-export interface IAuthorizeModalProps {
-    contract: string;
+export interface IAuthorizeModalParams {
+    contract?: string;
 }
 
-class AuthorizeModal extends Modal<IAuthorizeModalProps, string> {
+class AuthorizeModal extends React.Component<IModalProps<IAuthorizeModalParams, string>> {
     onSuccess = (values: { [key: string]: any }) => {
         this.props.onResult(values.password);
     }

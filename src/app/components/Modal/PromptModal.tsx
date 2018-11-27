@@ -23,7 +23,7 @@
 import * as React from 'react';
 import { Button, Well } from 'react-bootstrap';
 
-import Modal from './';
+import Modal, { IModalProps } from './';
 import Validation from 'components/Validation';
 import { FormattedMessage } from 'react-intl';
 
@@ -33,7 +33,7 @@ export interface IPromptModalProps {
     description?: string;
 }
 
-class PromptModal extends Modal<IPromptModalProps, string> {
+class PromptModal extends React.Component<IModalProps<IPromptModalProps, string>> {
     onSuccess(values: { [key: string]: any }) {
         this.props.onResult(values.value);
     }

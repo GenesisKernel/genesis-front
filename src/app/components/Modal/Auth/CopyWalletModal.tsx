@@ -27,13 +27,13 @@ import { IWalletData } from 'genesis/api';
 import QRCode from 'qrcode.react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
-import Modal from '../';
+import Modal, { IModalProps } from '../';
 
 export interface ICopyWalletModalParams {
     wallet: IWalletData;
 }
 
-class CopyWalletModal extends Modal<ICopyWalletModalParams, void> {
+class CopyWalletModal extends React.Component<IModalProps<ICopyWalletModalParams, void>> {
     formatKey = (key: string) => {
         const match = key.match(/.{1,2}/g);
         return match ? match.join(' ') : '';

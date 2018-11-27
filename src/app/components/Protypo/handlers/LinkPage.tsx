@@ -36,7 +36,6 @@ export interface ILinkPageProps {
 
 interface ILinkPageContext {
     protypo: Protypo;
-    navigatePage: (params: { name: string, params: any, force?: boolean }) => void;
 }
 
 const LinkPage: React.SFC<ILinkPageProps> = (props, context: ILinkPageContext) => (

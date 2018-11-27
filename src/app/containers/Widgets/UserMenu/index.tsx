@@ -22,7 +22,7 @@
 
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
-import { logout, changePassword, switchWallet } from 'modules/auth/actions';
+import { logout, switchWallet } from 'modules/auth/actions';
 import { modalShow } from 'modules/modal/actions';
 
 import UserMenu from 'components/Main/UserMenu';
@@ -49,9 +49,15 @@ export default connect(mapStateToProps, {
             id: 'ROLE_PICKER',
             type: 'ROLE_PICKER',
             params: {
+                // TODO: refactoring
+                walletID: null as any,
                 ecosystem
             }
         }),
-    onChangePassword: () => changePassword.started(undefined)
+    onChangePassword: () => modalShow({
+        id: 'CHANGE_PASSWORD',
+        type: 'AUTH_CHANGE_PASSWORD',
+        params: undefined
+    })
 
 })(UserMenu);

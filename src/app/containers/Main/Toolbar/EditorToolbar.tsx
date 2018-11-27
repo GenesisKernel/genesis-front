@@ -25,9 +25,9 @@ import { IRootState } from 'modules';
 import { connect } from 'react-redux';
 import { modalShow } from 'modules/modal/actions';
 import { editorSave, revertEditorTab, changeEditorTool, debugContract } from 'modules/editor/actions';
-import { IModalResult } from 'genesis/modal';
 import { TEditorTab } from 'genesis/editor';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
+import { IModalResult } from 'lib/modal';
 
 import EditorToolbar from 'components/Main/Toolbar/EditorToolbar';
 
@@ -36,7 +36,7 @@ export interface IEditorToolbarProps {
 }
 
 interface IEditorToolbarState {
-    modalResult?: IModalResult;
+    modalResult?: IModalResult<any>;
     currentTab: TEditorTab;
     currentTabIndex: number;
     canSave: boolean;

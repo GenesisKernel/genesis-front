@@ -20,53 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// TODO: refactoring
 declare module 'genesis/modal' {
-    type TModalResultReason =
-        // Dispatched when Modal component received active=false while modal was visible
-        'CANCEL' |
-
-        // Dispatched when another modal window overlays the current one
-        'OVERLAP' |
-
-        // Dispatched when clicked outside or close button was clicked
-        'CLOSE' |
-
-        // Dispatched when correct result was yielded
-        'RESULT';
-
-    interface IModalResult {
-        reason: TModalResultReason;
-        data: any;
-    }
-
-    interface IModalCall {
-        id: string;
-        type: string;
-        params: {
-            [key: string]: any;
-        }
-    }
-
-    interface IModalCloseCall {
-        reason: TModalResultReason;
-        data: any;
-    }
-
     interface IModalPageCall {
         name: string;
         title?: string;
         width?: number;
+        section: string;
         params: {
             [key: string]: any;
         };
-    }
-
-    interface IModal {
-        id: string;
-        type: string;
-        result?: IModalResult;
-        params: {
-            [key: string]: any;
-        }
     }
 }

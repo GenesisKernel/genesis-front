@@ -23,7 +23,7 @@
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
 
-import Modal from '../';
+import Modal, { IModalProps } from '../';
 import { FormattedMessage } from 'react-intl';
 import Validation from 'components/Validation';
 
@@ -31,7 +31,7 @@ export interface ICreatePageModalProps {
     menus: string[];
 }
 
-class CreatePageModal extends Modal<ICreatePageModalProps, { name: string, menu: string, conditions: string }> {
+class CreatePageModal extends React.Component<IModalProps<ICreatePageModalProps, { name: string, menu: string, conditions: string }>> {
     onSubmit = (values: { [key: string]: any }) => {
         this.props.onResult({
             name: values.name,

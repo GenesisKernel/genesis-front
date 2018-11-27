@@ -20,18 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
-import Modal from '../';
+import Modal, { IModalProps } from '../';
 
-export interface IAuthErrorModalProps {
+export interface IAuthErrorModalParams {
     error: string;
     message: string;
 }
 
-class AuthErrorModal extends Modal<IAuthErrorModalProps, void> {
+class AuthErrorModal extends React.Component<IModalProps<IAuthErrorModalParams, void>> {
     render() {
         return (
             <div>

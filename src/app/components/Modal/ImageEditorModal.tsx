@@ -26,7 +26,7 @@ import { Button, Well } from 'react-bootstrap';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 
-import Modal from './';
+import Modal, { IModalProps } from './';
 
 export interface IImageEditorModalProps {
     mime: string;
@@ -35,7 +35,7 @@ export interface IImageEditorModalProps {
     width: number;
 }
 
-class ImageEditorModal extends Modal<IImageEditorModalProps, string> {
+class ImageEditorModal extends React.Component<IModalProps<IImageEditorModalProps, string>> {
     private _cropper: Cropper | null = null;
 
     onSuccess() {

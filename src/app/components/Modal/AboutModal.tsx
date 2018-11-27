@@ -24,12 +24,12 @@ import * as React from 'react';
 import { Button } from 'react-bootstrap';
 import imgLogo from 'images/logoInverse.svg';
 
-import Modal from './';
+import Modal, { IModalProps } from './';
 import { FormattedMessage } from 'react-intl';
 
 const MAIN_WEBSITE = 'http://genesis.space';
 
-class AboutModal extends Modal<void, void> {
+class AboutModal extends React.Component<IModalProps<void, void>> {
     openWebsite() {
         const electron = require('electron');
         electron.shell.openExternal(MAIN_WEBSITE);

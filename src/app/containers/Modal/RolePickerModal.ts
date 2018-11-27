@@ -24,7 +24,6 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { IModalProps } from 'components/Modal';
 import { switchWallet } from 'modules/auth/actions';
-import { modalClose } from 'modules/modal/actions';
 
 import RolePickerModal from 'components/Modal/RolePickerModal';
 
@@ -47,16 +46,12 @@ const mapStateToProps = (state: IRootState, props: IModalProps<IRolePickerModalP
 });
 
 export default connect(mapStateToProps, {
-    onSwitchWallet: switchWallet,
-    modalClose: modalClose
+    onSwitchWallet: switchWallet
 
-}, (state, dispatch: any, props) => ({
+}, (state, dispatch, props) => ({
     ...state,
     onSwitchWallet: (role?: string) => {
-        dispatch.modalClose({
-            reason: 'CLOSE',
-            data: null
-        });
+        props.onCancel();
         dispatch.onSwitchWallet({
             ecosystem: props.params.ecosystem,
             role

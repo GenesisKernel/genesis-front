@@ -95,6 +95,7 @@ const buttonInteractionEpic: Epic = (action$, store, { api, routerService }) => 
                 if (action.payload.popup) {
                     return of(modalPage({
                         name: action.payload.page.name,
+                        section: action.payload.page.section,
                         params: action.payload.page.params,
                         title: action.payload.popup.title,
                         width: action.payload.popup.width

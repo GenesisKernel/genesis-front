@@ -23,7 +23,7 @@
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
 
-import Modal from './';
+import Modal, { IModalProps } from './';
 import { FormattedMessage } from 'react-intl';
 
 export interface IConfirmModalProps {
@@ -33,7 +33,7 @@ export interface IConfirmModalProps {
     cancelButton?: string;
 }
 
-class ConfirmModal extends Modal<IConfirmModalProps, boolean> {
+class ConfirmModal extends React.Component<IModalProps<IConfirmModalProps, boolean>> {
     onSuccess(values: { [key: string]: any }) {
         this.props.onResult(true);
     }

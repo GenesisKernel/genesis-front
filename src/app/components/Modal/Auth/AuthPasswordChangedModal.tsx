@@ -24,9 +24,9 @@ import * as React from 'react';
 import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
-import Modal from '../';
+import Modal, { IModalProps } from '../';
 
-class AuthPasswordChangedModal extends Modal<{}, void> {
+class AuthPasswordChangedModal extends React.Component<IModalProps<{}, void>> {
     render() {
         return (
             <div>

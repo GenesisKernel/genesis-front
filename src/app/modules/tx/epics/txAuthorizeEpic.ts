@@ -23,6 +23,7 @@
 import uuid from 'uuid';
 import { Epic } from 'modules';
 import { Action } from 'redux';
+import { Action as FSAAction } from 'typescript-fsa';
 import { of, merge } from 'rxjs';
 import { modalShow, modalClose } from 'modules/modal/actions';
 import { txAuthorize } from '../actions';
@@ -30,6 +31,7 @@ import { authorize } from 'modules/auth/actions';
 import keyring from 'lib/keyring';
 import { enqueueNotification } from 'modules/notifications/actions';
 import { switchMap, take, flatMap } from 'rxjs/operators';
+import { IModalResult } from 'lib/modal';
 
 const txAuthorizeEpic: Epic = (action$, store) => action$.ofAction(txAuthorize.started).pipe(
     switchMap(action => {
@@ -48,7 +50,9 @@ const txAuthorizeEpic: Epic = (action$, store) => action$.ofAction(txAuthorize.s
                 })),
                 action$.ofAction(modalClose).pipe(
                     take(1),
-                    flatMap(result => {
+                    // TODO: refactoring
+                    flatMap((resultPayload: any) => {
+                        const result: FSAAction<IModalResult<'AUTHORIZE'>> = resultPayload;
                         if (result.payload.data) {
                             const privateKey = keyring.decryptAES(store.value.auth.session.wallet!.encKey, result.payload.data || '');
                             if (keyring.validatePrivateKey(privateKey)) {

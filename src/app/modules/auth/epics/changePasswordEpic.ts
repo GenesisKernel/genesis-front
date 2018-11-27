@@ -22,79 +22,44 @@
 
 import { Action } from 'redux';
 import { Epic } from 'modules';
-import { changePassword, logout } from '../actions';
-import { of, merge } from 'rxjs';
-import { flatMap, take, map } from 'rxjs/operators';
-import { modalShow, modalClose } from 'modules/modal/actions';
+import { changePassword } from '../actions';
+import { of } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
+import { modalShow } from 'modules/modal/actions';
 import { saveWallet } from 'modules/storage/actions';
 import keyring from 'lib/keyring';
 
-const changePasswordEpic: Epic = (action$, store, { api }) => action$.ofAction(changePassword.started).pipe(
-    flatMap(action =>
-        merge(
-            of(modalShow({
-                id: 'AUTH_CHANGE_PASSWORD',
-                type: 'AUTH_CHANGE_PASSWORD',
+const changePasswordEpic: Epic = (action$, store) => action$.ofAction(changePassword).pipe(
+    flatMap(action => {
+        const wallet = store.value.auth.session.wallet!;
+        const privateKey = keyring.decryptAES(wallet.encKey, action.payload.oldPassword);
+
+        if (!keyring.validatePrivateKey(privateKey)) {
+            return of(modalShow({
+                id: 'AUTH_ERROR',
+                type: 'AUTH_ERROR',
                 params: {
-                    encKey: store.value.auth.session.wallet!.encKey
+                    error: 'E_INVALID_PASSWORD',
+                    message: 'E_INVALID_PASSWORD'
                 }
-            })),
-            action$.ofAction(modalClose).pipe(
-                take(1),
-                flatMap(result => {
-                    if ('RESULT' === result.payload.reason) {
-                        const wallet = store.value.auth.session.wallet!;
-                        const privateKey = keyring.decryptAES(wallet.encKey, result.payload.data.oldPassword);
-
-                        if (!keyring.validatePrivateKey(privateKey)) {
-                            return of(
-                                changePassword.failed({
-                                    params: undefined,
-                                    error: 'E_INVALID_PASSWORD'
-                                }),
-                                modalShow({
-                                    id: 'AUTH_ERROR',
-                                    type: 'AUTH_ERROR',
-                                    params: {
-                                        error: 'E_INVALID_PASSWORD'
-                                    }
-                                })
-                            );
-                        }
-
-                        const encKey = keyring.encryptAES(privateKey, result.payload.data.newPassword);
-                        return merge(
-                            of<Action>(
-                                changePassword.done({
-                                    params: action.payload,
-                                    result: undefined
-                                }),
-                                saveWallet({
-                                    ...wallet,
-                                    encKey
-                                }),
-                                modalShow({
-                                    id: 'AUTH_PASSWORD_CHANGED',
-                                    type: 'AUTH_PASSWORD_CHANGED',
-                                    params: {}
-                                }),
-                            ),
-                            action$.ofAction(modalClose).pipe(
-                                take(1),
-                                map(() => logout())
-                            )
-                        );
-                    }
-                    else {
-                        return of(changePassword.failed({
-                            params: action.payload,
-                            error: undefined
-                        }));
-                    }
+            }));
+        }
+        else {
+            const encKey = keyring.encryptAES(privateKey, action.payload.newPassword);
+            return of<Action>(
+                saveWallet({
+                    ...wallet,
+                    encKey
+                }),
+                modalShow({
+                    id: 'AUTH_PASSWORD_CHANGED',
+                    type: 'AUTH_PASSWORD_CHANGED',
+                    params: {}
                 })
-            )
-        )
-    )
+            );
+
+        }
+    })
 );
 
 export default changePasswordEpic;

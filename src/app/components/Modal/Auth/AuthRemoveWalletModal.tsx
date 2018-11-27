@@ -23,15 +23,15 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import { IWallet } from 'genesis/auth';
+import { IWalletData } from 'genesis/api';
 
-import Modal from '../';
+import Modal, { IModalProps } from '../';
 
 export interface IAuthRemoveWalletModalProps {
-    wallet: IWallet;
+    wallet: IWalletData;
 }
 
-class AuthRemoveWalletModal extends Modal<IAuthRemoveWalletModalProps, void> {
+class AuthRemoveWalletModal extends React.Component<IModalProps<IAuthRemoveWalletModalProps, void>> {
     render() {
         return (
             <div>

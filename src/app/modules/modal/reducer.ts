@@ -21,13 +21,13 @@
 // SOFTWARE.
 
 import * as actions from './actions';
-import { IModal } from 'genesis/modal';
+import { IModal } from 'lib/modal';
 import { reducerWithInitialState } from 'typescript-fsa-reducers/dist';
 import modalShowHandler from './reducers/modalShowHandler';
 import modalCloseHandler from './reducers/modalCloseHandler';
 
 export type State =
-    IModal;
+    IModal<any>;
 
 export const initialState: State = {
     id: '',

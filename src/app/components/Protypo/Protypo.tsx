@@ -39,8 +39,6 @@ export interface IProtypoProps {
     section: string;
     content: TProtypoElement[];
     menuPush: (params: { section: string, menu: IMenu }) => void;
-    navigatePage: (params: { name: string, params: any, force?: boolean }) => void;
-    navigate: (url: string) => void;
     displayData: (link: string) => void;
 }
 
@@ -57,8 +55,6 @@ export interface IParamSpec {
 class Protypo extends React.Component<IProtypoProps> {
     private _lastID: number = 0;
     private _menuPushBind: Function;
-    private _navigatePageBind: Function;
-    private _navigateBind: Function;
     private _resolveSourceBind: Function;
     private _renderElementsBind: Function;
     private _title: string = '';
@@ -69,8 +65,6 @@ class Protypo extends React.Component<IProtypoProps> {
     constructor(props: IProtypoProps) {
         super(props);
         this._menuPushBind = props.menuPush.bind(this);
-        this._navigatePageBind = props.navigatePage.bind(this);
-        this._navigateBind = props.navigate.bind(this);
         this._resolveSourceBind = this.resolveSource.bind(this);
         this._renderElementsBind = this.renderElements.bind(this);
     }
@@ -79,8 +73,6 @@ class Protypo extends React.Component<IProtypoProps> {
         return {
             protypo: this,
             menuPush: this._menuPushBind,
-            navigatePage: this._navigatePageBind,
-            navigate: this._navigateBind,
             resolveSource: this._resolveSourceBind,
             renderElements: this._renderElementsBind
         };
@@ -238,8 +230,6 @@ class Protypo extends React.Component<IProtypoProps> {
 
 (Protypo as any).childContextTypes = {
     protypo: propTypes.object.isRequired,
-    navigatePage: propTypes.func.isRequired,
-    navigate: propTypes.func.isRequired,
     menuPush: propTypes.func.isRequired,
     resolveSource: propTypes.func.isRequired,
     renderElements: propTypes.func.isRequired

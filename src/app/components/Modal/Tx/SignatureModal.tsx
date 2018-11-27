@@ -23,7 +23,7 @@
 import * as React from 'react';
 import { Button, Row, Col } from 'react-bootstrap';
 
-import Modal from '../';
+import Modal, { IModalProps } from '../';
 import { FormattedMessage } from 'react-intl';
 
 export interface ISignatureModalProps {
@@ -39,7 +39,7 @@ export interface ISignatureModalProps {
     contract: string;
 }
 
-class SignatureModal extends Modal<ISignatureModalProps, boolean> {
+class SignatureModal extends React.Component<IModalProps<ISignatureModalProps, boolean>> {
     onSuccess(values: { [key: string]: any }) {
         this.props.onResult(true);
     }

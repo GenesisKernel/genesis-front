@@ -25,7 +25,7 @@ import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { IWalletData } from 'genesis/api';
 
-import Modal from '../';
+import Modal, { IModalProps } from '../';
 import Action from 'components/Auth/Wallet/Action';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
@@ -34,7 +34,7 @@ export interface IRegisterModalParams {
     wallet: IWalletData;
 }
 
-class RegisterModal extends Modal<IRegisterModalParams, void> {
+class RegisterModal extends React.Component<IModalProps<IRegisterModalParams, void>> {
     onEmail = () => {
         window.location.href = `mailto:${this.props.params.activationEmail}?body=${this.props.params.wallet.publicKey}`;
     }

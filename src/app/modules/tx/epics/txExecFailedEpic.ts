@@ -23,13 +23,13 @@
 import { Epic } from 'modules';
 import { txExec } from '../actions';
 import { modalShow } from 'modules/modal/actions';
-import { navigatePage } from 'modules/navigator/actions';
 import { map, filter } from 'rxjs/operators';
 
 export const txExecFailedEpic: Epic = (action$, store) => action$.ofAction(txExec.failed).pipe(
     filter(l => !l.payload.params.silent),
     map(action => {
-        if (action.payload.error.id && action.payload.params.errorRedirects) {
+        // TODO: refactoring
+        /* if (action.payload.error.id && action.payload.params.errorRedirects) {
             const errorRedirect = action.payload.params.errorRedirects[action.payload.error.id];
             if (errorRedirect) {
                 return navigatePage.started({
@@ -38,7 +38,7 @@ export const txExecFailedEpic: Epic = (action$, store) => action$.ofAction(txExe
                     force: true
                 });
             }
-        }
+        }*/
         return modalShow({
             id: 'TX_ERROR',
             type: 'TX_ERROR',

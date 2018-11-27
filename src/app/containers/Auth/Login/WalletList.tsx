@@ -51,7 +51,7 @@ export default connect(mapStateToProps, {
             wallet
         }
     }),
-    onRegister: (wallet: IWalletData, activationEmail?: string) => modalShow({
+    onRegister: (wallet: IWalletData, activationEmail: string) => modalShow({
         id: 'REGISTER_WALLET',
         type: 'REGISTER_WALLET',
         params: {
@@ -70,7 +70,7 @@ export default connect(mapStateToProps, {
     onLogin: dispatch.onLogin,
     onSelect: dispatch.onSelect,
     onCopy: dispatch.onCopy,
-    onRegister: (wallet: IWalletData) => dispatch.onRegister(wallet, state.activationEmail),
+    onRegister: (wallet: IWalletData) => dispatch.onRegister(wallet, state.activationEmail || ''),
     onCreate: dispatch.onCreate
 
 }))(WalletList);

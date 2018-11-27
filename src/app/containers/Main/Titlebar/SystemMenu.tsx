@@ -37,7 +37,7 @@ export default connect(mapStateToProps, {
     onAbout: () => dispatch.modalShow({
         id: 'ABOUT',
         type: 'ABOUT',
-        params: {}
+        params: undefined
     }),
 
     onChangeLocale: () => dispatch.modalShow({

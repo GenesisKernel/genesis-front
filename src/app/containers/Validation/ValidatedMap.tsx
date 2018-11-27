@@ -26,7 +26,7 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { modalShow } from 'modules/modal/actions';
 import { IMapEditorEvent, TMapEditorType, TMapType } from 'genesis/geo';
-import { IModal } from 'genesis/modal';
+import { IModal } from 'lib/modal';
 
 import { Validator } from 'components/Validation/Validators';
 import ValidatedMap from 'components/Validation/ValidatedMap';
@@ -42,7 +42,7 @@ export interface IValidatedMapContainerProps {
 }
 
 interface IValidatedMapContainerState {
-    modal: IModal;
+    modal: IModal<any>;
 }
 
 interface IValidatedMapContainerDispatch {
@@ -71,7 +71,7 @@ class ValidatedMapContainer extends React.Component<IValidatedMapContainerProps 
         const result = props.modal && this._id === props.modal.id && props.modal.result;
         if (result && 'RESULT' === result.reason) {
             this.setState({
-                result: result.data
+                result: result.data as any
             });
         }
     }

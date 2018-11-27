@@ -25,7 +25,7 @@ import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { TTxError } from 'genesis/tx';
 
-import Modal from '../';
+import Modal, { IModalProps } from '../';
 
 export interface ITxErrorModalProps {
     type: TTxError;
@@ -33,7 +33,7 @@ export interface ITxErrorModalProps {
     params?: string[];
 }
 
-class TxErrorModal extends Modal<ITxErrorModalProps, void> {
+class TxErrorModal extends React.Component<IModalProps<ITxErrorModalProps, void>> {
     render() {
         const normalizedParams: { [key: string]: string } = {};
         if (this.props.params.params) {

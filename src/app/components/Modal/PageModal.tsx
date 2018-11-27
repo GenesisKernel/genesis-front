@@ -22,7 +22,7 @@
 
 import React from 'react';
 
-import Modal from './';
+import Modal, { IModalProps } from './';
 import Protypo from 'containers/Widgets/Protypo';
 import { TProtypoElement } from 'genesis/protypo';
 
@@ -33,7 +33,7 @@ export interface IPageModalProps {
     tree: TProtypoElement[];
 }
 
-class PageModal extends Modal<IPageModalProps, boolean> {
+class PageModal extends React.Component<IModalProps<IPageModalProps, boolean>> {
     onSuccess(values: { [key: string]: any }) {
         this.props.onResult(true);
     }

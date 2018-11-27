@@ -21,70 +21,18 @@
 // SOFTWARE.
 
 import React from 'react';
-import { IModal, TModalResultReason } from 'genesis/modal';
-import { INotification } from 'genesis/notifications';
-import uuid from 'uuid';
-
-import Wrapper from 'components/Modal/Wrapper';
-import DebugContractModal from 'components/Modal/Editor/DebugContractModal';
-import PromptModal from 'components/Modal/PromptModal';
-import ImageEditorModal from 'components/Modal/ImageEditorModal';
-import MapEditorModal from 'components/Modal/MapEditorModal';
-import AboutModal from 'components/Modal/AboutModal';
-import InfoModal from 'components/Modal/InfoModal';
-import ErrorModal from 'components/Modal/ErrorModal';
-import ConfirmModal from 'components/Modal/ConfirmModal';
-import CreatePageModal from 'components/Modal/Editor/CreatePageModal';
-import CreateInterfaceModal from 'components/Modal/Editor/CreateInterfaceModal';
-import AuthorizeModal from 'components/Modal/Tx/AuthorizeModal';
-import SignatureModal from 'components/Modal/Tx/SignatureModal';
-import TxErrorModal from 'components/Modal/Tx/ErrorModal';
-import AuthErrorModal from 'components/Modal/Auth/AuthErrorModal';
-import AuthRemoveWalletModal from 'components/Modal/Auth/AuthRemoveWalletModal';
-import AuthChangePasswordModal from 'components/Modal/Auth/AuthChangePasswordModal';
-import AuthPasswordChangedModal from 'components/Modal/Auth/AuthPasswordChangedModal';
-import TxConfirmModal from './Tx/ConfirmModal';
-import PageModal from './PageModal';
-import ChangeLocaleModal from './ChangeLocale';
-import CopyWalletModal from './Auth/CopyWalletModal';
-import RegisterModal from './Auth/RegisterModal';
-import RolePickerModal from 'containers/Modal/RolePickerModal';
+import { MODAL_COMPONENTS, IModal, TModalResultReason, TModalType } from 'lib/modal';
 import { IModalProps } from '.';
 
-const MODAL_COMPONENTS: { [name: string]: React.ComponentType<IModalProps<any, any>> } = {
-    'AUTHORIZE': AuthorizeModal,
-    'AUTH_ERROR': AuthErrorModal,
-    'AUTH_REMOVE_WALLET': AuthRemoveWalletModal,
-    'AUTH_CHANGE_PASSWORD': AuthChangePasswordModal,
-    'AUTH_PASSWORD_CHANGED': AuthPasswordChangedModal,
-    'REGISTER_WALLET': RegisterModal,
-    'COPY_WALLET': CopyWalletModal,
-    'TX_CONFIRM': TxConfirmModal,
-    'TX_ERROR': TxErrorModal,
-    'TX_SIGNATURE': SignatureModal,
-    'CREATE_PAGE': CreatePageModal,
-    'CREATE_INTERFACE': CreateInterfaceModal,
-    'DEBUG_CONTRACT': DebugContractModal,
-    'IMAGE_EDITOR': ImageEditorModal,
-    'MAP_EDITOR': MapEditorModal,
-    'PAGE_MODAL': PageModal,
-    'PROMPT': PromptModal,
-    'CONFIRM': ConfirmModal,
-    'INFO': InfoModal,
-    'ERROR': ErrorModal,
-    'ABOUT': AboutModal,
-    'CHANGE_LOCALE': ChangeLocaleModal,
-    'ROLE_PICKER': RolePickerModal
-};
+import Wrapper from 'components/Modal/Wrapper';
 
-export interface IModalProviderProps {
-    modal: IModal;
+export interface IModalProviderProps<T extends TModalType> {
+    modal: IModal<T>;
     onResult: (params: { reason: TModalResultReason, data: any }) => void;
-    enqueueNotification: (params: INotification) => void;
     changeLocale: (locale: string) => void;
 }
 
-class ModalProvider extends React.Component<IModalProviderProps> {
+class ModalProvider<T extends TModalType> extends React.Component<IModalProviderProps<T>> {
     onResult = (data: any) => {
         this.props.onResult({
             reason: 'RESULT',
@@ -99,16 +47,8 @@ class ModalProvider extends React.Component<IModalProviderProps> {
         });
     }
 
-    notify = (type: string, params: any) => {
-        this.props.enqueueNotification({
-            id: uuid.v4(),
-            type,
-            params
-        });
-    }
-
     render() {
-        const Modal = this.props.modal && !this.props.modal.result && MODAL_COMPONENTS[this.props.modal.type] || null;
+        const Modal: React.ComponentType<IModalProps<any, any>> | null = this.props.modal.result ? null : MODAL_COMPONENTS[this.props.modal.type] as any;
         return (
             <Wrapper>
                 {Modal && (
@@ -116,9 +56,8 @@ class ModalProvider extends React.Component<IModalProviderProps> {
                         key={this.props.modal.id}
                         onResult={this.onResult}
                         onCancel={this.onCancel}
-                        notify={this.notify}
                         changeLocale={this.props.changeLocale}
-                        {...this.props.modal}
+                        params={this.props.modal.params}
                     />
                 )}
             </Wrapper>

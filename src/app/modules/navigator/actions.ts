@@ -30,7 +30,6 @@ const actionCreator = actionCreatorFactory('navigator');
 export const updateSection = actionCreator<ISection>('UPDATE_SECTION');
 export const menuPop = actionCreator('MENU_POP');
 export const menuPush = actionCreator<{ section: string, menu: IMenu }>('MENU_PUSH');
-export const navigatePage = actionCreator.async<{ name?: string, section?: string, force?: boolean, params: { [key: string]: any } }, { section: string }, undefined>('NAVIGATE_PAGE');
 export const renderPage = actionCreator.async<{ section: string, name: string, params: { [key: string]: string }, location: Location }, TProtypoElement[], string>('RENDER_PAGE');
 export const reloadPage = actionCreator.async<{}, { params: { [key: string]: any }, menu: IMenu, page: IPage }, string>('RELOAD_PAGE');
 export const popPage = actionCreator<{ section: string, name: string, location: Location }>('POP_PAGE');

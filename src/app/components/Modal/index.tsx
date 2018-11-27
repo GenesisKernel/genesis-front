@@ -28,7 +28,7 @@ export interface IModalProps<P, R> {
     params: P;
     onResult: (data: R) => void;
     onCancel: () => void;
-    notify: (type: string, params: any) => void;
+    // TODO: refactoring
     changeLocale: (locale: string) => void;
 }
 
@@ -51,12 +51,6 @@ const StyledFooter = themed.div`
     background: #efefef;
     border-top: solid 1px #d0dff3;
 `;
-
-export abstract class ModalContainer<P, S = {}> extends React.Component<P, S> {
-    public static Header = StyledHeader;
-    public static Body = StyledBody;
-    public static Footer = StyledFooter;
-}
 
 export default abstract class Modal<P, R, S = {}> extends React.Component<IModalProps<P, R>, S> {
     public static Header = StyledHeader;

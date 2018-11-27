@@ -20,27 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Observable, merge, empty, of } from 'rxjs';
-import { ActionsObservable } from 'redux-observable';
-import { modalShow, modalClose } from '../actions';
-import { IModalCall, TModalResultReason } from 'genesis/modal';
-import { take, flatMap } from 'rxjs/operators';
+import { connect } from 'react-redux';
+import { enqueueNotification } from 'modules/notifications/actions';
+import { changePassword } from 'modules/auth/actions';
 
-const ModalObservable = <T>(action$: ActionsObservable<Action>, params: { modal: IModalCall, success?: (data: T) => Observable<Action>, failure?: (reason: TModalResultReason) => Observable<Action> }) =>
-    merge(
-        action$.ofAction(modalClose).pipe(
-            take(1),
-            flatMap(result => {
-                if ('RESULT' === result.payload.reason) {
-                    return params.success ? params.success(result.payload.data) : empty();
-                }
-                else {
-                    return params.failure ? params.failure(result.payload.reason) : empty();
-                }
-            })
-        ),
-        of(modalShow(params.modal))
-    );
+import ChangePasswordModal from 'components/Modal/Auth/AuthChangePasswordModal';
 
-export default ModalObservable;
+export interface IRolePickerModalProps {
+    walletID: string;
+    ecosystem: string;
+}
+
+export default connect(null, {
+    onInvalidPassword: () => enqueueNotification({
+        id: 'INVALID_PASSWORD',
+        type: 'INVALID_PASSWORD',
+        params: {}
+    }),
+    onChangePassword: changePassword
+
+})(ChangePasswordModal);

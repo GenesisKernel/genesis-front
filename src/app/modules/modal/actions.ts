@@ -20,11 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import actionCreatorFactory from 'typescript-fsa';
-import { IModalCall, IModalCloseCall, IModalPageCall } from 'genesis/modal';
+import actionCreatorFactory, { Action, ActionCreator } from 'typescript-fsa';
+import { IModalPageCall } from 'genesis/modal';
+import { IModalCall, TModalType, IModalResult, TModalResult } from 'lib/modal';
 
 const actionCreator = actionCreatorFactory('modal');
 
-export const modalShow = actionCreator<IModalCall>('MODAL_SHOW');
-export const modalClose = actionCreator<IModalCloseCall>('MODAL_CLOSE');
+export const modalShow = actionCreator<IModalCall<TModalType>>('MODAL_SHOW') as
+    ActionCreator<IModalCall<never>> &
+    (<T extends TModalType>(params: IModalCall<T>) => Action<IModalCall<T>>);
+
+export const modalClose = actionCreator<TModalResult<TModalType>>('MODAL_CLOSE') as
+    (<T extends TModalType>(params: IModalResult<T>) => Action<IModalResult<T>>) &
+    ActionCreator<IModalResult<any>>;
+
 export const modalPage = actionCreator<IModalPageCall>('MODAL_PAGE');

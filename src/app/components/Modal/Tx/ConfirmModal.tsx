@@ -25,12 +25,12 @@ import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { IButtonConfirm } from 'genesis/protypo';
 
-import Modal from '../';
+import Modal, { IModalProps } from '../';
 
 export interface ITxConfirmModalProps extends IButtonConfirm {
 }
 
-class TxConfirmModal extends Modal<ITxConfirmModalProps, void> {
+class TxConfirmModal extends React.Component<IModalProps<ITxConfirmModalProps, void>> {
     render() {
         return (
             <div>

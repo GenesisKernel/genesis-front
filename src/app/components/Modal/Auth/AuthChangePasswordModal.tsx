@@ -20,58 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import { Button } from 'react-bootstrap';
-import Modal from '../';
 import { FormattedMessage } from 'react-intl';
-import Validation from 'components/Validation';
-import keyring from 'lib/keyring';
 
-export interface IAuthChangePasswordModalProps {
-    encKey: string;
-}
+import Modal, { IModalProps } from '../';
+import Validation from 'components/Validation';
 
 export interface IAuthChangePasswordModalState {
-    newPassword: string;
-    newPasswordKey: string;
-    newPasswordRepeat: string;
+    password: string;
 }
 
-class AuthChangePasswordModal extends Modal<IAuthChangePasswordModalProps, {}, IAuthChangePasswordModalState> {
+export interface IAuthChangePasswordModalProps extends IModalProps<void, void> {
+    onInvalidPassword: () => any;
+    onChangePassword: (params: { oldPassword: string, newPassword: string }) => any;
+}
 
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            newPassword: '',
-            newPasswordKey: Math.random().toString(),
-            newPasswordRepeat: ''
-        };
-    }
+class AuthChangePasswordModal extends React.Component<IAuthChangePasswordModalProps, IAuthChangePasswordModalState> {
+    state: IAuthChangePasswordModalState = {
+        password: '',
+    };
 
     onSubmit = (values: { [key: string]: any }) => {
-        const privateKey = keyring.decryptAES(this.props.params.encKey, values.password_old);
-
-        if (!keyring.validatePrivateKey(privateKey)) {
-            this.props.notify('INVALID_PASSWORD', {});
-        }
-        else {
-            this.props.onResult({
-                oldPassword: values.password_old,
-                newPassword: values.password_new
-            });
-        }
-    }
-
-    onNewPasswordChange = (value: string) => {
-        this.setState({
-            newPassword: value,
-            newPasswordKey: Math.random().toString()
+        this.props.onChangePassword({
+            oldPassword: values.password_old,
+            newPassword: values.password_new
         });
     }
 
-    onNewPasswordRepeatChange = (value: string) => {
+    onPasswordChange = (value: string) => {
         this.setState({
-            newPasswordRepeat: value
+            password: value
         });
     }
 
@@ -98,9 +77,9 @@ class AuthChangePasswordModal extends Modal<IAuthChangePasswordModalProps, {}, I
                         <Validation.components.ValidatedControl
                             name="password_new"
                             type="password"
-                            value={this.state.newPassword}
+                            value={this.state.password}
                             validators={[Validation.validators.password]}
-                            onChange={(e: any) => this.onNewPasswordChange(e.target.value)}
+                            onChange={e => this.onPasswordChange((e.target as HTMLInputElement).value)}
                         />
                         <div className="visible-md visible-lg text-left">
                             <Validation.components.ValidationMessage for="password_new" />
@@ -111,12 +90,9 @@ class AuthChangePasswordModal extends Modal<IAuthChangePasswordModalProps, {}, I
                             <FormattedMessage id="general.password.repeat" defaultMessage="Repeat password" />
                         </label>
                         <Validation.components.ValidatedControl
-                            key={this.state.newPasswordKey}
                             name="password_new_repeat"
                             type="password"
-                            value={this.state.newPasswordRepeat}
-                            validators={[Validation.validators.password, Validation.validators.compare(this.state.newPassword)]}
-                            onChange={(e: any) => this.onNewPasswordRepeatChange(e.target.value)}
+                            validators={[Validation.validators.password, Validation.validators.compare(this.state.password)]}
                         />
                         <div className="visible-md visible-lg text-left">
                             <Validation.components.ValidationMessage for="password_new_repeat" />
@@ -125,7 +101,7 @@ class AuthChangePasswordModal extends Modal<IAuthChangePasswordModalProps, {}, I
 
                 </Modal.Body >
                 <Modal.Footer className="text-right">
-                    <Button type="button" bsStyle="link" onClick={this.props.onCancel.bind(this)}>
+                    <Button type="button" bsStyle="link" onClick={this.props.onCancel}>
                         <FormattedMessage id="cancel" defaultMessage="Cancel" />
                     </Button>
                     <Validation.components.ValidatedSubmit bsStyle="primary">

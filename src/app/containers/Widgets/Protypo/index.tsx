@@ -20,60 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { navigate } from 'modules/engine/actions';
 import { displayData } from 'modules/content/actions';
-import { navigatePage, menuPush } from 'modules/navigator/actions';
+import { menuPush } from 'modules/navigator/actions';
 import { TProtypoElement } from 'genesis/protypo';
+
+export interface IProtypoProps {
+    wrapper?: JSX.Element;
+    context: string;
+    page?: string;
+    menu?: string;
+    section: string;
+    content: TProtypoElement[];
+}
 
 import Protypo from 'components/Protypo';
 
-export interface IProtypoContainerProps {
-    editable?: boolean;
-    wrapper?: JSX.Element;
-    context: string;
-    content: TProtypoElement[];
-    changePage?: any;
-    setTagCanDropPosition?: any;
-    addTag?: any;
-    moveTag?: any;
-    copyTag?: any;
-    removeTag?: any;
-    selectTag?: any;
-    selectedTag?: any;
-    logic?: boolean;
-    section: string;
-    page?: string;
-    menu?: string;
-}
-
-interface IProtypoContainerState {
-    apiHost: string;
-}
-
-interface IProtypoContainerDispatch {
-    navigatePage: typeof navigatePage.started;
-    navigate: typeof navigate;
-    menuPush: typeof menuPush;
-    displayData: typeof displayData.started;
-}
-
-const ProtypoContainer: React.SFC<IProtypoContainerState & IProtypoContainerDispatch & IProtypoContainerProps> = (props) => (
-    <Protypo {...props} />
-);
-
-const mapStateToProps = (state: IRootState, props: IProtypoContainerProps) => ({
-    apiHost: state.auth.session && (state.auth.session.apiHost + '/api/v2'),
+const mapStateToProps = (state: IRootState, props: IProtypoProps) => ({
+    apiHost: state.auth.session.apiHost + '/api/v2',
     page: props.page
 });
 
-const mapDispatchToProps = {
-    navigatePage: navigatePage.started,
-    navigate,
+export default connect(mapStateToProps, {
     menuPush,
     displayData: displayData.started
-};
 
-export default connect<IProtypoContainerState, IProtypoContainerDispatch, IProtypoContainerProps, IRootState>(mapStateToProps, mapDispatchToProps)(ProtypoContainer);
+})(Protypo);

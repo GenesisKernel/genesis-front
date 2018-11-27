@@ -69,7 +69,7 @@ const configureStore = (initialState?: IRootState) => {
 
     const value = createStore(
         reducer(history),
-        initialState,
+        initialState as any,
         composedEnhancers
     );
 

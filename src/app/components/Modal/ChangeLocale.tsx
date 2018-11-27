@@ -25,13 +25,13 @@ import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import locales from 'lib/locales';
 
-import Modal from './';
+import Modal, { IModalProps } from './';
 
 export interface IChangeLocaleModalProps {
     value: string;
 }
 
-class ChangeLocaleModal extends Modal<IChangeLocaleModalProps, void> {
+class ChangeLocaleModal extends React.Component<IModalProps<IChangeLocaleModalProps, void>> {
     changeLocale = (locale: string) => {
         this.props.changeLocale(locale);
         this.props.onCancel();

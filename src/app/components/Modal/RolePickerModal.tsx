@@ -25,7 +25,7 @@ import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { IRoleInfo } from 'genesis/api';
 
-import Modal, { ModalContainer, IModalProps } from './';
+import Modal, { IModalProps } from './';
 import Avatar from 'containers/Avatar';
 
 export interface IRolePickerModalParams {
@@ -39,7 +39,7 @@ export interface IRolePickerModalProps extends IModalProps<IRolePickerModalParam
     onSwitchWallet: (role?: string) => void;
 }
 
-class RolePickerModal extends ModalContainer<IRolePickerModalProps> {
+class RolePickerModal extends React.Component<IRolePickerModalProps> {
     render() {
         return (
             <div>

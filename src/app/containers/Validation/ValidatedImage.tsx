@@ -24,7 +24,7 @@ import React from 'react';
 import uuid from 'uuid';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { IModal } from 'genesis/modal';
+import { IModal } from 'lib/modal';
 import { modalShow } from 'modules/modal/actions';
 import { Validator } from 'components/Validation/Validators';
 
@@ -39,7 +39,7 @@ export interface IValidatedImageContainerProps {
 }
 
 interface IValidatedImageContainerState {
-    modal: IModal;
+    modal: IModal<any>;
 }
 
 interface IValidatedImageContainerDispatch {
@@ -68,7 +68,7 @@ class ValidatedImageContainer extends React.Component<IValidatedImageContainerPr
         const result = props.modal && this._id === props.modal.id && props.modal.result;
         if (result && 'RESULT' === result.reason) {
             this.setState({
-                result: result.data
+                result: result.data as any
             });
         }
     }

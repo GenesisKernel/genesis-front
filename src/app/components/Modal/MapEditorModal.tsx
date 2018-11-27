@@ -76,7 +76,7 @@ const PlacesAutocompleteList = themed.div`
     }
 `;
 
-class MapEditorModal extends Modal<IMapEditorModalProps, IMapEditorEvent, IMapEditorModalState> {
+class MapEditorModal extends React.Component<IModalProps<IMapEditorModalProps, IMapEditorEvent>, IMapEditorModalState> {
     private _isMounted = false;
 
     constructor(props: any) {

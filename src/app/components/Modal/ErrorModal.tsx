@@ -24,13 +24,13 @@ import * as React from 'react';
 import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
-import Modal from './';
+import Modal, { IModalProps } from './';
 
 export interface IErrorModalProps {
     value: string;
 }
 
-class ErrorModal extends Modal<IErrorModalProps, void> {
+class ErrorModal extends React.Component<IModalProps<IErrorModalProps, void>> {
     render() {
         return (
             <div>

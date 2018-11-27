@@ -23,11 +23,11 @@
 import { Epic } from 'modules';
 import { isType } from 'typescript-fsa';
 import { modalClose } from '../actions';
-import { navigatePage } from 'modules/navigator/actions';
 import { flatMap } from 'rxjs/operators';
 import { iif, empty, of } from 'rxjs';
+import { buttonInteraction } from 'modules/content/actions';
 
-const closeModalOnInteractionEpic: Epic = (action$, store, { api }) => action$.filter(action => isType(action, navigatePage.started)).pipe(
+const closeModalOnInteractionEpic: Epic = (action$, store, { api }) => action$.filter(action => isType(action, buttonInteraction)).pipe(
     flatMap(action => iif(
         () => !!(store.value.modal.type && !store.value.modal.result),
         of(modalClose({

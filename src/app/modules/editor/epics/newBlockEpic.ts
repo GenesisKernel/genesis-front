@@ -20,18 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import uuid from 'uuid';
-import { from, empty } from 'rxjs';
+import { empty } from 'rxjs';
 import { Epic } from 'modules';
-import { editorSave, reloadEditorTab } from '../actions';
-import ModalObservable from 'modules/modal/util/ModalObservable';
-import TxObservable from 'modules/tx/util/TxObservable';
-import { flatMap, filter, map } from 'rxjs/operators';
+import { editorSave } from '../actions';
+import { flatMap, filter } from 'rxjs/operators';
 
+// TODO: refactoring
 const newBlockEpic: Epic = (action$, store, { api }) => action$.ofAction(editorSave).pipe(
     filter(l => l.payload.new && 'block' === l.payload.type),
     flatMap(action => {
-        const id = uuid.v4();
+        return empty();
+        /*const id = uuid.v4();
         const client = api(store.value.auth.session);
 
         return ModalObservable<{ name: string, conditions: string }>(action$, {
@@ -73,7 +72,7 @@ const newBlockEpic: Epic = (action$, store, { api }) => action$.ofAction(editorS
                 failure: () => empty()
             }),
             failure: () => empty()
-        });
+        });*/
     })
 );
 

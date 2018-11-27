@@ -38,7 +38,8 @@ export default connect(mapStateToProps, {
         id: 'E_INVALID_PASSWORD',
         type: 'AUTH_ERROR',
         params: {
-            error: 'E_INVALID_PASSWORD'
+            error: 'E_INVALID_PASSWORD',
+            message: 'E_INVALID_PASSWORD'
         }
     }),
     onCopy: () => modalShow({
