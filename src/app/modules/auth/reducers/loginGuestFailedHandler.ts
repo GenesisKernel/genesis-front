@@ -20,35 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
-import { connect } from 'react-redux';
-import { IRootState } from 'modules';
-import { navigate } from 'modules/engine/actions';
+import { State } from '../reducer';
+import { loginGuest } from '../actions';
+import { Reducer } from 'modules';
 
-import Welcome from 'components/Auth/Welcome';
-
-export interface IWelcomeContainerProps {
-
-}
-
-interface IWelcomeContainerState {
-
-}
-
-interface IWelcomeContainerDispatch {
-    onConfirm: () => void;
-}
-
-const mapStateToProps = (state: IRootState) => ({
-
+const loginGuestFailedHandler: Reducer<typeof loginGuest.failed, State> = (state, payload) => ({
+    ...state,
+    isLoggingIn: false
 });
 
-const mapDispatchToProps = {
-    onConfirm: () => navigate('/wallet')
-};
-
-const WelcomeContainer: React.SFC<IWelcomeContainerProps & IWelcomeContainerState & IWelcomeContainerDispatch> = props => (
-    <Welcome {...props} />
-);
-
-export default connect<IWelcomeContainerState, IWelcomeContainerDispatch, IWelcomeContainerProps>(mapStateToProps, mapDispatchToProps)(WelcomeContainer);
+export default loginGuestFailedHandler;
