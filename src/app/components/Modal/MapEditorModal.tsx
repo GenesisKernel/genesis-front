@@ -20,53 +20,68 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import * as uuid from 'uuid';
+import React from 'react';
 import { List } from 'immutable';
 import { FormattedMessage } from 'react-intl';
 import { Button } from 'react-bootstrap';
-import { IMapEditorEvent } from 'genesis/geo';
+import { IMapEditorEvent, TMapEditorType } from 'genesis/geo';
 import themed from 'components/Theme/themed';
-import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
+import { loadModules } from 'esri-loader';
+import Autosuggest, { GetSuggestionValue, SuggestionsFetchRequested, ChangeEvent, OnSuggestionSelected } from 'react-autosuggest';
 
 import Modal, { IModalProps } from './';
 import Validation from 'components/Validation';
 import MapView from 'components/Map/MapView';
+import Tooltip from 'components/Tooltip';
+import SectionToolButton from 'components/Main/Toolbar/SectionToolButton';
 
 export interface IMapEditorModalProps {
-    mapType?: 'hybrid' | 'roadmap' | 'satellite' | 'terrain';
-    coords: { lat: number, lng: number }[];
-    center?: { lat: number, lng: number };
+    mapType?: 'streets' | 'satellite' | 'hybrid' | 'topo' | 'gray' | 'dark-gray' | 'oceans' | 'national-geographic' | 'terrain' | 'osm';
+    tool?: TMapEditorType;
+    coords: [number, number][];
+    center?: [number, number];
     zoom?: number;
 }
 
 interface IMapEditorModalState {
-    points: List<{ lat: number, lng: number }>;
+    search: string;
+    tool: TMapEditorType;
+    points: List<[number, number]>;
     area: number;
     pending: boolean;
     address: string;
-    center?: { lat: number, lng: number };
+    center?: [number, number];
+    suggestions: ISuggestion[];
 }
 
-const PlacesAutocompleteList = themed.div`
+interface ISuggestion {
+    address: string;
+    location: [number, number];
+}
+
+export const PlacesAutocompleteList = themed.div`
     position: relative;
-    .places-autocomplete-container {
+
+    .react-autosuggest__suggestions-list {
         position: absolute;
-        top: 35px;
-        left: 0px;
+        top: 0;
+        left: 0;
         right: 0;
         background: #fff;
-        z-index: 10;      
+        z-index: 10;
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
         border-right: 1px solid #66afe9;
         border-left: 1px solid #66afe9;
         border-bottom: 1px solid #66afe9;
     }
     
-    .places-autocomplete-container__item {
+    .react-autosuggest__suggestion {
         padding: 10px;
     }
     
-    .places-autocomplete-container__item_active {
+    .react-autosuggest__suggestion--highlighted {
         background: #fafafa;
         cursor: pointer;
     }
@@ -76,6 +91,25 @@ const PlacesAutocompleteList = themed.div`
     }
 `;
 
+interface IToolButtonProps {
+    tooltip: JSX.Element;
+    onClick: React.EventHandler<React.MouseEvent<HTMLButtonElement>>;
+    className?: string;
+    disabled?: boolean;
+}
+
+const ToolButton: React.SFC<IToolButtonProps> = props => (
+    <div className="mr" style={{ display: 'inline-block' }}>
+        <Tooltip body={props.tooltip}>
+            <button type="button" className="btn btn-icon" onClick={props.onClick} disabled={props.disabled}>
+                <span className={`btn-label ${props.className || ''}`} />
+            </button>
+        </Tooltip>
+    </div>
+);
+
+const mapTools = ['point', 'line', 'polygon'];
+
 class MapEditorModal extends Modal<IMapEditorModalProps, IMapEditorEvent, IMapEditorModalState> {
     private _isMounted = false;
 
@@ -83,10 +117,13 @@ class MapEditorModal extends Modal<IMapEditorModalProps, IMapEditorEvent, IMapEd
         super(props);
         this.state = {
             points: List(),
+            tool: props.params.tool || 'point',
             area: 0,
             pending: false,
             address: '',
-            center: props.params.center
+            search: '',
+            center: props.params.center,
+            suggestions: []
         };
     }
 
@@ -109,21 +146,28 @@ class MapEditorModal extends Modal<IMapEditorModalProps, IMapEditorEvent, IMapEd
         });
     }
 
-    calcResult(coords: { lat: number, lng: number }[], onResult: (result: google.maps.GeocoderResult) => void) {
-        const geocoder = new google.maps.Geocoder();
-        const bounds = new google.maps.LatLngBounds();
-        for (let i = 0; i < coords.length; i++) {
-            bounds.extend(coords[i]);
-        }
+    calcResult(coords: [number, number][], onResult: (result: string) => void) {
+        loadModules(['esri/tasks/Locator', 'esri/geometry/Polygon']).then((deps: [__esri.LocatorConstructor, __esri.PolygonConstructor]) => {
+            const [Locator, Polygon] = deps;
+            const locator = new Locator({
+                url: 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer'
+            });
+            const centerPoint = new Polygon({
+                rings: [coords]
+            }).centroid;
 
-        geocoder.geocode({
-            location: bounds.getCenter()
-        }, result => {
-            onResult(result[0]);
+            locator.locationToAddress(centerPoint).then(result => {
+                onResult(result.address || '');
+            }).catch(e => {
+                onResult('');
+            });
+
+        }).catch(e => {
+            onResult('');
         });
     }
 
-    onSuccess(values: { [key: string]: any }) {
+    onSuccess = (values: { [key: string]: any }) => {
         this.setState({
             pending: true
         });
@@ -133,9 +177,10 @@ class MapEditorModal extends Modal<IMapEditorModalProps, IMapEditorEvent, IMapEd
         this.calcResult(points, result => {
             if (this._isMounted) {
                 this.props.onResult({
+                    type: this.state.tool,
                     coords: this.state.points.toArray(),
                     area: this.state.area,
-                    address: result ? result.formatted_address : ''
+                    address: result
                 });
                 this.setState({
                     pending: false
@@ -144,15 +189,17 @@ class MapEditorModal extends Modal<IMapEditorModalProps, IMapEditorEvent, IMapEd
         });
     }
 
-    onClick(e: google.maps.MouseEvent) {
-        const points = this.state.points.push({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+    onClick = (e: __esri.MapViewClickEvent) => {
+        const points = 'point' === this.state.tool ?
+            List<[number, number]>([[e.mapPoint.longitude, e.mapPoint.latitude]]) :
+            this.state.points.push([e.mapPoint.longitude, e.mapPoint.latitude]);
 
         this.setState({
             points
         });
     }
 
-    onUndo() {
+    onUndo = () => {
         const points = this.state.points.pop();
 
         this.setState({
@@ -160,124 +207,176 @@ class MapEditorModal extends Modal<IMapEditorModalProps, IMapEditorEvent, IMapEd
         });
     }
 
-    onClear() {
+    onClear = () => {
         this.setState({
-            points: List<{ lat: number, lng: number }>()
+            points: List<[number, number]>()
         });
     }
 
-    onAreaChange(area: number) {
+    onAreaChange = (area: number) => {
         this.setState({
             area
         });
     }
 
-    handleChange(address: string) {
+    onChange = (event: React.FormEvent<any>, params: ChangeEvent) => {
         this.setState({
-            address
+            search: params.newValue
         });
     }
 
-    handleSelect(address: string) {
+    onSuggestionSelected: OnSuggestionSelected<ISuggestion> = (e, data) => {
         this.setState({
-            address
+            address: data.suggestion.address,
+            center: data.suggestion.location
         });
+    }
 
-        geocodeByAddress(address)
-            .then((results: any) => getLatLng(results[0]))
-            .then((center: { lat: number, lng: number }) => {
-                this.setState({
-                    center
-                });
+    getSuggestionValue: GetSuggestionValue<ISuggestion> = suggestion => {
+        return suggestion.address;
+    }
+
+    onSuggestionsFetchRequested: SuggestionsFetchRequested = ({ value }) => {
+        loadModules(['esri/tasks/Locator']).then((deps: [__esri.LocatorConstructor]) => {
+            const [Locator] = deps;
+
+            const locator = new Locator({
+                url: 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer'
             });
+
+            locator.addressToLocations({
+                address: {
+                    SingleLine: value,
+                    SingleLineFieldName: value
+                },
+                maxLocations: 5
+
+            } as any).then(result => {
+                if (this._isMounted) {
+                    this.setState({
+                        suggestions: result.map(l => ({
+                            address: l.address,
+                            location: [l.location.longitude, l.location.latitude] as [number, number]
+                        }))
+                    });
+                }
+            });
+
+        }).catch(err => { /* Silently suppress errors */ });
+    }
+
+    onSuggestionsClearRequested = () => {
+        this.setState({
+            suggestions: []
+        });
+    }
+
+    onToolChange = (index: number) => {
+        this.setState({
+            tool: mapTools[index] as any,
+            points: List<[number, number]>()
+        });
     }
 
     render() {
         return (
-            <Validation.components.ValidatedForm onSubmitSuccess={this.onSuccess.bind(this)}>
+            <div>
                 <Modal.Header>
                     <FormattedMessage id="map.editor" defaultMessage="Map editor" />
                 </Modal.Header>
-                <Modal.Body>
-                    <div style={{ minWidth: 500, width: '60%' }}>
-
-                        <PlacesAutocomplete
-                            value={this.state.address}
-                            onChange={this.handleChange.bind(this)}
-                            onSelect={this.handleSelect.bind(this)}
-                            googleCallbackName="googleMapsLoaded"
-                        >
-                            {(params: any) => (
-                                <PlacesAutocompleteList>
-                                    <input
-                                        {...params.getInputProps({
-                                            placeholder: '',
-                                            className: 'form-control',
-                                        })}
-                                    />
-                                    {(params.suggestions.length > 0) && (
-                                        <div className="places-autocomplete-container">
-                                            {params.loading && <div className="places-autocomplete-container__item">...</div>}
-                                            {!params.loading && params.suggestions.map((suggestion: any) => {
-                                                const className = suggestion.active
-                                                    ? 'places-autocomplete-container__item places-autocomplete-container__item_active'
-                                                    : 'places-autocomplete-container__item';
-
-                                                return (
-                                                    <div
-                                                        key={uuid.v4()}
-                                                        {...params.getSuggestionItemProps(suggestion, {
-                                                            className
-                                                        })}
-                                                    >
-                                                        {suggestion.description}
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    )}
+                <Modal.Body style={{ paddingBottom: 0 }}>
+                    <PlacesAutocompleteList>
+                        <Autosuggest
+                            suggestions={this.state.suggestions}
+                            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+                            onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+                            onSuggestionSelected={this.onSuggestionSelected}
+                            getSuggestionValue={this.getSuggestionValue}
+                            renderSuggestionsContainer={params => (
+                                <PlacesAutocompleteList {...params.containerProps}>
+                                    {params.children}
                                 </PlacesAutocompleteList>
                             )}
-                        </PlacesAutocomplete>
-                        <div className="mt">
-                            <MapView
-                                height={400}
-                                center={this.state.center}
-                                zoom={this.props.params.zoom}
-                                mapType={this.props.params.mapType}
-                                onClick={this.onClick.bind(this)}
-                                polygon={this.state.points.toArray()}
-                                onAreaChange={this.onAreaChange.bind(this)}
-                            />
-                        </div>
-                    </div>
-                    <div className="mt">
-                        <div className="pull-right">
-                            <FormattedMessage id="map.area" defaultMessage="Area: {value}" values={{ value: this.state.area.toFixed(2) }} />
-                            <span>&nbsp;</span>
-                            <span className="text-muted">
-                                <FormattedMessage id="map.meter.short" defaultMessage="m" /><sup>2</sup>
-                            </span>
-                        </div>
-                        <button type="button" className="btn btn-default mr" onClick={this.onUndo.bind(this)} disabled={0 === this.state.points.count()}>
-                            <span className="glyphicon fa fa-undo mr" />
-                            <FormattedMessage id="undo" defaultMessage="Undo" />
-                        </button>
-                        <button type="button" className="btn btn-default mr" onClick={this.onClear.bind(this)} disabled={0 === this.state.points.count()}>
-                            <span className="glyphicon fa fa-trash mr" />
-                            <FormattedMessage id="clear" defaultMessage="Clear" />
-                        </button>
-                    </div>
+                            renderSuggestion={(suggestion, params) => (
+                                <div
+                                    key={suggestion.address}
+                                    className={params.isHighlighted ? 'places-autocomplete-container__item places-autocomplete-container__item_active' : 'places-autocomplete-container__item'}
+                                >
+                                    {suggestion.address}
+                                </div>
+                            )}
+                            inputProps={{
+                                placeholder: '',
+                                value: this.state.search,
+                                onChange: this.onChange,
+                                className: 'form-control'
+                            }}
+                        />
+                    </PlacesAutocompleteList>
                 </Modal.Body>
-                <Modal.Footer className="text-right">
-                    <Button type="button" bsStyle="link" onClick={this.props.onCancel.bind(this)}>
-                        <FormattedMessage id="cancel" defaultMessage="Cancel" />
-                    </Button>
-                    <Validation.components.ValidatedSubmit bsStyle="primary" disabled={this.state.pending}>
-                        <FormattedMessage id="confirm" defaultMessage="Confirm" />
-                    </Validation.components.ValidatedSubmit>
-                </Modal.Footer>
-            </Validation.components.ValidatedForm>
+                <Validation.components.ValidatedForm onSubmitSuccess={this.onSuccess}>
+                    <Modal.Body style={{ paddingTop: 0 }}>
+                        <div style={{ minWidth: 500, width: '60%' }}>
+                            <div className="mt">
+                                <MapView
+                                    height={400}
+                                    tool={this.state.tool}
+                                    center={this.state.center}
+                                    zoom={this.props.params.zoom}
+                                    mapType={this.props.params.mapType}
+                                    onClick={this.onClick}
+                                    coords={this.state.points.toArray()}
+                                    onAreaChange={this.onAreaChange}
+                                />
+                            </div>
+                        </div>
+                        <div className="mt text-center clearfix" style={{ position: 'relative' }}>
+                            <div style={{ position: 'relative', zIndex: 1 }}>
+                                <div className="pull-right">
+                                    <FormattedMessage id="map.area" defaultMessage="Area: {value}" values={{ value: this.state.area.toFixed(2) }} />
+                                    <span>&nbsp;</span>
+                                    <span className="text-muted">
+                                        <FormattedMessage id="map.meter.short" defaultMessage="m" /><sup>2</sup>
+                                    </span>
+                                </div>
+                                <div className="pull-left">
+                                    <ToolButton
+                                        tooltip={<FormattedMessage id="undo" defaultMessage="Undo" />}
+                                        onClick={this.onUndo}
+                                        disabled={0 === this.state.points.count()}
+                                        className="fa fa-undo"
+                                    />
+                                    <ToolButton
+                                        tooltip={<FormattedMessage id="clear" defaultMessage="Clear" />}
+                                        onClick={this.onClear}
+                                        disabled={0 === this.state.points.count()}
+                                        className="fa fa-trash"
+                                    />
+                                </div>
+                            </div>
+                            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, textAlign: 'center', zIndex: 0 }}>
+                                <SectionToolButton
+                                    activeIndex={mapTools.indexOf(this.state.tool)}
+                                    onChange={this.onToolChange}
+                                    items={[
+                                        <FormattedMessage key="point" id="map.tool.point" defaultMessage="Point" />,
+                                        <FormattedMessage key="line" id="map.tool.line" defaultMessage="Line" />,
+                                        <FormattedMessage key="polygon" id="map.tool.polygon" defaultMessage="Polygon" />
+                                    ]}
+                                />
+                            </div>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer className="text-right">
+                        <Button type="button" bsStyle="link" onClick={this.props.onCancel.bind(this)}>
+                            <FormattedMessage id="cancel" defaultMessage="Cancel" />
+                        </Button>
+                        <Validation.components.ValidatedSubmit bsStyle="primary" disabled={this.state.pending}>
+                            <FormattedMessage id="confirm" defaultMessage="Confirm" />
+                        </Validation.components.ValidatedSubmit>
+                    </Modal.Footer>
+                </Validation.components.ValidatedForm>
+            </div>
         );
     }
 }
