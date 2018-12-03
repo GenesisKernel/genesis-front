@@ -54,6 +54,7 @@ const storageAdapters = [
     filter([
         'storage',
         'auth.isAuthenticated',
+        'auth.isDefaultWallet',
         'auth.session',
         'auth.id',
         'auth.wallet',

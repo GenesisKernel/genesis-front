@@ -22,7 +22,7 @@
 
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { login, selectWallet, removeWallet } from 'modules/auth/actions';
+import { login, selectWallet, removeWallet, loginGuest } from 'modules/auth/actions';
 import { navigate } from 'modules/engine/actions';
 import { IWallet } from 'genesis/auth';
 import { modalShow } from 'modules/modal/actions';
@@ -62,7 +62,8 @@ const mapDispatchToProps = {
             activationEmail
         }
     }),
-    onCreate: () => navigate('/wallet')
+    onCreate: () => navigate('/wallet'),
+    onGuestLogin: () => loginGuest.started(undefined)
 };
 
 export default connect(mapStateToProps, mapDispatchToProps, (state, dispatch: any, props) => ({
@@ -76,6 +77,7 @@ export default connect(mapStateToProps, mapDispatchToProps, (state, dispatch: an
     onSelect: dispatch.onSelect,
     onCopy: dispatch.onCopy,
     onRegister: (wallet: IWallet) => dispatch.onRegister(wallet, state.activationEmail),
-    onCreate: dispatch.onCreate
+    onCreate: dispatch.onCreate,
+    onGuestLogin: dispatch.onGuestLogin
 
 }))(WalletList);

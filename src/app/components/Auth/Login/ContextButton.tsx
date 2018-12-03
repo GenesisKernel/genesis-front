@@ -20,12 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 export interface IContextButtonProps {
     className?: string;
     icon: string;
+    description: React.ReactNode;
     onClick: () => void;
 }
 
@@ -34,13 +35,16 @@ const ContextButton: React.SFC<IContextButtonProps> = props => (
         <div className="button-icon">
             <em className={props.icon} />
         </div>
-        <div className="button-label">
-            {props.children}
+        <div>
+            <div className="button-label">
+                {props.children}
+            </div>
+            <div className="button-desc">{props.description}</div>
         </div>
     </button>
 );
 
-export default styled(ContextButton) `
+export default styled(ContextButton)`
     display: block;
     width: 100%;
     height: 40px;
@@ -48,7 +52,7 @@ export default styled(ContextButton) `
     border: 0;
     background: 0;
     padding: 0;
-    margin: 10px 0;
+    margin: 10px 0 15px 0;
     text-align: left;
 
     &:hover {
@@ -68,6 +72,9 @@ export default styled(ContextButton) `
 
     .button-label {
         font-size: 16px;
-        line-height: 36px;
+    }
+
+    .button-desc {
+        color: #909FA7;
     }
 `;

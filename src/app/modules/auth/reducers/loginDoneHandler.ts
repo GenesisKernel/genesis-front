@@ -31,7 +31,8 @@ const loginDoneHandler: Reducer<typeof login.done, State> = (state, payload) => 
     ecosystem: state.wallet.access.ecosystem,
     session: payload.result.session,
     privateKey: payload.result.privateKey,
-    id: state.wallet.wallet.id
+    id: state.wallet.wallet.id,
+    isDefaultWallet: false
 });
 
 export default loginDoneHandler;

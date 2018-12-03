@@ -79,6 +79,7 @@ const StyledUserMenu = styled.div`
 `;
 
 export interface IUserMenuProps {
+    isDefaultWallet: boolean;
     wallet: IAccountContext;
     walletEcosystems: IKeyInfo[];
     onSwitchEcosystem: (ecosystem: string, defaultRole?: boolean) => void;
@@ -97,24 +98,28 @@ class UserMenu extends React.Component<IUserMenuProps> {
                 content={
                     <div>
                         <ul className="dropdown-group">
-                            <li>
-                                <CloseDropdownButton onClick={this.props.onChangePassword}>
-                                    <em className="icon icon-key text-muted." />
-                                    <span>
-                                        <FormattedMessage id="general.wallet.changepassword" defaultMessage="Change password" />
-                                    </span>
-                                </CloseDropdownButton>
-                            </li>
-                            <li>
-                                <PageLink page="backup">
-                                    <CloseDropdownButton>
-                                        <em className="icon icon-shield text-muted" />
-                                        <span>
-                                            <FormattedMessage id="general.wallet.backup" defaultMessage="Backup wallet" />
-                                        </span>
-                                    </CloseDropdownButton>
-                                </PageLink>
-                            </li>
+                            {!this.props.isDefaultWallet && (
+                                <>
+                                    <li>
+                                        <CloseDropdownButton onClick={this.props.onChangePassword}>
+                                            <em className="icon icon-key text-muted." />
+                                            <span>
+                                                <FormattedMessage id="general.wallet.changepassword" defaultMessage="Change password" />
+                                            </span>
+                                        </CloseDropdownButton>
+                                    </li>
+                                    <li>
+                                        <PageLink page="backup">
+                                            <CloseDropdownButton>
+                                                <em className="icon icon-shield text-muted" />
+                                                <span>
+                                                    <FormattedMessage id="general.wallet.backup" defaultMessage="Backup wallet" />
+                                                </span>
+                                            </CloseDropdownButton>
+                                        </PageLink>
+                                    </li>
+                                </>
+                            )}
                             <li>
                                 <CloseDropdownButton onClick={this.props.onLogout}>
                                     <em className="icon icon-logout text-danger" />
