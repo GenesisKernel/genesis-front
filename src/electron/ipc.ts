@@ -42,6 +42,7 @@ if (!args.dry) {
             storage: state.storage,
             auth: {
                 isAuthenticated: state.auth.isAuthenticated,
+                isDefaultWallet: state.auth.isDefaultWallet,
                 session: state.auth.session,
                 id: state.auth.id,
                 wallet: state.auth.wallet

@@ -20,20 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
+import propTypes from 'prop-types';
 import { Validator } from './Validators';
-import * as propTypes from 'prop-types';
-import { IMapEditorEvent } from 'genesis/geo';
+import { IMapEditorEvent, TMapType } from 'genesis/geo';
 import { IMapEditorModalProps } from 'components/Modal/MapEditorModal';
 
 import ValidatedForm, { IValidatedControl } from './ValidatedForm';
 
 export interface IValidatedMapProps {
     name: string;
-    type: 'polygon';
-    mapType?: 'hybrid' | 'roadmap' | 'satellite' | 'terrain';
+    mapType?: TMapType;
     value?: IMapEditorEvent;
-    center?: { lat: number, lng: number };
+    center?: [number, number];
     zoom?: number;
     validators?: Validator[];
     openEditor: (params: IMapEditorModalProps) => void;
@@ -45,6 +44,7 @@ interface IValidatedMapState {
 
 export default class ValidatedMap extends React.Component<IValidatedMapProps, IValidatedMapState> implements IValidatedControl {
     private _value: IMapEditorEvent = {
+        type: 'point',
         coords: [],
         address: '',
         area: 0
@@ -96,6 +96,7 @@ export default class ValidatedMap extends React.Component<IValidatedMapProps, IV
 
     openEditor = () => {
         this.props.openEditor({
+            tool: this.props.value ? this.props.value.type : null,
             mapType: this.props.mapType,
             coords: this.props.value && this.props.value.coords,
             center: this.props.center,
