@@ -49,6 +49,16 @@ const buttonInteractionEpic: Epic = (action$, store, { api }) => action$.ofActio
 
         ).flatMap(action => {
             if (isType(action, buttonInteraction) && action.payload.contracts.length) {
+                if (store.getState().auth.isDefaultWallet) {
+                    return Observable.of(modalShow({
+                        id: 'TX_ERROR',
+                        type: 'TX_ERROR',
+                        params: {
+                            type: 'E_GUEST_VIOLATION'
+                        }
+                    }));
+                }
+
                 return Observable.merge(
                     Observable.of(txCall({
                         uuid: action.payload.uuid,

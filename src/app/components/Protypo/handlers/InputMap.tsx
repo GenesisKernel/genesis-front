@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import * as React from 'react';
-import { TMapType, TMapEditorType } from 'apla/geo';
+import { TMapType } from 'apla/geo';
 import { IMapValue, parseData } from 'components/Protypo/handlers/Map';
 
 import Validation from 'components/Validation';
@@ -29,12 +29,12 @@ import Validation from 'components/Validation';
 export interface IInputMapProps {
     name: string;
     value: string;
-    type: TMapEditorType;
     maptype: TMapType;
 }
 
 const InputMap: React.SFC<IInputMapProps> = (props) => {
     const value: IMapValue = parseData(props.value) || {
+        type: 'point',
         coords: [],
         area: 0,
         address: ''
@@ -46,7 +46,7 @@ const InputMap: React.SFC<IInputMapProps> = (props) => {
             value={value}
             zoom={value.zoom}
             center={value.center}
-            type={props.type || 'polygon'}
+            type={value.type}
             mapType={props.maptype}
         />
     );

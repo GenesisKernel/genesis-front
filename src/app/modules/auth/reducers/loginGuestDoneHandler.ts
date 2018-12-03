@@ -20,17 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Action } from 'redux';
-import { Epic } from 'redux-observable';
-import { IRootState } from 'modules';
-import { setBadgeCount } from '../actions';
-import { login, loginGuest } from 'modules/auth/actions';
-import { isType } from 'typescript-fsa';
+import { State } from '../reducer';
+import { loginGuest } from '../actions';
+import { Reducer } from 'modules';
 
-const setBadgeCountOnLogoutEpic: Epic<Action, IRootState> =
-    (action$, store) => action$.filter(action => isType(action, login.done) || isType(action, loginGuest.done))
-        .map(action =>
-            setBadgeCount(0)
-        );
+const loginGuestDoneHandler: Reducer<typeof loginGuest.done, State> = (state, payload) => ({
+    ...state,
+    isAuthenticated: true,
+    isLoggingIn: false,
+    ecosystem: '1',
+    session: payload.result.session,
+    privateKey: payload.result.privateKey,
+    wallet: payload.result.wallet,
+    isDefaultWallet: true
+});
 
-export default setBadgeCountOnLogoutEpic;
+export default loginGuestDoneHandler;

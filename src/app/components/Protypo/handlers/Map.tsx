@@ -33,11 +33,14 @@ export interface IMapProps {
 
 export interface IMapValue extends IMapEditorEvent {
     zoom?: number;
-    center?: { lat: number, lng: number };
+    center?: [number, number];
 }
+
+const mapTypes = ['point', 'line', 'polygon'];
 
 export const parseData = (plain: string): IMapValue => {
     const result: IMapValue = {
+        type: 'point',
         coords: [],
         area: 0,
         address: ''
@@ -47,21 +50,21 @@ export const parseData = (plain: string): IMapValue => {
         const value = JSON.parse(plain);
         if (Array.isArray(value.coords)) {
             value.coords.forEach((l: any) => {
-                if ('number' === typeof l.lng && 'number' === typeof l.lat) {
-                    result.coords.push({
-                        lng: l.lng,
-                        lat: l.lat
-                    });
+                if (Array.isArray(l)) {
+                    if ('number' === typeof l[0] && 'number' === typeof l[1]) {
+                        result.coords.push([l[0], l[1]]);
+                    }
                 }
             });
         }
 
+        if (mapTypes.includes(value.type)) {
+            result.type = value.type;
+        }
+
         if (value.center) {
             if ('number' === typeof value.center.lng && 'number' === typeof value.center.lat) {
-                result.center = {
-                    lng: value.center.lng,
-                    lat: value.center.lat
-                };
+                result.center = [value.center.lat, value.center.lng];
             }
         }
 
@@ -87,6 +90,7 @@ export const parseData = (plain: string): IMapValue => {
 
 const InputMap: React.SFC<IMapProps> = (props) => {
     const value: IMapValue = parseData(props.value) || {
+        type: 'point',
         coords: [],
         area: 0,
         address: ''
@@ -99,9 +103,10 @@ const InputMap: React.SFC<IMapProps> = (props) => {
 
     return (
         <MapView
+            tool={value.type}
             height={height}
             mapType={props.maptype}
-            polygon={value.coords}
+            coords={value.coords}
             center={value.center}
             zoom={value.zoom}
         />

@@ -82,11 +82,13 @@ const EditorToolbar: React.SFC<IEditorToolbarProps> = props => {
             <FormattedMessage id="editor.save.all" defaultMessage="Save all" />
             </ToolButton>*/}
             {props.currentTab && 'contract' !== props.currentTab.type && (
-                <SectionToolButton
-                    activeIndex={resolveToolIndex(props.currentTab.tool)}
-                    onChange={onToolChange}
-                    items={editorTools.map(l => l.content)}
-                />
+                <li style={{ margin: '8px', float: 'right' }}>
+                    <SectionToolButton
+                        activeIndex={resolveToolIndex(props.currentTab.tool)}
+                        onChange={onToolChange}
+                        items={editorTools.map(l => l.content)}
+                    />
+                </li>
             )}
             {props.currentTab && 'contract' === props.currentTab.type && (
                 <ToolButton icon="icon-paper-plane" disabled={props.currentTab.new || props.canSave} onClick={props.onExec}>

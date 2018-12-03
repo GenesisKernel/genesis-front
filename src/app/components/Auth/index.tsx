@@ -29,7 +29,6 @@ import platform from 'lib/platform';
 
 import themed from 'components/Theme/themed';
 import Titlebar from 'components/Main/Titlebar';
-import Welcome from 'containers/Auth/Welcome';
 import Wallet from 'components/Auth/Wallet';
 import Login from 'containers/Auth/Login';
 import Offline from 'containers/Auth/Offline';
@@ -37,7 +36,6 @@ import Offline from 'containers/Auth/Offline';
 export interface IAuthProps {
     className?: string;
     locale: string;
-    firstRun: boolean;
     isOffline: boolean;
     changeLocale: () => void;
 }
@@ -53,8 +51,7 @@ const Auth: React.SFC<IAuthProps> = props => (
                     <Switch>
                         {props.isOffline && (<Route path="/" component={Offline} />)}
                         <Route path="/wallet" component={Wallet} />
-                        {props.firstRun && (<Route path="/" component={Welcome} />)}
-                        {!props.firstRun && (<Route path="/" component={Login} />)}
+                        <Route path="/" component={Login} />
                         <Redirect to="/" />
                     </Switch>
                 </Panel>

@@ -34,7 +34,6 @@ export interface IAuthContainerProps {
 
 interface IAuthContainerState {
     locale: string;
-    firstRun: boolean;
     isOffline: boolean;
 }
 
@@ -44,7 +43,6 @@ interface IAuthContainerDispatch {
 
 const mapStateToProps = (state: IRootState) => ({
     locale: state.storage.locale,
-    firstRun: !state.storage.wallets || 0 === state.storage.wallets.length,
     isOffline: state.engine.isOffline
 });
 

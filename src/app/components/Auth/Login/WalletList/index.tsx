@@ -25,12 +25,13 @@ import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
 import { IWallet, IAccountContext } from 'apla/auth';
 import { IAccount } from 'apla/api';
+import { INotificationsMessage } from 'apla/socket';
 
 import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import Heading from 'components/Auth/Heading';
 import ContextButton from '../ContextButton';
 import WalletButton from './WalletButton';
-import { INotificationsMessage } from 'apla/socket';
+import Welcome from 'components/Auth/Welcome';
 
 export interface IWalletListProps {
     className?: string;
@@ -44,6 +45,7 @@ export interface IWalletListProps {
     onCopy: (wallet: IWallet) => any;
     onRegister: (wallet: IWallet) => any;
     onSelect: (params: IAccountContext) => any;
+    onGuestLogin: () => any;
 }
 
 const WalletList: React.SFC<IWalletListProps> = props => (
@@ -54,21 +56,29 @@ const WalletList: React.SFC<IWalletListProps> = props => (
             </Heading>
             <div className="form-horizontal desktop-flex-col desktop-flex-stretch" style={{ padding: 10 }}>
                 <div className="text-center desktop-flex-stretch">
-                    {props.wallets.map((wallet, index) =>
-                        <WalletButton
-                            key={wallet.id}
-                            wallet={wallet}
-                            notifications={props.notifications.filter(l => l.id === wallet.id)}
-                            onRemove={() => props.onRemove(wallet)}
-                            onCopy={() => props.onCopy(wallet)}
-                            onRegister={props.activationEnabled ? () => props.onRegister(wallet) : null}
-                            onSelect={params => props.onSelect({ ...params, wallet })}
-                        />
-                    )}
+                    {0 === props.wallets.length ?
+                        (
+                            <Welcome />
+                        )
+                        : props.wallets.map((wallet, index) =>
+                            <WalletButton
+                                key={wallet.id}
+                                wallet={wallet}
+                                notifications={props.notifications.filter(l => l.id === wallet.id)}
+                                onRemove={() => props.onRemove(wallet)}
+                                onCopy={() => props.onCopy(wallet)}
+                                onRegister={props.activationEnabled ? () => props.onRegister(wallet) : null}
+                                onSelect={params => props.onSelect({ ...params, wallet })}
+                            />
+                        )
+                    }
                 </div>
                 <div className="text-left">
-                    <ContextButton icon="icon-plus" onClick={props.onCreate}>
+                    <ContextButton icon="icon-plus" onClick={props.onCreate} description={<FormattedMessage id="wallet.createimport.desc" defaultMessage="Restore your existing wallet or enroll a new one" />}>
                         <FormattedMessage id="wallet.createimport" defaultMessage="Create or import wallet" />
+                    </ContextButton>
+                    <ContextButton icon="icon-login" onClick={props.onGuestLogin} description={<FormattedMessage id="auth.login.guest.desc" defaultMessage="Proceed with this option if you want to try Apla in test mode" />}>
+                        <FormattedMessage id="auth.login.guest" defaultMessage="Login using guest key" />
                     </ContextButton>
                 </div>
             </div>

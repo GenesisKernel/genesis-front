@@ -21,35 +21,25 @@
 // SOFTWARE.
 
 import React from 'react';
-import { Button } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
-import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
-import Heading from './Heading';
-
 export interface IWelcomeProps {
-    onConfirm: () => void;
+
 }
 
 const Welcome: React.SFC<IWelcomeProps> = (props) => (
-    <LocalizedDocumentTitle title="auth.welcome" defaultTitle="Welcome">
-        <div>
-            <Heading>Apla</Heading>
-            <h4>
-                <FormattedMessage id="auth.welcome" defaultMessage="Welcome" />
-            </h4>
-            <p className="pv">
-                <FormattedMessage id="auth.welcome.guide" defaultMessage="Before proceeding, you will be guided through the wallet creation process. This will not take too much time. After completing this process you will be able to use all features of Apla" />
-            </p>
-            <p>
-                <FormattedMessage id="auth.welcome.continue" defaultMessage="Press 'Get started' button to begin the process of creating or restoring your wallet" />
-            </p>
-            <hr />
-            <Button bsStyle="primary" className="btn-block" onClick={props.onConfirm}>
-                <FormattedMessage id="auth.getstarted" defaultMessage="Get started" />
-            </Button>
-        </div>
-    </LocalizedDocumentTitle>
+    <div>
+        <h4 className="p0 m0">
+            <FormattedMessage id="auth.welcome" defaultMessage="Welcome" />
+        </h4>
+        <p className="pv">
+            <FormattedMessage id="auth.welcome.guide" defaultMessage="Before proceeding, you will be guided through the wallet creation process. This will not take too much time. After completing this process you will be able to use all features of Apla" />
+        </p>
+        <p>
+            <FormattedMessage id="auth.welcome.continue" defaultMessage="Press 'Get started' button to begin the process of creating or restoring your wallet" />
+        </p>
+        <hr />
+    </div>
 );
 
 export default Welcome;

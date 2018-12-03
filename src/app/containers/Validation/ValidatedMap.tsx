@@ -36,7 +36,7 @@ export interface IValidatedMapContainerProps {
     type: TMapEditorType;
     mapType?: TMapType;
     value?: IMapEditorEvent;
-    center?: { lat: number, lng: number };
+    center?: [number, number];
     zoom?: number;
     validators?: Validator[];
 }
@@ -80,7 +80,6 @@ class ValidatedMapContainer extends React.Component<IValidatedMapContainerProps 
         return (
             <ValidatedMap
                 name={this.props.name}
-                type={this.props.type}
                 mapType={this.props.mapType}
                 validators={this.props.validators}
                 value={this.state.result || this.props.value}

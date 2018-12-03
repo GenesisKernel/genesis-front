@@ -25,7 +25,6 @@ declare module 'jsrsasign';
 declare module 'react-router-transition';
 declare module 'html2json';
 declare module 'react-contenteditable';
-declare module 'react-places-autocomplete';
 
 declare module '*.svg' {
     const content: string;

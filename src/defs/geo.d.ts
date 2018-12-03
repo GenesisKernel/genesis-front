@@ -22,16 +22,14 @@
 
 declare module 'apla/geo' {
     type TMapEditorType =
-        'polygon';
+        'point' | 'line' | 'polygon';
 
     type TMapType =
-        'hybrid' | 'roadmap' | 'satellite' | 'terrain';
+        'streets' | 'satellite' | 'hybrid' | 'topo' | 'gray' | 'dark-gray' | 'oceans' | 'national-geographic' | 'terrain' | 'osm';
 
     interface IMapEditorEvent {
-        coords: {
-            lat: number;
-            lng: number;
-        }[];
+        coords: [number, number][];
+        type: TMapEditorType;
         area: number;
         address: string;
     }

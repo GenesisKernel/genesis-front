@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import React from 'react';
+import classNames from 'classnames';
 
 import themed from 'components/Theme/themed';
 
@@ -33,58 +34,51 @@ export interface ISectionToolButtonProps {
 }
 
 const SectionToolButton: React.SFC<ISectionToolButtonProps> = props => (
-    <li className={props.className}>
-        <ul className="button-sections">
-            {props.items.map((l, i) => (
-                <li key={i} className={props.activeIndex === i ? 'active' : null}>
-                    <button onClick={props.onChange && props.onChange.bind(null, i)}>
-                        {l}
-                    </button>
-                </li>
-            ))}
-        </ul>
-    </li>
+    <ul className={classNames('button-sections', props.className)}>
+        {props.items.map((l, i) => (
+            <li key={i} className={props.activeIndex === i ? 'active' : null}>
+                <button type="button" onClick={props.onChange && props.onChange.bind(null, i)}>
+                    {l}
+                </button>
+            </li>
+        ))}
+    </ul>
 );
 
-const StyledSectionToolButton = themed(SectionToolButton) `
-    height: 40px;
-    padding: 9px;
-    float: right;
+const StyledSectionToolButton = themed(SectionToolButton)`
+    border: solid 1px ${props => props.theme.sectionButtonOutline};
+    border-radius: 2px;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0;
+    display: inline-block;
 
-    ul.button-sections {
-        border: solid 1px ${props => props.theme.sectionButtonOutline};
-        border-radius: 2px;
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-        font-size: 0;
+    li {
+        display: inline-block;
 
-        li {
-            display: inline-block;
+        button {
+            background: 0;
+            outline: 0;
+            border: 0;
+            border-right: solid 1px ${props => props.theme.sectionButtonOutline};
+            height: 20px;
+            font-size: 13px;
+            padding: 0 10px;
+            color: ${props => props.theme.sectionButtonForeground};
+        }
 
-            button {
-                background: 0;
-                outline: 0;
-                border: 0;
-                border-right: solid 1px ${props => props.theme.sectionButtonOutline};
-                height: 20px;
-                font-size: 13px;
-                padding: 0 10px;
-                color: ${props => props.theme.sectionButtonForeground};
-            }
+        &:last-child button {
+            border-right: 0;
+        }
 
-            &:last-child button {
-                border-right: 0;
-            }
-
-            &:hover button {
-                background: ${props => props.theme.sectionButtonBackground};
-            }
-            
-            &.active button {
-                background: ${props => props.theme.sectionButtonActive};
-                color: ${props => props.theme.sectionButtonPrimary};
-            }
+        &:hover button {
+            background: ${props => props.theme.sectionButtonBackground};
+        }
+        
+        &.active button {
+            background: ${props => props.theme.sectionButtonActive};
+            color: ${props => props.theme.sectionButtonPrimary};
         }
     }
 `;
