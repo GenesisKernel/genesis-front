@@ -20,92 +20,126 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
-import * as _ from 'lodash';
-import { withGoogleMap, GoogleMap, withScriptjs, Polygon } from 'react-google-maps';
+import React from 'react';
+import _ from 'lodash';
+import { TMapEditorType } from 'genesis/geo';
+import { Map, loadModules } from 'react-arcgis';
 
-export interface IMapProps {
-    mapType?: 'hybrid' | 'roadmap' | 'satellite' | 'terrain';
-    polygon?: { lat: number, lng: number }[];
-    center?: { lat: number, lng: number };
+import Line from './Line';
+import Polygon from './Polygon';
+import Point from './Point';
+
+export interface IMapViewProps {
+    height: number;
+    tool: TMapEditorType;
+    mapType?: 'streets' | 'satellite' | 'hybrid' | 'topo' | 'gray' | 'dark-gray' | 'oceans' | 'national-geographic' | 'terrain' | 'osm';
+    coords?: [number, number][];
+    center?: [number, number];
     zoom?: number;
-    onClick?: (e: google.maps.MouseEvent) => void;
+    onClick?: (e: __esri.MapViewClickEvent) => void;
     onAreaChange?: (area: number) => void;
 }
 
-export interface IMapViewProps extends IMapProps {
-    height: number;
-}
+const comparePoints = (a: [number, number], b: [number, number]) => {
+    if (!a && b) {
+        return true;
+    }
+    else if (!b) {
+        return false;
+    }
+    else if (a && b && (a[0] !== b[0] || a[1] !== b[1])) {
+        return true;
+    }
+    else {
+        return false;
+    }
+};
 
-class Map extends React.Component<IMapProps> {
-    private _map: GoogleMap = null;
-    private _defaultCenter = { lat: 36.07574221562708, lng: 5.0921630859375 };
+class MapView extends React.Component<IMapViewProps> {
+    private _mapView: __esri.MapView = null;
+    private _defaultCenter = [36.07574221562708, 5.0921630859375];
 
     componentDidMount() {
         this.processEvents(this.props);
-        if (this.props.polygon && this.props.polygon.length) {
-            this._map.fitBounds(this.calcBounds(this.getPolygon(this.props.polygon)));
-        }
     }
 
-    componentWillReceiveProps(props: IMapProps) {
-        if (!_.isEqual(this.props.polygon, props.polygon)) {
+    componentWillReceiveProps(props: IMapViewProps) {
+        if (this._mapView) {
+            this._mapView.graphics.removeAll();
+        }
+
+        if (!_.isEqual(this.props.coords, props.coords)) {
             this.processEvents(props);
         }
-    }
 
-    getPolygon(coords: { lat: number, lng: number }[]) {
-        return coords.map(l => new google.maps.LatLng(l.lat, l.lng));
-    }
-
-    calcBounds(coords: google.maps.LatLng[]) {
-        const bounds = new google.maps.LatLngBounds();
-        for (let i = 0; i < coords.length; i++) {
-            bounds.extend(coords[i]);
+        if (comparePoints(this.props.center, props.center)) {
+            this._mapView.zoom = 10;
+            this._mapView.goTo(props.center);
         }
-        return bounds;
     }
 
-    processEvents(props: IMapProps) {
-        if (props.onAreaChange && props.polygon) {
-            const area = google.maps.geometry.spherical.computeArea(new google.maps.MVCArray(this.getPolygon(props.polygon)));
-            props.onAreaChange(area);
+    onLoad = (map: __esri.Map, view: __esri.MapView) => {
+        this._mapView = view;
+
+        if (this.props.coords && this.props.coords.length) {
+            loadModules(['esri/geometry/Polygon']).then((value: [__esri.PolygonConstructor]) => {
+                const [PolygonGeometry] = value;
+                const polygon = new PolygonGeometry({
+                    rings: [
+                        this.props.coords
+                    ]
+                });
+
+                this._mapView.goTo(polygon, {
+                    animate: false
+                });
+
+            }).catch(a => {/* Silently suppress errors*/ });
+        }
+    }
+
+    processEvents(props: IMapViewProps) {
+        if (props.onAreaChange) {
+            if ('polygon' !== props.tool || !props.coords || !props.coords.length) {
+                props.onAreaChange(0);
+            }
+            else {
+                loadModules(['esri/geometry/geometryEngine', 'esri/geometry/Polygon']).then((value: [__esri.geometryEngine, __esri.PolygonConstructor]) => {
+                    const [geometryEngine, PolygonGeometry] = value;
+                    const polygon = new PolygonGeometry({
+                        rings: [
+                            props.coords
+                        ]
+                    });
+                    const area = geometryEngine.geodesicArea(polygon, 'square-meters');
+                    props.onAreaChange(Math.abs(area));
+                }).catch(a => {/* Silently suppress errors*/ });
+            }
         }
     }
 
     render() {
+        const isEmpty = !this.props.coords || !this.props.coords.length;
         return (
-            <GoogleMap
-                ref={l => this._map = l}
-                defaultMapTypeId={this.props.mapType}
-                defaultZoom={this.props.zoom || 1}
-                defaultCenter={this.props.center || this._defaultCenter}
-                center={this.props.center || this._defaultCenter}
-                mapTypeId={this.props.mapType}
-                options={{
-                    disableDefaultUI: true,
-                    draggableCursor: 'default'
-                }}
-                onClick={this.props.onClick}
-            >
-                {this.props.polygon ? (
-                    <Polygon paths={new google.maps.MVCArray(this.getPolygon(this.props.polygon))} />
-                ) : null}
-            </GoogleMap>
+            <div style={{ height: this.props.height }}>
+                <Map
+                    onLoad={this.onLoad}
+                    mapProperties={{
+                        basemap: this.props.mapType || 'streets'
+                    }}
+                    viewProperties={{
+                        zoom: this.props.zoom || 1,
+                        center: this.props.center || this._defaultCenter
+                    }}
+                    onClick={this.props.onClick}
+                >
+                    {!isEmpty && 'point' === this.props.tool ? (<Point coords={this.props.coords[0]} />) : <span />}
+                    {!isEmpty && 'line' === this.props.tool ? (<Line coords={this.props.coords} />) : <span />}
+                    {!isEmpty && 'polygon' === this.props.tool ? (<Polygon rings={this.props.coords} />) : <span />}
+                </Map>
+            </div>
         );
     }
 }
-
-const BoundMap = withScriptjs(withGoogleMap(Map));
-
-const MapView: React.SFC<IMapViewProps> = props => (
-    <BoundMap
-        googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyATHGb9H5fXlOMp4azLLFmX2KIr6o0jH9M&libraries=geometry,drawing,places&callback=googleMapsLoaded"
-        loadingElement={<div style={{ height: props.height }} />}
-        containerElement={<div style={{ height: props.height }} />}
-        mapElement={<div style={{ height: props.height }} />}
-        {...props}
-    />
-);
 
 export default MapView;
