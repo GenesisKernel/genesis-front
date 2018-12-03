@@ -22,7 +22,7 @@
 
 import React from 'react';
 import _ from 'lodash';
-import { TMapEditorType } from 'genesis/geo';
+import { TMapEditorType } from 'apla/geo';
 import { Map, loadModules } from 'react-arcgis';
 
 import Line from './Line';
