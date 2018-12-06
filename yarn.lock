@@ -9162,7 +9162,7 @@ react-router@^4.2.0:
 
 "react-scripts-ts-electron@git+https://git@github.com/GenesisKernel/cra-typescript-electron.git":
   version "0.2.1"
-  resolved "git+https://git@github.com/GenesisKernel/cra-typescript-electron.git#fe927dba8e38a00923dcb95e5c53595bd154371c"
+  resolved "git+https://git@github.com/GenesisKernel/cra-typescript-electron.git#4d735d59e6bf47352b96d2ed0798af4f13b9ea9a"
   dependencies:
     autoprefixer "7.1.2"
     case-sensitive-paths-webpack-plugin "2.1.1"
