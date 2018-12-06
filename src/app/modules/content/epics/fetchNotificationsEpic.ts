@@ -31,7 +31,7 @@ const fetchNotificationsEpic: Epic = (action$, store, { api }) => action$.ofActi
 
         return Observable.fromPromise(client.content({
             type: 'page',
-            name: 'notifications',
+            name: '@1notifications',
             params: {},
             locale: state.storage.locale
 
