@@ -62,7 +62,7 @@ const configureStore = (initialState?: IRootState) => {
         }
     }
 
-    const composedEnhancers: any = compose(
+    const composedEnhancers = compose(
         applyMiddleware(...middleware),
         ...enhancers
     );
