@@ -41,7 +41,7 @@ export interface IWalletButtonProps {
 }
 
 const getNotificationsCount = (notifications: INotificationsMessage[], role: number, ecosystem: string) => {
-    const value = notifications.find(l => l.role === role && l.ecosystem === l.ecosystem);
+    const value = notifications.find(l => l.role === role && l.ecosystem === ecosystem);
     return value ? value.count : 0;
 };
 
