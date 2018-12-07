@@ -146,5 +146,8 @@
         "tslint-react": "^3.2.0",
         "typescript": "^2.8.3",
         "typescript-react-intl": "^0.1.7"
+    },
+    "resolutions": {
+        "**/event-stream": "^4.0.1"
     }
 }
