@@ -2,6 +2,9 @@
     "extends": [
         "tslint-react"
     ],
+    "rulesDirectory": [
+        "node_modules/rxjs-tslint"
+    ],
     "rules": {
         "ban": false,
         "class-name": true,
@@ -115,6 +118,10 @@
             "check-separator",
             "check-type",
             "check-typecast"
-        ]
+        ],
+        "rxjs-collapse-imports": true,
+        "rxjs-pipeable-operators-only": true,
+        "rxjs-no-static-observable-methods": true,
+        "rxjs-proper-imports": true
     }
 }

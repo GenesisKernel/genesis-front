@@ -21,12 +21,11 @@
 // SOFTWARE.
 
 import { Action } from 'redux';
-import { Observable } from 'rxjs/Observable';
+import { Observable, of } from 'rxjs';
 import { Epic } from 'modules';
 import { connect, disconnect, setConnected } from '../actions';
 import * as Centrifuge from 'centrifuge';
 import SockJS from 'sockjs-client';
-import { of } from 'rxjs';
 import { flatMap, takeUntil } from 'rxjs/operators';
 
 const connectEpic: Epic = (action$, store) => action$.ofAction(connect.started).pipe(

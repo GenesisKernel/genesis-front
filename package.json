@@ -39,7 +39,6 @@
         "random-js": "^1.0.8",
         "react-bootstrap": "^0.31.2",
         "react-chartjs-2": "^2.7.2",
-        "react-contenteditable": "^2.0.7",
         "react-copy-to-clipboard": "^5.0.1",
         "react-cropper": "^1.0.0",
         "react-custom-scrollbars": "^4.2.1",
@@ -63,7 +62,6 @@
         "redux-persist": "^5.10.0",
         "route-parser": "^0.0.5",
         "rxjs": "^6.3.3",
-        "rxjs-compat": "^6.3.3",
         "simple-line-icons": "^2.4.1",
         "sockjs-client": "^1.1.4",
         "styled-components": "^4.0.3",
@@ -136,14 +134,20 @@
         "cross-env": "^5.1.3",
         "electron": "^1.8.2",
         "electron-builder": "^20.0.4",
+        "jest": "^23.6.0",
         "node-sass-chokidar": "^0.0.3",
         "npm-run-all": "^4.1.1",
         "react": "^16.6.1",
-        "react-scripts-ts": "^2.15.1",
+        "react-scripts-ts": "^3.1.0",
         "react-scripts-ts-electron": "git+https://git@github.com/GenesisKernel/cra-typescript-electron.git",
-        "ts-jest": "^22.4.4",
-        "tslint-react": "^3.2.0",
+        "rxjs-tslint": "0.1.5",
+        "ts-jest": "^23.10.5",
+        "tslint": "^5.11.0",
+        "tslint-react": "^3.6.0",
         "typescript": "^3.1.6",
         "typescript-react-intl": "^0.1.7"
+    },
+    "resolutions": {
+        "**/event-stream": "^4.0.1"
     }
 }

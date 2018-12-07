@@ -22,7 +22,7 @@
 
 import { Action } from 'redux';
 import { Epic } from 'modules';
-import { Observable, from, defer, of } from 'rxjs';
+import { from, defer, of, throwError } from 'rxjs';
 import { txExec } from '../actions';
 import uuid from 'uuid';
 import Contract, { IContractParam } from 'lib/tx/contract';
@@ -156,7 +156,7 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                                         );
 
                                     case 'E_ERROR':
-                                        return Observable.throw({
+                                        return throwError({
                                             id: error.data.id,
                                             type: error.data.type,
                                             error: error.data.error,
@@ -164,7 +164,7 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                                         });
 
                                     default:
-                                        return Observable.throw(error);
+                                        return throwError(error);
                                 }
 
                             })

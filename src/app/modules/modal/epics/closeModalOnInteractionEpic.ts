@@ -21,12 +21,11 @@
 // SOFTWARE.
 
 import { Epic } from 'modules';
-import { isType } from 'typescript-fsa';
 import { modalClose } from '../actions';
 import { filter, map } from 'rxjs/operators';
 import { buttonInteraction } from 'modules/content/actions';
 
-const closeModalOnInteractionEpic: Epic = (action$, store, { api }) => action$.filter(action => isType(action, buttonInteraction)).pipe(
+const closeModalOnInteractionEpic: Epic = (action$, store, { api }) => action$.ofAction(buttonInteraction).pipe(
     filter(() => 'instance' in store.value.modal),
     map(() => modalClose())
 );

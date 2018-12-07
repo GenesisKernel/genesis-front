@@ -34,7 +34,7 @@ const txCallEpic: Epic = (action$, store) => action$.ofAction(txCall).pipe(
         of(txExec.started(action.payload)),
         merge(
             of(txAuthorize.started({})),
-            action$.filter(l => txAuthorize.done.match(l) || txAuthorize.failed.match(l)).pipe(
+            action$.ofAction(txAuthorize.done, txAuthorize.failed).pipe(
                 take(1),
                 flatMap(result => iif(
                     () => isType(result, txAuthorize.done),

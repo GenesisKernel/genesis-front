@@ -40,13 +40,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-/* tslint:disable */
 import { ActionsObservable } from 'redux-observable';
 import { Action, ActionCreator, isType } from 'typescript-fsa';
 import { Action as ReduxAction } from 'redux';
-import 'rxjs/add/operator/filter';
+import { filter } from 'rxjs/operators';
 
 declare module 'redux-observable' {
+    // Redeclaring external interface
+    // tslint:disable-next-line:interface-name
     interface ActionsObservable<T extends ReduxAction> {
         ofAction<P>(action: ActionCreator<P>): ActionsObservable<Action<P>>;
         ofAction<P1, P2>(item1: ActionCreator<P1>, item2: ActionCreator<P2>): ActionsObservable<Action<P1 | P2>>;
@@ -59,7 +60,9 @@ declare module 'redux-observable' {
 
 ActionsObservable.prototype.ofAction =
     function (this: ActionsObservable<Action<any>>, ...actionCreators: ActionCreator<any>[]): ActionsObservable<Action<any>> {
-        return this.filter(action =>
-            actionCreators.some(actionCreator => isType(action, actionCreator))
+        return this.pipe(
+            filter(action =>
+                actionCreators.some(actionCreator => isType(action, actionCreator))
+            )
         ) as ActionsObservable<Action<any>>;
     };

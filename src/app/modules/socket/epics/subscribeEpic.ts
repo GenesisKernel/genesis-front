@@ -21,9 +21,8 @@
 // SOFTWARE.
 
 import { Action } from 'redux';
-import { Observable } from 'rxjs/Observable';
+import { Observable, Observer, of } from 'rxjs';
 import { Epic } from 'modules';
-import { Observer, of } from 'rxjs';
 import { setBadgeCount } from 'modules/gui/actions';
 import { subscribe, setNotificationsCount, getNotificationsCount } from '../actions';
 import { flatMap } from 'rxjs/operators';
