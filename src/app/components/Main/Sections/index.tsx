@@ -59,9 +59,8 @@ export interface ISectionsProps {
 }
 
 const mapSectionParam = (section: ISection) => {
-    const lastPage = section.pages[section.pages.length - 1];
-    const page = lastPage ? lastPage.name : section.defaultPage;
-    const params = lastPage ? lastPage.params : {};
+    const page = section.page ? section.page.name : section.defaultPage;
+    const params = section.page ? section.page.params : {};
 
     return {
         title: section.title,
@@ -84,7 +83,7 @@ const Sections: React.SFC<ISectionsProps> = (props) => (
             <Navigation section={props.section} />
             <Section
                 name={props.section}
-                pages={props.values[props.section].pages}
+                page={props.values[props.section].page}
                 breadcrumbs={props.values[props.section].breadcrumbs}
             />
         </div>

@@ -62,6 +62,6 @@ declare module 'genesis/content' {
         readonly defaultPage: string;
         readonly breadcrumbs: IBreadcrumb[];
         readonly menus: IMenu[];
-        readonly pages: IPage[];
+        readonly page?: IPage;
     }
 }

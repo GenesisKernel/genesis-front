@@ -126,7 +126,7 @@ export interface INavigationProps {
 
 // TODO: refactoring
 const Navigation: React.SFC<INavigationProps> = props => (
-    <StyledNavigation style={{ width: props.width }}>
+    <StyledNavigation style={{ minWidth: props.width, maxWidth: props.width }}>
         <nav>
             <div className="navigation-controls">&lt;&lt;&lt; Collapse</div>
             <StyledMenu>

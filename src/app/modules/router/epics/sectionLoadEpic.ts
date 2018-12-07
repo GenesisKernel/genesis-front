@@ -22,8 +22,7 @@
 
 import { Epic, ofAction } from 'modules';
 import { locationChange } from '../actions';
-import { renderPage, popPage } from 'modules/navigator/actions';
-import findPage from 'modules/navigator/util/findPage';
+import { renderPage } from 'modules/navigator/actions';
 import { of, empty } from 'rxjs';
 import { filter, delayWhen, switchMap } from 'rxjs/operators';
 
@@ -39,19 +38,21 @@ const sectionLoadEpic: Epic = (action$, store, { routerService }) => action$.pip
             const section = store.value.navigator.sections[match.parts.section || store.value.navigator.mainSection];
             const pageName = match.parts.page || section.defaultPage;
 
-            if ('POP' === action.payload.action) {
-                const pageIndex = findPage(section, pageName);
-                if (-1 !== pageIndex) {
-                    const page = store.value.navigator.sections[section.name].pages[pageIndex];
-                    if (page.content || page.error) {
-                        return of(popPage({
-                            location: action.payload.location,
-                            section: section.name,
-                            name: pageName
-                        }));
-                    }
-                }
-            }
+            // TODO: refactoring
+            // must ignore navigation when page and params are equal
+            // if ('POP' === action.payload.action) {
+            //     const pageIndex = findPage(section, pageName);
+            //     if (-1 !== pageIndex) {
+            //         const page = store.value.navigator.sections[section.name].pages[pageIndex];
+            //         if (page.content || page.error) {
+            //             return of(popPage({
+            //                 location: action.payload.location,
+            //                 section: section.name,
+            //                 name: pageName
+            //             }));
+            //         }
+            //     }
+            // }
 
             return of(renderPage.started({
                 location: action.payload.location,

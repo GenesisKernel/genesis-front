@@ -30,7 +30,6 @@ import menuPushHandler from './reducers/menuPushHandler';
 import renderPageDoneHandler from './reducers/renderPageDoneHandler';
 import renderPageFailedHandler from './reducers/renderPageFailedHandler';
 import renderPageHandler from './reducers/renderPageHandler';
-import popPageHandler from './reducers/popPageHandler';
 
 export type State = {
     readonly mainSection: string;
@@ -51,5 +50,4 @@ export default reducerWithInitialState(initialState)
     .case(actions.renderPage.done, renderPageDoneHandler)
     .case(actions.renderPage.failed, renderPageFailedHandler)
     .case(actions.renderPage.started, renderPageHandler)
-    .case(actions.popPage, popPageHandler)
     .case(actions.sectionsInit, sectionsInitHandler);

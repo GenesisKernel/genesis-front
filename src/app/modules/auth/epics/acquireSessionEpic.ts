@@ -65,7 +65,7 @@ const acquireSessionEpic: Epic = (action$, store, { api }) => action$.ofAction(a
                             params: {}
                         }],
                         menus: [],
-                        pages: []
+                        page: undefined
                     };
                 });
 

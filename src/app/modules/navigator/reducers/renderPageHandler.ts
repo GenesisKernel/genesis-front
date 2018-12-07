@@ -23,7 +23,6 @@
 import { State } from '../reducer';
 import { renderPage } from '../actions';
 import { Reducer } from 'modules';
-import upsertSectionPage from '../util/upsertSectionPage';
 import upsertSectionBreadcrumb from '../util/upsertSectionBreadcrumb';
 
 const renderPageHandler: Reducer<typeof renderPage.started, State> = (state, payload): State => ({
@@ -31,12 +30,15 @@ const renderPageHandler: Reducer<typeof renderPage.started, State> = (state, pay
     sections: {
         ...state.sections,
         [payload.section]: {
-            ...upsertSectionPage(state.sections[payload.section], {
+            ...state.sections[payload.section],
+            page: {
                 name: payload.name,
                 status: 'PENDING',
+                content: [],
                 params: payload.params,
-                location: payload.location
-            }),
+                error: undefined,
+                location: payload.location,
+            },
             breadcrumbs: upsertSectionBreadcrumb(
                 state.sections[payload.section],
                 {

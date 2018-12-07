@@ -24,13 +24,12 @@ import React from 'react';
 import { IPage, IBreadcrumb } from 'genesis/content';
 
 import Page from 'components/Main/Page';
-import Stack from 'components/Animation/Stack';
 import Breadcrumbs from 'components/Main/Sections/Breadcrumbs';
 import themed from 'components/Theme/themed';
 
 export interface ISectionProps {
     name: string;
-    pages: IPage[];
+    page?: IPage;
     breadcrumbs: IBreadcrumb[];
 }
 
@@ -54,13 +53,11 @@ const Section: React.SFC<ISectionProps> = (props) => (
         <StyledContent>
             <Breadcrumbs values={props.breadcrumbs} />
             <div className="flex-stretch" style={{ position: 'relative' }}>
-                <Stack
-                    items={(props.pages || []).map(page => (
-                        <div key={page.location.key} className="content-page">
-                            <Page value={page} section={props.name} />
-                        </div>
-                    ))}
-                />
+                {props.page && (
+                    <div className="content-page">
+                        <Page value={props.page} section={props.name} />
+                    </div>
+                )}
             </div>
         </StyledContent>
     </div>

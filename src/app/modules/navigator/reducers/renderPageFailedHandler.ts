@@ -23,17 +23,22 @@
 import { State } from '../reducer';
 import { renderPage } from '../actions';
 import { Reducer } from 'modules';
-import upsertSectionPage from '../util/upsertSectionPage';
 
 const renderPageFailedHandler: Reducer<typeof renderPage.failed, State> = (state, payload): State => ({
     ...state,
     sections: {
         ...state.sections,
-        [payload.params.section]: upsertSectionPage(state.sections[payload.params.section], {
-            name: payload.params.name,
-            status: 'ERROR',
-            error: payload.error
-        })
+        [payload.params.section]: {
+            ...state.sections[payload.params.section],
+            page: {
+                name: payload.params.name,
+                status: 'ERROR',
+                content: [],
+                params: payload.params.params,
+                error: payload.error,
+                location: payload.params.location,
+            }
+        }
     }
 });
 

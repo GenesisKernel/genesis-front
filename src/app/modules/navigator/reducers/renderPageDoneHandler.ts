@@ -23,17 +23,22 @@
 import { State } from '../reducer';
 import { renderPage } from '../actions';
 import { Reducer } from 'modules';
-import upsertSectionPage from '../util/upsertSectionPage';
 
 const renderPageDoneHandler: Reducer<typeof renderPage.done, State> = (state, payload): State => ({
     ...state,
     sections: {
         ...state.sections,
-        [payload.params.section]: upsertSectionPage(state.sections[payload.params.section], {
-            name: payload.params.name,
-            status: 'LOADED',
-            content: payload.result
-        })
+        [payload.params.section]: {
+            ...state.sections[payload.params.section],
+            page: {
+                name: payload.params.name,
+                status: 'LOADED',
+                content: payload.result,
+                params: payload.params.params,
+                error: undefined,
+                location: payload.params.location,
+            }
+        }
     }
 });
 
