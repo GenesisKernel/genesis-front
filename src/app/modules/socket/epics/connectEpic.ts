@@ -24,7 +24,7 @@ import { Action } from 'redux';
 import { Observable, of } from 'rxjs';
 import { Epic } from 'modules';
 import { connect, disconnect, setConnected } from '../actions';
-import * as Centrifuge from 'centrifuge';
+import Centrifuge from 'centrifuge';
 import SockJS from 'sockjs-client';
 import { flatMap, takeUntil } from 'rxjs/operators';
 

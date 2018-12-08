@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import * as React from 'react';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import styled from 'styled-components';
 
 const StyledHead = styled.thead`

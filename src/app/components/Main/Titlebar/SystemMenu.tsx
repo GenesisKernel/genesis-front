@@ -21,8 +21,8 @@
 // SOFTWARE.
 
 import React from 'react';
-import { remote } from 'electron';
 import { FormattedMessage } from 'react-intl';
+import platform from 'lib/platform';
 
 import themed from 'components/Theme/themed';
 import DropdownButton, { CloseDropdownButton } from 'components/DropdownButton';
@@ -73,10 +73,17 @@ export interface ISystemMenuProps {
     onChangeLocale: () => void;
 }
 
+// TODO: refactoring
+const openDevTools = () => {
+    const wnd = platform.getElectron().remote.getCurrentWindow();
+    wnd.webContents.openDevTools({ mode: 'detach' });
+};
+
 const SystemMenu: React.SFC<ISystemMenuProps> = props => {
     const elements = [
         (
             <SystemDropdown
+                key="system"
                 width={180}
                 align={props.align}
                 leftMost={'left' === props.align}
@@ -94,7 +101,7 @@ const SystemMenu: React.SFC<ISystemMenuProps> = props => {
                                 </CloseDropdownButton>
                             </li>
                             <li>
-                                <CloseDropdownButton onClick={() => remote.getCurrentWindow().webContents.openDevTools({ mode: 'detach' })}>
+                                <CloseDropdownButton onClick={openDevTools}>
                                     <em className="icon icon-calculator text-danger" />
                                     <span>
                                         <FormattedMessage id="general.developer.tools" defaultMessage="Developer tools" />
@@ -109,7 +116,7 @@ const SystemMenu: React.SFC<ISystemMenuProps> = props => {
             </SystemDropdown>
         ),
         (
-            <SystemButton onClick={props.onChangeLocale}>
+            <SystemButton key="locale" onClick={props.onChangeLocale}>
                 <em className="icon-globe" />
             </SystemButton>
         )

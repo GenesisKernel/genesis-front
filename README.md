@@ -71,7 +71,7 @@ Create your settings.json configuration file and build the project
 ### Example
 
 ```bash
-$ yarn build-desktop
+$ yarn build
 ```
 
 When build process finishes you will need to package your application using "release". You will also need to specify "--publish never" so your project will not be published to github

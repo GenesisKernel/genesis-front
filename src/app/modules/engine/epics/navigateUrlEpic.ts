@@ -30,7 +30,7 @@ const navigateUrlEpic: Epic = (action$) => action$.ofAction(navigateUrl).pipe(
     flatMap(action => {
         platform.target({
             desktop: () => {
-                const electron = require('electron');
+                const electron = platform.getElectron();
                 electron.shell.openExternal(action.payload);
             },
             web: () => {

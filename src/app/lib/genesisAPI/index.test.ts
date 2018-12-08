@@ -58,6 +58,10 @@ class FormDataMock implements FormData {
             this._values[name] = String(value);
         }
     }
+
+    forEach() {
+        throw 'E_NOT_IMPLEMENTED';
+    }
 }
 
 (window as any).FormData = FormDataMock;
@@ -214,7 +218,7 @@ test('Login', () => {
             body: mockFormData({
                 ecosystem: '1',
                 expire: 4815162342,
-                pubkey: '123456789',
+                pubkey: '04123456789',
                 signature: 'test',
                 role_id: 123,
             }),
@@ -252,7 +256,7 @@ test('GetConfig', () => {
     return paramTestingAPIMock().getConfig({ name: 'centrifugo' }).then((response: any) => {
         expect(response).toEqual({
             __requestUrl: `${paramTestingAPIHost}/${paramTestingAPIEndpoint}/config/${testRequest}`,
-            body: null
+            body: undefined
         });
     });
 });
@@ -265,7 +269,7 @@ test('GetContract', () => {
     return paramTestingAPIMock().getContract(testRequest).then((response: any) => {
         expect(response).toEqual({
             __requestUrl: `${paramTestingAPIHost}/${paramTestingAPIEndpoint}/contract/TEST_CONTRACT`,
-            body: null
+            body: undefined
         });
     });
 });
@@ -279,7 +283,7 @@ test('GetContracts', () => {
     return paramTestingAPIMock().getContracts(testRequest).then((response: any) => {
         expect(response).toEqual({
             __requestUrl: `${paramTestingAPIHost}/${paramTestingAPIEndpoint}/contracts?limit=8&offset=4`,
-            body: null
+            body: undefined
         });
     });
 });
@@ -292,7 +296,7 @@ test('GetParam', () => {
     return paramTestingAPIMock().getParam(testRequest).then((response: any) => {
         expect(response).toEqual({
             __requestUrl: `${paramTestingAPIHost}/${paramTestingAPIEndpoint}/ecosystemparam/TEST_PARAM`,
-            body: null
+            body: undefined
         });
     });
 });
@@ -305,7 +309,7 @@ test('GetParams', () => {
     return paramTestingAPIMock().getParams(testRequest).then((response: any) => {
         expect(response).toEqual({
             __requestUrl: `${paramTestingAPIHost}/${paramTestingAPIEndpoint}/ecosystemparams?names=TEST_PARAM%2CMOCK_PARAM%2C%2C%23PARAM`,
-            body: null
+            body: undefined
         });
     });
 });
@@ -318,7 +322,7 @@ test('GetPage', () => {
     return paramTestingAPIMock().getPage(testRequest).then((response: any) => {
         expect(response).toEqual({
             __requestUrl: `${paramTestingAPIHost}/${paramTestingAPIEndpoint}/interface/page/TEST_PAGE`,
-            body: null
+            body: undefined
         });
     });
 });
@@ -331,7 +335,7 @@ test('GetMenu', () => {
     return paramTestingAPIMock().getMenu(testRequest).then((response: any) => {
         expect(response).toEqual({
             __requestUrl: `${paramTestingAPIHost}/${paramTestingAPIEndpoint}/interface/menu/TEST_MENU`,
-            body: null
+            body: undefined
         });
     });
 });
@@ -344,7 +348,7 @@ test('GetBlock', () => {
     return paramTestingAPIMock().getBlock(testRequest).then((response: any) => {
         expect(response).toEqual({
             __requestUrl: `${paramTestingAPIHost}/${paramTestingAPIEndpoint}/interface/block/TEST_BLOCK`,
-            body: null
+            body: undefined
         });
     });
 });
@@ -357,7 +361,7 @@ test('GetTable', () => {
     return paramTestingAPIMock().getTable(testRequest).then((response: any) => {
         expect(response).toEqual({
             __requestUrl: `${paramTestingAPIHost}/${paramTestingAPIEndpoint}/table/TEST_TABLE`,
-            body: null
+            body: undefined
         });
     });
 });
@@ -371,7 +375,7 @@ test('GetTables', () => {
     return paramTestingAPIMock().getTables(testRequest).then((response: any) => {
         expect(response).toEqual({
             __requestUrl: `${paramTestingAPIHost}/${paramTestingAPIEndpoint}/tables?limit=8&offset=4`,
-            body: null
+            body: undefined
         });
     });
 });
@@ -385,7 +389,7 @@ test('GetHistory', () => {
     return paramTestingAPIMock().getHistory(testRequest).then((response: any) => {
         expect(response).toEqual({
             __requestUrl: `${paramTestingAPIHost}/${paramTestingAPIEndpoint}/history/TEST_TABLE/4815162342`,
-            body: null
+            body: undefined
         });
     });
 });
@@ -400,7 +404,7 @@ test('GetRow', () => {
     return paramTestingAPIMock().getRow(testRequest).then((response: any) => {
         expect(response).toEqual({
             __requestUrl: `${paramTestingAPIHost}/${paramTestingAPIEndpoint}/row/TEST_TABLE/4815162342?columns=COL_1%2CCOL2%2C%40COL%223`,
-            body: null
+            body: undefined
         });
     });
 });
@@ -414,7 +418,7 @@ test('GetData', () => {
     return paramTestingAPIMock().getData(testRequest).then((response: any) => {
         expect(response).toEqual({
             __requestUrl: `${paramTestingAPIHost}/${paramTestingAPIEndpoint}/list/TEST_TABLE?columns=COL_1%2CCOL2%2C%40COL%223`,
-            body: null
+            body: undefined
         });
     });
 });

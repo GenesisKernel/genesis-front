@@ -34,18 +34,25 @@ const target: TTargetType = isElectron ? 'desktop' : 'web';
 let os: NodeJS.Platform | 'web' = 'web';
 let args: IInferredArguments = {};
 
-if (isElectron) {
-    const electron = require('electron');
-    const process: NodeJS.Process = require('process');
-    os = process.platform;
-    args = electron.ipcRenderer.sendSync('getArgs') || {};
+const requireModule = (moduleName: string) => {
+    const electron = (window as Window & { require: NodeRequire }).require('electron');
+    return electron.remote.require(moduleName);
+};
+
+interface IPlatformModule {
+    select: <T>(platforms: { [K in TPlatformType]?: T }) => T | undefined;
+    target: <T>(targets: { [K in TTargetType]: T }) => T;
+    on: (platformType: TPlatformType, callback: () => void) => void;
+    getElectron: () => typeof Electron;
+    require: NodeRequire;
+    args: IInferredArguments;
 }
 
-export default {
+const platform: IPlatformModule = {
     // Platform.select will return only 1 value depending on which platform
     // this application runs. If 'desktop' is specified instead of providing
     // extact platform name - it will be returned instead
-    select: function <T>(platforms: { [K in TPlatformType]?: T }): T | undefined {
+    select: platforms => {
         if (isElectron && os in platforms) {
             return platforms[os as TPlatformType];
         }
@@ -54,15 +61,31 @@ export default {
         }
     },
 
-    target: function <T>(targets: { [K in TTargetType]: T }): T {
+    target: targets => {
         return targets[target];
     },
 
-    on: (platformType: TPlatformType, callback: () => void) => {
+    on: (platformType, callback) => {
         if (platformType === target) {
             callback();
         }
     },
 
+    getElectron: () => {
+        return (window as Window & { require: NodeRequire }).require('electron');
+    },
+
+    require: requireModule as NodeRequire,
+
     args
 };
+
+if (isElectron) {
+    const electron = platform.getElectron();
+    const process: NodeJS.Process = platform.require('process');
+    os = process.platform;
+    // TODO: refactoring
+    // platform.args = electron.ipcRenderer.sendSync('getArgs') || {};
+}
+
+export default platform;

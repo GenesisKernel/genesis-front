@@ -15,9 +15,6 @@
 /public/settings.json
 config.json
 
-# build artifacts
-/src/app/styles/built
-
 # misc
 .DS_Store
 .env.local

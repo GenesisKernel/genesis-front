@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "components/*": ["src/app/components/*"],
+            "components": ["src/app/components"],
+            "containers/*": ["src/app/containers/*"],
+            "containers": ["src/app/containers"],
+            "images/*": ["src/app/images/*"],
+            "images": ["src/app/images"],
+            "lib/*": ["src/app/lib/*"],
+            "lib": ["src/app/lib"],
+            "modules/*": ["src/app/modules/*"],
+            "modules": ["src/app/modules"],
+            "services/*": ["src/app/services/*"],
+            "services": ["src/app/services"],
+            "styles/*": ["src/app/styles/*"],
+            "styles": ["src/app/styles"],
+            "store": ["src/app/store"],
+        }
+    }
+}

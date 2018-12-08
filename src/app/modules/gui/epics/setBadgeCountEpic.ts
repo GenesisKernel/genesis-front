@@ -29,7 +29,7 @@ import { empty } from 'rxjs';
 const setBadgeCountEpic: Epic = (action$, store) => action$.ofAction(setBadgeCount).pipe(
     flatMap(action => {
         platform.on('desktop', () => {
-            const Electron = require('electron');
+            const Electron = platform.getElectron();
             Electron.remote.app.setBadgeCount(action.payload);
         });
 

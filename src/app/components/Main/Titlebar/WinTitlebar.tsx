@@ -23,10 +23,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import imgControls from './wndControls.svg';
-import { remote } from 'electron';
 import { ITitlebarProps } from './';
 
 import SystemMenu from 'containers/Main/Titlebar/SystemMenu';
+import platform from 'lib/platform';
 
 const StyledControls = styled.div`
     position: absolute;
@@ -91,17 +91,19 @@ class WinTitlebar extends React.Component<ITitlebarProps, IWinTitlebarState> {
     constructor(props: {}) {
         super(props);
 
-        remote.getCurrentWindow().on('maximize', this._stateListener);
-        remote.getCurrentWindow().on('unmaximize', this._stateListener);
+        const wnd = platform.getElectron().remote.getCurrentWindow();
+        wnd.on('maximize', this._stateListener);
+        wnd.on('unmaximize', this._stateListener);
 
         this.state = {
-            maximized: remote.getCurrentWindow().isMaximized()
+            maximized: wnd.isMaximized()
         };
     }
 
     componentWillUnmount() {
-        remote.getCurrentWindow().removeListener('maximize', this._stateListener);
-        remote.getCurrentWindow().removeListener('unmaximize', this._stateListener);
+        const wnd = platform.getElectron().remote.getCurrentWindow();
+        wnd.removeListener('maximize', this._stateListener);
+        wnd.removeListener('unmaximize', this._stateListener);
     }
 
     onStateChange(e: { sender: { isMaximized: () => boolean } }) {
@@ -111,19 +113,23 @@ class WinTitlebar extends React.Component<ITitlebarProps, IWinTitlebarState> {
     }
 
     onClose() {
-        remote.getCurrentWindow().close();
+        const wnd = platform.getElectron().remote.getCurrentWindow();
+        wnd.close();
     }
 
     onMinimize() {
-        remote.getCurrentWindow().minimize();
+        const wnd = platform.getElectron().remote.getCurrentWindow();
+        wnd.minimize();
     }
 
     onMaximize() {
-        if (remote.getCurrentWindow().isMaximized()) {
-            remote.getCurrentWindow().unmaximize();
+        const wnd = platform.getElectron().remote.getCurrentWindow();
+
+        if (wnd.isMaximized()) {
+            wnd.unmaximize();
         }
         else {
-            remote.getCurrentWindow().maximize();
+            wnd.maximize();
         }
     }
 

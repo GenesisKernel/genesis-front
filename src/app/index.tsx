@@ -30,7 +30,7 @@ import store, { persistor, history } from 'store';
 import 'jspolyfill-array.prototype.find';
 import 'font-awesome/css/font-awesome.css';
 import 'simple-line-icons/css/simple-line-icons.css';
-import 'styles/built/sass.css';
+import 'styles/scss/sass.scss';
 import 'styles/index.css';
 
 import App from 'containers/App';

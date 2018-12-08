@@ -21,12 +21,13 @@
 // SOFTWARE.
 
 import React from 'react';
+import backDarkImg from 'images/backDark.png';
 
 import themed from 'components/Theme/themed';
 import SideButton from './SideButton';
 
 const StyledSidebar = themed.div`
-    background: url(/img/backDark.png);
+    background: url(${backDarkImg});
     background-attachment: fixed;
     width: ${props => props.theme.menuWidth}px;
     height: 100%;

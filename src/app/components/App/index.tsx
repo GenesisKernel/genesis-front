@@ -25,8 +25,9 @@ import { Route, Switch } from 'react-router-dom';
 import { FormattedMessage, IntlProvider } from 'react-intl';
 import platform from 'lib/platform';
 import classnames from 'classnames';
-import themed from 'components/Theme/themed';
+import backImg from 'images/back.png';
 
+import themed from 'components/Theme/themed';
 import Main from 'components/Main';
 import Auth from 'containers/Auth';
 import Splash from 'components/Splash';
@@ -47,7 +48,7 @@ interface IAppProps {
 }
 
 const ThemedApp = themed.div`
-    background: url(/img/back.png) 0 0;
+    background: url(${backImg}) 0 0;
 
     &.platform-windows {
         border: solid 1px ${props => props.theme.windowBorder};

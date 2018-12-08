@@ -25,18 +25,3 @@ declare module 'jsrsasign';
 declare module 'react-router-transition';
 declare module 'html2json';
 declare module 'react-places-autocomplete';
-
-declare module '*.svg' {
-    const content: string;
-    export default content;
-}
-
-declare module '*.png' {
-    const content: string;
-    export default content;
-}
-
-declare module '*.json' {
-    const content: any;
-    export default content;
-}

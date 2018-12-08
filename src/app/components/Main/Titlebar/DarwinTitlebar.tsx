@@ -23,8 +23,8 @@
 import React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
-import { remote } from 'electron';
 import imgControls from './wndControls.svg';
+import platform from 'lib/platform';
 import { ITitlebarProps } from './';
 
 import SystemMenu from 'containers/Main/Titlebar/SystemMenu';
@@ -105,22 +105,29 @@ class DarwinTitlebar extends React.Component<ITitlebarProps, ITitlebarState> {
 
     constructor(props: {}) {
         super(props);
+
+        const wnd = platform.getElectron().remote.getCurrentWindow();
+
         this.state = {
             isAltDown: false,
-            isFocused: remote.getCurrentWindow().isFocused()
+            isFocused: wnd.isFocused()
         };
     }
 
     componentDidMount() {
+        const wnd = platform.getElectron().remote.getCurrentWindow();
         window.addEventListener('keydown', this._keyListener);
         window.addEventListener('keyup', this._keyListener);
-        remote.getCurrentWindow().on('blur', this._focusListener);
-        remote.getCurrentWindow().on('focus', this._focusListener);
+        wnd.on('blur', this._focusListener);
+        wnd.on('focus', this._focusListener);
     }
 
     componentWillUnmount() {
+        const wnd = platform.getElectron().remote.getCurrentWindow();
         window.removeEventListener('keydown', this._keyListener);
         window.removeEventListener('keyup', this._keyListener);
+        wnd.removeListener('blur', this._focusListener);
+        wnd.removeListener('focus', this._focusListener);
     }
 
     onKeyEvent(e: KeyboardEvent) {
@@ -136,25 +143,30 @@ class DarwinTitlebar extends React.Component<ITitlebarProps, ITitlebarState> {
     }
 
     onClose() {
-        remote.getCurrentWindow().close();
+        const wnd = platform.getElectron().remote.getCurrentWindow();
+        wnd.close();
     }
 
     onMinimize() {
-        remote.getCurrentWindow().minimize();
+        const wnd = platform.getElectron().remote.getCurrentWindow();
+        wnd.minimize();
     }
 
     onFullscreen() {
-        remote.getCurrentWindow().setFullScreen(
-            !remote.getCurrentWindow().isFullScreen()
+        const wnd = platform.getElectron().remote.getCurrentWindow();
+        wnd.setFullScreen(
+            !wnd.isFullScreen()
         );
     }
 
     onZoom() {
-        if (remote.getCurrentWindow().isMaximized()) {
-            remote.getCurrentWindow().unmaximize();
+        const wnd = platform.getElectron().remote.getCurrentWindow();
+
+        if (wnd.isMaximized()) {
+            wnd.unmaximize();
         }
         else {
-            remote.getCurrentWindow().maximize();
+            wnd.maximize();
         }
     }
 
