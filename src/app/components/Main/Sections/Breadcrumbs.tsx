@@ -51,13 +51,19 @@ const Breadcrumbs: React.SFC<IBreadcrumbsProps> = (props) => (
     <StyledBreadcrumbs>
         {props.values.map((breadcrumb, i) => (
             <li key={i}>
-                <PageLink
-                    section={breadcrumb.section}
-                    page={breadcrumb.page}
-                    params={breadcrumb.params}
-                >
-                    {breadcrumb.page} &gt;
-                </PageLink>
+                {i === props.values.length - 1 ?
+                    (
+                        <span>{breadcrumb.page}</span>
+                    ) : (
+                        <PageLink
+                            section={breadcrumb.section}
+                            page={breadcrumb.page}
+                            params={breadcrumb.params}
+                        >
+                            {breadcrumb.page} &gt;
+                        </PageLink>
+                    )
+                }
             </li>
         ))}
     </StyledBreadcrumbs>
