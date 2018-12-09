@@ -28,7 +28,7 @@ import { TProtypoElement, ISource } from 'genesis/protypo';
 import { IValidationResult } from 'components/Validation/ValidatedForm';
 import Heading from 'components/Heading';
 import ToolButton, { IToolButtonProps } from 'containers/ToolButton/ToolButton';
-import { IMenu } from 'genesis/content';
+import { IMenu, TBreadcrumbType } from 'genesis/content';
 
 export interface IProtypoProps {
     apiHost: string;
@@ -76,6 +76,24 @@ class Protypo extends React.Component<IProtypoProps> {
             resolveSource: this._resolveSourceBind,
             renderElements: this._renderElementsBind
         };
+    }
+
+    getFromContext: () => { type: TBreadcrumbType, name: string } | undefined = () => {
+        if (this.props.page) {
+            return {
+                type: 'PAGE',
+                name: this.props.page
+            };
+        }
+        else if (this.props.menu) {
+            return {
+                type: 'MENU',
+                name: this.props.menu
+            };
+        }
+        else {
+            return undefined;
+        }
     }
 
     getCurrentPage() {

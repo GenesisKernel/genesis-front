@@ -99,7 +99,7 @@ const buttonInteractionEpic: Epic = (action$, store, { api, routerService }) => 
                     // TODO: refactoring
                     const redirectUrl = routerService.generateRoute(`/${action.payload.page.section}/${action.payload.page.name}`, action.payload.page.params);
                     return of<Action<any>>(
-                        push(redirectUrl)
+                        push(redirectUrl, { from: action.payload.from })
                     );
                 }
             }

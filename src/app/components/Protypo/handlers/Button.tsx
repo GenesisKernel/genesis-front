@@ -172,6 +172,7 @@ const Button: React.SFC<IButtonProps & InjectedIntlProps> = (props, context: IBu
                 name: tx.name,
                 params: tx.data
             }))}
+            from={context.protypo.getFromContext()}
             contract={props.contract}
             contractParams={getParams}
             page={props.page}

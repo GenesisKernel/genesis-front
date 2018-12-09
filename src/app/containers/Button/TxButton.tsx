@@ -28,6 +28,7 @@ import { IRootState } from 'modules';
 import { connect } from 'react-redux';
 import { buttonInteraction } from 'modules/content/actions';
 import { IErrorRedirect } from 'genesis/protypo';
+import { TBreadcrumbType } from 'genesis/content';
 
 import Button from 'components/Button';
 
@@ -35,6 +36,11 @@ export interface ITxButtonProps {
     disabled?: boolean;
     silent?: boolean;
     className?: string;
+
+    from?: {
+        type: TBreadcrumbType;
+        name: string;
+    };
 
     // Called first
     confirm?: {
@@ -61,13 +67,13 @@ export interface ITxButtonProps {
     page?: string;
     section: string;
     pageParams?: () => ({ [key: string]: any } | undefined);
-    
+
     // Page must be rendered within a modal dialog
     popup?: {
         title?: string;
         width?: number;
     };
-    
+
     errorRedirects?: { [key: string]: IErrorRedirect } | (() => { [key: string]: IErrorRedirect });
 }
 
@@ -119,6 +125,7 @@ class TxButton extends React.Component<ITxButtonProps & ITxButtonState & ITxButt
             confirm: this.props.confirm,
             popup: this.props.popup,
             contracts: contracts,
+            from: this.props.from,
             page: this.props.page ? {
                 name: this.props.page,
                 section: this.props.section,

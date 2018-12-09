@@ -21,6 +21,8 @@
 // SOFTWARE.
 
 declare module 'genesis/protypo' {
+    import { TBreadcrumbType } from 'genesis/content';
+
     type TProtypoElement = {
         readonly tag: string;
         readonly id?: string;
@@ -71,6 +73,10 @@ declare module 'genesis/protypo' {
     interface IButtonInteraction {
         uuid: string;
         silent?: boolean;
+        from?: {
+            name: string;
+            type: TBreadcrumbType;
+        };
         confirm?: IButtonConfirm;
         contracts: {
             name: string;
