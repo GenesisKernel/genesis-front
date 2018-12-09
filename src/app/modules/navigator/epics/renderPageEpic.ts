@@ -23,7 +23,7 @@
 import { Action } from 'redux';
 import { Epic } from 'modules';
 import { renderPage, menuPush } from '../actions';
-import { flatMap } from 'rxjs/operators';
+import { flatMap, switchMap } from 'rxjs/operators';
 import { from, of } from 'rxjs';
 
 /*import NodeObservable from 'modules/engine/util/NodeObservable';
@@ -35,7 +35,7 @@ const invalidationError = {
 
 // TODO: refactoring
 const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(renderPage.started).pipe(
-    flatMap(action => {
+    switchMap(action => {
         const client = api(store.value.auth.session);
 
         return from(client.content({

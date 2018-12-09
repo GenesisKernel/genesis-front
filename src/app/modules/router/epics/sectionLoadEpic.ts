@@ -24,14 +24,14 @@ import { Epic, ofAction } from 'modules';
 import { locationChange } from '../actions';
 import { renderPage } from 'modules/navigator/actions';
 import { of, empty } from 'rxjs';
-import { filter, delayWhen, switchMap } from 'rxjs/operators';
+import { filter, delayWhen, flatMap } from 'rxjs/operators';
 
 const sectionLoadEpic: Epic = (action$, store, { routerService }) => action$.pipe(
     delayWhen(() => store.pipe(
         filter(l => l.auth.isAcquired)
     )),
     ofAction(locationChange),
-    switchMap(action => {
+    flatMap(action => {
         const match = routerService.matchRoute('(/)(:section)(/)(:page)(/)', action.payload.location.pathname + action.payload.location.search);
 
         if (store.value.auth.isAuthenticated && match) {
