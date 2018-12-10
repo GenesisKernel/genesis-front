@@ -45,6 +45,7 @@ import * as io from './io';
 import * as notifications from './notifications';
 import * as storage from './storage';
 import * as socket from './socket';
+import * as forms from './forms';
 import * as router from './router';
 
 export type Epic = NativeEpic<ReduxAction<any>, ReduxAction<any>, IRootState, IStoreDependencies>;
@@ -67,6 +68,7 @@ export interface IRootState {
     storage: storage.State;
     socket: socket.State;
     loadingBar: any;
+    forms: forms.State;
     router: router.State;
 }
 interface IActionsObservable {
@@ -127,5 +129,6 @@ export default (history: History) => combineReducers({
     notifications: notifications.reducer,
     socket: socket.reducer,
     loadingBar: loadingBarReducer,
+    forms: forms.reducer,
     router: connectRouter(history) as any
 });
