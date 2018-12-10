@@ -26,7 +26,7 @@ import { flatMap } from 'rxjs/operators';
 import { of, empty } from 'rxjs';
 
 const destroyNotificationEpic: Epic = (action$, store) => action$.ofAction(destroyNotification).pipe(
-    flatMap(action => {
+    flatMap(() => {
         if (store.value.notifications.queue.length) {
             const queuedNotification = store.value.notifications.queue[0];
             return of(spawnNotification(queuedNotification));

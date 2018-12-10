@@ -24,7 +24,7 @@ import { State } from '../reducer';
 import { acquireSession } from '../actions';
 import { Reducer } from 'modules';
 
-const acquireSessionHandler: Reducer<typeof acquireSession.started, State> = (state, payload): State => ({
+const acquireSessionHandler: Reducer<typeof acquireSession.started, State> = (state): State => ({
     ...state,
     isAcquired: false
 });

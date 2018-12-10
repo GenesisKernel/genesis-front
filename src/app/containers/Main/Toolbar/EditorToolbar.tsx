@@ -75,7 +75,8 @@ class EditorToolbarContainer extends React.Component<IEditorToolbarProps & Injec
         this.props.onExec(this.props.currentTab.name);
     }
 
-    componentWillReceiveProps(props: IEditorToolbarProps & IEditorToolbarState & IEditorToolbarDispatch) {
+    // componentWillReceiveProps(props: IEditorToolbarProps & IEditorToolbarState & IEditorToolbarDispatch) {
+    componentWillReceiveProps() {
         // TODO: refactoring
         /*if ('number' === typeof this._pendingRevert && props.modalResult) {
             if ('RESULT' === props.modalResult.reason) {

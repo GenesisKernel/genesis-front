@@ -67,7 +67,7 @@ class InteractionManager {
         }
     }
 
-    getConditionFor(id: string, reaction: TReaction, condition: ICondition) {
+    getConditionFor(condition: ICondition) {
         for (let input in condition) {
             if (condition.hasOwnProperty(input)) {
                 if (this._inputValues[input] !== condition[input]) {
@@ -85,7 +85,7 @@ class InteractionManager {
 
             for (let i = 0; i < conditions.length; i++) {
                 const condition = conditions[i];
-                if (this.getConditionFor(id, reaction, condition)) {
+                if (this.getConditionFor(condition)) {
                     return true;
                 }
             }
@@ -94,7 +94,7 @@ class InteractionManager {
         return false;
     }
 
-    getConditionMap<A>(): { [id: string]: TConditionMap } {
+    getConditionMap(): { [id: string]: TConditionMap } {
         const result: { [id: string]: TConditionMap } = {};
 
         Object.keys(this._listeners).forEach(id => {

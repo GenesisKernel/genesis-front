@@ -46,7 +46,7 @@ const acquireSessionEpic: Epic = (action$, store, { api }) => action$.ofAction(a
             ),
             from(client.getParam({ name: 'stylesheet' })).pipe(
                 map(result => result.value),
-                catchError(e => of(''))
+                catchError(() => of(''))
             )
         ).pipe(
             flatMap(([sections, stylesheet]) => {
@@ -84,7 +84,7 @@ const acquireSessionEpic: Epic = (action$, store, { api }) => action$.ofAction(a
                     })
                 );
             }),
-            catchError(e => of(acquireSession.done({
+            catchError(() => of(acquireSession.done({
                 params: action.payload,
                 result: false
             })))

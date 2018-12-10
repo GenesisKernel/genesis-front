@@ -58,7 +58,7 @@ class Create extends React.Component<ICreateProps & InjectedIntlProps, ICreateSt
         };
     }
 
-    componentWillReceiveProps(props: ICreateProps) {
+    componentWillReceiveProps() {
         if (this._inputFile) {
             this._inputFile.setAttribute('value', '');
         }

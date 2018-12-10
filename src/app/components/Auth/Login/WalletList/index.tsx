@@ -53,7 +53,7 @@ const WalletList: React.SFC<IWalletListProps> = props => (
             </Heading>
             <div className="form-horizontal desktop-flex-col desktop-flex-stretch" style={{ padding: 10 }}>
                 <div className="text-center desktop-flex-stretch">
-                    {props.wallets.map((wallet, index) =>
+                    {props.wallets.map(wallet =>
                         <WalletButton
                             key={wallet.id}
                             wallet={wallet}

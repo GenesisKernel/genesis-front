@@ -260,9 +260,9 @@ class Table extends React.Component<ITableProps, ITableState> {
                     </tr>
                 </StyledHead>
                 <StyledBody className={this.props.collapse ? 'tbody-collapse' : ''}>
-                    {this.getSortedData().map((row, rowIndex) => (
+                    {this.getSortedData().map((_row, rowIndex) => (
                         <tr key={rowIndex}>
-                            {this.props.columns.map((col, colIndex) => (
+                            {this.props.columns.map((_col, colIndex) => (
                                 <td key={colIndex}>
                                     {this.renderCell(rowIndex, colIndex)}
                                 </td>

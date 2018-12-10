@@ -33,7 +33,7 @@ const connections: { [name: string]: string } = {
     '@1EditMenu': 'menu'
 };
 
-const editEntityEpic: Epic = (action$, store) => action$.ofAction(txExec.done).pipe(
+const editEntityEpic: Epic = (action$) => action$.ofAction(txExec.done).pipe(
     flatMap(action => from(action.payload.params.contracts).pipe(
         filter(l => l.name in connections),
         flatMap(contract => from(contract.params).pipe(

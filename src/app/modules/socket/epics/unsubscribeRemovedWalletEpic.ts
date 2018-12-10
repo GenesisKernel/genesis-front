@@ -25,7 +25,7 @@ import { unsubscribe } from '../actions';
 import { removeWallet } from 'modules/storage/actions';
 import { map } from 'rxjs/operators';
 
-const unsubscribeRemovedWalletEpic: Epic = (action$, store) => action$.ofAction(removeWallet).pipe(
+const unsubscribeRemovedWalletEpic: Epic = (action$) => action$.ofAction(removeWallet).pipe(
     map(action => unsubscribe.started(action.payload))
 );
 

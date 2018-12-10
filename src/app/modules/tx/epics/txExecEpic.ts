@@ -115,7 +115,7 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                 });
 
                 return from(client.txSend(request)).pipe(
-                    flatMap(sendResponse => defer(() =>
+                    flatMap(() => defer(() =>
                         client.txStatus(contracts.map(l => l.hash))
                     ).pipe(
                         map(status => {

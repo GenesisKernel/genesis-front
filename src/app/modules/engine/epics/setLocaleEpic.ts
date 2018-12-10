@@ -34,7 +34,7 @@ import { ajax } from 'rxjs/ajax';
 
 const defaultLocale = 'en-US';
 
-const setLocaleEpic: Epic = (action$, store) => action$.ofAction(setLocale.started).pipe(
+const setLocaleEpic: Epic = (action$) => action$.ofAction(setLocale.started).pipe(
     delay(0),
     flatMap(action => {
         if (!action.payload || 'en-US' === action.payload) {
@@ -58,7 +58,7 @@ const setLocaleEpic: Epic = (action$, store) => action$.ofAction(setLocale.start
                         addLocaleData({
                             locale: action.payload,
                             fields: result.response,
-                            pluralRuleFunction: (n: number, ord: boolean) => n.toString()
+                            pluralRuleFunction: (n: number) => n.toString()
                         });
                         return of<Action>(
                             saveLocale(action.payload),
@@ -72,7 +72,7 @@ const setLocaleEpic: Epic = (action$, store) => action$.ofAction(setLocale.start
                         throw 'E_FAILED';
                     }
                 }),
-                catchError(e => of<Action>(
+                catchError(() => of<Action>(
                     saveLocale(defaultLocale),
                     setLocale.done({
                         params: defaultLocale,

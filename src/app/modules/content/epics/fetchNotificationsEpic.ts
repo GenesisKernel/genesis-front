@@ -40,7 +40,7 @@ const fetchNotificationsEpic: Epic = (action$, store, { api }) => action$.ofActi
                 params: action.payload,
                 result: payload.tree
             })),
-            catchError(e => of(fetchNotifications.failed({
+            catchError(() => of(fetchNotifications.failed({
                 params: action.payload,
                 error: undefined
             })))

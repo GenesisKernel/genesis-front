@@ -50,7 +50,7 @@ export interface ISidebarProps {
     onCollapseToggle: () => void;
 }
 
-const Sidebar: React.SFC<ISidebarProps> = props => (
+const Sidebar: React.SFC<ISidebarProps> = () => (
     <StyledSidebar>
         <SideButton>
             <em className="icon-menu" />

@@ -49,7 +49,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
             requestUrl
 
         ).pipe(
-            catchError(e => of<IWebSettings>({})),
+            catchError(() => of<IWebSettings>({})),
             map(result => {
                 if (!result) {
                     result = {};
@@ -104,7 +104,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                                                     () => !!config.socketUrl,
                                                     of(config.socketUrl),
                                                     from(securedClient.getConfig({ name: 'centrifugo' })).pipe(
-                                                        catchError(e => of(''))
+                                                        catchError(() => of(''))
                                                     )
                                                 ),
                                                 iif(
@@ -115,7 +115,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                                                             const value = paramsResult.list.find(p => p.name === 'full_nodes')!.value;
                                                             return JSON.parse(value).map((paramValue: any) => paramValue.api_address) as string[];
                                                         }),
-                                                        catchError(e => of([] as string[]))
+                                                        catchError(() => of([] as string[]))
                                                     )
                                                 )
                                             ).pipe(

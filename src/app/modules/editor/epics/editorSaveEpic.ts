@@ -33,7 +33,7 @@ const connections: { [name: string]: string } = {
     block: '@1EditBlock'
 };
 
-const editorSaveEpic: Epic = (action$, store) => action$.ofAction(editorSave).pipe(
+const editorSaveEpic: Epic = (action$) => action$.ofAction(editorSave).pipe(
     filter(l => !l.payload.new && l.payload.type in connections),
     map(action => txCall({
         uuid: uuid.v4(),

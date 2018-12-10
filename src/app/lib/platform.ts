@@ -81,7 +81,6 @@ const platform: IPlatformModule = {
 };
 
 if (isElectron) {
-    const electron = platform.getElectron();
     const process: NodeJS.Process = platform.require('process');
     os = process.platform;
     // TODO: refactoring

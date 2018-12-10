@@ -26,9 +26,9 @@ import { editorSave } from '../actions';
 import { flatMap, filter } from 'rxjs/operators';
 
 // TODO: refactoring
-const newBlockEpic: Epic = (action$, store, { api }) => action$.ofAction(editorSave).pipe(
+const newBlockEpic: Epic = (action$) => action$.ofAction(editorSave).pipe(
     filter(l => l.payload.new && 'block' === l.payload.type),
-    flatMap(action => {
+    flatMap(() => {
         return empty();
         /*const id = uuid.v4();
         const client = api(store.value.auth.session);

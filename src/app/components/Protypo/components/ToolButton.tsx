@@ -23,8 +23,6 @@
 import React from 'react';
 import propTypes from 'prop-types';
 
-import Protypo from '../Protypo';
-
 export interface IToolButtonProps {
     title?: string;
     icon?: string;
@@ -35,11 +33,7 @@ export interface IToolButtonProps {
     onClick: (e: any) => void;
 }
 
-interface IToolButtonContext {
-    protypo: Protypo;
-}
-
-const ToolButton: React.SFC<IToolButtonProps> = (props, context: IToolButtonContext) => {
+const ToolButton: React.SFC<IToolButtonProps> = (props) => {
     return (
         <a href="#" className="ml btn-tool" onClick={props.onClick}>
             <em className={`icon ${props.icon}`} />

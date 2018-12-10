@@ -24,7 +24,7 @@ import { State } from '../reducer';
 import { disconnect } from '../actions';
 import { Reducer } from 'modules';
 
-const disconnectDone: Reducer<typeof disconnect.done, State> = (state, payload) => ({
+const disconnectDone: Reducer<typeof disconnect.done, State> = (state) => ({
     ...state,
     socket: undefined,
     session: '',

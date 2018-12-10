@@ -64,7 +64,7 @@ const createEditorTabEpic: Epic = (action$, store) => action$.ofAction(createEdi
             });
         }
     }),
-    flatMap(action => empty())
+    flatMap(() => empty())
     // TODO: refactoring
     // flatMap(action => {
     //     const editor = store.value.sections.sections.editor;

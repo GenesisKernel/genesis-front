@@ -29,7 +29,7 @@ import { flatMap, take, filter, catchError } from 'rxjs/operators';
 import { merge, of, empty } from 'rxjs';
 import { push } from 'connected-react-router';
 
-const buttonInteractionEpic: Epic = (action$, store, { api, routerService }) => action$.ofAction(buttonInteraction).pipe(
+const buttonInteractionEpic: Epic = (action$, _store, { routerService }) => action$.ofAction(buttonInteraction).pipe(
     // Show confirmation window if there is any
     flatMap(action => {
         if (action.payload.confirm) {
@@ -40,7 +40,7 @@ const buttonInteractionEpic: Epic = (action$, store, { api, routerService }) => 
                 })),
                 action$.ofAction(modalClose).pipe(
                     take(1),
-                    flatMap(modalPayload => {
+                    flatMap(_modalPayload => {
                         // TODO: refactoring
                         return of(action);
                     })
@@ -111,7 +111,7 @@ const buttonInteractionEpic: Epic = (action$, store, { api, routerService }) => 
             return of<Action<any>>(action);
         }
     }),
-    catchError(e => empty())
+    catchError(() => empty())
 );
 
 export default buttonInteractionEpic;

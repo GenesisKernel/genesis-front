@@ -96,7 +96,7 @@ const RadioGroup: React.SFC<IRadioGroupProps> = (props, context: IRadioGroupCont
             name={props.name || ''}
             validators={compiledValidators}
             defaultChecked={(props.value || (options && options.length && options[0].value)).toString()}
-            values={options.map((l, index) => ({
+            values={options.map(l => ({
                 value: l.value,
                 title: l.name
             }))}

@@ -26,8 +26,8 @@ import { flatMap } from 'rxjs/operators';
 import { empty } from 'rxjs';
 
 // TODO: refactoring
-const reloadPageEpic: Epic = (action$, store, { api }) => action$.ofAction(reloadPage.started).pipe(
-    flatMap(action => empty())
+const reloadPageEpic: Epic = (action$) => action$.ofAction(reloadPage.started).pipe(
+    flatMap(() => empty())
 );
 
 /*const state = store.getState();

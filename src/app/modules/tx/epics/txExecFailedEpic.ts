@@ -25,7 +25,7 @@ import { txExec } from '../actions';
 import { modalShow } from 'modules/modal/actions';
 import { map, filter } from 'rxjs/operators';
 
-export const txExecFailedEpic: Epic = (action$, store) => action$.ofAction(txExec.failed).pipe(
+export const txExecFailedEpic: Epic = (action$) => action$.ofAction(txExec.failed).pipe(
     filter(l => !l.payload.params.silent),
     map(action => {
         // TODO: refactoring

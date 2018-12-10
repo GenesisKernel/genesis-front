@@ -189,7 +189,7 @@ class DropdownButton extends React.Component<IDropdownButtonProps & InjectedOnCl
         };
     }
 
-    handleClickOutside(event: React.MouseEvent<HTMLElement>) {
+    handleClickOutside() {
         this.onCollapseToggle(false);
     }
 

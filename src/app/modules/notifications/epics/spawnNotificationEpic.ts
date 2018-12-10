@@ -24,7 +24,7 @@ import { Epic } from 'modules';
 import { spawnNotification, destroyNotification } from '../actions';
 import { map, delay } from 'rxjs/operators';
 
-const spawnNotificationEpic: Epic = (action$, store) => action$.ofAction(spawnNotification).pipe(
+const spawnNotificationEpic: Epic = (action$) => action$.ofAction(spawnNotification).pipe(
     delay(5000),
     map(action =>
         destroyNotification(action.payload.id)

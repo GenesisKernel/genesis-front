@@ -30,7 +30,7 @@ export default connect(null, {
     removeWallet,
     modalClose
 
-}, (state, dispatch, props: IRemoveWalletModalProps) => ({
+}, (_state, dispatch, props: IRemoveWalletModalProps) => ({
     ...props,
     onConfirm: () => {
         dispatch.removeWallet(props.params.wallet.id);

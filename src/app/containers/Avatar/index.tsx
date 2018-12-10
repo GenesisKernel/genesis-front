@@ -32,12 +32,12 @@ export interface IAvatarContainerProps {
     size?: number;
 }
 
-const mapStateToProps = (state: IRootState, props: IAvatarContainerProps) => ({
+const mapStateToProps = (state: IRootState, _props: IAvatarContainerProps) => ({
     nodeHost: state.engine.nodeHost
 });
 
 // TODO: refactoring
-export default connect(mapStateToProps, null, (state, dispatch, props) => ({
+export default connect(mapStateToProps, null, (state, _dispatch, props) => ({
     ...props,
     url: `${state.nodeHost}/api/v2/avatar/${props.ecosystem}/${props.keyID}`
 

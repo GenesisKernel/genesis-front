@@ -59,7 +59,7 @@ class DebugContractModal extends React.Component<IModalProps<IDebugContractModal
         return payload;
     }
 
-    renderParameter: ICellRenderer = (value, rowData) => {
+    renderParameter: ICellRenderer = (_value, rowData) => {
         const field = rowData.rowData[0] as {
             name: string;
             type: TContractFieldType;
@@ -130,7 +130,7 @@ class DebugContractModal extends React.Component<IModalProps<IDebugContractModal
                                     { title: 'Key', width: 140 },
                                     { title: 'Value' },
                                 ]}
-                                data={this.props.params.fields.map((param, index) => [param])}
+                                data={this.props.params.fields.map(param => [param])}
                             />
                         </Col>
                         <Col md={6} style={{ width: 400 }}>

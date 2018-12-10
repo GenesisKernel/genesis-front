@@ -63,7 +63,7 @@ class Import extends React.Component<IImportProps & InjectedIntlProps, IImportSt
         }
     }
 
-    onSubmit = (values: { [key: string]: any }) => {
+    onSubmit = () => {
         this.props.onConfirm({
             backup: this.state.backup,
             password: this.state.password

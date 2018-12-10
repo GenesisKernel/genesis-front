@@ -55,7 +55,7 @@ class Offline extends React.Component<IOfflineProps, IOfflineState> {
         clearInterval(this._interval);
     }
 
-    componentWillReceiveProps(props: IOfflineProps) {
+    componentWillReceiveProps() {
         this.resetTimer();
     }
 

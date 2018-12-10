@@ -28,7 +28,7 @@ import Centrifuge from 'centrifuge';
 import SockJS from 'sockjs-client';
 import { flatMap, takeUntil } from 'rxjs/operators';
 
-const connectEpic: Epic = (action$, store) => action$.ofAction(connect.started).pipe(
+const connectEpic: Epic = (action$) => action$.ofAction(connect.started).pipe(
     flatMap(action => {
         if (action.payload.wsHost && action.payload.userID && action.payload.timestamp && action.payload.socketToken) {
             return new Observable<Action>(observer => {
@@ -42,7 +42,7 @@ const connectEpic: Epic = (action$, store) => action$.ofAction(connect.started).
                     sockJS: SockJS
                 });
 
-                centrifuge.on('connect', context => {
+                centrifuge.on('connect', () => {
                     observer.next(connect.done({
                         params: action.payload,
                         result: {
@@ -52,7 +52,7 @@ const connectEpic: Epic = (action$, store) => action$.ofAction(connect.started).
                     }));
                 });
 
-                centrifuge.on('disconnect', context => {
+                centrifuge.on('disconnect', () => {
                     observer.next(setConnected(false));
                 });
 

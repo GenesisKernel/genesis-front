@@ -27,6 +27,7 @@ import Sidebar from 'containers/Sidebar';
 import Sections from 'containers/Main/Sections';
 import NotFound from 'components/NotFound';
 import themed from 'components/Theme/themed';
+import Desktop from 'containers/Main/Desktop';
 
 export interface IMainProps {
     stylesheet: string;
@@ -50,6 +51,7 @@ const Main: React.SFC<IMainProps> = props => (
             <div className="switch-wrapper">
                 <Switch>
                     <Route exact path="/:section/:page?" render={route => <Sections section={route.match.params.section} page={route.match.params.page} />} />
+                    <Route exact path="/" render={() => <Desktop />} />
                     <Route path="*" render={() => <NotFound main />} />
                 </Switch>
             </div>

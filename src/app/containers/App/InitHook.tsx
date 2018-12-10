@@ -22,7 +22,6 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { IRootState } from 'modules';
 import { initialize } from 'modules/engine/actions';
 
 export interface IInitHookProps {
@@ -40,7 +39,7 @@ class InitHook extends React.Component<IInitHookProps> {
     }
 }
 
-const mapStateToProps = (state: IRootState) => ({
+const mapStateToProps = () => ({
 
 });
 

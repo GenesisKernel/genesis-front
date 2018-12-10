@@ -26,7 +26,7 @@ import { readTextFile } from 'lib/fs';
 import { switchMap, map, catchError } from 'rxjs/operators';
 import { from, of } from 'rxjs';
 
-const importSeedEpic: Epic = (action$, store) => action$.ofAction(importSeed.started).pipe(
+const importSeedEpic: Epic = (action$) => action$.ofAction(importSeed.started).pipe(
     switchMap(action =>
         from(readTextFile(action.payload)).pipe(
             map(payload => importSeed.done({

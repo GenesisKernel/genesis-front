@@ -39,7 +39,7 @@ export const sendAttachment = (filename: string, data: string) => {
 export const readTextFile = (file: Blob) => {
     return new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = () => {
             const loadedFile = reader.result as string;
             loadedFile ? resolve(loadedFile) : reject();
         };
@@ -50,7 +50,7 @@ export const readTextFile = (file: Blob) => {
 export const readBinaryFile = (file: Blob) => {
     return new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = () => {
             const loadedFile = reader.result as string;
             loadedFile ? resolve(loadedFile) : reject();
         };

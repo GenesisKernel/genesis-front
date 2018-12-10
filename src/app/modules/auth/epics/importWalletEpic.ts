@@ -29,7 +29,7 @@ import keyring from 'lib/keyring';
 import { flatMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
-const importWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(importWallet.started).pipe(
+const importWalletEpic: Epic = (action$) => action$.ofAction(importWallet.started).pipe(
     flatMap(action => {
         if (!action.payload.backup || action.payload.backup.length !== keyring.KEY_LENGTH) {
             return of(importWallet.failed({

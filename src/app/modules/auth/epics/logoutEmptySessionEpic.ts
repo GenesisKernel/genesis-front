@@ -44,7 +44,7 @@ const logoutEmptySessionEpic: Epic = (action$, store) => action$.pipe(
         }
 
     }),
-    map(action => logout())
+    map(() => logout())
 );
 
 export default logoutEmptySessionEpic;

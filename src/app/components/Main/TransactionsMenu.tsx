@@ -28,7 +28,7 @@ export interface ITransactionsMenuProps {
 
 }
 
-const TransactionsMenu: React.SFC<ITransactionsMenuProps> = props => (
+const TransactionsMenu: React.SFC<ITransactionsMenuProps> = () => (
     <DropdownButton
         align="right"
         width={300}

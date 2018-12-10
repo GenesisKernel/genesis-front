@@ -29,7 +29,7 @@ const TxBatchNotification: INotificationProto<void> = {
     title: (
         <FormattedMessage id="tx.error.info" defaultMessage="Information" />
     ),
-    body: params => (
+    body: () => (
         <FormattedMessage id="notification.tx_batch" defaultMessage="Batch processing completed" />
     )
 };

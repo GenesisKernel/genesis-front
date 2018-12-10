@@ -49,7 +49,7 @@ const StyledFooter = themed.div`
     border-top: solid 1px #d0dff3;
 `;
 
-export default abstract class Modal<P, R, S = {}> extends React.Component<IModalProps<P>, S> {
+export default abstract class Modal<P, S = {}> extends React.Component<IModalProps<P>, S> {
     public static Header = StyledHeader;
     public static Body = StyledBody;
     public static Footer = StyledFooter;

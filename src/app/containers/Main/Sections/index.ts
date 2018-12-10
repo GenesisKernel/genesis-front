@@ -22,14 +22,10 @@
 
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
+
 import Sections from 'components/Main/Sections';
 
-export interface ISectionsProps {
-    section: string;
-    page: string;
-}
-
-const mapStateToProps = (state: IRootState, props: ISectionsProps) => ({
+const mapStateToProps = (state: IRootState) => ({
     values: state.navigator.sections,
     navigationSize: state.storage.navigationSize
 });

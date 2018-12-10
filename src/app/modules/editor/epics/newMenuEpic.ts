@@ -26,9 +26,9 @@ import { editorSave } from '../actions';
 import { flatMap, filter } from 'rxjs/operators';
 
 // TODO: refactoring
-const newMenuEpic: Epic = (action$, store, { api }) => action$.ofAction(editorSave).pipe(
+const newMenuEpic: Epic = (action$) => action$.ofAction(editorSave).pipe(
     filter(l => l.payload.new && 'menu' === l.payload.type),
-    flatMap(action => {
+    flatMap(() => {
         return empty();
         /*const id = uuid.v4();
         const client = api(store.value.auth.session);

@@ -25,7 +25,7 @@ import { closeEditorTab } from '../actions';
 import { flatMap } from 'rxjs/operators';
 import { empty } from 'rxjs';
 
-const closeEditorTabEpic: Epic = (action$, store) => action$.ofAction(closeEditorTab).pipe(
+const closeEditorTabEpic: Epic = (action$) => action$.ofAction(closeEditorTab).pipe(
     flatMap(() => empty())
     // TODO: refactoring
     /*map(action => updateSection({

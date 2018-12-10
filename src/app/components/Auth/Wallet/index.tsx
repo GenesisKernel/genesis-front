@@ -27,7 +27,7 @@ import ActionSelector from 'containers/Auth/Wallet/ActionSelector';
 import Create from 'containers/Auth/Wallet/Create';
 import Import from 'containers/Auth/Wallet/Import';
 
-const Wallet: React.SFC = (props) => (
+const Wallet: React.SFC = () => (
     <Switch>
         <Route path="/wallet/create" component={Create} />
         <Route path="/wallet/import" component={Import} />

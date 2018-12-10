@@ -46,7 +46,7 @@ const modalPageEpic: Epic = (action$, store, { api }) => action$.ofAction(modalP
                 }
 
             })),
-            catchError(e => empty())
+            catchError(() => empty())
         );
     })
 );

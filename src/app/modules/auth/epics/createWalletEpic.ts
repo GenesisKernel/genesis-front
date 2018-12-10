@@ -28,7 +28,7 @@ import keyring from 'lib/keyring';
 import { of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
-const createWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(createWallet.started).pipe(
+const createWalletEpic: Epic = (action$) => action$.ofAction(createWallet.started).pipe(
     flatMap(action => {
         const keys = keyring.generateKeyPair(action.payload.seed);
         const publicKey = keyring.generatePublicKey(keys.private);

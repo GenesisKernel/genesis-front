@@ -63,7 +63,8 @@ class ValidatedMapContainer extends React.Component<IValidatedMapContainerProps 
         });
     }
 
-    componentWillReceiveProps(props: IValidatedMapContainerProps & IValidatedMapContainerState & IValidatedMapContainerDispatch) {
+    // componentWillReceiveProps(props: IValidatedMapContainerProps & IValidatedMapContainerState & IValidatedMapContainerDispatch) {
+    componentWillReceiveProps() {
         // TODO: refactoring
         /*const result = props.modal && this._id === props.modal.id && props.modal.result;
         if (result && 'RESULT' === result.reason) {

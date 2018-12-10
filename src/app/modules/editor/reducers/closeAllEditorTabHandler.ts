@@ -24,7 +24,7 @@ import { State } from '../reducer';
 import { closeAllEditorTab } from '../actions';
 import { Reducer } from 'modules';
 
-const closeEditorTabHandler: Reducer<typeof closeAllEditorTab, State> = (state, payload) => ({
+const closeEditorTabHandler: Reducer<typeof closeAllEditorTab, State> = (state) => ({
     ...state,
     tabIndex: -1,
     tabs: []

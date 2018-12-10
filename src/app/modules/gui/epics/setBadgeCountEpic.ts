@@ -26,7 +26,7 @@ import platform from 'lib/platform';
 import { flatMap } from 'rxjs/operators';
 import { empty } from 'rxjs';
 
-const setBadgeCountEpic: Epic = (action$, store) => action$.ofAction(setBadgeCount).pipe(
+const setBadgeCountEpic: Epic = (action$) => action$.ofAction(setBadgeCount).pipe(
     flatMap(action => {
         platform.on('desktop', () => {
             const Electron = platform.getElectron();

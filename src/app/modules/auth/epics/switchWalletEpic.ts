@@ -25,7 +25,7 @@ import { switchWallet, selectWallet, logout } from '../actions';
 import { flatMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
-const switchWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(switchWallet).pipe(
+const switchWalletEpic: Epic = (action$, store) => action$.ofAction(switchWallet).pipe(
     flatMap(action => {
         const wallet = store.value.storage.wallets.find(l => l.id === store.value.auth.session.wallet!.id)!;
         const walletData = store.value.auth.wallets.find(l => l.id === store.value.auth.session.wallet!.id)!;

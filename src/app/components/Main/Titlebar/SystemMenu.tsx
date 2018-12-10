@@ -123,7 +123,7 @@ const SystemMenu: React.SFC<ISystemMenuProps> = props => {
     ];
     return (
         <div className="no-drag">
-            {(props.align === 'left' ? elements : elements.reverse()).map((e, i) => (
+            {(props.align === 'left' ? elements : elements.reverse()).map((e) => (
                 e
             ))}
         </div>

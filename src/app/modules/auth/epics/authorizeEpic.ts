@@ -25,8 +25,8 @@ import { authorize, deauthorize } from '../actions';
 import { switchMap, map, takeUntil } from 'rxjs/operators';
 import { timer } from 'rxjs';
 
-const authorizeEpic: Epic = (action$, store) => action$.ofAction(authorize).pipe(
-    switchMap(action =>
+const authorizeEpic: Epic = (action$) => action$.ofAction(authorize).pipe(
+    switchMap(() =>
         timer(60000 * 60).pipe(
             map(() =>
                 deauthorize()

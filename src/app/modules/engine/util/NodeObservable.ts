@@ -32,7 +32,7 @@ const NodeObservable = (params: { nodes: string[], count: number, timeout?: numb
             return from(client.getUid()).pipe(
                 map(() => apiHost),
                 timeout(params.timeout || 60000),
-                catchError(error => empty())
+                catchError(() => empty())
             );
         }, params.concurrency),
         take(params.count)

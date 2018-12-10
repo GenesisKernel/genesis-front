@@ -33,7 +33,7 @@ const mapStateToProps = (state: IRootState) => ({
 export default connect(mapStateToProps, {
     modalShow
 
-}, (state, dispatch, props) => ({
+}, (state, dispatch) => ({
     onAbout: () => dispatch.modalShow({
         type: 'ABOUT',
         params: {}

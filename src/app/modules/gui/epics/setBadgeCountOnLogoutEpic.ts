@@ -25,8 +25,8 @@ import { setBadgeCount } from '../actions';
 import { login } from 'modules/auth/actions';
 import { map } from 'rxjs/operators';
 
-const setBadgeCountOnLogoutEpic: Epic = (action$, store) => action$.ofAction(login.done).pipe(
-    map(action => setBadgeCount(0))
+const setBadgeCountOnLogoutEpic: Epic = (action$) => action$.ofAction(login.done).pipe(
+    map(() => setBadgeCount(0))
 );
 
 export default setBadgeCountOnLogoutEpic;

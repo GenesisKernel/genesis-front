@@ -37,7 +37,7 @@ const debugContractEpic: Epic = (action$, store, { api }) => action$.ofAction(de
                     fields: contract.fields
                 }
             })),
-            catchError(e => empty())
+            catchError(() => empty())
         );
     })
 );

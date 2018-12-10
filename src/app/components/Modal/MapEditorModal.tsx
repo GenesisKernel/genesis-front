@@ -124,14 +124,14 @@ class MapEditorModal extends React.Component<IModalProps<IMapEditorModalProps>, 
         });
     }
 
-    onSuccess(values: { [key: string]: any }) {
+    onSuccess() {
         this.setState({
             pending: true
         });
 
         const points = this.state.points.toArray();
 
-        this.calcResult(points, result => {
+        this.calcResult(points, () => {
             if (this._isMounted) {
                 // TODO: refactoring
                 // this.props.onClose({

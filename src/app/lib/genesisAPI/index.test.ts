@@ -76,7 +76,7 @@ interface IMockTransportResponse {
 }
 
 const apiPassthroughTransportMock: IRequestTransport = request => {
-    return new Promise<any>((resolve, reject) => {
+    return new Promise<any>((resolve) => {
         setTimeout(() => {
             resolve({
                 json: request
@@ -86,7 +86,7 @@ const apiPassthroughTransportMock: IRequestTransport = request => {
 };
 
 const paramsTransportMock: IRequestTransport = request => {
-    return new Promise<any>((resolve, reject) => {
+    return new Promise<any>((resolve) => {
         setTimeout(() => {
             resolve({
                 json: {

@@ -112,7 +112,7 @@ export default class ValidatedImage extends React.Component<IValidatedImageProps
         }
     }
 
-    onBlur = (e: React.FocusEvent<FormControl>) => {
+    onBlur = () => {
         ((this as any).context.form as ValidatedForm).updateState(this.props.name);
     }
 

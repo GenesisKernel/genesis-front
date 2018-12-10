@@ -68,7 +68,7 @@ class Tooltip extends React.Component<ITooltipProps, ITooltipState> {
         }
     };
 
-    onHover = (e: React.MouseEvent<HTMLDivElement>) => {
+    onHover = () => {
         if (!this._container || !this._tooltip) {
             return;
         }

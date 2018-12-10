@@ -53,7 +53,8 @@ class ValidatedImageContainer extends React.Component<IValidatedImageContainerPr
         };
     }
 
-    openEditor(params: { mime: string, data: string, aspectRatio: number, width: number }) {
+    // openEditor(params: { mime: string, data: string, aspectRatio: number, width: number }) {
+    openEditor() {
         // TODO: refactoring
         // this.props.modalShow({
         //     id: this._id,
@@ -62,7 +63,8 @@ class ValidatedImageContainer extends React.Component<IValidatedImageContainerPr
         // });
     }
 
-    componentWillReceiveProps(props: IValidatedImageContainerProps & IValidatedImageContainerState & IValidatedImageContainerDispatch) {
+    // componentWillReceiveProps(props: IValidatedImageContainerProps & IValidatedImageContainerState & IValidatedImageContainerDispatch) {
+    componentWillReceiveProps() {
         // TODO: refactoring
         // const result = props.modal && this._id === props.modal.id && props.modal.result;
         // if (result && 'RESULT' === result.reason) {

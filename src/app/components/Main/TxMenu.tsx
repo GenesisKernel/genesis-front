@@ -33,11 +33,7 @@ export interface ITxMenuProps {
     onEdit: (value: string) => any;
 }
 
-interface ITxMenuContext {
-    closeDropdown: () => void;
-}
-
-const TxMenu: React.SFC<ITxMenuProps> = (props, context: ITxMenuContext) => (
+const TxMenu: React.SFC<ITxMenuProps> = props => (
     <DropdownToolButton
         icon="icon-lock"
         right

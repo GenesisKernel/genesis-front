@@ -25,7 +25,7 @@ import { generateSeed } from '../actions';
 import { map } from 'rxjs/operators';
 import keyring from 'lib/keyring';
 
-const generateSeedEpic: Epic = (action$, store) => action$.ofAction(generateSeed.started).pipe(
+const generateSeedEpic: Epic = (action$) => action$.ofAction(generateSeed.started).pipe(
     map(action => generateSeed.done({
         params: action.payload,
         result: keyring.generateSeed()

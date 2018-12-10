@@ -44,7 +44,7 @@ const loadSavedWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(
                 }))
 
             })),
-            catchError(e => empty())
+            catchError(() => empty())
         );
     })
 );

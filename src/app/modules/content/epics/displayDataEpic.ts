@@ -28,7 +28,7 @@ import { flatMap, catchError } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax';
 import { of } from 'rxjs';
 
-const displayDataEpic: Epic = (action$, store, { api }) => action$.ofAction(displayData.started).pipe(
+const displayDataEpic: Epic = (action$, store) => action$.ofAction(displayData.started).pipe(
     flatMap(action => {
         return ajax({
             url: urlJoin(store.value.auth.session.apiHost, 'api/v2', action.payload),

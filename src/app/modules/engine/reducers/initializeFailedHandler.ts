@@ -24,7 +24,7 @@ import { State } from '../reducer';
 import { initialize } from '../actions';
 import { Reducer } from 'modules';
 
-const initializeFailedHandler: Reducer<typeof initialize.failed, State> = (state, payload) => ({
+const initializeFailedHandler: Reducer<typeof initialize.failed, State> = (state) => ({
     ...state,
     isOffline: true,
     isConnecting: false,

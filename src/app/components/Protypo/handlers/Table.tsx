@@ -49,7 +49,7 @@ class Table extends React.Component<ITableProps> {
         renderElements: propTypes.func.isRequired
     };
 
-    shouldComponentUpdate(props: ITableProps, state: never, context: ITableContext) {
+    shouldComponentUpdate(props: ITableProps, _state: never, context: ITableContext) {
         if (props.source) {
             const source = context.resolveSource(props.source);
             return !_.isEqual(props, this.props) || !_.isEqual(this._cachedSourceData, source);

@@ -26,10 +26,9 @@ import { loadWallets } from 'modules/auth/actions';
 import { from } from 'rxjs';
 import { flatMap, map } from 'rxjs/operators';
 
-const subscribeWalletsEpic: Epic = (action$, store) => action$.ofAction(loadWallets.done).pipe(
-    flatMap(action => from(action.payload.result).pipe(
-        map(account => subscribe.started(account))
-    ))
+const subscribeWalletsEpic: Epic = (action$) => action$.ofAction(loadWallets.done).pipe(
+    flatMap(action => from(action.payload.result)),
+    map(account => subscribe.started(account))
 );
 
 export default subscribeWalletsEpic;

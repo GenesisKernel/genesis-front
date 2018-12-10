@@ -30,7 +30,7 @@ export default connect(null, {
     onChangeLocale: setLocale,
     modalClose
 
-}, (state, dispatch, props) => ({
+}, (_state, dispatch, props) => ({
     ...props,
     onChangeLocale: (locale: string) => {
         dispatch.onChangeLocale.started(locale);

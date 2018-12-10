@@ -26,7 +26,7 @@ import { sendAttachment as fsSend } from 'lib/fs';
 import { flatMap } from 'rxjs/operators';
 import { empty } from 'rxjs';
 
-const sendAttachmentEpic: Epic = (action$, store) => action$.ofAction(sendAttachment).pipe(
+const sendAttachmentEpic: Epic = (action$) => action$.ofAction(sendAttachment).pipe(
     flatMap(action => {
         fsSend(action.payload.name, action.payload.data);
         return empty();

@@ -24,7 +24,7 @@ import { State } from '../reducer';
 import { logout } from '../actions';
 import { Reducer } from 'modules';
 
-const logoutHandler: Reducer<typeof logout, State> = (state, payload): State => ({
+const logoutHandler: Reducer<typeof logout, State> = (state): State => ({
     ...state,
     session: {
         ...state.session,

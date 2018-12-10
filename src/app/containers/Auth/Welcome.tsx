@@ -21,12 +21,11 @@
 // SOFTWARE.
 
 import { connect } from 'react-redux';
-import { IRootState } from 'modules';
 import { push } from 'connected-react-router';
 
 import Welcome from 'components/Auth/Welcome';
 
-const mapStateToProps = (state: IRootState) => ({
+const mapStateToProps = () => ({
 
 });
 

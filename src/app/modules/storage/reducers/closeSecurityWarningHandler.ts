@@ -24,7 +24,7 @@ import { State } from '../reducer';
 import { closeSecurityWarning } from '../actions';
 import { Reducer } from 'modules';
 
-const closeSecurityWarningHandler: Reducer<typeof closeSecurityWarning, State> = (state, payload) => ({
+const closeSecurityWarningHandler: Reducer<typeof closeSecurityWarning, State> = (state) => ({
     ...state,
     securityWarningClosed: true
 });

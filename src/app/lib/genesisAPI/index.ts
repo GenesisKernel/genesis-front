@@ -204,7 +204,7 @@ class GenesisAPI {
             roles: response.roles || []
         })
     });
-    public keyinfo = this.setEndpoint<{ id: string }, IKeyInfo[]>('get', 'keyinfo/{id}', { requestTransformer: request => ({}) });
+    public keyinfo = this.setEndpoint<{ id: string }, IKeyInfo[]>('get', 'keyinfo/{id}', { requestTransformer: () => ({}) });
     public requestNotifications = this.setSecuredEndpoint<INotificationsRequest[], void>('post', 'updnotificator', {
         requestTransformer: request => ({
             ids: JSON.stringify(request)
@@ -220,21 +220,21 @@ class GenesisAPI {
     public getEcosystemName = this.setEndpoint<{ id: string | number }, string>('get', 'ecosystemname', {
         responseTransformer: response => response.ecosystem_name
     });
-    public getConfig = this.setEndpoint<{ name: TConfigRequest }, string>('get', 'config/{name}', { requestTransformer: request => ({}) });
-    public getContract = this.setSecuredEndpoint<IContractRequest, IContractResponse>('get', 'contract/{name}', { requestTransformer: request => ({}) });
+    public getConfig = this.setEndpoint<{ name: TConfigRequest }, string>('get', 'config/{name}', { requestTransformer: () => ({}) });
+    public getContract = this.setSecuredEndpoint<IContractRequest, IContractResponse>('get', 'contract/{name}', { requestTransformer: () => ({}) });
     public getContracts = this.setSecuredEndpoint<ISegmentRequest, IContractsResponse>('get', 'contracts');
-    public getParam = this.setSecuredEndpoint<IParamRequest, IParamResponse>('get', 'ecosystemparam/{name}', { requestTransformer: request => ({}) });
+    public getParam = this.setSecuredEndpoint<IParamRequest, IParamResponse>('get', 'ecosystemparam/{name}', { requestTransformer: () => ({}) });
     public getParams = this.setSecuredEndpoint<IParamsRequest, IParamsResponse>('get', 'ecosystemparams', {
         requestTransformer: request => ({
             names: (request.names || []).join(',')
         })
     });
-    public getPage = this.setSecuredEndpoint<ITemplateRequest, IPageResponse>('get', 'interface/page/{name}', { requestTransformer: request => ({}) });
-    public getBlock = this.setSecuredEndpoint<ITemplateRequest, IBlockResponse>('get', 'interface/block/{name}', { requestTransformer: request => ({}) });
-    public getMenu = this.setSecuredEndpoint<ITemplateRequest, IMenuResponse>('get', 'interface/menu/{name}', { requestTransformer: request => ({}) });
-    public getTable = this.setSecuredEndpoint<ITableRequest, ITableResponse>('get', 'table/{name}', { requestTransformer: request => ({}) });
+    public getPage = this.setSecuredEndpoint<ITemplateRequest, IPageResponse>('get', 'interface/page/{name}', { requestTransformer: () => ({}) });
+    public getBlock = this.setSecuredEndpoint<ITemplateRequest, IBlockResponse>('get', 'interface/block/{name}', { requestTransformer: () => ({}) });
+    public getMenu = this.setSecuredEndpoint<ITemplateRequest, IMenuResponse>('get', 'interface/menu/{name}', { requestTransformer: () => ({}) });
+    public getTable = this.setSecuredEndpoint<ITableRequest, ITableResponse>('get', 'table/{name}', { requestTransformer: () => ({}) });
     public getTables = this.setSecuredEndpoint<ISegmentRequest, ITablesResponse>('get', 'tables');
-    public getHistory = this.setSecuredEndpoint<IHistoryRequest, IHistoryResponse>('get', 'history/{table}/{id}', { requestTransformer: request => ({}) });
+    public getHistory = this.setSecuredEndpoint<IHistoryRequest, IHistoryResponse>('get', 'history/{table}/{id}', { requestTransformer: () => ({}) });
     public getRow = this.setSecuredEndpoint<IRowRequest, IRowResponse>('get', 'row/{table}/{id}', {
         requestTransformer: request => ({
             columns: (request.columns || []).join(',')

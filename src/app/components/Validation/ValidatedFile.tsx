@@ -99,7 +99,7 @@ export default class ValidatedFile extends React.Component<IValidatedFileProps, 
         }
     }
 
-    onBlur = (e: React.FocusEvent<FormControl>) => {
+    onBlur = () => {
         ((this as any).context.form as ValidatedForm).updateState(this.props.name);
     }
 

@@ -26,7 +26,7 @@ import { from } from 'rxjs';
 import { flatMap, map } from 'rxjs/operators';
 
 const subscribeReconnectEpic: Epic = (action$, store) => action$.ofAction(connect.done).pipe(
-    flatMap(action =>
+    flatMap(() =>
         from(store.value.auth.wallets).pipe(
             map(account => subscribe.started(account))
         )

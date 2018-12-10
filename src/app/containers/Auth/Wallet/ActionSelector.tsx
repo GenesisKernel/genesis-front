@@ -21,12 +21,11 @@
 // SOFTWARE.
 
 import { connect } from 'react-redux';
-import { IRootState } from 'modules';
-
-import ActionSelector from 'components/Auth/Wallet/ActionSelector';
 import { push } from 'connected-react-router';
 
-const mapStateToProps = (state: IRootState) => ({
+import ActionSelector from 'components/Auth/Wallet/ActionSelector';
+
+const mapStateToProps = () => ({
 
 });
 

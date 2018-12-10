@@ -25,8 +25,8 @@ import { logout, loadWallets } from '../actions';
 import { initialize } from 'modules/engine/actions';
 import { map } from 'rxjs/operators';
 
-const reloadWalletsEpic: Epic = (action$, store, { api }) => action$.ofAction(logout, initialize.done).pipe(
-    map(action => loadWallets.started(undefined))
+const reloadWalletsEpic: Epic = (action$) => action$.ofAction(logout, initialize.done).pipe(
+    map(() => loadWallets.started(undefined))
 );
 
 export default reloadWalletsEpic;

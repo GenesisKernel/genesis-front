@@ -24,7 +24,7 @@ import { State } from '../reducer';
 import { menuPop } from '../actions';
 import { Reducer } from 'modules';
 
-const menuPopHandler: Reducer<typeof menuPop, State> = (state, payload): State => {
+const menuPopHandler: Reducer<typeof menuPop, State> = (state): State => {
     /*if (1 >= state.sections[state.section].menus.length) {
         return state;
     }

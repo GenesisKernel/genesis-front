@@ -71,7 +71,8 @@ class EditorContainer extends React.Component<IEditorContainerProps & InjectedIn
         }
     }
 
-    componentWillReceiveProps(props: IEditorContainerProps & IEditorContainerState & IEditorContainerDispatch) {
+    // componentWillReceiveProps(props: IEditorContainerProps & IEditorContainerState & IEditorContainerDispatch) {
+    componentWillReceiveProps() {
         // TODO: refactoring
         /*if ('number' === typeof this._pendingClose && props.modalResult) {
             if ('RESULT' === props.modalResult.reason) {

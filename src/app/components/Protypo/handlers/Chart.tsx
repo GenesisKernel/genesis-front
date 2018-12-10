@@ -56,7 +56,7 @@ class Chart extends React.Component<IChartProps> {
         resolveSource: propTypes.func.isRequired
     };
 
-    shouldComponentUpdate(props: IChartProps, state: never, context: IChartContext) {
+    shouldComponentUpdate(props: IChartProps, _state: never, context: IChartContext) {
         if (props.source) {
             const source = context.resolveSource(props.source);
             return !_.isEqual(props, this.props) || !_.isEqual(this._cachedSourceData, source);
@@ -87,11 +87,11 @@ class Chart extends React.Component<IChartProps> {
             return null;
         }
 
-        const labels = this._cachedSourceData.data.map((row, rowIndex) => (
+        const labels = this._cachedSourceData.data.map(row => (
             row[fieldLabelRowIndex]
         ));
 
-        const data = this._cachedSourceData.data.map((row, rowIndex) => (
+        const data = this._cachedSourceData.data.map(row => (
             parseFloat(row[fieldValueRowIndex])
         ));
 

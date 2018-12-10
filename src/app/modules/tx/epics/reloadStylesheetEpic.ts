@@ -26,7 +26,7 @@ import { reloadStylesheet } from 'modules/content/actions';
 import { from } from 'rxjs';
 import { map, filter, flatMap } from 'rxjs/operators';
 
-const reloadStylesheetEpic: Epic = (action$, store) => action$.ofAction(txExec.done).pipe(
+const reloadStylesheetEpic: Epic = (action$) => action$.ofAction(txExec.done).pipe(
     filter(l => !!l.payload.params.contracts.find(c =>
         /^(@1)?EditParameter$/.test(c.name) && !!c.params.find(p => 'stylesheet' === p.name))
     ),

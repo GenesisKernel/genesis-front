@@ -24,7 +24,7 @@ import { State } from '../reducer';
 import { initialize } from '../actions';
 import { Reducer } from 'modules';
 
-const initializeHandler: Reducer<typeof initialize.started, State> = (state, payload) => ({
+const initializeHandler: Reducer<typeof initialize.started, State> = (state) => ({
     ...state,
     isConnecting: true
 });

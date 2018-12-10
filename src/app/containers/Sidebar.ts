@@ -21,11 +21,10 @@
 // SOFTWARE.
 
 import { connect } from 'react-redux';
-import { IRootState } from 'modules';
 
 import Sidebar from 'components/Main/Sidebar';
 
-const mapStateToProps = (state: IRootState) => ({
+const mapStateToProps = () => ({
 
 });
 

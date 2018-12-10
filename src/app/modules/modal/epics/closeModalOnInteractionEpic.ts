@@ -25,7 +25,7 @@ import { modalClose } from '../actions';
 import { filter, map } from 'rxjs/operators';
 import { buttonInteraction } from 'modules/content/actions';
 
-const closeModalOnInteractionEpic: Epic = (action$, store, { api }) => action$.ofAction(buttonInteraction).pipe(
+const closeModalOnInteractionEpic: Epic = (action$, store) => action$.ofAction(buttonInteraction).pipe(
     filter(() => 'instance' in store.value.modal),
     map(() => modalClose())
 );

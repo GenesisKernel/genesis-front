@@ -25,7 +25,7 @@ import { importWallet } from 'modules/auth/actions';
 import { saveWallet } from '../actions';
 import { map } from 'rxjs/operators';
 
-const saveWalletOnImportEpic: Epic = (action$, store) => action$.ofAction(importWallet.done).pipe(
+const saveWalletOnImportEpic: Epic = (action$) => action$.ofAction(importWallet.done).pipe(
     map(action => saveWallet(action.payload.result))
 );
 

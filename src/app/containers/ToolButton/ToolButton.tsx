@@ -93,7 +93,7 @@ class ToolButtonContainer extends React.Component<IToolButtonProps & IToolButton
     }
 }
 
-const mapStateToProps = (state: IRootState) => ({
+const mapStateToProps = () => ({
 });
 
 const mapDispatchToProps = {

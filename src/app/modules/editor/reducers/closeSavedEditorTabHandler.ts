@@ -24,7 +24,7 @@ import { State } from '../reducer';
 import { closeSavedEditorTab } from '../actions';
 import { Reducer } from 'modules';
 
-const closeEditorTabHandler: Reducer<typeof closeSavedEditorTab, State> = (state, payload) => ({
+const closeEditorTabHandler: Reducer<typeof closeSavedEditorTab, State> = (state) => ({
     ...state,
     tabIndex: state.tabs.filter(l => l.dirty).length >= 0 ? 0 : -1,
     tabs: [
