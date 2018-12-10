@@ -15,18 +15,17 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
-    "isolatedModules": false,
+    "isolatedModules": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noEmit": true,
     "jsx": "preserve",
     "plugins": [
       {
-        "name": "typescript-tslint-plugin",
-        "alwaysShowRuleFailuresAsWarnings": true,
-        "suppressWhileTypeErrorsPresent": true
+        "name": "typescript-tslint-plugin"
       }
-    ]
+    ],
+    "resolveJsonModule": true
   },
   "extends": "./tsconfig.paths.json",
   "include": [
