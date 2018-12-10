@@ -55,7 +55,7 @@ const configureStore = (initialState?: IRootState) => {
     ];
 
     if (process.env.NODE_ENV === 'development') {
-        const devToolsExtension = (window as { devToolsExtension?: Function }).devToolsExtension;
+        const devToolsExtension = (window as { __REDUX_DEVTOOLS_EXTENSION__?: Function }).__REDUX_DEVTOOLS_EXTENSION__;
 
         if (typeof devToolsExtension === 'function') {
             enhancers.push(devToolsExtension());
