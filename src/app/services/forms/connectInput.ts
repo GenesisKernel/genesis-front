@@ -20,56 +20,69 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { ComponentType, Component, createElement, ReactNode } from 'react';
-import { IFormContext, FormContext } from 'services/forms';
-import { IValidator, validate } from 'services/forms/validation';
+import { ComponentType, Component, createElement } from 'react';
+import { FormContext, IFormValuesCollection } from 'services/forms';
+import { IValidator, validate, TValidationResult } from 'services/forms/validation';
 
-export interface IFormEmitterProps<T> {
-    name: string;
+export interface IInputProps<T> {
+    value?: T | null;
     defaultValue?: T;
     validate?: IValidator<T> | IValidator<T>[];
-    children?: ReactNode;
+    onChange?: (value: T) => void;
 }
 
-export interface IFormEmitterInjectedProps<T> {
-    value: T | null;
-    onChange: (value: T) => void;
+export interface IConnectedInputProps<T> {
+    defaultValue?: T;
+    validate?: IValidator<T> | IValidator<T>[];
+
+    name: string;
+    formValues: { [form: string]: IFormValuesCollection };
+    connectInput: (form: string, initialValue: TValidationResult<T>) => void;
+    disconnectInput: (form: string) => void;
+    onChange: (form: string, value: TValidationResult<T>) => void;
 }
 
-export interface IFormInputProps<T> extends IFormEmitterProps<T>, IFormEmitterInjectedProps<T> {
+type TFormInput<T> = ComponentType<IInputProps<T>>;
 
-}
+const valueOf = (values: { [form: string]: IFormValuesCollection }, params: { form: string, name: string }) => {
+    if (!(params.form in values)) {
+        return undefined;
+    }
 
-export interface IConnectedFormInputProps<T> extends IFormEmitterProps<T> {
+    if (!(params.name in values[params.form])) {
+        return undefined;
+    }
 
-}
+    return values[params.form][params.name];
+};
 
-type TFormInput<T> = ComponentType<IFormInputProps<T>>;
-
-type TConnectedFormInput<T> = ComponentType<IConnectedFormInputProps<T>>;
-
-const connectInput: <T>(component: TFormInput<T>) => TConnectedFormInput<T> = <T>(component: TFormInput<T>) => {
-    class FormEmitter extends Component<IConnectedFormInputProps<T>> {
+const connectInput = <T>(component: TFormInput<T>) => {
+    class FormEmitter extends Component<IConnectedInputProps<T>> {
         static contextType = FormContext;
-        context!: IFormContext;
+        context!: string;
 
         componentDidMount() {
-            this.context.connectInput(this.props.name, validate(this.props.defaultValue, this.props.validate));
+            this.props.connectInput(this.context, validate(this.props.defaultValue, this.props.validate));
         }
 
         componentWillUnmount() {
-            this.context.disconnectInput(this.props.name);
+            this.props.disconnectInput(this.context);
         }
 
         onChange = (value: T) => {
-            this.context.onFieldChange(this.props.name, validate(value, this.props.validate));
+            this.props.onChange(this.context, validate(value, this.props.validate));
         }
 
         render() {
-            const formValue = this.context.valueOf<T>(this.props.name);
+            const formValue = valueOf(this.props.formValues, {
+                form: this.context,
+                name: this.props.name
+            });
+
+            const plainValue = formValue && formValue.value;
+
             return createElement(component, {
-                ...this.props,
-                value: undefined === formValue ? null : formValue,
+                value: undefined === plainValue ? null : plainValue,
                 onChange: this.onChange
             });
         }

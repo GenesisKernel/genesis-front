@@ -20,37 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
-import { IInputProps } from 'services/forms/connectInput';
+import connectFormInput from './connectFormInput';
+import TextInputNative from 'components/Form/TextInput';
 
-export interface ITextInputProps extends IInputProps<string> {
-    disabled?: boolean;
-}
-
-class TextInput extends React.Component<ITextInputProps> {
-    onChange: React.ChangeEventHandler<HTMLInputElement> = e => {
-        if (this.props.onChange) {
-            this.props.onChange(e.target.value);
-        }
-    }
-
-    render() {
-        return (
-            <div style={{ margin: 10 }}>
-                <div style={{ color: '#999', fontSize: 12 }}>Input</div>
-                <input
-                    type="text"
-                    style={{
-                        border: 'solid 2px #bbb',
-                        padding: 4
-                    }}
-                    disabled={this.props.disabled}
-                    onChange={this.onChange}
-                    value={this.props.value || ''}
-                />
-            </div>
-        );
-    }
-}
-
-export default TextInput;
+export const TextInput = connectFormInput(TextInputNative);

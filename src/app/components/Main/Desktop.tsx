@@ -21,11 +21,12 @@
 // SOFTWARE.
 
 import React from 'react';
-import TextInput from 'components/Form/TextInput';
-import Form from 'containers/Form';
 import required from 'services/forms/validation/generic/required';
 import minLength from 'services/forms/validation/strings/minLength';
 import maxLength from 'services/forms/validation/strings/maxLength';
+
+import Form from 'containers/Form';
+import { TextInput } from 'containers/Form/inputs';
 
 export interface IDesktopProps {
     formValues: {

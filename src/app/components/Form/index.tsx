@@ -26,28 +26,10 @@ import { FormContext, IFormValuesCollection } from 'services/forms';
 export interface IFormProps {
     name: string;
     values: IFormValuesCollection;
-    connectInput: <T>(name: string, initialValue?: T) => void;
-    disconnectInput: (name: string) => void;
-    onFieldChange: (name: string, value: any) => void;
 }
 
-const getValueOf = (values: IFormValuesCollection, name: string) => {
-    if (name in values) {
-        return values[name].value;
-    }
-
-    return undefined;
-};
-
 const Form: React.SFC<IFormProps> = props => (
-    <FormContext.Provider
-        value={{
-            valueOf: name => getValueOf(props.values, name),
-            connectInput: props.connectInput,
-            disconnectInput: props.disconnectInput,
-            onFieldChange: props.onFieldChange
-        }}
-    >
+    <FormContext.Provider value={props.name}>
         <div style={{ border: 'solid 1px #ccc', margin: 10, padding: 10 }}>
             <div style={{ color: '#999', fontSize: 12 }}>Form #{props.name}</div>
             <div>{props.children}</div>

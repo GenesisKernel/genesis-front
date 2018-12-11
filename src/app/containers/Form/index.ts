@@ -22,7 +22,6 @@
 
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { changeValue, connectEmitter, disconnectEmitter } from 'modules/forms/actions';
 
 import Form from 'components/Form';
 
@@ -34,26 +33,4 @@ const mapStateToProps = (state: IRootState, props: IFormProps) => ({
     values: state.forms[props.name] || {}
 });
 
-export default connect(mapStateToProps, {
-    changeValue,
-    connectEmitter,
-    disconnectEmitter
-
-}, (state, dispatch, props) => ({
-    ...state,
-    ...props,
-    connectInput: (name: string, initialValue?: any) => dispatch.connectEmitter({
-        form: props.name,
-        name: name,
-        value: initialValue
-    }),
-    disconnectInput: (name: string) => dispatch.disconnectEmitter({
-        form: props.name,
-        name: name
-    }),
-    onFieldChange: (name: string, value: any) => dispatch.changeValue({
-        form: props.name,
-        name: name,
-        value: value
-    })
-}))(Form);
+export default connect(mapStateToProps)(Form);
