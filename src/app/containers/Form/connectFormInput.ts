@@ -39,31 +39,18 @@ const connectFormInput = <T>(component: ComponentType<IInputProps<T>>) => {
     });
 
     const InputEmitter = connectInput(component);
-
     const ConnectedFormInput = connect(mapStateToProps, {
         changeValue,
         connectEmitter,
         disconnectEmitter
-
     }, (state, dispatch, props) => ({
         name: props.name,
         formValues: state.formValues,
         validate: props.validate,
         defaultValue: props.defaultValue,
-        onChange: (form: string, value: TValidationResult<any>) => dispatch.changeValue({
-            form,
-            name: props.name,
-            value
-        }),
-        connectInput: (form: string, value: TValidationResult<any>) => dispatch.connectEmitter({
-            form,
-            name: props.name,
-            value
-        }),
-        disconnectInput: (form: string) => dispatch.disconnectEmitter({
-            form,
-            name: props.name
-        })
+        onChange: (form: string, value: TValidationResult<any>) => dispatch.changeValue({ form, name: props.name, value }),
+        connectInput: (form: string, value: TValidationResult<any>) => dispatch.connectEmitter({ form, name: props.name, value }),
+        disconnectInput: (form: string) => dispatch.disconnectEmitter({ form, name: props.name })
     }))(InputEmitter);
 
     return ConnectedFormInput;
