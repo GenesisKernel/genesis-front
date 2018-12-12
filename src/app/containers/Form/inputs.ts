@@ -22,5 +22,7 @@
 
 import connectFormInput from './connectFormInput';
 import TextInputNative from 'components/Form/TextInput';
+import CheckboxNative from 'components/Form/Checkbox';
 
 export const TextInput = connectFormInput(TextInputNative);
+export const Checkbox = connectFormInput(CheckboxNative);

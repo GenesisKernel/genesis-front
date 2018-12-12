@@ -20,11 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { createContext } from 'react';
-import { TValidationResult } from './validation';
+import React from 'react';
+import { IInputProps } from 'services/forms/connectInput';
 
-export const FormContext = createContext<string>('');
-
-export interface IFormValuesCollection {
-    [input: string]: TValidationResult<any>;
+export interface ICheckboxProps extends IInputProps<boolean> {
+    disabled?: boolean;
 }
+
+class Checkbox extends React.Component<ICheckboxProps> {
+    onChange: React.ChangeEventHandler<HTMLInputElement> = e => {
+        if (this.props.onChange) {
+            this.props.onChange(e.target.checked);
+        }
+    }
+
+    render() {
+        return (
+            <div className="checkbox c-checkbox">
+                <label>
+                    <input
+                        type="checkbox"
+                        onChange={this.onChange}
+                        checked={true === this.props.value}
+                        disabled={this.props.disabled}
+                    />
+                    <em className="fa fa-check" />
+                    <span>{this.props.children}</span>
+                </label>
+            </div>
+        );
+    }
+}
+
+export default Checkbox;

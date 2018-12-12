@@ -25,35 +25,39 @@ import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { changeValue, connectEmitter, disconnectEmitter } from 'modules/forms/actions';
 import { TValidationResult, IValidator } from 'services/forms/validation';
-import connectInput, { IInputProps } from 'services/forms/connectInput';
+import connectInput, { IInputProps, TInputOwnProps } from 'services/forms/connectInput';
 
-export interface IInputContainerProps<T> extends IInputProps<T> {
+export interface IInputContainerProps<T> {
     name: string;
     defaultValue?: T;
     validate?: IValidator<T> | IValidator<T>[];
 }
 
-const connectFormInput = <T>(component: ComponentType<IInputProps<T>>) => {
-    const mapStateToProps = (state: IRootState, _props: IInputContainerProps<T>) => ({
-        formValues: state.forms
-    });
+export type TInputContainerProps<TComponent> =
+    TComponent extends ComponentType<infer TProps> ?
+    TProps extends IInputProps<infer TValue> ?
+    TInputOwnProps<TComponent> & IInputContainerProps<TValue> : unknown : unknown;
 
-    const InputEmitter = connectInput(component);
-    const ConnectedFormInput = connect(mapStateToProps, {
-        changeValue,
-        connectEmitter,
-        disconnectEmitter
-    }, (state, dispatch, props) => ({
-        name: props.name,
-        formValues: state.formValues,
-        validate: props.validate,
-        defaultValue: props.defaultValue,
-        onChange: (form: string, value: TValidationResult<any>) => dispatch.changeValue({ form, name: props.name, value }),
-        connectInput: (form: string, value: TValidationResult<any>) => dispatch.connectEmitter({ form, name: props.name, value }),
-        disconnectInput: (form: string) => dispatch.disconnectEmitter({ form, name: props.name })
-    }))(InputEmitter);
-
-    return ConnectedFormInput;
+const connectFormInput = <TProps, TValue>(component: ComponentType<TProps & IInputProps<TValue>>) => {
+    const ConnectedComponent = connectInput(component);
+    const ComponentContainer = connect((state: IRootState) =>
+        ({
+            formValues: state.forms
+        }),
+        {
+            connectEmitter,
+            disconnectEmitter,
+            changeValue
+        },
+        (state, dispatch, props: IInputContainerProps<TValue>) => ({
+            ...state,
+            ...props,
+            onChange: (form: string, value: TValidationResult<TValue>) => form ? dispatch.changeValue({ form, name: props.name, value }) : undefined,
+            connectInput: (form: string, value: TValidationResult<TValue>) => form ? dispatch.connectEmitter({ form, name: props.name, value }) : undefined,
+            disconnectInput: (form: string) => form ? dispatch.disconnectEmitter({ form, name: props.name }) : undefined
+        })
+    )(ConnectedComponent as any);
+    return ComponentContainer as unknown as ComponentType<TInputContainerProps<typeof component>>;
 };
 
 export default connectFormInput;

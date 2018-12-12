@@ -24,25 +24,29 @@ import { ComponentType, Component, createElement } from 'react';
 import { FormContext, IFormValuesCollection } from 'services/forms';
 import { IValidator, validate, TValidationResult } from 'services/forms/validation';
 
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
 export interface IInputProps<T> {
     value?: T | null;
-    defaultValue?: T;
     validate?: IValidator<T> | IValidator<T>[];
     onChange?: (value: T) => void;
 }
 
+export type TInputOwnProps<TComponent> =
+    TComponent extends ComponentType<infer TProps> ?
+    TProps extends IInputProps<infer TValue> ?
+    Omit<TProps, keyof IInputProps<TValue>> : unknown : unknown;
+
 export interface IConnectedInputProps<T> {
+    name: string;
     defaultValue?: T;
     validate?: IValidator<T> | IValidator<T>[];
 
-    name: string;
     formValues: { [form: string]: IFormValuesCollection };
     connectInput: (form: string, initialValue: TValidationResult<T>) => void;
     disconnectInput: (form: string) => void;
     onChange: (form: string, value: TValidationResult<T>) => void;
 }
-
-type TFormInput<T> = ComponentType<IInputProps<T>>;
 
 const valueOf = (values: { [form: string]: IFormValuesCollection }, params: { form: string, name: string }) => {
     if (!(params.form in values)) {
@@ -56,8 +60,8 @@ const valueOf = (values: { [form: string]: IFormValuesCollection }, params: { fo
     return values[params.form][params.name];
 };
 
-const connectInput = <T>(component: TFormInput<T>) => {
-    class FormEmitter extends Component<IConnectedInputProps<T>> {
+const connectInput = <TProps, TValue>(component: ComponentType<TProps & IInputProps<TValue>>) => {
+    class FormEmitter extends Component<TProps & IConnectedInputProps<TValue>> {
         static contextType = FormContext;
         context!: string;
 
@@ -69,7 +73,7 @@ const connectInput = <T>(component: TFormInput<T>) => {
             this.props.disconnectInput(this.context);
         }
 
-        onChange = (value: T) => {
+        onChange = (value: TValue) => {
             this.props.onChange(this.context, validate(value, this.props.validate));
         }
 
@@ -82,6 +86,7 @@ const connectInput = <T>(component: TFormInput<T>) => {
             const plainValue = formValue && formValue.value;
 
             return createElement(component, {
+                ...this.props,
                 value: undefined === plainValue ? null : plainValue,
                 onChange: this.onChange
             });

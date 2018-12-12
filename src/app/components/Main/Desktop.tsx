@@ -26,7 +26,7 @@ import minLength from 'services/forms/validation/strings/minLength';
 import maxLength from 'services/forms/validation/strings/maxLength';
 
 import Form from 'containers/Form';
-import { TextInput } from 'containers/Form/inputs';
+import { TextInput, Checkbox } from 'containers/Form/inputs';
 
 export interface IDesktopProps {
     formValues: {
@@ -60,6 +60,8 @@ class Desktop extends React.Component<IDesktopProps, IDesktopState> {
                 <Form name="debug_desktop">
                     <button onClick={this.onHideToggle}>Hide toggle</button>
                     <TextInput name="first" validate={[required, minLength(3), maxLength(5)]} />
+                    <Checkbox name="picker" validate={required} defaultValue>Must be picked</Checkbox>
+                    <Checkbox name="picker2" defaultValue>Doesn't care to be picked</Checkbox>
                     {!this.state.hideToggle && (
                         <>
                             <TextInput name="second" defaultValue="SECOND_DEFAULT" validate={minLength(3)} />
