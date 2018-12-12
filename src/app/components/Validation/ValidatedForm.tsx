@@ -255,7 +255,7 @@ export default class ValidatedForm extends React.Component<IValidatedFormProps, 
             <Form
                 autoComplete="off"
                 className={this.props.className}
-                onSubmit={this._onSubmit.bind(this)}
+                onSubmit={this._onSubmit.bind(this) as any}
                 bsClass={this.props.bsClass}
                 componentClass={this.props.componentClass}
                 horizontal={this.props.horizontal}

@@ -56,7 +56,7 @@ class ValidatedMapContainer extends React.Component<IValidatedMapContainerProps 
         };
     }
 
-    openEditor(params: { mime: string, data: string, aspectRatio: number, width: number }) {
+    openEditor(params: { mime: string, coords: { lat: number, lng: number }[], data: string, aspectRatio: number, width: number }) {
         this.props.modalShow({
             type: 'MAP_EDITOR',
             params
@@ -84,7 +84,7 @@ class ValidatedMapContainer extends React.Component<IValidatedMapContainerProps 
                 value={this.state.result || this.props.value}
                 center={this.props.center}
                 zoom={this.props.zoom}
-                openEditor={this.openEditor.bind(this)}
+                openEditor={() => this.openEditor.bind(this) as any}
             />
         );
     }

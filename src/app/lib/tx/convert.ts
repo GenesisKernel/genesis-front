@@ -71,10 +71,10 @@ export const concatBuffer = (a: Uint8Array | ArrayBuffer, b: Uint8Array | ArrayB
         b = new Uint8Array(b);
     }
 
-    const uint8 = new Uint8Array(a.length + b.length);
+    const uint8 = new Uint8Array((a as any).length + (b as any).length);
 
-    uint8.set(a, 0);
-    uint8.set(b, a.length);
+    uint8.set(a as any, 0);
+    uint8.set(b as any, (a as any).length);
 
     return uint8.buffer;
 };
@@ -84,7 +84,7 @@ export const encodeLengthPlusData = (buffer: Uint8Array | ArrayBuffer): ArrayBuf
         buffer = new Uint8Array(buffer);
     }
 
-    return concatBuffer(encodeLength(buffer.length), buffer);
+    return concatBuffer(encodeLength((buffer as any).length), buffer);
 };
 
 export const toMoney = (value: number | string) => {

@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
+import React, { createElement } from 'react';
 import propTypes from 'prop-types';
 import InteractionManager, { TConditionMap, TReaction } from '../interaction';
 
@@ -60,8 +60,8 @@ const tryRegisterConditions = (props: IInteractiveComponentProps, interactionMan
     }
 };
 
-const bindComponent: <T>(Component: React.ComponentType<T>) => React.SFC<IInteractiveComponentProps> = (Component) => {
-    const BoundComponent: React.SFC<IInteractiveComponentProps> = (props, context: IInteractiveComponentContext) => {
+const bindComponent = <T>(Component: React.ComponentType<T>) => {
+    const BoundComponent: React.SFC<T & IInteractiveComponentProps> = (props, context: IInteractiveComponentContext) => {
         const conditionMap = (context.conditionMap && context.conditionMap[props.id]) || {};
         tryRegisterConditions(props, context.interactionManager);
 
@@ -69,7 +69,7 @@ const bindComponent: <T>(Component: React.ComponentType<T>) => React.SFC<IIntera
             return null;
         }
         else {
-            return <Component {...props} />;
+            return createElement(Component, props);
         }
     };
     BoundComponent.contextTypes = {
@@ -83,7 +83,6 @@ const bindComponent: <T>(Component: React.ComponentType<T>) => React.SFC<IIntera
 export default function interactiveComponent<T>(Component: React.ComponentType<T>) {
     const BoundComponent = bindComponent<T>(Component);
 
-    return (props: T & IInteractiveComponentProps) => (
-        <BoundComponent {...props} />
-    );
+    return (props: T & IInteractiveComponentProps) =>
+        createElement(BoundComponent, props);
 }

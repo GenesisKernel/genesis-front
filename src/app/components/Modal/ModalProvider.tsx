@@ -21,9 +21,10 @@
 // SOFTWARE.
 
 import React from 'react';
-import { MODAL_COMPONENTS, IModal, TModalType, TModalProps } from 'lib/modal';
+import { MODAL_COMPONENTS, IModal, TModalType } from 'lib/modal';
 
 import Wrapper from 'components/Modal/Wrapper';
+import { IModalProps } from '.';
 
 export interface IModalProviderProps<T extends TModalType> {
     modal?: IModal<T>;
@@ -33,7 +34,8 @@ export interface IModalProviderProps<T extends TModalType> {
 class ModalProvider<T extends TModalType> extends React.Component<IModalProviderProps<T>> {
     render() {
         const modal = this.props.modal;
-        const Component: React.ComponentType<TModalProps<T>> | undefined = modal && MODAL_COMPONENTS[modal.type] as any;
+        // TODO: refactoring
+        const Component: React.ComponentType<IModalProps<any>> | undefined = modal && MODAL_COMPONENTS[modal.type] as any;
         return (
             <Wrapper>
                 {modal && Component && (
