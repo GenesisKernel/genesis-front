@@ -23,12 +23,6 @@
 import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
 import { renderPage } from '../actions';
-import NodeObservable from 'modules/engine/util/NodeObservable';
-import keyring from 'lib/keyring';
-
-const invalidationError = {
-    error: 'E_INVALIDATED'
-};
 
 const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(renderPage.started)
     .flatMap(action => {
@@ -51,57 +45,27 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
                 locale: state.storage.locale
             }) : Promise.resolve(null)
 
-        ])).flatMap(payload => {
+        ])).map(payload => {
             const page = payload[0];
             const defaultPage = payload[1];
 
-            return NodeObservable({
-                nodes: state.storage.fullNodes,
-                count: page.nodesCount,
-                concurrency: 3,
-                api
-
-            }).flatMap(apiHost => Observable.from(
-                api({ apiHost }).contentHash({
-                    name: action.payload.name,
-                    ecosystem: state.auth.wallet.access.ecosystem,
-                    walletID: state.auth.wallet.wallet.id,
-                    role: state.auth.wallet.role ? Number(state.auth.wallet.role.id) : null,
-                    locale: state.storage.locale,
-                    params: action.payload.params
-
-                })
-            )).catch(e => Observable.throw(invalidationError)).toArray().map(result => {
-                const contentHash = keyring.hashData(page.plainText);
-
-                if (0 < state.storage.fullNodes.length && page.nodesCount !== result.length) {
-                    throw invalidationError;
-                }
-
-                for (let i = 0; i < result.length; i++) {
-                    if (contentHash !== result[i].hash) {
-                        throw invalidationError;
+            return renderPage.done({
+                params: action.payload,
+                result: {
+                    defaultMenu: defaultPage && defaultPage.menu !== page.menu && {
+                        name: defaultPage.menu,
+                        content: defaultPage.menutree
+                    },
+                    menu: {
+                        name: page.menu,
+                        content: page.menutree
+                    },
+                    page: {
+                        params: action.payload.params,
+                        name: action.payload.name,
+                        content: page.tree
                     }
                 }
-
-                return renderPage.done({
-                    params: action.payload,
-                    result: {
-                        defaultMenu: defaultPage && defaultPage.menu !== page.menu && {
-                            name: defaultPage.menu,
-                            content: defaultPage.menutree
-                        },
-                        menu: {
-                            name: page.menu,
-                            content: page.menutree
-                        },
-                        page: {
-                            params: action.payload.params,
-                            name: action.payload.name,
-                            content: page.tree
-                        }
-                    }
-                });
             });
 
         }).catch(e =>
