@@ -107,13 +107,6 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
                 bsStyle="default"
                 footer={(
                     <div className="clearfix">
-                        <div className="pull-left">
-                            <CopyToClipboard text={this.props.privateKey} onCopy={this.props.onCopy}>
-                                <Button bsStyle="primary">
-                                    <FormattedMessage id="general.clipboard.copy" defaultMessage="Copy to clipboard" />
-                                </Button>
-                            </CopyToClipboard>
-                        </div>
                         <div className="pull-right">
                             <Button bsStyle="primary" onClick={this.onKeyDownlaod}>
                                 <FormattedMessage id="general.download.asfile" defaultMessage="Download as file" />
@@ -122,19 +115,28 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
                     </div>
                 )}
             >
-                <table className="table table-striped table-bordered table-hover preline">
+                <table className="table table-striped table-bordered table-hover preline" style={{ wordBreak: 'break-all' }}>
                     <tbody>
                         <tr>
                             <td style={{ minWidth: 100 }}>
                                 <FormattedMessage id="general.key.private" defaultMessage="Private key" />
                             </td>
-                            <td>{this.formatKey(this.state.privateKey)}</td>
+                            <td>
+                                <span>
+                                    {this.state.privateKey}
+                                </span>
+                                <CopyToClipboard text={this.props.privateKey} onCopy={this.props.onCopy}>
+                                    <Button bsStyle="link" className="p0 ml" style={{ verticalAlign: 'top' }}>
+                                        <FormattedMessage id="general.clipboard.copy" defaultMessage="Copy to clipboard" />
+                                    </Button>
+                                </CopyToClipboard>
+                            </td>
                         </tr>
                         <tr>
                             <td style={{ minWidth: 100 }}>
                                 <FormattedMessage id="general.key.public" defaultMessage="Public key" />
                             </td>
-                            <td>{this.formatKey(this.state.publicKey)}</td>
+                            <td>{this.state.publicKey}</td>
                         </tr>
                         <tr>
                             <td>
