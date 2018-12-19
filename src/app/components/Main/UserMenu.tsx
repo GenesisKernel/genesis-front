@@ -155,7 +155,14 @@ class UserMenu extends React.Component<IUserMenuProps> {
                 <StyledUserMenu>
                     <div className="user-info">
                         <div className="user-title">
-                            {this.props.wallet.wallet.address}
+                            {this.props.isDefaultWallet ?
+                                (
+                                    <FormattedMessage id="auth.login.guest" defaultMessage="Demo" />
+                                ) :
+                                (
+                                    <span>{this.props.wallet.wallet.address}</span>
+                                )
+                            }
                         </div>
                         <div className="user-subtitle">
                             {this.props.wallet.access.name || (
