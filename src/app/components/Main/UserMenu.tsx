@@ -134,7 +134,7 @@ class UserMenu extends React.Component<IUserMenuProps> {
                         </div>
                         <ul className="dropdown-group">
                             {this.props.walletEcosystems.map(value => (
-                                <li key={value.ecosystem}>
+                                <li key={value.ecosystem} style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                     {/*wallet.ecosystem !== this.props.wallet.ecosystem && this.props.switchWallet.bind(this, wallet)*/}
                                     <CloseDropdownButton onClick={() => this.props.onSwitchEcosystem(value.ecosystem, !value.roles.length)}>
                                         {value.name ?
