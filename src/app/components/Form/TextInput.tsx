@@ -21,36 +21,54 @@
 // SOFTWARE.
 
 import React from 'react';
+import themed from 'components/Theme/themed';
+import classNames from 'classnames';
 import { IInputProps } from 'services/forms/connectInput';
 
 export interface ITextInputProps extends IInputProps<string> {
+    className?: string;
+    placeholder?: string;
     disabled?: boolean;
 }
 
-class TextInput extends React.Component<ITextInputProps> {
-    onChange: React.ChangeEventHandler<HTMLInputElement> = e => {
-        if (this.props.onChange) {
-            this.props.onChange(e.target.value);
+const TextInput: React.SFC<ITextInputProps> = props => (
+    <div className={classNames(props.className, { 'textinput-disabled': props.disabled })}>
+        <input
+            type="text"
+            disabled={props.disabled}
+            placeholder={props.placeholder}
+            onBlur={() => props.onBlur && props.onBlur()}
+            onFocus={() => props.onFocus && props.onFocus()}
+            onChange={e => props.onChange && props.onChange(e.target.value)}
+            value={props.value || ''}
+        />
+    </div>
+);
+
+export default themed(TextInput)`
+    &&.textinput-disabled > input {
+        border-color: ${props => props.theme.controlBackgroundDisabled};
+        background: ${props => props.theme.controlBackgroundDisabled};
+        color: ${props => props.theme.controlForegroundMuted};
+    }
+
+    > input {
+        transition: border-color .2s ease-in-out;
+        border: solid 1px ${props => 'VALID' === props.validationState ? props.theme.controlOutlineBright : props.theme.controlOutlineInvalid};
+        background: ${props => props.theme.controlBackgroundBright};
+        color: ${props => props.theme.controlForeground};
+        padding: 5px 6px;
+        margin-bottom: 10px;
+        font-size: ${props => props.theme.controlFontSize};
+        box-sizing: border-box;
+        width: 100%;
+
+        &:hover {
+            border-color: ${props => 'VALID' === props.validationState ? props.theme.controlOutline : props.theme.controlOutlineInvalid};
+        }
+        
+        &:focus {
+            border-color: ${props => 'VALID' === props.validationState ? props.theme.controlBackgroundPrimary : props.theme.controlOutlineInvalid};
         }
     }
-
-    render() {
-        return (
-            <div style={{ margin: 10 }}>
-                <div style={{ color: '#999', fontSize: 12 }}>Input</div>
-                <input
-                    type="text"
-                    style={{
-                        border: 'solid 2px #bbb',
-                        padding: 4
-                    }}
-                    disabled={this.props.disabled}
-                    onChange={this.onChange}
-                    value={this.props.value || ''}
-                />
-            </div>
-        );
-    }
-}
-
-export default TextInput;
+`;

@@ -27,7 +27,7 @@ import Sidebar from 'containers/Sidebar';
 import Sections from 'containers/Main/Sections';
 import NotFound from 'components/NotFound';
 import themed from 'components/Theme/themed';
-import Desktop from 'containers/Main/Desktop';
+import Desktop from 'components/Main/Desktop';
 
 export interface IMainProps {
     stylesheet: string;

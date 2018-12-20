@@ -24,7 +24,10 @@ import { createGenerator } from 'services/forms/validation';
 
 export default createGenerator<number, string>('maxLength', condition => {
     return (value?: string) => {
-        const testValue = value || '';
-        return condition >= testValue.length;
+        if (!value) {
+            return true;
+        }
+
+        return condition >= value.length;
     };
 });

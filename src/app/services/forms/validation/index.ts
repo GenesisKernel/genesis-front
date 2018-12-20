@@ -59,6 +59,9 @@ export const createGenerator: ICreateValidatorGeneratorFn = <P, T>(name: string,
     return validator;
 };
 
+export type TValidationState =
+    'VALID' | 'INVALID';
+
 export type TValidationResult<T> =
     IValidationSuccess<T> | IValidationFailure<T>;
 

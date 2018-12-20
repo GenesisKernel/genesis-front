@@ -23,8 +23,27 @@
 import { createContext } from 'react';
 import { TValidationResult } from './validation';
 
-export const FormContext = createContext<string>('');
-
 export interface IFormValuesCollection {
     [input: string]: TValidationResult<any>;
 }
+
+export interface IFormSubmit {
+    valid: boolean;
+    values: IFormValuesCollection;
+}
+
+export interface IFormContext<TValue> {
+    isSubmitting: boolean;
+    connectEmitter: (name: string, initialValue: TValidationResult<TValue>) => void;
+    disconnectEmitter: (name: string) => void;
+    onSubmit: () => void;
+    onChange: (name: string, value: TValidationResult<TValue>) => void;
+}
+
+export const FormContext = createContext<IFormContext<never>>({
+    isSubmitting: false,
+    connectEmitter: () => undefined,
+    disconnectEmitter: () => undefined,
+    onSubmit: () => undefined,
+    onChange: () => undefined
+});

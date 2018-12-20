@@ -86,5 +86,23 @@ declare module 'genesis/theme' {
 
         securityWarningBackground: string;
         securityWarningForeground: string;
+
+        controlSpacing: string;
+        controlSpacingGroup: string;
+        controlFontSize: string;
+        controlOutline: string;
+        controlOutlineBright: string;
+        controlOutlinePrimary: string;
+        controlOutlineInvalid: string;
+        controlBackground: string;
+        controlBackgroundBright: string;
+        controlBackgroundPrimary: string;
+        controlBackgroundPrimaryActive: string;
+        controlBackgroundDisabled: string;
+        controlBackgroundActive: string;
+        controlForeground: string;
+        controlForegroundPrimary: string;
+        controlForegroundMuted: string;
+        controlForegroundRequired: string;
     }
 }

@@ -20,13 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { connect } from 'react-redux';
-import { IRootState } from 'modules';
+import React from 'react';
+import { IInputProps } from 'services/forms/connectInput';
+import RadioButton from './RadioButton';
 
-import Desktop from 'components/Main/Desktop';
+interface IRadioGroupItem {
+    key: string;
+    disabled?: boolean;
+    content: React.ReactNode;
+}
 
-const mapStateToProps = (state: IRootState) => ({
-    formValues: state.forms
-});
+export interface IRadioGroupProps extends IInputProps<string> {
+    className?: string;
+    items: IRadioGroupItem[];
+}
 
-export default connect(mapStateToProps)(Desktop);
+const RadioGroup: React.SFC<IRadioGroupProps> = props => (
+    <div className={props.className}>
+        {props.items.map(item => (
+            <RadioButton
+                key={item.key}
+                checked={props.value === item.key}
+                disabled={item.disabled}
+                onClick={() => props.onChange && props.onChange(item.key)}
+            >
+                {item.content}
+            </RadioButton>
+        ))}
+    </div>
+);
+
+export default RadioGroup;

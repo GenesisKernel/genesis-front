@@ -21,14 +21,17 @@
 // SOFTWARE.
 
 import { ComponentType, Component, createElement } from 'react';
-import { FormContext, IFormValuesCollection } from 'services/forms';
-import { IValidator, validate, TValidationResult } from 'services/forms/validation';
+import { FormContext, IFormContext } from 'services/forms';
+import { IValidator, validate, TValidationResult, TValidationState } from 'services/forms/validation';
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 export interface IInputProps<T> {
     value?: T | null;
     validate?: IValidator<T> | IValidator<T>[];
+    validationState?: TValidationState;
+    onFocus?: () => void;
+    onBlur?: () => void;
     onChange?: (value: T) => void;
 }
 
@@ -41,53 +44,78 @@ export interface IConnectedInputProps<T> {
     name: string;
     defaultValue?: T;
     validate?: IValidator<T> | IValidator<T>[];
-
-    formValues: { [form: string]: IFormValuesCollection };
-    connectInput: (form: string, initialValue: TValidationResult<T>) => void;
-    disconnectInput: (form: string) => void;
-    onChange: (form: string, value: TValidationResult<T>) => void;
 }
 
-const valueOf = (values: { [form: string]: IFormValuesCollection }, params: { form: string, name: string }) => {
-    if (!(params.form in values)) {
-        return undefined;
-    }
-
-    if (!(params.name in values[params.form])) {
-        return undefined;
-    }
-
-    return values[params.form][params.name];
-};
+interface IConnectedInputState<TValue> {
+    isPristine: boolean;
+    value: TValue | undefined;
+    validationState: TValidationState;
+    validationResult?: TValidationResult<TValue>;
+}
 
 const connectInput = <TProps, TValue>(component: ComponentType<TProps & IInputProps<TValue>>) => {
-    class FormEmitter extends Component<TProps & IConnectedInputProps<TValue>> {
+    class FormEmitter extends Component<TProps & IInputProps<TValue> & IConnectedInputProps<TValue>, IConnectedInputState<TValue>> {
         static contextType = FormContext;
-        context!: string;
+        context!: IFormContext<TValue>;
+        state: IConnectedInputState<TValue> = {
+            isPristine: true,
+            value: undefined,
+            validationState: 'VALID'
+        };
 
         componentDidMount() {
-            this.props.connectInput(this.context, validate(this.props.defaultValue, this.props.validate));
+            const result = validate(this.props.defaultValue, this.props.validate);
+            this.setState({
+                value: this.props.defaultValue,
+                validationState: result.valid ? 'VALID' : 'INVALID',
+                validationResult: result
+            }, () => {
+                this.context.connectEmitter(this.props.name, result);
+            });
         }
 
         componentWillUnmount() {
-            this.props.disconnectInput(this.context);
+            this.context.disconnectEmitter(this.props.name);
+        }
+
+        onBlur = () => {
+            const isValid = !(this.state.validationResult && !this.state.validationResult.valid);
+            this.setState({
+                validationState: isValid ? 'VALID' : 'INVALID'
+            });
         }
 
         onChange = (value: TValue) => {
-            this.props.onChange(this.context, validate(value, this.props.validate));
+            const result = validate(value, this.props.validate);
+            this.setState({
+                isPristine: false,
+                value: value,
+                validationState: result.valid ? 'VALID' : 'INVALID',
+                validationResult: result
+            }, () => {
+                this.context.onChange(this.props.name, result);
+
+                if (this.props.onChange) {
+                    this.props.onChange(value);
+                }
+            });
+        }
+
+        isValid: () => TValidationState = () => {
+            if (this.state.isPristine && !this.context.isSubmitting) {
+                return 'VALID';
+            }
+            else {
+                return this.state.validationState;
+            }
         }
 
         render() {
-            const formValue = valueOf(this.props.formValues, {
-                form: this.context,
-                name: this.props.name
-            });
-
-            const plainValue = formValue && formValue.value;
-
             return createElement(component, {
                 ...this.props,
-                value: undefined === plainValue ? null : plainValue,
+                value: undefined === this.state.value ? null : this.state.value,
+                validationState: this.isValid(),
+                onBlur: this.onBlur,
                 onChange: this.onChange
             });
         }

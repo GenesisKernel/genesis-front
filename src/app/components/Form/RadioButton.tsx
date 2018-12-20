@@ -21,124 +21,105 @@
 // SOFTWARE.
 
 import React from 'react';
-import { IInputProps } from 'services/forms/connectInput';
 import themed from 'components/Theme/themed';
 import classNames from 'classnames';
 
-export interface ICheckboxProps extends IInputProps<boolean> {
+export interface IRadioButtonProps {
     className?: string;
+    checked?: boolean;
     disabled?: boolean;
+    onClick?: () => void;
 }
 
-const Checkbox: React.SFC<ICheckboxProps> = props => (
+const RadioButton: React.SFC<IRadioButtonProps> = props => (
     <div
         className={classNames(props.className, {
-            'checkbox-active': props.value,
-            'checkbox-disabled': props.disabled
+            'radiobutton-active': props.checked,
+            'radiobutton-disabled': props.disabled
         })}
-        onClick={() => !props.disabled && props.onChange && props.onChange(!props.value)}
+        onClick={props.disabled ? undefined : props.onClick}
     >
-        <label>
-            <div className="checkbox-control">
-                <em className="icon" />
-            </div>
-            <div className="checkbox-label">
-                {props.children}
-            </div>
-        </label>
+        <div className="radiobutton-control">
+            <div className="icon" />
+        </div>
+        <div className="radiobutton-label">
+            {props.children}
+        </div>
     </div>
 );
 
-export default themed(Checkbox)`
+export default themed(RadioButton)`
     user-select: none;
     margin-bottom: ${props => props.theme.controlSpacing};
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 
-    label {
-        margin: 0;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
-
-    &&&.checkbox-disabled {
-        &.checkbox-active .checkbox-control .icon {
-            display: inline-block;
-        }
-
-        .checkbox-control .icon {
-            display: none;
-        }
-
-        .checkbox-control {
+    &&&.radiobutton-disabled {
+        .radiobutton-control {
             border-color: ${props => props.theme.controlBackgroundDisabled};    
             background: ${props => props.theme.controlBackgroundDisabled};
 
             .icon {
-                border-color: ${props => props.theme.controlForegroundMuted};
+                background: ${props => props.theme.controlForegroundMuted};
             }
         }
 
-        .checkbox-label {
+        .radiobutton-label {
             color: ${props => props.theme.controlForegroundMuted};
         }
     }
 
-    &&.checkbox-active {
-        .checkbox-control {
-            background: ${props => props.theme.controlBackgroundPrimary};
+    &.radiobutton-active {
+        .radiobutton-control {
             border-color: ${props => props.theme.controlBackgroundPrimary};
-            
+
             > .icon {
-                border-color: ${props => props.theme.controlForegroundPrimary};
-                display: inline-block;
+                transform: scale(1);
             }
         }
     }
 
-    &:hover .checkbox-control {
+    &:hover .radiobutton-control {
         border-color: ${props => props.theme.controlOutline};
-
-        > .icon {
-            display: inline-block;
-        }
     }
 
-    &.checkbox-active:hover .checkbox-control {
-        border-color: ${props => props.theme.controlBackgroundPrimaryActive};
-        background: ${props => props.theme.controlBackgroundPrimaryActive};
+    &.radiobutton-active:hover .radiobutton-control {
+        border-color: ${props => props.theme.controlOutlineBright};
     }
 
-    &.checkbox-active:active .checkbox-control, &:active .checkbox-control {
+    &.radiobutton-active:active .radiobutton-control, &:active .radiobutton-control {
         border-color: ${props => props.theme.controlBackgroundActive};
-        background: ${props => props.theme.controlBackgroundActive};
     }
 
-    .checkbox-control {
+    .radiobutton-control {
         transition: border-color .1s ease-in-out, background .1s ease-in-out;
         vertical-align: middle;
         width: 20px;
         height: 20px;
+        border-radius: 100%;
         background: ${props => props.theme.controlBackgroundBright};
         border: solid 1px ${props => props.theme.controlOutlineBright};
         display: inline-block;
-        text-align: center;
+        position: relative;
 
         > .icon {
-            vertical-align: middle;
-            transform: rotate(-45deg);
-            border-left: solid 1px;
-            border-bottom: solid 1px;
-            border-color: ${props => props.theme.controlForegroundMuted};
-            height: 5px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -5px;
+            margin-left: -5px;
+            transition: transform .12s ease-in-out;
             width: 10px;
-            margin-top: -6px;
-            display: none;
+            height: 10px;
+            border-radius: 100%;
+            background: ${props => props.theme.controlBackgroundPrimary};
+            transform: scale(0);
         }
     }
 
-    .checkbox-label {
-        vertical-align: middle;
-        padding-left: 5px;
+    .radiobutton-label {
+        padding-left: 8px;
         color: ${props => props.theme.controlForeground};
         font-size: 15px;
         font-weight: 500;

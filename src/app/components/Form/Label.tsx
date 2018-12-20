@@ -20,11 +20,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import actionCreatorFactory from 'typescript-fsa';
-import { TValidationResult } from 'services/forms/validation';
+import React from 'react';
+import themed from 'components/Theme/themed';
+import classNames from 'classnames';
 
-const actionCreator = actionCreatorFactory('forms');
+export interface ILabelProps {
+    className?: string;
+    disabled?: boolean;
+    required?: boolean;
+}
 
-export const changeValue = actionCreator<{ form: string, name: string, value: TValidationResult<any> }>('CHANGE_VALUE');
-export const connectEmitter = actionCreator<{ form: string, name: string, value: TValidationResult<any> }>('CONNECT_EMITTER');
-export const disconnectEmitter = actionCreator<{ form: string, name: string }>('DISCONNECT_EMITTER');
+const Label: React.SFC<ILabelProps> = props => (
+    <div
+        className={classNames(props.className, {
+            'label-disabled': props.disabled,
+            'label-required': props.required
+        })}
+    >
+        {props.children}
+        {props.required && (
+            <span className="label-required"> *</span>
+        )}
+    </div>
+);
+
+export default themed(Label)`
+    user-select: none;
+    margin-top: ${props => props.theme.controlSpacing};
+    margin-bottom: ${props => props.theme.controlSpacingGroup};
+    font-size: ${props => props.theme.controlFontSize};
+    font-weight: 300;
+    color: ${props => props.disabled ? props.theme.controlForegroundMuted : props.theme.controlForeground};
+    
+    .label-required {
+        color: ${props => props.theme.controlForegroundRequired};
+    }
+`;

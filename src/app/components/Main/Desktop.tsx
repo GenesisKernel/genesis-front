@@ -25,17 +25,13 @@ import required from 'services/forms/validation/generic/required';
 import minLength from 'services/forms/validation/strings/minLength';
 import maxLength from 'services/forms/validation/strings/maxLength';
 
-import Form from 'containers/Form';
-import { TextInput, Checkbox } from 'containers/Form/inputs';
+import Form from 'components/Form';
+import Button from 'components/Form/Button';
+import { TextInput, Checkbox, RadioGroup, FileInput } from 'containers/Form/inputs';
+import Label from 'components/Form/Label';
 
 export interface IDesktopProps {
-    formValues: {
-        [name: string]: {
-            [input: string]: {
-                value: any;
-            };
-        };
-    };
+
 }
 
 interface IDesktopState {
@@ -57,19 +53,58 @@ class Desktop extends React.Component<IDesktopProps, IDesktopState> {
         return (
             <div className="wrapper fullscreen" style={{ background: '#fff' }}>
                 Hello world. Welcome to Desktop
-                <Form name="debug_desktop">
-                    <button onClick={this.onHideToggle}>Hide toggle</button>
-                    <TextInput name="first" validate={[required, minLength(3), maxLength(5)]} />
-                    <Checkbox name="picker" validate={required} defaultValue>Must be picked</Checkbox>
-                    <Checkbox name="picker2" defaultValue>Doesn't care to be picked</Checkbox>
-                    {!this.state.hideToggle && (
-                        <>
-                            <TextInput name="second" defaultValue="SECOND_DEFAULT" validate={minLength(3)} />
-                            <TextInput name="third" validate={maxLength(5)} />
-                        </>
-                    )}
-                </Form>
-                <TextInput name="hello" />
+                <div style={{ width: 200, padding: 20 }}>
+                    <Form>
+                        <button onClick={this.onHideToggle}>Hide toggle</button>
+                        <Label>Simple text input. MinLength(3), MaxLength(5)</Label>
+                        <TextInput name="first" placeholder="This is the first input..." validate={[required, minLength(3), maxLength(5)]} />
+
+                        <Label>File input</Label>
+                        <FileInput name="file" placeholder="Select file..." validate={[required]} />
+
+                        <Label required>Checkbox picker. Required</Label>
+                        <Checkbox name="picker" validate={required} defaultValue>Must be picked</Checkbox>
+
+                        <Label>Checkbox with default value</Label>
+                        <Checkbox name="picker2" defaultValue>Doesn't care to be picked</Checkbox>
+
+                        <Label disabled>Disabled checkbox</Label>
+                        <Checkbox name="disabledPicker" disabled>Disabled picker</Checkbox>
+
+                        <Label disabled>Disabled and checked picker</Label>
+                        <Checkbox name="disabledCheckedPicker" disabled defaultValue>Disabled checked picker</Checkbox>
+
+                        <Label required>Radio group. Required</Label>
+                        <RadioGroup
+                            name="rg"
+                            items={[
+                                { key: 'first', content: 'First element' },
+                                { key: 'second', content: 'Second element' },
+                                { key: 'third', disabled: true, content: 'Third element' },
+                                { key: 'fourth', disabled: true, content: 'Fourth element' },
+                            ]}
+                            defaultValue="third"
+                            validate={required}
+                        />
+                        {!this.state.hideToggle && (
+                            <>
+                                <Label>Hidden texbox. MinLength(3)</Label>
+                                <TextInput name="second" defaultValue="SECOND_DEFAULT" validate={minLength(3)} />
+
+                                <Label>Hidden input. MaxLength(5)</Label>
+                                <TextInput name="third" validate={maxLength(5)} />
+                            </>
+                        )}
+                        <Label>Proceed when you are done with inputs</Label>
+                        <Button type="submit">Launch!</Button>
+                        <Button>Button</Button>
+                        <Button disabled>Disabled</Button>
+                    </Form>
+
+                    <Label>TextInput that is not attached to the form</Label>
+                    <TextInput name="hello" disabled value="Hello world" />
+                    <TextInput name="hello" disabled placeholder="Hello world" />
+                </div>
             </div>
         );
     }

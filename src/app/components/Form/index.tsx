@@ -21,24 +21,92 @@
 // SOFTWARE.
 
 import React from 'react';
-import { FormContext, IFormValuesCollection } from 'services/forms';
+import { FormContext, IFormValuesCollection, IFormContext, IFormSubmit } from 'services/forms';
+import { TValidationResult } from 'services/forms/validation';
 
 export interface IFormProps {
-    name: string;
-    values: IFormValuesCollection;
+    onSubmit?: (result: IFormSubmit) => void;
 }
 
-const Form: React.SFC<IFormProps> = props => (
-    <FormContext.Provider value={props.name}>
-        <div style={{ border: 'solid 1px #ccc', margin: 10, padding: 10 }}>
-            <div style={{ color: '#999', fontSize: 12 }}>Form #{props.name}</div>
-            <div>{props.children}</div>
-            <div>
-                <div style={{ color: '#999', fontSize: 12 }}>Values stack</div>
-                <div>{JSON.stringify(props.values)}</div>
-            </div>
-        </div>
-    </FormContext.Provider>
-);
+interface IFormState {
+    context: IFormContext<any>;
+}
+
+class Form extends React.Component<IFormProps, IFormState> {
+    private _values: IFormValuesCollection = {};
+
+    constructor(props: IFormProps) {
+        super(props);
+
+        this.state = {
+            context: {
+                isSubmitting: false,
+                onChange: this.onChange,
+                onSubmit: this.onSubmit,
+                connectEmitter: this.onChange,
+                disconnectEmitter: this.disconnectEmitter
+            }
+        };
+    }
+
+    onSubmit = (e?: React.FormEvent) => {
+        if (e) {
+            e.preventDefault();
+        }
+
+        this.setState(() => ({
+            context: {
+                ...this.state.context,
+                isSubmitting: true
+            }
+        }), () => {
+            if (this.props.onSubmit) {
+                this.props.onSubmit({
+                    valid: this.isValid(),
+                    values: this._values
+                });
+            }
+        });
+    }
+
+    onChange = (name: string, initialValue: TValidationResult<any>) => {
+        this._values[name] = initialValue;
+
+        if (this.state.context.isSubmitting) {
+            this.setState({
+                context: {
+                    ...this.state.context,
+                    isSubmitting: false
+                }
+            });
+        }
+    }
+
+    isValid = () => {
+        for (let input in this._values) {
+            if (this._values.hasOwnProperty(input)) {
+                if (!this._values[input].valid) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    disconnectEmitter = (name: string) => {
+        delete this._values[name];
+    }
+
+    render() {
+        return (
+            <FormContext.Provider value={this.state.context}>
+                <form onSubmit={this.onSubmit}>
+                    {this.props.children}
+                </form>
+            </FormContext.Provider>
+        );
+    }
+}
 
 export default Form;

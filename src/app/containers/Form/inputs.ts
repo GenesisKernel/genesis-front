@@ -20,9 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import connectFormInput from './connectFormInput';
+import connectInput from 'services/forms/connectInput';
 import TextInputNative from 'components/Form/TextInput';
 import CheckboxNative from 'components/Form/Checkbox';
+import RadioGroupNative from 'components/Form/RadioGroup';
+import FileInputNative from 'components/Form/FileInput';
 
-export const TextInput = connectFormInput(TextInputNative);
-export const Checkbox = connectFormInput(CheckboxNative);
+export const TextInput = connectInput(TextInputNative);
+export const Checkbox = connectInput(CheckboxNative);
+export const RadioGroup = connectInput(RadioGroupNative);
+export const FileInput = connectInput(FileInputNative);

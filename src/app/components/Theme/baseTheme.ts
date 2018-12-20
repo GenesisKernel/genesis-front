@@ -87,7 +87,28 @@ const baseTheme: IThemeDefinition = {
     systemButtonActive: 'rgba(0,0,0,0.1)',
 
     securityWarningBackground: '#ff5555',
-    securityWarningForeground: '#ffffff'
+    securityWarningForeground: '#ffffff',
+
+    controlSpacing: '10px',
+    controlSpacingGroup: '5px',
+    controlFontSize: '15px',
+
+    controlOutline: '#000',
+    controlOutlineBright: '#999',
+    controlOutlinePrimary: '#1a3f6b',
+    controlOutlineInvalid: '#ff0000',
+
+    controlBackground: '#ddd',
+    controlBackgroundBright: '#fff',
+    controlBackgroundPrimary: '#2061b1',
+    controlBackgroundPrimaryActive: '#1b559c',
+    controlBackgroundDisabled: '#eee',
+    controlBackgroundActive: '#b9b9b9',
+
+    controlForeground: '#000',
+    controlForegroundPrimary: '#fff',
+    controlForegroundMuted: '#b3b3b3',
+    controlForegroundRequired: '#ff0000'
 };
 
 export default baseTheme;

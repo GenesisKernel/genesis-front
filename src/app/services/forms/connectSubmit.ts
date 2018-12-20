@@ -20,11 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import reducer, { State } from './reducer';
-import * as actions from './actions';
+import { ComponentType, createElement } from 'react';
+import { FormContext, IFormContext } from 'services/forms';
 
-export type State = State;
-export {
-    actions,
-    reducer
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
+export interface ISubmitProps {
+    onSubmit?: () => void;
+}
+
+export type TSubmitOwnProps<TComponent> =
+    TComponent extends ComponentType<infer TProps> ?
+    TProps extends ISubmitProps ?
+    Omit<TProps, keyof ISubmitProps> : unknown : unknown;
+
+const connectSubmit = <TProps>(component: ComponentType<TProps & ISubmitProps>) => {
+    const FormSubmitter: React.SFC<TProps & ISubmitProps> = props => createElement(FormContext.Consumer, {
+        children: (context: IFormContext<never>) => createElement(component, {
+            ...props,
+            onSubmit: context.onSubmit
+        })
+    });
+
+    return FormSubmitter;
 };
+
+export default connectSubmit;
