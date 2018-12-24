@@ -23,8 +23,23 @@
 import { Observable } from 'rxjs';
 import { IAPIDependency } from 'modules/dependencies';
 
+function shuffle(array: Array<any>) {
+    let currentIndex = array.length, temporaryValue, randomIndex;
+    while (0 !== currentIndex) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+}
+
 const NodeObservable = (params: { nodes: string[], count: number, timeout?: number, concurrency?: number, api: IAPIDependency }) =>
-    Observable.from(params.nodes)
+    Observable.from(shuffle(params.nodes.slice()))
         .distinct()
         .flatMap(l => {
             const client = params.api({ apiHost: l });
