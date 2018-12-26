@@ -201,7 +201,6 @@ declare module 'genesis/api' {
         tree: TProtypoElement[];
         menutree?: TProtypoElement[];
         plainText: string;
-        nodesCount: number;
     }
 
     interface IContentTestRequest {
@@ -235,6 +234,14 @@ declare module 'genesis/api' {
 
     interface IContentHashResponse {
         hash: string;
+    }
+
+    interface IPageValidatorsRequest {
+        name: string
+    }
+
+    interface IPageValidatorsResponse {
+        validate_count: number
     }
 
     interface ISegmentRequest {

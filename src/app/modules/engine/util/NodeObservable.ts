@@ -23,13 +23,12 @@
 import { Observable } from 'rxjs';
 import { IAPIDependency } from 'modules/dependencies';
 
-function shuffle(array: Array<any>) {
+function shuffle<T>(array: Array<T>) {
     let currentIndex = array.length, temporaryValue, randomIndex;
     while (0 !== currentIndex) {
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex -= 1;
 
-        // And swap it with the current element.
         temporaryValue = array[currentIndex];
         array[currentIndex] = array[randomIndex];
         array[randomIndex] = temporaryValue;

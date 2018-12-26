@@ -23,6 +23,12 @@
 import { Epic } from 'modules';
 import { Observable } from 'rxjs/Observable';
 import { renderPage } from '../actions';
+import NodeObservable from 'modules/engine/util/NodeObservable';
+import keyring from 'lib/keyring';
+
+const invalidationError = {
+    error: 'E_INVALIDATED'
+};
 
 const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(renderPage.started)
     .flatMap(action => {
@@ -45,27 +51,62 @@ const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(rende
                 locale: state.storage.locale
             }) : Promise.resolve(null)
 
-        ])).map(payload => {
+        ])).flatMap(payload => {
             const page = payload[0];
             const defaultPage = payload[1];
 
-            return renderPage.done({
-                params: action.payload,
-                result: {
-                    defaultMenu: defaultPage && defaultPage.menu !== page.menu && {
-                        name: defaultPage.menu,
-                        content: defaultPage.menutree
-                    },
-                    menu: {
-                        name: page.menu,
-                        content: page.menutree
-                    },
-                    page: {
-                        params: action.payload.params,
+            return NodeObservable({
+                nodes: state.storage.fullNodes,
+                count: Math.min(state.storage.fullNodes.length, 3),
+                api
+            }).flatMap(node => client.to(node).pageValidatorsCount({
+                name: action.payload.name
+
+            })).map(v => v.validate_count).max().defaultIfEmpty(0).flatMap(count => {
+                return NodeObservable({
+                    nodes: state.storage.fullNodes,
+                    count,
+                    concurrency: 3,
+                    api
+
+                }).flatMap(apiHost => Observable.from(
+                    api({ apiHost }).contentHash({
                         name: action.payload.name,
-                        content: page.tree
+                        ecosystem: state.auth.wallet.access.ecosystem,
+                        walletID: state.auth.wallet.wallet.id,
+                        role: state.auth.wallet.role ? Number(state.auth.wallet.role.id) : null,
+                        locale: state.storage.locale,
+                        params: action.payload.params
+
+                    })
+                )).catch(e => Observable.empty<never>()).toArray().map(result => {
+                    const contentHash = keyring.hashData(page.plainText.trim());
+
+                    for (let i = 0; i < result.length; i++) {
+                        if (contentHash !== result[i].hash) {
+                            throw invalidationError;
+                        }
                     }
-                }
+
+                    return renderPage.done({
+                        params: action.payload,
+                        result: {
+                            defaultMenu: defaultPage && defaultPage.menu !== page.menu && {
+                                name: defaultPage.menu,
+                                content: defaultPage.menutree
+                            },
+                            menu: {
+                                name: page.menu,
+                                content: page.menutree
+                            },
+                            page: {
+                                params: action.payload.params,
+                                name: action.payload.name,
+                                content: page.tree
+                            }
+                        }
+                    });
+                });
             });
 
         }).catch(e =>
