@@ -122,8 +122,7 @@ const simvolioSyntax = () => ({
 
         comment: [
             [/[^\/*]+/, 'comment'],
-            [/\/\*/, 'comment', '@push'],    // nested comment
-            ['\\*/', 'comment', '@pop'],
+            [/\*\//, 'comment', '@pop'],
             [/[\/*]/, 'comment']
         ],
 
