@@ -26,6 +26,7 @@ import { Reducer } from 'modules';
 
 const initializeDoneHandler: Reducer<typeof initialize.done, State> = (state, payload) => ({
     ...state,
+    networkID: payload.result.networkID,
     isLoaded: true,
     isOffline: false,
     isConnecting: false,

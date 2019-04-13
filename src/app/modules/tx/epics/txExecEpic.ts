@@ -79,6 +79,7 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                         return Observable.from(new Contract({
                             id: proto.id,
                             schema: defaultSchema,
+                            networkID: state.engine.networkID,
                             ecosystemID: parseInt(state.auth.wallet && state.auth.wallet.access.ecosystem || '1', 10),
                             fields: txParams
 

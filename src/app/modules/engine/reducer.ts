@@ -30,6 +30,7 @@ import initializeFailedHandler from './reducers/initializeFailedHandler';
 import initializeHandler from './reducers/initializeHandler';
 
 export type State = {
+    readonly networkID: number;
     readonly nodeHost: string;
     readonly activationEmail: string;
     readonly localeMessages: { [key: string]: string };
@@ -40,6 +41,7 @@ export type State = {
 };
 
 export const initialState: State = {
+    networkID: 1,
     nodeHost: null,
     activationEmail: null,
     localeMessages: defaultLocale,

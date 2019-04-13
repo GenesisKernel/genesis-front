@@ -1,4 +1,5 @@
 {
+    "networkID": 1,
     "fullNodes": [
         "http://127.0.0.1:7079"
     ]

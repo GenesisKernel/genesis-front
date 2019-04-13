@@ -25,6 +25,6 @@ import { push } from 'connected-react-router';
 
 const actionCreator = actionCreatorFactory('engine');
 export const navigate = (url: string) => push(url);
-export const initialize = actionCreator.async<{ defaultKey?: string }, { nodeHost: string, fullNodes: string[], activationEmail: string }>('INITIALIZE');
+export const initialize = actionCreator.async<{ defaultKey?: string }, { networkID: number, nodeHost: string, fullNodes: string[], activationEmail: string }>('INITIALIZE');
 export const setCollapsed = actionCreator<boolean>('SET_COLLAPSED');
 export const setLocale = actionCreator.async<string, { [key: string]: string }>('SET_LOCALE');

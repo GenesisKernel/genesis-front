@@ -23,7 +23,7 @@
 import queryString from 'query-string';
 import urlJoin from 'url-join';
 import urlTemplate from 'url-template';
-import { IUIDResponse, ILoginRequest, ILoginResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, IContentJsonRequest, IContentJsonResponse, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, ISectionsRequest, ISectionsResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse, ITableRequest, TConfigRequest, ISystemParamsRequest, ISystemParamsResponse, IContentHashRequest, IContentHashResponse, TTxCallRequest, TTxCallResponse, TTxStatusRequest, TTxStatusResponse, ITxStatus, IKeyInfo } from 'apla/api';
+import { IUIDResponse, ILoginRequest, ILoginResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, IContentJsonRequest, IContentJsonResponse, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, ISectionsRequest, ISectionsResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse, ITableRequest, TConfigRequest, ISystemParamsRequest, ISystemParamsResponse, IContentHashRequest, IContentHashResponse, TTxCallRequest, TTxCallResponse, TTxStatusRequest, TTxStatusResponse, ITxStatus, IKeyInfo, IUIDRequest } from 'apla/api';
 
 export type TRequestMethod =
     'get' |
@@ -43,7 +43,7 @@ export interface IRequestOptions<P, R> {
         [key: string]: string;
     };
     requestTransformer?: (request: P) => { [key: string]: any };
-    responseTransformer?: (response: any, text: string) => R;
+    responseTransformer?: (response: any, text: string, request: P) => R;
 }
 
 export interface IEndpointFactory {
@@ -148,7 +148,7 @@ class AplaAPI {
             throw json;
         }
         else {
-            return requestOptions.responseTransformer ? requestOptions.responseTransformer(json, text) : json;
+            return requestOptions.responseTransformer ? requestOptions.responseTransformer(json, text, requestParams) : json;
         }
     }
 
@@ -185,10 +185,10 @@ class AplaAPI {
     }
 
     // Authorization
-    public getUid = this.setEndpoint<IUIDResponse>('get', 'getuid', {
-        responseTransformer: response => ({
+    public getUid = this.setEndpoint<IUIDRequest, IUIDResponse>('get', 'getuid', {
+        responseTransformer: (response, text, request) => ({
             token: response.token,
-            uid: 'LOGIN' + response.uid
+            uid: 'LOGIN' + String(request.networkID) + String(response.uid)
         })
     });
     public login = this.setSecuredEndpoint<ILoginRequest, ILoginResponse>('post', 'login', {

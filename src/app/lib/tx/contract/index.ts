@@ -32,6 +32,7 @@ export interface IContractContext {
     id: number;
     schema: ISchema;
     ecosystemID: number;
+    networkID: number;
     fields: {
         [name: string]: IContractParam;
     };
@@ -104,7 +105,7 @@ export default class Contract {
                     Time: this._time,
                     EcosystemID: this._context.ecosystemID,
                     KeyID: this._keyID,
-                    NetworkID: this._context.schema.network,
+                    NetworkID: this._context.networkID,
                     PublicKey: this._publicKey
                 },
                 Params: params

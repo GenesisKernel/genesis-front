@@ -36,7 +36,7 @@ const loginGuestEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
         const id = address(publicKey);
         const addr = addressString(id);
 
-        return Observable.from(client.getUid())
+        return Observable.from(client.getUid({ networkID: store.getState().engine.networkID }))
             .flatMap(uid =>
                 client.authorize(uid.token).login({
                     publicKey,

@@ -24,7 +24,6 @@ import IField from 'lib/tx/contract/field';
 
 export interface ISchema {
     header: Uint8Array;
-    network: number;
     fields: {
         [type: string]: new () => IField<any>;
     };
