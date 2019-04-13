@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 AplaProject
+// Copyright (c) 2016-2018 GenesisKernel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,14 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-/// <reference types="monaco-editor" />
-
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import MonacoEditor from 'react-monaco-editor';
 import registerProtypo from './protypo';
 import registerSimvolio from './simvolio';
-import platform from 'lib/platform';
+
+import { editor } from 'monaco-editor';
+import 'monaco-editor/esm/vs/editor/browser/controller/coreCommands.js';
+import 'monaco-editor/esm/vs/editor/contrib/bracketMatching/bracketMatching.js';
+import 'monaco-editor/esm/vs/editor/contrib/caretOperations/caretOperations.js';
+import 'monaco-editor/esm/vs/editor/contrib/caretOperations/transpose.js';
+import 'monaco-editor/esm/vs/editor/contrib/clipboard/clipboard.js';
+import 'monaco-editor/esm/vs/editor/contrib/find/findController.js';
+import 'monaco-editor/esm/vs/editor/contrib/multicursor/multicursor.js';
+import 'monaco-editor/esm/vs/editor/contrib/suggest/suggestController.js';
+import 'monaco-editor/esm/vs/editor/contrib/suggest/suggest.js';
+import * as monacoEditor from 'monaco-editor/esm/vs/editor/editor.api';
+
+registerProtypo(monacoEditor);
+registerSimvolio(monacoEditor);
 
 const StyledEditor = styled.div`
     &.editor-flex {
@@ -46,27 +58,18 @@ interface IEditorProps {
     value?: string;
     width?: number;
     height?: number;
-    options?: monaco.editor.IEditorOptions;
+    options?: editor.IEditorOptions;
     onChange?: (code: string) => void;
 }
 
 export default class Editor extends React.Component<IEditorProps> {
-    public editor: monaco.editor.ICodeEditor;
-
-    editorWillMount(editor: typeof monaco) {
-        registerProtypo(editor);
-        registerSimvolio(editor);
-    }
-
     render() {
         return (
             <StyledEditor className={this.props.height ? null : 'editor-flex'}>
                 <MonacoEditor
-                    ref={l => this.editor = l && l.editor}
                     language={this.props.language}
                     value={this.props.value}
                     onChange={this.props.onChange && this.props.onChange.bind(this)}
-                    editorWillMount={this.editorWillMount.bind(this)}
                     options={{
                         automaticLayout: true,
                         contextmenu: false,
@@ -74,19 +77,6 @@ export default class Editor extends React.Component<IEditorProps> {
                         ...this.props.options
                     }}
                     height={this.props.height}
-                    requireConfig={{
-                        url: platform.select({
-                            desktop: './vs/loader.js',
-                            web: '/vs/loader.js'
-                        }),
-                        baseUrl: platform.select({
-                            desktop: './',
-                            web: '/'
-                        }),
-                        paths: {
-                            'vs': './vs'
-                        }
-                    }}
                 />
             </StyledEditor>
         );

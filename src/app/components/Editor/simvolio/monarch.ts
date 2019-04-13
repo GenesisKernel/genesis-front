@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 AplaProject
+// Copyright (c) 2016-2018 GenesisKernel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-/// <reference types="monaco-editor" />
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 const simvolioSyntax = () => ({
     // Set defaultToken to invalid to see what you do not tokenize yet
@@ -122,8 +122,7 @@ const simvolioSyntax = () => ({
 
         comment: [
             [/[^\/*]+/, 'comment'],
-            [/\/\*/, 'comment', '@push'],    // nested comment
-            ['\\*/', 'comment', '@pop'],
+            [/\*\//, 'comment', '@pop'],
             [/[\/*]/, 'comment']
         ],
 
