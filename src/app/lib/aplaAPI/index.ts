@@ -186,6 +186,7 @@ class AplaAPI {
 
     // Authorization
     public getUid = this.setEndpoint<IUIDRequest, IUIDResponse>('get', 'getuid', {
+        requestTransformer: request => null,
         responseTransformer: (response, text, request) => ({
             token: response.token,
             uid: 'LOGIN' + String(request.networkID) + String(response.uid)
