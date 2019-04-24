@@ -31,7 +31,6 @@ import StringCollection from '../contract/field/stringCollection';
 
 const defaultSchema: ISchema = {
     header: new Uint8Array([0x80]),
-    network: 1,
     fields: {
         'bool': Boolean,
         'int': Integer,

@@ -27,6 +27,7 @@ declare module 'apla/gui' {
     interface IInferredArguments {
         readonly privateKey?: string;
         readonly fullNode?: string[];
+        readonly networkID?: number;
         readonly dry?: boolean;
         readonly offsetX?: number;
         readonly offsetY?: number;

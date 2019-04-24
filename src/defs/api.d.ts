@@ -23,6 +23,10 @@
 declare module 'apla/api' {
     import { TProtypoElement } from 'apla/protypo';
 
+    interface IUIDRequest {
+        networkID: number;
+    }
+
     interface IUIDResponse {
         uid: string;
         token: string;

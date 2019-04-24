@@ -23,12 +23,12 @@
 import { Observable } from 'rxjs';
 import { IAPIDependency } from 'modules/dependencies';
 
-const NodeObservable = (params: { nodes: string[], count: number, timeout?: number, concurrency?: number, api: IAPIDependency }) =>
+const NodeObservable = (params: { networkID: number, nodes: string[], count: number, timeout?: number, concurrency?: number, api: IAPIDependency }) =>
     Observable.from(params.nodes)
         .distinct()
         .flatMap(l => {
             const client = params.api({ apiHost: l });
-            return Observable.from(client.getUid())
+            return Observable.from(client.getUid({ networkID: params.networkID }))
                 .map(() => l)
 
                 // Set request timeout, try the next one

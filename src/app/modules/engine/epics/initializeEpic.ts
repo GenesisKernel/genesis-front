@@ -52,6 +52,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
             }
 
             const config: IWebSettings = {
+                networkID: 'number' === typeof platform.args.networkID ? platform.args.networkID : 'number' === typeof result.networkID ? result.networkID : 1,
                 fullNodes: (platform.args.fullNode && platform.args.fullNode.length) ? platform.args.fullNode :
                     (result.fullNodes && Array.isArray(result.fullNodes) && result.fullNodes.length) ? result.fullNodes :
                         fullNodesFallback,
@@ -68,6 +69,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                 ...config.fullNodes
             ];
             return NodeObservable({
+                networkID: config.networkID,
                 nodes: fullNodes,
                 count: 1,
                 timeout: 5000,
@@ -82,13 +84,14 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                     Observable.of(initialize.done({
                         params: action.payload,
                         result: {
+                            networkID: config.networkID,
                             fullNodes: fullNodes,
                             nodeHost: node,
                             activationEmail: config.activationEmail
                         }
                     })),
                     Observable.of(setLocale.started(state.storage.locale)),
-                    Observable.from(client.getUid())
+                    Observable.from(client.getUid({ networkID: config.networkID }))
                         .flatMap(uid => {
                             const guestKey = action.payload.defaultKey || defaultKey;
 

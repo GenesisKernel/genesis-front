@@ -43,7 +43,7 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
         const nodeHost = store.getState().engine.nodeHost;
         const client = api({ apiHost: nodeHost });
 
-        return Observable.from(client.getUid())
+        return Observable.from(client.getUid({ networkID: store.getState().engine.networkID }))
             .flatMap(uid =>
                 client.authorize(uid.token).login({
                     publicKey,

@@ -40,6 +40,7 @@ const command = commander
     .option('-d, --dry')
     .option('-x, --offset-x <value>', null, parseInt)
     .option('-y, --offset-y <value>', null, parseInt)
+    .option('-i, --network-id <value>', null, parseInt)
     .option('-s, --socket-url <url>', null)
     .option('-u, --disable-full-nodes-sync', null)
     .option('-e, --activation-email', null)
@@ -51,6 +52,7 @@ const args: IInferredArguments = {
     dry: command.dry,
     offsetX: command.offsetX,
     offsetY: command.offsetY,
+    networkID: command.networkId,
     socketUrl: command.socketUrl,
     disableFullNodesSync: command.disableFullNodesSync
 };
