@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2016-2018 AplaProject
+// Copyright (c) 2016-2018 GenesisKernel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,10 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-/// <reference types="monaco-editor" />
-
 import * as _ from 'lodash';
 import syntax from './monarch';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 const langName = 'protypo';
 
@@ -782,7 +781,7 @@ const register = (editor: typeof monaco) => {
                 {
                     label: 'Columns',
                     kind: monaco.languages.CompletionItemKind.Property,
-                    documentation: 'Optional filter for the coulmns to show. Format: ColumnTitle1=column1,ColumnTitl2=column2',
+                    documentation: 'Optional filter for the coulmns to show. Format: ColumnTitle1=column1,ColumnTitle2=column2',
                     insertText: 'Columns: '
                 }
             ]
@@ -802,11 +801,15 @@ const register = (editor: typeof monaco) => {
             if (paramsMatch) {
                 const token = paramsMatch[paramsMatch.length - 1].slice(0, -1);
                 if (functionDefs[token]) {
-                    return functionDefs[token].params;
+                    return {
+                        suggestions: functionDefs[token].params
+                    };
                 }
             }
 
-            return functionProposals();
+            return {
+                suggestions: functionProposals()
+            };
         }
     });
 
