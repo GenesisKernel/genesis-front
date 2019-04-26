@@ -31,7 +31,7 @@ import themed from 'components/Theme/themed';
 import Titlebar from 'components/Main/Titlebar';
 import Wallet from 'components/Auth/Wallet';
 import Login from 'containers/Auth/Login';
-import Offline from 'containers/Auth/Offline';
+import NetworkList from 'containers/Auth/Login/NetworkList';
 
 export interface IAuthProps {
     className?: string;
@@ -49,8 +49,8 @@ const Auth: React.SFC<IAuthProps> = props => (
                     header={platform.select({ desktop: <Titlebar maximizable={false} /> })}
                 >
                     <Switch>
-                        {props.isOffline && (<Route path="/" component={Offline} />)}
                         <Route path="/wallet" component={Wallet} />
+                        <Route path="/networks" component={NetworkList} />
                         <Route path="/" component={Login} />
                         <Redirect to="/" />
                     </Switch>

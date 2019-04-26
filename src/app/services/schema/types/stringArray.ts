@@ -20,15 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { initialize } from '../actions';
-import { Reducer } from 'modules';
+import { TSchemaValueType } from '../';
 
-const initializeFailedHandler: Reducer<typeof initialize.failed, State> = (state, payload) => ({
-    ...state,
-    isOffline: true,
-    isConnecting: false,
-    isLoaded: true
-});
+const stringArrayType: TSchemaValueType<string[]> = {
+    name: 'string[]',
+    isDefined: (value) => {
+        return Array.isArray(value) && 0 < value.length && value.every(l => 'string' === typeof l);
+    },
+    tryGetValue: (value, defaultValue, ...fallbackValues) => {
+        const values = [value, ...fallbackValues];
+        for (let i = 0; i < values.length; i++) {
+            const valueCandidate = values[i];
+            if (stringArrayType.isDefined(valueCandidate)) {
+                return valueCandidate;
+            }
+        }
 
-export default initializeFailedHandler;
+        return defaultValue;
+    }
+};
+
+export default stringArrayType;

@@ -23,6 +23,18 @@
 declare module 'apla/auth' {
     import { IAccount, IKeyInfo, IRoleInfo } from 'apla/api';
 
+    interface INetworkEndpoint {
+        uuid: string;
+        apiHost: string;
+    }
+
+    interface INetwork {
+        uuid: string;
+        id: number;
+        name: string;
+        fullNodes: string[];
+    }
+
     interface IWallet {
         id: string;
         encKey: string;
@@ -36,9 +48,8 @@ declare module 'apla/auth' {
     }
 
     interface ISession {
-        apiHost: string;
+        network: INetworkEndpoint;
         sessionToken: string;
-        refreshToken: string;
     }
 
     interface IAccountContext {

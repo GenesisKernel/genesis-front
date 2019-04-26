@@ -23,14 +23,13 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button } from 'react-bootstrap';
-
-import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
-import Heading from 'components/Auth/Heading';
+import NetworkError from 'services/network/errors';
 
 export interface IOfflineProps {
+    error: NetworkError;
     isConnecting: boolean;
     isConnected: boolean;
-    checkOnline?: (params: null) => void;
+    checkOnline?: () => void;
 }
 
 interface IOfflineState {
@@ -71,7 +70,7 @@ class Offline extends React.Component<IOfflineProps, IOfflineState> {
         const seconds = this.state.seconds - 1;
 
         if (0 >= seconds) {
-            this.props.checkOnline(null);
+            this.props.checkOnline();
         }
         else {
             this.setState({
@@ -82,38 +81,31 @@ class Offline extends React.Component<IOfflineProps, IOfflineState> {
 
     render() {
         return (
-            <LocalizedDocumentTitle title="general.service.offline" defaultTitle="Service offline">
-                <div className="desktop-flex-col desktop-flex-stretch">
-                    <Heading>
-                        <FormattedMessage id="general.service.offline" defaultMessage="Service offline" />
-                    </Heading>
-                    <div className="text-center mv-lg">
-                        <h1 className="mb-lg">
-                            <sup>
-                                <em className="fa fa-cog fa-2x text-muted fa-spin text-info" />
-                            </sup>
-                            <em className="fa fa-cog fa-5x text-muted fa-spin text-purple" />
-                            <em className="fa fa-cog fa-lg text-muted fa-spin text-success" />
-                        </h1>
-                        <div className="text-bold text-lg mb-lg">
-                            <FormattedMessage id="general.service.offline" defaultMessage="Service offline" />
-                        </div>
-                        <p className="lead">
-                            {this.props.isConnecting && (
-                                <FormattedMessage id="general.service.connecting" defaultMessage="Connecting..." />
-                            )}
-                            {!this.props.isConnecting && (
-                                <FormattedMessage id="general.service.connecting.retry.in" defaultMessage="Retrying in {seconds} sec" values={{ seconds: this.state.seconds }} />
-                            )}
-                        </p>
-                        <div>
-                            <Button bsStyle="link" onClick={this.props.isConnecting ? null : this.props.checkOnline}>
-                                <FormattedMessage id="general.service.retry" defaultMessage="Retry now" />
-                            </Button>
-                        </div>
-                    </div>
+            <div className="text-center mv-lg">
+                <h1 className="mb-lg">
+                    <sup>
+                        <em className="fa fa-cog fa-2x text-muted fa-spin text-info" />
+                    </sup>
+                    <em className="fa fa-cog fa-5x text-muted fa-spin text-purple" />
+                    <em className="fa fa-cog fa-lg text-muted fa-spin text-success" />
+                </h1>
+                <div className="text-bold text-lg mb-lg">
+                    <FormattedMessage id={`general.network.error.${this.props.error}`} defaultMessage="Network is unreachable" />
                 </div>
-            </LocalizedDocumentTitle>
+                <p className="lead">
+                    {this.props.isConnecting && (
+                        <FormattedMessage id="general.service.connecting" defaultMessage="Connecting..." />
+                    )}
+                    {!this.props.isConnecting && (
+                        <FormattedMessage id="general.service.connecting.retry.in" defaultMessage="Retrying in {seconds} sec" values={{ seconds: this.state.seconds }} />
+                    )}
+                </p>
+                <div>
+                    <Button bsStyle="link" onClick={this.props.isConnecting ? null : this.props.checkOnline}>
+                        <FormattedMessage id="general.service.retry" defaultMessage="Retry now" />
+                    </Button>
+                </div>
+            </div>
         );
     }
 }

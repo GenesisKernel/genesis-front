@@ -20,11 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-declare module 'apla' {
-    interface IWebSettings {
-        fullNodes?: string[];
-        socketUrl?: string;
-        activationEmail?: string;
-        disableFullNodesSync?: boolean;
+import { TSchemaValueType } from '../';
+
+const stringType: TSchemaValueType<string> = {
+    name: 'string',
+    isDefined: (value) => {
+        return null !== value && undefined !== value && 'string' === typeof value && 0 < value.length;
+    },
+    tryGetValue: (value, defaultValue, ...fallbackValues) => {
+        const values = [value, ...fallbackValues];
+        for (let i = 0; i < values.length; i++) {
+            const valueCandidate = values[i];
+            if (stringType.isDefined(valueCandidate)) {
+                return valueCandidate;
+            }
+        }
+
+        return defaultValue;
     }
-}
+};
+
+export default stringType;

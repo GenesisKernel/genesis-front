@@ -27,8 +27,8 @@ import { saveWallet } from 'modules/storage/actions';
 
 const loadSavedWalletEpic: Epic = (action$, store, { api }) => action$.ofAction(saveWallet)
     .flatMap(action => {
-        const state = store.getState();
-        const client = api({ apiHost: state.engine.nodeHost });
+        const network = store.getState().engine.guestSession.network;
+        const client = api({ apiHost: network.apiHost });
 
         return Observable.from(client.keyinfo({
             id: action.payload.id

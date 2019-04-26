@@ -24,7 +24,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { initialize } from 'modules/engine/actions';
-import platform from 'lib/platform';
 
 export interface IInitHookProps {
 
@@ -40,9 +39,7 @@ interface IInitHookDispatch {
 
 class InitHook extends React.Component<IInitHookProps & IInitHookState & IInitHookDispatch> {
     componentDidMount() {
-        this.props.initialize({
-            defaultKey: platform.args.privateKey
-        });
+        this.props.initialize({});
     }
 
     render() {

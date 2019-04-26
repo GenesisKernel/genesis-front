@@ -24,6 +24,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { initialize } from 'modules/engine/actions';
+import NetworkError from 'services/network/errors';
 
 import Offline from 'components/Auth/Offline';
 
@@ -32,6 +33,7 @@ export interface IOfflineContainerProps {
 }
 
 interface IOfflineContainerState {
+    error: NetworkError;
     isConnecting: boolean;
     isConnected: boolean;
 }
@@ -41,12 +43,13 @@ interface IOfflineContainerDispatch {
 }
 
 const mapStateToProps = (state: IRootState) => ({
+    error: state.engine.networkError,
     isConnected: !state.engine.isOffline,
     isConnecting: state.engine.isConnecting
 });
 
 const mapDispatchToProps = {
-    checkOnline: () => initialize.started(null)
+    checkOnline: () => initialize.started({})
 };
 
 const WalletListContainer: React.SFC<IOfflineContainerProps & IOfflineContainerState & IOfflineContainerDispatch> = props => (

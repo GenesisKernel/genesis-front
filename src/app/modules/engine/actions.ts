@@ -22,9 +22,12 @@
 
 import actionCreatorFactory from 'typescript-fsa';
 import { push } from 'connected-react-router';
+import NetworkError from 'services/network/errors';
+import { ISession } from 'apla/auth';
 
 const actionCreator = actionCreatorFactory('engine');
 export const navigate = (url: string) => push(url);
-export const initialize = actionCreator.async<{ defaultKey?: string }, { networkID: number, nodeHost: string, fullNodes: string[], activationEmail: string }>('INITIALIZE');
+export const initialize = actionCreator.async<{}, { activationEmail: string }>('INITIALIZE');
+export const discoverNetwork = actionCreator.async<{ uuid: string }, { session: ISession }, NetworkError>('DISCOVER_NETWORK');
 export const setCollapsed = actionCreator<boolean>('SET_COLLAPSED');
 export const setLocale = actionCreator.async<string, { [key: string]: string }>('SET_LOCALE');

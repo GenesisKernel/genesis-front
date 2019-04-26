@@ -31,7 +31,10 @@ const newPageEpic: Epic = (action$, store, { api }) => action$.ofAction(editorSa
     .filter(l => l.payload.new && 'page' === l.payload.type)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.auth.session);
+        const client = api({
+            apiHost: state.auth.session.network.apiHost,
+            sessionToken: state.auth.session.sessionToken
+        });
         const id = uuid.v4();
 
         return Observable.fromPromise(client.getData({

@@ -32,7 +32,10 @@ const newBlockEpic: Epic = (action$, store, { api }) => action$.ofAction(editorS
     .flatMap(action => {
         const id = uuid.v4();
         const state = store.getState();
-        const client = api(state.auth.session);
+        const client = api({
+            apiHost: state.auth.session.network.apiHost,
+            sessionToken: state.auth.session.sessionToken
+        });
 
         return ModalObservable<{ name: string, conditions: string }>(action$, {
             modal: {

@@ -21,17 +21,20 @@
 // SOFTWARE.
 
 import * as actions from './actions';
+import { ISession } from 'apla/auth';
 import defaultLocale from 'lib/en-US.json';
+import NetworkError from 'services/network/errors';
 import { reducerWithInitialState } from 'typescript-fsa-reducers/dist';
 import initializeDoneHandler from './reducers/initializeDoneHandler';
 import setLocaleDoneHandler from './reducers/setLocaleDoneHandler';
 import setCollapsedHandler from './reducers/setCollapsedHandler';
-import initializeFailedHandler from './reducers/initializeFailedHandler';
-import initializeHandler from './reducers/initializeHandler';
+import discoverNetworkHandler from './reducers/discoverNetworkHandler';
+import discoverNetworkDoneHandler from './reducers/discoverNetworkDoneHandler';
+import discoverNetworkFailedHandler from './reducers/discoverNetworkFailedHandler';
 
 export type State = {
-    readonly networkID: number;
-    readonly nodeHost: string;
+    readonly networkError: NetworkError;
+    readonly guestSession: ISession;
     readonly activationEmail: string;
     readonly localeMessages: { [key: string]: string };
     readonly isCollapsed: boolean;
@@ -41,19 +44,20 @@ export type State = {
 };
 
 export const initialState: State = {
-    networkID: 1,
-    nodeHost: null,
+    networkError: null,
+    guestSession: null,
     activationEmail: null,
     localeMessages: defaultLocale,
     isCollapsed: true,
     isLoaded: false,
-    isOffline: false,
+    isOffline: true,
     isConnecting: false
 };
 
 export default reducerWithInitialState<State>(initialState)
-    .case(actions.initialize.started, initializeHandler)
     .case(actions.initialize.done, initializeDoneHandler)
-    .case(actions.initialize.failed, initializeFailedHandler)
     .case(actions.setCollapsed, setCollapsedHandler)
-    .case(actions.setLocale.done, setLocaleDoneHandler);
+    .case(actions.setLocale.done, setLocaleDoneHandler)
+    .case(actions.discoverNetwork.started, discoverNetworkHandler)
+    .case(actions.discoverNetwork.done, discoverNetworkDoneHandler)
+    .case(actions.discoverNetwork.failed, discoverNetworkFailedHandler);
