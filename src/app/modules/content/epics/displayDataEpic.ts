@@ -29,10 +29,10 @@ import urlJoin from 'url-join';
 
 const displayDataEpic: Epic = (action$, store, { api }) => action$.ofAction(displayData.started)
     .flatMap(action => {
-        const state = store.getState();
+        const network = store.getState().engine.guestSession.network;
 
         return Observable.ajax({
-            url: urlJoin(state.auth.session.apiHost, 'api/v2', action.payload),
+            url: urlJoin(network.apiHost, 'api/v2', action.payload),
             responseType: 'text'
 
         }).flatMap(payload => Observable.of<Action>(

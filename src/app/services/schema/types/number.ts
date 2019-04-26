@@ -20,13 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { State } from '../reducer';
-import { initialize } from '../actions';
-import { Reducer } from 'modules';
+import { TSchemaValueType } from '../';
 
-const initializeHandler: Reducer<typeof initialize.started, State> = (state, payload) => ({
-    ...state,
-    isConnecting: true
-});
+const numberType: TSchemaValueType<number> = {
+    name: 'number',
+    isDefined: (value) => {
+        return null !== value && undefined !== value && 'number' === typeof value && value === value;
+    },
+    tryGetValue: (value, defaultValue, ...fallbackValues) => {
+        const values = [value, ...fallbackValues];
+        for (let i = 0; i < values.length; i++) {
+            const valueCandidate = values[i];
+            if (numberType.isDefined(valueCandidate)) {
+                return valueCandidate;
+            }
+        }
 
-export default initializeHandler;
+        return defaultValue;
+    }
+};
+
+export default numberType;

@@ -30,7 +30,10 @@ import { logout, selectWallet } from 'modules/auth/actions';
 const ecosystemInitEpic: Epic = (action$, store, { api }) => action$.ofAction(ecosystemInit.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.auth.session);
+        const client = api({
+            apiHost: state.auth.session.network.apiHost,
+            sessionToken: state.auth.session.sessionToken
+        });
 
         return Observable.from(
             client.getParam({ name: 'stylesheet' }).then(l => l.value)

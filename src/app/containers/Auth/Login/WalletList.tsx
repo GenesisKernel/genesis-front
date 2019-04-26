@@ -30,6 +30,7 @@ import { modalShow } from 'modules/modal/actions';
 import WalletList from 'components/Auth/Login/WalletList';
 
 const mapStateToProps = (state: IRootState) => ({
+    isOffline: state.engine.isOffline,
     pending: state.auth.isLoggingIn,
     wallets: state.storage.wallets.sort((a, b) => a.address > b.address ? 1 : -1).map(wallet => ({
         access: [],
@@ -68,6 +69,7 @@ const mapDispatchToProps = {
 
 export default connect(mapStateToProps, mapDispatchToProps, (state, dispatch: any, props) => ({
     ...props,
+    isOffline: state.isOffline,
     pending: state.pending,
     wallets: state.wallets,
     notifications: state.notifications,

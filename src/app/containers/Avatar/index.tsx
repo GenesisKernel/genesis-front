@@ -50,7 +50,7 @@ const AvatarContainer: React.SFC<IAvatarContainerProps & IAvatarContainerState &
 );
 
 const mapStateToProps = (state: IRootState) => ({
-    nodeHost: state.engine.nodeHost
+    nodeHost: state.engine.guestSession.network.apiHost
 });
 
 const mapDispatchToProps = {

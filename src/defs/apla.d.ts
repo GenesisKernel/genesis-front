@@ -25,6 +25,6 @@ declare module 'apla' {
         networkID?: number;
         fullNodes?: string[];
         socketUrl?: string;
-        disableFullNodesSync?: boolean;
+        activationEmail?: string;
     }
 }
