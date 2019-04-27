@@ -20,15 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { combineEpics } from 'redux-observable';
-import initializeEpic from './epics/initializeEpic';
-import setLocaleEpic from './epics/setLocaleEpic';
-import discoverNetworkEpic from './epics/discoverNetworkEpic';
-import addNetworkEpic from './epics/addNetworkEpic';
+import { connect } from 'react-redux';
+import { IRootState } from 'modules';
+import { addNetwork } from 'modules/engine/actions';
 
-export default combineEpics(
-    initializeEpic,
-    setLocaleEpic,
-    discoverNetworkEpic,
-    addNetworkEpic
-);
+import AddNetwork from 'components/Auth/Login/NetworkList/AddNetwork';
+
+const mapStateToProps = (state: IRootState) => ({
+    pending: state.engine.isConnecting
+});
+
+export default connect(mapStateToProps, {
+    onSubmit: (params: { name: string, networkID?: number, apiHost: string }) => addNetwork.started(params)
+})(AddNetwork);

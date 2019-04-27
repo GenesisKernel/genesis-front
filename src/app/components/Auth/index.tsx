@@ -32,6 +32,7 @@ import Titlebar from 'components/Main/Titlebar';
 import Wallet from 'components/Auth/Wallet';
 import Login from 'containers/Auth/Login';
 import NetworkList from 'containers/Auth/Login/NetworkList';
+import AddNetwork from 'containers/Auth/Login/NetworkList/AddNetwork';
 
 export interface IAuthProps {
     className?: string;
@@ -50,6 +51,7 @@ const Auth: React.SFC<IAuthProps> = props => (
                 >
                     <Switch>
                         <Route path="/account" component={Wallet} />
+                        <Route path="/networks/add" component={AddNetwork} />
                         <Route path="/networks" component={NetworkList} />
                         <Route path="/" component={Login} />
                         <Redirect to="/" />

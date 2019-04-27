@@ -20,22 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { connect } from 'react-redux';
-import { IRootState } from 'modules';
-import { discoverNetwork } from 'modules/engine/actions';
+import { State } from '../reducer';
+import { addNetwork } from '../actions';
+import { Reducer } from 'modules';
 
-import NetworkList from 'components/Auth/Login/NetworkList';
-
-const mapStateToProps = (state: IRootState) => ({
-    defaultNetwork: {
-        id: 1,
-        name: 'DND_APLA_MAINNET',
-        apiHost: 'https://'
-    },
-    networks: state.storage.networks
+const addNetworkHandler: Reducer<typeof addNetwork.started, State> = (state) => ({
+    ...state,
+    isConnecting: true
 });
 
-export default connect(mapStateToProps, {
-    onConnect: (uuid: string) => discoverNetwork.started({ uuid })
-
-})(NetworkList);
+export default addNetworkHandler;

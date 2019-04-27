@@ -20,15 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { combineEpics } from 'redux-observable';
-import initializeEpic from './epics/initializeEpic';
-import setLocaleEpic from './epics/setLocaleEpic';
-import discoverNetworkEpic from './epics/discoverNetworkEpic';
-import addNetworkEpic from './epics/addNetworkEpic';
+import { connect } from 'react-redux';
+import { IRootState } from 'modules';
+import { discoverNetwork, navigate } from 'modules/engine/actions';
 
-export default combineEpics(
-    initializeEpic,
-    setLocaleEpic,
-    discoverNetworkEpic,
-    addNetworkEpic
-);
+import NetworkList from 'components/Auth/Login/NetworkList';
+
+const mapStateToProps = (state: IRootState) => ({
+    defaultNetwork: {
+        id: 1,
+        name: 'DND_APLA_MAINNET',
+        apiHost: 'https://'
+    },
+    networks: state.storage.networks
+});
+
+export default connect(mapStateToProps, {
+    onConnect: (uuid: string) => discoverNetwork.started({ uuid }),
+    onAddNetwork: () => navigate('/networks/add')
+
+})(NetworkList);
