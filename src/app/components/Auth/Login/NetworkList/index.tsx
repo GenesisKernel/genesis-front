@@ -22,14 +22,16 @@
 
 import React from 'react';
 import classNames from 'classnames';
-import { INetwork } from 'apla/auth';
+import { INetwork, INetworkEndpoint } from 'apla/auth';
 
 import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import Heading from 'components/Auth/Heading';
 import ContextButton from '../ContextButton';
+import NetworkButton from './NetworkButton';
 
 export interface INetworkListProps {
     defaultNetwork?: any;
+    current?: INetworkEndpoint;
     networks: INetwork[];
     onAddNetwork?: () => void;
     onConnect?: (uuid: string) => void;
@@ -43,24 +45,22 @@ const NetworkList: React.SFC<INetworkListProps> = props => (
             </Heading>
 
             <div className="text-left">
-                <div><b>Configured network</b></div>
-                <div>[{props.defaultNetwork.id}] {props.defaultNetwork.name}</div>
-                <button onClick={() => props.onConnect('DEFAULT')}>Connect</button>
-                <hr />
+                {/* <div><b>Configured network</b></div>
+                <NetworkButton network={props.defaultNetwork} onConnect={() => props.onConnect('DEFAULT')} />
+                <hr /> */}
 
                 <div><b>Network list</b></div>
+                <hr />
                 {props.networks.map(network => (
                     <div key={network.uuid}>
-                        <div style={{ display: 'inline-block' }}>
-                            <div>[{network.id}] {network.name}</div>
-                        </div>
-                        <div style={{ display: 'inline-block', verticalAlign: 'middle', fontSize: 24, fontWeight: 'bold' }}>{network.fullNodes.length}</div>
-                        <div style={{ display: 'inline-block' }}>
-                            <button onClick={() => props.onConnect(network.uuid)}>Connect</button>
-                        </div>
+                        <NetworkButton
+                            network={network}
+                            active={props.current && props.current.uuid === network.uuid}
+                            onConnect={() => props.onConnect(network.uuid)}
+                        />
+                        <hr />
                     </div>
                 ))}
-                <hr />
 
                 <ContextButton icon="icon-plus" onClick={props.onAddNetwork} description="NL_ADD_NETWORK">
                     <span>NL_ADD_NETWORK</span>

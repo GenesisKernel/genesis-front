@@ -1,17 +1,17 @@
 // MIT License
-// 
+//
 // Copyright (c) 2016-2018 AplaProject
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,19 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { connect } from 'react-redux';
-import { IRootState } from 'modules';
-import { discoverNetwork, navigate } from 'modules/engine/actions';
+import React from 'react';
+import { INetwork } from 'apla/auth';
 
-import NetworkList from 'components/Auth/Login/NetworkList';
+export interface INetworkButtonProps {
+    active?: boolean;
+    static?: boolean;
+    network: INetwork;
+    onConnect?: () => void;
+}
 
-const mapStateToProps = (state: IRootState) => ({
-    current: state.engine.guestSession && state.engine.guestSession.network,
-    networks: state.storage.networks.sort((a, b) => a.uuid < b.uuid ? 1 : -1)
-});
+const NetworkButton: React.SFC<INetworkButtonProps> = props => (
+    <div>
+        <div style={{ display: 'inline-block' }}>
+            <div>[{props.network.id}] {props.network.name}</div>
+        </div>
+        <div style={{ display: 'inline-block', verticalAlign: 'middle', fontSize: 24, fontWeight: 'bold' }}>{props.network.fullNodes.length}</div>
+        <div style={{ display: 'inline-block', verticalAlign: 'middle', fontSize: 24, fontWeight: 'bold' }}>
+            {props.active && 'CURRENT'}
+        </div>
+        <div style={{ display: 'inline-block' }}>
+            <button onClick={() => props.onConnect()}>Connect</button>
+        </div>
+    </div>
+);
 
-export default connect(mapStateToProps, {
-    onConnect: (uuid: string) => discoverNetwork.started({ uuid }),
-    onAddNetwork: () => navigate('/networks/add')
-
-})(NetworkList);
+export default NetworkButton;
