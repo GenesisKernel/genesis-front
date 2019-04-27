@@ -31,13 +31,14 @@ import ContextButton from '../ContextButton';
 export interface INetworkListProps {
     defaultNetwork?: any;
     networks: INetwork[];
+    onAddNetwork?: () => void;
     onConnect?: (uuid: string) => void;
 }
 
 const NetworkList: React.SFC<INetworkListProps> = props => (
     <LocalizedDocumentTitle title="auth.login" defaultTitle="Login">
         <div className={classNames('desktop-flex-col desktop-flex-stretch')}>
-            <Heading returnUrl="/">
+            <Heading returnUrl="/networks">
                 NL_NETWORKS
             </Heading>
 
@@ -61,7 +62,7 @@ const NetworkList: React.SFC<INetworkListProps> = props => (
                 ))}
                 <hr />
 
-                <ContextButton icon="icon-plus" onClick={() => null} description="NL_ADD_NETWORK">
+                <ContextButton icon="icon-plus" onClick={props.onAddNetwork} description="NL_ADD_NETWORK">
                     <span>NL_ADD_NETWORK</span>
                 </ContextButton>
                 <ContextButton icon="icon-refresh" onClick={() => null} description="NL_SYNC">

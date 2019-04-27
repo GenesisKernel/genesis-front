@@ -20,15 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { combineEpics } from 'redux-observable';
-import initializeEpic from './epics/initializeEpic';
-import setLocaleEpic from './epics/setLocaleEpic';
-import discoverNetworkEpic from './epics/discoverNetworkEpic';
-import addNetworkEpic from './epics/addNetworkEpic';
+import { State } from '../reducer';
+import { addNetwork } from '../actions';
+import { Reducer } from 'modules';
 
-export default combineEpics(
-    initializeEpic,
-    setLocaleEpic,
-    discoverNetworkEpic,
-    addNetworkEpic
-);
+const addNetworkDoneHandler: Reducer<typeof addNetwork.done, State> = (state) => ({
+    ...state,
+    isConnecting: false
+});
+
+export default addNetworkDoneHandler;

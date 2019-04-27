@@ -31,6 +31,8 @@ import setCollapsedHandler from './reducers/setCollapsedHandler';
 import discoverNetworkHandler from './reducers/discoverNetworkHandler';
 import discoverNetworkDoneHandler from './reducers/discoverNetworkDoneHandler';
 import discoverNetworkFailedHandler from './reducers/discoverNetworkFailedHandler';
+import addNetworkHandler from './reducers/addNetworkHandler';
+import addNetworkDoneHandler from './reducers/addNetworkDoneHandler';
 
 export type State = {
     readonly networkError: NetworkError;
@@ -60,4 +62,6 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.setLocale.done, setLocaleDoneHandler)
     .case(actions.discoverNetwork.started, discoverNetworkHandler)
     .case(actions.discoverNetwork.done, discoverNetworkDoneHandler)
-    .case(actions.discoverNetwork.failed, discoverNetworkFailedHandler);
+    .case(actions.discoverNetwork.failed, discoverNetworkFailedHandler)
+    .case(actions.addNetwork.started, addNetworkHandler)
+    .case(actions.addNetwork.done, addNetworkDoneHandler);

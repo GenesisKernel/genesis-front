@@ -20,15 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import actionCreatorFactory from 'typescript-fsa';
-import { push } from 'connected-react-router';
+import uuid from 'uuid';
+import { Epic } from 'modules';
+import { Observable } from 'rxjs';
+import { addNetwork, navigate } from '../actions';
+import { discover } from 'services/network';
 import NetworkError from 'services/network/errors';
-import { ISession } from 'apla/auth';
+import { saveNetwork } from 'modules/storage/actions';
 
-const actionCreator = actionCreatorFactory('engine');
-export const navigate = (url: string) => push(url);
-export const initialize = actionCreator.async<{}, { activationEmail: string }>('INITIALIZE');
-export const discoverNetwork = actionCreator.async<{ uuid: string }, { session: ISession }, NetworkError>('DISCOVER_NETWORK');
-export const addNetwork = actionCreator.async<{ name: string, networkID?: number, apiHost: string }, void>('ADD_NETWORK');
-export const setCollapsed = actionCreator<boolean>('SET_COLLAPSED');
-export const setLocale = actionCreator.async<string, { [key: string]: string }>('SET_LOCALE');
+const addNetworkEpic: Epic = (action$, _store, { defaultKey }) => action$.ofAction(addNetwork.started)
+    .flatMap(action => {
+        const uniqueID = uuid.v4();
+
+        return Observable.from(discover({ uuid: uniqueID, apiHost: action.payload.apiHost }, defaultKey, action.payload.networkID))
+            .flatMap(result => Observable.of(
+                navigate('/networks'),
+                saveNetwork({
+                    uuid: uniqueID,
+                    id: result.networkID,
+                    fullNodes: result.fullNodes,
+                    name: action.payload.name
+                }),
+                addNetwork.done(null)
+            ))
+            .catch((e: NetworkError) => {
+                alert('Error:: ' + e);
+                return Observable.of(
+                    addNetwork.done(null)
+                );
+            });
+    });
+
+export default addNetworkEpic;

@@ -20,15 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { combineEpics } from 'redux-observable';
-import initializeEpic from './epics/initializeEpic';
-import setLocaleEpic from './epics/setLocaleEpic';
-import discoverNetworkEpic from './epics/discoverNetworkEpic';
-import addNetworkEpic from './epics/addNetworkEpic';
+import { State } from '../reducer';
+import { saveNetwork } from '../actions';
+import { Reducer } from 'modules';
 
-export default combineEpics(
-    initializeEpic,
-    setLocaleEpic,
-    discoverNetworkEpic,
-    addNetworkEpic
-);
+const saveNetworkHandler: Reducer<typeof saveNetwork, State> = (state, payload) => ({
+    ...state,
+    networks: [
+        ...state.networks.filter(l => l.uuid !== payload.uuid),
+        payload
+    ]
+});
+
+export default saveNetworkHandler;
