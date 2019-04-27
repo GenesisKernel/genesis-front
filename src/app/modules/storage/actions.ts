@@ -26,6 +26,7 @@ import { IWallet, ISaveEncKeyCall, INetwork } from 'apla/auth';
 const actionCreator = actionCreatorFactory('storage');
 export const saveLocale = actionCreator<string>('SAVE_LOCALE');
 export const saveNetwork = actionCreator<INetwork>('SAVE_NETWORK');
+export const removeNetwork = actionCreator<string>('REMOVE_NETWORK');
 export const saveWallet = actionCreator<IWallet>('SAVE_WALLET');
 export const removeWallet = actionCreator<IWallet>('REMOVE_WALLET');
 export const saveNavigationSize = actionCreator<number>('SAVE_NAVIGATION_SIZE');

@@ -23,8 +23,10 @@
 import { combineEpics } from 'redux-observable';
 import modalPageEpic from './epics/modalPageEpic';
 import closeModalOnInteractionEpic from './epics/closeModalOnInteractionEpic';
+import removeNetworkEpic from './epics/removeNetworkEpic';
 
 export default combineEpics(
     modalPageEpic,
-    closeModalOnInteractionEpic
+    closeModalOnInteractionEpic,
+    removeNetworkEpic
 );

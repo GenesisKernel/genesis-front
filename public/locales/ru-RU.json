@@ -167,6 +167,7 @@
     "modal.imageeditor.desc": "Произведите обработку вашего изображения для загрузки, выбрав необходимую область",
     "modal.imageeditor.title": "Редактирование изображения",
     "modal.locale.title": "Выбор языка",
+    "modal.network.remove.confirmation": "Вы действительно хотите удалить сеть \"{name}\"?",
     "navigation.back": "Назад",
     "navigation.forward": "Вперёд",
     "navigation.home": "Домашняя страница",

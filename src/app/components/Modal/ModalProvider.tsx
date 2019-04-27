@@ -49,6 +49,7 @@ import ChangeLocaleModal from './ChangeLocale';
 import CopyWalletModal from './Auth/CopyWalletModal';
 import RegisterModal from './Auth/RegisterModal';
 import RolePickerModal from 'containers/Modal/RolePickerModal';
+import RemoveNetworkModal from './Network/RemoveNetworkModal';
 
 const MODAL_COMPONENTS = {
     'AUTHORIZE': AuthorizeModal,
@@ -68,6 +69,7 @@ const MODAL_COMPONENTS = {
     'MAP_EDITOR': MapEditorModal,
     'PAGE_MODAL': PageModal,
     'PROMPT': PromptModal,
+    'REMOVE_NETWORK': RemoveNetworkModal,
     'CONFIRM': ConfirmModal,
     'INFO': InfoModal,
     'ERROR': ErrorModal,
