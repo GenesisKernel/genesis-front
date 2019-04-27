@@ -167,6 +167,7 @@
     "modal.imageeditor.desc": "Prepare your image for uploading by selecting which part of the image you want to use",
     "modal.imageeditor.title": "Image editor",
     "modal.locale.title": "Switch language",
+    "modal.network.remove.confirmation": "Do you really want to delete network \"{name}\"?",
     "navigation.back": "Back",
     "navigation.forward": "Forward",
     "navigation.home": "Home",

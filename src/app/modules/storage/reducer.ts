@@ -30,6 +30,7 @@ import saveNavigationSizeHandler from './reducers/saveNavigationSizeHandler';
 import mergeFullNodesHandler from './reducers/mergeFullNodesHandler';
 import closeSecurityWarningHandler from './reducers/closeSecurityWarningHandler';
 import saveNetworkHandler from './reducers/saveNetworkHandler';
+import removeNetworkHandler from './reducers/removeNetworkHandler';
 
 export type State = {
     readonly locale: string;
@@ -54,4 +55,5 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.saveNavigationSize, saveNavigationSizeHandler)
     .case(actions.mergeFullNodes, mergeFullNodesHandler)
     .case(actions.closeSecurityWarning, closeSecurityWarningHandler)
-    .case(actions.saveNetwork, saveNetworkHandler);
+    .case(actions.saveNetwork, saveNetworkHandler)
+    .case(actions.removeNetwork, removeNetworkHandler);

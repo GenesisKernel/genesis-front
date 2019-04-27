@@ -35,12 +35,13 @@ export interface INetworkListProps {
     networks: INetwork[];
     onAddNetwork?: () => void;
     onConnect?: (uuid: string) => void;
+    onRemove?: (network: INetwork) => void;
 }
 
 const NetworkList: React.SFC<INetworkListProps> = props => (
     <LocalizedDocumentTitle title="auth.login" defaultTitle="Login">
         <div className={classNames('desktop-flex-col desktop-flex-stretch')}>
-            <Heading returnUrl="/networks">
+            <Heading returnUrl="/">
                 NL_NETWORKS
             </Heading>
 
@@ -57,6 +58,7 @@ const NetworkList: React.SFC<INetworkListProps> = props => (
                             network={network}
                             active={props.current && props.current.uuid === network.uuid}
                             onConnect={() => props.onConnect(network.uuid)}
+                            onRemove={() => props.onRemove(network)}
                         />
                         <hr />
                     </div>

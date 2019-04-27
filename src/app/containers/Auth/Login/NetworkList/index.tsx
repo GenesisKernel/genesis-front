@@ -23,8 +23,10 @@
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
 import { discoverNetwork, navigate } from 'modules/engine/actions';
+import { INetwork } from 'apla/auth';
 
 import NetworkList from 'components/Auth/Login/NetworkList';
+import { modalShow } from 'modules/modal/actions';
 
 const mapStateToProps = (state: IRootState) => ({
     current: state.engine.guestSession && state.engine.guestSession.network,
@@ -33,6 +35,14 @@ const mapStateToProps = (state: IRootState) => ({
 
 export default connect(mapStateToProps, {
     onConnect: (uuid: string) => discoverNetwork.started({ uuid }),
-    onAddNetwork: () => navigate('/networks/add')
+    onAddNetwork: () => navigate('/networks/add'),
+    onRemove: (network: INetwork) => modalShow({
+        id: 'REMOVE_NETWORK',
+        type: 'REMOVE_NETWORK',
+        params: {
+            uuid: network.uuid,
+            name: network.name
+        }
+    })
 
 })(NetworkList);
