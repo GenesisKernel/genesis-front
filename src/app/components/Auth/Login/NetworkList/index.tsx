@@ -25,12 +25,12 @@ import classNames from 'classnames';
 import { INetwork, INetworkEndpoint } from 'apla/auth';
 
 import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
-import Heading from 'components/Auth/Heading';
 import ContextButton from '../ContextButton';
 import NetworkButton from './NetworkButton';
+import HeadingNetwork from 'containers/Auth/HeadingNetwork';
 
 export interface INetworkListProps {
-    defaultNetwork?: any;
+    pending: boolean;
     current?: INetworkEndpoint;
     networks: INetwork[];
     onAddNetwork?: () => void;
@@ -41,9 +41,9 @@ export interface INetworkListProps {
 const NetworkList: React.SFC<INetworkListProps> = props => (
     <LocalizedDocumentTitle title="auth.login" defaultTitle="Login">
         <div className={classNames('desktop-flex-col desktop-flex-stretch')}>
-            <Heading returnUrl="/">
+            <HeadingNetwork returnUrl="/">
                 NL_NETWORKS
-            </Heading>
+            </HeadingNetwork>
 
             <div className="text-left">
                 {/* <div><b>Configured network</b></div>
@@ -57,6 +57,7 @@ const NetworkList: React.SFC<INetworkListProps> = props => (
                         <NetworkButton
                             network={network}
                             active={props.current && props.current.uuid === network.uuid}
+                            disabled={props.pending}
                             onConnect={() => props.onConnect(network.uuid)}
                             onRemove={() => props.onRemove(network)}
                         />

@@ -20,30 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { discoverNetwork, navigate } from 'modules/engine/actions';
-import { INetwork } from 'apla/auth';
+import { connect } from 'react-redux';
 
-import NetworkList from 'components/Auth/Login/NetworkList';
-import { modalShow } from 'modules/modal/actions';
+import Heading from 'components/Auth/Heading';
 
-const mapStateToProps = (state: IRootState) => ({
-    pending: state.engine.isConnecting,
-    current: state.engine.guestSession && state.engine.guestSession.network,
-    networks: state.storage.networks.sort((a, b) => a.uuid < b.uuid ? 1 : -1)
-});
+const mapStateToProps = (state: IRootState) => {
+    const network = state.engine.guestSession &&
+        state.engine.guestSession.network &&
+        state.storage.networks.find(l => l.uuid === state.engine.guestSession.network.uuid);
+
+    return {
+        option: network ?
+            {
+                title: network.name,
+                icon: 'icon-feed',
+                navigateUrl: '/networks'
+            } : {
+                title: 'NL_OFFLINE',
+                icon: 'icon-feed',
+                navigateUrl: '/networks'
+            }
+    };
+};
 
 export default connect(mapStateToProps, {
-    onConnect: (uuid: string) => discoverNetwork.started({ uuid }),
-    onAddNetwork: () => navigate('/networks/add'),
-    onRemove: (network: INetwork) => modalShow({
-        id: 'REMOVE_NETWORK',
-        type: 'REMOVE_NETWORK',
-        params: {
-            uuid: network.uuid,
-            name: network.name
-        }
-    })
 
-})(NetworkList);
+})(Heading);

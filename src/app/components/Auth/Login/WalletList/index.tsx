@@ -28,11 +28,11 @@ import { IAccount } from 'apla/api';
 import { INotificationsMessage } from 'apla/socket';
 
 import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
-import Heading from 'components/Auth/Heading';
 import ContextButton from '../ContextButton';
 import WalletButton from './WalletButton';
 import Welcome from 'components/Auth/Welcome';
 import Offline from 'containers/Auth/Offline';
+import HeadingNetwork from 'containers/Auth/HeadingNetwork';
 
 export interface IWalletListProps {
     className?: string;
@@ -53,15 +53,9 @@ export interface IWalletListProps {
 const WalletList: React.SFC<IWalletListProps> = props => (
     <LocalizedDocumentTitle title="auth.login" defaultTitle="Login">
         <div className={classNames('desktop-flex-col desktop-flex-stretch', props.className)}>
-            <Heading
-                option={{
-                    title: 'NL_Apla Main Network',
-                    icon: 'icon-feed',
-                    navigateUrl: '/networks'
-                }}
-            >
+            <HeadingNetwork>
                 <FormattedMessage id="auth.wallets" defaultMessage="Accounts" />
-            </Heading>
+            </HeadingNetwork>
             {props.isOffline ?
                 (
                     <Offline />

@@ -24,7 +24,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
-import Heading from 'components/Auth/Heading';
+import HeadingNetwork from 'containers/Auth/HeadingNetwork';
 
 export interface IAddNetworkProps {
     pending: boolean;
@@ -82,7 +82,7 @@ class AddNetwork extends React.Component<IAddNetworkProps, IAddNetworkState> {
         return (
             <LocalizedDocumentTitle title="auth.login" defaultTitle="Login">
                 <div className={classNames('desktop-flex-col desktop-flex-stretch')}>
-                    <Heading returnUrl="/networks">NL_ADD_NETWORK</Heading>
+                    <HeadingNetwork returnUrl="/networks">NL_ADD_NETWORK</HeadingNetwork>
 
                     <div className="text-left">
                         <h4>Name</h4>
