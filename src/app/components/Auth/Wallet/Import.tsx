@@ -26,7 +26,7 @@ import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import Generator from './Generator';
 import Validation from 'components/Validation';
-import Heading from 'components/Auth/Heading';
+import HeadingNetwork from 'containers/Auth/HeadingNetwork';
 
 export interface IImportProps {
     backup: string;
@@ -92,9 +92,9 @@ class Import extends React.Component<IImportProps & InjectedIntlProps, IImportSt
         return (
             <LocalizedDocumentTitle title="wallet.import" defaultTitle="Import wallet">
                 <div>
-                    <Heading returnUrl="/wallet">
+                    <HeadingNetwork returnUrl="/wallet">
                         <FormattedMessage id="wallet.import" defaultMessage="Import wallet" />
-                    </Heading>
+                    </HeadingNetwork>
                     <input type="file" className="hidden" onChange={this.onLoadSuccess} ref={l => this._inputFile = l} />
                     <div className="text-center">
                         <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit}>

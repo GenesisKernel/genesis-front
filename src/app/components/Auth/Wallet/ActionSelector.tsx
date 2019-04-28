@@ -24,8 +24,8 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
-import Heading from 'components/Auth/Heading';
 import Action from './Action';
+import HeadingNetwork from 'containers/Auth/HeadingNetwork';
 
 export interface IActionSelectorProps {
     onImport: () => void;
@@ -35,9 +35,9 @@ export interface IActionSelectorProps {
 const ActionSelector: React.SFC<IActionSelectorProps> = (props) => (
     <LocalizedDocumentTitle title="auth.wallet" defaultTitle="Wallet">
         <div>
-            <Heading returnUrl="/">
+            <HeadingNetwork returnUrl="/">
                 <FormattedMessage id="auth.wallet.actions" defaultMessage="Wallet actions" />
-            </Heading>
+            </HeadingNetwork>
             <div className="text-left">
                 <Action
                     icon="icon-wallet"

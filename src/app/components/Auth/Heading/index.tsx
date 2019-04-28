@@ -29,7 +29,7 @@ import OptionButton from './OptionButton';
 
 export interface IHeadingOption {
     icon: string;
-    title: React.ReactNode;
+    title: string;
     navigateUrl: string;
 }
 
@@ -37,7 +37,7 @@ export interface IHeadingProps {
     className?: string;
     returnUrl?: string;
     onReturn?: () => void;
-    option?: IHeadingOption;
+    option: IHeadingOption;
 }
 
 const Heading: React.SFC<IHeadingProps> = props => (
