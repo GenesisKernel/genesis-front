@@ -121,6 +121,8 @@
     "general.home": "Домашняя страница",
     "general.key.private": "Закрытый ключ",
     "general.key.public": "Открытый ключ",
+    "general.network.connecting": "Подключение...",
+    "general.network.offline": "Отключено",
     "general.network.error.E_OFFLINE": "Сеть недоступна",
     "general.network.error.E_IDMISMATCH": "Неверный идентификатор сети",
     "general.network.error.E_SERVER_MISCONFIGURATION": "Ошибка настройки сервера",
