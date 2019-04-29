@@ -121,6 +121,8 @@
     "general.home": "Home",
     "general.key.private": "Private key",
     "general.key.public": "Public key",
+    "general.network.connecting": "Connecting...",
+    "general.network.offline": "Offline",
     "general.network.error.E_OFFLINE": "Network is unreachable",
     "general.network.error.E_IDMISMATCH": "Network ID mismatch",
     "general.network.error.E_SERVER_MISCONFIGURATION": "Server configuration error",

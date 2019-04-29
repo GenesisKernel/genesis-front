@@ -20,10 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import React from 'react';
 import { IRootState } from 'modules';
 import { connect } from 'react-redux';
 
 import Heading from 'components/Auth/Heading';
+import NetworkIndicator from 'components/Auth/Heading/NetworkIndicator';
 
 const mapStateToProps = (state: IRootState) => {
     const network = state.engine.guestSession &&
@@ -31,16 +33,10 @@ const mapStateToProps = (state: IRootState) => {
         state.storage.networks.find(l => l.uuid === state.engine.guestSession.network.uuid);
 
     return {
-        option: network ?
-            {
-                title: network.name,
-                icon: 'icon-feed',
-                navigateUrl: '/networks'
-            } : {
-                title: 'NL_OFFLINE',
-                icon: 'icon-feed',
-                navigateUrl: '/networks'
-            }
+        option: React.createElement(NetworkIndicator, {
+            navigateUrl: '/networks',
+            status: state.engine.isConnecting ? 'PENDING' : network ? 'ONLINE' : 'OFFLINE'
+        }, network && network.name) as React.ReactNode
     };
 };
 

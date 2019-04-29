@@ -25,7 +25,6 @@ import platform from 'lib/platform';
 
 import themed from 'components/Theme/themed';
 import BackButton from './BackButton';
-import OptionButton from './OptionButton';
 
 export interface IHeadingOption {
     icon: string;
@@ -37,7 +36,7 @@ export interface IHeadingProps {
     className?: string;
     returnUrl?: string;
     onReturn?: () => void;
-    option: IHeadingOption;
+    option: React.ReactNode;
 }
 
 const Heading: React.SFC<IHeadingProps> = props => (
@@ -53,7 +52,7 @@ const Heading: React.SFC<IHeadingProps> = props => (
             </div>
             {props.option && (
                 <div className="heading-right">
-                    <OptionButton icon={props.option.icon} navigateUrl={props.option.navigateUrl}>{props.option.title}</OptionButton>
+                    {props.option}
                 </div>
             )}
         </div>
@@ -79,7 +78,7 @@ export default themed(Heading)`
 
         .heading-right {
             position: absolute;
-            top: 2px;
+            top: 0;
             right: 0;
             bottom: 0;
         }
