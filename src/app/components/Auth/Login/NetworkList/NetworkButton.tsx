@@ -42,7 +42,7 @@ const NetworkButton: React.SFC<INetworkButtonProps> = props => (
             {props.active && 'CURRENT'}
         </div>
         <div style={{ display: 'inline-block', float: 'right' }}>
-            <button disabled={props.disabled} onClick={props.onConnect}>Connect</button>
+            <button disabled={props.disabled || props.active} onClick={props.onConnect}>Connect</button>
             {!props.static && (
                 <button onClick={props.onRemove} disabled={props.disabled}>Remove</button>
             )}
