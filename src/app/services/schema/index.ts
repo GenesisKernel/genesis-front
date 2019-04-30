@@ -24,6 +24,7 @@ import stringType from './types/string';
 import stringArrayType from './types/stringArray';
 import booleanType from './types/boolean';
 import numberType from './types/number';
+import SchemaError from './errors';
 
 export type TSchemaType =
     'string' | 'string[]' |
@@ -35,8 +36,13 @@ export interface ISchemaValue<T> {
     defaultValue: T;
 }
 
+export interface ISchemaShape<T> {
+    type: 'object';
+    shape: TValidationSchema<T>;
+}
+
 export type TValidationSchema<T> = {
-    [K in keyof T]-?: ISchemaValue<T[K]>;
+    [K in keyof T]-?: ISchemaValue<T[K]> | ISchemaShape<T[K]>;
 };
 
 export type TSchemaValueType<T> = {
@@ -59,21 +65,40 @@ class ValidationSchema<T> {
         this._schema = schema;
     }
 
-    public tryGetValue = <K extends keyof T>(key: K, value: any, ...fallbackValues: any[]) => {
-        const valueSchema = this._schema[key];
-        return schemaValueTypes[valueSchema.type].tryGetValue(value, valueSchema.defaultValue, ...fallbackValues) as T[K];
-    }
+    protected visitObject = <TSchema>(schema: TValidationSchema<TSchema>, value: any, ...fallbackValues: any[]) => {
+        const result: { [K in keyof TSchema]?: TSchema[K] } = {};
 
-    public deserialize = (candidate: any) => {
-        const result: { [K in keyof T]?: T[K] } = {};
-
-        for (let key in this._schema) {
+        for (let key in schema) {
             if (this._schema.hasOwnProperty(key)) {
-                result[key] = this.tryGetValue(key, candidate[key]);
+                result[key] = this.visitValue(schema, key, value[key], ...fallbackValues) as TSchema[typeof key];
             }
         }
 
-        return result as { [K in keyof T]: T[K] };
+        return result as { [K in keyof TSchema]: TSchema[K] };
+    }
+
+    protected visitValue = <K extends keyof TSchema, TSchema>(schema: TValidationSchema<TSchema>, key: K, value: any, ...fallbackValues: any[]) => {
+        const valueSchema = schema[key];
+
+        if ('object' === valueSchema.type) {
+            const resultSchema = valueSchema as ISchemaShape<TSchema[K]>;
+            return this.visitObject(resultSchema.shape, value || {});
+        }
+        else if (valueSchema.type in schemaValueTypes) {
+            const resultSchema = valueSchema as ISchemaValue<TSchema[K]>;
+            return schemaValueTypes[resultSchema.type].tryGetValue(value, resultSchema.defaultValue, ...fallbackValues) as TSchema[K];
+        }
+        else {
+            throw SchemaError.UnknownType;
+        }
+    }
+
+    public tryGetValue = <K extends keyof T>(key: K, value: any, ...fallbackValues: any[]) => {
+        return this.visitValue(this._schema, key, value, ...fallbackValues);
+    }
+
+    public deserialize = (candidate: any) => {
+        return this.visitObject(this._schema, candidate);
     }
 }
 

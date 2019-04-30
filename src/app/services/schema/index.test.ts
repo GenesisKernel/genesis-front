@@ -26,6 +26,11 @@ interface ISettingsMock {
     stringParam: string;
     stringArrayParam: string[];
     booleanParam: boolean;
+    shapeParam: {
+        stringParam: string;
+        stringArrayParam: string[];
+        booleanParam: boolean;
+    };
 }
 
 const createSchemaMock = () =>
@@ -41,6 +46,23 @@ const createSchemaMock = () =>
         booleanParam: {
             type: 'boolean',
             defaultValue: false
+        },
+        shapeParam: {
+            type: 'object',
+            shape: {
+                stringParam: {
+                    type: 'string',
+                    defaultValue: ''
+                },
+                stringArrayParam: {
+                    type: 'string[]',
+                    defaultValue: []
+                },
+                booleanParam: {
+                    type: 'boolean',
+                    defaultValue: false
+                }
+            }
         }
     });
 
@@ -109,11 +131,21 @@ test('Complex deserialization with truthy values', () => {
     expect(schema.deserialize({
         stringParam: 'hello',
         stringArrayParam: ['world'],
-        booleanParam: true
+        booleanParam: true,
+        shapeParam: {
+            stringParam: 'shape_hello',
+            stringArrayParam: ['shape_world'],
+            booleanParam: true
+        }
     })).toEqual({
         stringParam: 'hello',
         stringArrayParam: ['world'],
-        booleanParam: true
+        booleanParam: true,
+        shapeParam: {
+            stringParam: 'shape_hello',
+            stringArrayParam: ['shape_world'],
+            booleanParam: true
+        }
     });
 });
 
@@ -122,11 +154,21 @@ test('Complex deserialization with falsy values', () => {
     expect(schema.deserialize({
         stringParam: 123,
         stringArrayParam: 456,
-        booleanParam: 789
+        booleanParam: 789,
+        shapeParam: {
+            stringParam: 876,
+            stringArrayParam: 543,
+            booleanParam: 210
+        }
     })).toEqual({
         stringParam: '',
         stringArrayParam: [],
-        booleanParam: false
+        booleanParam: false,
+        shapeParam: {
+            stringParam: '',
+            stringArrayParam: [],
+            booleanParam: false
+        }
     });
 });
 
@@ -135,6 +177,11 @@ test('Complex deserialization with missing values', () => {
     expect(schema.deserialize({})).toEqual({
         stringParam: '',
         stringArrayParam: [],
-        booleanParam: false
+        booleanParam: false,
+        shapeParam: {
+            stringParam: '',
+            stringArrayParam: [],
+            booleanParam: false
+        }
     });
 });
