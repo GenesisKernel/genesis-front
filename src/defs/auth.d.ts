@@ -33,6 +33,9 @@ declare module 'apla/auth' {
         id: number;
         name: string;
         fullNodes: string[];
+        socketUrl?: string;
+        activationEmail?: string;
+        demoEnabled?: boolean;
     }
 
     interface IWallet {

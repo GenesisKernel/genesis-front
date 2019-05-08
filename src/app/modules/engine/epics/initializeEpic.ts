@@ -23,14 +23,13 @@
 import { Epic } from 'modules';
 import { Observable } from 'rxjs';
 import { initialize, setLocale } from '../actions';
-import { IWebSettings } from 'apla';
 import urlJoin from 'url-join';
 import platform from 'lib/platform';
-import { webConfigSchema } from 'services/schema/defs/config';
-import { saveWallet, mergeFullNodes } from 'modules/storage/actions';
+import { saveWallet, savePreconfiguredNetworks } from 'modules/storage/actions';
 import { address, addressString } from 'lib/crypto';
 import keyring from 'lib/keyring';
-import { DEFAULT_NETWORK } from 'services/network/const';
+import webConfig from 'lib/settings';
+import { INetwork } from 'apla/auth';
 
 const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword }) => action$.ofAction(initialize.started)
     .flatMap(action => {
@@ -39,23 +38,13 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
             desktop: './settings.json'
         });
 
-        return Observable.ajax.getJSON<IWebSettings>(
+        return Observable.ajax.getJSON(
             requestUrl
 
         ).catch(e =>
-            Observable.of({} as IWebSettings)
+            Observable.of({})
 
-        ).defaultIfEmpty({} as IWebSettings).map(result => {
-            const config: IWebSettings = {
-                networkID: webConfigSchema.tryGetValue('networkID', platform.args.networkID, result.networkID),
-                fullNodes: webConfigSchema.tryGetValue('fullNodes', platform.args.fullNode, result.fullNodes),
-                activationEmail: webConfigSchema.tryGetValue('activationEmail', platform.args.activationEmail, result.activationEmail),
-                socketUrl: webConfigSchema.tryGetValue('socketUrl', platform.args.socketUrl, result.socketUrl)
-            };
-
-            return config;
-
-        }).flatMap(config => {
+        ).defaultIfEmpty({}).flatMap(result => webConfig.validate(result)).flatMap(config => {
             const state = store.getState();
 
             if (platform.args.privateKey) {
@@ -70,6 +59,16 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                 };
             }
 
+            const preconfiguredNetworks: INetwork[] = config.networks.map(network => ({
+                uuid: network.key,
+                id: network.networkID,
+                name: network.name,
+                fullNodes: network.fullNodes,
+                socketUrl: network.socketUrl,
+                activationEmail: network.activationEmail,
+                demoEnabled: network.enableDemoMode
+            }));
+
             return Observable.concat(
                 Observable.of(setLocale.started(state.storage.locale)),
                 Observable.if(
@@ -77,14 +76,11 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                     Observable.of(saveWallet(preconfiguredKey)),
                     Observable.empty<never>()
                 ),
-                Observable.of(mergeFullNodes({
-                    uuid: DEFAULT_NETWORK,
-                    fullNodes: config.fullNodes
-                })),
+                Observable.of(savePreconfiguredNetworks(preconfiguredNetworks)),
                 Observable.of(initialize.done({
                     params: action.payload,
                     result: {
-                        activationEmail: config.activationEmail
+                        preconfiguredNetworks
                     }
                 }))
             );

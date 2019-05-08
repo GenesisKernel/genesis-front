@@ -20,8 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-enum SchemaError {
-    UnknownType = 'E_UNKNOWN_TYPE',
-}
+import { State } from '../reducer';
+import { savePreconfiguredNetworks } from '../actions';
+import { Reducer } from 'modules';
+import { INetwork } from 'apla/auth';
 
-export default SchemaError;
+const savePreconfiguredNetworksHandler: Reducer<typeof savePreconfiguredNetworks, State> = (state, payload) => {
+    const preconfigured = payload.map(network => {
+        const saved = state.networks.find(l => l.uuid === network.uuid);
+
+        if (saved) {
+            return {
+                ...saved,
+                ...network,
+                fullNodes: [
+                    ...saved.fullNodes,
+                    ...network.fullNodes
+                ].filter((value, index, self) => self.indexOf(value) === index)
+            } as INetwork;
+        }
+        else {
+            return network;
+        }
+    });
+
+    return {
+        ...state,
+        networks: [
+            ...state.networks.filter(l => !preconfigured.find(p => p.uuid === l.uuid)),
+            ...preconfigured
+        ]
+    };
+};
+
+export default savePreconfiguredNetworksHandler;
