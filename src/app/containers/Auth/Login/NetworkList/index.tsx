@@ -28,10 +28,28 @@ import { INetwork } from 'apla/auth';
 import NetworkList from 'components/Auth/Login/NetworkList';
 import { modalShow } from 'modules/modal/actions';
 
+const sortNetworks = (a: INetwork, b: INetwork) =>
+    a.uuid < b.uuid ? 1 : -1;
+
+const selectNetworks = (state: IRootState) => {
+    const preconfiguredNetworks = state.storage.networks.filter(l =>
+        !!state.engine.preconfiguredNetworks.find(n => n.uuid === l.uuid)
+    ).sort(sortNetworks);
+
+    const savedNetworks = state.storage.networks.filter(l =>
+        !state.engine.preconfiguredNetworks.find(n => n.uuid === l.uuid)
+    ).sort(sortNetworks);
+
+    return {
+        preconfiguredNetworks,
+        networks: savedNetworks
+    };
+};
+
 const mapStateToProps = (state: IRootState) => ({
     pending: state.engine.isConnecting,
     current: state.engine.guestSession && state.engine.guestSession.network,
-    networks: state.storage.networks.sort((a, b) => a.uuid < b.uuid ? 1 : -1)
+    ...selectNetworks(state)
 });
 
 export default connect(mapStateToProps, {

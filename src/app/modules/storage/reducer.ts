@@ -31,6 +31,7 @@ import mergeFullNodesHandler from './reducers/mergeFullNodesHandler';
 import closeSecurityWarningHandler from './reducers/closeSecurityWarningHandler';
 import saveNetworkHandler from './reducers/saveNetworkHandler';
 import removeNetworkHandler from './reducers/removeNetworkHandler';
+import savePreconfiguredNetworksHandler from './reducers/savePreconfiguredNetworksHandler';
 
 export type State = {
     readonly locale: string;
@@ -56,4 +57,5 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.mergeFullNodes, mergeFullNodesHandler)
     .case(actions.closeSecurityWarning, closeSecurityWarningHandler)
     .case(actions.saveNetwork, saveNetworkHandler)
-    .case(actions.removeNetwork, removeNetworkHandler);
+    .case(actions.removeNetwork, removeNetworkHandler)
+    .case(actions.savePreconfiguredNetworks, savePreconfiguredNetworksHandler);

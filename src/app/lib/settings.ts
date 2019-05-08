@@ -20,24 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { TSchemaValueType } from '../';
+import * as yup from 'yup';
 
-const stringArrayType: TSchemaValueType<string[]> = {
-    name: 'string[]',
-    isDefined: (value) => {
-        return Array.isArray(value) && 0 < value.length && value.every(l => 'string' === typeof l);
-    },
-    tryGetValue: (value, defaultValue, ...fallbackValues) => {
-        const values = [value, ...fallbackValues];
-        for (let i = 0; i < values.length; i++) {
-            const valueCandidate = values[i];
-            if (stringArrayType.isDefined(valueCandidate)) {
-                return valueCandidate;
-            }
-        }
+const webConfig = yup.object().shape({
+    networks: yup.array().of(yup.object({
+        key: yup.string().required(),
+        name: yup.string().required(),
+        networkID: yup.number().required(),
+        fullNodes: yup.array().of(yup.string()).required().min(1),
+        socketUrl: yup.string().notRequired(),
+        activationEmail: yup.string().email().notRequired(),
+        enableDemoMode: yup.bool()
+    }))
+});
 
-        return defaultValue;
-    }
-};
-
-export default stringArrayType;
+export default webConfig;

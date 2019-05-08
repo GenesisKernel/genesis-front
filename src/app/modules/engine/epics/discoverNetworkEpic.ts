@@ -56,7 +56,7 @@ const setNetworkEpic: Epic = (action$, store, { api, defaultKey }) => action$.of
                         }
                     })),
                     Observable.of(connect.started({
-                        wsHost: result.socketUrl,
+                        wsHost: network.socketUrl || result.socketUrl,
                         session: result.loginResult.token,
                         socketToken: result.loginResult.notify_key,
                         timestamp: result.loginResult.timestamp,

@@ -33,6 +33,7 @@ export interface INetworkListProps {
     pending: boolean;
     current?: INetworkEndpoint;
     networks: INetwork[];
+    preconfiguredNetworks: INetwork[];
     onAddNetwork?: () => void;
     onConnect?: (uuid: string) => void;
     onRemove?: (network: INetwork) => void;
@@ -46,9 +47,20 @@ const NetworkList: React.SFC<INetworkListProps> = props => (
             </HeadingNetwork>
 
             <div className="text-left">
-                {/* <div><b>Configured network</b></div>
-                <NetworkButton network={props.defaultNetwork} onConnect={() => props.onConnect('DEFAULT')} />
-                <hr /> */}
+                <div><b>Configured network</b></div>
+                {props.preconfiguredNetworks.map(network => (
+                    <div key={network.uuid}>
+                        <NetworkButton
+                            static
+                            network={network}
+                            active={props.current && props.current.uuid === network.uuid}
+                            disabled={props.pending}
+                            onConnect={() => props.onConnect(network.uuid)}
+                            onRemove={() => props.onRemove(network)}
+                        />
+                        <hr />
+                    </div>
+                ))}
 
                 <div><b>Network list</b></div>
                 <hr />

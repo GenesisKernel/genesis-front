@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import * as actions from './actions';
-import { ISession } from 'apla/auth';
+import { ISession, INetwork } from 'apla/auth';
 import defaultLocale from 'lib/en-US.json';
 import NetworkError from 'services/network/errors';
 import { reducerWithInitialState } from 'typescript-fsa-reducers/dist';
@@ -37,23 +37,23 @@ import addNetworkDoneHandler from './reducers/addNetworkDoneHandler';
 export type State = {
     readonly networkError: NetworkError;
     readonly guestSession: ISession;
-    readonly activationEmail: string;
     readonly localeMessages: { [key: string]: string };
     readonly isCollapsed: boolean;
     readonly isLoaded: boolean;
     readonly isOffline: boolean;
     readonly isConnecting: boolean;
+    readonly preconfiguredNetworks: INetwork[];
 };
 
 export const initialState: State = {
     networkError: null,
     guestSession: null,
-    activationEmail: null,
     localeMessages: defaultLocale,
     isCollapsed: true,
     isLoaded: false,
     isOffline: true,
-    isConnecting: false
+    isConnecting: false,
+    preconfiguredNetworks: []
 };
 
 export default reducerWithInitialState<State>(initialState)
