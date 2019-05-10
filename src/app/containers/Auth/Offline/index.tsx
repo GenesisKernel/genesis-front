@@ -20,40 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-import { initialize } from 'modules/engine/actions';
-import NetworkError from 'services/network/errors';
 
 import Offline from 'components/Auth/Offline';
 
-export interface IOfflineContainerProps {
-
-}
-
-interface IOfflineContainerState {
-    error: NetworkError;
-    isConnecting: boolean;
-    isConnected: boolean;
-}
-
-interface IOfflineContainerDispatch {
-    checkOnline: () => void;
-}
-
 const mapStateToProps = (state: IRootState) => ({
     error: state.engine.networkError,
-    isConnected: !state.engine.isOffline,
-    isConnecting: state.engine.isConnecting
 });
 
 const mapDispatchToProps = {
-    checkOnline: () => initialize.started({})
 };
 
-const WalletListContainer: React.SFC<IOfflineContainerProps & IOfflineContainerState & IOfflineContainerDispatch> = props => (
-    <Offline {...props} />
-);
-
-export default connect<IOfflineContainerState, IOfflineContainerDispatch, IOfflineContainerProps>(mapStateToProps, mapDispatchToProps)(WalletListContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(Offline);
