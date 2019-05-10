@@ -37,7 +37,6 @@ import AddNetwork from 'containers/Auth/Login/NetworkList/AddNetwork';
 export interface IAuthProps {
     className?: string;
     locale: string;
-    isOffline: boolean;
     changeLocale: () => void;
 }
 

@@ -40,6 +40,7 @@ interface IAppContainerState {
     isAuthenticated: boolean;
     isLoaded: boolean;
     isCollapsed: boolean;
+    isFatal: boolean;
     localeMessages: { [key: string]: string };
     securityWarningClosed: boolean;
 }
@@ -55,6 +56,7 @@ const AppContainer: React.SFC<IAppContainerProps & IAppContainerState & IAppCont
                 isAuthenticated={props.isAuthenticated}
                 isLoaded={props.isLoaded}
                 isCollapsed={props.isCollapsed}
+                isFatal={props.isFatal}
                 switchWindow={props.switchWindow}
                 securityWarningClosed={props.securityWarningClosed}
             />
@@ -68,6 +70,7 @@ const mapStateToProps = (state: IRootState) => ({
     isAuthenticated: state.auth.isAuthenticated,
     isCollapsed: state.engine.isCollapsed,
     isLoaded: state.engine.isLoaded,
+    isFatal: !!state.engine.fatalError,
     securityWarningClosed: state.storage.securityWarningClosed
 });
 

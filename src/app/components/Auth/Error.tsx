@@ -1,17 +1,17 @@
 // MIT License
-// 
+//
 // Copyright (c) 2016-2018 AplaProject
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,45 +21,17 @@
 // SOFTWARE.
 
 import React from 'react';
-import { connect } from 'react-redux';
-import { IRootState } from 'modules';
-import { modalShow } from 'modules/modal/actions';
 
-import Auth from 'components/Auth';
-
-export interface IAuthContainerProps {
-
+export interface IErrorProps {
+    type: string;
+    message: string;
 }
 
-interface IAuthContainerState {
-    locale: string;
-}
+const Error: React.SFC<IErrorProps> = props => (
+    <div>
+        <h4>NL_FATAL_ERROR: {props.type}</h4>
+        <div>{props.message}</div>
+    </div>
+);
 
-interface IAuthContainerDispatch {
-    changeLocale: (locale: string) => void;
-}
-
-const mapStateToProps = (state: IRootState) => ({
-    locale: state.storage.locale
-});
-
-const mapDispatchToProps = {
-    changeLocale: (locale: string) => modalShow({
-        id: 'CHANGE_LOCALE',
-        type: 'CHANGE_LOCALE',
-        params: {
-            value: locale
-        }
-    })
-};
-
-const AuthContainer: React.SFC<IAuthContainerProps & IAuthContainerState & IAuthContainerDispatch> = props => {
-    const changeLocale = () =>
-        props.changeLocale(props.locale);
-
-    return (
-        <Auth {...props} changeLocale={changeLocale} />
-    );
-};
-
-export default connect<IAuthContainerState, IAuthContainerDispatch, IAuthContainerProps>(mapStateToProps, mapDispatchToProps)(AuthContainer);
+export default Error;

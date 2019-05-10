@@ -84,7 +84,10 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                     }
                 }))
             );
-        });
+        }).catch(e => Observable.of(initialize.failed({
+            params: action.payload,
+            error: e
+        })));
     });
 
 export default initializeEpic;
