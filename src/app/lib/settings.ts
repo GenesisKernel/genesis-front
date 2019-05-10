@@ -31,7 +31,13 @@ const webConfig = yup.object().shape({
         socketUrl: yup.string().notRequired(),
         activationEmail: yup.string().email().notRequired(),
         enableDemoMode: yup.bool()
-    }))
+
+    })).test('ValidationError', params => `${params.path}[x].key must be unique`, function (value: any[]) {
+        const unique = value.filter((element, index, self) => {
+            return self.findIndex(subElement => subElement.key === element.key) === index;
+        });
+        return unique.length === value.length;
+    })
 });
 
 export default webConfig;
