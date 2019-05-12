@@ -58,18 +58,11 @@ class Editor extends React.Component<IEditorProps> {
                 );
 
             default:
-                return (
-                    <CodeEditor
-                        language={'contract' === tab.type ? 'simvolio' : 'protypo'}
-                        value={tab.value}
-                        onChange={this.props.onTabUpdate}
-                    />
-                );
+                return null;
         }
     }
 
     render() {
-        const currentTab = this.props.tabs[this.props.tabIndex];
         return (
             <div className="fullscreen noscroll">
                 <EditorTabs
@@ -80,7 +73,18 @@ class Editor extends React.Component<IEditorProps> {
                     onCloseAll={this.props.onTabCloseAll}
                     onCloseSaved={this.props.onTabCloseSaved}
                 />
-                {currentTab && this.renderTool(currentTab)}
+                {this.props.tabs.map((tab, index) => (
+                    <div key={index} className="fullscreen" style={{ display: this.props.tabIndex === index ? null : 'none' }}>
+                        <div className="fullscreen" style={{ display: 'editor' === tab.tool ? null : 'none' }}>
+                            <CodeEditor
+                                language={'contract' === tab.type ? 'simvolio' : 'protypo'}
+                                value={tab.value}
+                                onChange={this.props.onTabUpdate}
+                            />
+                        </div>
+                        {index === this.props.tabIndex && 'editor' !== tab.tool ? this.renderTool(tab) : null}
+                    </div>
+                ))}
             </div>
         );
     }
