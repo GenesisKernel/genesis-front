@@ -33,6 +33,7 @@ declare module 'apla/auth' {
         id: number;
         name: string;
         fullNodes: string[];
+        disableSync?: boolean;
         socketUrl?: string;
         activationEmail?: string;
         demoEnabled?: boolean;

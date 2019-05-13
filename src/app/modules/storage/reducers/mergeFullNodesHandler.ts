@@ -31,7 +31,7 @@ const mergeFullNodesHandler: Reducer<typeof mergeFullNodes, State> = (state, pay
         return state;
     }
 
-    const fullNodes = [
+    const fullNodes = network.disableSync ? network.fullNodes : [
         ...network.fullNodes,
         ...payload.fullNodes
     ].filter((value, index, self) => self.indexOf(value) === index);

@@ -66,6 +66,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                 fullNodes: network.fullNodes,
                 socketUrl: network.socketUrl,
                 activationEmail: network.activationEmail,
+                disableSync: network.disableSync,
                 demoEnabled: network.enableDemoMode
             }));
 
