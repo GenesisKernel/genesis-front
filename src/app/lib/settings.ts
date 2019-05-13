@@ -30,7 +30,8 @@ const webConfig = yup.object().shape({
         fullNodes: yup.array().of(yup.string()).required().min(1),
         socketUrl: yup.string().notRequired(),
         activationEmail: yup.string().email().notRequired(),
-        enableDemoMode: yup.bool()
+        enableDemoMode: yup.bool(),
+        disableSync: yup.bool(),
 
     })).test('ValidationError', params => `${params.path}[x].key must be unique`, function (value: any[]) {
         const unique = value.filter((element, index, self) => {
