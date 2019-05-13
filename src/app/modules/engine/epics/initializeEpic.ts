@@ -46,6 +46,20 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
 
         ).defaultIfEmpty({}).flatMap(result => webConfig.validate(result)).flatMap(config => {
             const state = store.getState();
+            const preconfiguredNetworks: INetwork[] = [];
+
+            if (platform.args.dry && platform.args.fullNode && 'number' === typeof platform.args.networkID) {
+                preconfiguredNetworks.push({
+                    uuid: '__DEFAULT',
+                    id: platform.args.networkID,
+                    name: platform.args.networkName,
+                    fullNodes: platform.args.fullNode,
+                    socketUrl: platform.args.socketUrl,
+                    activationEmail: platform.args.activationEmail,
+                    disableSync: platform.args.disableFullNodesSync,
+                    demoEnabled: platform.args.guestMode
+                });
+            }
 
             if (platform.args.privateKey) {
                 const publicKey = keyring.generatePublicKey(platform.args.privateKey);
@@ -59,7 +73,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                 };
             }
 
-            const preconfiguredNetworks: INetwork[] = config.networks.map(network => ({
+            config.networks.forEach(network => preconfiguredNetworks.push({
                 uuid: network.key,
                 id: network.networkID,
                 name: network.name,

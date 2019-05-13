@@ -34,7 +34,7 @@ const savePreconfiguredNetworksHandler: Reducer<typeof savePreconfiguredNetworks
                 ...saved,
                 ...network,
                 fullNodes: [
-                    ...(network.disableSync ? saved.fullNodes : []),
+                    ...(network.disableSync ? [] : saved.fullNodes),
                     ...network.fullNodes
                 ].filter((value, index, self) => self.indexOf(value) === index)
             } as INetwork;
