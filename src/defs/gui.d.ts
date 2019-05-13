@@ -28,11 +28,13 @@ declare module 'apla/gui' {
         readonly privateKey?: string;
         readonly fullNode?: string[];
         readonly networkID?: number;
+        readonly networkName?: string;
         readonly dry?: boolean;
         readonly offsetX?: number;
         readonly offsetY?: number;
         readonly socketUrl?: string;
         readonly disableFullNodesSync?: boolean;
         readonly activationEmail?: string;
+        readonly guestMode?: boolean;
     }
 }

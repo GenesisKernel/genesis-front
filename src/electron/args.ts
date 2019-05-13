@@ -41,8 +41,10 @@ const command = commander
     .option('-x, --offset-x <value>', null, parseInt)
     .option('-y, --offset-y <value>', null, parseInt)
     .option('-i, --network-id <value>', null, parseInt)
+    .option('-m, --network-name <value>', 'Default network')
     .option('-s, --socket-url <url>', null)
     .option('-u, --disable-full-nodes-sync', null)
+    .option('-g, --guest-mode')
     .option('-e, --activation-email', null)
     .parse(argv);
 
@@ -53,8 +55,10 @@ const args: IInferredArguments = {
     offsetX: command.offsetX,
     offsetY: command.offsetY,
     networkID: command.networkId,
+    networkName: command.networkName,
     socketUrl: command.socketUrl,
-    disableFullNodesSync: command.disableFullNodesSync
+    disableFullNodesSync: command.disableFullNodesSync,
+    guestMode: command.guestMode
 };
 
 export default args;
