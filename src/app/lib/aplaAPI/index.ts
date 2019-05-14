@@ -210,6 +210,7 @@ class AplaAPI {
         responseTransformer: response => ({
             token: response.token,
             networkID: parseInt(response.network_id, 10),
+            // uid: 'LOGIN' + response.network_id + response.uid
             uid: 'LOGIN' + response.uid
         })
     });
