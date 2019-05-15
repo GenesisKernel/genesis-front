@@ -62,7 +62,7 @@ const mapDispatchToProps = {
             activationEmail
         }
     }),
-    onCreate: () => navigate('/wallet'),
+    onCreate: () => navigate('/account'),
     onGuestLogin: () => loginGuest.started(undefined)
 };
 

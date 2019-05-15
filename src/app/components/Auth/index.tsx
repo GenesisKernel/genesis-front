@@ -50,7 +50,7 @@ const Auth: React.SFC<IAuthProps> = props => (
                 >
                     <Switch>
                         {props.isOffline && (<Route path="/" component={Offline} />)}
-                        <Route path="/wallet" component={Wallet} />
+                        <Route path="/account" component={Wallet} />
                         <Route path="/" component={Login} />
                         <Redirect to="/" />
                     </Switch>

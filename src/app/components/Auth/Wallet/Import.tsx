@@ -92,7 +92,7 @@ class Import extends React.Component<IImportProps & InjectedIntlProps, IImportSt
         return (
             <LocalizedDocumentTitle title="wallet.import" defaultTitle="Import wallet">
                 <div>
-                    <Heading returnUrl="/wallet">
+                    <Heading returnUrl="/account">
                         <FormattedMessage id="wallet.import" defaultMessage="Import account" />
                     </Heading>
                     <input type="file" className="hidden" onChange={this.onLoadSuccess} ref={l => this._inputFile = l} />

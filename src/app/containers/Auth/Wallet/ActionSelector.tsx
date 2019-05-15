@@ -45,8 +45,8 @@ const mapStateToProps = (state: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-    onImport: () => navigate('/wallet/import'),
-    onCreate: () => navigate('/wallet/create')
+    onImport: () => navigate('/account/import'),
+    onCreate: () => navigate('/account/create')
 };
 
 const ActionSelectorContainer: React.SFC<IActionSelectorContainerProps & IActionSelectorContainerState & IActionSelectorContainerDispatch> = props => (

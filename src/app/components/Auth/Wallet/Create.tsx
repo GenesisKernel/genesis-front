@@ -125,7 +125,7 @@ class Create extends React.Component<ICreateProps & InjectedIntlProps, ICreateSt
         return (
             <LocalizedDocumentTitle title="wallet.create" defaultTitle="Create wallet">
                 <div>
-                    <Heading returnUrl={this.state.isConfirming ? null : '/wallet'} onReturn={this.state.isConfirming ? this.onReturn : null}>
+                    <Heading returnUrl={this.state.isConfirming ? null : '/account'} onReturn={this.state.isConfirming ? this.onReturn : null}>
                         <FormattedMessage id="wallet.create" defaultMessage="Create account" />
                     </Heading>
                     <input type="file" className="hidden" onChange={this.onLoadSuccess} ref={l => this._inputFile = l} />

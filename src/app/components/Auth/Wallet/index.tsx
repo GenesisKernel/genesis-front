@@ -29,9 +29,9 @@ import Import from 'containers/Auth/Wallet/Import';
 
 const Wallet: React.SFC = (props) => (
     <Switch>
-        <Route path="/wallet/create" component={Create} />
-        <Route path="/wallet/import" component={Import} />
-        <Route path="/wallet" component={ActionSelector} />
+        <Route path="/account/create" component={Create} />
+        <Route path="/account/import" component={Import} />
+        <Route path="/account" component={ActionSelector} />
     </Switch>
 );
 
