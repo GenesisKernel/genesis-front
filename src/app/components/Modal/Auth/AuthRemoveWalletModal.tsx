@@ -39,7 +39,7 @@ class AuthRemoveWalletModal extends Modal<IAuthRemoveWalletModalProps, void> {
                     <FormattedMessage id="modal.confirm.title" defaultMessage="Confirmation" />
                 </Modal.Header>
                 <Modal.Body>
-                    <FormattedMessage id="auth.remove.desc" defaultMessage="Do you really want to delete this wallet? THIS ACTION IS IRREVERSIBLE" />
+                    <FormattedMessage id="auth.remove.desc" defaultMessage="Do you really want to delete this account? THIS ACTION IS IRREVERSIBLE" />
                 </Modal.Body>
                 <Modal.Footer className="text-right">
                     <Button type="button" bsStyle="link" onClick={this.props.onCancel.bind(this)}>

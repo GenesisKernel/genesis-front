@@ -60,7 +60,7 @@ const NotFound: React.SFC<INotFoundProps> = (props) => (
                         <li >|</li>
                         <li>
                             <Link to="/wallet/create">
-                                <FormattedMessage id="wallet.create" defaultMessage="Create wallet" />
+                                <FormattedMessage id="wallet.create" defaultMessage="Create account" />
                             </Link>
                         </li>
                     </ul>

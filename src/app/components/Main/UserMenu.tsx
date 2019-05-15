@@ -113,7 +113,7 @@ class UserMenu extends React.Component<IUserMenuProps> {
                                             <CloseDropdownButton>
                                                 <em className="icon icon-shield text-muted" />
                                                 <span>
-                                                    <FormattedMessage id="general.wallet.backup" defaultMessage="Backup wallet" />
+                                                    <FormattedMessage id="general.wallet.backup" defaultMessage="Backup account" />
                                                 </span>
                                             </CloseDropdownButton>
                                         </PageLink>

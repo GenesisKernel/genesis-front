@@ -46,7 +46,7 @@ class CopyWalletModal extends Modal<ICopyWalletModalParams, void> {
         return (
             <div>
                 <Modal.Header>
-                    <FormattedMessage id="auth.wallet.share.long" defaultMessage="Share wallet" />
+                    <FormattedMessage id="auth.wallet.share.long" defaultMessage="Share account" />
                 </Modal.Header>
                 <Modal.Body>
                     <table className="table table-striped table-bordered table-hover preline mb0" style={{ maxWidth: 500 }}>

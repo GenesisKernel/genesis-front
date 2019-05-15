@@ -126,7 +126,7 @@ class Create extends React.Component<ICreateProps & InjectedIntlProps, ICreateSt
             <LocalizedDocumentTitle title="wallet.create" defaultTitle="Create wallet">
                 <div>
                     <Heading returnUrl={this.state.isConfirming ? null : '/wallet'} onReturn={this.state.isConfirming ? this.onReturn : null}>
-                        <FormattedMessage id="wallet.create" defaultMessage="Create wallet" />
+                        <FormattedMessage id="wallet.create" defaultMessage="Create account" />
                     </Heading>
                     <input type="file" className="hidden" onChange={this.onLoadSuccess} ref={l => this._inputFile = l} />
                     <div className="text-center">
@@ -144,7 +144,7 @@ class Create extends React.Component<ICreateProps & InjectedIntlProps, ICreateSt
                                     descriptionValue={
                                         <FormattedMessage
                                             id="auth.remember.disclaimer"
-                                            defaultMessage="Please make sure that you keep your passphrase (wallet seed) safe and remember the password. You will be asked to retype them for confirmation"
+                                            defaultMessage="Please make sure that you keep your passphrase (account seed) safe and remember the password. You will be asked to retype them for confirmation"
                                         />
                                     }
                                 />

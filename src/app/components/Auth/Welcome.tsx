@@ -33,10 +33,10 @@ const Welcome: React.SFC<IWelcomeProps> = (props) => (
             <FormattedMessage id="auth.welcome" defaultMessage="Welcome" />
         </h4>
         <p className="pv">
-            <FormattedMessage id="auth.welcome.guide" defaultMessage="Before proceeding, you will be guided through the wallet creation process. This will not take too much time. After completing this process you will be able to use all features of Apla" />
+            <FormattedMessage id="auth.welcome.guide" defaultMessage="Before proceeding, you will be guided through the account creation process. This will not take too much time. After completing this process you will be able to use all features of Apla" />
         </p>
         <p>
-            <FormattedMessage id="auth.welcome.continue" defaultMessage="Press 'Get started' button to begin the process of creating or restoring your wallet" />
+            <FormattedMessage id="auth.welcome.continue" defaultMessage="Press 'Get started' button to begin the process of creating or restoring your account" />
         </p>
         <hr />
     </div>

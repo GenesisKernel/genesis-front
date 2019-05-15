@@ -52,7 +52,7 @@ const WalletList: React.SFC<IWalletListProps> = props => (
     <LocalizedDocumentTitle title="auth.login" defaultTitle="Login">
         <div className={classNames('desktop-flex-col desktop-flex-stretch', props.className)}>
             <Heading>
-                <FormattedMessage id="auth.wallets" defaultMessage="Wallets" />
+                <FormattedMessage id="auth.wallets" defaultMessage="Accounts" />
             </Heading>
             <div className="form-horizontal desktop-flex-col desktop-flex-stretch" style={{ padding: 10 }}>
                 <div className="text-center desktop-flex-stretch">
@@ -74,8 +74,8 @@ const WalletList: React.SFC<IWalletListProps> = props => (
                     }
                 </div>
                 <div className="text-left">
-                    <ContextButton icon="icon-plus" onClick={props.onCreate} description={<FormattedMessage id="wallet.createimport.desc" defaultMessage="Restore your existing wallet or enroll a new one" />}>
-                        <FormattedMessage id="wallet.createimport" defaultMessage="Create or import wallet" />
+                    <ContextButton icon="icon-plus" onClick={props.onCreate} description={<FormattedMessage id="wallet.createimport.desc" defaultMessage="Restore your existing account or enroll a new one" />}>
+                        <FormattedMessage id="wallet.createimport" defaultMessage="Create or import account" />
                     </ContextButton>
                 </div>
             </div>

@@ -152,7 +152,7 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
                                 <div className="text-center">
                                     <QRCode value={this.props.privateKey || this.state.privateKey} />
                                     <div className="text-muted">
-                                        <FormattedMessage id="auth.qrcode.desc" defaultMessage="Use this code to import the wallet on your mobile device" />
+                                        <FormattedMessage id="auth.qrcode.desc" defaultMessage="Use this code to import the account on your mobile device" />
                                     </div>
                                 </div>
                             </td>
@@ -173,11 +173,11 @@ class Backup extends React.Component<IBackupProps, IBackupState> {
                 }}
                 heading={{
                     content: (
-                        <FormattedMessage id="general.wallet.backup" defaultMessage="Backup wallet" />
+                        <FormattedMessage id="general.wallet.backup" defaultMessage="Backup account" />
                     )
                 }}
                 description={
-                    <FormattedMessage id="general.wallet.backup" defaultMessage="This section is used to backup your wallet data. You will not be able to restore access to your wallet if you forget your password or lose the private key" />
+                    <FormattedMessage id="general.wallet.backup" defaultMessage="This section is used to backup your account data. You will not be able to restore access to your account if you forget your password or lose the private key" />
                 }
             >
                 {this.props.wallet && (

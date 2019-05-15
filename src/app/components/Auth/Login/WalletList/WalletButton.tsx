@@ -56,7 +56,7 @@ const WalletButton: React.SFC<IWalletButtonProps> = (props) => (
             </h4>
             {0 === props.wallet.access.length && props.onRegister && (
                 <div className="text-danger">
-                    <FormattedMessage id="auth.wallet.register.desc" defaultMessage="This wallet is pending registration. Click register to begin the process" />
+                    <FormattedMessage id="auth.wallet.register.desc" defaultMessage="This account is pending registration. Click register to begin the process" />
                 </div>
             )}
             <div>

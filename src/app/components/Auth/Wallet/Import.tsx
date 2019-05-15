@@ -93,7 +93,7 @@ class Import extends React.Component<IImportProps & InjectedIntlProps, IImportSt
             <LocalizedDocumentTitle title="wallet.import" defaultTitle="Import wallet">
                 <div>
                     <Heading returnUrl="/wallet">
-                        <FormattedMessage id="wallet.import" defaultMessage="Import wallet" />
+                        <FormattedMessage id="wallet.import" defaultMessage="Import account" />
                     </Heading>
                     <input type="file" className="hidden" onChange={this.onLoadSuccess} ref={l => this._inputFile = l} />
                     <div className="text-center">
@@ -108,7 +108,7 @@ class Import extends React.Component<IImportProps & InjectedIntlProps, IImportSt
                                 descriptionValue={
                                     <FormattedMessage
                                         id="auth.import.disclaimer"
-                                        defaultMessage="Please enter your wallet backup payload to restore access to the system"
+                                        defaultMessage="Please enter your account backup payload to restore access to the system"
                                     />
                                 }
                             />
