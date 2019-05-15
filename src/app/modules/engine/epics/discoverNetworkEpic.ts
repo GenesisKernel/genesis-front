@@ -71,6 +71,9 @@ const setNetworkEpic: Epic = (action$, store, { api, defaultKey }) => action$.of
         ).catch((error: NetworkError) => Observable.of(discoverNetwork.failed({
             params: action.payload,
             error
+        }))).timeout(10000).catch(timeout => Observable.of(discoverNetwork.failed({
+            params: action.payload,
+            error: NetworkError.Offline
         })));
     });
 
