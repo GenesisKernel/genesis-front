@@ -50,6 +50,7 @@ import CopyWalletModal from './Auth/CopyWalletModal';
 import RegisterModal from './Auth/RegisterModal';
 import RolePickerModal from 'containers/Modal/RolePickerModal';
 import RemoveNetworkModal from './Network/RemoveNetworkModal';
+import NetworkErrorModal from './Auth/NetworkErrorModal';
 
 const MODAL_COMPONENTS = {
     'AUTHORIZE': AuthorizeModal,
@@ -67,6 +68,7 @@ const MODAL_COMPONENTS = {
     'DEBUG_CONTRACT': DebugContractModal,
     'IMAGE_EDITOR': ImageEditorModal,
     'MAP_EDITOR': MapEditorModal,
+    'NETWORK_ERROR': NetworkErrorModal,
     'PAGE_MODAL': PageModal,
     'PROMPT': PromptModal,
     'REMOVE_NETWORK': RemoveNetworkModal,

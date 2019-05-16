@@ -27,6 +27,8 @@ import { addNetwork, navigate } from '../actions';
 import { discover } from 'services/network';
 import NetworkError from 'services/network/errors';
 import { saveNetwork } from 'modules/storage/actions';
+import { modalShow } from 'modules/modal/actions';
+import { Action } from 'redux';
 
 const addNetworkEpic: Epic = (action$, _store, { defaultKey }) => action$.ofAction(addNetwork.started)
     .flatMap(action => {
@@ -43,12 +45,19 @@ const addNetworkEpic: Epic = (action$, _store, { defaultKey }) => action$.ofActi
                 }),
                 addNetwork.done(null)
             ))
-            .catch((e: NetworkError) => {
-                alert('Error:: ' + e);
-                return Observable.of(
-                    addNetwork.done(null)
-                );
-            });
+            .catch((e: NetworkError) => Observable.of<Action>(
+                modalShow({
+                    id: 'NETWORK_ERROR',
+                    params: {
+                        error: e
+                    },
+                    type: 'NETWORK_ERROR'
+                }),
+                addNetwork.failed({
+                    params: action.payload,
+                    error: e
+                })
+            ));
     });
 
 export default addNetworkEpic;
