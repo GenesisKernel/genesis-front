@@ -53,8 +53,14 @@ export const discover = async (network: INetworkEndpoint, key: string, networkID
             .list
             .find(l => 'full_nodes' === l.name)
             .value;
-        const fullNodes: string[] = JSON.parse(fullNodesPlain)
-            .map((l: any) => l.api_address);
+
+        try {
+            var fullNodes: string[] = JSON.parse(fullNodesPlain)
+                .map((l: any) => l.api_address);
+        }
+        catch {
+            fullNodes = [];
+        }
 
         return {
             networkID: uid.networkID,

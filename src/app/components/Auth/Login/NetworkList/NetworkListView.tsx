@@ -67,7 +67,7 @@ const NetworkName: React.SFC<{ name: string, current: boolean }> = props => (
 
 class NetworkListView extends React.Component<INetworkListViewProps & InjectedIntlProps> {
     buildRow = (network: INetwork, preconfigured?: boolean) => [
-        <b key={network.uuid}>{network.id}</b>,
+        <b key={network.uuid} style={{ whiteSpace: 'nowrap' }}>{network.id}</b>,
         <NetworkName key={network.uuid} name={network.name} current={this.props.current === network.uuid} />,
         network.fullNodes.length,
         (
