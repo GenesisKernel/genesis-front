@@ -1,6 +1,12 @@
 {
-    "networkID": 1,
+    "key": "DEFAULT_NETWORK",
+    "name": "Default Network",
+    "networkID": 100,
     "fullNodes": [
         "http://127.0.0.1:7079"
-    ]
+    ],
+    "socketUrl": "",
+    "activationEmail": "",
+    "enableDemoMode": true,
+    "disableSync": false
 }
