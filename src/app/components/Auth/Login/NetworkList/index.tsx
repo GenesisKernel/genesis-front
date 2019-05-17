@@ -26,8 +26,9 @@ import { INetwork, INetworkEndpoint } from 'apla/auth';
 
 import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import ContextButton from '../ContextButton';
-import NetworkButton from './NetworkButton';
 import HeadingNetwork from 'containers/Auth/HeadingNetwork';
+import NetworkListView from './NetworkListView';
+import { FormattedMessage } from 'react-intl';
 
 export interface INetworkListProps {
     pending: boolean;
@@ -43,45 +44,25 @@ const NetworkList: React.SFC<INetworkListProps> = props => (
     <LocalizedDocumentTitle title="auth.login" defaultTitle="Login">
         <div className={classNames('desktop-flex-col desktop-flex-stretch')}>
             <HeadingNetwork returnUrl="/">
-                NL_NETWORKS
+                <FormattedMessage id="general.networks" defaultMessage="Networks" />
             </HeadingNetwork>
 
             <div className="text-left">
-                <div><b>Configured network</b></div>
-                {props.preconfiguredNetworks.map(network => (
-                    <div key={network.uuid}>
-                        <NetworkButton
-                            static
-                            network={network}
-                            active={props.current && props.current.uuid === network.uuid}
-                            disabled={props.pending}
-                            onConnect={() => props.onConnect(network.uuid)}
-                            onRemove={() => props.onRemove(network)}
-                        />
-                        <hr />
-                    </div>
-                ))}
-
-                <div><b>Network list</b></div>
+                <NetworkListView
+                    pending={props.pending}
+                    current={props.current && props.current.uuid}
+                    preconfiguredNetworks={props.preconfiguredNetworks}
+                    networks={props.networks}
+                    onConnect={props.onConnect}
+                    onRemove={props.onRemove}
+                />
                 <hr />
-                {props.networks.map(network => (
-                    <div key={network.uuid}>
-                        <NetworkButton
-                            network={network}
-                            active={props.current && props.current.uuid === network.uuid}
-                            disabled={props.pending}
-                            onConnect={() => props.onConnect(network.uuid)}
-                            onRemove={() => props.onRemove(network)}
-                        />
-                        <hr />
-                    </div>
-                ))}
-
-                <ContextButton icon="icon-plus" onClick={props.onAddNetwork} description="NL_ADD_NETWORK">
-                    <span>NL_ADD_NETWORK</span>
-                </ContextButton>
-                <ContextButton icon="icon-refresh" onClick={() => null} description="NL_SYNC">
-                    <span>NL_SYNC</span>
+                <ContextButton
+                    icon="icon-plus"
+                    onClick={props.onAddNetwork}
+                    description={<FormattedMessage id="general.network.add.desc" defaultMessage="Specify connection details and connect to another network not listed there" />}
+                >
+                    <FormattedMessage id="general.network.add" defaultMessage="Add network" />
                 </ContextButton>
             </div>
         </div>
