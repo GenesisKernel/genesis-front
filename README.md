@@ -31,11 +31,26 @@ API binding can be customized to the value of your choice. Simply create a setti
 
 ```json
 {
+    "key": "DEFAULT_NETWORK",
+    "name": "Default Network",
+    "networkID": 100,
     "fullNodes": [
         "http://127.0.0.1:7079"
-    ]
+    ],
+    "socketUrl": "",
+    "activationEmail": "",
+    "enableDemoMode": true,
+    "disableSync": false
 }
 ```
+- **key** - Specifies a unique key for a network
+- **name** - A human readable network name that will be shown in the interface
+- **networkID** - Unique identificator that is imprinted in all transactions. Refer to the configuration of your go-apla instance
+- **fullNodes** - Prebuilt list of URLs that will be used for synchronization
+- **socketUrl** - Optional parameter that overrides Centrifugo connection endpoint. Default: provided by go-apla configuration
+- **activationEmail** - Optional parameter that will be shown to a user when there are no active endpoints to log in. Used for KYC
+- **enableDemoMode** - When set to true, will enable authorization using the guest key
+- **disableSync** - Optional parameter that disables synchronization of the full nodes. Unsafe, use with caution
 
 Development server emits warnings and will report errors in readable format. You can hack around it, but it is suited only for development/testing. To use it in production environment you will need to build the project.
 
