@@ -59,7 +59,7 @@ export const discover = async (network: INetworkEndpoint, key: string, networkID
                 .map((l: any) => l.api_address);
         }
         catch {
-            fullNodes = [];
+            fullNodes = [network.apiHost];
         }
 
         return {
