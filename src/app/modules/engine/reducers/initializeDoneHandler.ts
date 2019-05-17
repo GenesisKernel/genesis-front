@@ -26,12 +26,8 @@ import { Reducer } from 'modules';
 
 const initializeDoneHandler: Reducer<typeof initialize.done, State> = (state, payload) => ({
     ...state,
-    networkID: payload.result.networkID,
     isLoaded: true,
-    isOffline: false,
-    isConnecting: false,
-    nodeHost: payload.result.nodeHost,
-    activationEmail: payload.result.activationEmail
+    preconfiguredNetworks: payload.result.preconfiguredNetworks
 });
 
 export default initializeDoneHandler;

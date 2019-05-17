@@ -26,7 +26,7 @@ import { injectIntl, FormattedMessage, InjectedIntlProps } from 'react-intl';
 import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import Generator from './Generator';
 import Validation from 'components/Validation';
-import Heading from 'components/Auth/Heading';
+import HeadingNetwork from 'containers/Auth/HeadingNetwork';
 
 export interface ICreateProps {
     seed: string;
@@ -125,9 +125,9 @@ class Create extends React.Component<ICreateProps & InjectedIntlProps, ICreateSt
         return (
             <LocalizedDocumentTitle title="wallet.create" defaultTitle="Create wallet">
                 <div>
-                    <Heading returnUrl={this.state.isConfirming ? null : '/account'} onReturn={this.state.isConfirming ? this.onReturn : null}>
+                    <HeadingNetwork returnUrl={this.state.isConfirming ? null : '/account'} onReturn={this.state.isConfirming ? this.onReturn : null}>
                         <FormattedMessage id="wallet.create" defaultMessage="Create account" />
-                    </Heading>
+                    </HeadingNetwork>
                     <input type="file" className="hidden" onChange={this.onLoadSuccess} ref={l => this._inputFile = l} />
                     <div className="text-center">
                         <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit}>

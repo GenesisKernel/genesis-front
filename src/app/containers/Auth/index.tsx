@@ -23,10 +23,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'modules';
-// import { setLocale } from 'modules/engine/actions';
+import { modalShow } from 'modules/modal/actions';
 
 import Auth from 'components/Auth';
-import { modalShow } from 'modules/modal/actions';
 
 export interface IAuthContainerProps {
 
@@ -34,7 +33,6 @@ export interface IAuthContainerProps {
 
 interface IAuthContainerState {
     locale: string;
-    isOffline: boolean;
 }
 
 interface IAuthContainerDispatch {
@@ -42,8 +40,7 @@ interface IAuthContainerDispatch {
 }
 
 const mapStateToProps = (state: IRootState) => ({
-    locale: state.storage.locale,
-    isOffline: state.engine.isOffline
+    locale: state.storage.locale
 });
 
 const mapDispatchToProps = {

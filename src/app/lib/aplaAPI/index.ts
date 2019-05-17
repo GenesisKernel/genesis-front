@@ -23,7 +23,7 @@
 import queryString from 'query-string';
 import urlJoin from 'url-join';
 import urlTemplate from 'url-template';
-import { IUIDResponse, ILoginRequest, ILoginResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, IContentJsonRequest, IContentJsonResponse, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, ISectionsRequest, ISectionsResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse, ITableRequest, TConfigRequest, ISystemParamsRequest, ISystemParamsResponse, IContentHashRequest, IContentHashResponse, TTxCallRequest, TTxCallResponse, TTxStatusRequest, TTxStatusResponse, ITxStatus, IKeyInfo, IUIDRequest } from 'apla/api';
+import { IUIDResponse, ILoginRequest, ILoginResponse, IRowRequest, IRowResponse, IPageResponse, IBlockResponse, IMenuResponse, IContentRequest, IContentResponse, IContentTestRequest, IContentJsonRequest, IContentJsonResponse, ITableResponse, ISegmentRequest, ITablesResponse, IDataRequest, IDataResponse, ISectionsRequest, ISectionsResponse, IHistoryRequest, IHistoryResponse, INotificationsRequest, IParamResponse, IParamsRequest, IParamsResponse, IParamRequest, ITemplateRequest, IContractRequest, IContractResponse, IContractsResponse, ITableRequest, TConfigRequest, ISystemParamsRequest, ISystemParamsResponse, IContentHashRequest, IContentHashResponse, TTxCallRequest, TTxCallResponse, TTxStatusRequest, TTxStatusResponse, ITxStatus, IKeyInfo } from 'apla/api';
 
 export type TRequestMethod =
     'get' |
@@ -73,8 +73,8 @@ export interface ISecuredRequestParams extends IRequestParams {
 
 export interface IAPIOptions {
     apiHost: string;
-    apiEndpoint: string;
-    transport: IRequestTransport;
+    apiEndpoint?: string;
+    transport?: IRequestTransport;
     session?: string;
     requestOptions?: IRequestOptions<any, any>;
 }
@@ -85,6 +85,26 @@ class AplaAPI {
 
     constructor(options: IAPIOptions) {
         this._options = {
+            transport: request => fetch(request.url, {
+                method: request.method,
+                headers: request.headers,
+                body: request.body
+
+            }).then(response =>
+                Promise.all([
+                    response.clone().json(),
+                    response.clone().text()
+
+                ]).then(result => ({
+                    json: result[0],
+                    body: result[1]
+
+                }))
+
+            ).catch(e => {
+                throw e && e.response && e.response.data ? e.response.data.error : null;
+            }),
+            apiEndpoint: 'api/v2',
             ...options
         };
 
@@ -185,11 +205,12 @@ class AplaAPI {
     }
 
     // Authorization
-    public getUid = this.setEndpoint<IUIDRequest, IUIDResponse>('get', 'getuid', {
+    public getUid = this.setEndpoint<IUIDResponse>('get', 'getuid', {
         requestTransformer: request => null,
-        responseTransformer: (response, text, request) => ({
+        responseTransformer: response => ({
             token: response.token,
-            uid: 'LOGIN' + String(request.networkID) + String(response.uid)
+            networkID: parseInt(response.network_id, 10),
+            uid: 'LOGIN' + response.network_id + response.uid
         })
     });
     public login = this.setSecuredEndpoint<ILoginRequest, ILoginResponse>('post', 'login', {

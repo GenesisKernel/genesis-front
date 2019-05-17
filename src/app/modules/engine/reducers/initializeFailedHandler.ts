@@ -26,9 +26,8 @@ import { Reducer } from 'modules';
 
 const initializeFailedHandler: Reducer<typeof initialize.failed, State> = (state, payload) => ({
     ...state,
-    isOffline: true,
-    isConnecting: false,
-    isLoaded: true
+    isLoaded: true,
+    fatalError: payload.error
 });
 
 export default initializeFailedHandler;

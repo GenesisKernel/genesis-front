@@ -30,7 +30,10 @@ import { replace } from 'connected-react-router';
 const loadEditorTabEpic: Epic = (action$, store, { api }) => action$.ofAction(loadEditorTab.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.auth.session);
+        const client = api({
+            apiHost: state.auth.session.network.apiHost,
+            sessionToken: state.auth.session.sessionToken
+        });
         const nameParser = /^(@[0-9]+)?(.*)$/i;
 
         switch (action.payload.type) {

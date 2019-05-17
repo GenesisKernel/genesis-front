@@ -58,6 +58,7 @@ const storageAdapters = [
         'auth.session',
         'auth.id',
         'auth.wallet',
+        'engine.guestSession'
     ])
 ];
 

@@ -30,6 +30,7 @@ import themed from 'components/Theme/themed';
 import { AnimatedSwitch } from 'components/Animation';
 import Main from 'containers/Main';
 import Auth from 'containers/Auth';
+import Error from 'containers/Auth/Error';
 import Splash from 'components/Splash';
 import InitHook from 'containers/App/InitHook';
 import ModalProvider from 'containers/Modal/ModalProvider';
@@ -40,6 +41,7 @@ interface IAppProps {
     isAuthenticated: boolean;
     isLoaded: boolean;
     isCollapsed: boolean;
+    isFatal: boolean;
     securityWarningClosed: boolean;
     switchWindow: (wnd: string) => void;
 }
@@ -82,6 +84,9 @@ class App extends React.Component<IAppProps> {
                 })}
 
                 <AnimatedSwitch animation={AnimatedSwitch.animations.fade()}>
+                    {this.props.isFatal && (
+                        <Route path="/" component={Error} />
+                    )}
                     {!this.props.isLoaded && (
                         <Route path="/" component={Splash} />
                     )}

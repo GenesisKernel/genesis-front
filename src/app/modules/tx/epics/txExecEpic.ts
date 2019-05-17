@@ -35,8 +35,12 @@ const TX_STATUS_INTERVAL = 3000;
 export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(txExec.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.auth.session);
+        const client = api({
+            apiHost: state.auth.session.network.apiHost,
+            sessionToken: state.auth.session.sessionToken
+        });
         const privateKey = state.auth.privateKey;
+        const network = store.getState().storage.networks.find(l => l.uuid === state.auth.session.network.uuid);
 
         return Observable.from(action.payload.contracts).flatMap(contract =>
             Observable.from(client.getContract({
@@ -79,7 +83,7 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                         return Observable.from(new Contract({
                             id: proto.id,
                             schema: defaultSchema,
-                            networkID: state.engine.networkID,
+                            networkID: network.id,
                             ecosystemID: parseInt(state.auth.wallet && state.auth.wallet.access.ecosystem || '1', 10),
                             fields: txParams
 

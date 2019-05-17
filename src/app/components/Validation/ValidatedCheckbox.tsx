@@ -29,7 +29,7 @@ import ValidatedForm, { IValidatedControl } from './ValidatedForm';
 export interface IValidatedCheckboxProps {
     validators?: Validator[];
     name: string;
-    title?: string;
+    title?: React.ReactNode;
     className?: string;
     defaultChecked?: boolean;
     onChange?: React.ChangeEventHandler<HTMLInputElement>;

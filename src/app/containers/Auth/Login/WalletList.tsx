@@ -29,7 +29,27 @@ import { modalShow } from 'modules/modal/actions';
 
 import WalletList from 'components/Auth/Login/WalletList';
 
+const selectNetwork = (state: IRootState) => {
+    const session = state.engine.guestSession;
+    if (!session) {
+        return undefined;
+    }
+
+    return state.storage.networks.find(l => l.uuid === session.network.uuid);
+};
+
+const selectActivationMail = (state: IRootState) => {
+    const network = selectNetwork(state);
+    return network ? network.activationEmail : '';
+};
+
+const selectDemoEnabled = (state: IRootState) => {
+    const network = selectNetwork(state);
+    return network ? network.demoEnabled : false;
+};
+
 const mapStateToProps = (state: IRootState) => ({
+    isOffline: state.engine.isOffline,
     pending: state.auth.isLoggingIn,
     wallets: state.storage.wallets.sort((a, b) => a.address > b.address ? 1 : -1).map(wallet => ({
         access: [],
@@ -40,7 +60,8 @@ const mapStateToProps = (state: IRootState) => ({
         ...(state.auth.wallets || []).find(l => l.id === wallet.id)
     })),
     notifications: state.socket.notifications,
-    activationEmail: state.engine.activationEmail
+    activationEmail: selectActivationMail(state),
+    demoModeEnabled: selectDemoEnabled(state)
 });
 
 const mapDispatchToProps = {
@@ -68,10 +89,12 @@ const mapDispatchToProps = {
 
 export default connect(mapStateToProps, mapDispatchToProps, (state, dispatch: any, props) => ({
     ...props,
+    isOffline: state.isOffline,
     pending: state.pending,
     wallets: state.wallets,
     notifications: state.notifications,
     activationEnabled: !!state.activationEmail,
+    demoModeEnabled: state.demoModeEnabled,
     onRemove: dispatch.onRemove,
     onLogin: dispatch.onLogin,
     onSelect: dispatch.onSelect,

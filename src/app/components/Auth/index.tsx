@@ -31,12 +31,12 @@ import themed from 'components/Theme/themed';
 import Titlebar from 'components/Main/Titlebar';
 import Wallet from 'components/Auth/Wallet';
 import Login from 'containers/Auth/Login';
-import Offline from 'containers/Auth/Offline';
+import NetworkList from 'containers/Auth/Login/NetworkList';
+import AddNetwork from 'containers/Auth/Login/NetworkList/AddNetwork';
 
 export interface IAuthProps {
     className?: string;
     locale: string;
-    isOffline: boolean;
     changeLocale: () => void;
 }
 
@@ -49,8 +49,9 @@ const Auth: React.SFC<IAuthProps> = props => (
                     header={platform.select({ desktop: <Titlebar maximizable={false} /> })}
                 >
                     <Switch>
-                        {props.isOffline && (<Route path="/" component={Offline} />)}
                         <Route path="/account" component={Wallet} />
+                        <Route path="/networks/add" component={AddNetwork} />
+                        <Route path="/networks" component={NetworkList} />
                         <Route path="/" component={Login} />
                         <Redirect to="/" />
                     </Switch>
@@ -59,7 +60,7 @@ const Auth: React.SFC<IAuthProps> = props => (
                     web: (
                         <div className="clearfix p-lg text-center text-white">
                             <div className="pull-left">
-                                <div>Apla &copy; 2017 - 2018 - <a href="https://apla.io">https://apla.io</a></div>
+                                <div>Apla &copy; 2017 - 2019 - <a href="https://apla.io">https://apla.io</a></div>
                             </div>
                             <div className="pull-right">
                                 <a href="#" onClick={props.changeLocale}>

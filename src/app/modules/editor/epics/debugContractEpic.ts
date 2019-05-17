@@ -28,7 +28,10 @@ import { Observable } from 'rxjs';
 const debugContractEpic: Epic = (action$, store, { api }) => action$.ofAction(actions.debugContract)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.auth.session);
+        const client = api({
+            apiHost: state.auth.session.network.apiHost,
+            sessionToken: state.auth.session.sessionToken
+        });
         return Observable.from(client.getContract({ name: action.payload }))
             .map(contract => modalShow({
                 id: 'DEBUG_CONTRACT',

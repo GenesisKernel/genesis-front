@@ -43,7 +43,7 @@ const MainContainer: React.SFC<IMainProps> = props => (
 );
 
 const mapStateToProps = (state: IRootState) => ({
-    nodeUrl: state.auth.session && state.auth.session.apiHost,
+    network: state.auth.session && state.auth.session.network,
     isAuthorized: !!state.auth.privateKey,
     stylesheet: state.content.stylesheet,
     section: state.sections.section,

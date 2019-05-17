@@ -43,7 +43,10 @@ interface IRemoteSectionProto {
 const sectionsInitEpic: Epic = (action$, store, { api }) => action$.ofAction(sectionsInit.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.auth.session);
+        const client = api({
+            apiHost: state.auth.session.network.apiHost,
+            sessionToken: state.auth.session.sessionToken
+        });
         const roleID = state.auth.wallet.role && state.auth.wallet.role.id;
 
         return Observable.from(Promise.all([

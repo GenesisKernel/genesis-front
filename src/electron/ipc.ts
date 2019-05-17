@@ -40,6 +40,9 @@ if (!args.dry) {
     saveState = _.throttle(() => {
         config.set('persistentData', JSON.stringify({
             storage: state.storage,
+            engine: {
+                guestSession: state.engine.guestSession,
+            },
             auth: {
                 isAuthenticated: state.auth.isAuthenticated,
                 isDefaultWallet: state.auth.isDefaultWallet,

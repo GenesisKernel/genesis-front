@@ -31,6 +31,8 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
     .flatMap(action => {
         const wallet = store.getState().auth.wallet;
         const privateKey = keyring.decryptAES(wallet.wallet.encKey, action.payload.password);
+        const state = store.getState();
+        const networkEndpoint = state.engine.guestSession.network;
 
         if (!keyring.validatePrivateKey(privateKey)) {
             return Observable.of(login.failed({
@@ -40,19 +42,18 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
         }
 
         const publicKey = keyring.generatePublicKey(privateKey);
-        const nodeHost = store.getState().engine.nodeHost;
-        const client = api({ apiHost: nodeHost });
+        const client = api({ apiHost: networkEndpoint.apiHost });
 
-        return Observable.from(client.getUid({ networkID: store.getState().engine.networkID }))
-            .flatMap(uid =>
-                client.authorize(uid.token).login({
+        return Observable.from(client.getUid())
+            .flatMap(uid => {
+                return client.authorize(uid.token).login({
                     publicKey,
                     signature: keyring.sign(uid.uid, privateKey),
                     ecosystem: wallet.access.ecosystem,
                     expire: 60 * 60 * 24 * 90,
                     role: wallet.role ? Number(wallet.role.id) : null
-                })
-            )
+                });
+            })
 
             // Successful authentication. Yield the result
             .flatMap(session => {
@@ -63,8 +64,7 @@ const loginEpic: Epic = (action$, store, { api }) => action$.ofAction(login.star
                         result: {
                             session: {
                                 sessionToken: session.token,
-                                refreshToken: session.refresh,
-                                apiHost: nodeHost
+                                network: networkEndpoint
                             },
                             privateKey,
                             publicKey

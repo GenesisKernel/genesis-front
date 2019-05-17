@@ -23,6 +23,7 @@
 import React from 'react';
 import _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
+import { INetworkEndpoint } from 'apla/auth';
 import { TSection } from 'apla/content';
 import { history } from 'store';
 import platform from 'lib/platform';
@@ -38,14 +39,13 @@ import ToolButton from 'components/Main/Toolbar/ToolButton';
 import EditorToolbar from 'containers/Main/Toolbar/EditorToolbar';
 import ToolIndicator from 'components/Main/Toolbar/ToolIndicator';
 import LoadingBar from './LoadingBar';
-// import TransactionsMenu from './TransactionsMenu';
 
 const StyledWrapper = themed.div`
     background-color: #f6f8fa;
 `;
 
 export interface IMainProps {
-    nodeUrl: string;
+    network: INetworkEndpoint;
     isAuthorized: boolean;
     pending: boolean;
     section: string;
@@ -125,7 +125,7 @@ class Main extends React.Component<IMainProps> {
     }
 
     render() {
-        const appTitle = `Apla (${this.props.nodeUrl})`;
+        const appTitle = `Apla ${this.props.network ? '(' + this.props.network.apiHost + ')' : ''}`;
 
         return (
             <StyledWrapper className="wrapper component-main">
