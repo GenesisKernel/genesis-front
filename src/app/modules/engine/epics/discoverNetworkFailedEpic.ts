@@ -20,17 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { combineEpics } from 'redux-observable';
-import initializeEpic from './epics/initializeEpic';
-import setLocaleEpic from './epics/setLocaleEpic';
-import discoverNetworkEpic from './epics/discoverNetworkEpic';
-import addNetworkEpic from './epics/addNetworkEpic';
-import discoverNetworkFailedEpic from './epics/discoverNetworkFailedEpic';
+import { Epic } from 'modules';
+import { discoverNetwork } from '../actions';
+import { modalShow } from 'modules/modal/actions';
 
-export default combineEpics(
-    initializeEpic,
-    setLocaleEpic,
-    discoverNetworkEpic,
-    discoverNetworkFailedEpic,
-    addNetworkEpic
-);
+const discoverNetworkFailedEpic: Epic = (action$, store, { api, defaultKey }) => action$.ofAction(discoverNetwork.failed)
+    .map(action => modalShow({
+        id: 'NETWORK_ERROR',
+        params: {
+            error: action.payload.error
+        },
+        type: 'NETWORK_ERROR'
+    }));
+
+export default discoverNetworkFailedEpic;
