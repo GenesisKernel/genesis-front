@@ -27,7 +27,10 @@ import { Observable } from 'rxjs/Observable';
 const modalPageEpic: Epic = (action$, store, { api }) => action$.ofAction(modalPage)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.auth.session);
+        const client = api({
+            apiHost: state.auth.session.network.apiHost,
+            sessionToken: state.auth.session.sessionToken
+        });
 
         return Observable.fromPromise(client.content({
             type: 'page',

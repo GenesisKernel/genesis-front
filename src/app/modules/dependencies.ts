@@ -27,8 +27,6 @@ import getConstructorTemplate from 'lib/constructor/templates';
 import resolveTagHandler from 'lib/constructor/tags';
 import 'whatwg-fetch';
 
-export const apiEndpoint = 'api/v2';
-
 export interface IStoreDependencies {
     api: IAPIDependency;
     defaultKey: string;
@@ -56,27 +54,7 @@ interface IConstructorDependenies {
 
 const storeDependencies: IStoreDependencies = {
     api: (params: { apiHost: string, sessionToken?: string } = { apiHost: null }) => new AplaAPI({
-        transport: request => fetch(request.url, {
-            method: request.method,
-            headers: request.headers,
-            body: request.body
-
-        }).then(response =>
-            Promise.all([
-                response.clone().json(),
-                response.clone().text()
-
-            ]).then(result => ({
-                json: result[0],
-                body: result[1]
-
-            }))
-
-        ).catch(e => {
-            throw e && e.response && e.response.data ? e.response.data.error : null;
-        }),
         apiHost: params.apiHost,
-        apiEndpoint,
         session: params.sessionToken
     }),
     defaultKey: 'e5a87a96a445cb55a214edaad3661018061ef2936e63a0a93bdb76eb28251c1f',

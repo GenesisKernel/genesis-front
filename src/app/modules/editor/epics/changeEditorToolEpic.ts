@@ -28,7 +28,10 @@ import { Observable } from 'rxjs/Observable';
 const changeEditorToolEpic: Epic = (action$, store, { api }) => action$.ofAction(changeEditorTool.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.auth.session);
+        const client = api({
+            apiHost: state.auth.session.network.apiHost,
+            sessionToken: state.auth.session.sessionToken
+        });
 
         switch (action.payload) {
             case 'preview':

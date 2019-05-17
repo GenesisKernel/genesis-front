@@ -28,7 +28,10 @@ const reloadPageEpic: Epic = (action$, store, { api }) => action$.ofAction(reloa
     .flatMap(action => {
         const state = store.getState();
         const section = state.sections.sections[state.sections.section];
-        const client = api(state.auth.session);
+        const client = api({
+            apiHost: state.auth.session.network.apiHost,
+            sessionToken: state.auth.session.sessionToken
+        });
 
         return Observable.fromPromise(client.content({
             type: 'page',

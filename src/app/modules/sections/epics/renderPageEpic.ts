@@ -27,7 +27,10 @@ import { renderPage } from '../actions';
 const renderPageEpic: Epic = (action$, store, { api }) => action$.ofAction(renderPage.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.auth.session);
+        const client = api({
+            apiHost: state.auth.session.network.apiHost,
+            sessionToken: state.auth.session.sessionToken
+        });
         const section = state.sections.sections[action.payload.section || state.sections.section];
 
         return Observable.from(Promise.all([

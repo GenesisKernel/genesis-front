@@ -27,7 +27,10 @@ import { renderLegacyPage } from '..//actions';
 const renderLegacyPageEpic: Epic = (action$, store, { api }) => action$.ofAction(renderLegacyPage.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api(state.auth.session);
+        const client = api({
+            apiHost: state.auth.session.network.apiHost,
+            sessionToken: state.auth.session.sessionToken
+        });
 
         if (action.payload.menu) {
             return Observable.fromPromise(client.content({

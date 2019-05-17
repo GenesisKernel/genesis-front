@@ -20,102 +20,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import * as React from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { Button } from 'react-bootstrap';
+import NetworkError from 'services/network/errors';
 
-import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
-import Heading from 'components/Auth/Heading';
+import Error from './Error';
 
 export interface IOfflineProps {
-    isConnecting: boolean;
-    isConnected: boolean;
-    checkOnline?: (params: null) => void;
+    error: NetworkError;
 }
 
-interface IOfflineState {
-    seconds: number;
-}
-
-class Offline extends React.Component<IOfflineProps, IOfflineState> {
-    private _interval: number;
-
-    constructor(props: IOfflineProps) {
-        super(props);
-        this.state = {
-            seconds: 60
-        };
-    }
-
-    componentDidMount() {
-        this.resetTimer();
-    }
-
-    componentWillUnmount() {
-        clearInterval(this._interval);
-    }
-
-    componentWillReceiveProps(props: IOfflineProps) {
-        this.resetTimer();
-    }
-
-    resetTimer() {
-        if (this._interval) {
-            clearInterval(this._interval);
-        }
-        this.setState({ seconds: 60 });
-        this._interval = setInterval(this.tick.bind(this), 1000);
-    }
-
-    tick() {
-        const seconds = this.state.seconds - 1;
-
-        if (0 >= seconds) {
-            this.props.checkOnline(null);
-        }
-        else {
-            this.setState({
-                seconds
-            });
-        }
-    }
-
-    render() {
-        return (
-            <LocalizedDocumentTitle title="general.service.offline" defaultTitle="Service offline">
-                <div className="desktop-flex-col desktop-flex-stretch">
-                    <Heading>
-                        <FormattedMessage id="general.service.offline" defaultMessage="Service offline" />
-                    </Heading>
-                    <div className="text-center mv-lg">
-                        <h1 className="mb-lg">
-                            <sup>
-                                <em className="fa fa-cog fa-2x text-muted fa-spin text-info" />
-                            </sup>
-                            <em className="fa fa-cog fa-5x text-muted fa-spin text-purple" />
-                            <em className="fa fa-cog fa-lg text-muted fa-spin text-success" />
-                        </h1>
-                        <div className="text-bold text-lg mb-lg">
-                            <FormattedMessage id="general.service.offline" defaultMessage="Service offline" />
-                        </div>
-                        <p className="lead">
-                            {this.props.isConnecting && (
-                                <FormattedMessage id="general.service.connecting" defaultMessage="Connecting..." />
-                            )}
-                            {!this.props.isConnecting && (
-                                <FormattedMessage id="general.service.connecting.retry.in" defaultMessage="Retrying in {seconds} sec" values={{ seconds: this.state.seconds }} />
-                            )}
-                        </p>
-                        <div>
-                            <Button bsStyle="link" onClick={this.props.isConnecting ? null : this.props.checkOnline}>
-                                <FormattedMessage id="general.service.retry" defaultMessage="Retry now" />
-                            </Button>
-                        </div>
-                    </div>
+const Offline: React.SFC<IOfflineProps> = props => (
+    <div>
+        {props.error && (
+            <Error error={props.error} />
+        )}
+        {!props.error && (
+            <div style={{ padding: 30 }}>
+                <i className="fa fa-chain-broken text-primary" style={{ fontSize: 128 }} />
+                <h3>
+                    <FormattedMessage id="general.network.notconnected" defaultMessage="Not connected" />
+                </h3>
+                <div className="text-muted">
+                    <FormattedMessage id="general.network.notconnected.desc" defaultMessage="Please connect to a network to begin using Apla. You can manage networks by clicking on the connection indicator in the top right corner of this window" />
                 </div>
-            </LocalizedDocumentTitle>
-        );
-    }
-}
+                <div style={{ marginTop: 25 }}>
+                    <Link to="/networks" className="btn btn-primary">
+                        <FormattedMessage id="general.network.connect" defaultMessage="Connect" />
+                    </Link>
+                </div>
+            </div>
+        )}
+    </div>
+);
 
 export default Offline;

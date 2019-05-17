@@ -28,7 +28,8 @@ import { IKeyInfo } from 'apla/api';
 const loadWalletsEpic: Epic = (action$, store, { api }) => action$.ofAction(loadWallets.started)
     .flatMap(action => {
         const state = store.getState();
-        const client = api({ apiHost: state.engine.nodeHost });
+        const network = store.getState().engine.guestSession.network;
+        const client = api({ apiHost: network.apiHost });
 
         return Observable.from(state.storage.wallets).flatMap(wallet =>
             Observable.from(client.keyinfo({

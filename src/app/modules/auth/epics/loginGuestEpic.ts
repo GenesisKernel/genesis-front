@@ -31,12 +31,12 @@ import { address, addressString } from 'lib/crypto';
 const loginGuestEpic: Epic = (action$, store, { api, defaultKey, defaultPassword }) => action$.ofAction(loginGuest.started)
     .flatMap(action => {
         const publicKey = keyring.generatePublicKey(defaultKey);
-        const nodeHost = store.getState().engine.nodeHost;
-        const client = api({ apiHost: nodeHost });
+        const network = store.getState().engine.guestSession.network;
+        const client = api({ apiHost: network.apiHost });
         const id = address(publicKey);
         const addr = addressString(id);
 
-        return Observable.from(client.getUid({ networkID: store.getState().engine.networkID }))
+        return Observable.from(client.getUid())
             .flatMap(uid =>
                 client.authorize(uid.token).login({
                     publicKey,
@@ -56,8 +56,7 @@ const loginGuestEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                         result: {
                             session: {
                                 sessionToken: session.token,
-                                refreshToken: session.refresh,
-                                apiHost: nodeHost
+                                network
                             },
                             wallet: {
                                 wallet: {

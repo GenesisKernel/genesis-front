@@ -27,7 +27,7 @@ import { ILoginCall, IAccountContext } from 'apla/auth';
 
 import Avatar from 'containers/Avatar';
 import Validation from 'components/Validation';
-import Heading from 'components/Auth/Heading';
+import HeadingNetwork from 'containers/Auth/HeadingNetwork';
 
 export interface IPasswordPromptProps {
     className?: string;
@@ -45,9 +45,9 @@ const PasswordPrompt: React.SFC<IPasswordPromptProps & InjectedIntlProps> = prop
     return (
         <div className={props.className}>
             <Validation.components.ValidatedForm className="form-horizontal" onSubmitSuccess={onSubmit}>
-                <Heading onReturn={props.onCancel}>
+                <HeadingNetwork onReturn={props.onCancel}>
                     <FormattedMessage id="auth.authentication" defaultMessage="Authentication" />
-                </Heading>
+                </HeadingNetwork>
                 <div className="text-center desktop-flex-stretch">
                     <div className="avatar-holder">
                         <Avatar
