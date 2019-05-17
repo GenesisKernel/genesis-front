@@ -23,6 +23,7 @@
 import * as yup from 'yup';
 
 const webConfig = yup.object().shape({
+    defaultNetwork: yup.string().notRequired(),
     networks: yup.array().of(yup.object({
         key: yup.string().required(),
         name: yup.string().required(),

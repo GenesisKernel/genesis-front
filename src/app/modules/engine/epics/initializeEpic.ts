@@ -22,7 +22,7 @@
 
 import { Epic } from 'modules';
 import { Observable } from 'rxjs';
-import { initialize, setLocale } from '../actions';
+import { initialize, setLocale, discoverNetwork } from '../actions';
 import urlJoin from 'url-join';
 import platform from 'lib/platform';
 import { saveWallet, savePreconfiguredNetworks } from 'modules/storage/actions';
@@ -97,7 +97,12 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                     result: {
                         preconfiguredNetworks
                     }
-                }))
+                })),
+                Observable.if(
+                    () => !!(!state.engine.guestSession && config.defaultNetwork && state.storage.networks.find(n => n.uuid === config.defaultNetwork)),
+                    Observable.of(discoverNetwork.started({ uuid: config.defaultNetwork })),
+                    Observable.empty<never>()
+                )
             );
         }).catch(e => Observable.of(initialize.failed({
             params: action.payload,
