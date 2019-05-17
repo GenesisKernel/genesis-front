@@ -20,19 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { combineEpics } from 'redux-observable';
-import initializeEpic from './epics/initializeEpic';
-import setLocaleEpic from './epics/setLocaleEpic';
-import discoverNetworkEpic from './epics/discoverNetworkEpic';
-import addNetworkEpic from './epics/addNetworkEpic';
-import discoverNetworkFailedEpic from './epics/discoverNetworkFailedEpic';
-import connectDefaultEpic from './epics/connectDefaultEpic';
+import { Epic } from 'modules';
+import { initialize, discoverNetwork } from '../actions';
 
-export default combineEpics(
-    initializeEpic,
-    setLocaleEpic,
-    discoverNetworkEpic,
-    discoverNetworkFailedEpic,
-    addNetworkEpic,
-    connectDefaultEpic
-);
+const connectDefaultEpic: Epic = (action$, store) => action$.ofAction(initialize.done)
+    .filter(action => {
+        const state = store.getState();
+        return !!(!state.engine.guestSession && action.payload.result.defaultNetwork && state.storage.networks.find(l => l.uuid === action.payload.result.defaultNetwork));
+    })
+    .map(action => (
+        discoverNetwork.started({ uuid: action.payload.result.defaultNetwork }))
+    );
+export default connectDefaultEpic;
