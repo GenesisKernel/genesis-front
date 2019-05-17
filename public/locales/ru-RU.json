@@ -126,6 +126,8 @@
     "general.network.add": "Добавить сеть",
     "general.network.add.desc": "Указать настройки подключения и установить связь с сетью не из этого списка",
     "general.network.add.help": "Введите настройки сети. При успешном подключении сеть будет сохранена в списке доступных сетей",
+    "general.network.notconnected": "Соединение не установлено",
+    "general.network.notconnected.desc": "Пожалуйста установите соединение с сетью для начала работы с Apla. Вы можете управлять настройками сети нажав на индикатор в правом верхнем углу данного окна",
     "general.network.current": "Подключено",
     "general.network.name": "Название",
     "general.network.full_nodes": "Узлы",
