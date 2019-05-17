@@ -55,7 +55,7 @@ const WalletList: React.SFC<IWalletListProps> = props => (
     <LocalizedDocumentTitle title="auth.login" defaultTitle="Login">
         <div className={classNames('desktop-flex-col desktop-flex-stretch', props.className)}>
             <HeadingNetwork>
-                <FormattedMessage id="auth.wallets" defaultMessage="Accounts" />
+                <FormattedMessage id="auth" defaultMessage="Authorization" />
             </HeadingNetwork>
             {props.isOffline ?
                 (
