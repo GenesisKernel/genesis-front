@@ -22,9 +22,12 @@
 
 import React from 'react';
 import classNames from 'classnames';
+import { FormattedMessage } from 'react-intl';
+import { Col } from 'react-bootstrap';
 
 import LocalizedDocumentTitle from 'components/DocumentTitle/LocalizedDocumentTitle';
 import HeadingNetwork from 'containers/Auth/HeadingNetwork';
+import Validation from 'components/Validation';
 
 export interface IAddNetworkProps {
     pending: boolean;
@@ -46,35 +49,35 @@ class AddNetwork extends React.Component<IAddNetworkProps, IAddNetworkState> {
         apiHost: ''
     };
 
-    onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onNameChange = (name: string) => {
         this.setState({
-            name: e.target.value
+            name
         });
     }
 
-    onDiscoveryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onDiscoveryChange = (autoDiscovery: boolean) => {
         this.setState({
-            autoDiscovery: e.target.checked
+            autoDiscovery
         });
     }
 
-    onNetworkIDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onNetworkIDChange = (networkID: number) => {
         this.setState({
-            networkID: e.target.valueAsNumber
+            networkID
         });
     }
 
-    onApiHostChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onApiHostChange = (apiHost: string) => {
         this.setState({
-            apiHost: e.target.value
+            apiHost
         });
     }
 
-    onSubmit = () => {
+    onSubmit = (payload: any) => {
         this.props.onSubmit({
-            name: this.state.name,
-            networkID: this.state.autoDiscovery ? undefined : this.state.networkID,
-            apiHost: this.state.apiHost
+            name: payload.name,
+            networkID: payload.discovery ? undefined : parseInt(payload.id, 10),
+            apiHost: payload.url
         });
     }
 
@@ -82,29 +85,99 @@ class AddNetwork extends React.Component<IAddNetworkProps, IAddNetworkState> {
         return (
             <LocalizedDocumentTitle title="auth.login" defaultTitle="Login">
                 <div className={classNames('desktop-flex-col desktop-flex-stretch')}>
-                    <HeadingNetwork returnUrl="/networks">NL_ADD_NETWORK</HeadingNetwork>
+                    <HeadingNetwork returnUrl="/networks">
+                        <FormattedMessage id="general.network.add" defaultMessage="Add network" />
+                    </HeadingNetwork>
+                    <Validation.components.ValidatedForm onSubmitSuccess={this.onSubmit}>
+                        <fieldset>
+                            <p className="text-center">
+                                <FormattedMessage id="general.network.add.help" defaultMessage="Enter network parameters. If connection succeeds it will be added to the list of configured networks" />
+                            </p>
+                        </fieldset>
+                        <fieldset>
+                            <Validation.components.ValidatedFormGroup for="name">
+                                <Col md={3} className="clearfix">
+                                    <div className="pull-left">
+                                        <FormattedMessage id="general.network.name" defaultMessage="Name" />
+                                    </div>
+                                    <div className="pull-right visible-sm visible-xs">
+                                        <Validation.components.ValidationMessage for="name" />
+                                    </div>
+                                </Col>
+                                <Col md={9}>
+                                    <div>
+                                        <Validation.components.ValidatedControl
+                                            onChange={e => this.onNameChange((e.target as HTMLInputElement).value)}
+                                            value={this.state.name}
+                                            name="name"
+                                            validators={[Validation.validators.required]}
+                                        />
+                                    </div>
+                                </Col>
+                            </Validation.components.ValidatedFormGroup>
+                        </fieldset>
+                        <fieldset>
+                            <Validation.components.ValidatedFormGroup for="id">
+                                <Col md={3} className="clearfix">
+                                    <div className="pull-left">
+                                        <FormattedMessage id="general.network.id.short" defaultMessage="ID" />
+                                    </div>
+                                    <div className="pull-right visible-sm visible-xs">
+                                        <Validation.components.ValidationMessage for="id" />
+                                    </div>
+                                </Col>
+                                <Col md={9}>
+                                    <div className="text-left">
+                                        <Validation.components.ValidatedControl
+                                            onChange={e => this.onNetworkIDChange((e.target as HTMLInputElement).valueAsNumber)}
+                                            value={String(this.state.networkID)}
+                                            type="number"
+                                            name="id"
+                                            key={String(this.state.autoDiscovery)}
+                                            disabled={this.state.autoDiscovery}
+                                            validators={this.state.autoDiscovery ? [] : [Validation.validators.required]}
+                                        />
+                                        <Validation.components.ValidatedCheckbox
+                                            onChange={e => this.onDiscoveryChange((e.target as HTMLInputElement).checked)}
+                                            checked={this.state.autoDiscovery}
+                                            name="discovery"
+                                            title={
+                                                <FormattedMessage id="general.network.id.auto" defaultMessage="Automatic discovery" />
+                                            }
+                                        />
+                                    </div>
+                                </Col>
+                            </Validation.components.ValidatedFormGroup>
+                        </fieldset>
+                        <fieldset>
+                            <Validation.components.ValidatedFormGroup for="url">
+                                <Col md={3} className="clearfix">
+                                    <div className="pull-left">
+                                        <FormattedMessage id="general.network.url" defaultMessage="Node URL" />
+                                    </div>
+                                    <div className="pull-right visible-sm visible-xs">
+                                        <Validation.components.ValidationMessage for="url" />
+                                    </div>
+                                </Col>
+                                <Col md={9}>
+                                    <div className="text-left">
+                                        <Validation.components.ValidatedControl
+                                            onChange={e => this.onApiHostChange((e.target as HTMLInputElement).value)}
+                                            value={this.state.apiHost}
+                                            name="url"
+                                            validators={[Validation.validators.required]}
+                                        />
+                                    </div>
+                                </Col>
+                            </Validation.components.ValidatedFormGroup>
+                        </fieldset>
 
-                    <div className="text-left">
-                        <h4>Name</h4>
-                        <div>
-                            <input type="text" value={this.state.name} onChange={this.onNameChange} />
+                        <div className="text-right">
+                            <Validation.components.ValidatedSubmit bsStyle="primary" disabled={this.props.pending}>
+                                <FormattedMessage id="process.continue" defaultMessage="Continue" />
+                            </Validation.components.ValidatedSubmit>
                         </div>
-                        <h4>Network ID</h4>
-                        <div>
-                            <div style={{ display: 'inline-block' }}>
-                                <input type="number" value={this.state.networkID} disabled={this.state.autoDiscovery} onChange={this.onNetworkIDChange} />
-                            </div>
-                            <div style={{ display: 'inline-block' }}>
-                                <input type="checkbox" checked={this.state.autoDiscovery} onChange={this.onDiscoveryChange} />
-                            </div>
-                        </div>
-                        <h4>Discovery node host</h4>
-                        <div>
-                            <input type="text" value={this.state.apiHost} onChange={this.onApiHostChange} />
-                        </div>
-
-                        <button onClick={this.onSubmit} disabled={this.props.pending}>NL_ADD</button>
-                    </div>
+                    </Validation.components.ValidatedForm>
                 </div>
             </LocalizedDocumentTitle>
         );

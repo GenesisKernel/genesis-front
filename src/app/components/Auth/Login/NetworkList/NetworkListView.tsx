@@ -75,7 +75,7 @@ class NetworkListView extends React.Component<INetworkListViewProps & InjectedIn
                 key={network.uuid}
                 disabled={this.props.pending || this.props.current === network.uuid}
                 onConnect={() => this.props.onConnect(network.uuid)}
-                onRemove={preconfigured ? () => this.props.onRemove(network) : undefined}
+                onRemove={preconfigured ? undefined : () => this.props.onRemove(network)}
             />
         )
     ]
