@@ -29,7 +29,7 @@ export interface IErrorProps {
 
 const Error: React.SFC<IErrorProps> = props => (
     <div>
-        <h4>NL_FATAL_ERROR: {props.type}</h4>
+        <h4>FATAL_ERROR: {props.type}</h4>
         <div>{props.message}</div>
     </div>
 );
