@@ -60,7 +60,7 @@ const Auth: React.SFC<IAuthProps> = props => (
                     web: (
                         <div className="clearfix p-lg text-center text-white">
                             <div className="pull-left">
-                                <div>Apla &copy; 2017 - 2018 - <a href="https://apla.io">https://apla.io</a></div>
+                                <div>Apla &copy; 2017 - 2019 - <a href="https://apla.io">https://apla.io</a></div>
                             </div>
                             <div className="pull-right">
                                 <a href="#" onClick={props.changeLocale}>
