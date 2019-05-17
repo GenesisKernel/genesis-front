@@ -22,7 +22,7 @@
     "auth.wallet.register.desc": "This wallet is pending activation. Click activate to begin the process",
     "auth.wallet.registration": "Activation",
     "auth.wallet.registration.type.email": "Activate using E-Mail",
-    "auth.wallet.registration.type.email.desc": "Go through the know your customer (KYC) procedure to activate your wallet. To do so, please send your public key to {mail} and proceed with the instructions that SnapSwap send you in response",
+    "auth.wallet.registration.type.email.desc": "Go through the know your customer (KYC) procedure to activate your account. To do so, please send your public key to {mail} and proceed with the instructions that you will receive in response",
     "auth.wallet.registration.type.email.confirm": "Send E-Mail",
     "auth.wallet.remove": "Remove",
     "auth.wallet.share": "Share",
