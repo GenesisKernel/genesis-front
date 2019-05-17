@@ -47,7 +47,7 @@ const NetworkList: React.SFC<INetworkListProps> = props => (
                 <FormattedMessage id="general.networks" defaultMessage="Networks" />
             </HeadingNetwork>
 
-            <div className="text-left">
+            <div className="text-left" style={{ margin: -15, marginBottom: 15 }}>
                 <NetworkListView
                     pending={props.pending}
                     current={props.current && props.current.uuid}
@@ -56,7 +56,8 @@ const NetworkList: React.SFC<INetworkListProps> = props => (
                     onConnect={props.onConnect}
                     onRemove={props.onRemove}
                 />
-                <hr />
+            </div>
+            <div>
                 <ContextButton
                     icon="icon-plus"
                     onClick={props.onAddNetwork}
