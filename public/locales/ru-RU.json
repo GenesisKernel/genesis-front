@@ -174,7 +174,7 @@
     "map.editor": "Редактирование карты",
     "map.meter.short": "м",
     "modal.authorization.title": "Авторизация",
-    "modal.authorization.password": "Введите пароль для подписи контракта {contract}",
+    "modal.authorization.password": "Введите пароль для вызова транзакции {contract}",
     "modal.confirm.title": "Подтверждение",
     "modal.imageeditor.cancel": "Отмена",
     "modal.imageeditor.confirm": "Подтверждение",
