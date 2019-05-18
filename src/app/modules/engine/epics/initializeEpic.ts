@@ -14,6 +14,8 @@ import keyring from 'lib/keyring';
 import webConfig from 'lib/settings';
 import { INetwork } from 'apla/auth';
 
+const DEFAULT_NETWORK = '__DEFAULT';
+
 const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword }) => action$.ofAction(initialize.started)
     .flatMap(action => {
         const requestUrl = platform.select({
@@ -30,10 +32,12 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
         ).defaultIfEmpty({}).flatMap(result => webConfig.validate(result)).flatMap(config => {
             const state = store.getState();
             const preconfiguredNetworks: INetwork[] = [];
+            let defaultNetworkSet = false;
 
             if (platform.args.dry && platform.args.fullNode && 'number' === typeof platform.args.networkID) {
+                defaultNetworkSet = true;
                 preconfiguredNetworks.push({
-                    uuid: '__DEFAULT',
+                    uuid: DEFAULT_NETWORK,
                     id: platform.args.networkID,
                     name: platform.args.networkName,
                     fullNodes: platform.args.fullNode,
@@ -78,7 +82,7 @@ const initializeEpic: Epic = (action$, store, { api, defaultKey, defaultPassword
                 Observable.of(initialize.done({
                     params: action.payload,
                     result: {
-                        defaultNetwork: config.defaultNetwork,
+                        defaultNetwork: defaultNetworkSet ? DEFAULT_NETWORK : config.defaultNetwork,
                         preconfiguredNetworks
                     }
                 }))
