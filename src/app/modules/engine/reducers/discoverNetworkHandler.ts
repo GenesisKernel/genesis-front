@@ -9,8 +9,7 @@ import { Reducer } from 'modules';
 
 const discoverNetworkHandler: Reducer<typeof discoverNetwork.started, State> = (state, payload) => ({
     ...state,
-    isConnecting: true,
-    isOffline: true
+    isConnecting: true
 });
 
 export default discoverNetworkHandler;

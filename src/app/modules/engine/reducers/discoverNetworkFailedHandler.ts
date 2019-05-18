@@ -11,7 +11,6 @@ const discoverNetworkFailedHandler: Reducer<typeof discoverNetwork.failed, State
     ...state,
     networkError: payload.error,
     guestSession: null,
-    isOffline: true,
     isConnecting: false
 });
 

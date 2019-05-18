@@ -61,7 +61,6 @@ const state: IRootState = {
         localeMessages: {},
         isCollapsed: true,
         isLoaded: true,
-        isOffline: false,
         isConnecting: false
     },
     editor: {

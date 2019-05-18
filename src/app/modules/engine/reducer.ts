@@ -27,7 +27,6 @@ export type State = {
     readonly localeMessages: { [key: string]: string };
     readonly isCollapsed: boolean;
     readonly isLoaded: boolean;
-    readonly isOffline: boolean;
     readonly isConnecting: boolean;
     readonly preconfiguredNetworks: INetwork[];
 };
@@ -39,7 +38,6 @@ export const initialState: State = {
     localeMessages: defaultLocale,
     isCollapsed: true,
     isLoaded: false,
-    isOffline: true,
     isConnecting: false,
     preconfiguredNetworks: []
 };
