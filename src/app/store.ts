@@ -20,6 +20,7 @@ import createMemoryHistory from 'history/createMemoryHistory';
 import rootReducer, { rootEpic, IRootState } from './modules';
 import platform from 'lib/platform';
 import dependencies from 'modules/dependencies';
+import rehydrateHandler from 'modules/storage/reducers/rehydrateHandler';
 
 export const history = platform.select<() => History>({
     desktop: createMemoryHistory,
@@ -92,7 +93,10 @@ const store = platform.select({
     desktop: () => {
         const Electron = require('electron');
         const storedState = Electron.ipcRenderer.sendSync('getState');
-        const storeInstance = (storedState && Object.keys(storedState).length) ? configureStore(storedState) : configureStore();
+        const storeInstance = (storedState && Object.keys(storedState).length) ? configureStore({
+            ...storedState,
+            storage: rehydrateHandler(storedState.storage, undefined)
+        }) : configureStore();
 
         storeInstance.subscribe(() => {
             const state = storeInstance.getState();

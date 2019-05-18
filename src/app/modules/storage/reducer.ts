@@ -15,6 +15,7 @@ import closeSecurityWarningHandler from './reducers/closeSecurityWarningHandler'
 import saveNetworkHandler from './reducers/saveNetworkHandler';
 import removeNetworkHandler from './reducers/removeNetworkHandler';
 import savePreconfiguredNetworksHandler from './reducers/savePreconfiguredNetworksHandler';
+import rehydrateHandler from './reducers/rehydrateHandler';
 
 export type State = {
     readonly locale: string;
@@ -41,4 +42,5 @@ export default reducerWithInitialState<State>(initialState)
     .case(actions.closeSecurityWarning, closeSecurityWarningHandler)
     .case(actions.saveNetwork, saveNetworkHandler)
     .case(actions.removeNetwork, removeNetworkHandler)
-    .case(actions.savePreconfiguredNetworks, savePreconfiguredNetworksHandler);
+    .case(actions.savePreconfiguredNetworks, savePreconfiguredNetworksHandler)
+    .case(actions.localstorageInit, rehydrateHandler);
