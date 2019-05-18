@@ -13,7 +13,7 @@ import defaultSchema from 'lib/tx/schema/defaultSchema';
 import fileObservable from 'modules/io/util/fileObservable';
 import { enqueueNotification } from 'modules/notifications/actions';
 
-const TX_STATUS_INTERVAL = 3000;
+const TX_STATUS_INTERVAL = 2000;
 
 export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(txExec.started)
     .flatMap(action => {
@@ -100,7 +100,7 @@ export const txExecEpic: Epic = (action$, store, { api }) => action$.ofAction(tx
                     });
                 });
 
-                return Observable.from(client.txSend(request)).flatMap(sendResponse => Observable.defer(() =>
+                return Observable.from(client.txSend(request)).delay(TX_STATUS_INTERVAL).flatMap(sendResponse => Observable.defer(() =>
                     client.txStatus(contracts.map(l => l.hash))
 
                 ).map(status => {
