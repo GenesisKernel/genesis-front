@@ -44,7 +44,7 @@ const Heading: React.SFC<IHeadingProps> = props => (
 
 export default themed(Heading)`
     background: ${props => platform.select({ web: props.theme.headerBackground, desktop: 'transparent' })};
-    margin: -15px -15px ${platform.select({ desktop: '0', web: '15px' })};
+    margin: -15px -15px 15px;
     padding: 0 15px;
     height: 45px;
     line-height: 43px;

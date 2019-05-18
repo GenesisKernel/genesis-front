@@ -6,7 +6,6 @@
 import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { Panel } from 'react-bootstrap';
 import imgLogo from 'images/logo.svg';
 import platform from 'lib/platform';
 
@@ -27,18 +26,24 @@ const Auth: React.SFC<IAuthProps> = props => (
     <div className={props.className}>
         <div className="auth-window-container">
             <div className="auth-window">
-                <Panel
-                    className="m0"
-                    header={platform.select({ desktop: <Titlebar maximizable={false} /> })}
-                >
-                    <Switch>
-                        <Route path="/account" component={Wallet} />
-                        <Route path="/networks/add" component={AddNetwork} />
-                        <Route path="/networks" component={NetworkList} />
-                        <Route path="/" component={Login} />
-                        <Redirect to="/" />
-                    </Switch>
-                </Panel>
+                <div className="panel panel-default m0">
+                    {platform.select({
+                        desktop: (
+                            <div className="panel-heading" style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
+                                <Titlebar maximizable={false} />
+                            </div>
+                        )
+                    })}
+                    <div className="panel-body">
+                        <Switch>
+                            <Route path="/account" component={Wallet} />
+                            <Route path="/networks/add" component={AddNetwork} />
+                            <Route path="/networks" component={NetworkList} />
+                            <Route path="/" component={Login} />
+                            <Redirect to="/" />
+                        </Switch>
+                    </div>
+                </div>
                 {platform.select({
                     web: (
                         <div className="clearfix p-lg text-center text-white">
@@ -76,6 +81,7 @@ export default themed(Auth)`
             max-width: ${platform.select({ web: '600px', desktop: 'none' })};
             height: ${platform.select({ web: 'auto', desktop: '100%' })};
             padding: ${platform.select({ web: '10px', desktop: '0' })};
+            padding-top: ${props => platform.select({ web: '0', desktop: props.theme.headerHeight + 'px' })};
             margin: 0 auto;
             
             .panel {
