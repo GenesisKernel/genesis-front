@@ -1,7 +1,7 @@
 {
     "key": "DEFAULT_NETWORK",
     "name": "Default Network",
-    "networkID": 100,
+    "networkID": 1,
     "fullNodes": [
         "http://127.0.0.1:7079"
     ],
